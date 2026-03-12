@@ -727,13 +727,13 @@ def print_summary(report: dict) -> None:
     print(f"Files Missing Minutes: {summary['files_missing_minutes']}")
     print(f"Extraction Success Rate: {summary['extraction_success_rate']:.1f}%")
     print(
-        f"Index Rebuild: {'✓ Confirmed' if summary['index_rebuild_confirmed'] else '✗ Failed'}"
+        f"Index Rebuild: {'[OK] Confirmed' if summary['index_rebuild_confirmed'] else '[FAIL] Failed'}"
     )
     print(
-        f"Structure Validation: {'✓ Passed' if summary['structure_validation_passed'] else '✗ Failed'}"
+        f"Structure Validation: {'[OK] Passed' if summary['structure_validation_passed'] else '[FAIL] Failed'}"
     )
     print(
-        f"Integrity Checks: {'✓ Passed' if summary['integrity_checks_passed'] else '✗ Failed'}"
+        f"Integrity Checks: {'[OK] Passed' if summary['integrity_checks_passed'] else '[FAIL] Failed'}"
     )
 
     if report["warnings"]:

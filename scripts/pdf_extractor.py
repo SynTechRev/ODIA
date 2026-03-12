@@ -247,10 +247,10 @@ def main():
             out_dir.mkdir(parents=True, exist_ok=True)
             out_file = out_dir / f"{pdf_path.stem}.txt"
             out_file.write_text(result["text"], encoding="utf-8")
-            print(f"✓ Extracted text using {result['method']} method")
+            print(f"[OK] Extracted text using {result['method']} method")
             print(f"  Output: {out_file}")
         else:
-            print(f"✗ Extraction failed: {result.get('error', 'Unknown error')}")
+            print(f"[FAIL] Extraction failed: {result.get('error', 'Unknown error')}")
             return 1
     else:
         print("PDF Extractor module initialized")

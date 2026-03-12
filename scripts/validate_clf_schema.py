@@ -19,14 +19,14 @@ def validate_clf_schema():  # noqa: C901
     )
 
     if not clf_file.exists():
-        print(f"✗ CLF file not found: {clf_file}")
+        print(f"[FAIL] CLF file not found: {clf_file}")
         return False
 
     try:
         with open(clf_file) as f:
             data = json.load(f)
     except json.JSONDecodeError as e:
-        print(f"✗ Invalid JSON in CLF file: {e}")
+        print(f"[FAIL] Invalid JSON in CLF file: {e}")
         return False
 
     errors = []
@@ -101,7 +101,7 @@ def validate_clf_schema():  # noqa: C901
 
     # Report results
     if errors:
-        print("✗ CLF Schema Validation FAILED:")
+        print("[FAIL] CLF Schema Validation FAILED:")
         for error in errors:
             print(f"  - {error}")
         if warnings:
@@ -111,11 +111,11 @@ def validate_clf_schema():  # noqa: C901
         return False
 
     if warnings:
-        print("✓ CLF Schema Validation PASSED (with warnings):")
+        print("[OK] CLF Schema Validation PASSED (with warnings):")
         for warning in warnings:
             print(f"  - {warning}")
     else:
-        print("✓ CLF Schema Validation PASSED")
+        print("[OK] CLF Schema Validation PASSED")
         print("  - 10 frameworks validated")
         print(f"  - JIM total weight: {jim_total:.2f}")
         print(f"  - ACE total weight: {ace_total:.2f}")

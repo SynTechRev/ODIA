@@ -274,7 +274,7 @@ Examples:
             author = flag["author"]
             print(f"    - [{severity}] {message} (by {author})")
 
-    print("\n✓ Triage complete")
+    print("\n[OK] Triage complete")
 
 
 if __name__ == "__main__":

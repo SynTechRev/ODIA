@@ -326,7 +326,7 @@ Examples:
     print("\nGenerating issue files...")
     generated_files = generator.generate_issues(filtered_manifests)
 
-    print(f"\n✓ Generated {len(generated_files)} issue file(s)")
+    print(f"\n[OK] Generated {len(generated_files)} issue file(s)")
     for issue_file in generated_files:
         print(f"  - {issue_file}")
 

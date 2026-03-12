@@ -3,6 +3,8 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 # Add paths for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -15,7 +17,10 @@ from scripts.ingest_corpus import (
     scan_files_under,
 )
 
+_SKIP_CORPUS = "requires populated oraculus/corpus/ directory (runtime data)"
 
+
+@pytest.mark.skip(reason=_SKIP_CORPUS)
 def test_find_all_corpora():
     """Test that corpus discovery finds all directories."""
     repo_root = Path(__file__).parent.parent

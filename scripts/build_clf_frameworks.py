@@ -793,10 +793,10 @@ def main():
     with open(output_file, "w") as f:
         json.dump(clf_data, f, indent=2)
 
-    print(f"✓ Created {output_file}")
-    print(f"✓ {clf_data['metadata']['total_frameworks']} frameworks")
-    print(f"✓ JIM total weight: {clf_data['weight_normalization']['jim_total']:.2f}")
-    print(f"✓ ACE total weight: {clf_data['weight_normalization']['ace_total']:.2f}")
+    print(f"[OK] Created {output_file}")
+    print(f"[OK] {clf_data['metadata']['total_frameworks']} frameworks")
+    print(f"[OK] JIM total weight: {clf_data['weight_normalization']['jim_total']:.2f}")
+    print(f"[OK] ACE total weight: {clf_data['weight_normalization']['ace_total']:.2f}")
 
 
 if __name__ == "__main__":

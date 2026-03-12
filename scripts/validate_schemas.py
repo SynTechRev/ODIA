@@ -314,12 +314,12 @@ def validate_all_artifacts(
             results["valid"] += 1
             if result["fixed"]:
                 results["fixed"] += 1
-                log_message(f"✓ Fixed and validated: {artifact_path}")
+                log_message(f"[OK] Fixed and validated: {artifact_path}")
             else:
-                log_message(f"✓ Valid: {artifact_path}")
+                log_message(f"[OK] Valid: {artifact_path}")
         else:
             results["failed"] += 1
-            log_message(f"✗ Validation failed: {artifact_path}")
+            log_message(f"[FAIL] Validation failed: {artifact_path}")
             for error in result["errors"]:
                 log_message(f"  - {error}")
 
@@ -367,13 +367,13 @@ def main():
 
     # Exit with error code if validation failed and fail_on_error is True
     if results["failed"] > 0 and not args.no_fail:
-        print(f"\n✗ Validation failed for {results['failed']} artifacts")
+        print(f"\n[FAIL] Validation failed for {results['failed']} artifacts")
         sys.exit(1)
 
     if results["fixed"] > 0:
-        print(f"\n✓ Success: {results['fixed']} artifacts auto-fixed")
+        print(f"\n[OK] Success: {results['fixed']} artifacts auto-fixed")
     else:
-        print("\n✓ Success: All artifacts validated")
+        print("\n[OK] Success: All artifacts validated")
 
     sys.exit(0)
 

@@ -43,7 +43,7 @@ def main():
 
     provenance_file = Path(args.input)
     if not provenance_file.exists():
-        print(f"\n✗ Provenance file not found: {provenance_file}")
+        print(f"\n[FAIL] Provenance file not found: {provenance_file}")
         print("  Run ingestion with --format xml to generate provenance records")
         return 1
 
@@ -52,7 +52,7 @@ def main():
     try:
         results = verify_integrity(provenance_file)
     except Exception as e:
-        print(f"\n✗ Verification failed: {e}")
+        print(f"\n[FAIL] Verification failed: {e}")
         return 1
 
     # Print summary
@@ -60,8 +60,8 @@ def main():
     print("Verification Results")
     print("=" * 70)
     print(f"Total records:   {results['total']}")
-    print(f"✓ Verified:      {results['verified']}")
-    print(f"✗ Failed:        {results['failed']}")
+    print(f"[OK] Verified:      {results['verified']}")
+    print(f"[FAIL] Failed:        {results['failed']}")
     print(f"⚠ Missing:       {results['missing']}")
 
     # Calculate success rate
@@ -77,8 +77,8 @@ def main():
 
         for detail in results["details"]:
             status_symbol = {
-                "verified": "✓",
-                "failed": "✗",
+                "verified": "[OK]",
+                "failed": "[FAIL]",
                 "missing": "⚠",
             }
             symbol = status_symbol.get(detail["status"], "?")
@@ -93,7 +93,7 @@ def main():
         print("\n⚠ Some files failed verification or are missing")
         return 1
 
-    print("\n✓ All files verified successfully")
+    print("\n[OK] All files verified successfully")
     return 0
 
 

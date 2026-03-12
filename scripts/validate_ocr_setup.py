@@ -38,9 +38,9 @@ def check_dependencies():
     for module, description in dependencies.items():
         try:
             __import__(module)
-            print(f"✓ {module:20s} - {description}")
+            print(f"[OK] {module:20s} - {description}")
         except ImportError:
-            print(f"✗ {module:20s} - {description} (NOT INSTALLED)")
+            print(f"[FAIL] {module:20s} - {description} (NOT INSTALLED)")
             all_installed = False
 
     return all_installed
@@ -64,9 +64,9 @@ def check_modules():
     for module, description in modules:
         try:
             __import__(module)
-            print(f"✓ {module:40s} - {description}")
+            print(f"[OK] {module:40s} - {description}")
         except Exception as e:
-            print(f"✗ {module:40s} - {description}")
+            print(f"[FAIL] {module:40s} - {description}")
             print(f"  Error: {e}")
             all_ok = False
 
@@ -102,13 +102,13 @@ def check_config():
 
         print("\nAPI Keys Configured:")
         for service, configured in config["api_keys_configured"].items():
-            status = "✓" if configured else "✗"
+            status = "[OK]" if configured else "[FAIL]"
             print(f"  {status} {service}")
 
         return True
 
     except Exception as e:
-        print(f"✗ Failed to load configuration: {e}")
+        print(f"[FAIL] Failed to load configuration: {e}")
         return False
 
 
@@ -133,9 +133,9 @@ def check_file_structure():
     for file_path in required_files:
         full_path = _repo_root / file_path
         if full_path.exists():
-            print(f"✓ {file_path}")
+            print(f"[OK] {file_path}")
         else:
-            print(f"✗ {file_path} (MISSING)")
+            print(f"[FAIL] {file_path} (MISSING)")
             all_exist = False
 
     return all_exist
@@ -158,22 +158,22 @@ def test_extraction():
         required_keys = ["path", "text", "success", "method", "confidence", "error"]
         for key in required_keys:
             if key not in result:
-                print(f"✗ Missing key in result: {key}")
+                print(f"[FAIL] Missing key in result: {key}")
                 return False
 
         # Verify confidence range
         if not (0.0 <= result["confidence"] <= 1.0):
-            print(f"✗ Confidence out of range: {result['confidence']}")
+            print(f"[FAIL] Confidence out of range: {result['confidence']}")
             return False
 
-        print("✓ extract_text() returns correct structure")
+        print("[OK] extract_text() returns correct structure")
         print(f"  Keys: {list(result.keys())}")
-        print("  Confidence range: [0.0, 1.0] ✓")
+        print("  Confidence range: [0.0, 1.0] [OK]")
 
         return True
 
     except Exception as e:
-        print(f"✗ Extraction test failed: {e}")
+        print(f"[FAIL] Extraction test failed: {e}")
         return False
 
 
@@ -201,21 +201,21 @@ def main():
     print("=" * 80)
 
     for name, passed in results.items():
-        status = "✓ PASSED" if passed else "✗ FAILED"
+        status = "[OK] PASSED" if passed else "[FAIL] FAILED"
         print(f"{name:20s}: {status}")
 
     all_passed = all(results.values())
 
     print("\n" + "=" * 80)
     if all_passed:
-        print("✓ ALL CHECKS PASSED - OCR enhancement is ready to use")
+        print("[OK] ALL CHECKS PASSED - OCR enhancement is ready to use")
         print("\nNext steps:")
         print("  1. Populate corpus with PDF files")
         print("  2. Run: python scripts/bulk_pdf_extract.py")
         print("  3. Run: python scripts/flag_manual_review_queue.py")
         print("  4. Check: analysis/extracted_text/extraction_quality_report.json")
     else:
-        print("✗ SOME CHECKS FAILED - Please review errors above")
+        print("[FAIL] SOME CHECKS FAILED - Please review errors above")
         print("\nCommon issues:")
         print("  • Missing dependencies: pip install -r requirements.txt")
         print("  • Tesseract not installed: sudo apt-get install tesseract-ocr")

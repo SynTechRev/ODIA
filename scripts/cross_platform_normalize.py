@@ -256,7 +256,7 @@ def main():
     print("=" * 70)
 
     if not corpus_root.exists():
-        print(f"\n✗ Corpus root not found: {corpus_root}")
+        print(f"\n[FAIL] Corpus root not found: {corpus_root}")
         return 1
 
     exit_code = 0
@@ -271,7 +271,7 @@ def main():
             for issue in compat["permission_issues"]:
                 print(f"    - {issue['hist_id']}: {issue['path']}")
     else:
-        print("  ✓ No permission issues detected")
+        print("  [OK] No permission issues detected")
 
     if compat["line_ending_issues"]:
         print(f"  ⚠ Line ending issues found: {len(compat['line_ending_issues'])}")
@@ -279,7 +279,7 @@ def main():
             for issue in compat["line_ending_issues"][:10]:
                 print(f"    - {issue['path']}: {issue['issue']}")
     else:
-        print("  ✓ No line ending issues detected")
+        print("  [OK] No line ending issues detected")
 
     # Step 2: Check file permissions
     print("\n[2/4] Checking file permissions...")
@@ -294,7 +294,7 @@ def main():
             for issue in perms["issues"]:
                 print(f"    - {issue['path']}: {issue['issue']}")
     else:
-        print("  ✓ All permissions OK")
+        print("  [OK] All permissions OK")
 
     # Step 3: Check for path case issues
     print("\n[3/4] Checking for path case sensitivity issues...")
@@ -308,7 +308,7 @@ def main():
             for conflict in case_issues["potential_conflicts"]:
                 print(f"    - {conflict['path1']} vs {conflict['path2']}")
     else:
-        print("  ✓ No case sensitivity issues detected")
+        print("  [OK] No case sensitivity issues detected")
 
     # Step 4: Apply fixes if requested
     print("\n[4/4] Applying fixes...")
@@ -335,7 +335,7 @@ def main():
     # Final summary
     print("\n" + "=" * 70)
     if exit_code == 0:
-        print("✓ NORMALIZATION COMPLETE")
+        print("[OK] NORMALIZATION COMPLETE")
     else:
         print("⚠ NORMALIZATION COMPLETED WITH ISSUES")
     print("=" * 70)

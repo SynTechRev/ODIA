@@ -314,9 +314,9 @@ def scan_and_repair() -> dict:
 
         if check_result["valid"]:
             results["valid"] += 1
-            log_message(f"✓ Valid: {artifact_path}")
+            log_message(f"[OK] Valid: {artifact_path}")
         else:
-            log_message(f"✗ Issues found in {artifact_path}:")
+            log_message(f"[FAIL] Issues found in {artifact_path}:")
             for issue in check_result["issues"]:
                 log_message(f"  - {issue}")
 
@@ -357,7 +357,7 @@ def main():
         print(f"\n⚠ Warning: {results['failed']} artifacts could not be repaired")
         sys.exit(1)
 
-    print("\n✓ Success: All artifacts validated or repaired")
+    print("\n[OK] Success: All artifacts validated or repaired")
     sys.exit(0)
 
 

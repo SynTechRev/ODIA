@@ -166,7 +166,7 @@ def update_ingestion_report():
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False)
 
-    print(f"✓ Updated ingestion report: {output_path}")
+    print(f"[OK] Updated ingestion report: {output_path}")
     print(f"  Total corpora: {total_corpora}")
     print(f"  Total files: {total_files}")
     print(f"  Corpora with files: {corpora_with_files}")

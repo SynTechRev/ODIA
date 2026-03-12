@@ -12,7 +12,7 @@ from .normalize import chunk_text
 from .normalize import normalize_document as normalize_text
 from .rgk18 import Phase18Service
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 __all__ = [
     "chunk_text",
     "normalize_text",

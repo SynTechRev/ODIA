@@ -361,7 +361,7 @@ Answer:"""
         with open(summary_file, "w") as f:
             json.dump(summary, f, indent=2)
 
-        print("\n✓ Evaluation complete")
+        print("\n[OK] Evaluation complete")
         print(f"  Successful: {summary['successful']}/{summary['total_queries']}")
         print(f"  Avg latency: {summary['avg_latency']:.2f}s")
         print(f"  Results: {self.run_dir}")

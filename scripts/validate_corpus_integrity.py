@@ -169,7 +169,7 @@ def main():
     print("=" * 70)
 
     if not corpus_root.exists():
-        print(f"\n✗ Corpus root not found: {corpus_root}")
+        print(f"\n[FAIL] Corpus root not found: {corpus_root}")
         return 1
 
     exit_code = 0
@@ -183,13 +183,13 @@ def main():
     for hist_id, status in structure_results.items():
         if status["exists"] and not status["missing_subdirs"]:
             structure_pass += 1
-            print(f"  ✓ {hist_id}: All {len(REQUIRED_SUBDIRS)} subdirectories present")
+            print(f"  [OK] {hist_id}: All {len(REQUIRED_SUBDIRS)} subdirectories present")
         elif status["exists"]:
             structure_fail += 1
             print(f"  ⚠ {hist_id}: Missing subdirectories: {status['missing_subdirs']}")
         else:
             structure_fail += 1
-            print(f"  ✗ {hist_id}: Directory not found")
+            print(f"  [FAIL] {hist_id}: Directory not found")
 
     print(f"\n  Summary: {structure_pass} passed, {structure_fail} failed")
 
@@ -245,9 +245,9 @@ def main():
     # Final summary
     print("\n" + "=" * 70)
     if exit_code == 0:
-        print("✓ VALIDATION PASSED")
+        print("[OK] VALIDATION PASSED")
     else:
-        print("✗ VALIDATION FAILED")
+        print("[FAIL] VALIDATION FAILED")
     print("=" * 70)
 
     return exit_code

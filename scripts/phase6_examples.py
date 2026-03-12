@@ -210,16 +210,16 @@ def example_4_full_bundle():
 
     print("\nDeployment Platforms:")
     for platform, config in result["deployment"]["platforms"].items():
-        rec = "✓" if config.get("recommended") else " "
+        rec = "[OK]" if config.get("recommended") else " "
         print(f"  [{rec}] {platform}")
 
     print("\nIncluded Sub-Reports:")
-    print(f"  - Task Plan: ✓ ({len(result['task_plan']['components'])} components)")
+    print(f"  - Task Plan: [OK] ({len(result['task_plan']['components'])} components)")
     print(
-        f"  - Build Instructions: ✓ ("
+        f"  - Build Instructions: [OK] ("
         f"{len(result['build_instructions']['setup_steps'])} steps)"
     )
-    print(f"  - Gap Report: ✓ (Priority: {result['gap_report']['priority']})")
+    print(f"  - Gap Report: [OK] (Priority: {result['gap_report']['priority']})")
 
     print("\nRecommended Next Phase:")
     print(f"  {result['recommended_next_phase']}")

@@ -666,7 +666,7 @@ def main():
     artifacts = harmonizer.generate_artifacts()
     print(f"Artifacts: {artifacts}")
 
-    print("\n✓ Semantic harmonization complete!")
+    print("\n[OK] Semantic harmonization complete!")
 
 
 if __name__ == "__main__":

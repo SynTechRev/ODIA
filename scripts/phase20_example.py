@@ -186,21 +186,21 @@ def main():
     print("1. Creating example phase inputs (Phases 12-19)...")
     phase_inputs = create_example_phase_inputs()
     print(
-        f"   ✓ Phase 12: Coherence Score = {phase_inputs['phase12']['coherence_score']}"
+        f"   [OK] Phase 12: Coherence Score = {phase_inputs['phase12']['coherence_score']}"
     )
     print(
-        f"   ✓ Phase 17: Ethics Score = {phase_inputs['phase17']['global_ethics_score']}"
+        f"   [OK] Phase 17: Ethics Score = {phase_inputs['phase17']['global_ethics_score']}"
     )
-    print(f"   ✓ Phase 18: Governance Score = {phase_inputs['phase18']['score']}")
+    print(f"   [OK] Phase 18: Governance Score = {phase_inputs['phase18']['score']}")
     print(
-        f"   ✓ Phase 19: UIF-19 Dimension = {phase_inputs['phase19']['uif_19_state']['dimension']}"
+        f"   [OK] Phase 19: UIF-19 Dimension = {phase_inputs['phase19']['uif_19_state']['dimension']}"
     )
     print()
 
     # Run Phase 20 analysis
     print("2. Running Ascendant Emergence Analysis...")
     result = service.run_ascendant_emergence(phase_inputs, dry_run=True)
-    print("   ✓ Analysis complete!")
+    print("   [OK] Analysis complete!")
     print()
 
     # Display AUF-20 state
@@ -262,7 +262,7 @@ def main():
     print()
     print("   Compliance Status:")
     for key, value in analysis.compliance_status.items():
-        status = "✓" if value else "✗"
+        status = "[OK]" if value else "[FAIL]"
         print(f"     {status} {key.replace('_', ' ').title()}: {value}")
     print()
 
@@ -328,11 +328,11 @@ def main():
     all_match = all(check[1] for check in determinism_checks)
 
     for name, matches in determinism_checks:
-        status = "✓" if matches else "✗"
+        status = "[OK]" if matches else "[FAIL]"
         print(f"   {status} {name}: {'MATCH' if matches else 'MISMATCH'}")
 
     print()
-    print(f"   Overall Determinism: {'✓ VERIFIED' if all_match else '✗ FAILED'}")
+    print(f"   Overall Determinism: {'[OK] VERIFIED' if all_match else '[FAIL] FAILED'}")
     print()
 
     # Display Reversibility Protocol
@@ -366,15 +366,15 @@ def main():
     print("=" * 80)
     print()
     print("Key Achievements:")
-    print("  ✓ 256-dimensional Ascendant Unified Field constructed")
-    print("  ✓ Recursive synthesis across all 8 phases")
-    print(f"  ✓ {len(result.meta_insights)} meta-insight packet(s) generated")
-    print("  ✓ 7-step recursive ascension loop executed")
-    print("  ✓ Comprehensive integrity and alignment verified")
-    print("  ✓ Final Ascendant Packet (FAP-20) published")
-    print("  ✓ Complete determinism verified")
-    print("  ✓ Reversibility protocol documented")
-    print("  ✓ Human primacy and safety constraints maintained")
+    print("  [OK] 256-dimensional Ascendant Unified Field constructed")
+    print("  [OK] Recursive synthesis across all 8 phases")
+    print(f"  [OK] {len(result.meta_insights)} meta-insight packet(s) generated")
+    print("  [OK] 7-step recursive ascension loop executed")
+    print("  [OK] Comprehensive integrity and alignment verified")
+    print("  [OK] Final Ascendant Packet (FAP-20) published")
+    print("  [OK] Complete determinism verified")
+    print("  [OK] Reversibility protocol documented")
+    print("  [OK] Human primacy and safety constraints maintained")
     print()
     print("The Crown is Complete. 👑")
     print()

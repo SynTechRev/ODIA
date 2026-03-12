@@ -172,7 +172,7 @@ def main():
     print("=" * 70)
 
     if not corpus_root.exists():
-        print(f"\n✗ Corpus root not found: {corpus_root}")
+        print(f"\n[FAIL] Corpus root not found: {corpus_root}")
         return 1
 
     # First, check current state

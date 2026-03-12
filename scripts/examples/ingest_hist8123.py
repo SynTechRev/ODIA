@@ -442,7 +442,7 @@ def print_extended_summary(report: dict) -> None:
     print(f"Subdirectories Scaffolded: {summary['subdirs_scaffolded']}")
     print(f"Hash Verifications: {summary['hash_verifications']}")
     passed = summary["structure_validation_passed"]
-    status = "✓ Passed" if passed else "✗ Failed"
+    status = "[OK] Passed" if passed else "[FAIL] Failed"
     print(f"Structure Validation: {status}")
 
     if report["corpora_by_year"]:

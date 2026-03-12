@@ -32,7 +32,7 @@ def example_causal_graph():
     print_section("Example 1: Building a Causal Graph")
 
     graph = CausalGraph()
-    print(f"✓ Initialized causal graph version {graph.version}")
+    print(f"[OK] Initialized causal graph version {graph.version}")
 
     # Create a governance scenario: Policy → Implementation → Outcome
     policy_node = graph.add_node(
@@ -66,12 +66,12 @@ def example_causal_graph():
     graph.add_edge(policy_node.node_id, implementation_node.node_id)
     graph.add_edge(implementation_node.node_id, outcome_node.node_id)
 
-    print(f"✓ Created {len(graph.nodes)} causal nodes")
+    print(f"[OK] Created {len(graph.nodes)} causal nodes")
     print("  - Policy Decision → Implementation → Outcome")
 
     # Validate graph
     validation = graph.validate_graph()
-    print(f"\n✓ Graph validation: {'PASSED' if validation['is_valid'] else 'FAILED'}")
+    print(f"\n[OK] Graph validation: {'PASSED' if validation['is_valid'] else 'FAILED'}")
     print(f"  - Issues: {validation['issue_count']}")
     print(f"  - Warnings: {validation['warning_count']}")
 
@@ -83,14 +83,14 @@ def example_retrocausal_inference(graph, outcome_node):
     print_section("Example 2: Retrocausal Inference")
 
     engine = RetrocausalInferenceEngine(max_depth=10)
-    print(f"✓ Initialized retrocausal engine version {engine.version}")
+    print(f"[OK] Initialized retrocausal engine version {engine.version}")
 
     # Trace root causes
     print("\nTracing root causes for outcome node...")
     result = engine.infer_root_causes(graph, outcome_node.node_id)
 
     if result["success"]:
-        print(f"✓ Found {result['root_cause_count']} root cause(s)")
+        print(f"[OK] Found {result['root_cause_count']} root cause(s)")
         for i, root_cause in enumerate(result["root_causes"], 1):
             print(f"\n  Root Cause {i}:")
             print(f"    - Node ID: {root_cause['root_node_id'][:8]}...")
@@ -100,7 +100,7 @@ def example_retrocausal_inference(graph, outcome_node):
     # Identify causal breaks
     print("\nIdentifying causal breaks...")
     breaks = engine.identify_causal_breaks(graph, threshold=0.3)
-    print(f"✓ Found {len(breaks)} causal break(s)")
+    print(f"[OK] Found {len(breaks)} causal break(s)")
 
     for i, break_item in enumerate(breaks[:3], 1):
         print(f"\n  Break {i}:")
@@ -115,13 +115,13 @@ def example_causal_responsibility(graph):
     print_section("Example 3: Causal Responsibility Index (CRI)")
 
     cri_calc = CausalResponsibilityIndex()
-    print(f"✓ Initialized CRI calculator version {cri_calc.version}")
+    print(f"[OK] Initialized CRI calculator version {cri_calc.version}")
 
     # Rank all nodes by responsibility
     print("\nRanking nodes by causal responsibility...")
     rankings = cri_calc.rank_by_responsibility(graph)
 
-    print(f"✓ Analyzed {len(rankings)} nodes")
+    print(f"[OK] Analyzed {len(rankings)} nodes")
     print("\nTop 3 Nodes by CRI:")
 
     for i, result in enumerate(rankings[:3], 1):
@@ -146,13 +146,13 @@ def example_anomaly_detection(graph):
     print_section("Example 4: Causal Anomaly Detection")
 
     detector = CausalAnomalyDetector()
-    print(f"✓ Initialized anomaly detector version {detector.version}")
+    print(f"[OK] Initialized anomaly detector version {detector.version}")
 
     # Run full detection cycle
     print("\nRunning complete anomaly detection cycle...")
     report = detector.detect_all_anomalies(graph)
 
-    print(f"✓ Detection cycle {report['detection_cycle']} complete")
+    print(f"[OK] Detection cycle {report['detection_cycle']} complete")
     print(f"  - Execution time: {report['execution_time_seconds']:.3f} seconds")
 
     # Display summary (Output 1 of 7)
@@ -189,13 +189,13 @@ def example_governance_prognosis(graph):
     print_section("Example 5: Governance Prognosis")
 
     generator = GovernancePrognosisGenerator(time_depth=12, branching_factor=5)
-    print(f"✓ Initialized prognosis generator version {generator.version}")
+    print(f"[OK] Initialized prognosis generator version {generator.version}")
 
     # Generate complete prognosis
     print("\nGenerating governance prognosis...")
     prognosis = generator.generate_prognosis(graph)
 
-    print("✓ Prognosis generation complete")
+    print("[OK] Prognosis generation complete")
 
     # Best-case trajectory
     best_case = prognosis["best_case_trajectory"]
@@ -242,7 +242,7 @@ def example_phase14_service():
     print_section("Example 6: Complete Phase 14 Service (RPG-14)")
 
     service = Phase14Service(time_depth=12, branching_factor=5)
-    print(f"✓ Initialized Phase 14 Service version {service.version}")
+    print(f"[OK] Initialized Phase 14 Service version {service.version}")
 
     # Get service info
     info = service.get_service_info()
@@ -292,7 +292,7 @@ def example_phase14_service():
         phase13_probabilities=phase13_probabilities,
     )
 
-    print(f"✓ Cycle {result['cycle']} complete")
+    print(f"[OK] Cycle {result['cycle']} complete")
     print(f"  - Execution time: {result['execution_time_seconds']:.3f} seconds")
     print(f"  - Graph nodes: {result['causal_graph']['node_count']}")
 
@@ -336,12 +336,12 @@ def final_summary():
     print_section("Phase 14 (RPG-14) Examples Complete")
 
     print("📊 Phase 14 Capabilities Demonstrated:")
-    print("  ✓ Causal graph construction with validation")
-    print("  ✓ Retrocausal inference and root cause analysis")
-    print("  ✓ Causal Responsibility Index (CRI) computation")
-    print("  ✓ Anomaly detection with 7 required outputs")
-    print("  ✓ Governance prognosis (best/worst/median trajectories)")
-    print("  ✓ Complete RPG-14 cycle with all integrations")
+    print("  [OK] Causal graph construction with validation")
+    print("  [OK] Retrocausal inference and root cause analysis")
+    print("  [OK] Causal Responsibility Index (CRI) computation")
+    print("  [OK] Anomaly detection with 7 required outputs")
+    print("  [OK] Governance prognosis (best/worst/median trajectories)")
+    print("  [OK] Complete RPG-14 cycle with all integrations")
 
     print("\n🎯 Key Features:")
     print("  • Deterministic, reproducible outputs")

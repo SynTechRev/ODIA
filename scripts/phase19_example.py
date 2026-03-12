@@ -322,7 +322,7 @@ def example_7_determinism_verification():
         for r in results
     )
 
-    print("\n✓ Determinism Verification:")
+    print("\n[OK] Determinism Verification:")
     print(f"  UIF IDs identical: {all_same_uif}")
     print(f"  Alignment IDs identical: {all_same_alignment}")
     print(f"  Scenario IDs identical: {all_same_scenario}")

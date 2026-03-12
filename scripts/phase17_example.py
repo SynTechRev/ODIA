@@ -65,11 +65,11 @@ def main():
 
     # Create service
     service = Phase17Service()
-    print("✓ Phase17Service initialized")
+    print("[OK] Phase17Service initialized")
 
     # Create mock Phase 16 result
     phase16_result = create_mock_phase16_result()
-    print("✓ Mock Phase 16 result created")
+    print("[OK] Mock Phase 16 result created")
 
     # Run ethical analysis
     print_section("Running Ethical Analysis")
@@ -78,11 +78,11 @@ def main():
         dry_run=True,  # Default: suggestions only, no actions
         auto_apply=False,  # Default: requires manual approval
     )
-    print("✓ Ethical analysis complete")
+    print("[OK] Ethical analysis complete")
 
     # Validate against schema
     validated_result = Phase17Result(**result)
-    print("✓ Result validated against Phase17Result schema")
+    print("[OK] Result validated against Phase17Result schema")
 
     # Display results
     print_section("Ethical Lattice")
@@ -125,7 +125,7 @@ def main():
         for violation in validated_result.governance_invariants.invariant_violations:
             print(f"  - {violation}")
     else:
-        print("\nNo invariant violations ✓")
+        print("\nNo invariant violations [OK]")
 
     print_section("Global Assessment")
     print(f"Global Ethics Score: {validated_result.global_ethics_score:.3f}")
@@ -151,9 +151,9 @@ def main():
         result["ethical_lattice"]["lattice_id"]
         == result2["ethical_lattice"]["lattice_id"]
     ):
-        print("✓ PASS: Determinism verified (same input → same lattice)")
+        print("[OK] PASS: Determinism verified (same input → same lattice)")
     else:
-        print("✗ FAIL: Non-deterministic behavior detected")
+        print("[FAIL] FAIL: Non-deterministic behavior detected")
 
     print_section("Example Complete")
     print("Phase 17 successfully demonstrated recursive ethical cognition.")

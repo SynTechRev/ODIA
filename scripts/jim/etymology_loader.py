@@ -67,23 +67,23 @@ class EtymologyLoader:
         """
         try:
             # Load Latin maxims
-            with open(self.etymology_dir / "latin_maxims.json") as f:
+            with open(self.etymology_dir / "latin_maxims.json", encoding="utf-8") as f:
                 self.latin_maxims = json.load(f)
 
             # Load Greek roots
-            with open(self.etymology_dir / "greek_roots.json") as f:
+            with open(self.etymology_dir / "greek_roots.json", encoding="utf-8") as f:
                 self.greek_roots = json.load(f)
 
             # Load Canon law roots
-            with open(self.etymology_dir / "canon_law_roots.json") as f:
+            with open(self.etymology_dir / "canon_law_roots.json", encoding="utf-8") as f:
                 self.canon_roots = json.load(f)
 
             # Load etymology matrix
-            with open(self.etymology_dir / "ETYMOLOGY_MATRIX.json") as f:
+            with open(self.etymology_dir / "ETYMOLOGY_MATRIX.json", encoding="utf-8") as f:
                 self.etymology_matrix = json.load(f)
 
             # Load index
-            with open(self.etymology_dir / "ETYMOLOGY_INDEX.json") as f:
+            with open(self.etymology_dir / "ETYMOLOGY_INDEX.json", encoding="utf-8") as f:
                 self.index = json.load(f)
 
             self.loaded = True

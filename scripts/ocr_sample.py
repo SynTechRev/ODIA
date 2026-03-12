@@ -316,7 +316,7 @@ Examples:
         with open(extracted_text_path, "w", encoding="utf-8") as f:
             f.write(text)
 
-        print("\n✓ Extraction complete")
+        print("\n[OK] Extraction complete")
         print(f"  Pages processed: {page_count}")
         print(f"  Average confidence: {confidence:.2%}")
         print(f"  Characters extracted: {len(text)}")

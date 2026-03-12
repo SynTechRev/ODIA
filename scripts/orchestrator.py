@@ -62,10 +62,10 @@ def run_module(name: str, func: callable, optional: bool = False) -> bool:
     log_message(f"Running: {name}")
     try:
         func()
-        log_message(f"✓ {name} completed successfully")
+        log_message(f"[OK] {name} completed successfully")
         return True
     except Exception as e:
-        log_message(f"✗ {name} failed: {e}")
+        log_message(f"[FAIL] {name} failed: {e}")
         if optional:
             log_message(f"⚠ {name} is optional, continuing...")
             return True
@@ -103,10 +103,10 @@ def run_script(
         )
 
         if result.returncode == 0:
-            log_message(f"✓ {name} completed successfully")
+            log_message(f"[OK] {name} completed successfully")
             return True
         else:
-            log_message(f"✗ {name} failed with return code {result.returncode}")
+            log_message(f"[FAIL] {name} failed with return code {result.returncode}")
             if result.stderr:
                 log_message(f"Error: {result.stderr}")
             if optional:
@@ -114,7 +114,7 @@ def run_script(
                 return True
             return False
     except Exception as e:
-        log_message(f"✗ {name} failed: {e}")
+        log_message(f"[FAIL] {name} failed: {e}")
         if optional:
             log_message(f"⚠ {name} is optional, continuing...")
             return True
@@ -275,9 +275,9 @@ def main():
     success = run_all_modules()
 
     if success:
-        print("\n✓ Pipeline orchestration completed successfully")
+        print("\n[OK] Pipeline orchestration completed successfully")
     else:
-        print("\n✗ Pipeline orchestration failed")
+        print("\n[FAIL] Pipeline orchestration failed")
         sys.exit(1)
 
 

@@ -77,14 +77,14 @@ def main():
 
     if not vectors_file.exists() or not metadata_file.exists():
         print(
-            f"✗ Vector index not found: {vectors_file} or {metadata_file}",
+            f"[FAIL] Vector index not found: {vectors_file} or {metadata_file}",
             file=sys.stderr,
         )
         print("  Run 'python scripts/ingest_and_index.py' first", file=sys.stderr)
         return 1
 
     if not vocab_path.exists():
-        print(f"✗ Vocabulary file not found: {vocab_path}", file=sys.stderr)
+        print(f"[FAIL] Vocabulary file not found: {vocab_path}", file=sys.stderr)
         print("  Run 'python scripts/ingest_and_index.py' first", file=sys.stderr)
         return 1
 
@@ -93,7 +93,7 @@ def main():
         try:
             from oraculus_di_auditor.rag import OracRAG
         except ImportError:
-            print("✗ RAG module not available", file=sys.stderr)
+            print("[FAIL] RAG module not available", file=sys.stderr)
             return 1
 
         try:
@@ -101,11 +101,11 @@ def main():
             orac_rag.load_index(index_name=index_path.name, vocab_path=str(vocab_path))
             result = orac_rag.query(args.query, top_k=args.top_k)
         except Exception as e:
-            print(f"✗ RAG query failed: {e}", file=sys.stderr)
+            print(f"[FAIL] RAG query failed: {e}", file=sys.stderr)
             return 1
 
         if "error" in result and result["error"]:
-            print(f"✗ Error: {result['error']}", file=sys.stderr)
+            print(f"[FAIL] Error: {result['error']}", file=sys.stderr)
             return 1
 
         # Output RAG result
@@ -134,14 +134,14 @@ def main():
         retriever = Retriever()
         retriever.load(index_path.name)
     except Exception as e:
-        print(f"✗ Failed to load index: {e}", file=sys.stderr)
+        print(f"[FAIL] Failed to load index: {e}", file=sys.stderr)
         return 1
 
     # Embed query
     try:
         query_vector = embedder.embed(args.query)
     except Exception as e:
-        print(f"✗ Failed to embed query: {e}", file=sys.stderr)
+        print(f"[FAIL] Failed to embed query: {e}", file=sys.stderr)
         return 1
 
     # Search

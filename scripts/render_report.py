@@ -15,7 +15,7 @@ import json
 import shutil
 import subprocess
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -164,9 +164,9 @@ class ReportRenderer:
             "report_title": config.get("title", "Audit Report"),
             "author": config.get("author", "Oraculus DI Auditor"),
             "report_id": config.get(
-                "report_id", f"REPORT_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+                "report_id", f"REPORT_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}"
             ),
-            "generation_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            "generation_date": datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC"),
             "executive_summary": config.get(
                 "executive_summary",
                 (
@@ -216,7 +216,7 @@ class ReportRenderer:
                 {
                     "initial_date": "Not specified",
                     "review_start": "Not specified",
-                    "review_end": datetime.utcnow().strftime("%Y-%m-%d"),
+                    "review_end": datetime.now(UTC).strftime("%Y-%m-%d"),
                     "custodians": ["Audit Team"],
                     "integrity_checks": len(manifests),
                 },
@@ -401,7 +401,7 @@ Examples:
     with open(output_path, "w") as f:
         f.write(report_content)
 
-    print(f"✓ Generated Markdown report: {output_path}")
+    print(f"[OK] Generated Markdown report: {output_path}")
 
     # Generate HTML if requested
     if args.html:
@@ -413,7 +413,7 @@ Examples:
         pdf_path = output_path.with_suffix(".pdf")
         renderer.convert_to_pdf(output_path, pdf_path)
 
-    print("\n✓ Report generation complete")
+    print("\n[OK] Report generation complete")
 
 
 if __name__ == "__main__":

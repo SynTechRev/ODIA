@@ -785,7 +785,7 @@ class RepositoryAuditor:
         # Write report
         report_text = "\n".join(report_lines)
         output_path.write_text(report_text, encoding="utf-8")
-        print(f"✓ Audit report generated: {output_path}")
+        print(f"[OK] Audit report generated: {output_path}")
         print(f"  Total findings: {len(self.findings)}")
         print(f"  Global flags: {len(self.global_flags)}")
         print(f"  Recommendations: {len(recommendations)}")

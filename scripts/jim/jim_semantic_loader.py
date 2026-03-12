@@ -554,7 +554,7 @@ def main():
     artifacts = loader.generate_artifacts()
     print(f"Artifacts: {artifacts}")
 
-    print("\n✓ Lexicon processing complete!")
+    print("\n[OK] Lexicon processing complete!")
 
 
 if __name__ == "__main__":

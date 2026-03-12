@@ -86,7 +86,7 @@ def run_command(
         )
 
         if result.returncode == 0:
-            log_message(f"✓ {name} completed successfully")
+            log_message(f"[OK] {name} completed successfully")
             return (
                 True,
                 result.stdout if check_output else "",
@@ -94,7 +94,7 @@ def run_command(
             )
         else:
             log_message(
-                f"✗ {name} failed with return code {result.returncode}", "ERROR"
+                f"[FAIL] {name} failed with return code {result.returncode}", "ERROR"
             )
             if check_output and result.stderr:
                 log_message(f"Error output:\n{result.stderr}", "ERROR")
@@ -105,10 +105,10 @@ def run_command(
             )
 
     except subprocess.TimeoutExpired:
-        log_message(f"✗ {name} timed out after {timeout} seconds", "ERROR")
+        log_message(f"[FAIL] {name} timed out after {timeout} seconds", "ERROR")
         return False, "", f"Command timed out after {timeout} seconds"
     except Exception as e:
-        log_message(f"✗ {name} failed with exception: {e}", "ERROR")
+        log_message(f"[FAIL] {name} failed with exception: {e}", "ERROR")
         return False, "", str(e)
 
 
@@ -116,10 +116,10 @@ def validate_file_exists(path: Path, description: str) -> bool:
     """Validate that a required file exists."""
     if path.exists():
         size = path.stat().st_size
-        log_message(f"✓ {description} exists: {path} ({size} bytes)")
+        log_message(f"[OK] {description} exists: {path} ({size} bytes)")
         return True
     else:
-        log_message(f"✗ {description} missing: {path}", "ERROR")
+        log_message(f"[FAIL] {description} missing: {path}", "ERROR")
         return False
 
 
@@ -149,7 +149,7 @@ def validate_json_file(
 
         # Check file is not empty
         if not data:
-            log_message(f"✗ {description} is empty", "ERROR")
+            log_message(f"[FAIL] {description} is empty", "ERROR")
             return False
 
         # Check required keys
@@ -157,7 +157,7 @@ def validate_json_file(
             missing_keys = [key for key in required_keys if key not in data]
             if missing_keys:
                 log_message(
-                    f"✗ {description} missing required keys: {missing_keys}", "ERROR"
+                    f"[FAIL] {description} missing required keys: {missing_keys}", "ERROR"
                 )
                 return False
 
@@ -167,20 +167,20 @@ def validate_json_file(
                 actual_value = data.get(key, 0)
                 if actual_value < min_value:
                     log_message(
-                        f"✗ {description} validation failed: "
+                        f"[FAIL] {description} validation failed: "
                         f"{key}={actual_value}, expected >= {min_value}",
                         "ERROR",
                     )
                     return False
 
-        log_message(f"✓ {description} validation passed")
+        log_message(f"[OK] {description} validation passed")
         return True
 
     except json.JSONDecodeError as e:
-        log_message(f"✗ {description} is not valid JSON: {e}", "ERROR")
+        log_message(f"[FAIL] {description} is not valid JSON: {e}", "ERROR")
         return False
     except Exception as e:
-        log_message(f"✗ {description} validation error: {e}", "ERROR")
+        log_message(f"[FAIL] {description} validation error: {e}", "ERROR")
         return False
 
 
@@ -200,17 +200,17 @@ def validate_forensic_report() -> bool:
         unique_files = len(data.get("metadata_by_file", {}))
 
         if pdfs_processed == 0:
-            log_message("✗ Forensic report shows 0 PDFs processed", "ERROR")
+            log_message("[FAIL] Forensic report shows 0 PDFs processed", "ERROR")
             return False
 
         log_message(
-            f"✓ Forensic report valid: {pdfs_processed} PDFs processed, "
+            f"[OK] Forensic report valid: {pdfs_processed} PDFs processed, "
             f"{unique_files} unique files, mode: {mode}"
         )
         return True
 
     except Exception as e:
-        log_message(f"✗ Failed to validate forensic report: {e}", "ERROR")
+        log_message(f"[FAIL] Failed to validate forensic report: {e}", "ERROR")
         return False
 
 
@@ -373,7 +373,7 @@ def run_full_audit_pipeline() -> bool:
                         failed_stages.append(f"{stage_name} (validation)")
                         if not is_optional:
                             log_message(
-                                f"✗ CRITICAL VALIDATION FAILED: {stage_name}", "ERROR"
+                                f"[FAIL] CRITICAL VALIDATION FAILED: {stage_name}", "ERROR"
                             )
                             log_message("Pipeline execution aborted", "ERROR")
                             return False
@@ -390,7 +390,7 @@ def run_full_audit_pipeline() -> bool:
         if not success:
             failed_stages.append(stage_name)
             if not is_optional:
-                log_message(f"✗ CRITICAL STAGE FAILED: {stage_name}", "ERROR")
+                log_message(f"[FAIL] CRITICAL STAGE FAILED: {stage_name}", "ERROR")
                 log_message("Pipeline execution aborted", "ERROR")
                 return False
             else:
@@ -404,7 +404,7 @@ def run_full_audit_pipeline() -> bool:
             if not stage["validate"]():
                 failed_stages.append(f"{stage_name} (validation)")
                 if not is_optional:
-                    log_message(f"✗ CRITICAL VALIDATION FAILED: {stage_name}", "ERROR")
+                    log_message(f"[FAIL] CRITICAL VALIDATION FAILED: {stage_name}", "ERROR")
                     log_message("Pipeline execution aborted", "ERROR")
                     return False
                 else:
@@ -426,7 +426,7 @@ def run_full_audit_pipeline() -> bool:
         log_message(f"⚠ Failed optional stages: {', '.join(failed_stages)}", "WARNING")
 
     log_message("=" * 80)
-    log_message("✓ Full audit pipeline completed successfully")
+    log_message("[OK] Full audit pipeline completed successfully")
     log_message("=" * 80)
 
     return True
@@ -455,11 +455,11 @@ def main():
     success = run_full_audit_pipeline()
 
     if success:
-        print("\n✓ Full audit orchestration completed successfully")
+        print("\n[OK] Full audit orchestration completed successfully")
         print(f"Audit report: {_repo_root}/transparency_release/ALL_AUDIT_FULL.txt")
         sys.exit(0)
     else:
-        print("\n✗ Full audit orchestration failed")
+        print("\n[FAIL] Full audit orchestration failed")
         print(f"Check logs: {LOG_FILE}")
         sys.exit(1)
 

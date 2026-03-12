@@ -26,8 +26,8 @@ def example_scalar_recursive_map():
     print_section("Example 1: Scalar Recursive Map (SRM)")
 
     srm = ScalarRecursiveMap()
-    print(f"✓ Initialized SRM version {srm.version}")
-    print(f"✓ Total layers: {len(srm.layers)}")
+    print(f"[OK] Initialized SRM version {srm.version}")
+    print(f"[OK] Total layers: {len(srm.layers)}")
 
     # Show layer information
     print("\nLayer Architecture:")
@@ -53,7 +53,7 @@ def example_scalar_recursive_map():
 
     # Dependency validation
     validation = srm.validate_layer_dependencies()
-    print(f"\n✓ Dependency validation: {validation['is_valid']}")
+    print(f"\n[OK] Dependency validation: {validation['is_valid']}")
     print(f"  - Valid connections: {validation['valid_connections']}")
     print(f"  - Invalid connections: {validation['invalid_connections']}")
 
@@ -65,12 +65,12 @@ def example_coherence_audit():
     print_section("Example 2: Global Coherence Audit")
 
     auditor = CoherenceAuditor()
-    print(f"✓ Initialized Coherence Auditor version {auditor.version}")
+    print(f"[OK] Initialized Coherence Auditor version {auditor.version}")
 
     print("\nRunning full coherence audit...")
     coherence_report = auditor.run_full_audit()
 
-    print("✓ Audit complete!")
+    print("[OK] Audit complete!")
     print("\nSummary:")
     print(f"  - Total issues: {coherence_report['summary']['total_issues']}")
     print(f"  - Coherence score: {coherence_report['summary']['coherence_score']:.3f}")
@@ -99,13 +99,13 @@ def example_integration_plan(srm, coherence_report):
     print_section("Example 3: Integration Plan Generation")
 
     engine = IntegrationEngine()
-    print(f"✓ Initialized Integration Engine version {engine.version}")
+    print(f"[OK] Initialized Integration Engine version {engine.version}")
 
     print("\nGenerating integration plan...")
     srm_report = srm.to_dict()
     integration_plan = engine.generate_integration_plan(srm_report, coherence_report)
 
-    print("✓ Integration plan generated!")
+    print("[OK] Integration plan generated!")
     print("\nSummary:")
     print(f"  - Total tasks: {integration_plan['summary']['total_tasks']}")
     print(
@@ -137,13 +137,13 @@ def example_phase12_service():
     print_section("Example 4: Complete Phase 12 Analysis")
 
     service = Phase12Service()
-    print(f"✓ Initialized Phase 12 Service version {service.version}")
+    print(f"[OK] Initialized Phase 12 Service version {service.version}")
 
     print("\nExecuting complete Phase 12 analysis...")
     print("  (This may take a few seconds...)")
     report = service.execute_phase12_analysis()
 
-    print("\n✓ Phase 12 analysis complete!")
+    print("\n[OK] Phase 12 analysis complete!")
     print(f"  - Status: {report['status']}")
     print(f"  - Mode: {report['mode']}")
     print(f"  - Execution time: {report['execution_time_seconds']:.2f} seconds")
@@ -196,7 +196,7 @@ def save_reports(service):
     print(f"Saving Phase 12 reports to: {output_dir}")
     files = service.save_reports(str(output_dir))
 
-    print("\n✓ Reports saved!")
+    print("\n[OK] Reports saved!")
     for report_name, file_path in files.items():
         file_size = Path(file_path).stat().st_size
         print(f"  - {report_name}: {file_path} ({file_size:,} bytes)")
@@ -214,11 +214,11 @@ def final_summary(report, output_dir):
     print_section("Phase 12 Analysis Complete")
 
     print("📊 Key Findings:")
-    print(f"  ✓ System coherence score: {report['summary']['coherence_score']:.3f}/1.0")
-    print("  ✓ Architecture health: Good")
-    print(f"  ✓ Integration tasks identified: {report['summary']['integration_tasks']}")
+    print(f"  [OK] System coherence score: {report['summary']['coherence_score']:.3f}/1.0")
+    print("  [OK] Architecture health: Good")
+    print(f"  [OK] Integration tasks identified: {report['summary']['integration_tasks']}")
     print(
-        f"  ✓ Estimated integration effort: {report['summary']['estimated_integration_hours']} hours"
+        f"  [OK] Estimated integration effort: {report['summary']['estimated_integration_hours']} hours"
     )
 
     score = report["summary"]["coherence_score"]

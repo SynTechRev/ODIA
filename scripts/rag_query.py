@@ -111,7 +111,7 @@ def main():
     index_path = Path(f"data/vectors/{args.index}_vectors.npy")
     if not index_path.exists():
         print(
-            f"✗ Vector index not found: {index_path}",
+            f"[FAIL] Vector index not found: {index_path}",
             file=sys.stderr,
         )
         print("  Run 'python scripts/ingest_and_index.py' first", file=sys.stderr)
@@ -119,7 +119,7 @@ def main():
 
     vocab_path = Path(args.vocab)
     if not vocab_path.exists():
-        print(f"✗ Vocabulary file not found: {vocab_path}", file=sys.stderr)
+        print(f"[FAIL] Vocabulary file not found: {vocab_path}", file=sys.stderr)
         print("  Run 'python scripts/ingest_and_index.py' first", file=sys.stderr)
         return 1
 
@@ -134,7 +134,7 @@ def main():
         orac_rag = OracRAG(**kwargs)
         orac_rag.load_index(index_name=args.index, vocab_path=str(vocab_path))
     except Exception as e:
-        print(f"✗ Failed to initialize RAG: {e}", file=sys.stderr)
+        print(f"[FAIL] Failed to initialize RAG: {e}", file=sys.stderr)
         return 1
 
     # Override LLM to None for dry-run
@@ -159,12 +159,12 @@ def main():
                 threshold=args.threshold,
             )
     except Exception as e:
-        print(f"✗ Query failed: {e}", file=sys.stderr)
+        print(f"[FAIL] Query failed: {e}", file=sys.stderr)
         return 1
 
     # Handle errors
     if "error" in result and result["error"]:
-        print(f"✗ Error: {result['error']}", file=sys.stderr)
+        print(f"[FAIL] Error: {result['error']}", file=sys.stderr)
         return 1
 
     # Output results
@@ -182,7 +182,7 @@ def main():
             output_path.parent.mkdir(parents=True, exist_ok=True)
             with open(output_path, "w") as f:
                 json.dump(output_data, f, indent=2)
-            print(f"✓ Results written to {output_path}")
+            print(f"[OK] Results written to {output_path}")
         else:
             # Print to stdout
             print(json.dumps(output_data, indent=2))

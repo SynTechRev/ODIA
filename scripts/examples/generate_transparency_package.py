@@ -598,7 +598,7 @@ def ensure_corpus_manifest_hashes():
     )
 
     if updated_count > 0:
-        print(f"  ✓ Updated {updated_count} file hashes in corpus manifest")
+        print(f"  [OK] Updated {updated_count} file hashes in corpus manifest")
 
 
 def write_json_file(path: Path, data: dict):

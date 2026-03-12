@@ -60,12 +60,12 @@ def run_module(name: str, command: list, optional: bool = False) -> bool:
         )
 
         if result.returncode == 0:
-            log_message(f"✓ {name} completed successfully")
+            log_message(f"[OK] {name} completed successfully")
             if result.stdout:
                 log_message(f"Output:\n{result.stdout}")
             return True
         else:
-            log_message(f"✗ {name} failed with return code {result.returncode}")
+            log_message(f"[FAIL] {name} failed with return code {result.returncode}")
             if result.stderr:
                 log_message(f"Error output:\n{result.stderr}")
             if result.stdout:
@@ -77,13 +77,13 @@ def run_module(name: str, command: list, optional: bool = False) -> bool:
             return False
 
     except subprocess.TimeoutExpired:
-        log_message(f"✗ {name} timed out after 5 minutes")
+        log_message(f"[FAIL] {name} timed out after 5 minutes")
         if optional:
             log_message(f"⚠ {name} is optional, continuing...")
             return True
         return False
     except Exception as e:
-        log_message(f"✗ {name} failed with exception: {e}")
+        log_message(f"[FAIL] {name} failed with exception: {e}")
         if optional:
             log_message(f"⚠ {name} is optional, continuing...")
             return True
@@ -93,10 +93,10 @@ def run_module(name: str, command: list, optional: bool = False) -> bool:
 def check_file_exists(path: Path, description: str) -> bool:
     """Check if a required file exists."""
     if path.exists():
-        log_message(f"✓ {description} exists: {path}")
+        log_message(f"[OK] {description} exists: {path}")
         return True
     else:
-        log_message(f"✗ {description} missing: {path}")
+        log_message(f"[FAIL] {description} missing: {path}")
         return False
 
 
@@ -113,7 +113,7 @@ def validate_json_output(path: Path, required_keys: list[str] | None = None) -> 
     import json
 
     if not path.exists():
-        log_message(f"✗ Validation failed: {path} does not exist")
+        log_message(f"[FAIL] Validation failed: {path} does not exist")
         return False
 
     try:
@@ -122,24 +122,24 @@ def validate_json_output(path: Path, required_keys: list[str] | None = None) -> 
 
         # Check file is not empty
         if not data:
-            log_message(f"✗ Validation failed: {path} is empty")
+            log_message(f"[FAIL] Validation failed: {path} is empty")
             return False
 
         # Check required keys if specified
         if required_keys:
             missing_keys = [key for key in required_keys if key not in data]
             if missing_keys:
-                log_message(f"✗ Validation failed: {path} missing keys: {missing_keys}")
+                log_message(f"[FAIL] Validation failed: {path} missing keys: {missing_keys}")
                 return False
 
-        log_message(f"✓ Validation passed: {path}")
+        log_message(f"[OK] Validation passed: {path}")
         return True
 
     except json.JSONDecodeError as e:
-        log_message(f"✗ Validation failed: {path} is not valid JSON: {e}")
+        log_message(f"[FAIL] Validation failed: {path} is not valid JSON: {e}")
         return False
     except Exception as e:
-        log_message(f"✗ Validation failed: {path} error: {e}")
+        log_message(f"[FAIL] Validation failed: {path} error: {e}")
         return False
 
 
@@ -155,7 +155,7 @@ def validate_forensic_report(report_path: Path) -> bool:
     import json
 
     if not report_path.exists():
-        log_message(f"✗ Forensic report missing: {report_path}")
+        log_message(f"[FAIL] Forensic report missing: {report_path}")
         return False
 
     try:
@@ -166,16 +166,16 @@ def validate_forensic_report(report_path: Path) -> bool:
         mode = data.get("mode", "unknown")
 
         if pdfs_processed == 0:
-            log_message("✗ Forensic report shows 0 PDFs processed")
+            log_message("[FAIL] Forensic report shows 0 PDFs processed")
             return False
 
         log_message(
-            f"✓ Forensic report valid: {pdfs_processed} PDFs processed (mode: {mode})"
+            f"[OK] Forensic report valid: {pdfs_processed} PDFs processed (mode: {mode})"
         )
         return True
 
     except Exception as e:
-        log_message(f"✗ Failed to validate forensic report: {e}")
+        log_message(f"[FAIL] Failed to validate forensic report: {e}")
         return False
 
 
@@ -331,7 +331,7 @@ def run_full_pipeline(force_extract=False) -> bool:
         if not success:
             failed_modules.append(module["name"])
             if not module["optional"]:
-                log_message(f"✗ Required module failed: {module['name']}")
+                log_message(f"[FAIL] Required module failed: {module['name']}")
                 log_message("Pipeline execution aborted")
                 return False
 
@@ -339,7 +339,7 @@ def run_full_pipeline(force_extract=False) -> bool:
         for output_file in module.get("output_files", []):
             if not check_file_exists(output_file, f"{module['name']} output"):
                 if not module["optional"]:
-                    log_message(f"✗ Required output missing: {output_file}")
+                    log_message(f"[FAIL] Required output missing: {output_file}")
                     log_message("Pipeline execution aborted")
                     return False
 
@@ -347,7 +347,7 @@ def run_full_pipeline(force_extract=False) -> bool:
             if output_file.name == "forensic_report.json":
                 if not validate_forensic_report(output_file):
                     if not module["optional"]:
-                        log_message("✗ Forensic report validation failed")
+                        log_message("[FAIL] Forensic report validation failed")
                         log_message("Pipeline execution aborted")
                         return False
 
@@ -386,12 +386,12 @@ def main():
     success = run_full_pipeline(force_extract=args.force_extract)
 
     if success:
-        print("\n✓ Pipeline execution completed")
+        print("\n[OK] Pipeline execution completed")
         print(
             "Next step: Run scripts/reconcile_artifacts.py to repair any missing data"
         )
     else:
-        print("\n✗ Pipeline execution failed")
+        print("\n[FAIL] Pipeline execution failed")
         sys.exit(1)
 
 
