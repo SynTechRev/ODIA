@@ -7,7 +7,7 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from oraculus.ingestion.legislative_loader import load_legislation, normalize_document
+from oraculus_di_auditor.document_loader import load_legislation, normalize_document
 
 
 def test_load_legislation_json(tmp_path):

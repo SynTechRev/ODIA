@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 def test_load_legislation_json(tmp_path):
     """Test loading a JSON legislative document."""
-    from oraculus.ingestion.legislative_loader import load_legislation
+    from oraculus_di_auditor.document_loader import load_legislation
 
     # Create a test JSON file
     test_data = {"title": "Test Bill", "content": "Test content"}
@@ -31,7 +31,7 @@ def test_load_legislation_json(tmp_path):
 
 def test_load_legislation_text(tmp_path):
     """Test loading a text legislative document."""
-    from oraculus.ingestion.legislative_loader import load_legislation
+    from oraculus_di_auditor.document_loader import load_legislation
 
     # Create a test text file
     test_content = "This is a test legislative document."
@@ -48,7 +48,7 @@ def test_load_legislation_text(tmp_path):
 
 def test_load_legislation_file_not_found():
     """Test that FileNotFoundError is raised for missing files."""
-    from oraculus.ingestion.legislative_loader import load_legislation
+    from oraculus_di_auditor.document_loader import load_legislation
 
     try:
         load_legislation("/nonexistent/path/file.json")

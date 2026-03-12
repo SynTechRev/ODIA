@@ -7,7 +7,7 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from oraculus.auditing.provenance_tracker import ProvenanceTracker
+from oraculus_di_auditor.provenance import ProvenanceTracker
 
 
 def test_provenance_tracker_initialization():
