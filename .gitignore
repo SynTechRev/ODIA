@@ -25,9 +25,13 @@ wheels/
 # Testing
 .pytest_cache/
 .coverage
+.coverage.*
 coverage.xml
 htmlcov/
 .tox/
+
+# Generated audit artifacts (runtime outputs — not committed)
+AUDIT_REPORT.txt
 
 # IDEs
 .vscode/

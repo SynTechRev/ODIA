@@ -23,7 +23,9 @@ from pathlib import Path
 
 # Add paths for imports
 _script_dir = Path(__file__).parent
-_repo_root = _script_dir.parent  # scripts/ is one level below repo root
+_repo_root = (
+    _script_dir.parent.parent
+)  # scripts/examples/ is two levels below repo root
 sys.path.insert(0, str(_repo_root / "src"))
 sys.path.insert(0, str(_repo_root))
 

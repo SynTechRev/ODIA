@@ -61,10 +61,19 @@ class RepositoryAuditor:
             "*.egg-info",
             ".mypy_cache",
             ".ruff_cache",
+            ".coverage",
+            "htmlcov",
+        }
+
+        # Specific filenames to skip (generated/runtime artifacts)
+        self.skip_filenames = {
+            "AUDIT_REPORT.txt",
         }
 
     def should_skip(self, path: Path) -> bool:
         """Check if path should be skipped."""
+        if path.name in self.skip_filenames:
+            return True
         path_str = str(path)
         for pattern in self.skip_patterns:
             if pattern.replace("*", "") in path_str:
