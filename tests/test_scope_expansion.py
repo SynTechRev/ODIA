@@ -6,7 +6,6 @@ from oraculus_di_auditor.analysis.scope_expansion import (
     detect_scope_expansion_anomalies,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -159,9 +158,7 @@ def test_amendment_with_no_baseline_reference_flagged():
 
 def test_amendment_with_baseline_reference_no_baseline_flag():
     """'Not to exceed' counts as a baseline reference — no baseline finding."""
-    doc = _doc(
-        "Amendment No. 1. Not to exceed $200,000. New value $250,000."
-    )
+    doc = _doc("Amendment No. 1. Not to exceed $200,000. New value $250,000.")
     anomalies = detect_scope_expansion_anomalies(doc)
     assert not any(a["id"] == "scope:amendment-without-baseline" for a in anomalies)
 
@@ -187,18 +184,14 @@ def test_sole_source_with_amendment_flagged():
     )
     anomalies = detect_scope_expansion_anomalies(doc)
     assert any(a["id"] == "scope:sole-source-expansion" for a in anomalies)
-    finding = next(
-        a for a in anomalies if a["id"] == "scope:sole-source-expansion"
-    )
+    finding = next(a for a in anomalies if a["id"] == "scope:sole-source-expansion")
     assert finding["severity"] == "high"
     assert finding["layer"] == "scope"
 
 
 def test_sole_source_hyphenated_form_detected():
     """'sole-source' hyphenated variant is also detected."""
-    doc = _doc(
-        "Modification No. 2. Sole-source award. Approved amount $300,000."
-    )
+    doc = _doc("Modification No. 2. Sole-source award. Approved amount $300,000.")
     assert "scope:sole-source-expansion" in _ids(
         "Modification No. 2. Sole-source award. Approved amount $300,000."
     )
@@ -206,9 +199,7 @@ def test_sole_source_hyphenated_form_detected():
 
 def test_single_source_with_renewal_detected():
     """'single source' + renewal → sole-source-expansion."""
-    doc = _doc(
-        "Contract renewal. Single source procurement. Not to exceed $400,000."
-    )
+    doc = _doc("Contract renewal. Single source procurement. Not to exceed $400,000.")
     assert "scope:sole-source-expansion" in _ids(
         "Contract renewal. Single source procurement. Not to exceed $400,000."
     )
