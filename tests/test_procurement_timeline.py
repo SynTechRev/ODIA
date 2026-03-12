@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from oraculus_di_auditor.analysis.procurement_timeline import (
     detect_procurement_timeline_anomalies,
 )
@@ -15,7 +13,9 @@ from oraculus_di_auditor.analysis.procurement_timeline import (
 _VIOLATION_ID = "procurement:execution-precedes-authorization"
 
 
-def _make_doc(execution_date, authorization_date, doc_id="contract-001", title="Test Contract"):
+def _make_doc(
+    execution_date, authorization_date, doc_id="contract-001", title="Test Contract"
+):
     return {
         "document_id": doc_id,
         "title": title,
@@ -81,7 +81,9 @@ def test_violation_layer_is_procurement():
 
 
 def test_violation_details_contain_expected_fields():
-    docs = [_make_doc("2024-01-15", "2024-03-15", doc_id="c-99", title="Bridge Contract")]
+    docs = [
+        _make_doc("2024-01-15", "2024-03-15", doc_id="c-99", title="Bridge Contract")
+    ]
     anomalies = detect_procurement_timeline_anomalies(docs)
     details = anomalies[0]["details"]
     assert details["document_id"] == "c-99"
@@ -175,7 +177,11 @@ def test_non_list_input_returns_empty():
 
 
 def test_fallback_to_id_field_when_document_id_missing():
-    doc = {"id": "alt-id", "execution_date": "2024-01-01", "authorization_date": "2024-02-01"}
+    doc = {
+        "id": "alt-id",
+        "execution_date": "2024-01-01",
+        "authorization_date": "2024-02-01",
+    }
     anomalies = detect_procurement_timeline_anomalies([doc])
     assert anomalies[0]["details"]["document_id"] == "alt-id"
 
