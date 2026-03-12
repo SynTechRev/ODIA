@@ -71,7 +71,9 @@ def example_causal_graph():
 
     # Validate graph
     validation = graph.validate_graph()
-    print(f"\n[OK] Graph validation: {'PASSED' if validation['is_valid'] else 'FAILED'}")
+    print(
+        f"\n[OK] Graph validation: {'PASSED' if validation['is_valid'] else 'FAILED'}"
+    )
     print(f"  - Issues: {validation['issue_count']}")
     print(f"  - Warnings: {validation['warning_count']}")
 

@@ -129,7 +129,9 @@ def validate_json_output(path: Path, required_keys: list[str] | None = None) -> 
         if required_keys:
             missing_keys = [key for key in required_keys if key not in data]
             if missing_keys:
-                log_message(f"[FAIL] Validation failed: {path} missing keys: {missing_keys}")
+                log_message(
+                    f"[FAIL] Validation failed: {path} missing keys: {missing_keys}"
+                )
                 return False
 
         log_message(f"[OK] Validation passed: {path}")

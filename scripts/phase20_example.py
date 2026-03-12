@@ -332,7 +332,9 @@ def main():
         print(f"   {status} {name}: {'MATCH' if matches else 'MISMATCH'}")
 
     print()
-    print(f"   Overall Determinism: {'[OK] VERIFIED' if all_match else '[FAIL] FAILED'}")
+    print(
+        f"   Overall Determinism: {'[OK] VERIFIED' if all_match else '[FAIL] FAILED'}"
+    )
     print()
 
     # Display Reversibility Protocol

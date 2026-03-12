@@ -183,7 +183,9 @@ def main():
     for hist_id, status in structure_results.items():
         if status["exists"] and not status["missing_subdirs"]:
             structure_pass += 1
-            print(f"  [OK] {hist_id}: All {len(REQUIRED_SUBDIRS)} subdirectories present")
+            print(
+                f"  [OK] {hist_id}: All {len(REQUIRED_SUBDIRS)} subdirectories present"
+            )
         elif status["exists"]:
             structure_fail += 1
             print(f"  ⚠ {hist_id}: Missing subdirectories: {status['missing_subdirs']}")

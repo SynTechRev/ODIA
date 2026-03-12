@@ -158,9 +158,15 @@ def validate_corpus_structure(corpus_root: Path) -> dict[str, Any]:
         Dictionary with validation results for each HIST directory
     """
     results = {}
-    ids_to_check = list(HIST_FILES.keys()) if HIST_FILES else [
-        p.name for p in corpus_root.iterdir() if p.is_dir()
-    ] if corpus_root.exists() else []
+    ids_to_check = (
+        list(HIST_FILES.keys())
+        if HIST_FILES
+        else (
+            [p.name for p in corpus_root.iterdir() if p.is_dir()]
+            if corpus_root.exists()
+            else []
+        )
+    )
     for hist_id in ids_to_check:
         hist_path = corpus_root / hist_id
         validation = {
@@ -576,9 +582,15 @@ def verify_hash_consistency(corpus_root: Path) -> dict[str, Any]:
         "pdfs_without_metadata": [],
     }
 
-    ids_to_check = list(HIST_FILES.keys()) if HIST_FILES else [
-        p.name for p in corpus_root.iterdir() if p.is_dir()
-    ] if corpus_root.exists() else []
+    ids_to_check = (
+        list(HIST_FILES.keys())
+        if HIST_FILES
+        else (
+            [p.name for p in corpus_root.iterdir() if p.is_dir()]
+            if corpus_root.exists()
+            else []
+        )
+    )
     for hist_id in ids_to_check:
         corpus_path = corpus_root / hist_id
         if not corpus_path.exists():

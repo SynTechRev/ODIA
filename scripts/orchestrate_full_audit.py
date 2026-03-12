@@ -157,7 +157,8 @@ def validate_json_file(
             missing_keys = [key for key in required_keys if key not in data]
             if missing_keys:
                 log_message(
-                    f"[FAIL] {description} missing required keys: {missing_keys}", "ERROR"
+                    f"[FAIL] {description} missing required keys: {missing_keys}",
+                    "ERROR",
                 )
                 return False
 
@@ -373,7 +374,8 @@ def run_full_audit_pipeline() -> bool:
                         failed_stages.append(f"{stage_name} (validation)")
                         if not is_optional:
                             log_message(
-                                f"[FAIL] CRITICAL VALIDATION FAILED: {stage_name}", "ERROR"
+                                f"[FAIL] CRITICAL VALIDATION FAILED: {stage_name}",
+                                "ERROR",
                             )
                             log_message("Pipeline execution aborted", "ERROR")
                             return False
@@ -404,7 +406,9 @@ def run_full_audit_pipeline() -> bool:
             if not stage["validate"]():
                 failed_stages.append(f"{stage_name} (validation)")
                 if not is_optional:
-                    log_message(f"[FAIL] CRITICAL VALIDATION FAILED: {stage_name}", "ERROR")
+                    log_message(
+                        f"[FAIL] CRITICAL VALIDATION FAILED: {stage_name}", "ERROR"
+                    )
                     log_message("Pipeline execution aborted", "ERROR")
                     return False
                 else:

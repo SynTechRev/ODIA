@@ -75,15 +75,21 @@ class EtymologyLoader:
                 self.greek_roots = json.load(f)
 
             # Load Canon law roots
-            with open(self.etymology_dir / "canon_law_roots.json", encoding="utf-8") as f:
+            with open(
+                self.etymology_dir / "canon_law_roots.json", encoding="utf-8"
+            ) as f:
                 self.canon_roots = json.load(f)
 
             # Load etymology matrix
-            with open(self.etymology_dir / "ETYMOLOGY_MATRIX.json", encoding="utf-8") as f:
+            with open(
+                self.etymology_dir / "ETYMOLOGY_MATRIX.json", encoding="utf-8"
+            ) as f:
                 self.etymology_matrix = json.load(f)
 
             # Load index
-            with open(self.etymology_dir / "ETYMOLOGY_INDEX.json", encoding="utf-8") as f:
+            with open(
+                self.etymology_dir / "ETYMOLOGY_INDEX.json", encoding="utf-8"
+            ) as f:
                 self.index = json.load(f)
 
             self.loaded = True

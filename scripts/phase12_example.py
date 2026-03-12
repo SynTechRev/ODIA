@@ -214,9 +214,13 @@ def final_summary(report, output_dir):
     print_section("Phase 12 Analysis Complete")
 
     print("📊 Key Findings:")
-    print(f"  [OK] System coherence score: {report['summary']['coherence_score']:.3f}/1.0")
+    print(
+        f"  [OK] System coherence score: {report['summary']['coherence_score']:.3f}/1.0"
+    )
     print("  [OK] Architecture health: Good")
-    print(f"  [OK] Integration tasks identified: {report['summary']['integration_tasks']}")
+    print(
+        f"  [OK] Integration tasks identified: {report['summary']['integration_tasks']}"
+    )
     print(
         f"  [OK] Estimated integration effort: {report['summary']['estimated_integration_hours']} hours"
     )
