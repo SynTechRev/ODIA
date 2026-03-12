@@ -1,0 +1,239 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Audit Document Manifest",
+  "description": "Schema for validating per-document audit manifest fields",
+  "type": "object",
+  "required": [
+    "document_id",
+    "source",
+    "original_path",
+    "ingest_date",
+    "uploader",
+    "checksum_sha256"
+  ],
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "description": "Unique identifier for the document",
+      "pattern": "^[A-Z0-9_-]+$"
+    },
+    "source": {
+      "type": "string",
+      "description": "Origin or source system of the document"
+    },
+    "original_path": {
+      "type": "string",
+      "description": "Original file path (may be external to repository)"
+    },
+    "ingest_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of document ingestion"
+    },
+    "uploader": {
+      "type": "string",
+      "description": "Name or identifier of the person who uploaded the document"
+    },
+    "checksum_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$",
+          "description": "SHA-256 checksum in hexadecimal format"
+        },
+        {
+          "type": "string",
+          "enum": ["FILE_NOT_FOUND", "ERROR_CALCULATING_CHECKSUM"],
+          "description": "Error indicator when checksum cannot be calculated"
+        }
+      ],
+      "description": "SHA-256 checksum of the original document or error indicator"
+    },
+    "extraction": {
+      "type": "object",
+      "description": "Text extraction metadata",
+      "properties": {
+        "text_present": {
+          "type": "boolean",
+          "description": "Whether text was successfully extracted"
+        },
+        "ocr_used": {
+          "type": "boolean",
+          "description": "Whether OCR was required for text extraction"
+        },
+        "extraction_confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Confidence score of text extraction (0-1)"
+        },
+        "ocr_engine": {
+          "type": "string",
+          "description": "Name of OCR engine used (e.g., tesseract, textract)"
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of pages in the document"
+        },
+        "extracted_text_path": {
+          "type": "string",
+          "description": "Path to extracted text file (typically in extraction/ directory)"
+        }
+      },
+      "required": ["text_present"]
+    },
+    "forensics": {
+      "type": "object",
+      "description": "Document forensics metadata",
+      "properties": {
+        "file_size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "modified_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "pdf_version": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "string"
+        }
+      }
+    },
+    "flags": {
+      "type": "array",
+      "description": "Audit flags and findings",
+      "items": {
+        "type": "object",
+        "required": ["flag_id", "message", "severity", "timestamp", "author"],
+        "properties": {
+          "flag_id": {
+            "type": "string",
+            "description": "Unique identifier for this flag"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the audit finding"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Severity level of the finding"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of finding (e.g., doj_certification, irb_check, infrastructure)"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the flag was added"
+          },
+          "author": {
+            "type": "string",
+            "description": "Who added this flag"
+          }
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "description": "Legal citations or references within the document",
+      "items": {
+        "type": "object",
+        "properties": {
+          "citation": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "context": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "description": "Audit notes and observations",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "author", "note"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "redaction_status": {
+      "type": "object",
+      "description": "Redaction and PII handling status",
+      "properties": {
+        "requires_redaction": {
+          "type": "boolean",
+          "description": "Whether document requires redaction"
+        },
+        "redaction_complete": {
+          "type": "boolean",
+          "description": "Whether redaction has been completed"
+        },
+        "pii_detected": {
+          "type": "boolean",
+          "description": "Whether PII was detected in the document"
+        },
+        "redacted_version_path": {
+          "type": "string",
+          "description": "Path to redacted version if available"
+        }
+      }
+    },
+    "chain_of_custody": {
+      "type": "array",
+      "description": "Chain of custody log",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "actor", "action"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor": {
+            "type": "string",
+            "description": "Person or system performing the action"
+          },
+          "action": {
+            "type": "string",
+            "description": "Action performed (e.g., upload, review, flag, extract)"
+          },
+          "details": {
+            "type": "string",
+            "description": "Additional details about the action"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "case_id": "rakas_v_illinois_1978",
+  "name": "Rakas v. Illinois",
+  "citation": "439 U.S. 128 (1978)",
+  "year": 1978,
+  "doctrine": "fourth_amendment",
+  "summary": "Fourth Amendment rights are personal; legitimate expectation of privacy required for standing to challenge search; mere presence in searched area insufficient.",
+  "holding": "Fourth Amendment protects people, not places; person seeking to exclude evidence must have legitimate expectation of privacy in area searched.",
+  "issue_tags": [
+    "fourth_amendment",
+    "standing",
+    "expectation_of_privacy",
+    "search_and_seizure",
+    "personal_rights",
+    "legitimate_expectation"
+  ],
+  "doctrinal_weight": 0.83,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes privacy interest requirements; relevant to determining who has standing to challenge surveillance or data collection programs.",
+  "procedural_posture": "State criminal conviction affirmed",
+  "relevance_score": 0.80
+}

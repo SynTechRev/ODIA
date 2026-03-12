@@ -1,0 +1,23 @@
+{
+  "case_id": "florida_v_jardines_2013",
+  "name": "Florida v. Jardines",
+  "citation": "569 U.S. 1 (2013)",
+  "year": 2013,
+  "doctrine": "fourth_amendment",
+  "summary": "Use of drug-sniffing dog on homeowner's porch to investigate contents of home is search within meaning of Fourth Amendment; curtilage of home receives Fourth Amendment protection.",
+  "holding": "Law enforcement use of trained police dog to explore curtilage of home to investigate contents constitutes search; government trespass on constitutionally protected area to gather information is Fourth Amendment search.",
+  "issue_tags": [
+    "fourth_amendment",
+    "curtilage",
+    "home_privacy",
+    "drug_dog",
+    "trespass_doctrine",
+    "search_definition",
+    "physical_intrusion"
+  ],
+  "doctrinal_weight": 0.87,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes strong protection for home curtilage; relevant to analyzing government inspections, physical intrusions, and surveillance at private residences or business premises.",
+  "procedural_posture": "State conviction reversed",
+  "relevance_score": 0.84
+}

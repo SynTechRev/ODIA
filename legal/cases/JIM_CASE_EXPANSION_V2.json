@@ -1,0 +1,236 @@
+{
+  "version": "2.0.0",
+  "expansion_name": "Case Law Expansion Pack v2 (CLEP-v2)",
+  "release_date": "2025-12-06",
+  "description": "Major expansion of JIM case law database with 115 new Supreme Court cases covering constitutional core (1A-14A), economic governance, surveillance, civil rights, and administrative law spanning 1803-2024",
+  "baseline_stats": {
+    "baseline_cases": 44,
+    "baseline_doctrines": 10,
+    "baseline_temporal_range": "1789-2024"
+  },
+  "expansion_stats": {
+    "new_cases_added": 115,
+    "total_cases_now": 159,
+    "new_doctrines_added": 6,
+    "total_doctrines_now": 16,
+    "expanded_temporal_range": "1803-2024",
+    "cases_by_era": {
+      "founding_era_1776_1850": 4,
+      "reconstruction_1851_1900": 6,
+      "progressive_era_1901_1945": 11,
+      "civil_rights_1946_1980": 22,
+      "modern_era_1981_2010": 53,
+      "contemporary_2011_2025": 19
+    }
+  },
+  "new_doctrines": [
+    {
+      "name": "constitutional_structure",
+      "cases_count": 2,
+      "key_cases": [
+        "barron_v_baltimore_1833",
+        "rucho_v_common_cause_2019"
+      ]
+    },
+    {
+      "name": "economic_regulation",
+      "cases_count": 1,
+      "key_cases": [
+        "nebbia_v_new_york_1934"
+      ]
+    },
+    {
+      "name": "eighth_amendment",
+      "cases_count": 5,
+      "key_cases": [
+        "timbs_v_indiana_2019",
+        "austin_v_united_states_1993",
+        "miller_v_alabama_2012",
+        "roper_v_simmons_2005",
+        "atkins_v_virginia_2002"
+      ]
+    },
+    {
+      "name": "federal_power",
+      "cases_count": 10,
+      "key_cases": [
+        "mcculloch_v_maryland_1819",
+        "knox_v_lee_1871",
+        "gibbons_v_ogden_1824",
+        "wickard_v_filburn_1942",
+        "heart_of_atlanta_1964"
+      ]
+    },
+    {
+      "name": "first_amendment",
+      "cases_count": 13,
+      "key_cases": [
+        "gitlow_v_new_york_1925",
+        "near_v_minnesota_1931",
+        "west_virginia_v_barnette_1943",
+        "shuttlesworth_v_birmingham_1969",
+        "tinker_v_des_moines_1969"
+      ]
+    },
+    {
+      "name": "second_amendment",
+      "cases_count": 2,
+      "key_cases": [
+        "heller_v_dc_2008",
+        "mcdonald_v_chicago_2010"
+      ]
+    }
+  ],
+  "expanded_doctrines": [
+    {
+      "name": "due_process",
+      "new_cases_count": 17,
+      "new_cases_list": [
+        "hurtado_v_california_1884",
+        "gideon_v_wainwright_1963",
+        "brady_v_maryland_1963",
+        "napue_v_illinois_1959",
+        "mooney_v_holohan_1935",
+        "lawrence_v_texas_2003",
+        "griswold_v_connecticut_1965",
+        "roe_v_wade_1973",
+        "dobbs_v_jackson_2022",
+        "obergefell_v_hodges_2015",
+        "boumediene_v_bush_2008",
+        "rochin_v_california_1952",
+        "county_of_sacramento_v_lewis_1998",
+        "deshaney_v_winnebago_1989",
+        "town_of_castle_rock_v_gonzales_2005",
+        "sandin_v_conner_1995",
+        "bolling_v_sharpe_1954"
+      ]
+    },
+    {
+      "name": "equal_protection",
+      "new_cases_count": 25,
+      "new_cases_list": [
+        "brown_v_board_1954",
+        "loving_v_virginia_1967",
+        "shelby_county_v_holder_2013",
+        "us_v_carolene_products_1938",
+        "plessy_v_ferguson_1896",
+        "strauder_v_west_virginia_1880",
+        "batson_v_kentucky_1986",
+        "yick_wo_v_hopkins_1886",
+        "city_of_cleburne_v_cleburne_1985",
+        "romer_v_evans_1996",
+        "united_states_v_windsor_2013",
+        "regents_v_bakke_1978",
+        "fisher_v_texas_2016",
+        "students_for_fair_admissions_v_harvard_2023",
+        "grutter_v_bollinger_2003",
+        "korematsu_v_united_states_1944",
+        "hirabayashi_v_united_states_1943",
+        "plyler_v_doe_1982",
+        "frontiero_v_richardson_1973",
+        "craig_v_boren_1976",
+        "united_states_v_virginia_1996",
+        "bush_v_gore_2000",
+        "bush_v_vera_1996",
+        "shaw_v_reno_1993",
+        "shelley_v_kraemer_1948"
+      ]
+    },
+    {
+      "name": "fourth_amendment",
+      "new_cases_count": 20,
+      "new_cases_list": [
+        "mapp_v_ohio_1961",
+        "katz_v_united_states_1967",
+        "united_states_v_leon_1984",
+        "carpenter_v_united_states_2018",
+        "us_v_warshak_2010",
+        "delaware_v_prouse_1979",
+        "whren_v_united_states_1996",
+        "rodriguez_v_united_states_2015",
+        "atwater_v_lago_vista_2001",
+        "kyllo_v_united_states_2001",
+        "florida_v_riley_1989",
+        "california_v_ciraolo_1986",
+        "maryland_v_king_2013",
+        "safford_v_redding_2009",
+        "new_jersey_v_tlo_1985",
+        "board_of_education_v_earls_2002",
+        "vernonia_v_acton_1995",
+        "city_of_indianapolis_v_edmond_2000",
+        "illinois_v_caballes_2005",
+        "florence_v_board_2012"
+      ]
+    },
+    {
+      "name": "free_movement",
+      "new_cases_count": 1,
+      "new_cases_list": [
+        "crandall_v_nevada_1868"
+      ]
+    },
+    {
+      "name": "non_delegation",
+      "new_cases_count": 1,
+      "new_cases_list": [
+        "hampton_v_united_states_1928"
+      ]
+    },
+    {
+      "name": "property_rights",
+      "new_cases_count": 9,
+      "new_cases_list": [
+        "louisville_bank_v_radford_1935",
+        "penn_central_v_new_york_1978",
+        "lucas_v_south_carolina_1992",
+        "kelo_v_city_of_new_london_2005",
+        "koontz_v_st_johns_river_2013",
+        "nollan_v_california_1987",
+        "dolan_v_tigard_1994",
+        "loretto_v_teleprompter_1982",
+        "horne_v_usda_2015"
+      ]
+    },
+    {
+      "name": "separation_of_powers",
+      "new_cases_count": 9,
+      "new_cases_list": [
+        "marbury_v_madison_1803",
+        "printz_v_united_states_1997",
+        "new_york_v_united_states_1992",
+        "ins_v_chadha_1983",
+        "clinton_v_new_york_1998",
+        "bowsher_v_synar_1986",
+        "morrison_v_olson_1988",
+        "seila_law_v_cfpb_2020",
+        "arizona_v_united_states_2012"
+      ]
+    }
+  ],
+  "constitutional_coverage": {
+    "first_amendment": 14,
+    "second_amendment": 2,
+    "fourth_amendment": 20,
+    "fifth_amendment": 2,
+    "sixth_amendment": 5,
+    "eighth_amendment": 5,
+    "fourteenth_amendment": 42
+  },
+  "thematic_coverage": {
+    "surveillance_and_digital_privacy": 2,
+    "police_authority_and_use_of_force": 3,
+    "civil_rights_and_discrimination": 15,
+    "economic_liberty_and_property": 5,
+    "federal_vs_state_power": 14,
+    "administrative_law_and_delegation": 1,
+    "criminal_procedure_and_evidence": 5
+  },
+  "validation": {
+    "schema_validated": true,
+    "all_cases_have_required_fields": true,
+    "doctrinal_weights_valid": true,
+    "temporal_consistency": true,
+    "cross_reference_integrity": true,
+    "no_duplicate_case_ids": true
+  }
+}

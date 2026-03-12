@@ -1,0 +1,20 @@
+{
+  "id": "ca_civil_code_1950_5",
+  "title": "Ca Civil Code 1950 5",
+  "jurisdiction": "unknown",
+  "source": "data/sources/ca_civil_code_1950_5.txt",
+  "source_url": null,
+  "version_date": null,
+  "ingest_timestamp": "2025-11-13T06:51:13.491553+00:00",
+  "checksum": "222b8807c2b7b905bd3550335722a5d3956966a95818127977a930a1460da928",
+  "citations": [],
+  "metadata": {
+    "processor_version": "0.1.0",
+    "transformations": [
+      "ingest",
+      "normalize"
+    ],
+    "original_format": ".txt"
+  },
+  "text": "California Civil Code § 1950.5 - Security Deposits\n\n(a) This section applies to security for a rental agreement for residential property that is used as the dwelling of the tenant.\n\n(b) As used in this section, \"security\" means any payment, fee, deposit or charge, including, but not limited to, any payment, fee, deposit, or charge, except as provided in Section 1950.6, that is imposed at the beginning of the tenancy to be used to reimburse the landlord for costs associated with processing a new tenant or that is imposed as an advance payment of rent, used or to be used for any purpose, including, but not limited to, any of the following:\n\n(1) The compensation of a landlord for a tenant's default in the payment of rent.\n\n(2) The repair of damages to the premises, exclusive of ordinary wear and tear, caused by the tenant or by a guest or licensee of the tenant.\n\n(3) The cleaning of the premises upon termination of the tenancy necessary to return the unit to the same level of cleanliness it was in at the inception of the tenancy.\n\n(c) Any security shall be held by the landlord for the tenant who is party to the lease or agreement. The claim of a tenant to the security shall be prior to the claim of any creditor of the landlord.\n\nJurisdiction: California\nCategory: Civil Code\nEffective: January 1, 2019\n"
+}

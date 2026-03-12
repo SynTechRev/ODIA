@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-12-07T00:00:00Z",
+  "synonym_graph": {
+    "node_count": 0,
+    "edges": {}
+  },
+  "antonym_graph": {
+    "node_count": 0,
+    "edges": {}
+  },
+  "etymology_graph": {
+    "node_count": 0,
+    "nodes": {}
+  },
+  "doctrine_graph": {
+    "node_count": 0,
+    "edges": {}
+  },
+  "concept_clusters": {
+    "cluster_count": 0,
+    "clusters": []
+  },
+  "cycles": {
+    "etymology_cycles": []
+  },
+  "metadata": {
+    "description": "CDSCE Semiotic Graph Index - Placeholder file to be populated by CDSCE graph builder",
+    "last_updated": "2025-12-07",
+    "status": "initialized"
+  }
+}

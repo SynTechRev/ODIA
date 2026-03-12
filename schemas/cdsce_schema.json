@@ -1,0 +1,271 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/SynTechRev/Oraculus-DI-Auditor/schemas/cdsce_schema.json",
+  "title": "CDSCE Schema",
+  "description": "Schema for Cross-Dictionary Semiotic Correlation Engine (CDSCE-v1) data structures",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["version", "schema_version", "generated", "total_terms", "terms"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "CDSCE version number"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version"
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when corpus was generated"
+    },
+    "total_terms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of terms in corpus"
+    },
+    "terms": {
+      "type": "object",
+      "description": "Dictionary of term correlations",
+      "patternProperties": {
+        "^[a-z_]+$": {
+          "type": "object",
+          "required": ["term", "canonical", "dictionary_sources", "correlation_strength", "timestamp"],
+          "properties": {
+            "term": {
+              "type": "string",
+              "description": "Original term"
+            },
+            "canonical": {
+              "type": "string",
+              "description": "Canonical form of term"
+            },
+            "dictionary_sources": {
+              "type": "array",
+              "description": "Dictionary source definitions",
+              "items": {
+                "type": "object",
+                "required": ["source", "definition"],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "description": "Source dictionary name"
+                  },
+                  "definition": {
+                    "type": "string",
+                    "description": "Term definition from this source"
+                  },
+                  "year": {
+                    "type": "integer",
+                    "description": "Year of dictionary edition"
+                  },
+                  "citation": {
+                    "type": "string",
+                    "description": "Citation reference"
+                  }
+                }
+              }
+            },
+            "etymology_lineage": {
+              "type": "array",
+              "description": "Etymological lineage information",
+              "items": {
+                "type": "object",
+                "required": ["language", "meaning"],
+                "properties": {
+                  "language": {
+                    "type": "string",
+                    "enum": ["latin", "greek", "canon_law", "common_law", "statutory", "colloquial"],
+                    "description": "Language of origin"
+                  },
+                  "root": {
+                    "type": "string",
+                    "description": "Root word or phrase"
+                  },
+                  "meaning": {
+                    "type": "string",
+                    "description": "Original meaning"
+                  },
+                  "era": {
+                    "type": "string",
+                    "description": "Historical era"
+                  }
+                }
+              }
+            },
+            "doctrinal_mappings": {
+              "type": "array",
+              "description": "Legal doctrine mappings",
+              "items": {
+                "type": "object",
+                "required": ["doctrine"],
+                "properties": {
+                  "doctrine": {
+                    "type": "string",
+                    "description": "Legal doctrine name"
+                  },
+                  "related_cases": {
+                    "type": "array",
+                    "description": "Related case law",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "case_id": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "year": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "era_definitions": {
+              "type": "object",
+              "description": "Era-specific definitions",
+              "patternProperties": {
+                "^\\d{4}$": {
+                  "type": "object",
+                  "properties": {
+                    "definition": {
+                      "type": "string",
+                      "description": "Definition for this era"
+                    },
+                    "era_name": {
+                      "type": "string",
+                      "description": "Name of the era"
+                    }
+                  }
+                }
+              }
+            },
+            "framework_context": {
+              "type": "array",
+              "description": "Constitutional framework context",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "framework": {
+                    "type": "string",
+                    "description": "Framework identifier"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Framework name"
+                  },
+                  "era": {
+                    "type": "string",
+                    "description": "Framework era"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "JIM weight"
+                  }
+                }
+              }
+            },
+            "semantic_drift": {
+              "type": "object",
+              "description": "Semantic drift analysis",
+              "properties": {
+                "overall_drift_score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Overall drift score (0.0 = no drift, 1.0 = full inversion)"
+                },
+                "linguistic_lineage": {
+                  "type": "string",
+                  "description": "Linguistic lineage classification"
+                },
+                "drift_category": {
+                  "type": "string",
+                  "enum": ["minimal", "low", "moderate", "high", "severe"],
+                  "description": "Drift severity category"
+                },
+                "has_drift_spike": {
+                  "type": "boolean",
+                  "description": "Whether drift spike detected"
+                },
+                "spike_count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Number of drift spikes"
+                }
+              }
+            },
+            "contradictions": {
+              "type": "array",
+              "description": "Detected contradictions",
+              "items": {
+                "type": "object",
+                "required": ["conflict_type", "sources_involved", "severity"],
+                "properties": {
+                  "conflict_type": {
+                    "type": "string",
+                    "enum": [
+                      "lexical",
+                      "doctrinal",
+                      "interpretive",
+                      "temporal",
+                      "constitutional_framework",
+                      "etymological"
+                    ],
+                    "description": "Type of contradiction"
+                  },
+                  "sources_involved": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Sources involved in contradiction"
+                  },
+                  "severity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Contradiction severity score"
+                  },
+                  "details": {
+                    "type": "object",
+                    "description": "Additional contradiction details"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "description": "Human-readable notes"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Detection timestamp"
+                  }
+                }
+              }
+            },
+            "correlation_strength": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Overall correlation strength score"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Correlation timestamp"
+            }
+          }
+        }
+      }
+    }
+  }
+}

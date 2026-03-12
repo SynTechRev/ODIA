@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LegalDocument",
+  "description": "Canonical schema for normalized legal documents in Oraculus DI Auditor",
+  "type": "object",
+  "required": ["id", "title", "jurisdiction", "source", "ingest_timestamp", "text"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the document"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title or name of the legal document"
+    },
+    "jurisdiction": {
+      "type": "string",
+      "description": "Legal jurisdiction (e.g., 'federal', 'california', 'unknown')"
+    },
+    "source": {
+      "type": "string",
+      "description": "Original source path or identifier"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "URL of the original source document"
+    },
+    "version_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the document version (YYYY-MM-DD)"
+    },
+    "ingest_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when document was ingested (ISO 8601)"
+    },
+    "checksum": {
+      "type": "string",
+      "description": "SHA-256 hash of the document text for provenance"
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of legal citations referenced in the document"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata (processor version, transformations, etc.)"
+    },
+    "text": {
+      "type": "string",
+      "description": "Full text content of the document"
+    }
+  }
+}

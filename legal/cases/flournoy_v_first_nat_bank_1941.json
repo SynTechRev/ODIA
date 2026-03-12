@@ -1,0 +1,22 @@
+{
+  "case_id": "flournoy_v_first_nat_bank_1941",
+  "name": "Flournoy v. First Nat. Bank of Shreveport",
+  "citation": "197 La. 1067 (La. 1941)",
+  "year": 1941,
+  "doctrine": "property_rights",
+  "summary": "Louisiana Supreme Court decision addressing property interests, banking regulations, and liberty interests in commercial transactions.",
+  "holding": "Property rights and liberty interests in commercial relationships protected; government restrictions must have rational basis and not arbitrarily interfere with contractual freedom.",
+  "issue_tags": [
+    "property_rights",
+    "liberty_interests",
+    "contractual_freedom",
+    "banking_regulation",
+    "due_process",
+    "substantive_due_process"
+  ],
+  "doctrinal_weight": 0.68,
+  "constitutional_basis": "Fourteenth Amendment Due Process, Contract Clause",
+  "relevance_to_audit": "Relevant to analysis of government interference with property rights and commercial relationships; applicable to vendor contract restrictions and regulatory burdens.",
+  "procedural_posture": "State appellate decision",
+  "relevance_score": 0.70
+}

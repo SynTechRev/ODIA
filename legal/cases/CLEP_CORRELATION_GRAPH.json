@@ -1,0 +1,380 @@
+{
+  "version": "1.0.0",
+  "description": "CLEP-v1 doctrine-case correlation graph for visualization",
+  "generated_at": "2025-12-06T17:00:00Z",
+  "graph_type": "bipartite",
+  "nodes": {
+    "doctrines": [
+      {
+        "id": "due_process",
+        "name": "Due Process",
+        "type": "doctrine",
+        "weight": 0.95,
+        "cases_count": 7
+      },
+      {
+        "id": "fourth_amendment",
+        "name": "Fourth Amendment",
+        "type": "doctrine",
+        "weight": 0.95,
+        "cases_count": 15
+      },
+      {
+        "id": "non_delegation",
+        "name": "Non-Delegation",
+        "type": "doctrine",
+        "weight": 0.9,
+        "cases_count": 5
+      },
+      {
+        "id": "separation_of_powers",
+        "name": "Separation of Powers",
+        "type": "doctrine",
+        "weight": 0.92,
+        "cases_count": 3
+      },
+      {
+        "id": "administrative_law",
+        "name": "Administrative Law",
+        "type": "doctrine",
+        "weight": 0.9,
+        "cases_count": 8
+      },
+      {
+        "id": "equal_protection",
+        "name": "Equal Protection",
+        "type": "doctrine",
+        "weight": 0.85,
+        "cases_count": 2
+      },
+      {
+        "id": "unconstitutional_conditions",
+        "name": "Unconstitutional Conditions",
+        "type": "doctrine",
+        "weight": 0.8,
+        "cases_count": 1
+      },
+      {
+        "id": "constitutional_torts",
+        "name": "Constitutional Torts",
+        "type": "doctrine",
+        "weight": 0.82,
+        "cases_count": 1,
+        "new_in_clep": true
+      },
+      {
+        "id": "property_rights",
+        "name": "Property Rights",
+        "type": "doctrine",
+        "weight": 0.78,
+        "cases_count": 1,
+        "new_in_clep": true
+      },
+      {
+        "id": "free_movement",
+        "name": "Free Movement",
+        "type": "doctrine",
+        "weight": 0.84,
+        "cases_count": 2,
+        "new_in_clep": true
+      }
+    ],
+    "cases": [
+      {
+        "id": "coffin_v_united_states_1895",
+        "name": "Coffin v. United States",
+        "year": 1895,
+        "type": "case",
+        "doctrine": "due_process",
+        "new_in_clep": true
+      },
+      {
+        "id": "silverthorne_lumber_v_united_states_1920",
+        "name": "Silverthorne Lumber v. US",
+        "year": 1920,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "nardone_v_united_states_1939",
+        "name": "Nardone v. United States",
+        "year": 1939,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "flournoy_v_first_nat_bank_1941",
+        "name": "Flournoy v. First Nat. Bank",
+        "year": 1941,
+        "type": "case",
+        "doctrine": "property_rights",
+        "new_in_clep": true
+      },
+      {
+        "id": "johnson_v_united_states_1948",
+        "name": "Johnson v. United States",
+        "year": 1948,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "wong_sun_v_united_states_1963",
+        "name": "Wong Sun v. United States",
+        "year": 1963,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "terry_v_ohio_1968",
+        "name": "Terry v. Ohio",
+        "year": 1968,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "shapiro_v_thompson_1969",
+        "name": "Shapiro v. Thompson",
+        "year": 1969,
+        "type": "case",
+        "doctrine": "free_movement",
+        "new_in_clep": true
+      },
+      {
+        "id": "rakas_v_illinois_1978",
+        "name": "Rakas v. Illinois",
+        "year": 1978,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "brown_v_texas_1979",
+        "name": "Brown v. Texas",
+        "year": 1979,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "illinois_v_gates_1983",
+        "name": "Illinois v. Gates",
+        "year": 1983,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "james_v_kentucky_1984",
+        "name": "James v. Kentucky",
+        "year": 1984,
+        "type": "case",
+        "doctrine": "due_process",
+        "new_in_clep": true
+      },
+      {
+        "id": "tennessee_v_garner_1985",
+        "name": "Tennessee v. Garner",
+        "year": 1985,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "moya_v_united_states_1985",
+        "name": "Moya v. United States",
+        "year": 1985,
+        "type": "case",
+        "doctrine": "due_process",
+        "new_in_clep": true
+      },
+      {
+        "id": "graham_v_connor_1989",
+        "name": "Graham v. Connor",
+        "year": 1989,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "sanders_v_english_1992",
+        "name": "Sanders v. English",
+        "year": 1992,
+        "type": "case",
+        "doctrine": "constitutional_torts",
+        "new_in_clep": true
+      },
+      {
+        "id": "saenz_v_roe_1999",
+        "name": "Saenz v. Roe",
+        "year": 1999,
+        "type": "case",
+        "doctrine": "free_movement",
+        "new_in_clep": true
+      },
+      {
+        "id": "florida_v_jardines_2013",
+        "name": "Florida v. Jardines",
+        "year": 2013,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "riley_v_california_2014",
+        "name": "Riley v. California",
+        "year": 2014,
+        "type": "case",
+        "doctrine": "fourth_amendment",
+        "new_in_clep": true
+      },
+      {
+        "id": "trump_v_united_states_2024",
+        "name": "Trump v. United States",
+        "year": 2024,
+        "type": "case",
+        "doctrine": "separation_of_powers",
+        "new_in_clep": true
+      }
+    ]
+  },
+  "edges": [
+    {
+      "source": "fourth_amendment",
+      "target": "silverthorne_lumber_v_united_states_1920",
+      "relation": "establishes",
+      "label": "fruit of poisonous tree"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "nardone_v_united_states_1939",
+      "relation": "establishes",
+      "label": "derivative evidence exclusion"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "johnson_v_united_states_1948",
+      "relation": "requires",
+      "label": "neutral magistrate"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "wong_sun_v_united_states_1963",
+      "relation": "establishes",
+      "label": "attenuation doctrine"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "terry_v_ohio_1968",
+      "relation": "establishes",
+      "label": "reasonable suspicion standard"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "rakas_v_illinois_1978",
+      "relation": "requires",
+      "label": "legitimate expectation of privacy"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "brown_v_texas_1979",
+      "relation": "requires",
+      "label": "reasonable suspicion for stops"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "illinois_v_gates_1983",
+      "relation": "establishes",
+      "label": "totality of circumstances"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "tennessee_v_garner_1985",
+      "relation": "limits",
+      "label": "deadly force"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "graham_v_connor_1989",
+      "relation": "establishes",
+      "label": "objective reasonableness"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "florida_v_jardines_2013",
+      "relation": "protects",
+      "label": "curtilage privacy"
+    },
+    {
+      "source": "fourth_amendment",
+      "target": "riley_v_california_2014",
+      "relation": "requires",
+      "label": "warrant for digital searches"
+    },
+    {
+      "source": "due_process",
+      "target": "coffin_v_united_states_1895",
+      "relation": "establishes",
+      "label": "presumption of innocence"
+    },
+    {
+      "source": "due_process",
+      "target": "james_v_kentucky_1984",
+      "relation": "requires",
+      "label": "proper jury instructions"
+    },
+    {
+      "source": "due_process",
+      "target": "moya_v_united_states_1985",
+      "relation": "requires",
+      "label": "confrontation rights"
+    },
+    {
+      "source": "separation_of_powers",
+      "target": "trump_v_united_states_2024",
+      "relation": "establishes",
+      "label": "presidential immunity framework"
+    },
+    {
+      "source": "free_movement",
+      "target": "shapiro_v_thompson_1969",
+      "relation": "protects",
+      "label": "interstate travel"
+    },
+    {
+      "source": "free_movement",
+      "target": "saenz_v_roe_1999",
+      "relation": "protects",
+      "label": "equal treatment of newcomers"
+    },
+    {
+      "source": "constitutional_torts",
+      "target": "sanders_v_english_1992",
+      "relation": "establishes",
+      "label": "qualified immunity standards"
+    },
+    {
+      "source": "property_rights",
+      "target": "flournoy_v_first_nat_bank_1941",
+      "relation": "protects",
+      "label": "contractual freedom"
+    }
+  ],
+  "clep_v1_highlights": {
+    "total_new_cases": 20,
+    "total_new_edges": 20,
+    "most_expanded_doctrine": "fourth_amendment",
+    "temporal_span": "1895-2024",
+    "key_themes": [
+      "digital_privacy",
+      "evidence_integrity",
+      "use_of_force",
+      "freedom_of_movement",
+      "official_accountability"
+    ]
+  }
+}

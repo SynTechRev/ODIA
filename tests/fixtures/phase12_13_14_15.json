@@ -1,0 +1,20 @@
+{
+  "system_state": {
+    "components": {
+      "compA": {"version": "1.0.0"},
+      "compB": {"version": "1.2.0"}
+    },
+    "dependencies": {
+      "compA": ["compB"],
+      "compB": []
+    }
+  },
+  "phase12_harmonics": { "0": 1.0, "1": 0.9, "2": 1.1 },
+  "phase13_probabilities": { "compA": 0.92, "compB": 0.85 },
+  "phase14_outputs": {
+    "causal_graph": { "nodes": ["compA", "compB"], "edges": [["compA", "compB"]] },
+    "cri_rankings": { "compA": 0.8, "compB": 0.75 },
+    "anomaly_report": []
+  },
+  "run_options": { "auto_apply": false, "dry_run": true, "time_depth": 6, "debug": false }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "total_files",
+    "extraction_success_rate"
+  ],
+  "properties": {
+    "total_files": {
+      "type": "number"
+    },
+    "extraction_success_rate": {
+      "type": "number"
+    },
+    "corpora_processed": {
+      "type": "number"
+    },
+    "pdfs_scanned": {
+      "type": "number"
+    },
+    "flagged_irregularities": {
+      "type": "array"
+    }
+  }
+}

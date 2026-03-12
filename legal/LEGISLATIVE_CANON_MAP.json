@@ -1,0 +1,319 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2025-12-06T14:33:00Z",
+  "description": "Legislative interpretation framework mapping audit anomalies to constitutional canons",
+  "audit_source_mappings": {
+    "ACE": {
+      "description": "Anomaly Correlation Engine - Legislative metadata and chronological analysis",
+      "anomaly_types": {
+        "metadata_break": {
+          "interpretive_canons": ["constitutional_avoidance", "clear_statement_rule"],
+          "doctrines": ["due_process", "administrative_law"],
+          "risk_factors": [
+            "Inadequate legislative record",
+            "Missing procedural safeguards",
+            "Deficient notice requirements"
+          ],
+          "statutory_alignment_issues": [
+            "Inconsistent with Administrative Procedure Act",
+            "Potential due process violations"
+          ]
+        },
+        "chronological_drift": {
+          "interpretive_canons": ["rule_of_lenity"],
+          "doctrines": ["administrative_law"],
+          "risk_factors": [
+            "Ambiguous effective dates",
+            "Retroactive application concerns"
+          ],
+          "statutory_alignment_issues": [
+            "Temporal scope unclear",
+            "Potential retroactivity issues"
+          ]
+        },
+        "cross_year_irregularity": {
+          "interpretive_canons": ["constitutional_avoidance"],
+          "doctrines": ["administrative_law"],
+          "risk_factors": [
+            "Legislative continuity broken",
+            "Multi-year program integrity"
+          ],
+          "statutory_alignment_issues": [
+            "Appropriations continuity",
+            "Authorization gaps"
+          ]
+        }
+      }
+    },
+    "VICFM": {
+      "description": "Vendor Influence Contract Flow Map - Procurement and contracting patterns",
+      "anomaly_types": {
+        "sole_source_procurement": {
+          "interpretive_canons": ["clear_statement_rule", "equal_protection_scrutiny"],
+          "doctrines": ["due_process", "equal_protection"],
+          "risk_factors": [
+            "Competitive bidding bypass",
+            "Arbitrary vendor selection",
+            "Equal protection concerns"
+          ],
+          "statutory_alignment_issues": [
+            "Inconsistent with procurement statutes",
+            "Potential favoritism",
+            "Lack of competitive process"
+          ]
+        },
+        "cost_escalation": {
+          "interpretive_canons": ["substantive_due_process"],
+          "doctrines": ["administrative_law"],
+          "risk_factors": [
+            "Inadequate cost justification",
+            "Fiscal accountability gaps"
+          ],
+          "statutory_alignment_issues": [
+            "Appropriations Act compliance",
+            "Anti-deficiency concerns"
+          ]
+        },
+        "vendor_concentration": {
+          "interpretive_canons": ["clear_statement_rule"],
+          "doctrines": ["administrative_law", "equal_protection"],
+          "risk_factors": [
+            "Market concentration",
+            "Dependency on single vendor",
+            "Competitive disadvantage"
+          ],
+          "statutory_alignment_issues": [
+            "Anti-trust implications",
+            "Fair competition requirements"
+          ]
+        }
+      }
+    },
+    "CAIM": {
+      "description": "Cross-Agency Influence Map - Inter-agency coordination and jurisdiction",
+      "anomaly_types": {
+        "agency_coordination_gap": {
+          "interpretive_canons": ["major_questions_doctrine", "clear_statement_rule"],
+          "doctrines": ["separation_of_powers", "administrative_law"],
+          "risk_factors": [
+            "Unclear statutory authority",
+            "Jurisdictional overlap",
+            "Coordination failure"
+          ],
+          "statutory_alignment_issues": [
+            "Organic Act boundaries unclear",
+            "Delegation without coordination mandate"
+          ]
+        },
+        "cross_agency_conflict": {
+          "interpretive_canons": ["clear_statement_rule", "federalism_clear_statement"],
+          "doctrines": ["separation_of_powers"],
+          "risk_factors": [
+            "Conflicting statutory mandates",
+            "Turf battles",
+            "Policy inconsistency"
+          ],
+          "statutory_alignment_issues": [
+            "Overlapping jurisdiction",
+            "Conflicting delegations"
+          ]
+        },
+        "delegation_without_authority": {
+          "interpretive_canons": ["major_questions_doctrine", "non_delegation"],
+          "doctrines": ["non_delegation", "separation_of_powers"],
+          "risk_factors": [
+            "Lacks intelligible principle",
+            "Exceeds statutory grant",
+            "No clear authorization"
+          ],
+          "statutory_alignment_issues": [
+            "Ultra vires action",
+            "Exceeds delegated authority",
+            "Non-delegation doctrine violation"
+          ]
+        }
+      }
+    },
+    "PDF_FORENSICS": {
+      "description": "PDF Metadata Mining and forensic analysis",
+      "anomaly_types": {
+        "timestamp_conflict": {
+          "interpretive_canons": ["best_evidence_rule", "authentication_standard"],
+          "doctrines": ["administrative_law"],
+          "risk_factors": [
+            "Documentary authenticity questioned",
+            "Chain of custody broken",
+            "Evidentiary reliability"
+          ],
+          "statutory_alignment_issues": [
+            "Federal Rules of Evidence compliance",
+            "Administrative record integrity"
+          ]
+        },
+        "producer_mismatch": {
+          "interpretive_canons": ["authentication_standard"],
+          "doctrines": ["administrative_law"],
+          "risk_factors": [
+            "Document origin unclear",
+            "Fabrication risk",
+            "Provenance gap"
+          ],
+          "statutory_alignment_issues": [
+            "Administrative record completeness",
+            "Document authenticity requirements"
+          ]
+        },
+        "forensic_anomaly": {
+          "interpretive_canons": ["best_evidence_rule"],
+          "doctrines": ["administrative_law"],
+          "risk_factors": [
+            "Digital manipulation suspected",
+            "Metadata tampering",
+            "Evidentiary exclusion risk"
+          ],
+          "statutory_alignment_issues": [
+            "Federal Rules of Evidence §§ 1001-1008",
+            "Admissibility concerns"
+          ]
+        }
+      }
+    }
+  },
+  "interpretive_canon_definitions": {
+    "rule_of_lenity": {
+      "name": "Rule of Lenity",
+      "description": "Ambiguous penal or regulatory statutes construed in favor of regulated party",
+      "application": "Apply when statute imposes penalties and ambiguity persists",
+      "constitutional_basis": "Due Process Clause (fair notice)",
+      "weight": 0.85
+    },
+    "major_questions_doctrine": {
+      "name": "Major Questions Doctrine",
+      "description": "Agency must have clear congressional authorization for decisions of vast economic/political significance",
+      "application": "Transformative regulatory actions, novel assertions of authority, vast economic impact",
+      "constitutional_basis": "Article I (non-delegation), separation of powers",
+      "weight": 0.95,
+      "key_case": "West Virginia v. EPA (2022)"
+    },
+    "clear_statement_rule": {
+      "name": "Clear Statement Rule",
+      "description": "Congress must clearly state intent when affecting fundamental rights, federalism, or extraterritoriality",
+      "application": "Fundamental rights, federal-state balance, retroactive laws",
+      "constitutional_basis": "Various constitutional provisions",
+      "weight": 0.90,
+      "key_case": "Kent v. Dulles (1958)"
+    },
+    "constitutional_avoidance": {
+      "name": "Constitutional Avoidance Canon",
+      "description": "Interpret statutes to avoid serious constitutional questions",
+      "application": "Choose interpretation that avoids constitutional doubt",
+      "constitutional_basis": "Judicial restraint, constitutional supremacy",
+      "weight": 0.88
+    },
+    "non_delegation": {
+      "name": "Non-Delegation Canon",
+      "description": "Statutes construed to contain intelligible principle guiding agency discretion",
+      "application": "Broad delegations require limiting construction",
+      "constitutional_basis": "Article I, Section 1 (vesting clause)",
+      "weight": 0.90,
+      "key_cases": ["Schechter Poultry (1935)", "Gundy v. US (2019)"]
+    },
+    "substantive_due_process": {
+      "name": "Substantive Due Process Protection",
+      "description": "Statutes affecting fundamental rights receive heightened scrutiny",
+      "application": "Liberty, property, fundamental rights",
+      "constitutional_basis": "Fifth/Fourteenth Amendment Due Process",
+      "weight": 0.92
+    },
+    "equal_protection_scrutiny": {
+      "name": "Equal Protection Canon",
+      "description": "Statutes creating classifications must have rational basis (or meet higher scrutiny)",
+      "application": "Discriminatory effect, classification, disparate treatment",
+      "constitutional_basis": "Fourteenth Amendment Equal Protection",
+      "weight": 0.88
+    },
+    "federalism_clear_statement": {
+      "name": "Federalism Clear Statement Rule",
+      "description": "Federal law does not intrude on state sovereignty absent clear statement",
+      "application": "Federal-state boundary questions",
+      "constitutional_basis": "Tenth Amendment, federalism",
+      "weight": 0.85
+    },
+    "best_evidence_rule": {
+      "name": "Best Evidence Rule (Evidentiary Canon)",
+      "description": "Original document preferred over secondary evidence",
+      "application": "Document authenticity, evidentiary reliability",
+      "constitutional_basis": "Federal Rules of Evidence Rule 1002",
+      "weight": 0.80
+    },
+    "authentication_standard": {
+      "name": "Authentication Standard (Evidentiary Canon)",
+      "description": "Evidence must be authenticated before admission",
+      "application": "Chain of custody, document origin, digital evidence",
+      "constitutional_basis": "Federal Rules of Evidence Rule 901",
+      "weight": 0.82
+    }
+  },
+  "statutory_alignment_principles": {
+    "administrative_procedure_act": {
+      "citation": "5 U.S.C. §§ 551-559, 701-706",
+      "key_requirements": [
+        "Notice and comment rulemaking",
+        "Reasoned decision-making",
+        "Arbitrary and capricious review standard",
+        "Substantial evidence standard for formal proceedings"
+      ],
+      "relevant_audit_sources": ["ACE", "CAIM"]
+    },
+    "appropriations_act_compliance": {
+      "citation": "31 U.S.C. § 1301 et seq.",
+      "key_requirements": [
+        "Purpose, time, and amount restrictions",
+        "Anti-deficiency prohibitions",
+        "Fiscal year limitations"
+      ],
+      "relevant_audit_sources": ["ACE", "VICFM"]
+    },
+    "procurement_integrity": {
+      "citation": "41 U.S.C. §§ 1901-1909",
+      "key_requirements": [
+        "Competitive procedures",
+        "Fair opportunity to compete",
+        "Conflicts of interest prohibited",
+        "Transparency requirements"
+      ],
+      "relevant_audit_sources": ["VICFM"]
+    },
+    "federal_records_act": {
+      "citation": "44 U.S.C. Chapter 31",
+      "key_requirements": [
+        "Records preservation",
+        "Authenticity maintenance",
+        "Public access provisions",
+        "FOIA compliance"
+      ],
+      "relevant_audit_sources": ["PDF_FORENSICS"]
+    }
+  },
+  "risk_scoring_integration": {
+    "description": "How legislative canons integrate with JIM risk scoring",
+    "canon_weight_factors": {
+      "major_questions_applicable": {
+        "score_multiplier": 1.3,
+        "rationale": "Major questions doctrine signals heightened constitutional concern"
+      },
+      "clear_statement_violated": {
+        "score_multiplier": 1.2,
+        "rationale": "Affects fundamental rights or federalism"
+      },
+      "non_delegation_issue": {
+        "score_multiplier": 1.25,
+        "rationale": "Core separation of powers concern"
+      },
+      "evidentiary_deficiency": {
+        "score_multiplier": 1.1,
+        "rationale": "Undermines administrative record"
+      }
+    }
+  }
+}

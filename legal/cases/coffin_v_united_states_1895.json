@@ -1,0 +1,21 @@
+{
+  "case_id": "coffin_v_united_states_1895",
+  "name": "Coffin v. United States",
+  "citation": "156 U.S. 432 (1895)",
+  "year": 1895,
+  "doctrine": "due_process",
+  "summary": "Established presumption of innocence as fundamental principle of American criminal law; burden of proof rests on prosecution to prove guilt beyond reasonable doubt.",
+  "holding": "Presumption of innocence is not mere rule of evidence but fundamental principle of criminal justice; prosecution bears burden of proving guilt beyond reasonable doubt.",
+  "issue_tags": [
+    "presumption_of_innocence",
+    "burden_of_proof",
+    "criminal_procedure",
+    "due_process",
+    "beyond_reasonable_doubt"
+  ],
+  "doctrinal_weight": 0.92,
+  "constitutional_basis": "Fifth Amendment Due Process Clause",
+  "relevance_to_audit": "Establishes foundation for burden of proof in administrative enforcement actions; relevant to presumptions in regulatory proceedings and evidentiary standards.",
+  "procedural_posture": "Criminal conviction appealed to Supreme Court",
+  "relevance_score": 0.88
+}

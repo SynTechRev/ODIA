@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+  - repo: local
+    hooks:
+      - id: placeholder-scan
+        name: Placeholder Scan
+        entry: python scripts/placeholder_scan.py
+        language: system
+        pass_filenames: false
+      - id: clf-schema-validation
+        name: CLF Schema Validation
+        entry: python scripts/validate_clf_schema.py
+        language: system
+        pass_filenames: false
+        files: ^constitutional/CONSTITUTIONAL_LINGUISTIC_FRAMEWORKS\.json$
+      - id: cdsce-schema-validation
+        name: CDSCE Schema Validation
+        entry: python scripts/validate_cdsce_schema.py
+        language: system
+        pass_filenames: false
+        files: ^legal/semiotics/SEMIOTIC_CORPUS\.json$
+      - id: artifact-schema-validation
+        name: Artifact Schema Validation
+        entry: python scripts/validate_schemas.py --no-fail
+        language: system
+        pass_filenames: false
+
+

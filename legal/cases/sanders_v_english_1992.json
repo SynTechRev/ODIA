@@ -1,0 +1,22 @@
+{
+  "case_id": "sanders_v_english_1992",
+  "name": "Sanders v. English",
+  "citation": "950 F.2d 1036 (5th Cir. 1992)",
+  "year": 1992,
+  "doctrine": "constitutional_torts",
+  "summary": "Federal appellate decision addressing qualified immunity standards and constitutional tort liability for government officials.",
+  "holding": "Officials entitled to qualified immunity unless conduct violates clearly established constitutional rights that reasonable person would have known; addresses intentional tort liability.",
+  "issue_tags": [
+    "qualified_immunity",
+    "constitutional_torts",
+    "official_liability",
+    "clearly_established_law",
+    "intentional_torts",
+    "section_1983"
+  ],
+  "doctrinal_weight": 0.75,
+  "constitutional_basis": "42 U.S.C. § 1983, Fourth Amendment, Due Process",
+  "relevance_to_audit": "Addresses liability standards for government misconduct; relevant to assessing accountability for administrative overreach and violations of constitutional rights.",
+  "procedural_posture": "Federal civil rights appeal",
+  "relevance_score": 0.77
+}

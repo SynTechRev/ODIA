@@ -1,0 +1,21 @@
+{
+  "case_id": "moya_v_united_states_1985",
+  "name": "Moya v. United States",
+  "citation": "761 F.2d 322 (7th Cir. 1985)",
+  "year": 1985,
+  "doctrine": "due_process",
+  "summary": "Federal appellate decision addressing procedural due process requirements in criminal proceedings and evidence presentation standards.",
+  "holding": "Due process requires adequate opportunity to challenge evidence and confront witnesses; procedural safeguards must be meaningful, not merely formal.",
+  "issue_tags": [
+    "procedural_due_process",
+    "confrontation_clause",
+    "evidentiary_standards",
+    "criminal_procedure",
+    "meaningful_hearing"
+  ],
+  "doctrinal_weight": 0.72,
+  "constitutional_basis": "Fifth Amendment Due Process, Sixth Amendment Confrontation Clause",
+  "relevance_to_audit": "Addresses evidentiary adequacy and confrontation rights; relevant to administrative proceedings requiring testimony and documentary evidence.",
+  "procedural_posture": "Federal criminal appeal",
+  "relevance_score": 0.75
+}

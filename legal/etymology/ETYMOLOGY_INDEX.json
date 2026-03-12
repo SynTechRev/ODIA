@@ -1,0 +1,112 @@
+{
+  "index": "etymology_index",
+  "version": "1.0.0",
+  "schema_version": "1.0",
+  "description": "Master index of all etymology sources with cross-references",
+  "generated_date": "2025-12-07",
+  "sources": {
+    "latin_maxims": {
+      "file": "legal/etymology/latin_maxims.json",
+      "total_entries": 100,
+      "description": "Latin legal maxims with translations, concepts, doctrines, eras, and usage"
+    },
+    "greek_roots": {
+      "file": "legal/etymology/greek_roots.json",
+      "total_entries": 130,
+      "description": "Greek philosophical and legal roots with meanings, concept families, influences"
+    },
+    "canon_law_roots": {
+      "file": "legal/etymology/canon_law_roots.json",
+      "total_entries": 75,
+      "description": "Canon law roots with categories, sources, influences on secular law"
+    },
+    "etymology_matrix": {
+      "file": "legal/etymology/ETYMOLOGY_MATRIX.json",
+      "total_entries": 50,
+      "description": "Harmonized etymology matrix with semantic lineage and drift scores"
+    }
+  },
+  "total_entries": 305,
+  "cross_references": {
+    "justice": [
+      "dike",
+      "dikaiosyne",
+      "iustitia",
+      "ius"
+    ],
+    "law": [
+      "nomos",
+      "lex",
+      "ius"
+    ],
+    "liberty": [
+      "eleutheria",
+      "libertas",
+      "liberum arbitrium"
+    ],
+    "equity": [
+      "epieikeia",
+      "aequitas",
+      "aequitas canonica"
+    ],
+    "consent": [
+      "synkatathesis",
+      "consensus"
+    ],
+    "natural_law": [
+      "ius naturale",
+      "physis",
+      "lex aeterna"
+    ],
+    "due_process": [
+      "audi alteram partem"
+    ],
+    "precedent": [
+      "stare decisis",
+      "res judicata"
+    ],
+    "sovereignty": [
+      "parens patriae",
+      "kratos",
+      "plenitudo potestatis"
+    ],
+    "human_dignity": [
+      "dignitas humana",
+      "imago Dei"
+    ]
+  },
+  "doctrine_mappings": {
+    "natural_law": [
+      "ius naturale",
+      "physis",
+      "logos",
+      "lex aeterna"
+    ],
+    "due_process": [
+      "audi alteram partem",
+      "nemo judex in causa sua"
+    ],
+    "equity": [
+      "epieikeia",
+      "aequitas canonica"
+    ],
+    "common_law": [
+      "stare decisis",
+      "lex non scripta"
+    ],
+    "criminal_law": [
+      "actus reus",
+      "mens rea",
+      "nullum crimen sine lege"
+    ],
+    "contract_law": [
+      "consensus facit legem",
+      "pacta sunt servanda"
+    ],
+    "constitutional_law": [
+      "sovereignty",
+      "parens patriae",
+      "ius gentium"
+    ]
+  }
+}

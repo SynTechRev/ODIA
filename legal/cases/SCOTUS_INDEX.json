@@ -1,0 +1,3073 @@
+{
+  "version": "2.0.0",
+  "generated_at": "2025-12-06T17:41:24.411494+00:00",
+  "description": "Supreme Court constitutional doctrine index for Judicial Interpretive Matrix (JIM) - CLEP-v2 Enhanced",
+  "metadata": {
+    "total_cases": 159,
+    "doctrinal_categories": [
+      "administrative_law",
+      "constitutional_structure",
+      "constitutional_torts",
+      "due_process",
+      "economic_regulation",
+      "eighth_amendment",
+      "equal_protection",
+      "federal_power",
+      "first_amendment",
+      "fourth_amendment",
+      "free_movement",
+      "non_delegation",
+      "property_rights",
+      "second_amendment",
+      "separation_of_powers",
+      "unconstitutional_conditions"
+    ],
+    "temporal_range": "1803-2024",
+    "clep_v2": {
+      "baseline_cases": 44,
+      "new_cases_added": 115,
+      "total_cases": 159,
+      "baseline_doctrines": [
+        "administrative_law",
+        "constitutional_torts",
+        "due_process",
+        "equal_protection",
+        "fourth_amendment",
+        "free_movement",
+        "non_delegation",
+        "property_rights",
+        "separation_of_powers",
+        "unconstitutional_conditions"
+      ],
+      "new_doctrines_added": [
+        "constitutional_structure",
+        "economic_regulation",
+        "eighth_amendment",
+        "federal_power",
+        "first_amendment",
+        "second_amendment"
+      ],
+      "total_doctrines": [
+        "administrative_law",
+        "constitutional_structure",
+        "constitutional_torts",
+        "due_process",
+        "economic_regulation",
+        "eighth_amendment",
+        "equal_protection",
+        "federal_power",
+        "first_amendment",
+        "fourth_amendment",
+        "free_movement",
+        "non_delegation",
+        "property_rights",
+        "second_amendment",
+        "separation_of_powers",
+        "unconstitutional_conditions"
+      ],
+      "expansion_date": "2025-12-06T17:41:24.411518+00:00"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "mathews_v_eldridge_1976",
+      "name": "Mathews v. Eldridge",
+      "citation": "424 U.S. 319 (1976)",
+      "year": 1976,
+      "doctrine": "due_process",
+      "summary": "Established three-factor balancing test for procedural due process: (1) private interest affected, (2) risk of erroneous deprivation and value of additional safeguards, (3) government interest including fiscal/administrative burdens.",
+      "holding": "Due process does not invariably require adversarial hearing before termination of disability benefits; informal procedures may suffice depending on balancing test.",
+      "issue_tags": [
+        "procedural_due_process",
+        "administrative_hearing",
+        "benefit_termination",
+        "balancing_test"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fifth Amendment Due Process Clause",
+      "relevance_to_audit": "Applies to administrative actions affecting individual rights; relevant to agency decision-making procedures and notice requirements."
+    },
+    {
+      "case_id": "goldberg_v_kelly_1970",
+      "name": "Goldberg v. Kelly",
+      "citation": "397 U.S. 254 (1970)",
+      "year": 1970,
+      "doctrine": "due_process",
+      "summary": "Welfare benefits are property interests protected by procedural due process; termination requires pre-termination evidentiary hearing.",
+      "holding": "Due process requires adversarial hearing before termination of welfare benefits; post-termination hearing insufficient.",
+      "issue_tags": [
+        "procedural_due_process",
+        "welfare_benefits",
+        "property_interest",
+        "evidentiary_hearing"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourteenth Amendment Due Process Clause",
+      "relevance_to_audit": "Establishes property interest in government benefits; relevant to benefit termination procedures and notice requirements."
+    },
+    {
+      "case_id": "hamdi_v_rumsfeld_2004",
+      "name": "Hamdi v. Rumsfeld",
+      "citation": "542 U.S. 507 (2004)",
+      "year": 2004,
+      "doctrine": "due_process",
+      "summary": "U.S. citizen detained as enemy combatant entitled to meaningful opportunity to contest factual basis for detention.",
+      "holding": "Due process demands citizen held in United States as enemy combatant be given meaningful opportunity to contest factual basis for detention before neutral decisionmaker.",
+      "issue_tags": [
+        "procedural_due_process",
+        "detention",
+        "enemy_combatant",
+        "factual_hearing"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fifth Amendment Due Process Clause",
+      "relevance_to_audit": "Establishes minimum procedural safeguards for deprivation of liberty; relevant to administrative detention and enforcement actions."
+    },
+    {
+      "case_id": "perry_v_sindermann_1972",
+      "name": "Perry v. Sindermann",
+      "citation": "408 U.S. 593 (1972)",
+      "year": 1972,
+      "doctrine": "unconstitutional_conditions",
+      "summary": "Government cannot condition benefits on surrender of constitutional rights.",
+      "holding": "Government may not deny benefit to person on basis that infringes constitutionally protected interests, especially freedom of speech.",
+      "issue_tags": [
+        "unconstitutional_conditions",
+        "first_amendment",
+        "employment",
+        "academic_freedom"
+      ],
+      "doctrinal_weight": 0.8,
+      "constitutional_basis": "First Amendment, Fourteenth Amendment Due Process",
+      "relevance_to_audit": "Relevant to conditions imposed on government contracts, benefits, or regulatory compliance."
+    },
+    {
+      "case_id": "youngstown_v_sawyer_1952",
+      "name": "Youngstown Sheet & Tube Co. v. Sawyer",
+      "citation": "343 U.S. 579 (1952)",
+      "year": 1952,
+      "doctrine": "separation_of_powers",
+      "summary": "Presidential power must stem from act of Congress or Constitution itself; executive cannot act contrary to congressional will.",
+      "holding": "President lacks inherent authority to seize private property absent express constitutional or statutory authorization.",
+      "issue_tags": [
+        "separation_of_powers",
+        "executive_power",
+        "congressional_authorization",
+        "emergency_powers"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Article I, Article II, Article III",
+      "relevance_to_audit": "Defines limits of executive agency authority; relevant to administrative actions without clear statutory authorization."
+    },
+    {
+      "case_id": "mistretta_v_us_1989",
+      "name": "Mistretta v. United States",
+      "citation": "488 U.S. 361 (1989)",
+      "year": 1989,
+      "doctrine": "separation_of_powers",
+      "summary": "Sentencing Commission's promulgation of binding sentencing guidelines does not violate separation of powers.",
+      "holding": "Congress may delegate rulemaking authority to expert agency with intelligible principle and without excessive legislative power.",
+      "issue_tags": [
+        "separation_of_powers",
+        "delegation",
+        "sentencing_guidelines",
+        "independent_commission"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Article I, Article III",
+      "relevance_to_audit": "Addresses permissible delegation to independent commissions; relevant to agency rulemaking authority."
+    },
+    {
+      "case_id": "schechter_poultry_1935",
+      "name": "A.L.A. Schechter Poultry Corp. v. United States",
+      "citation": "295 U.S. 495 (1935)",
+      "year": 1935,
+      "doctrine": "non_delegation",
+      "summary": "Congress cannot delegate legislative power without intelligible principle to guide executive discretion.",
+      "holding": "National Industrial Recovery Act unconstitutional for delegating excessive legislative power without sufficient standards.",
+      "issue_tags": [
+        "non_delegation_doctrine",
+        "intelligible_principle",
+        "legislative_power",
+        "excessive_delegation"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Article I, Section 1",
+      "relevance_to_audit": "Establishes limits on delegation; relevant to statutes granting broad agency discretion without clear standards."
+    },
+    {
+      "case_id": "gundy_v_us_2019",
+      "name": "Gundy v. United States",
+      "citation": "139 S. Ct. 2116 (2019)",
+      "year": 2019,
+      "doctrine": "non_delegation",
+      "summary": "Modern articulation of non-delegation doctrine; intelligible principle standard remains controlling.",
+      "holding": "Sex Offender Registration and Notification Act's delegation to Attorney General constitutional under intelligible principle test.",
+      "issue_tags": [
+        "non_delegation_doctrine",
+        "intelligible_principle",
+        "attorney_general_discretion",
+        "sorna"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Article I, Section 1",
+      "relevance_to_audit": "Recent reaffirmation of non-delegation limits; relevant to executive discretion in regulatory implementation."
+    },
+    {
+      "case_id": "katz_v_us_1967",
+      "name": "Katz v. United States",
+      "citation": "389 U.S. 347 (1967)",
+      "year": 1967,
+      "doctrine": "fourth_amendment",
+      "summary": "Fourth Amendment protects people, not places; reasonable expectation of privacy test established.",
+      "holding": "Fourth Amendment protects reasonable expectation of privacy; warrantless wiretapping violates Fourth Amendment.",
+      "issue_tags": [
+        "fourth_amendment",
+        "expectation_of_privacy",
+        "electronic_surveillance",
+        "warrantless_search"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Foundation for privacy analysis; relevant to surveillance programs and data collection."
+    },
+    {
+      "case_id": "carpenter_v_us_2018",
+      "name": "Carpenter v. United States",
+      "citation": "138 S. Ct. 2206 (2018)",
+      "year": 2018,
+      "doctrine": "fourth_amendment",
+      "summary": "Cell-site location information creates expectation of privacy; warrant required for historical cell phone location data.",
+      "holding": "Government generally needs warrant to access historical cell-site location information.",
+      "issue_tags": [
+        "fourth_amendment",
+        "cell_site_location",
+        "digital_privacy",
+        "third_party_doctrine"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Modern privacy analysis for digital data; relevant to government data collection and surveillance."
+    },
+    {
+      "case_id": "kyllo_v_us_2001",
+      "name": "Kyllo v. United States",
+      "citation": "533 U.S. 27 (2001)",
+      "year": 2001,
+      "doctrine": "fourth_amendment",
+      "summary": "Thermal imaging of home interior constitutes search requiring warrant.",
+      "holding": "Using sense-enhancing technology not in general public use to explore home interior constitutes search.",
+      "issue_tags": [
+        "fourth_amendment",
+        "thermal_imaging",
+        "home_privacy",
+        "sense_enhancing_technology"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Addresses technology-enhanced surveillance; relevant to use of advanced surveillance technologies."
+    },
+    {
+      "case_id": "us_v_jones_2012",
+      "name": "United States v. Jones",
+      "citation": "565 U.S. 400 (2012)",
+      "year": 2012,
+      "doctrine": "fourth_amendment",
+      "summary": "Attaching GPS device to vehicle and monitoring movements constitutes search.",
+      "holding": "Physical intrusion on private property for information gathering is Fourth Amendment search.",
+      "issue_tags": [
+        "fourth_amendment",
+        "gps_tracking",
+        "physical_intrusion",
+        "prolonged_surveillance"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Addresses physical and digital tracking; relevant to location tracking and surveillance programs."
+    },
+    {
+      "case_id": "village_of_willowbrook_1997",
+      "name": "Village of Willowbrook v. Olech",
+      "citation": "528 U.S. 562 (2000)",
+      "year": 2000,
+      "doctrine": "equal_protection",
+      "summary": "Equal Protection Clause protects class of one; irrational and arbitrary government action violates equal protection.",
+      "holding": "Intentional and arbitrary discrimination against individual violates Equal Protection even absent class membership.",
+      "issue_tags": [
+        "equal_protection",
+        "class_of_one",
+        "arbitrary_discrimination",
+        "rational_basis"
+      ],
+      "doctrinal_weight": 0.75,
+      "constitutional_basis": "Fourteenth Amendment Equal Protection Clause",
+      "relevance_to_audit": "Protects against arbitrary administrative action; relevant to disparate treatment in enforcement."
+    },
+    {
+      "case_id": "arlington_heights_1977",
+      "name": "Village of Arlington Heights v. Metropolitan Housing Development Corp.",
+      "citation": "429 U.S. 252 (1977)",
+      "year": 1977,
+      "doctrine": "equal_protection",
+      "summary": "Disproportionate impact insufficient for Equal Protection violation; discriminatory intent required.",
+      "holding": "Proof of racially discriminatory intent or purpose required to show Equal Protection violation.",
+      "issue_tags": [
+        "equal_protection",
+        "discriminatory_intent",
+        "disproportionate_impact",
+        "zoning"
+      ],
+      "doctrinal_weight": 0.8,
+      "constitutional_basis": "Fourteenth Amendment Equal Protection Clause",
+      "relevance_to_audit": "Defines standard for proving discrimination; relevant to disparate impact analysis in regulations."
+    },
+    {
+      "case_id": "chevron_v_nrdc_1984",
+      "name": "Chevron U.S.A., Inc. v. Natural Resources Defense Council, Inc.",
+      "citation": "467 U.S. 837 (1984)",
+      "year": 1984,
+      "doctrine": "administrative_law",
+      "summary": "Two-step framework for judicial review of agency statutory interpretation: (1) Congressional intent clear? (2) Agency interpretation reasonable?",
+      "holding": "Courts defer to reasonable agency interpretation of ambiguous statute Congress charged agency with administering.",
+      "issue_tags": [
+        "chevron_deference",
+        "statutory_interpretation",
+        "agency_discretion",
+        "judicial_review"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Administrative Procedure Act",
+      "relevance_to_audit": "Governs deference to agency interpretations; critical for reviewing regulatory actions and statutory implementation. Note: May be limited by recent developments."
+    },
+    {
+      "case_id": "motor_vehicle_manufacturers_1983",
+      "name": "Motor Vehicle Manufacturers Ass'n v. State Farm Mutual Automobile Insurance Co.",
+      "citation": "463 U.S. 29 (1983)",
+      "year": 1983,
+      "doctrine": "administrative_law",
+      "summary": "Agency action arbitrary and capricious if agency fails to consider important aspect of problem or offers explanation counter to evidence.",
+      "holding": "Rescission of passive restraint requirement arbitrary and capricious; agency must provide reasoned analysis.",
+      "issue_tags": [
+        "arbitrary_and_capricious",
+        "reasoned_decisionmaking",
+        "apa_review",
+        "agency_explanation"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Administrative Procedure Act",
+      "relevance_to_audit": "Standard for reviewing agency rulemaking; relevant to analyzing adequacy of administrative decision-making."
+    },
+    {
+      "case_id": "west_virginia_v_epa_2022",
+      "name": "West Virginia v. EPA",
+      "citation": "142 S. Ct. 2587 (2022)",
+      "year": 2022,
+      "doctrine": "administrative_law",
+      "summary": "Major questions doctrine: agency must have clear congressional authorization for decisions of vast economic and political significance.",
+      "holding": "EPA lacks clear congressional authorization to adopt generation-shifting approach in Clean Power Plan.",
+      "issue_tags": [
+        "major_questions_doctrine",
+        "agency_authority",
+        "clear_statement",
+        "congressional_authorization"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Article I, Administrative Procedure Act",
+      "relevance_to_audit": "Limits agency authority on major questions; relevant to significant regulatory actions without explicit authorization."
+    },
+    {
+      "case_id": "auer_v_robbins_1997",
+      "name": "Auer v. Robbins",
+      "citation": "519 U.S. 452 (1997)",
+      "year": 1997,
+      "doctrine": "administrative_law",
+      "summary": "Agency interpretation of own ambiguous regulation entitled to deference unless plainly erroneous or inconsistent.",
+      "holding": "Defer to agency interpretation of its own regulation if not plainly erroneous or inconsistent with regulation.",
+      "issue_tags": [
+        "auer_deference",
+        "regulatory_interpretation",
+        "agency_deference",
+        "ambiguous_regulation"
+      ],
+      "doctrinal_weight": 0.75,
+      "constitutional_basis": "Administrative Procedure Act",
+      "relevance_to_audit": "Governs deference to agency regulatory interpretations; relevant to reviewing agency guidance and interpretive rules. Note: May be limited by recent developments."
+    },
+    {
+      "case_id": "loper_bright_2024",
+      "name": "Loper Bright Enterprises v. Raimondo",
+      "citation": "144 S. Ct. 2244 (2024)",
+      "year": 2024,
+      "doctrine": "administrative_law",
+      "summary": "Chevron doctrine overruled; courts must exercise independent judgment in interpreting statutes.",
+      "holding": "Chevron deference overruled; APA requires courts to decide all relevant questions of law, including statutory interpretation.",
+      "issue_tags": [
+        "chevron_overruled",
+        "statutory_interpretation",
+        "judicial_review",
+        "apa_interpretation"
+      ],
+      "doctrinal_weight": 0.98,
+      "constitutional_basis": "Administrative Procedure Act, Article III",
+      "relevance_to_audit": "Fundamental shift in administrative law; courts now independently interpret statutes without deference to agencies. Critical for analyzing all regulatory actions post-2024."
+    },
+    {
+      "case_id": "kent_v_dulles_1958",
+      "name": "Kent v. Dulles",
+      "citation": "357 U.S. 116 (1958)",
+      "year": 1958,
+      "doctrine": "administrative_law",
+      "summary": "Right to travel is liberty interest; Congress must clearly delegate authority to restrict fundamental rights.",
+      "holding": "Absent clear delegation, agency cannot deny passport based on political beliefs or associations.",
+      "issue_tags": [
+        "clear_statement_rule",
+        "fundamental_rights",
+        "right_to_travel",
+        "agency_authority"
+      ],
+      "doctrinal_weight": 0.8,
+      "constitutional_basis": "Fifth Amendment Due Process",
+      "relevance_to_audit": "Requires clear congressional authorization for restrictions on fundamental rights; relevant to agency actions affecting constitutional liberties."
+    },
+    {
+      "case_id": "hampton_v_us_1928",
+      "name": "J.W. Hampton, Jr., & Co. v. United States",
+      "citation": "276 U.S. 394 (1928)",
+      "year": 1928,
+      "doctrine": "non_delegation",
+      "summary": "Congress may delegate authority if it prescribes intelligible principle to which agency must conform.",
+      "holding": "Delegation permissible if Congress lays down intelligible principle to guide agency.",
+      "issue_tags": [
+        "intelligible_principle",
+        "delegation",
+        "legislative_standards",
+        "tariff_authority"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Article I, Section 1",
+      "relevance_to_audit": "Foundational case on permissible delegation; relevant to analyzing statutory grants of agency authority."
+    },
+    {
+      "case_id": "panama_refining_1935",
+      "name": "Panama Refining Co. v. Ryan",
+      "citation": "293 U.S. 388 (1935)",
+      "year": 1935,
+      "doctrine": "non_delegation",
+      "summary": "Delegation without standards or policy declaration violates separation of powers.",
+      "holding": "National Industrial Recovery Act provision unconstitutional for delegation without policy standards.",
+      "issue_tags": [
+        "non_delegation_doctrine",
+        "policy_standards",
+        "unfettered_discretion",
+        "nira"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Article I, Section 1",
+      "relevance_to_audit": "Requires meaningful standards for delegation; relevant to statutes granting broad discretion."
+    },
+    {
+      "case_id": "whitman_v_american_trucking_2001",
+      "name": "Whitman v. American Trucking Associations",
+      "citation": "531 U.S. 457 (2001)",
+      "year": 2001,
+      "doctrine": "non_delegation",
+      "summary": "Intelligible principle need not be precise; general terms sufficient if context limits discretion.",
+      "holding": "Clean Air Act's 'adequate margin of safety' sufficient intelligible principle for EPA standard-setting.",
+      "issue_tags": [
+        "intelligible_principle",
+        "public_health",
+        "clean_air_act",
+        "agency_discretion"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Article I, Section 1",
+      "relevance_to_audit": "Clarifies intelligible principle standard; relevant to reviewing broad statutory delegations."
+    },
+    {
+      "case_id": "skinner_v_mid_america_1989",
+      "name": "Skinner v. Railway Labor Executives' Association",
+      "citation": "489 U.S. 602 (1989)",
+      "year": 1989,
+      "doctrine": "fourth_amendment",
+      "summary": "Drug and alcohol testing of railroad employees involved in accidents is reasonable search serving compelling government interest.",
+      "holding": "Warrantless testing justified by compelling government interest in safety and diminished privacy expectations.",
+      "issue_tags": [
+        "fourth_amendment",
+        "drug_testing",
+        "special_needs",
+        "diminished_expectations"
+      ],
+      "doctrinal_weight": 0.78,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Addresses administrative searches and special needs; relevant to regulatory inspection and testing programs."
+    },
+    {
+      "case_id": "coffin_v_united_states_1895",
+      "name": "Coffin v. United States",
+      "citation": "156 U.S. 432 (1895)",
+      "year": 1895,
+      "doctrine": "due_process",
+      "summary": "Established presumption of innocence as fundamental principle of American criminal law; burden of proof rests on prosecution to prove guilt beyond reasonable doubt.",
+      "holding": "Presumption of innocence is not mere rule of evidence but fundamental principle of criminal justice; prosecution bears burden of proving guilt beyond reasonable doubt.",
+      "issue_tags": [
+        "presumption_of_innocence",
+        "burden_of_proof",
+        "criminal_procedure",
+        "due_process",
+        "beyond_reasonable_doubt"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fifth Amendment Due Process Clause",
+      "relevance_to_audit": "Establishes foundation for burden of proof in administrative enforcement actions; relevant to presumptions in regulatory proceedings and evidentiary standards.",
+      "procedural_posture": "Criminal conviction appealed to Supreme Court",
+      "relevance_score": 0.88
+    },
+    {
+      "case_id": "silverthorne_lumber_v_united_states_1920",
+      "name": "Silverthorne Lumber Co. v. United States",
+      "citation": "251 U.S. 385 (1920)",
+      "year": 1920,
+      "doctrine": "fourth_amendment",
+      "summary": "Established fruit of the poisonous tree doctrine; evidence derived from illegal search inadmissible even if independent source would have discovered it.",
+      "holding": "Government cannot use evidence derived from illegal search, nor knowledge gained from such evidence to subpoena documents, as this would make Fourth Amendment meaningless.",
+      "issue_tags": [
+        "fruit_of_poisonous_tree",
+        "exclusionary_rule",
+        "illegal_search",
+        "derivative_evidence",
+        "fourth_amendment",
+        "chain_of_custody"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Critical for chain of custody analysis; evidence derived from tainted sources must be excluded. Relevant to PDF forensics and metadata integrity where evidence chain is questioned.",
+      "procedural_posture": "Federal enforcement action appealed",
+      "relevance_score": 0.92
+    },
+    {
+      "case_id": "nardone_v_united_states_1939",
+      "name": "Nardone v. United States",
+      "citation": "308 U.S. 338 (1939)",
+      "year": 1939,
+      "doctrine": "fourth_amendment",
+      "summary": "Evidence obtained through illegal wiretapping inadmissible; derivative evidence (fruit of poisonous tree) also inadmissible unless independent source established.",
+      "holding": "Federal Communications Act prohibition on wiretapping enforceable through exclusion of illegally obtained evidence; government must demonstrate independent source for derivative evidence or exclusion applies.",
+      "issue_tags": [
+        "fruit_of_poisonous_tree",
+        "wiretapping",
+        "exclusionary_rule",
+        "derivative_evidence",
+        "independent_source",
+        "chain_of_custody",
+        "illegal_surveillance"
+      ],
+      "doctrinal_weight": 0.86,
+      "constitutional_basis": "Fourth Amendment, Federal Communications Act",
+      "relevance_to_audit": "Early establishment of fruit of poisonous tree doctrine; relevant to chain of custody analysis and derivative evidence from tainted sources.",
+      "procedural_posture": "Conviction reversed, remanded for determination of independent source",
+      "relevance_score": 0.88
+    },
+    {
+      "case_id": "flournoy_v_first_nat_bank_1941",
+      "name": "Flournoy v. First Nat. Bank of Shreveport",
+      "citation": "197 La. 1067 (La. 1941)",
+      "year": 1941,
+      "doctrine": "property_rights",
+      "summary": "Louisiana Supreme Court decision addressing property interests, banking regulations, and liberty interests in commercial transactions.",
+      "holding": "Property rights and liberty interests in commercial relationships protected; government restrictions must have rational basis and not arbitrarily interfere with contractual freedom.",
+      "issue_tags": [
+        "property_rights",
+        "liberty_interests",
+        "contractual_freedom",
+        "banking_regulation",
+        "due_process",
+        "substantive_due_process"
+      ],
+      "doctrinal_weight": 0.68,
+      "constitutional_basis": "Fourteenth Amendment Due Process, Contract Clause",
+      "relevance_to_audit": "Relevant to analysis of government interference with property rights and commercial relationships; applicable to vendor contract restrictions and regulatory burdens.",
+      "procedural_posture": "State appellate decision",
+      "relevance_score": 0.7
+    },
+    {
+      "case_id": "johnson_v_united_states_1948",
+      "name": "Johnson v. United States",
+      "citation": "333 U.S. 10 (1948)",
+      "year": 1948,
+      "doctrine": "fourth_amendment",
+      "summary": "Warrantless searches are per se unreasonable under Fourth Amendment subject only to few specifically established exceptions; neutral magistrate must evaluate probable cause, not police.",
+      "holding": "Point of Fourth Amendment is to interpose neutral magistrate between police and citizens; officers' determination of probable cause insufficient to justify warrantless entry.",
+      "issue_tags": [
+        "fourth_amendment",
+        "warrantless_search",
+        "probable_cause",
+        "neutral_magistrate",
+        "search_and_seizure",
+        "exigent_circumstances"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes requirement for neutral decision-maker in searches and enforcement actions; relevant to administrative inspections and regulatory searches without independent oversight.",
+      "procedural_posture": "Criminal conviction reversed",
+      "relevance_score": 0.85
+    },
+    {
+      "case_id": "wong_sun_v_united_states_1963",
+      "name": "Wong Sun v. United States",
+      "citation": "371 U.S. 471 (1963)",
+      "year": 1963,
+      "doctrine": "fourth_amendment",
+      "summary": "Fruit of poisonous tree doctrine applies to verbal statements and confessions obtained as result of illegal arrest; attenuation doctrine may allow admission if connection sufficiently attenuated.",
+      "holding": "Evidence obtained as fruit of unlawful arrest inadmissible unless connection attenuated by intervening circumstances; mere act of later coming to police station voluntarily does not purge taint of illegal arrest if not sufficiently attenuated.",
+      "issue_tags": [
+        "fruit_of_poisonous_tree",
+        "attenuation_doctrine",
+        "illegal_arrest",
+        "verbal_evidence",
+        "chain_of_custody",
+        "exclusionary_rule",
+        "taint_analysis"
+      ],
+      "doctrinal_weight": 0.89,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes attenuation analysis for derivative evidence; relevant to determining when tainted evidence chain is sufficiently broken by independent acts.",
+      "procedural_posture": "Conviction partially reversed",
+      "relevance_score": 0.87
+    },
+    {
+      "case_id": "terry_v_ohio_1968",
+      "name": "Terry v. Ohio",
+      "citation": "392 U.S. 1 (1968)",
+      "year": 1968,
+      "doctrine": "fourth_amendment",
+      "summary": "Police may conduct limited search for weapons (stop and frisk) based on reasonable suspicion that person is armed and dangerous; established reasonable suspicion standard distinct from probable cause.",
+      "holding": "Brief investigatory stop and protective frisk permissible when officer has reasonable suspicion based on specific articulable facts that criminal activity may be afoot and person may be armed and dangerous.",
+      "issue_tags": [
+        "stop_and_frisk",
+        "reasonable_suspicion",
+        "fourth_amendment",
+        "protective_search",
+        "officer_safety",
+        "investigatory_stop",
+        "articulable_facts"
+      ],
+      "doctrinal_weight": 0.96,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Foundational case establishing reasonable suspicion standard; relevant to analyzing investigatory actions, temporary detentions, and limited searches in administrative context.",
+      "procedural_posture": "State criminal conviction affirmed",
+      "relevance_score": 0.92
+    },
+    {
+      "case_id": "shapiro_v_thompson_1969",
+      "name": "Shapiro v. Thompson",
+      "citation": "394 U.S. 618 (1969)",
+      "year": 1969,
+      "doctrine": "free_movement",
+      "summary": "Right to travel is fundamental right; one-year residency requirement for welfare benefits impermissibly burdens right to travel and denies equal protection.",
+      "holding": "Durational residency requirements for welfare benefits unconstitutional; right to travel interstate is fundamental right protected by equal protection and privileges and immunities; requirement lacks compelling state interest.",
+      "issue_tags": [
+        "right_to_travel",
+        "interstate_migration",
+        "durational_residency",
+        "welfare_benefits",
+        "fundamental_rights",
+        "equal_protection",
+        "strict_scrutiny"
+      ],
+      "doctrinal_weight": 0.89,
+      "constitutional_basis": "Fourteenth Amendment Equal Protection, Privileges and Immunities Clause",
+      "relevance_to_audit": "Establishes fundamental right to interstate travel; relevant to restrictions on movement, residency requirements, and identity control measures.",
+      "procedural_posture": "State laws struck down",
+      "relevance_score": 0.86
+    },
+    {
+      "case_id": "rakas_v_illinois_1978",
+      "name": "Rakas v. Illinois",
+      "citation": "439 U.S. 128 (1978)",
+      "year": 1978,
+      "doctrine": "fourth_amendment",
+      "summary": "Fourth Amendment rights are personal; legitimate expectation of privacy required for standing to challenge search; mere presence in searched area insufficient.",
+      "holding": "Fourth Amendment protects people, not places; person seeking to exclude evidence must have legitimate expectation of privacy in area searched.",
+      "issue_tags": [
+        "fourth_amendment",
+        "standing",
+        "expectation_of_privacy",
+        "search_and_seizure",
+        "personal_rights",
+        "legitimate_expectation"
+      ],
+      "doctrinal_weight": 0.83,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes privacy interest requirements; relevant to determining who has standing to challenge surveillance or data collection programs.",
+      "procedural_posture": "State criminal conviction affirmed",
+      "relevance_score": 0.8
+    },
+    {
+      "case_id": "brown_v_texas_1979",
+      "name": "Brown v. Texas",
+      "citation": "443 U.S. 47 (1979)",
+      "year": 1979,
+      "doctrine": "fourth_amendment",
+      "summary": "Police must have reasonable suspicion of criminal activity to stop and demand identification; cannot arrest for refusing to identify without reasonable suspicion.",
+      "holding": "Conviction for refusing to identify oneself to police violates Fourth Amendment when police lacked reasonable suspicion of criminal activity.",
+      "issue_tags": [
+        "fourth_amendment",
+        "stop_and_identify",
+        "reasonable_suspicion",
+        "free_movement",
+        "police_encounter",
+        "identification_requirement"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes reasonable suspicion standard for stops and identification demands; relevant to identity control and free movement issues in administrative context.",
+      "procedural_posture": "State conviction reversed",
+      "relevance_score": 0.82
+    },
+    {
+      "case_id": "illinois_v_gates_1983",
+      "name": "Illinois v. Gates",
+      "citation": "462 U.S. 213 (1983)",
+      "year": 1983,
+      "doctrine": "fourth_amendment",
+      "summary": "Established totality of circumstances test for probable cause; replaced rigid two-prong Aguilar-Spinelli test with flexible standard considering all information known to officers.",
+      "holding": "Probable cause determined by totality of circumstances; magistrate makes practical, commonsense decision whether fair probability exists that contraband or evidence will be found; informant reliability and basis of knowledge considered but not separate rigid requirements.",
+      "issue_tags": [
+        "probable_cause",
+        "fourth_amendment",
+        "totality_of_circumstances",
+        "warrant_application",
+        "informant_reliability",
+        "magistrate_determination",
+        "search_warrant"
+      ],
+      "doctrinal_weight": 0.91,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes flexible standard for probable cause; relevant to analyzing basis for administrative searches, enforcement actions, and investigative determinations.",
+      "procedural_posture": "State conviction affirmed",
+      "relevance_score": 0.88
+    },
+    {
+      "case_id": "james_v_kentucky_1984",
+      "name": "James v. Kentucky",
+      "citation": "466 U.S. 341 (1984)",
+      "year": 1984,
+      "doctrine": "due_process",
+      "summary": "Right to remain silent and have silence not used against defendant; presumption of innocence instruction must be given when requested and supported by evidence.",
+      "holding": "Due process violated when trial court refuses to give presumption of innocence instruction that accurately states law and is supported by evidence.",
+      "issue_tags": [
+        "presumption_of_innocence",
+        "jury_instructions",
+        "right_to_silence",
+        "due_process",
+        "criminal_procedure",
+        "self_incrimination"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Fifth Amendment Due Process, Fourteenth Amendment",
+      "relevance_to_audit": "Relevant to administrative hearing procedures and presumptions in enforcement actions; establishes requirements for neutral adjudication.",
+      "procedural_posture": "State criminal conviction reversed",
+      "relevance_score": 0.78
+    },
+    {
+      "case_id": "tennessee_v_garner_1985",
+      "name": "Tennessee v. Garner",
+      "citation": "471 U.S. 1 (1985)",
+      "year": 1985,
+      "doctrine": "fourth_amendment",
+      "summary": "Use of deadly force to prevent escape of fleeing felon violates Fourth Amendment unless necessary to prevent escape and officer has probable cause to believe suspect poses significant threat of death or serious physical injury.",
+      "holding": "Fourth Amendment prohibits use of deadly force to prevent escape unless officer has probable cause to believe suspect poses significant threat of death or serious injury to officer or others; seizure by deadly force is search and seizure subject to reasonableness requirement.",
+      "issue_tags": [
+        "deadly_force",
+        "police_accountability",
+        "fourth_amendment",
+        "excessive_force",
+        "fleeing_felon",
+        "use_of_force",
+        "reasonableness"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes constitutional limits on use of force; relevant to analyzing law enforcement accountability, excessive force, and reasonableness of government actions.",
+      "procedural_posture": "Sixth Circuit affirmed, statute struck down",
+      "relevance_score": 0.9
+    },
+    {
+      "case_id": "moya_v_united_states_1985",
+      "name": "Moya v. United States",
+      "citation": "761 F.2d 322 (7th Cir. 1985)",
+      "year": 1985,
+      "doctrine": "due_process",
+      "summary": "Federal appellate decision addressing procedural due process requirements in criminal proceedings and evidence presentation standards.",
+      "holding": "Due process requires adequate opportunity to challenge evidence and confront witnesses; procedural safeguards must be meaningful, not merely formal.",
+      "issue_tags": [
+        "procedural_due_process",
+        "confrontation_clause",
+        "evidentiary_standards",
+        "criminal_procedure",
+        "meaningful_hearing"
+      ],
+      "doctrinal_weight": 0.72,
+      "constitutional_basis": "Fifth Amendment Due Process, Sixth Amendment Confrontation Clause",
+      "relevance_to_audit": "Addresses evidentiary adequacy and confrontation rights; relevant to administrative proceedings requiring testimony and documentary evidence.",
+      "procedural_posture": "Federal criminal appeal",
+      "relevance_score": 0.75
+    },
+    {
+      "case_id": "graham_v_connor_1989",
+      "name": "Graham v. Connor",
+      "citation": "490 U.S. 386 (1989)",
+      "year": 1989,
+      "doctrine": "fourth_amendment",
+      "summary": "Excessive force claims analyzed under Fourth Amendment reasonableness standard; objective reasonableness judged from perspective of officer on scene, not with 20/20 hindsight.",
+      "holding": "All claims that law enforcement used excessive force in course of arrest, investigatory stop, or other seizure analyzed under Fourth Amendment reasonableness standard; assessed from perspective of reasonable officer on scene considering totality of circumstances.",
+      "issue_tags": [
+        "excessive_force",
+        "fourth_amendment",
+        "reasonableness_standard",
+        "police_accountability",
+        "use_of_force",
+        "objective_reasonableness",
+        "totality_of_circumstances"
+      ],
+      "doctrinal_weight": 0.94,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes standard for evaluating use of force; critical for assessing police accountability, excessive force claims, and reasonableness of government enforcement actions.",
+      "procedural_posture": "Fourth Circuit reversed and remanded",
+      "relevance_score": 0.91
+    },
+    {
+      "case_id": "sanders_v_english_1992",
+      "name": "Sanders v. English",
+      "citation": "950 F.2d 1036 (5th Cir. 1992)",
+      "year": 1992,
+      "doctrine": "constitutional_torts",
+      "summary": "Federal appellate decision addressing qualified immunity standards and constitutional tort liability for government officials.",
+      "holding": "Officials entitled to qualified immunity unless conduct violates clearly established constitutional rights that reasonable person would have known; addresses intentional tort liability.",
+      "issue_tags": [
+        "qualified_immunity",
+        "constitutional_torts",
+        "official_liability",
+        "clearly_established_law",
+        "intentional_torts",
+        "section_1983"
+      ],
+      "doctrinal_weight": 0.75,
+      "constitutional_basis": "42 U.S.C. § 1983, Fourth Amendment, Due Process",
+      "relevance_to_audit": "Addresses liability standards for government misconduct; relevant to assessing accountability for administrative overreach and violations of constitutional rights.",
+      "procedural_posture": "Federal civil rights appeal",
+      "relevance_score": 0.77
+    },
+    {
+      "case_id": "saenz_v_roe_1999",
+      "name": "Saenz v. Roe",
+      "citation": "526 U.S. 489 (1999)",
+      "year": 1999,
+      "doctrine": "free_movement",
+      "summary": "Citizenship clause of Fourteenth Amendment protects right of newly arrived citizens to same privileges and immunities as long-term residents; durational residency requirements for welfare benefits unconstitutional.",
+      "holding": "Citizenship clause protects right to travel, including right to be treated equally in new state of residence; California cannot limit welfare benefits for new residents to levels of prior state for first year.",
+      "issue_tags": [
+        "right_to_travel",
+        "citizenship_clause",
+        "durational_residency",
+        "welfare_benefits",
+        "equal_treatment",
+        "privileges_and_immunities",
+        "interstate_migration"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourteenth Amendment Citizenship Clause, Privileges and Immunities",
+      "relevance_to_audit": "Reaffirms constitutional protection for interstate travel and equal treatment; relevant to residency requirements, movement restrictions, and discriminatory treatment of newcomers.",
+      "procedural_posture": "Ninth Circuit affirmed",
+      "relevance_score": 0.85
+    },
+    {
+      "case_id": "florida_v_jardines_2013",
+      "name": "Florida v. Jardines",
+      "citation": "569 U.S. 1 (2013)",
+      "year": 2013,
+      "doctrine": "fourth_amendment",
+      "summary": "Use of drug-sniffing dog on homeowner's porch to investigate contents of home is search within meaning of Fourth Amendment; curtilage of home receives Fourth Amendment protection.",
+      "holding": "Law enforcement use of trained police dog to explore curtilage of home to investigate contents constitutes search; government trespass on constitutionally protected area to gather information is Fourth Amendment search.",
+      "issue_tags": [
+        "fourth_amendment",
+        "curtilage",
+        "home_privacy",
+        "drug_dog",
+        "trespass_doctrine",
+        "search_definition",
+        "physical_intrusion"
+      ],
+      "doctrinal_weight": 0.87,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes strong protection for home curtilage; relevant to analyzing government inspections, physical intrusions, and surveillance at private residences or business premises.",
+      "procedural_posture": "State conviction reversed",
+      "relevance_score": 0.84
+    },
+    {
+      "case_id": "riley_v_california_2014",
+      "name": "Riley v. California",
+      "citation": "573 U.S. 373 (2014)",
+      "year": 2014,
+      "doctrine": "fourth_amendment",
+      "summary": "Police generally may not search digital information on cell phone seized from person arrested without warrant; digital data creates heightened privacy concerns requiring warrant protection.",
+      "holding": "Police must generally obtain warrant before searching digital information on cell phone, even when phone lawfully seized incident to arrest; search incident to arrest exception does not apply to digital data.",
+      "issue_tags": [
+        "digital_privacy",
+        "cell_phone_search",
+        "warrant_requirement",
+        "fourth_amendment",
+        "search_incident_to_arrest",
+        "digital_information",
+        "modern_technology"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes heightened protection for digital information; critical for analyzing government access to digital records, databases, and electronic communications.",
+      "procedural_posture": "State criminal convictions reversed and remanded",
+      "relevance_score": 0.94
+    },
+    {
+      "case_id": "trump_v_united_states_2024",
+      "name": "Trump v. United States",
+      "citation": "603 U.S. ___ (2024)",
+      "year": 2024,
+      "doctrine": "separation_of_powers",
+      "summary": "Presidential immunity from criminal prosecution for official acts within constitutional authority; established framework for distinguishing official from private conduct.",
+      "holding": "Presidents have absolute immunity from criminal prosecution for core constitutional powers; presumptive immunity for official acts within outer perimeter of official responsibility; no immunity for unofficial acts.",
+      "issue_tags": [
+        "presidential_immunity",
+        "separation_of_powers",
+        "executive_power",
+        "official_acts",
+        "criminal_prosecution",
+        "constitutional_authority"
+      ],
+      "doctrinal_weight": 0.94,
+      "constitutional_basis": "Article II, Separation of Powers",
+      "relevance_to_audit": "Establishes modern framework for executive authority and immunity; relevant to analyzing scope of executive agency authority and official conduct boundaries.",
+      "procedural_posture": "Original jurisdiction, immunity determination",
+      "relevance_score": 0.9
+    },
+    {
+      "case_id": "marbury_v_madison_1803",
+      "name": "Marbury v. Madison",
+      "citation": "5 U.S. (1 Cranch) 137 (1803)",
+      "year": 1803,
+      "doctrine": "separation_of_powers",
+      "summary": "Established judicial review - the power of federal courts to declare legislative and executive acts unconstitutional.",
+      "holding": "The Supreme Court has the authority to review acts of Congress and declare them void if they conflict with the Constitution.",
+      "issue_tags": [
+        "judicial_review",
+        "constitutional_interpretation",
+        "separation_of_powers",
+        "foundational"
+      ],
+      "doctrinal_weight": 1.0,
+      "constitutional_basis": "Article III; Supremacy Clause",
+      "relevance_to_audit": "Foundational case establishing judicial authority to review executive and legislative actions for constitutional compliance."
+    },
+    {
+      "case_id": "barron_v_baltimore_1833",
+      "name": "Barron v. Baltimore",
+      "citation": "32 U.S. (7 Pet.) 243 (1833)",
+      "year": 1833,
+      "doctrine": "constitutional_structure",
+      "summary": "Bill of Rights applies only to federal government, not states (overruled by incorporation doctrine).",
+      "holding": "The Fifth Amendment takings clause does not apply to state governments.",
+      "issue_tags": [
+        "incorporation",
+        "federalism",
+        "takings_clause",
+        "bill_of_rights"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Historical baseline for understanding modern incorporation doctrine and federal vs state rights."
+    },
+    {
+      "case_id": "gitlow_v_new_york_1925",
+      "name": "Gitlow v. New York",
+      "citation": "268 U.S. 652 (1925)",
+      "year": 1925,
+      "doctrine": "first_amendment",
+      "summary": "First Amendment free speech protections apply to states through Fourteenth Amendment Due Process Clause.",
+      "holding": "Freedom of speech and press are fundamental rights protected by the Due Process Clause of the Fourteenth Amendment from impairment by the states.",
+      "issue_tags": [
+        "incorporation",
+        "free_speech",
+        "due_process",
+        "state_action"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "First Amendment; Fourteenth Amendment",
+      "relevance_to_audit": "Established incorporation doctrine - critical for applying Bill of Rights to state/local government actions."
+    },
+    {
+      "case_id": "near_v_minnesota_1931",
+      "name": "Near v. Minnesota",
+      "citation": "283 U.S. 697 (1931)",
+      "year": 1931,
+      "doctrine": "first_amendment",
+      "summary": "Prior restraints on publication are unconstitutional except in extraordinary circumstances.",
+      "holding": "A state law permitting prior restraint on publication violates the First Amendment's freedom of press guarantee.",
+      "issue_tags": [
+        "prior_restraint",
+        "freedom_of_press",
+        "censorship",
+        "incorporation"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Protects against government censorship; relevant to transparency and public records access."
+    },
+    {
+      "case_id": "west_virginia_v_barnette_1943",
+      "name": "West Virginia State Board of Education v. Barnette",
+      "citation": "319 U.S. 624 (1943)",
+      "year": 1943,
+      "doctrine": "first_amendment",
+      "summary": "Government cannot compel individuals to salute flag or recite pledge - protects freedom of conscience.",
+      "holding": "Compulsory flag salute violates First Amendment; government may not force citizens to confess belief or adopt orthodox views.",
+      "issue_tags": [
+        "compelled_speech",
+        "freedom_of_conscience",
+        "religious_liberty",
+        "student_rights"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Prevents government from compelling speech or belief; relevant to unconstitutional conditions doctrine."
+    },
+    {
+      "case_id": "heller_v_dc_2008",
+      "name": "District of Columbia v. Heller",
+      "citation": "554 U.S. 570 (2008)",
+      "year": 2008,
+      "doctrine": "second_amendment",
+      "summary": "Second Amendment protects individual right to possess firearms for lawful purposes like self-defense.",
+      "holding": "The Second Amendment guarantees an individual right to possess firearms independent of militia service.",
+      "issue_tags": [
+        "second_amendment",
+        "individual_rights",
+        "self_defense",
+        "strict_scrutiny"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Second Amendment",
+      "relevance_to_audit": "Establishes individual right to self-defense; relevant to regulations affecting personal security."
+    },
+    {
+      "case_id": "mcdonald_v_chicago_2010",
+      "name": "McDonald v. City of Chicago",
+      "citation": "561 U.S. 742 (2010)",
+      "year": 2010,
+      "doctrine": "second_amendment",
+      "summary": "Second Amendment right to keep and bear arms is incorporated against states through Fourteenth Amendment.",
+      "holding": "The Second Amendment applies to state and local governments through the Fourteenth Amendment Due Process Clause.",
+      "issue_tags": [
+        "second_amendment",
+        "incorporation",
+        "fundamental_rights",
+        "due_process"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Second Amendment; Fourteenth Amendment",
+      "relevance_to_audit": "Extends Second Amendment protections to state/local actions; relevant to municipal regulations."
+    },
+    {
+      "case_id": "mapp_v_ohio_1961",
+      "name": "Mapp v. Ohio",
+      "citation": "367 U.S. 643 (1961)",
+      "year": 1961,
+      "doctrine": "fourth_amendment",
+      "summary": "Exclusionary rule applies to states - evidence obtained in violation of Fourth Amendment inadmissible in state prosecutions.",
+      "holding": "All evidence obtained by searches and seizures in violation of the Constitution is inadmissible in a criminal trial in a state court.",
+      "issue_tags": [
+        "exclusionary_rule",
+        "incorporation",
+        "illegal_search",
+        "evidence_suppression"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fourth Amendment; Fourteenth Amendment",
+      "relevance_to_audit": "Critical for evidence integrity; relevant to chain of custody and illegally obtained records."
+    },
+    {
+      "case_id": "katz_v_united_states_1967",
+      "name": "Katz v. United States",
+      "citation": "389 U.S. 347 (1967)",
+      "year": 1967,
+      "doctrine": "fourth_amendment",
+      "summary": "Fourth Amendment protects people, not places; established reasonable expectation of privacy test.",
+      "holding": "Electronic surveillance without warrant violates Fourth Amendment where individual has reasonable expectation of privacy.",
+      "issue_tags": [
+        "privacy_expectation",
+        "electronic_surveillance",
+        "wiretapping",
+        "warrant_requirement"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Foundational for digital privacy analysis; critical for surveillance system evaluation."
+    },
+    {
+      "case_id": "united_states_v_leon_1984",
+      "name": "United States v. Leon",
+      "citation": "468 U.S. 897 (1984)",
+      "year": 1984,
+      "doctrine": "fourth_amendment",
+      "summary": "Good faith exception to exclusionary rule - evidence admissible if officer reasonably relied on defective warrant.",
+      "holding": "Evidence obtained in good faith reliance on technically defective warrant not excluded if officer acted reasonably.",
+      "issue_tags": [
+        "good_faith_exception",
+        "exclusionary_rule",
+        "warrant_defect",
+        "reasonable_reliance"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Limits exclusionary rule; relevant to evaluating technical warrant defects vs systemic violations."
+    },
+    {
+      "case_id": "carpenter_v_united_states_2018",
+      "name": "Carpenter v. United States",
+      "citation": "138 S. Ct. 2206 (2018)",
+      "year": 2018,
+      "doctrine": "fourth_amendment",
+      "summary": "Cell-site location information (CSLI) protected by Fourth Amendment; warrant generally required.",
+      "holding": "Government acquisition of historical cell-site location information is a Fourth Amendment search requiring warrant.",
+      "issue_tags": [
+        "cell_site_location",
+        "digital_privacy",
+        "third_party_doctrine",
+        "warrant_requirement"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Landmark digital privacy case; directly applicable to municipal surveillance and location tracking systems."
+    },
+    {
+      "case_id": "us_v_warshak_2010",
+      "name": "United States v. Warshak",
+      "citation": "631 F.3d 266 (6th Cir. 2010)",
+      "year": 2010,
+      "doctrine": "fourth_amendment",
+      "summary": "Email communications protected by reasonable expectation of privacy under Fourth Amendment.",
+      "holding": "Government must obtain warrant before seizing email communications; reasonable expectation of privacy exists in email content.",
+      "issue_tags": [
+        "email_privacy",
+        "electronic_communications",
+        "warrant_requirement",
+        "digital_content"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Protects digital communications; relevant to government access to electronic records."
+    },
+    {
+      "case_id": "hurtado_v_california_1884",
+      "name": "Hurtado v. California",
+      "citation": "110 U.S. 516 (1884)",
+      "year": 1884,
+      "doctrine": "due_process",
+      "summary": "Grand jury requirement not incorporated against states; procedural due process allows state variations.",
+      "holding": "Fifth Amendment grand jury requirement does not apply to states through Fourteenth Amendment.",
+      "issue_tags": [
+        "grand_jury",
+        "incorporation",
+        "procedural_due_process",
+        "state_procedure"
+      ],
+      "doctrinal_weight": 0.78,
+      "constitutional_basis": "Fifth Amendment; Fourteenth Amendment",
+      "relevance_to_audit": "Historical context for incorporation; shows evolution of procedural protections."
+    },
+    {
+      "case_id": "gideon_v_wainwright_1963",
+      "name": "Gideon v. Wainwright",
+      "citation": "372 U.S. 335 (1963)",
+      "year": 1963,
+      "doctrine": "due_process",
+      "summary": "Sixth Amendment right to counsel applies to states; indigent defendants entitled to appointed counsel in felony cases.",
+      "holding": "States required to provide counsel to indigent criminal defendants in felony prosecutions.",
+      "issue_tags": [
+        "right_to_counsel",
+        "incorporation",
+        "indigent_defense",
+        "fair_trial"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Sixth Amendment; Fourteenth Amendment",
+      "relevance_to_audit": "Fundamental fairness requirement; relevant to evaluating adequacy of procedural safeguards."
+    },
+    {
+      "case_id": "brady_v_maryland_1963",
+      "name": "Brady v. Maryland",
+      "citation": "373 U.S. 83 (1963)",
+      "year": 1963,
+      "doctrine": "due_process",
+      "summary": "Prosecution must disclose material exculpatory evidence to defense; suppression violates due process.",
+      "holding": "Suppression by prosecution of evidence favorable to accused violates due process where evidence is material to guilt or punishment.",
+      "issue_tags": [
+        "exculpatory_evidence",
+        "prosecutorial_misconduct",
+        "discovery",
+        "fair_trial"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fifth Amendment; Fourteenth Amendment",
+      "relevance_to_audit": "Critical for evidence integrity; detects prosecutorial suppression of exculpatory materials."
+    },
+    {
+      "case_id": "napue_v_illinois_1959",
+      "name": "Napue v. Illinois",
+      "citation": "360 U.S. 264 (1959)",
+      "year": 1959,
+      "doctrine": "due_process",
+      "summary": "Due process violated when prosecution knowingly uses false testimony or fails to correct perjury.",
+      "holding": "Conviction obtained through knowing use of perjured testimony violates due process.",
+      "issue_tags": [
+        "perjured_testimony",
+        "prosecutorial_misconduct",
+        "false_evidence",
+        "due_process"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourteenth Amendment Due Process",
+      "relevance_to_audit": "Detects prosecutorial use of false evidence; relevant to witness credibility analysis."
+    },
+    {
+      "case_id": "mooney_v_holohan_1935",
+      "name": "Mooney v. Holohan",
+      "citation": "294 U.S. 103 (1935)",
+      "year": 1935,
+      "doctrine": "due_process",
+      "summary": "Due process violated when state knowingly uses false evidence to obtain conviction.",
+      "holding": "A conviction based on evidence known by state to be false violates due process.",
+      "issue_tags": [
+        "false_evidence",
+        "prosecutorial_misconduct",
+        "fundamental_fairness",
+        "conviction_integrity"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Foundational case for detecting fabricated evidence and prosecutorial fraud."
+    },
+    {
+      "case_id": "timbs_v_indiana_2019",
+      "name": "Timbs v. Indiana",
+      "citation": "139 S. Ct. 682 (2019)",
+      "year": 2019,
+      "doctrine": "eighth_amendment",
+      "summary": "Eighth Amendment Excessive Fines Clause incorporated against states.",
+      "holding": "The Excessive Fines Clause of the Eighth Amendment applies to state and local governments through the Fourteenth Amendment.",
+      "issue_tags": [
+        "excessive_fines",
+        "incorporation",
+        "civil_forfeiture",
+        "proportionality"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Eighth Amendment; Fourteenth Amendment",
+      "relevance_to_audit": "Critical for evaluating municipal fine structures, civil forfeiture, and revenue-driven enforcement."
+    },
+    {
+      "case_id": "austin_v_united_states_1993",
+      "name": "Austin v. United States",
+      "citation": "509 U.S. 602 (1993)",
+      "year": 1993,
+      "doctrine": "eighth_amendment",
+      "summary": "Civil forfeiture constitutes punishment subject to Excessive Fines Clause.",
+      "holding": "In rem civil forfeiture constitutes payment to government and qualifies as punishment for Eighth Amendment purposes.",
+      "issue_tags": [
+        "civil_forfeiture",
+        "excessive_fines",
+        "proportionality_review",
+        "punishment"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Eighth Amendment",
+      "relevance_to_audit": "Applies to civil asset forfeiture programs; evaluates proportionality of forfeitures."
+    },
+    {
+      "case_id": "brown_v_board_1954",
+      "name": "Brown v. Board of Education",
+      "citation": "347 U.S. 483 (1954)",
+      "year": 1954,
+      "doctrine": "equal_protection",
+      "summary": "Racial segregation in public schools violates Equal Protection Clause; separate is inherently unequal.",
+      "holding": "Separate educational facilities are inherently unequal and violate the Equal Protection Clause of the Fourteenth Amendment.",
+      "issue_tags": [
+        "racial_discrimination",
+        "equal_protection",
+        "segregation",
+        "education"
+      ],
+      "doctrinal_weight": 1.0,
+      "constitutional_basis": "Fourteenth Amendment Equal Protection",
+      "relevance_to_audit": "Foundational civil rights case; applies to any government classification based on race."
+    },
+    {
+      "case_id": "loving_v_virginia_1967",
+      "name": "Loving v. Virginia",
+      "citation": "388 U.S. 1 (1967)",
+      "year": 1967,
+      "doctrine": "equal_protection",
+      "summary": "Laws prohibiting interracial marriage violate Equal Protection and Due Process Clauses.",
+      "holding": "State laws banning interracial marriage violate both the Equal Protection and Due Process Clauses.",
+      "issue_tags": [
+        "racial_discrimination",
+        "marriage_equality",
+        "fundamental_rights",
+        "strict_scrutiny"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Applies strict scrutiny to racial classifications; protects fundamental right to marry."
+    },
+    {
+      "case_id": "shelby_county_v_holder_2013",
+      "name": "Shelby County v. Holder",
+      "citation": "570 U.S. 529 (2013)",
+      "year": 2013,
+      "doctrine": "equal_protection",
+      "summary": "Voting Rights Act Section 4(b) coverage formula unconstitutional; must be based on current conditions.",
+      "holding": "Coverage formula in Section 4(b) of Voting Rights Act unconstitutional; based on outdated data violating equal sovereignty of states.",
+      "issue_tags": [
+        "voting_rights",
+        "federalism",
+        "equal_sovereignty",
+        "congressional_power"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fifteenth Amendment; Tenth Amendment",
+      "relevance_to_audit": "Addresses voting rights enforcement; relevant to discriminatory electoral practices."
+    },
+    {
+      "case_id": "mcculloch_v_maryland_1819",
+      "name": "McCulloch v. Maryland",
+      "citation": "17 U.S. (4 Wheat.) 316 (1819)",
+      "year": 1819,
+      "doctrine": "federal_power",
+      "summary": "Congress has implied powers under Necessary and Proper Clause; federal law supreme over state law.",
+      "holding": "Congress has authority to charter national bank under implied powers; state cannot tax federal instrumentality.",
+      "issue_tags": [
+        "implied_powers",
+        "necessary_and_proper",
+        "federal_supremacy",
+        "banking"
+      ],
+      "doctrinal_weight": 0.98,
+      "constitutional_basis": "Article I, Section 8; Supremacy Clause",
+      "relevance_to_audit": "Foundational for federal banking authority; establishes scope of congressional power."
+    },
+    {
+      "case_id": "knox_v_lee_1871",
+      "name": "Knox v. Lee (Legal Tender Cases)",
+      "citation": "79 U.S. (12 Wall.) 457 (1871)",
+      "year": 1871,
+      "doctrine": "federal_power",
+      "summary": "Congress has power to make paper money legal tender during wartime emergency.",
+      "holding": "Constitutional for Congress to authorize paper currency as legal tender to prosecute war and fund government.",
+      "issue_tags": [
+        "legal_tender",
+        "monetary_policy",
+        "war_powers",
+        "currency"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Article I; War Powers",
+      "relevance_to_audit": "Establishes federal monetary authority; relevant to economic governance analysis."
+    },
+    {
+      "case_id": "louisville_bank_v_radford_1935",
+      "name": "Louisville Joint Stock Land Bank v. Radford",
+      "citation": "295 U.S. 555 (1935)",
+      "year": 1935,
+      "doctrine": "property_rights",
+      "summary": "Frazier-Lemke Act violates Fifth Amendment by allowing debtor to retain property without paying secured creditor.",
+      "holding": "Federal law allowing farm debtor to retain property while denying creditor rights violates Fifth Amendment Takings Clause.",
+      "issue_tags": [
+        "takings_clause",
+        "property_rights",
+        "debt_relief",
+        "creditor_rights"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fifth Amendment Takings",
+      "relevance_to_audit": "Protects property and contract rights; limits government interference in economic relationships."
+    },
+    {
+      "case_id": "nebbia_v_new_york_1934",
+      "name": "Nebbia v. New York",
+      "citation": "291 U.S. 502 (1934)",
+      "year": 1934,
+      "doctrine": "economic_regulation",
+      "summary": "States may regulate any business affected with public interest; deference to economic regulations.",
+      "holding": "State price control of milk industry constitutional under police power; rational basis review applies to economic regulation.",
+      "issue_tags": [
+        "price_controls",
+        "economic_regulation",
+        "police_power",
+        "rational_basis"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Fourteenth Amendment Due Process",
+      "relevance_to_audit": "Establishes deference to economic regulations; relevant to evaluating municipal fee structures."
+    },
+    {
+      "case_id": "us_v_carolene_products_1938",
+      "name": "United States v. Carolene Products Co.",
+      "citation": "304 U.S. 144 (1938)",
+      "year": 1938,
+      "doctrine": "equal_protection",
+      "summary": "Economic regulations get rational basis review; footnote 4 suggests heightened scrutiny for fundamental rights and discrete minorities.",
+      "holding": "Federal regulation of filled milk constitutional under rational basis review; famous footnote 4 outlines framework for heightened scrutiny.",
+      "issue_tags": [
+        "rational_basis",
+        "heightened_scrutiny",
+        "fundamental_rights",
+        "discrete_minorities"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Commerce Clause; Due Process",
+      "relevance_to_audit": "Establishes multi-tiered scrutiny framework; critical for determining level of judicial review."
+    },
+    {
+      "case_id": "gibbons_v_ogden_1824",
+      "name": "Gibbons v. Ogden",
+      "citation": "22 U.S. (9 Wheat.) 1 (1824)",
+      "year": 1824,
+      "doctrine": "federal_power",
+      "summary": "Commerce Clause grants Congress broad power to regulate interstate commerce, preempting conflicting state law.",
+      "holding": "Federal commerce power is plenary and extends to all commerce affecting more than one state.",
+      "issue_tags": [
+        "commerce_clause",
+        "preemption",
+        "interstate_commerce",
+        "navigation"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Article I, Section 8, Commerce Clause",
+      "relevance_to_audit": "Foundational for federal preemption; relevant to state/local regulations affecting commerce."
+    },
+    {
+      "case_id": "wickard_v_filburn_1942",
+      "name": "Wickard v. Filburn",
+      "citation": "317 U.S. 111 (1942)",
+      "year": 1942,
+      "doctrine": "federal_power",
+      "summary": "Congress may regulate purely local activity if it substantially affects interstate commerce in aggregate.",
+      "holding": "Federal regulation of wheat production for personal consumption constitutional under aggregation principle.",
+      "issue_tags": [
+        "commerce_clause",
+        "aggregation_principle",
+        "economic_activity",
+        "federal_reach"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Commerce Clause",
+      "relevance_to_audit": "Demonstrates breadth of federal commerce power; relevant to federal vs local jurisdiction."
+    },
+    {
+      "case_id": "heart_of_atlanta_1964",
+      "name": "Heart of Atlanta Motel, Inc. v. United States",
+      "citation": "379 U.S. 241 (1964)",
+      "year": 1964,
+      "doctrine": "federal_power",
+      "summary": "Congress may prohibit racial discrimination in public accommodations under Commerce Clause.",
+      "holding": "Civil Rights Act of 1964 prohibition on racial discrimination in public accommodations is valid exercise of commerce power.",
+      "issue_tags": [
+        "civil_rights_act",
+        "commerce_clause",
+        "racial_discrimination",
+        "public_accommodations"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Commerce Clause",
+      "relevance_to_audit": "Validates federal civil rights enforcement; relevant to discrimination claims."
+    },
+    {
+      "case_id": "us_v_lopez_1995",
+      "name": "United States v. Lopez",
+      "citation": "514 U.S. 549 (1995)",
+      "year": 1995,
+      "doctrine": "federal_power",
+      "summary": "Commerce Clause does not grant unlimited federal power; Gun-Free School Zones Act exceeds congressional authority.",
+      "holding": "Federal law criminalizing gun possession near schools exceeds Commerce Clause authority; not economic activity.",
+      "issue_tags": [
+        "commerce_clause_limits",
+        "federalism",
+        "non_economic_activity",
+        "police_power"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Commerce Clause; Tenth Amendment",
+      "relevance_to_audit": "Limits federal power; preserves state police power over non-economic local matters."
+    },
+    {
+      "case_id": "delaware_v_prouse_1979",
+      "name": "Delaware v. Prouse",
+      "citation": "440 U.S. 648 (1979)",
+      "year": 1979,
+      "doctrine": "fourth_amendment",
+      "summary": "Random vehicle stops without reasonable suspicion violate Fourth Amendment.",
+      "holding": "Stopping vehicle to check license and registration without reasonable suspicion is unreasonable under Fourth Amendment.",
+      "issue_tags": [
+        "traffic_stop",
+        "reasonable_suspicion",
+        "random_stops",
+        "fourth_amendment"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Limits police authority for traffic stops; requires articulable suspicion for stops."
+    },
+    {
+      "case_id": "whren_v_united_states_1996",
+      "name": "Whren v. United States",
+      "citation": "517 U.S. 806 (1996)",
+      "year": 1996,
+      "doctrine": "fourth_amendment",
+      "summary": "Pretextual traffic stops permissible if officer has probable cause of traffic violation regardless of subjective intent.",
+      "holding": "Fourth Amendment not violated by pretextual traffic stop when officer has probable cause for traffic violation.",
+      "issue_tags": [
+        "pretextual_stop",
+        "traffic_violation",
+        "probable_cause",
+        "subjective_intent"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Enables pretextual enforcement; relevant to analyzing discriminatory stop patterns."
+    },
+    {
+      "case_id": "rodriguez_v_united_states_2015",
+      "name": "Rodriguez v. United States",
+      "citation": "575 U.S. 348 (2015)",
+      "year": 2015,
+      "doctrine": "fourth_amendment",
+      "summary": "Police may not extend traffic stop beyond time needed to handle matter for which stop was made absent reasonable suspicion.",
+      "holding": "Extending traffic stop to conduct dog sniff violates Fourth Amendment if extension prolongs stop beyond traffic mission.",
+      "issue_tags": [
+        "traffic_stop_duration",
+        "dog_sniff",
+        "reasonable_suspicion",
+        "mission_creep"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Limits scope and duration of traffic stops; detects mission creep in traffic enforcement."
+    },
+    {
+      "case_id": "atwater_v_lago_vista_2001",
+      "name": "Atwater v. Lago Vista",
+      "citation": "532 U.S. 318 (2001)",
+      "year": 2001,
+      "doctrine": "fourth_amendment",
+      "summary": "Warrantless arrest for minor criminal offense punishable only by fine does not violate Fourth Amendment.",
+      "holding": "Fourth Amendment permits warrantless misdemeanor arrest for offense committed in officer's presence even if punishable only by fine.",
+      "issue_tags": [
+        "warrantless_arrest",
+        "minor_offense",
+        "custodial_arrest",
+        "proportionality"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Permits arrest for fine-only offenses; relevant to evaluating enforcement proportionality."
+    },
+    {
+      "case_id": "crandall_v_nevada_1868",
+      "name": "Crandall v. Nevada",
+      "citation": "73 U.S. (6 Wall.) 35 (1868)",
+      "year": 1868,
+      "doctrine": "free_movement",
+      "summary": "State cannot impose tax on interstate travel; protects right to move freely between states.",
+      "holding": "State tax on persons leaving state by common carrier violates right to interstate travel implicit in federal structure.",
+      "issue_tags": [
+        "right_to_travel",
+        "interstate_movement",
+        "taxation",
+        "fundamental_right"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Structural Constitution; Commerce Clause",
+      "relevance_to_audit": "Protects interstate mobility; relevant to evaluating fees/regulations burdening travel."
+    },
+    {
+      "case_id": "shuttlesworth_v_birmingham_1969",
+      "name": "Shuttlesworth v. City of Birmingham",
+      "citation": "394 U.S. 147 (1969)",
+      "year": 1969,
+      "doctrine": "first_amendment",
+      "summary": "Ordinance granting unbridled discretion to deny parade permit violates First Amendment.",
+      "holding": "Conviction under permit ordinance granting unfettered discretion to city officials violates First Amendment.",
+      "issue_tags": [
+        "parade_permit",
+        "prior_restraint",
+        "unbridled_discretion",
+        "licensing"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Prevents arbitrary licensing schemes; relevant to evaluating discretionary permit systems."
+    },
+    {
+      "case_id": "hampton_v_united_states_1928",
+      "name": "J.W. Hampton, Jr., & Co. v. United States",
+      "citation": "276 U.S. 394 (1928)",
+      "year": 1928,
+      "doctrine": "non_delegation",
+      "summary": "Congress may delegate authority if it provides intelligible principle to guide agency discretion.",
+      "holding": "Delegation of tariff-setting authority constitutional where Congress provides intelligible principle.",
+      "issue_tags": [
+        "non_delegation",
+        "intelligible_principle",
+        "tariff_authority",
+        "agency_discretion"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Article I, Section 1",
+      "relevance_to_audit": "Foundational for delegation doctrine; requires congressional standards for agency action."
+    },
+    {
+      "case_id": "plessy_v_ferguson_1896",
+      "name": "Plessy v. Ferguson",
+      "citation": "163 U.S. 537 (1896)",
+      "year": 1896,
+      "doctrine": "equal_protection",
+      "summary": "Separate but equal doctrine upheld racial segregation (overruled by Brown v. Board).",
+      "holding": "Racial segregation in public facilities does not violate Equal Protection if facilities are equal (OVERRULED).",
+      "issue_tags": [
+        "separate_but_equal",
+        "racial_segregation",
+        "overruled",
+        "equal_protection"
+      ],
+      "doctrinal_weight": 0.0,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Historically significant; overruled doctrine shows evolution of equal protection."
+    },
+    {
+      "case_id": "strauder_v_west_virginia_1880",
+      "name": "Strauder v. West Virginia",
+      "citation": "100 U.S. 303 (1880)",
+      "year": 1880,
+      "doctrine": "equal_protection",
+      "summary": "State law excluding African Americans from jury service violates Equal Protection Clause.",
+      "holding": "State statute limiting jury service to white males violates Equal Protection Clause.",
+      "issue_tags": [
+        "jury_discrimination",
+        "racial_exclusion",
+        "equal_protection",
+        "fair_trial"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Protects against racial discrimination in jury selection; relevant to jury composition analysis."
+    },
+    {
+      "case_id": "batson_v_kentucky_1986",
+      "name": "Batson v. Kentucky",
+      "citation": "476 U.S. 79 (1986)",
+      "year": 1986,
+      "doctrine": "equal_protection",
+      "summary": "Peremptory challenges based on race violate Equal Protection Clause.",
+      "holding": "Prosecutor's use of peremptory challenges to exclude jurors solely on account of race violates Equal Protection.",
+      "issue_tags": [
+        "peremptory_challenges",
+        "racial_discrimination",
+        "jury_selection",
+        "equal_protection"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Prevents discriminatory jury selection; relevant to analyzing patterns in strikes."
+    },
+    {
+      "case_id": "yick_wo_v_hopkins_1886",
+      "name": "Yick Wo v. Hopkins",
+      "citation": "118 U.S. 356 (1886)",
+      "year": 1886,
+      "doctrine": "equal_protection",
+      "summary": "Facially neutral law applied in discriminatory manner violates Equal Protection.",
+      "holding": "Facially neutral ordinance administered in discriminatory manner against Chinese laundry operators violates Equal Protection.",
+      "issue_tags": [
+        "discriminatory_enforcement",
+        "facial_neutrality",
+        "equal_protection",
+        "selective_enforcement"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Detects discriminatory application of neutral laws; critical for enforcement pattern analysis."
+    },
+    {
+      "case_id": "printz_v_united_states_1997",
+      "name": "Printz v. United States",
+      "citation": "521 U.S. 898 (1997)",
+      "year": 1997,
+      "doctrine": "separation_of_powers",
+      "summary": "Federal government cannot commandeer state executive officers to enforce federal law.",
+      "holding": "Brady Act provision requiring state law enforcement to conduct background checks unconstitutional; violates anti-commandeering principle.",
+      "issue_tags": [
+        "anti_commandeering",
+        "federalism",
+        "state_sovereignty",
+        "tenth_amendment"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Tenth Amendment",
+      "relevance_to_audit": "Protects state sovereignty; federal programs cannot compel state officials to enforce federal mandates."
+    },
+    {
+      "case_id": "new_york_v_united_states_1992",
+      "name": "New York v. United States",
+      "citation": "505 U.S. 144 (1992)",
+      "year": 1992,
+      "doctrine": "separation_of_powers",
+      "summary": "Congress cannot commandeer state legislatures to enact federal regulatory program.",
+      "holding": "Federal law requiring states to regulate radioactive waste or take title violates Tenth Amendment.",
+      "issue_tags": [
+        "anti_commandeering",
+        "federalism",
+        "tenth_amendment",
+        "state_sovereignty"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Tenth Amendment",
+      "relevance_to_audit": "Limits federal coercion of states; relevant to evaluating federal-state program structures."
+    },
+    {
+      "case_id": "lawrence_v_texas_2003",
+      "name": "Lawrence v. Texas",
+      "citation": "539 U.S. 558 (2003)",
+      "year": 2003,
+      "doctrine": "due_process",
+      "summary": "State sodomy laws criminalizing private consensual conduct between adults violate substantive due process.",
+      "holding": "Texas law criminalizing sodomy between consenting adults violates Due Process Clause; overrules Bowers v. Hardwick.",
+      "issue_tags": [
+        "substantive_due_process",
+        "privacy",
+        "intimate_conduct",
+        "liberty_interest"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourteenth Amendment Due Process",
+      "relevance_to_audit": "Protects liberty interests in intimate decisions; limits government intrusion into private conduct."
+    },
+    {
+      "case_id": "griswold_v_connecticut_1965",
+      "name": "Griswold v. Connecticut",
+      "citation": "381 U.S. 479 (1965)",
+      "year": 1965,
+      "doctrine": "due_process",
+      "summary": "Right to privacy protects married couples' access to contraception; found in penumbras of Bill of Rights.",
+      "holding": "Connecticut law prohibiting use of contraceptives violates right to marital privacy.",
+      "issue_tags": [
+        "privacy_right",
+        "contraception",
+        "marital_privacy",
+        "penumbral_rights"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "First, Third, Fourth, Fifth, Ninth Amendments",
+      "relevance_to_audit": "Established constitutional right to privacy; foundational for substantive due process."
+    },
+    {
+      "case_id": "roe_v_wade_1973",
+      "name": "Roe v. Wade",
+      "citation": "410 U.S. 113 (1973)",
+      "year": 1973,
+      "doctrine": "due_process",
+      "summary": "Right to privacy includes abortion decision; state regulation subject to strict scrutiny (overruled 2022).",
+      "holding": "Right to privacy protects woman's decision to terminate pregnancy; trimester framework (OVERRULED by Dobbs 2022).",
+      "issue_tags": [
+        "abortion_rights",
+        "privacy",
+        "substantive_due_process",
+        "overruled"
+      ],
+      "doctrinal_weight": 0.0,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Historical precedent overruled by Dobbs; illustrates evolution of substantive due process."
+    },
+    {
+      "case_id": "dobbs_v_jackson_2022",
+      "name": "Dobbs v. Jackson Women's Health Organization",
+      "citation": "142 S. Ct. 2228 (2022)",
+      "year": 2022,
+      "doctrine": "due_process",
+      "summary": "No constitutional right to abortion; overrules Roe and Casey; returns issue to states.",
+      "holding": "Constitution does not confer right to abortion; Roe and Casey overruled; rational basis review applies to abortion regulations.",
+      "issue_tags": [
+        "abortion",
+        "substantive_due_process",
+        "overrule",
+        "state_regulation"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Limits substantive due process; significant federalism implications for state regulation."
+    },
+    {
+      "case_id": "obergefell_v_hodges_2015",
+      "name": "Obergefell v. Hodges",
+      "citation": "576 U.S. 644 (2015)",
+      "year": 2015,
+      "doctrine": "due_process",
+      "summary": "Right to marry is fundamental liberty protected by Due Process and Equal Protection; extends to same-sex couples.",
+      "holding": "Fourteenth Amendment requires states to license and recognize same-sex marriages.",
+      "issue_tags": [
+        "marriage_equality",
+        "fundamental_right",
+        "equal_protection",
+        "due_process"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Protects fundamental right to marry; applies strict scrutiny to marriage restrictions."
+    },
+    {
+      "case_id": "tinker_v_des_moines_1969",
+      "name": "Tinker v. Des Moines Independent Community School District",
+      "citation": "393 U.S. 503 (1969)",
+      "year": 1969,
+      "doctrine": "first_amendment",
+      "summary": "Students retain First Amendment rights in school; symbolic speech protected unless materially disrupts.",
+      "holding": "Students do not shed constitutional rights at schoolhouse gate; armband protest protected absent material disruption.",
+      "issue_tags": [
+        "student_speech",
+        "symbolic_speech",
+        "school_regulation",
+        "substantial_disruption"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Protects student speech rights; relevant to school disciplinary policies."
+    },
+    {
+      "case_id": "brandenburg_v_ohio_1969",
+      "name": "Brandenburg v. Ohio",
+      "citation": "395 U.S. 444 (1969)",
+      "year": 1969,
+      "doctrine": "first_amendment",
+      "summary": "Government cannot punish inflammatory speech unless directed to inciting imminent lawless action and likely to do so.",
+      "holding": "Abstract advocacy of violence protected; only incitement to imminent lawless action punishable.",
+      "issue_tags": [
+        "incitement",
+        "imminent_lawless_action",
+        "advocacy",
+        "free_speech"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Highest protection for speech; limits government suppression of controversial expression."
+    },
+    {
+      "case_id": "virginia_v_black_2003",
+      "name": "Virginia v. Black",
+      "citation": "538 U.S. 343 (2003)",
+      "year": 2003,
+      "doctrine": "first_amendment",
+      "summary": "State may ban cross burning with intent to intimidate; true threats not protected by First Amendment.",
+      "holding": "Ban on cross burning constitutional if statute requires intent to intimidate; true threats exception to First Amendment.",
+      "issue_tags": [
+        "true_threats",
+        "intimidation",
+        "symbolic_speech",
+        "hate_speech"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Defines true threats exception; relevant to evaluating threatening communications."
+    },
+    {
+      "case_id": "citizens_united_v_fec_2010",
+      "name": "Citizens United v. Federal Election Commission",
+      "citation": "558 U.S. 310 (2010)",
+      "year": 2010,
+      "doctrine": "first_amendment",
+      "summary": "Corporations have First Amendment right to make independent political expenditures; no corruption from independent spending.",
+      "holding": "Government may not restrict independent expenditures by corporations, unions, or associations for political speech.",
+      "issue_tags": [
+        "corporate_speech",
+        "campaign_finance",
+        "independent_expenditures",
+        "political_speech"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Protects corporate political speech; relevant to campaign finance and vendor influence."
+    },
+    {
+      "case_id": "new_york_times_v_sullivan_1964",
+      "name": "New York Times Co. v. Sullivan",
+      "citation": "376 U.S. 254 (1964)",
+      "year": 1964,
+      "doctrine": "first_amendment",
+      "summary": "Public officials must prove actual malice to recover libel damages for statements about official conduct.",
+      "holding": "First Amendment requires public official to prove actual malice (knowledge of falsity or reckless disregard) in defamation suit.",
+      "issue_tags": [
+        "defamation",
+        "actual_malice",
+        "public_official",
+        "freedom_of_press"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Protects robust public debate; high bar for official defamation claims."
+    },
+    {
+      "case_id": "texas_v_johnson_1989",
+      "name": "Texas v. Johnson",
+      "citation": "491 U.S. 397 (1989)",
+      "year": 1989,
+      "doctrine": "first_amendment",
+      "summary": "Flag burning is expressive conduct protected by First Amendment.",
+      "holding": "Government may not prohibit expression of idea merely because society finds it offensive; flag burning protected.",
+      "issue_tags": [
+        "symbolic_speech",
+        "flag_desecration",
+        "expressive_conduct",
+        "content_neutrality"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Protects offensive symbolic speech; government cannot suppress based on disagreement with message."
+    },
+    {
+      "case_id": "snyder_v_phelps_2011",
+      "name": "Snyder v. Phelps",
+      "citation": "562 U.S. 443 (2011)",
+      "year": 2011,
+      "doctrine": "first_amendment",
+      "summary": "Speech on matters of public concern at public place receives heightened First Amendment protection even if offensive.",
+      "holding": "Westboro Baptist Church protest at military funeral protected by First Amendment despite hurtful content.",
+      "issue_tags": [
+        "public_concern",
+        "offensive_speech",
+        "funeral_protest",
+        "heightened_protection"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Protects speech on public issues even if deeply offensive to private individuals."
+    },
+    {
+      "case_id": "employment_division_v_smith_1990",
+      "name": "Employment Division v. Smith",
+      "citation": "494 U.S. 872 (1990)",
+      "year": 1990,
+      "doctrine": "first_amendment",
+      "summary": "Neutral law of general applicability need not accommodate religious practice; no religious exemption required.",
+      "holding": "Free Exercise Clause does not require religious exemption from neutral, generally applicable laws.",
+      "issue_tags": [
+        "free_exercise",
+        "religious_exemption",
+        "neutral_laws",
+        "peyote"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "First Amendment Free Exercise Clause",
+      "relevance_to_audit": "Limits religious exemptions; relevant to evaluating accommodation requests."
+    },
+    {
+      "case_id": "church_of_lukumi_v_hialeah_1993",
+      "name": "Church of the Lukumi Babalu Aye, Inc. v. City of Hialeah",
+      "citation": "508 U.S. 520 (1993)",
+      "year": 1993,
+      "doctrine": "first_amendment",
+      "summary": "Laws targeting specific religious practices violate Free Exercise Clause; must be neutral and generally applicable.",
+      "holding": "City ordinances prohibiting animal sacrifice for religious purposes unconstitutional; not neutral toward religion.",
+      "issue_tags": [
+        "free_exercise",
+        "religious_targeting",
+        "animal_sacrifice",
+        "neutrality"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "First Amendment",
+      "relevance_to_audit": "Prevents religious discrimination; laws must be genuinely neutral and generally applicable."
+    },
+    {
+      "case_id": "kyllo_v_united_states_2001",
+      "name": "Kyllo v. United States",
+      "citation": "533 U.S. 27 (2001)",
+      "year": 2001,
+      "doctrine": "fourth_amendment",
+      "summary": "Thermal imaging of home to detect heat signature is Fourth Amendment search requiring warrant.",
+      "holding": "Use of sense-enhancing technology to obtain information about home interior is search requiring warrant.",
+      "issue_tags": [
+        "thermal_imaging",
+        "sense_enhancing_technology",
+        "home_privacy",
+        "warrant_requirement"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Protects home from technological surveillance; relevant to emerging surveillance technologies."
+    },
+    {
+      "case_id": "florida_v_riley_1989",
+      "name": "Florida v. Riley",
+      "citation": "488 U.S. 445 (1989)",
+      "year": 1989,
+      "doctrine": "fourth_amendment",
+      "summary": "Aerial surveillance from helicopter at 400 feet not a search; no reasonable expectation of privacy.",
+      "holding": "Observation of greenhouse interior from helicopter in public airspace not a Fourth Amendment search.",
+      "issue_tags": [
+        "aerial_surveillance",
+        "open_fields",
+        "privacy_expectation",
+        "curtilage"
+      ],
+      "doctrinal_weight": 0.8,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Limits privacy in areas visible from public airspace; relevant to drone surveillance."
+    },
+    {
+      "case_id": "california_v_ciraolo_1986",
+      "name": "California v. Ciraolo",
+      "citation": "476 U.S. 207 (1986)",
+      "year": 1986,
+      "doctrine": "fourth_amendment",
+      "summary": "Aerial observation from fixed-wing aircraft at 1,000 feet not a search.",
+      "holding": "Naked-eye observation of fenced backyard from public airspace not a Fourth Amendment search.",
+      "issue_tags": [
+        "aerial_surveillance",
+        "open_fields",
+        "curtilage",
+        "privacy_expectation"
+      ],
+      "doctrinal_weight": 0.78,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes aerial surveillance baseline; relevant to drone and aircraft surveillance programs."
+    },
+    {
+      "case_id": "maryland_v_king_2013",
+      "name": "Maryland v. King",
+      "citation": "569 U.S. 435 (2013)",
+      "year": 2013,
+      "doctrine": "fourth_amendment",
+      "summary": "DNA swab of arrestee for serious offense is reasonable search; aids in identification.",
+      "holding": "Taking and analyzing DNA cheek swab from arrestees constitutional; legitimate government interest in identification.",
+      "issue_tags": [
+        "dna_collection",
+        "arrestee_search",
+        "identification",
+        "biometric_data"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Permits biometric collection from arrestees; relevant to DNA database programs."
+    },
+    {
+      "case_id": "safford_v_redding_2009",
+      "name": "Safford Unified School District v. Redding",
+      "citation": "557 U.S. 364 (2009)",
+      "year": 2009,
+      "doctrine": "fourth_amendment",
+      "summary": "Strip search of student for prescription-strength ibuprofen violated Fourth Amendment; intrusion unjustified.",
+      "holding": "Strip search of 13-year-old student not justified by suspicion she possessed ibuprofen; violated Fourth Amendment.",
+      "issue_tags": [
+        "student_search",
+        "strip_search",
+        "reasonable_suspicion",
+        "school_context"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Limits invasiveness of student searches; scope must match nature of infraction."
+    },
+    {
+      "case_id": "new_jersey_v_tlo_1985",
+      "name": "New Jersey v. T.L.O.",
+      "citation": "469 U.S. 325 (1985)",
+      "year": 1985,
+      "doctrine": "fourth_amendment",
+      "summary": "School officials need only reasonable suspicion (not probable cause) to search students.",
+      "holding": "Fourth Amendment applies to school searches but reasonable suspicion standard applies, not probable cause.",
+      "issue_tags": [
+        "student_search",
+        "reasonable_suspicion",
+        "school_authority",
+        "lowered_standard"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes lower threshold for school searches; balances student rights with school safety."
+    },
+    {
+      "case_id": "board_of_education_v_earls_2002",
+      "name": "Board of Education v. Earls",
+      "citation": "536 U.S. 822 (2002)",
+      "year": 2002,
+      "doctrine": "fourth_amendment",
+      "summary": "Suspicionless drug testing of students participating in competitive extracurricular activities is reasonable.",
+      "holding": "School policy requiring drug tests for students in extracurricular activities constitutional under special needs doctrine.",
+      "issue_tags": [
+        "drug_testing",
+        "special_needs",
+        "extracurricular_activities",
+        "suspicionless_search"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Permits suspicionless searches in school context; expands special needs exception."
+    },
+    {
+      "case_id": "vernonia_v_acton_1995",
+      "name": "Vernonia School District 47J v. Acton",
+      "citation": "515 U.S. 646 (1995)",
+      "year": 1995,
+      "doctrine": "fourth_amendment",
+      "summary": "Suspicionless drug testing of student athletes is reasonable under Fourth Amendment.",
+      "holding": "Random drug testing of student athletes constitutional; students have reduced privacy expectation in school.",
+      "issue_tags": [
+        "drug_testing",
+        "student_athletes",
+        "special_needs",
+        "reduced_privacy"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Establishes special needs exception for student athletes; reduced privacy expectation."
+    },
+    {
+      "case_id": "city_of_indianapolis_v_edmond_2000",
+      "name": "City of Indianapolis v. Edmond",
+      "citation": "531 U.S. 32 (2000)",
+      "year": 2000,
+      "doctrine": "fourth_amendment",
+      "summary": "Suspicionless vehicle checkpoints for general crime detection violate Fourth Amendment.",
+      "holding": "Drug interdiction checkpoints violate Fourth Amendment; primary purpose cannot be general crime detection.",
+      "issue_tags": [
+        "checkpoint",
+        "suspicionless_search",
+        "primary_purpose",
+        "crime_detection"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Limits checkpoint authority; primary purpose must be legitimate special need, not general law enforcement."
+    },
+    {
+      "case_id": "illinois_v_caballes_2005",
+      "name": "Illinois v. Caballes",
+      "citation": "543 U.S. 405 (2005)",
+      "year": 2005,
+      "doctrine": "fourth_amendment",
+      "summary": "Dog sniff during lawful traffic stop not a search; no reasonable expectation of privacy in contraband.",
+      "holding": "Dog sniff of vehicle during lawful traffic stop not a Fourth Amendment search if not prolonging stop.",
+      "issue_tags": [
+        "dog_sniff",
+        "traffic_stop",
+        "privacy_expectation",
+        "contraband"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Permits dog sniff during lawful stop without suspicion; limited to duration of lawful stop."
+    },
+    {
+      "case_id": "florence_v_board_2012",
+      "name": "Florence v. Board of Chosen Freeholders",
+      "citation": "566 U.S. 318 (2012)",
+      "year": 2012,
+      "doctrine": "fourth_amendment",
+      "summary": "Strip search of arrestee being admitted to general jail population reasonable even for minor offense.",
+      "holding": "Strip search procedures for detainees entering general jail population constitutional regardless of offense.",
+      "issue_tags": [
+        "strip_search",
+        "jail_intake",
+        "institutional_security",
+        "minor_offense"
+      ],
+      "doctrinal_weight": 0.83,
+      "constitutional_basis": "Fourth Amendment",
+      "relevance_to_audit": "Defers to jail security needs; permits intrusive searches for institutional safety."
+    },
+    {
+      "case_id": "boumediene_v_bush_2008",
+      "name": "Boumediene v. Bush",
+      "citation": "553 U.S. 723 (2008)",
+      "year": 2008,
+      "doctrine": "due_process",
+      "summary": "Guantanamo detainees have constitutional right to habeas corpus; MCA inadequate substitute.",
+      "holding": "Detainees at Guantanamo Bay have constitutional privilege of habeas corpus; MCA unconstitutional suspension.",
+      "issue_tags": [
+        "habeas_corpus",
+        "guantanamo",
+        "enemy_combatant",
+        "suspension_clause"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Suspension Clause; Due Process",
+      "relevance_to_audit": "Extends habeas rights to Guantanamo; limits executive detention authority."
+    },
+    {
+      "case_id": "rochin_v_california_1952",
+      "name": "Rochin v. California",
+      "citation": "342 U.S. 165 (1952)",
+      "year": 1952,
+      "doctrine": "due_process",
+      "summary": "Forced stomach pumping to retrieve evidence shocks the conscience and violates due process.",
+      "holding": "Police conduct that shocks the conscience violates Fourteenth Amendment Due Process.",
+      "issue_tags": [
+        "substantive_due_process",
+        "police_misconduct",
+        "shocks_conscience",
+        "bodily_integrity"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Establishes shocks-the-conscience test for substantive due process violations."
+    },
+    {
+      "case_id": "county_of_sacramento_v_lewis_1998",
+      "name": "County of Sacramento v. Lewis",
+      "citation": "523 U.S. 833 (1998)",
+      "year": 1998,
+      "doctrine": "due_process",
+      "summary": "High-speed police chase causing death violates substantive due process only if shocks conscience.",
+      "holding": "Substantive due process violated only by executive action intended to injure or that shocks conscience.",
+      "issue_tags": [
+        "police_chase",
+        "substantive_due_process",
+        "shocks_conscience",
+        "deliberate_indifference"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "High bar for substantive due process in high-speed pursuits; requires intent or deliberate indifference."
+    },
+    {
+      "case_id": "deshaney_v_winnebago_1989",
+      "name": "DeShaney v. Winnebago County Department of Social Services",
+      "citation": "489 U.S. 189 (1989)",
+      "year": 1989,
+      "doctrine": "due_process",
+      "summary": "Due Process Clause generally does not impose affirmative duty on state to protect individuals from private violence.",
+      "holding": "State's failure to protect individual from private violence not due process violation absent special relationship.",
+      "issue_tags": [
+        "state_duty",
+        "affirmative_obligation",
+        "child_abuse",
+        "special_relationship"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Limits state liability; no general duty to protect absent custody or special relationship."
+    },
+    {
+      "case_id": "town_of_castle_rock_v_gonzales_2005",
+      "name": "Town of Castle Rock v. Gonzales",
+      "citation": "545 U.S. 748 (2005)",
+      "year": 2005,
+      "doctrine": "due_process",
+      "summary": "No property interest in police enforcement of restraining order; no due process violation from non-enforcement.",
+      "holding": "Restraining order does not create property interest in police enforcement; discretionary enforcement permissible.",
+      "issue_tags": [
+        "police_discretion",
+        "restraining_order",
+        "property_interest",
+        "enforcement"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Limits due process claims for non-enforcement; police retain enforcement discretion."
+    },
+    {
+      "case_id": "sandin_v_conner_1995",
+      "name": "Sandin v. Conner",
+      "citation": "515 U.S. 472 (1995)",
+      "year": 1995,
+      "doctrine": "due_process",
+      "summary": "Prisoner disciplinary segregation for 30 days does not trigger due process protections absent atypical hardship.",
+      "holding": "Liberty interest in avoiding confinement conditions exists only if conditions impose atypical and significant hardship.",
+      "issue_tags": [
+        "prisoner_rights",
+        "disciplinary_segregation",
+        "liberty_interest",
+        "atypical_hardship"
+      ],
+      "doctrinal_weight": 0.8,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Limits due process protections for prisoners; only atypical hardships trigger hearings."
+    },
+    {
+      "case_id": "city_of_cleburne_v_cleburne_1985",
+      "name": "City of Cleburne v. Cleburne Living Center",
+      "citation": "473 U.S. 432 (1985)",
+      "year": 1985,
+      "doctrine": "equal_protection",
+      "summary": "Intellectual disability not quasi-suspect class; but permit denial for group home based on animus violates equal protection.",
+      "holding": "Requiring special permit for group home for intellectually disabled violates equal protection when based on irrational prejudice.",
+      "issue_tags": [
+        "rational_basis",
+        "animus",
+        "intellectual_disability",
+        "zoning"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Rational basis with bite; government action based on animus violates equal protection."
+    },
+    {
+      "case_id": "romer_v_evans_1996",
+      "name": "Romer v. Evans",
+      "citation": "517 U.S. 620 (1996)",
+      "year": 1996,
+      "doctrine": "equal_protection",
+      "summary": "State constitutional amendment barring anti-discrimination protection for gays and lesbians violates equal protection.",
+      "holding": "Colorado Amendment 2 imposing broad disability on gays and lesbians fails rational basis review; based on animus.",
+      "issue_tags": [
+        "sexual_orientation",
+        "rational_basis",
+        "animus",
+        "anti_discrimination"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Applies rational basis review to strike down discrimination based on animus."
+    },
+    {
+      "case_id": "united_states_v_windsor_2013",
+      "name": "United States v. Windsor",
+      "citation": "570 U.S. 744 (2013)",
+      "year": 2013,
+      "doctrine": "equal_protection",
+      "summary": "Defense of Marriage Act (DOMA) Section 3 unconstitutional; federal government must recognize state-sanctioned same-sex marriages.",
+      "holding": "DOMA's refusal to recognize state same-sex marriages violates Fifth Amendment Due Process and equal protection principles.",
+      "issue_tags": [
+        "same_sex_marriage",
+        "doma",
+        "federalism",
+        "equal_protection"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Fifth Amendment Due Process",
+      "relevance_to_audit": "Invalidates discriminatory federal non-recognition of state marriages; equal dignity principle."
+    },
+    {
+      "case_id": "bolling_v_sharpe_1954",
+      "name": "Bolling v. Sharpe",
+      "citation": "347 U.S. 497 (1954)",
+      "year": 1954,
+      "doctrine": "due_process",
+      "summary": "Fifth Amendment Due Process incorporates equal protection principles; racial segregation in DC schools unconstitutional.",
+      "holding": "Racial segregation in District of Columbia public schools violates Fifth Amendment Due Process (companion to Brown).",
+      "issue_tags": [
+        "reverse_incorporation",
+        "racial_segregation",
+        "equal_protection",
+        "due_process"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Applies equal protection to federal government through Fifth Amendment due process."
+    },
+    {
+      "case_id": "regents_v_bakke_1978",
+      "name": "Regents of the University of California v. Bakke",
+      "citation": "438 U.S. 265 (1978)",
+      "year": 1978,
+      "doctrine": "equal_protection",
+      "summary": "Racial quotas in university admissions unconstitutional; race may be considered as one factor among many.",
+      "holding": "Rigid racial quota system violates Equal Protection; race-conscious admissions permissible as one factor.",
+      "issue_tags": [
+        "affirmative_action",
+        "racial_quotas",
+        "strict_scrutiny",
+        "diversity"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Applies strict scrutiny to racial classifications; permits diversity consideration without quotas."
+    },
+    {
+      "case_id": "fisher_v_texas_2016",
+      "name": "Fisher v. University of Texas (Fisher II)",
+      "citation": "579 U.S. 365 (2016)",
+      "year": 2016,
+      "doctrine": "equal_protection",
+      "summary": "Race-conscious university admissions constitutional if narrowly tailored to achieve diversity and no workable alternative exists.",
+      "holding": "University of Texas's race-conscious admissions policy constitutional; satisfies strict scrutiny.",
+      "issue_tags": [
+        "affirmative_action",
+        "strict_scrutiny",
+        "narrow_tailoring",
+        "diversity"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Upholds limited race-conscious admissions under strict scrutiny analysis."
+    },
+    {
+      "case_id": "students_for_fair_admissions_v_harvard_2023",
+      "name": "Students for Fair Admissions, Inc. v. President & Fellows of Harvard College",
+      "citation": "143 S. Ct. 2141 (2023)",
+      "year": 2023,
+      "doctrine": "equal_protection",
+      "summary": "Race-conscious university admissions programs violate Equal Protection; overrules Bakke/Grutter framework.",
+      "holding": "Harvard and UNC race-conscious admissions programs unconstitutional; cannot use race as factor in admissions.",
+      "issue_tags": [
+        "affirmative_action",
+        "strict_scrutiny",
+        "overrule",
+        "colorblind"
+      ],
+      "doctrinal_weight": 0.95,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Major shift: prohibits use of race in admissions; mandates colorblind approach."
+    },
+    {
+      "case_id": "grutter_v_bollinger_2003",
+      "name": "Grutter v. Bollinger",
+      "citation": "539 U.S. 306 (2003)",
+      "year": 2003,
+      "doctrine": "equal_protection",
+      "summary": "Student body diversity is compelling interest; individualized race-conscious admissions constitutional (effectively overruled 2023).",
+      "holding": "Law school's narrowly tailored use of race in admissions constitutional; diversity compelling interest (overruled by SFFA).",
+      "issue_tags": [
+        "affirmative_action",
+        "compelling_interest",
+        "narrow_tailoring",
+        "overruled"
+      ],
+      "doctrinal_weight": 0.0,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Historical precedent overruled by Students for Fair Admissions (2023)."
+    },
+    {
+      "case_id": "ins_v_chadha_1983",
+      "name": "INS v. Chadha",
+      "citation": "462 U.S. 919 (1983)",
+      "year": 1983,
+      "doctrine": "separation_of_powers",
+      "summary": "Legislative veto violates separation of powers; Congress must use bicameralism and presentment.",
+      "holding": "One-house legislative veto unconstitutional; violates Presentment Clause and bicameralism requirements.",
+      "issue_tags": [
+        "legislative_veto",
+        "presentment",
+        "bicameralism",
+        "separation_of_powers"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Article I; Presentment Clause",
+      "relevance_to_audit": "Invalidates legislative vetoes; Congress must follow constitutional lawmaking process."
+    },
+    {
+      "case_id": "clinton_v_new_york_1998",
+      "name": "Clinton v. City of New York",
+      "citation": "524 U.S. 417 (1998)",
+      "year": 1998,
+      "doctrine": "separation_of_powers",
+      "summary": "Line-item veto violates Presentment Clause; President cannot unilaterally amend or repeal statutes.",
+      "holding": "Line Item Veto Act unconstitutional; permits President to cancel parts of bills after signing into law.",
+      "issue_tags": [
+        "line_item_veto",
+        "presentment_clause",
+        "statutory_amendment",
+        "executive_power"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Article I; Presentment Clause",
+      "relevance_to_audit": "Limits executive power to modify legislation; constitutional amendment process required."
+    },
+    {
+      "case_id": "bowsher_v_synar_1986",
+      "name": "Bowsher v. Synar",
+      "citation": "478 U.S. 714 (1986)",
+      "year": 1986,
+      "doctrine": "separation_of_powers",
+      "summary": "Congress cannot reserve removal power over officer performing executive functions; violates separation of powers.",
+      "holding": "Gramm-Rudman-Hollings Act unconstitutional; Comptroller General removable by Congress but exercises executive power.",
+      "issue_tags": [
+        "removal_power",
+        "executive_functions",
+        "comptroller_general",
+        "separation_of_powers"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Separation of Powers",
+      "relevance_to_audit": "Prevents congressional control of executive functions through removal power."
+    },
+    {
+      "case_id": "morrison_v_olson_1988",
+      "name": "Morrison v. Olson",
+      "citation": "487 U.S. 654 (1988)",
+      "year": 1988,
+      "doctrine": "separation_of_powers",
+      "summary": "Independent counsel law constitutional; limited restrictions on President's removal power permissible.",
+      "holding": "Ethics in Government Act permissibly limits President's removal power over independent counsel.",
+      "issue_tags": [
+        "independent_counsel",
+        "removal_power",
+        "good_cause",
+        "executive_power"
+      ],
+      "doctrinal_weight": 0.85,
+      "constitutional_basis": "Article II",
+      "relevance_to_audit": "Permits limited restrictions on presidential removal power for certain offices."
+    },
+    {
+      "case_id": "seila_law_v_cfpb_2020",
+      "name": "Seila Law LLC v. Consumer Financial Protection Bureau",
+      "citation": "140 S. Ct. 2183 (2020)",
+      "year": 2020,
+      "doctrine": "separation_of_powers",
+      "summary": "Single-director CFPB structure with for-cause removal violates separation of powers; President must have removal power.",
+      "holding": "CFPB's single-director structure insulated from presidential removal violates Article II.",
+      "issue_tags": [
+        "removal_power",
+        "unitary_executive",
+        "independent_agency",
+        "for_cause"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Article II",
+      "relevance_to_audit": "Strengthens presidential removal power; limits independence of single-director agencies."
+    },
+    {
+      "case_id": "penn_central_v_new_york_1978",
+      "name": "Penn Central Transportation Co. v. City of New York",
+      "citation": "438 U.S. 104 (1978)",
+      "year": 1978,
+      "doctrine": "property_rights",
+      "summary": "Regulatory taking requires case-by-case analysis; landmark preservation law not automatic taking.",
+      "holding": "Landmarks preservation law not a taking; established three-factor balancing test for regulatory takings.",
+      "issue_tags": [
+        "regulatory_taking",
+        "landmarks_preservation",
+        "balancing_test",
+        "transfer_development_rights"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Fifth Amendment Takings Clause",
+      "relevance_to_audit": "Foundational regulatory takings case; balances economic impact, reasonable expectations, character of action."
+    },
+    {
+      "case_id": "lucas_v_south_carolina_1992",
+      "name": "Lucas v. South Carolina Coastal Council",
+      "citation": "505 U.S. 1003 (1992)",
+      "year": 1992,
+      "doctrine": "property_rights",
+      "summary": "Regulation denying all economically beneficial use is taking requiring compensation unless inheres in title.",
+      "holding": "Regulation depriving property of all economic value is categorical taking unless justified by background principles.",
+      "issue_tags": [
+        "categorical_taking",
+        "total_economic_loss",
+        "nuisance_exception",
+        "beachfront_property"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Establishes categorical taking for total economic deprivation; relevant to restrictive regulations."
+    },
+    {
+      "case_id": "kelo_v_city_of_new_london_2005",
+      "name": "Kelo v. City of New London",
+      "citation": "545 U.S. 469 (2005)",
+      "year": 2005,
+      "doctrine": "property_rights",
+      "summary": "Economic development qualifies as public use for eminent domain; highly controversial decision.",
+      "holding": "Taking private property for economic development satisfies public use requirement of Fifth Amendment.",
+      "issue_tags": [
+        "eminent_domain",
+        "public_use",
+        "economic_development",
+        "private_transfer"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Broad interpretation of public use; relevant to economic development takings."
+    },
+    {
+      "case_id": "koontz_v_st_johns_river_2013",
+      "name": "Koontz v. St. Johns River Water Management District",
+      "citation": "570 U.S. 595 (2013)",
+      "year": 2013,
+      "doctrine": "property_rights",
+      "summary": "Unconstitutional conditions doctrine applies to permit denials and monetary exactions.",
+      "holding": "Government demands for property must satisfy Nollan/Dolan nexus and rough proportionality even if permit denied.",
+      "issue_tags": [
+        "exactions",
+        "unconstitutional_conditions",
+        "permit_denial",
+        "monetary_demands"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Extends exactions doctrine to permit denials and money demands; limits conditional approvals."
+    },
+    {
+      "case_id": "nollan_v_california_1987",
+      "name": "Nollan v. California Coastal Commission",
+      "citation": "483 U.S. 825 (1987)",
+      "year": 1987,
+      "doctrine": "property_rights",
+      "summary": "Permit condition must have essential nexus to legitimate state interest or violates takings clause.",
+      "holding": "Coastal Commission's beach access condition lacks essential nexus to permit; unconstitutional exaction.",
+      "issue_tags": [
+        "exactions",
+        "essential_nexus",
+        "permit_conditions",
+        "public_access"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Requires essential nexus for permit conditions; prevents pretextual exactions."
+    },
+    {
+      "case_id": "dolan_v_tigard_1994",
+      "name": "Dolan v. City of Tigard",
+      "citation": "512 U.S. 374 (1994)",
+      "year": 1994,
+      "doctrine": "property_rights",
+      "summary": "Permit condition must be roughly proportional to impact; heightened scrutiny for exactions.",
+      "holding": "Permit condition requiring dedication of land must be roughly proportional to development's impact.",
+      "issue_tags": [
+        "exactions",
+        "rough_proportionality",
+        "permit_conditions",
+        "heightened_scrutiny"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Requires rough proportionality for permit conditions; individualizes review."
+    },
+    {
+      "case_id": "loretto_v_teleprompter_1982",
+      "name": "Loretto v. Teleprompter Manhattan CATV Corp.",
+      "citation": "458 U.S. 419 (1982)",
+      "year": 1982,
+      "doctrine": "property_rights",
+      "summary": "Permanent physical occupation is categorical taking requiring compensation regardless of size.",
+      "holding": "Permanent physical occupation, however minor, is categorical taking requiring just compensation.",
+      "issue_tags": [
+        "physical_taking",
+        "categorical_taking",
+        "permanent_occupation",
+        "cable_boxes"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Establishes per se rule for permanent physical occupation; size irrelevant."
+    },
+    {
+      "case_id": "horne_v_usda_2015",
+      "name": "Horne v. Department of Agriculture",
+      "citation": "576 U.S. 350 (2015)",
+      "year": 2015,
+      "doctrine": "property_rights",
+      "summary": "Physical appropriation of personal property is taking; no distinction between real and personal property.",
+      "holding": "Government appropriation of raisins is physical taking; personal property protected like real property.",
+      "issue_tags": [
+        "physical_taking",
+        "personal_property",
+        "raisin_reserve",
+        "agricultural_regulation"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fifth Amendment",
+      "relevance_to_audit": "Extends takings protection to personal property; physical appropriation requires compensation."
+    },
+    {
+      "case_id": "garcia_v_san_antonio_1985",
+      "name": "Garcia v. San Antonio Metropolitan Transit Authority",
+      "citation": "469 U.S. 528 (1985)",
+      "year": 1985,
+      "doctrine": "federal_power",
+      "summary": "Federal Fair Labor Standards Act applies to state employees; political process protects states.",
+      "holding": "Congress may regulate state employers under Commerce Clause; Tenth Amendment not violated.",
+      "issue_tags": [
+        "state_sovereignty",
+        "commerce_clause",
+        "flsa",
+        "political_process"
+      ],
+      "doctrinal_weight": 0.82,
+      "constitutional_basis": "Commerce Clause; Tenth Amendment",
+      "relevance_to_audit": "Limits state sovereignty defense; political process primary protection."
+    },
+    {
+      "case_id": "national_federation_v_sebelius_2012",
+      "name": "National Federation of Independent Business v. Sebelius",
+      "citation": "567 U.S. 519 (2012)",
+      "year": 2012,
+      "doctrine": "federal_power",
+      "summary": "Individual mandate constitutional as tax; Medicaid expansion coercive to states.",
+      "holding": "ACA individual mandate constitutional under taxing power but not Commerce Clause; Medicaid expansion unconstitutionally coercive.",
+      "issue_tags": [
+        "affordable_care_act",
+        "taxing_power",
+        "commerce_clause",
+        "coercion"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Article I; Spending Clause",
+      "relevance_to_audit": "Limits Commerce Clause; defines coercion in conditional spending."
+    },
+    {
+      "case_id": "gonzales_v_raich_2005",
+      "name": "Gonzales v. Raich",
+      "citation": "545 U.S. 1 (2005)",
+      "year": 2005,
+      "doctrine": "federal_power",
+      "summary": "Congress may regulate intrastate marijuana cultivation under Commerce Clause using aggregation principle.",
+      "holding": "Federal marijuana prohibition constitutional as applied to intrastate cultivation and possession for medical use.",
+      "issue_tags": [
+        "commerce_clause",
+        "aggregation",
+        "controlled_substances",
+        "medical_marijuana"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Commerce Clause",
+      "relevance_to_audit": "Broad commerce power for comprehensive regulation; aggregation principle applies."
+    },
+    {
+      "case_id": "us_v_morrison_2000",
+      "name": "United States v. Morrison",
+      "citation": "529 U.S. 598 (2000)",
+      "year": 2000,
+      "doctrine": "federal_power",
+      "summary": "Violence Against Women Act civil remedy exceeds Commerce Clause authority; gender-motivated violence not economic activity.",
+      "holding": "VAWA civil remedy unconstitutional; Congress cannot regulate non-economic violent crime under Commerce Clause.",
+      "issue_tags": [
+        "commerce_clause_limits",
+        "non_economic_activity",
+        "gender_violence",
+        "federalism"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Commerce Clause",
+      "relevance_to_audit": "Limits federal commerce power; non-economic local crime beyond congressional reach."
+    },
+    {
+      "case_id": "korematsu_v_united_states_1944",
+      "name": "Korematsu v. United States",
+      "citation": "323 U.S. 214 (1944)",
+      "year": 1944,
+      "doctrine": "equal_protection",
+      "summary": "Japanese internment upheld under strict scrutiny; widely criticized and effectively overruled.",
+      "holding": "Exclusion of Japanese Americans from West Coast during WWII constitutional (DISCREDITED).",
+      "issue_tags": [
+        "japanese_internment",
+        "strict_scrutiny",
+        "racial_classification",
+        "war_powers"
+      ],
+      "doctrinal_weight": 0.0,
+      "constitutional_basis": "Due Process; Equal Protection",
+      "relevance_to_audit": "Historically discredited; example of improper deference to executive in wartime."
+    },
+    {
+      "case_id": "hirabayashi_v_united_states_1943",
+      "name": "Hirabayashi v. United States",
+      "citation": "320 U.S. 81 (1943)",
+      "year": 1943,
+      "doctrine": "equal_protection",
+      "summary": "Curfew targeting Japanese Americans upheld as wartime necessity; later discredited.",
+      "holding": "Wartime curfew based on Japanese ancestry constitutional (DISCREDITED).",
+      "issue_tags": [
+        "japanese_american_curfew",
+        "war_powers",
+        "racial_classification",
+        "discredited"
+      ],
+      "doctrinal_weight": 0.0,
+      "constitutional_basis": "War Powers",
+      "relevance_to_audit": "Historical case showing danger of wartime racial discrimination; now discredited."
+    },
+    {
+      "case_id": "plyler_v_doe_1982",
+      "name": "Plyler v. Doe",
+      "citation": "457 U.S. 202 (1982)",
+      "year": 1982,
+      "doctrine": "equal_protection",
+      "summary": "States cannot deny free public education to undocumented children; fails rational basis review.",
+      "holding": "Texas law denying free public education to undocumented children violates Equal Protection Clause.",
+      "issue_tags": [
+        "education_access",
+        "undocumented_children",
+        "heightened_rational_basis",
+        "fundamental_right"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Protects children from consequences of parents' status; education critically important."
+    },
+    {
+      "case_id": "frontiero_v_richardson_1973",
+      "name": "Frontiero v. Richardson",
+      "citation": "411 U.S. 677 (1973)",
+      "year": 1973,
+      "doctrine": "equal_protection",
+      "summary": "Gender-based classification in military benefits violates equal protection; plurality applies strict scrutiny.",
+      "holding": "Military policy providing automatic benefits for male spouses but requiring proof of dependency for female spouses unconstitutional.",
+      "issue_tags": [
+        "gender_discrimination",
+        "military_benefits",
+        "suspect_classification",
+        "strict_scrutiny"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fifth Amendment Due Process",
+      "relevance_to_audit": "Gender classifications subject to heightened scrutiny; automatic benefit denial impermissible."
+    },
+    {
+      "case_id": "craig_v_boren_1976",
+      "name": "Craig v. Boren",
+      "citation": "429 U.S. 190 (1976)",
+      "year": 1976,
+      "doctrine": "equal_protection",
+      "summary": "Gender classifications subject to intermediate scrutiny; must serve important objectives and be substantially related.",
+      "holding": "Oklahoma law setting different drinking ages for men and women violates Equal Protection; fails intermediate scrutiny.",
+      "issue_tags": [
+        "gender_discrimination",
+        "intermediate_scrutiny",
+        "drinking_age",
+        "statistical_evidence"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Establishes intermediate scrutiny for gender classifications; important and substantial relationship required."
+    },
+    {
+      "case_id": "united_states_v_virginia_1996",
+      "name": "United States v. Virginia",
+      "citation": "518 U.S. 515 (1996)",
+      "year": 1996,
+      "doctrine": "equal_protection",
+      "summary": "VMI's male-only admissions policy violates Equal Protection; exceedingly persuasive justification required for gender classification.",
+      "holding": "Virginia Military Institute's exclusion of women violates Equal Protection Clause.",
+      "issue_tags": [
+        "gender_discrimination",
+        "single_sex_education",
+        "exceedingly_persuasive_justification",
+        "intermediate_scrutiny"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Heightens intermediate scrutiny standard for gender; skeptical of separate but equal."
+    },
+    {
+      "case_id": "arizona_v_united_states_2012",
+      "name": "Arizona v. United States",
+      "citation": "567 U.S. 387 (2012)",
+      "year": 2012,
+      "doctrine": "separation_of_powers",
+      "summary": "Federal immigration law preempts major portions of Arizona SB 1070; immigration enforcement is federal.",
+      "holding": "Three provisions of Arizona SB 1070 preempted by federal immigration law; one provision upheld.",
+      "issue_tags": [
+        "preemption",
+        "immigration",
+        "state_enforcement",
+        "federalism"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Supremacy Clause; Article I",
+      "relevance_to_audit": "Federal immigration enforcement preempts state regulation; limits state immigration laws."
+    },
+    {
+      "case_id": "bush_v_gore_2000",
+      "name": "Bush v. Gore",
+      "citation": "531 U.S. 98 (2000)",
+      "year": 2000,
+      "doctrine": "equal_protection",
+      "summary": "Florida recount lacking uniform standards violates Equal Protection; case limited to its facts.",
+      "holding": "Florida Supreme Court recount order lacking uniform standards violates Equal Protection; time insufficient for constitutional recount.",
+      "issue_tags": [
+        "election_law",
+        "equal_protection",
+        "voting_standards",
+        "presidential_election"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Requires uniform standards in vote counting; equal treatment of voters."
+    },
+    {
+      "case_id": "bush_v_vera_1996",
+      "name": "Bush v. Vera",
+      "citation": "517 U.S. 952 (1996)",
+      "year": 1996,
+      "doctrine": "equal_protection",
+      "summary": "Bizarrely shaped districts with race as predominant factor violate Equal Protection.",
+      "holding": "Texas redistricting plan using race as predominant factor in drawing district lines violates Equal Protection.",
+      "issue_tags": [
+        "redistricting",
+        "racial_gerrymandering",
+        "strict_scrutiny",
+        "bizarre_shape"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Limits racial gerrymandering; race cannot be predominant factor absent compelling interest."
+    },
+    {
+      "case_id": "shaw_v_reno_1993",
+      "name": "Shaw v. Reno",
+      "citation": "509 U.S. 630 (1993)",
+      "year": 1993,
+      "doctrine": "equal_protection",
+      "summary": "Bizarrely shaped majority-minority districts subject to strict scrutiny under Equal Protection.",
+      "holding": "Redistricting plan so irregular that it can be understood only as segregating voters by race states Equal Protection claim.",
+      "issue_tags": [
+        "racial_gerrymandering",
+        "redistricting",
+        "strict_scrutiny",
+        "majority_minority_district"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Race-based redistricting subject to strict scrutiny; bizarre shapes trigger review."
+    },
+    {
+      "case_id": "rucho_v_common_cause_2019",
+      "name": "Rucho v. Common Cause",
+      "citation": "139 S. Ct. 2484 (2019)",
+      "year": 2019,
+      "doctrine": "constitutional_structure",
+      "summary": "Partisan gerrymandering claims are non-justiciable political questions.",
+      "holding": "Federal courts lack authority to adjudicate partisan gerrymandering claims; political question.",
+      "issue_tags": [
+        "partisan_gerrymandering",
+        "political_question",
+        "redistricting",
+        "justiciability"
+      ],
+      "doctrinal_weight": 0.88,
+      "constitutional_basis": "Article III; Political Question Doctrine",
+      "relevance_to_audit": "Removes federal judicial review of partisan gerrymandering; state courts remain available."
+    },
+    {
+      "case_id": "shelley_v_kraemer_1948",
+      "name": "Shelley v. Kraemer",
+      "citation": "334 U.S. 1 (1948)",
+      "year": 1948,
+      "doctrine": "equal_protection",
+      "summary": "Judicial enforcement of racially restrictive covenants constitutes state action violating Equal Protection.",
+      "holding": "State court enforcement of private racially restrictive covenant violates Fourteenth Amendment.",
+      "issue_tags": [
+        "state_action",
+        "restrictive_covenant",
+        "racial_discrimination",
+        "judicial_enforcement"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Fourteenth Amendment",
+      "relevance_to_audit": "Defines state action; judicial enforcement of private discrimination is state action."
+    },
+    {
+      "case_id": "miller_v_alabama_2012",
+      "name": "Miller v. Alabama",
+      "citation": "567 U.S. 460 (2012)",
+      "year": 2012,
+      "doctrine": "eighth_amendment",
+      "summary": "Mandatory life without parole for juveniles violates Eighth Amendment; individualized sentencing required.",
+      "holding": "Mandatory life without parole sentences for juvenile offenders violate Eighth Amendment.",
+      "issue_tags": [
+        "juvenile_sentencing",
+        "life_without_parole",
+        "cruel_unusual_punishment",
+        "individualized_sentencing"
+      ],
+      "doctrinal_weight": 0.9,
+      "constitutional_basis": "Eighth Amendment",
+      "relevance_to_audit": "Protects juveniles from mandatory LWOP; requires individualized consideration."
+    },
+    {
+      "case_id": "roper_v_simmons_2005",
+      "name": "Roper v. Simmons",
+      "citation": "543 U.S. 551 (2005)",
+      "year": 2005,
+      "doctrine": "eighth_amendment",
+      "summary": "Death penalty for crimes committed by juveniles violates Eighth Amendment.",
+      "holding": "Eighth and Fourteenth Amendments forbid execution of offenders who were under 18 when crimes committed.",
+      "issue_tags": [
+        "juvenile_death_penalty",
+        "cruel_unusual_punishment",
+        "evolving_standards",
+        "proportionality"
+      ],
+      "doctrinal_weight": 0.93,
+      "constitutional_basis": "Eighth Amendment",
+      "relevance_to_audit": "Categorically bars juvenile death penalty; evolving standards of decency."
+    },
+    {
+      "case_id": "atkins_v_virginia_2002",
+      "name": "Atkins v. Virginia",
+      "citation": "536 U.S. 304 (2002)",
+      "year": 2002,
+      "doctrine": "eighth_amendment",
+      "summary": "Executing intellectually disabled violates Eighth Amendment; national consensus against practice.",
+      "holding": "Execution of intellectually disabled persons is cruel and unusual punishment prohibited by Eighth Amendment.",
+      "issue_tags": [
+        "intellectual_disability",
+        "death_penalty",
+        "cruel_unusual_punishment",
+        "categorical_bar"
+      ],
+      "doctrinal_weight": 0.92,
+      "constitutional_basis": "Eighth Amendment",
+      "relevance_to_audit": "Categorically bars execution of intellectually disabled; evolving standards."
+    }
+  ],
+  "interpretive_canons": [
+    {
+      "canon_id": "rule_of_lenity",
+      "name": "Rule of Lenity",
+      "description": "Ambiguous criminal or penal statutes construed in favor of defendant.",
+      "application": "Apply when statute imposes penalties and ambiguity remains after exhausting interpretive tools.",
+      "weight": 0.85
+    },
+    {
+      "canon_id": "major_questions_doctrine",
+      "name": "Major Questions Doctrine",
+      "description": "Agency must have clear congressional authorization for decisions of vast economic and political significance.",
+      "application": "Apply to significant regulatory actions with major economic or political impact.",
+      "weight": 0.95,
+      "related_cases": [
+        "west_virginia_v_epa_2022"
+      ]
+    },
+    {
+      "canon_id": "clear_statement_rule",
+      "name": "Clear Statement Rule",
+      "description": "Congress must clearly state intent when affecting fundamental rights, altering federal-state balance, or creating extraterritorial application.",
+      "application": "Require explicit congressional authorization for actions affecting constitutional rights or federalism.",
+      "weight": 0.9,
+      "related_cases": [
+        "kent_v_dulles_1958"
+      ]
+    },
+    {
+      "canon_id": "avoidance_canon",
+      "name": "Constitutional Avoidance Canon",
+      "description": "Interpret statutes to avoid constitutional questions when possible.",
+      "application": "Choose interpretation that avoids constitutional doubt over one raising constitutional problems.",
+      "weight": 0.88
+    },
+    {
+      "canon_id": "expressio_unius",
+      "name": "Expressio Unius Est Exclusio Alterius",
+      "description": "Expression of one thing implies exclusion of others.",
+      "application": "When statute lists specific items, other items are impliedly excluded.",
+      "weight": 0.7
+    },
+    {
+      "canon_id": "noscitur_a_sociis",
+      "name": "Noscitur a Sociis",
+      "description": "Word is known by company it keeps; interpret word in context of surrounding words.",
+      "application": "Construe ambiguous term by reference to associated terms in statute.",
+      "weight": 0.75
+    }
+  ]
+}

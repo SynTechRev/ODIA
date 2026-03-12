@@ -1,0 +1,22 @@
+{
+  "case_id": "trump_v_united_states_2024",
+  "name": "Trump v. United States",
+  "citation": "603 U.S. ___ (2024)",
+  "year": 2024,
+  "doctrine": "separation_of_powers",
+  "summary": "Presidential immunity from criminal prosecution for official acts within constitutional authority; established framework for distinguishing official from private conduct.",
+  "holding": "Presidents have absolute immunity from criminal prosecution for core constitutional powers; presumptive immunity for official acts within outer perimeter of official responsibility; no immunity for unofficial acts.",
+  "issue_tags": [
+    "presidential_immunity",
+    "separation_of_powers",
+    "executive_power",
+    "official_acts",
+    "criminal_prosecution",
+    "constitutional_authority"
+  ],
+  "doctrinal_weight": 0.94,
+  "constitutional_basis": "Article II, Separation of Powers",
+  "relevance_to_audit": "Establishes modern framework for executive authority and immunity; relevant to analyzing scope of executive agency authority and official conduct boundaries.",
+  "procedural_posture": "Original jurisdiction, immunity determination",
+  "relevance_score": 0.90
+}

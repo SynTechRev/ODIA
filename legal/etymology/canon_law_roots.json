@@ -1,0 +1,542 @@
+{
+  "source": "canon_law_roots",
+  "version": "1.0.0",
+  "description": "Canonical legal roots with categories, sources, influences on secular law, and semantic notes",
+  "total_entries": 75,
+  "schema_version": "1.0",
+  "generated_date": "2025-12-07",
+  "entries": [
+    {
+      "term": "ius gentium",
+      "category": "universal law",
+      "canonical_source": "Corpus Juris Canonici",
+      "influence_on": ["founding-era_natural_law", "international_law", "law_of_nations"],
+      "semantic_notes": "Bridge between Roman natural law and Christian moral law. Influenced American founders' understanding of universal rights and international norms."
+    },
+    {
+      "term": "ius naturale",
+      "category": "natural law",
+      "canonical_source": "Summa Theologica (Aquinas)",
+      "influence_on": ["natural_rights", "founding-era_jurisprudence", "constitutional_interpretation"],
+      "semantic_notes": "Natural law as discovered through reason and divine revelation. Central to Founding-era understanding of inalienable rights."
+    },
+    {
+      "term": "ius divinum",
+      "category": "divine law",
+      "canonical_source": "Decretum Gratiani",
+      "influence_on": ["moral_law", "conscience_rights", "religious_liberty"],
+      "semantic_notes": "Divine law revealed through Scripture and tradition. Influenced conscience protections and religious liberty doctrines."
+    },
+    {
+      "term": "ius positivum",
+      "category": "positive law",
+      "canonical_source": "Corpus Juris Canonici",
+      "influence_on": ["statutory_law", "legislative_authority", "human_law"],
+      "semantic_notes": "Human-made law contrasted with natural and divine law. Foundation for understanding limits of legislative power."
+    },
+    {
+      "term": "lex aeterna",
+      "category": "eternal law",
+      "canonical_source": "Summa Theologica (Aquinas)",
+      "influence_on": ["natural_law", "divine_order", "higher_law"],
+      "semantic_notes": "Divine reason governing the universe. Highest law in Thomistic hierarchy, influencing natural law theory."
+    },
+    {
+      "term": "lex humana",
+      "category": "human law",
+      "canonical_source": "Summa Theologica (Aquinas)",
+      "influence_on": ["positive_law", "legislative_limits", "unjust_law_doctrine"],
+      "semantic_notes": "Human legislation must conform to natural law or lack binding moral authority. Influenced civil disobedience theory."
+    },
+    {
+      "term": "conscientia",
+      "category": "conscience",
+      "canonical_source": "Medieval moral theology",
+      "influence_on": ["conscience_rights", "religious_liberty", "moral_autonomy"],
+      "semantic_notes": "Inviolability of conscience central to religious liberty and freedom of thought protections."
+    },
+    {
+      "term": "liberum arbitrium",
+      "category": "free will",
+      "canonical_source": "Augustine, Aquinas",
+      "influence_on": ["voluntary_action", "mens_rea", "moral_responsibility"],
+      "semantic_notes": "Free will as foundation of moral and legal responsibility. Influenced intent requirements in criminal law."
+    },
+    {
+      "term": "dignitas humana",
+      "category": "human dignity",
+      "canonical_source": "Canon law tradition",
+      "influence_on": ["human_rights", "civil_rights", "equal_protection"],
+      "semantic_notes": "Inherent worth of human persons. Foundation for modern human rights and dignity-based constitutional interpretation."
+    },
+    {
+      "term": "persona",
+      "category": "personhood",
+      "canonical_source": "Trinitarian theology",
+      "influence_on": ["legal_personhood", "rights_bearer", "corporate_personhood"],
+      "semantic_notes": "Theological concept of person as relational being. Influenced legal concepts of personhood and rights."
+    },
+    {
+      "term": "imago Dei",
+      "category": "human nature",
+      "canonical_source": "Genesis, Patristic theology",
+      "influence_on": ["human_dignity", "inalienable_rights", "equality"],
+      "semantic_notes": "Humans created in God's image. Theological foundation for equal dignity and inalienable rights."
+    },
+    {
+      "term": "bonum commune",
+      "category": "common good",
+      "canonical_source": "Thomistic political philosophy",
+      "influence_on": ["public_interest", "general_welfare", "police_power"],
+      "semantic_notes": "Common good as proper aim of law and government. Influenced public interest and welfare doctrines."
+    },
+    {
+      "term": "subsidiaritas",
+      "category": "subsidiarity",
+      "canonical_source": "Catholic social teaching",
+      "influence_on": ["federalism", "local_governance", "limited_government"],
+      "semantic_notes": "Decisions should be made at lowest appropriate level. Parallels American federalism principles."
+    },
+    {
+      "term": "solidaritas",
+      "category": "solidarity",
+      "canonical_source": "Catholic social teaching",
+      "influence_on": ["social_responsibility", "mutual_obligation", "welfare_law"],
+      "semantic_notes": "Mutual interdependence and social responsibility. Influenced welfare state and social legislation."
+    },
+    {
+      "term": "aequitas canonica",
+      "category": "canonical equity",
+      "canonical_source": "Canon law tradition",
+      "influence_on": ["equity_law", "mitigating_factors", "judicial_discretion"],
+      "semantic_notes": "Equity tempering strict law with mercy. Influenced equitable jurisdiction and judicial discretion."
+    },
+    {
+      "term": "dispensatio",
+      "category": "dispensation",
+      "canonical_source": "Canon law procedure",
+      "influence_on": ["executive_clemency", "pardons", "equity"],
+      "semantic_notes": "Authority to grant exceptions to general law. Influenced pardon power and equitable relief."
+    },
+    {
+      "term": "epikeia",
+      "category": "equity principle",
+      "canonical_source": "Aristotle via Aquinas",
+      "influence_on": ["equity", "purposive_interpretation", "equitable_exceptions"],
+      "semantic_notes": "Interpreting law according to legislator's intent when strict application would be unjust."
+    },
+    {
+      "term": "consensus",
+      "category": "consent",
+      "canonical_source": "Marriage law",
+      "influence_on": ["contract_law", "consent_doctrine", "voluntary_agreement"],
+      "semantic_notes": "Free consent as essential to valid contracts and marriages. Foundation of consent doctrine."
+    },
+    {
+      "term": "vinculum matrimonii",
+      "category": "marriage bond",
+      "canonical_source": "Canon marriage law",
+      "influence_on": ["marriage_law", "family_law", "contract_law"],
+      "semantic_notes": "Indissoluble marriage bond. Influenced secular marriage and contract law."
+    },
+    {
+      "term": "impedimentum",
+      "category": "impediment",
+      "canonical_source": "Canon marriage law",
+      "influence_on": ["incapacity", "disability", "legal_obstacle"],
+      "semantic_notes": "Legal obstacle preventing valid act. Influenced capacity and disability doctrines."
+    },
+    {
+      "term": "forum internum",
+      "category": "internal forum",
+      "canonical_source": "Sacramental theology",
+      "influence_on": ["conscience", "internal_mental_state", "privacy"],
+      "semantic_notes": "Internal realm of conscience inaccessible to external authority. Influenced privacy and mental state doctrines."
+    },
+    {
+      "term": "forum externum",
+      "category": "external forum",
+      "canonical_source": "Canon law jurisdiction",
+      "influence_on": ["public_law", "external_acts", "jurisdiction"],
+      "semantic_notes": "External realm of public acts subject to legal authority. Influenced public/private distinction."
+    },
+    {
+      "term": "fides publica",
+      "category": "public faith",
+      "canonical_source": "Canon law of instruments",
+      "influence_on": ["public_records", "authentication", "full_faith_and_credit"],
+      "semantic_notes": "Public faith in official acts and records. Influenced authentication and full faith and credit."
+    },
+    {
+      "term": "bona fides",
+      "category": "good faith",
+      "canonical_source": "Roman law via Canon law",
+      "influence_on": ["good_faith", "honesty", "fair_dealing"],
+      "semantic_notes": "Good faith and honest dealing. Central to contract law and fiduciary duties."
+    },
+    {
+      "term": "fraus omnia corrumpit",
+      "category": "fraud principle",
+      "canonical_source": "Canon law maxim",
+      "influence_on": ["fraud_law", "clean_hands_doctrine", "equity"],
+      "semantic_notes": "Fraud vitiates all. Foundation of fraud law and clean hands doctrine."
+    },
+    {
+      "term": "periculum animae",
+      "category": "spiritual danger",
+      "canonical_source": "Canon law of conscience",
+      "influence_on": ["conscience_rights", "religious_exemptions", "accommodations"],
+      "semantic_notes": "Danger to soul justifying exemptions. Influenced religious accommodation doctrines."
+    },
+    {
+      "term": "cura animarum",
+      "category": "care of souls",
+      "canonical_source": "Pastoral theology",
+      "influence_on": ["pastoral_care", "clergy_duties", "fiduciary_duty"],
+      "semantic_notes": "Ecclesiastical duty of care. Analogous to fiduciary duties in secular law."
+    },
+    {
+      "term": "potestas ordinis",
+      "category": "power of orders",
+      "canonical_source": "Sacramental theology",
+      "influence_on": ["sacramental_authority", "professional_licensure", "qualified_immunity"],
+      "semantic_notes": "Sacramental power distinct from jurisdiction. Analogous to professional authority and licensure."
+    },
+    {
+      "term": "potestas iurisdictionis",
+      "category": "power of jurisdiction",
+      "canonical_source": "Canon law of authority",
+      "influence_on": ["jurisdiction", "governmental_authority", "separation_of_powers"],
+      "semantic_notes": "Governing authority. Influenced concepts of jurisdiction and governmental power."
+    },
+    {
+      "term": "plenitudo potestatis",
+      "category": "fullness of power",
+      "canonical_source": "Papal authority doctrine",
+      "influence_on": ["sovereignty", "plenary_power", "supremacy"],
+      "semantic_notes": "Supreme authority. Influenced sovereignty and supremacy doctrines."
+    },
+    {
+      "term": "potestas vicaria",
+      "category": "vicarious power",
+      "canonical_source": "Delegation doctrine",
+      "influence_on": ["delegation", "agency", "representative_authority"],
+      "semantic_notes": "Delegated authority. Foundation of agency and delegation doctrines."
+    },
+    {
+      "term": "potestas delegata non potest delegari",
+      "category": "delegation limit",
+      "canonical_source": "Canon law maxim",
+      "influence_on": ["non-delegation_doctrine", "agency_limits"],
+      "semantic_notes": "Delegated power cannot be re-delegated. Influenced non-delegation doctrine."
+    },
+    {
+      "term": "auctoritas",
+      "category": "authority",
+      "canonical_source": "Patristic tradition",
+      "influence_on": ["legitimate_authority", "sovereignty", "moral_authority"],
+      "semantic_notes": "Moral and legal authority. Influenced legitimacy and authority doctrines."
+    },
+    {
+      "term": "obedientia",
+      "category": "obedience",
+      "canonical_source": "Religious obedience",
+      "influence_on": ["duty_to_obey", "legal_obligation", "civil_obedience"],
+      "semantic_notes": "Obligation to obey legitimate authority. Influenced duty to obey law."
+    },
+    {
+      "term": "resistentia",
+      "category": "resistance",
+      "canonical_source": "Tyrannicide debates",
+      "influence_on": ["resistance_theory", "civil_disobedience", "revolution"],
+      "semantic_notes": "Right to resist unjust authority. Influenced resistance and revolution theories."
+    },
+    {
+      "term": "tyrannus",
+      "category": "tyrant",
+      "canonical_source": "Medieval political theology",
+      "influence_on": ["tyranny", "illegitimate_authority", "oppression"],
+      "semantic_notes": "Unjust ruler without legitimate authority. Influenced theories of legitimate resistance."
+    },
+    {
+      "term": "regimen",
+      "category": "governance",
+      "canonical_source": "Political theology",
+      "influence_on": ["government", "regime", "political_order"],
+      "semantic_notes": "System of governance. Influenced governmental structure concepts."
+    },
+    {
+      "term": "ordinatio",
+      "category": "ordering",
+      "canonical_source": "Thomistic law definition",
+      "influence_on": ["legal_order", "rational_ordering", "legislation"],
+      "semantic_notes": "Law as rational ordering to common good. Influenced purposive theories of law."
+    },
+    {
+      "term": "promulgatio",
+      "category": "promulgation",
+      "canonical_source": "Thomistic law definition",
+      "influence_on": ["publication", "notice", "due_process"],
+      "semantic_notes": "Law requires promulgation to bind. Influenced notice and due process requirements."
+    },
+    {
+      "term": "consuetudo",
+      "category": "custom",
+      "canonical_source": "Canon law of custom",
+      "influence_on": ["customary_law", "usage", "prescription"],
+      "semantic_notes": "Custom as source of law. Influenced customary law and prescription doctrines."
+    },
+    {
+      "term": "praescriptio",
+      "category": "prescription",
+      "canonical_source": "Canon property law",
+      "influence_on": ["adverse_possession", "prescription", "statute_of_limitations"],
+      "semantic_notes": "Acquisition by long use. Influenced prescription and limitations periods."
+    },
+    {
+      "term": "possessio",
+      "category": "possession",
+      "canonical_source": "Canon property law",
+      "influence_on": ["possession", "property_rights", "occupancy"],
+      "semantic_notes": "Possessory rights. Influenced property and possession doctrines."
+    },
+    {
+      "term": "dominium",
+      "category": "ownership",
+      "canonical_source": "Canon property law",
+      "influence_on": ["ownership", "property_rights", "dominion"],
+      "semantic_notes": "Full ownership rights. Influenced property law concepts of ownership."
+    },
+    {
+      "term": "usus",
+      "category": "use",
+      "canonical_source": "Canon property law",
+      "influence_on": ["use_rights", "usufruct", "beneficial_use"],
+      "semantic_notes": "Right to use property. Influenced use rights and beneficial interests."
+    },
+    {
+      "term": "usufructus",
+      "category": "usufruct",
+      "canonical_source": "Roman law via Canon law",
+      "influence_on": ["life_estates", "beneficial_interests", "trust_law"],
+      "semantic_notes": "Right to use and enjoy property. Influenced life estates and trust law."
+    },
+    {
+      "term": "beneficium",
+      "category": "benefit",
+      "canonical_source": "Feudal church law",
+      "influence_on": ["beneficial_interest", "trusts", "estates"],
+      "semantic_notes": "Ecclesiastical benefice. Influenced beneficial interest and trust concepts."
+    },
+    {
+      "term": "fidecommissum",
+      "category": "trust",
+      "canonical_source": "Roman law via Canon law",
+      "influence_on": ["trust_law", "fiduciary_duty", "estates"],
+      "semantic_notes": "Trust arrangement. Foundation of modern trust law."
+    },
+    {
+      "term": "fideicommissarius",
+      "category": "trustee",
+      "canonical_source": "Trust law",
+      "influence_on": ["trustee", "fiduciary", "executor"],
+      "semantic_notes": "Person holding property in trust. Influenced trustee and fiduciary roles."
+    },
+    {
+      "term": "custodia",
+      "category": "custody",
+      "canonical_source": "Canon law of care",
+      "influence_on": ["custody", "guardianship", "care_duty"],
+      "semantic_notes": "Duty of care and custody. Influenced custody and guardianship law."
+    },
+    {
+      "term": "tutela",
+      "category": "guardianship",
+      "canonical_source": "Canon family law",
+      "influence_on": ["guardianship", "wardship", "protection"],
+      "semantic_notes": "Guardianship of minors and incapacitated. Influenced guardianship law."
+    },
+    {
+      "term": "cura",
+      "category": "care",
+      "canonical_source": "Canon law of duty",
+      "influence_on": ["duty_of_care", "fiduciary_duty", "negligence"],
+      "semantic_notes": "Duty of care. Foundation of negligence and fiduciary duty."
+    },
+    {
+      "term": "diligentia",
+      "category": "diligence",
+      "canonical_source": "Contract and tort law",
+      "influence_on": ["due_diligence", "reasonable_care", "negligence"],
+      "semantic_notes": "Standard of care and diligence. Influenced negligence standards."
+    },
+    {
+      "term": "culpa",
+      "category": "fault",
+      "canonical_source": "Moral theology",
+      "influence_on": ["fault", "negligence", "culpability"],
+      "semantic_notes": "Fault or blameworthiness. Foundation of fault-based liability."
+    },
+    {
+      "term": "culpa lata",
+      "category": "gross fault",
+      "canonical_source": "Degrees of fault",
+      "influence_on": ["gross_negligence", "recklessness", "willful_misconduct"],
+      "semantic_notes": "Gross fault equivalent to fraud. Influenced gross negligence doctrine."
+    },
+    {
+      "term": "culpa levis",
+      "category": "slight fault",
+      "canonical_source": "Degrees of fault",
+      "influence_on": ["ordinary_negligence", "reasonable_care"],
+      "semantic_notes": "Ordinary fault. Standard for ordinary negligence."
+    },
+    {
+      "term": "dolus",
+      "category": "fraud",
+      "canonical_source": "Contract and crime",
+      "influence_on": ["fraud", "deceit", "intentional_wrong"],
+      "semantic_notes": "Intentional wrong or fraud. Foundation of fraud and intentional tort law."
+    },
+    {
+      "term": "dolus malus",
+      "category": "bad faith fraud",
+      "canonical_source": "Contract law",
+      "influence_on": ["fraud", "bad_faith", "malice"],
+      "semantic_notes": "Fraudulent bad faith. Influenced fraud and bad faith doctrines."
+    },
+    {
+      "term": "dolus bonus",
+      "category": "acceptable puffery",
+      "canonical_source": "Commercial law",
+      "influence_on": ["puffery", "sales_talk", "commercial_rhetoric"],
+      "semantic_notes": "Acceptable exaggeration in sales. Influenced puffery doctrine."
+    },
+    {
+      "term": "error",
+      "category": "mistake",
+      "canonical_source": "Contract and marriage law",
+      "influence_on": ["mistake", "misunderstanding", "contract_defect"],
+      "semantic_notes": "Mistake vitiating consent. Influenced mistake doctrine in contracts."
+    },
+    {
+      "term": "error substantialis",
+      "category": "material mistake",
+      "canonical_source": "Contract defects",
+      "influence_on": ["material_mistake", "mutual_mistake", "contract_rescission"],
+      "semantic_notes": "Material mistake. Foundation of mistake and rescission doctrine."
+    },
+    {
+      "term": "vis et metus",
+      "category": "force and fear",
+      "canonical_source": "Consent defects",
+      "influence_on": ["duress", "coercion", "undue_influence"],
+      "semantic_notes": "Force and fear vitiating consent. Influenced duress doctrine."
+    },
+    {
+      "term": "coactio",
+      "category": "coercion",
+      "canonical_source": "Consent defects",
+      "influence_on": ["coercion", "compulsion", "involuntariness"],
+      "semantic_notes": "Coercion negating voluntary action. Foundation of duress doctrine."
+    },
+    {
+      "term": "simulatio",
+      "category": "simulation",
+      "canonical_source": "Marriage law",
+      "influence_on": ["sham_transaction", "fraudulent_conveyance", "pretense"],
+      "semantic_notes": "Pretended act without true intent. Influenced sham transaction doctrine."
+    },
+    {
+      "term": "reservatio mentalis",
+      "category": "mental reservation",
+      "canonical_source": "Moral theology",
+      "influence_on": ["intent", "mental_state", "fraud"],
+      "semantic_notes": "Hidden mental reservation. Influenced intent and mental state analysis."
+    },
+    {
+      "term": "scandalum",
+      "category": "scandal",
+      "canonical_source": "Moral theology",
+      "influence_on": ["public_morals", "reputational_harm", "defamation"],
+      "semantic_notes": "Conduct causing spiritual harm. Influenced public morals and reputation law."
+    },
+    {
+      "term": "infamia",
+      "category": "infamy",
+      "canonical_source": "Penal consequences",
+      "influence_on": ["infamy", "legal_disability", "civil_death"],
+      "semantic_notes": "Legal disability from serious crime. Influenced collateral consequences doctrine."
+    },
+    {
+      "term": "excommunicatio",
+      "category": "excommunication",
+      "canonical_source": "Ecclesiastical penalty",
+      "influence_on": ["civil_death", "outlawry", "banishment"],
+      "semantic_notes": "Exclusion from church community. Parallel to civil death and banishment."
+    },
+    {
+      "term": "interdictu m",
+      "category": "interdict",
+      "canonical_source": "Ecclesiastical penalty",
+      "influence_on": ["injunction", "prohibition", "restraining_order"],
+      "semantic_notes": "Prohibition of sacramental participation. Influenced injunctive relief."
+    },
+    {
+      "term": "suspensio",
+      "category": "suspension",
+      "canonical_source": "Clerical penalty",
+      "influence_on": ["suspension", "temporary_disability", "professional_sanctions"],
+      "semantic_notes": "Temporary prohibition from office. Influenced suspension and professional discipline."
+    },
+    {
+      "term": "poenitentia",
+      "category": "penance",
+      "canonical_source": "Sacramental theology",
+      "influence_on": ["rehabilitation", "restitution", "restorative_justice"],
+      "semantic_notes": "Reparation for wrong. Influenced rehabilitation and restorative justice."
+    },
+    {
+      "term": "restitutio",
+      "category": "restitution",
+      "canonical_source": "Moral obligation",
+      "influence_on": ["restitution", "unjust_enrichment", "restoration"],
+      "semantic_notes": "Obligation to restore wrongfully taken property. Foundation of restitution law."
+    },
+    {
+      "term": "satisfactio",
+      "category": "satisfaction",
+      "canonical_source": "Penal theology",
+      "influence_on": ["satisfaction", "compensation", "discharge"],
+      "semantic_notes": "Making amends for wrong. Influenced satisfaction and discharge doctrines."
+    },
+    {
+      "term": "absolutio",
+      "category": "absolution",
+      "canonical_source": "Sacramental theology",
+      "influence_on": ["pardon", "acquittal", "discharge"],
+      "semantic_notes": "Forgiveness of sin or penalty. Influenced pardon and acquittal concepts."
+    },
+    {
+      "term": "indulgentia",
+      "category": "indulgence",
+      "canonical_source": "Penal remission",
+      "influence_on": ["remission", "clemency", "pardon"],
+      "semantic_notes": "Remission of temporal punishment. Influenced clemency and pardon doctrines."
+    },
+    {
+      "term": "venia",
+      "category": "pardon",
+      "canonical_source": "Forgiveness",
+      "influence_on": ["pardon", "forgiveness", "mercy"],
+      "semantic_notes": "Merciful pardon. Foundation of executive clemency."
+    },
+    {
+      "term": "misericordia",
+      "category": "mercy",
+      "canonical_source": "Divine attribute",
+      "influence_on": ["mercy", "clemency", "compassion"],
+      "semantic_notes": "Mercy tempering justice. Influenced equity and clemency doctrines."
+    }
+  ]
+}

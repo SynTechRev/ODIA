@@ -1,0 +1,107 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oraculus-di-auditor"
+version = "0.1.0"
+description = "Polymathic Synthetic Technology Oraculus DI Auditor"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pypdf>=4.0.0",
+    "jsonschema>=4.20.0",
+    "scikit-learn>=1.3.0",
+    "numpy>=1.24.0",
+]
+authors = [
+    {name = "Synthetic Technology Revolution", email = "syntechrev@gmail.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.3",
+    "pytest-cov==5.0.0",
+    "black==24.10.0",
+    "ruff==0.8.4",
+    "pre-commit==3.8.0",
+    "isort==5.13.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+fix = true
+exclude = [".git", "build", "dist", "**/__pycache__"]
+
+# Note: E203 is not ignored here because ruff-format handles whitespace rules automatically,
+# replacing Black's handling. See https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"src/oraculus_di_auditor/scalar_convergence/*.py" = ["E501"]
+"src/oraculus_di_auditor/rpg14/*.py" = ["E501"]
+"src/oraculus_di_auditor/aer20/*.py" = ["E501", "C901"]
+"scripts/phase12_example.py" = ["E501"]
+"scripts/phase17_example.py" = ["C901"]
+"scripts/phase20_example.py" = ["E501"]
+"scripts/corpus_manager.py" = ["C901"]
+"scripts/cross_platform_normalize.py" = ["C901", "E402"]
+"scripts/rebuild_index.py" = ["C901", "E501", "E402"]
+"scripts/validate_corpus_integrity.py" = ["C901", "E402"]
+"scripts/hash_reconciliation.py" = ["C901", "E402"]
+"scripts/full_ingestion.py" = ["C901", "E501", "E402"]
+"scripts/ace_analyzer.py" = ["C901"]
+"scripts/vendor_map_extractor.py" = ["C901", "E501"]
+"scripts/vendor_graph_builder.py" = ["C901", "E501"]
+"scripts/contract_flow_map.py" = ["C901", "E501"]
+"scripts/agency_map_extractor.py" = ["C901"]
+"scripts/cross_agency_influence.py" = ["C901"]
+"scripts/interdepartmental_matrix.py" = ["C901"]
+"scripts/generate_caim_reports.py" = ["C901"]
+"scripts/pdf_forensics/pdf_metadata_miner.py" = ["C901", "E501"]
+"scripts/pdf_forensics/forensic_integration.py" = ["E501"]
+"scripts/jim/generate_clep_v2_cases.py" = ["E501"]
+"scripts/jim/clep_v2_additional_cases.py" = ["E501"]
+"scripts/jim/clep_v2_final_cases.py" = ["E501"]
+"scripts/jim/merge_clep_v2.py" = ["E501"]
+"scripts/jim/jim_semantic_loader.py" = ["E501", "C901"]
+"scripts/generate_transparency_package.py" = ["E402", "E501"]
+"scripts/generate_plaintext_audit.py" = ["E501", "C901"]
+"scripts/generate_timeline.py" = ["E402", "E501", "F841"]
+"scripts/reconcile_artifacts.py" = ["E501", "C901"]
+"scripts/validate_schemas.py" = ["E501", "C901"]
+"scripts/run_full_pipeline.py" = ["E501", "C901"]
+"scripts/orchestrate_full_audit.py" = ["C901"]
+"scripts/automated_audit.py" = ["C901"]
+"src/oraculus_di_auditor/rec17/rec17_service.py" = ["C901"]
+"tests/test_phase14.py" = ["F841", "E741"]
+"src/oraculus_di_auditor/llm_providers.py" = ["E501"]
+"src/oraculus_di_auditor/rag_prompts.py" = ["E501"]
+"src/oraculus_di_auditor/rag_context.py" = ["F841"]
+"config/rag_config.py" = ["E501"]
+"scripts/rag_query.py" = ["C901"]
+"scripts/search_cli.py" = ["C901"]
+"tests/test_rag.py" = ["E501"]

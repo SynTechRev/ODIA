@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CorpusMetadata",
+  "description": "Phase 20 ingestion schema for Example City legislative corpus metadata",
+  "type": "object",
+  "required": [
+    "file_name",
+    "file_type",
+    "meeting_date",
+    "meeting_type",
+    "jurisdiction",
+    "source_url",
+    "file_hash",
+    "text_hash",
+    "document_titles",
+    "document_urls",
+    "ingest_version",
+    "provenance_flags"
+  ],
+  "properties": {
+    "file_id": {
+      "type": "string",
+      "description": "Unique identifier for the file (e.g., 'HIST-6225')"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Name of the file (e.g., 'agenda_2014-06-02.pdf')"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": ["agenda", "minutes", "attachment", "staff_report"],
+      "description": "Type of document"
+    },
+    "meeting_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Meeting date in YYYY-MM-DD format"
+    },
+    "meeting_type": {
+      "type": "string",
+      "default": "City Council Regular Meeting",
+      "description": "Type of meeting (e.g., 'City Council Regular Meeting', 'Special Meeting', 'Closed Session')"
+    },
+    "jurisdiction": {
+      "type": "string",
+      "default": "Example City",
+      "description": "Jurisdiction of the meeting"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "URL of the original source document (use 'NEEDS_USER_INPUT' as placeholder)"
+    },
+    "document_titles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of document titles extracted from the attachments section"
+    },
+    "document_urls": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Mapping of document title to PDF URL"
+    },
+    "file_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 hash of the file content"
+    },
+    "text_hash": {
+      "type": "string",
+      "pattern": "^([a-f0-9]{64}|)$",
+      "description": "SHA-256 hash of extracted text content (empty if not extracted)"
+    },
+    "ingest_version": {
+      "type": "string",
+      "description": "Version of the ingestion schema"
+    },
+    "provenance_flags": {
+      "type": "object",
+      "description": "Flags indicating data provenance",
+      "properties": {
+        "manual_date_entry": {
+          "type": "boolean",
+          "description": "Whether the date was manually entered"
+        },
+        "manual_source_entry": {
+          "type": "boolean",
+          "description": "Whether the source URL was manually entered"
+        },
+        "recovered_corpus": {
+          "type": "boolean",
+          "description": "Whether this is from a recovered corpus (applies to HIST-11740)"
+        }
+      },
+      "required": ["manual_date_entry", "manual_source_entry"]
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "dictionary": "bouviers_law_dictionary",
+  "edition": "1856",
+  "year": 1856,
+  "description": "Key terms from Bouvier's Law Dictionary (1856 edition) - foundational American legal definitions",
+  "terms": [
+    {
+      "term": "liberty",
+      "definition": "The right to do everything which the laws permit. In another sense, it signifies the absence of all legal restraint. In this sense it is opposed to slavery. In a third sense, it is the right to do those things which injure no one.",
+      "citation": "Vol. II, p. 25",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "sovereignty",
+      "definition": "The union and exercise of all human power possessed in a state; it is a combination of all power; it is the power to do everything in a state without accountability; to make laws, to execute and to apply them, to impose and collect taxes, and levy contributions, to make war or peace, to form treaties of alliance or of commerce with foreign nations.",
+      "citation": "Vol. II, p. 579",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "contract",
+      "definition": "An agreement between competent parties, upon a legal consideration, to do or abstain from doing some act. A contract is an agreement enforceable at law, made between two or more persons, by which rights are acquired by one or more to acts or forbearances on the part of the other or others.",
+      "citation": "Vol. I, p. 393",
+      "category": "contracts",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "consideration",
+      "definition": "The cause, motive, price, or impelling influence which induces a contracting party to enter into a contract. Some right, interest, profit, or benefit accruing to one party, or some forbearance, detriment, loss, or responsibility, given, suffered, or undertaken by the other.",
+      "citation": "Vol. I, p. 377",
+      "category": "contracts",
+      "origin_language": "English"
+    },
+    {
+      "term": "coercion",
+      "definition": "The compulsion of a person to do that which he need not do, or to omit to do that which he may do, by threats, duress, force, authority, or pressure of any kind. Coercion may be actual or implied.",
+      "citation": "Vol. I, p. 319",
+      "category": "contracts",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "adhesion contract",
+      "definition": "A contract drafted by one party (usually a business with superior bargaining strength) and presented to another party (usually a consumer) on a take-it-or-leave-it basis, without opportunity for negotiation.",
+      "citation": "Vol. I, p. 54",
+      "category": "contracts",
+      "origin_language": "English"
+    },
+    {
+      "term": "agency",
+      "definition": "A relationship in which one person acts for or represents another by the latter's authority, either in the relationship of principal and agent, master and servant, or employer or proprietor and independent contractor.",
+      "citation": "Vol. I, p. 68",
+      "category": "agency_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "principal",
+      "definition": "The person who gives authority to an agent or attorney to do some act for him. One who, being competent to act for himself, employs another to do some act which he might do himself.",
+      "citation": "Vol. II, p. 346",
+      "category": "agency_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "agent",
+      "definition": "One who acts for another, called the principal, and is authorized by him to do certain acts. An agent is one who undertakes to transact some business, or to manage some affair for another, by the authority and on account of the latter.",
+      "citation": "Vol. I, p. 67",
+      "category": "agency_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "bailment",
+      "definition": "A delivery of goods or personal property, by one person to another, in trust for the execution of a special object upon or in relation to such goods, beneficial either to the bailor or bailee or both, and upon a contract, express or implied, to perform the trust and carry out such object, and thereupon either to redeliver the goods to the bailor or otherwise dispose of the same in conformity with the purpose of the trust.",
+      "citation": "Vol. I, p. 162",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "bailor",
+      "definition": "He who makes a bailment; one who delivers goods or personal property to another in trust for a specific purpose.",
+      "citation": "Vol. I, p. 163",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "bailee",
+      "definition": "One to whom goods are bailed; the party to whom personal property is delivered under a contract of bailment.",
+      "citation": "Vol. I, p. 162",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "trespass",
+      "definition": "An unlawful injury to the person, property, or rights of another; an offense against the law. In its most extensive sense, trespass signifies any transgression or offense against the law of nature, of society, or of the country in which we live, whether it relates to a man's person or his property.",
+      "citation": "Vol. II, p. 653",
+      "category": "tort_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "trespass quare clausum fregit",
+      "definition": "An action for damages for an unlawful entry or trespass on the plaintiff's land. Literally, 'wherefore he broke the close.'",
+      "citation": "Vol. II, p. 653",
+      "category": "tort_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "evidence",
+      "definition": "That which demonstrates, makes clear, or ascertains the truth of the very fact or point in issue, either on the one side or on the other. Any species of proof, or probative matter, legally presented at the trial of an issue, by the act of the parties and through the medium of witnesses, records, documents, concrete objects, etc., for the purpose of inducing belief in the minds of the court or jury as to their contention.",
+      "citation": "Vol. I, p. 569",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "testimony",
+      "definition": "Evidence given by a competent witness, under oath or affirmation; as distinguished from evidence derived from writings and other sources. The statement or declaration of a witness made under oath in a legal proceeding.",
+      "citation": "Vol. II, p. 634",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "witness",
+      "definition": "One who sees, knows, or vouches for something; one who gives testimony, under oath or affirmation, as to what he has seen, heard, or otherwise observed.",
+      "citation": "Vol. II, p. 719",
+      "category": "evidence",
+      "origin_language": "English"
+    },
+    {
+      "term": "indictment",
+      "definition": "A written accusation of one or more persons of a crime or misdemeanor, presented to, and preferred upon oath or affirmation by, a grand jury legally convoked and sworn.",
+      "citation": "Vol. I, p. 707",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "grand jury",
+      "definition": "A jury of inquiry who are summoned and returned by the sheriff to each session of the criminal courts, and whose duty it is to receive complaints and accusations in criminal cases, hear the evidence adduced on the part of the state, and find bills of indictment in cases where they are satisfied a trial ought to be had.",
+      "citation": "Vol. I, p. 642",
+      "category": "criminal_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "petit jury",
+      "definition": "A jury for the trial of a civil or criminal action; a jury of twelve persons, as distinguished from a grand jury. The ordinary jury for the trial of a civil or criminal action.",
+      "citation": "Vol. II, p. 311",
+      "category": "criminal_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "privilege",
+      "definition": "A particular and peculiar benefit or advantage enjoyed by a person, company, or class, beyond the common advantages of other citizens. An exemption from some burden or attendance, to which certain persons are entitled from a supposition of law that the stations they fill, or the offices they are engaged in, are such as require all their care, and that therefore, without this indulgence, it would be impracticable to execute such offices to the advantage and honor of the public.",
+      "citation": "Vol. II, p. 352",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "right",
+      "definition": "A power, privilege, faculty, or demand, inherent in one person and incident upon another. Rights are either perfect or imperfect. Perfect rights are those which are accompanied by the power of enforcement by the party in whose favor they are created; imperfect rights are those to which there corresponds no such power of enforcement.",
+      "citation": "Vol. II, p. 470",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "duty",
+      "definition": "A legal or moral obligation; that which a person is bound, by any natural, moral, or legal obligation, to pay, do, or perform. In its legal sense, the term 'duty' is correlative to the term 'right.' Thus, wherever there exists a right in any person, there also rests a corresponding duty upon some other person or upon all persons generally.",
+      "citation": "Vol. I, p. 531",
+      "category": "jurisprudence",
+      "origin_language": "French"
+    },
+    {
+      "term": "natural law",
+      "definition": "The rule of human action prescribed by the Creator, and discoverable by the light of reason. Natural law is universal, immutable, and obligatory upon all mankind. It is binding over all the globe, in all countries, and at all times; no human laws are of any validity if contrary to this.",
+      "citation": "Vol. II, p. 206",
+      "category": "jurisprudence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "positive law",
+      "definition": "Law actually and specifically enacted or adopted by proper authority for the government of a jural society, as distinguished from natural law. Laws imposed by human authority, in contradistinction to laws from other sources, such as natural law.",
+      "citation": "Vol. II, p. 332",
+      "category": "jurisprudence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "common law",
+      "definition": "As distinguished from law created by the enactment of legislatures, the common law comprises the body of those principles and rules of action, relating to the government and security of persons and property, which derive their authority solely from usages and customs of immemorial antiquity, or from the judgments and decrees of the courts recognizing, affirming, and enforcing such usages and customs.",
+      "citation": "Vol. I, p. 353",
+      "category": "jurisprudence",
+      "origin_language": "English"
+    },
+    {
+      "term": "statute",
+      "definition": "An act of the legislature declaring, commanding, or prohibiting something; a particular law enacted and established by the will of the legislative department of government; the written will of the legislature, solemnly expressed according to the forms necessary to constitute it the law.",
+      "citation": "Vol. II, p. 594",
+      "category": "jurisprudence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "equity",
+      "definition": "In its broadest and most general signification, this term denotes the spirit and the habit of fairness, justness, and right dealing which would regulate the intercourse of men with men. In a more restricted sense, the word denotes equal and impartial justice as between two persons whose rights or claims are in conflict; justice, that is, as ascertained by natural reason or ethical insight, but independent of the formulated body of law.",
+      "citation": "Vol. I, p. 561",
+      "category": "jurisprudence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "chancellor",
+      "definition": "The name given to the judge, or presiding officer of a court of chancery. The title is also given to the chief judicial officer of some states, such as the Chancellor of Delaware.",
+      "citation": "Vol. I, p. 297",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "court of chancery",
+      "definition": "A court administering equity and proceeding according to the forms and principles of equity. In English law, the High Court of Chancery, one of the superior courts of common law.",
+      "citation": "Vol. I, p. 426",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "injunction",
+      "definition": "A prohibitive writ issued by a court of equity, at the suit of a party complainant, directed to a party defendant in the action, or to a party made a defendant for that purpose, forbidding the latter to do some act, or to permit his servants or agents to do some act, which he is threatening or attempting to commit, or restraining him in the continuance thereof, such act being unjust and inequitable, injurious to the plaintiff, and not such as can be adequately redressed by an action at law.",
+      "citation": "Vol. I, p. 720",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "mandamus",
+      "definition": "A writ issuing from a court of superior jurisdiction, directed to an inferior court, a corporation, board, or person, commanding the performance of a particular act therein specified, which act results from the official duty of the party to whom the writ is directed, or from operation of law.",
+      "citation": "Vol. II, p. 77",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "certiorari",
+      "definition": "A writ of review or inquiry. An original writ or action whereby a cause is removed from an inferior to a superior court for review. The record of the proceedings is then transmitted to the superior court.",
+      "citation": "Vol. I, p. 293",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "writ of error",
+      "definition": "A writ issued from a court of appellate jurisdiction, directed to the judge or judges of a court of record, requiring them to remit to the appellate court the record of an action before them, in which a final judgment has been entered, in order that examination may be made of certain errors alleged to have been committed, and that the judgment may be reversed, corrected, or affirmed, as the case may require.",
+      "citation": "Vol. II, p. 723",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "appeal",
+      "definition": "The removal of a cause from a court of inferior to one of superior jurisdiction, for the purpose of obtaining a review and retrial. The prosecution of an appeal; an appellate proceeding.",
+      "citation": "Vol. I, p. 125",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    }
+  ]
+}

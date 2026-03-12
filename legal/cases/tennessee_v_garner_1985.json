@@ -1,0 +1,23 @@
+{
+  "case_id": "tennessee_v_garner_1985",
+  "name": "Tennessee v. Garner",
+  "citation": "471 U.S. 1 (1985)",
+  "year": 1985,
+  "doctrine": "fourth_amendment",
+  "summary": "Use of deadly force to prevent escape of fleeing felon violates Fourth Amendment unless necessary to prevent escape and officer has probable cause to believe suspect poses significant threat of death or serious physical injury.",
+  "holding": "Fourth Amendment prohibits use of deadly force to prevent escape unless officer has probable cause to believe suspect poses significant threat of death or serious injury to officer or others; seizure by deadly force is search and seizure subject to reasonableness requirement.",
+  "issue_tags": [
+    "deadly_force",
+    "police_accountability",
+    "fourth_amendment",
+    "excessive_force",
+    "fleeing_felon",
+    "use_of_force",
+    "reasonableness"
+  ],
+  "doctrinal_weight": 0.92,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes constitutional limits on use of force; relevant to analyzing law enforcement accountability, excessive force, and reasonableness of government actions.",
+  "procedural_posture": "Sixth Circuit affirmed, statute struck down",
+  "relevance_score": 0.90
+}

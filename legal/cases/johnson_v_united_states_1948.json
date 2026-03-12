@@ -1,0 +1,22 @@
+{
+  "case_id": "johnson_v_united_states_1948",
+  "name": "Johnson v. United States",
+  "citation": "333 U.S. 10 (1948)",
+  "year": 1948,
+  "doctrine": "fourth_amendment",
+  "summary": "Warrantless searches are per se unreasonable under Fourth Amendment subject only to few specifically established exceptions; neutral magistrate must evaluate probable cause, not police.",
+  "holding": "Point of Fourth Amendment is to interpose neutral magistrate between police and citizens; officers' determination of probable cause insufficient to justify warrantless entry.",
+  "issue_tags": [
+    "fourth_amendment",
+    "warrantless_search",
+    "probable_cause",
+    "neutral_magistrate",
+    "search_and_seizure",
+    "exigent_circumstances"
+  ],
+  "doctrinal_weight": 0.88,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes requirement for neutral decision-maker in searches and enforcement actions; relevant to administrative inspections and regulatory searches without independent oversight.",
+  "procedural_posture": "Criminal conviction reversed",
+  "relevance_score": 0.85
+}

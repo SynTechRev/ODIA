@@ -1,0 +1,61 @@
+# Ollama Configuration for Oraculus DI Auditor
+# Settings specific to Ollama model inference
+
+# Ollama Server
+host: "localhost"
+port: 11434
+api_base: "http://localhost:11434"
+
+# Model Configuration
+models:
+  default: "llama3-small"
+  alternatives:
+    - "llama3"
+    - "mistral"
+    - "phi3"
+  
+# Generation Parameters
+generation:
+  temperature: 0.1  # Low temperature for consistent, factual responses
+  top_p: 0.9
+  top_k: 40
+  max_tokens: 2048
+  num_ctx: 4096  # Context window size
+  repeat_penalty: 1.1
+
+# Timeout and Retry
+timeout_seconds: 120
+max_retries: 3
+retry_delay_seconds: 2
+
+# Batch Processing
+batch_size: 1  # Process one query at a time for lightweight hardware
+enable_streaming: false
+
+# Logging
+log_requests: true
+log_responses: true
+log_latency: true
+
+# System Prompts (can be customized per query type)
+system_prompts:
+  default: "You are a legal document analysis assistant. Provide accurate, factual responses based solely on the provided context. Do not speculate or provide information not present in the context."
+  
+  factual_retrieval: "Extract specific factual information from the provided legal documents. Cite page numbers or document IDs when possible."
+  
+  contradiction_detection: "Analyze the provided documents for contradictions, inconsistencies, or conflicting statements. List each contradiction with supporting evidence."
+  
+  irb_consent_check: "Review the documents for compliance with IRB (Institutional Review Board) requirements under 28 C.F.R. Part 46. Check for informed consent, review board approval, and subject protections."
+  
+  infrastructure_concern: "Identify infrastructure-related concerns, including procurement issues, contractor relationships, and facility compliance."
+  
+  grant_incentive_detection: "Identify federal grant incentives, funding mechanisms, and potential conflicts of interest related to financial incentives."
+  
+  executive_summary: "Generate a concise executive summary of the audit findings, highlighting critical issues, key patterns, and recommended actions."
+
+# Response Validation
+validation:
+  min_response_length: 10
+  max_response_length: 10000
+  require_context_citation: false
+  check_hallucination: false  # Basic check for responses outside context

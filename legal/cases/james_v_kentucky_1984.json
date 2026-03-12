@@ -1,0 +1,22 @@
+{
+  "case_id": "james_v_kentucky_1984",
+  "name": "James v. Kentucky",
+  "citation": "466 U.S. 341 (1984)",
+  "year": 1984,
+  "doctrine": "due_process",
+  "summary": "Right to remain silent and have silence not used against defendant; presumption of innocence instruction must be given when requested and supported by evidence.",
+  "holding": "Due process violated when trial court refuses to give presumption of innocence instruction that accurately states law and is supported by evidence.",
+  "issue_tags": [
+    "presumption_of_innocence",
+    "jury_instructions",
+    "right_to_silence",
+    "due_process",
+    "criminal_procedure",
+    "self_incrimination"
+  ],
+  "doctrinal_weight": 0.82,
+  "constitutional_basis": "Fifth Amendment Due Process, Fourteenth Amendment",
+  "relevance_to_audit": "Relevant to administrative hearing procedures and presumptions in enforcement actions; establishes requirements for neutral adjudication.",
+  "procedural_posture": "State criminal conviction reversed",
+  "relevance_score": 0.78
+}

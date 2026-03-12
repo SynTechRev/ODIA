@@ -1,0 +1,154 @@
+{
+  "version": "1.0.0",
+  "description": "Sample audit queries for Ollama evaluation harness",
+  "categories": [
+    "factual_retrieval",
+    "contradiction_detection",
+    "irb_consent_check",
+    "infrastructure_concern",
+    "grant_incentive_detection",
+    "executive_summary"
+  ],
+  "queries": [
+    {
+      "id": "Q001",
+      "category": "factual_retrieval",
+      "query": "What is the total budget allocation mentioned in the documents?",
+      "expected_type": "numerical_fact",
+      "priority": "medium"
+    },
+    {
+      "id": "Q002",
+      "category": "factual_retrieval",
+      "query": "List all agencies or departments mentioned in the documents.",
+      "expected_type": "entity_list",
+      "priority": "medium"
+    },
+    {
+      "id": "Q003",
+      "category": "factual_retrieval",
+      "query": "What dates or time periods are covered by these documents?",
+      "expected_type": "temporal_fact",
+      "priority": "low"
+    },
+    {
+      "id": "Q004",
+      "category": "contradiction_detection",
+      "query": "Are there any contradictory statements about funding amounts across different documents?",
+      "expected_type": "contradiction_analysis",
+      "priority": "high"
+    },
+    {
+      "id": "Q005",
+      "category": "contradiction_detection",
+      "query": "Do any documents contradict each other regarding project timelines or deadlines?",
+      "expected_type": "contradiction_analysis",
+      "priority": "high"
+    },
+    {
+      "id": "Q006",
+      "category": "contradiction_detection",
+      "query": "Are there inconsistencies in how responsibilities or authorities are assigned?",
+      "expected_type": "contradiction_analysis",
+      "priority": "high"
+    },
+    {
+      "id": "Q007",
+      "category": "irb_consent_check",
+      "query": "Do the documents mention informed consent procedures for research subjects?",
+      "expected_type": "compliance_check",
+      "priority": "critical"
+    },
+    {
+      "id": "Q008",
+      "category": "irb_consent_check",
+      "query": "Is there evidence of Institutional Review Board (IRB) approval for research activities?",
+      "expected_type": "compliance_check",
+      "priority": "critical"
+    },
+    {
+      "id": "Q009",
+      "category": "irb_consent_check",
+      "query": "Are protections for human subjects mentioned in compliance with 28 C.F.R. Part 46?",
+      "expected_type": "compliance_check",
+      "priority": "critical"
+    },
+    {
+      "id": "Q010",
+      "category": "irb_consent_check",
+      "query": "Do the documents describe procedures for protecting vulnerable populations?",
+      "expected_type": "compliance_check",
+      "priority": "high"
+    },
+    {
+      "id": "Q011",
+      "category": "infrastructure_concern",
+      "query": "What infrastructure projects or facilities are mentioned in the documents?",
+      "expected_type": "entity_extraction",
+      "priority": "medium"
+    },
+    {
+      "id": "Q012",
+      "category": "infrastructure_concern",
+      "query": "Are there any procurement or contractor relationships described?",
+      "expected_type": "relationship_analysis",
+      "priority": "high"
+    },
+    {
+      "id": "Q013",
+      "category": "infrastructure_concern",
+      "query": "Do the documents mention facility compliance or safety standards?",
+      "expected_type": "compliance_check",
+      "priority": "medium"
+    },
+    {
+      "id": "Q014",
+      "category": "grant_incentive_detection",
+      "query": "What federal grants or funding mechanisms are mentioned?",
+      "expected_type": "entity_extraction",
+      "priority": "high"
+    },
+    {
+      "id": "Q015",
+      "category": "grant_incentive_detection",
+      "query": "Are there any potential conflicts of interest related to grant funding?",
+      "expected_type": "risk_analysis",
+      "priority": "critical"
+    },
+    {
+      "id": "Q016",
+      "category": "grant_incentive_detection",
+      "query": "Do the documents describe performance incentives or financial bonuses?",
+      "expected_type": "entity_extraction",
+      "priority": "high"
+    },
+    {
+      "id": "Q017",
+      "category": "grant_incentive_detection",
+      "query": "Are matching funds or cost-sharing requirements mentioned?",
+      "expected_type": "financial_analysis",
+      "priority": "medium"
+    },
+    {
+      "id": "Q018",
+      "category": "executive_summary",
+      "query": "Provide a concise executive summary of the key findings from these documents.",
+      "expected_type": "summary",
+      "priority": "high"
+    },
+    {
+      "id": "Q019",
+      "category": "executive_summary",
+      "query": "What are the most critical issues that require immediate attention?",
+      "expected_type": "risk_prioritization",
+      "priority": "critical"
+    },
+    {
+      "id": "Q020",
+      "category": "executive_summary",
+      "query": "What recommendations would you make based on the audit findings?",
+      "expected_type": "recommendation_generation",
+      "priority": "high"
+    }
+  ]
+}

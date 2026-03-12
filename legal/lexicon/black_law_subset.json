@@ -1,0 +1,372 @@
+{
+  "dictionary": "blacks_law_dictionary",
+  "edition": "11th",
+  "year": 2019,
+  "description": "Core subset of Black's Law Dictionary covering foundational constitutional and procedural terms",
+  "terms": [
+    {
+      "term": "due process",
+      "definition": "The conduct of legal proceedings according to established rules and principles for the protection and enforcement of private rights, including notice and the right to a fair hearing before a tribunal with the power to decide the case.",
+      "citation": "p. 630",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "reasonable suspicion",
+      "definition": "A particularized and objective basis, supported by specific and articulable facts, for suspecting a person of criminal activity. A police officer must have reasonable suspicion to stop and briefly detain a person for investigative purposes.",
+      "citation": "p. 1523",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "probable cause",
+      "definition": "Facts and circumstances within an officer's knowledge that are sufficient to warrant a prudent person in believing that a suspect has committed, is committing, or is about to commit a crime. Probable cause is required for arrests, searches, and seizures.",
+      "citation": "p. 1445",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "constructive notice",
+      "definition": "Notice arising by presumption of law from the existence of facts and circumstances that a party had a duty to take notice of, such as a recorded deed or a pending lawsuit.",
+      "citation": "p. 1249",
+      "category": "civil_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "color of law",
+      "definition": "The appearance or semblance, without the substance, of legal right. Misuse of power, possessed by virtue of state law and made possible only because the wrongdoer is clothed with the authority of state law.",
+      "citation": "p. 344",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "custody",
+      "definition": "The care and control of a thing or person. In criminal law, the restraint of a person's liberty such that a reasonable person would not feel free to leave.",
+      "citation": "p. 478",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "mens rea",
+      "definition": "The state of mind that the prosecution must prove that a defendant had when committing a crime; criminal intent or recklessness. The mental element required for criminal liability.",
+      "citation": "p. 1156",
+      "category": "criminal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "actus reus",
+      "definition": "A wrongful deed that comprises the physical components of a crime and that generally must be coupled with mens rea to establish criminal liability; a guilty act.",
+      "citation": "p. 37",
+      "category": "criminal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "prima facie",
+      "definition": "At first sight; on first appearance but subject to further evidence or information. Sufficient to establish a fact or raise a presumption unless disproved or rebutted.",
+      "citation": "p. 1437",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "burden of proof",
+      "definition": "A party's duty to prove a disputed assertion or charge. The duty includes both the burden of production and the burden of persuasion.",
+      "citation": "p. 249",
+      "category": "evidence",
+      "origin_language": "English"
+    },
+    {
+      "term": "jurisdiction",
+      "definition": "A government's general power to exercise authority over all persons and things within its territory; a court's power to decide a case or issue a decree.",
+      "citation": "p. 1011",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "standing",
+      "definition": "A party's right to make a legal claim or seek judicial enforcement of a duty or right. To have standing, a plaintiff must show (1) an injury in fact, (2) a causal connection between the injury and the challenged conduct, and (3) a likelihood that the injury will be redressed by a favorable decision.",
+      "citation": "p. 1699",
+      "category": "civil_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "immunity",
+      "definition": "Any exemption from a duty, liability, or service of process, especially such an exemption granted to a public official.",
+      "citation": "p. 895",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "delegation of powers",
+      "definition": "The transfer of authority by one branch of government to another or to an administrative agency. In constitutional law, Congress's grant of discretionary power to an executive agency.",
+      "citation": "p. 529",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "habeas corpus",
+      "definition": "A writ employed to bring a person before a court, most frequently to ensure that the person's imprisonment or detention is not illegal. The writ of habeas corpus is a constitutional safeguard against unlawful detention.",
+      "citation": "p. 863",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "equal protection",
+      "definition": "The constitutional guarantee that no person or class of persons shall be denied the same protection of the laws that is enjoyed by other persons or classes in like circumstances.",
+      "citation": "p. 668",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "substantive due process",
+      "definition": "The doctrine that the Due Process Clauses of the Fifth and Fourteenth Amendments require legislation to be fair and reasonable in content and to further a legitimate governmental objective.",
+      "citation": "p. 1768",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "procedural due process",
+      "definition": "The minimal requirements of notice and a hearing guaranteed by the Due Process Clauses of the Fifth and Fourteenth Amendments, especially if the deprivation of a significant life, liberty, or property interest is at stake.",
+      "citation": "p. 1443",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "search and seizure",
+      "definition": "The examination of a person's premises, vehicle, or person for the purpose of discovering evidence of a crime or other thing relevant to a legal proceeding, coupled with taking possession of such evidence.",
+      "citation": "p. 1608",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "warrant",
+      "definition": "A writ directing or authorizing someone to do an act, especially one directing a law enforcer to make an arrest, a search, or a seizure.",
+      "citation": "p. 1925",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "exigent circumstances",
+      "definition": "A situation that demands unusual or immediate action and that may allow people to circumvent normal procedures, as when a neighbor breaks through a window of a burning house to save someone inside.",
+      "citation": "p. 700",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "exclusionary rule",
+      "definition": "A rule that excludes or suppresses evidence obtained in violation of an accused person's constitutional rights.",
+      "citation": "p. 689",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "fruit of the poisonous tree",
+      "definition": "Evidence that is derived from or obtained through illegal search, arrest, or interrogation. Such evidence is inadmissible at trial under the exclusionary rule.",
+      "citation": "p. 803",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "good faith exception",
+      "definition": "An exception to the exclusionary rule whereby evidence obtained under a warrant later found to be invalid is nonetheless admissible if the police reasonably relied on the warrant in good faith.",
+      "citation": "p. 842",
+      "category": "criminal_procedure",
+      "origin_language": "English"
+    },
+    {
+      "term": "qualified immunity",
+      "definition": "Immunity from civil liability for a public official who is performing a discretionary function, as long as the conduct does not violate clearly established constitutional or statutory rights.",
+      "citation": "p. 898",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "sovereign immunity",
+      "definition": "A government's immunity from being sued in its own courts without its consent. The doctrine that bars suits against the state without legislative authorization.",
+      "citation": "p. 899",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "establishment clause",
+      "definition": "The First Amendment provision that prohibits governmental establishment of religion.",
+      "citation": "p. 674",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "free exercise clause",
+      "definition": "The First Amendment provision that protects the right to practice one's religion or to have no religion at all.",
+      "citation": "p. 799",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "commerce clause",
+      "definition": "The constitutional provision giving Congress the exclusive power to regulate trade and commercial intercourse among the states, with foreign nations, and with Indian tribes.",
+      "citation": "p. 351",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "dormant commerce clause",
+      "definition": "The constitutional principle that limits a state's ability to pass legislation that discriminates against or excessively burdens interstate commerce.",
+      "citation": "p. 615",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "preemption",
+      "definition": "The principle that a federal law can supersede or supplant any inconsistent state law or regulation.",
+      "citation": "p. 1426",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "separation of powers",
+      "definition": "The division of governmental authority into three branches: legislative, executive, and judicial. This division serves to prevent tyranny and protect liberty.",
+      "citation": "p. 1627",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "checks and balances",
+      "definition": "The theory of governmental power and functions whereby each branch of government has the ability to counter the actions of any other branch, so that no single branch can control the state.",
+      "citation": "p. 302",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "judicial review",
+      "definition": "A court's power to review the actions of other branches or levels of government, especially the courts' power to invalidate legislative and executive actions as being unconstitutional.",
+      "citation": "p. 1009",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "stare decisis",
+      "definition": "The doctrine of precedent, under which a court must follow earlier judicial decisions when the same points arise again in litigation.",
+      "citation": "p. 1699",
+      "category": "common_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "precedent",
+      "definition": "A decided case that furnishes a basis for determining later cases involving similar facts or issues.",
+      "citation": "p. 1425",
+      "category": "common_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "dicta",
+      "definition": "A judicial comment made during the course of delivering a judicial opinion, but one that is unnecessary to the decision in the case and therefore not precedential.",
+      "citation": "p. 559",
+      "category": "common_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "obiter dictum",
+      "definition": "A judicial comment made while delivering a judicial opinion, but one that is unnecessary to the decision in the case and therefore not precedential; a nonbinding statement of law.",
+      "citation": "p. 1269",
+      "category": "common_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "ratio decidendi",
+      "definition": "The principle or rule of law on which a court's decision is founded; the part of a judicial decision that is binding as precedent.",
+      "citation": "p. 1519",
+      "category": "common_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "void for vagueness",
+      "definition": "The doctrine that a criminal law violates due process if it does not give fair notice of the conduct that it prohibits or if it is so ambiguous that it encourages arbitrary enforcement.",
+      "citation": "p. 1917",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "overbreadth",
+      "definition": "The doctrine that allows for facial invalidation of a law that prohibits or chills substantially more speech than the Constitution permits government to regulate.",
+      "citation": "p. 1312",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "strict scrutiny",
+      "definition": "The standard applied to suspect classifications (such as race) in equal-protection analysis and to fundamental rights in due-process analysis. Under strict scrutiny, the state must establish that it has a compelling interest that justifies and necessitates the law in question.",
+      "citation": "p. 1757",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "intermediate scrutiny",
+      "definition": "A test applied in equal-protection and substantive-due-process analysis. Under this test, the court will uphold a law if it is substantially related to an important governmental objective.",
+      "citation": "p. 968",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "rational basis test",
+      "definition": "A principle whereby a court will uphold a law as long as it is rationally related to a legitimate governmental interest.",
+      "citation": "p. 1519",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "fundamental right",
+      "definition": "A right derived from natural or fundamental law. Under the Equal Protection Clause, a fundamental right triggers strict scrutiny to determine whether the law violates equal protection.",
+      "citation": "p. 808",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "suspect classification",
+      "definition": "A statutory classification based on race, national origin, or alienage, and thereby subject to strict scrutiny under equal-protection analysis.",
+      "citation": "p. 1777",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "quasi-suspect classification",
+      "definition": "A statutory classification based on gender or illegitimacy, and therefore subject to intermediate scrutiny under equal-protection analysis.",
+      "citation": "p. 1509",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "takings clause",
+      "definition": "The Fifth Amendment provision that prohibits the government from taking private property for public use without just compensation.",
+      "citation": "p. 1787",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "eminent domain",
+      "definition": "The inherent power of a governmental entity to take privately owned property, especially land, and convert it to public use, subject to reasonable compensation for the taking.",
+      "citation": "p. 648",
+      "category": "property_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "public use",
+      "definition": "The constitutional requirement for eminent domain. In modern jurisprudence, the term includes virtually any public purpose or benefit.",
+      "citation": "p. 1486",
+      "category": "property_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "just compensation",
+      "definition": "Under the Fifth Amendment, a payment by the government for property it has taken under eminent domain, usually measured by fair market value.",
+      "citation": "p. 1013",
+      "category": "property_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "regulatory taking",
+      "definition": "A governmental taking of private property through the exercise of its regulatory power, such as land-use regulation, rather than through eminent domain.",
+      "citation": "p. 1538",
+      "category": "property_law",
+      "origin_language": "English"
+    }
+  ]
+}

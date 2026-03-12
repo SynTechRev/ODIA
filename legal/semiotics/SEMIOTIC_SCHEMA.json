@@ -1,0 +1,210 @@
+{
+  "version": "1.0.0",
+  "description": "CDSCE Semiotic Schema - Defines the structure for semiotic analysis in the Cross-Dictionary Semiotic Correlation Engine",
+  "schema_version": "1.0",
+  "last_updated": "2025-12-07",
+  "components": {
+    "term_correlation": {
+      "description": "Full cross-dictionary correlation for a legal term",
+      "required_fields": [
+        "term",
+        "canonical",
+        "dictionary_sources",
+        "correlation_strength",
+        "timestamp"
+      ],
+      "optional_fields": [
+        "etymology_lineage",
+        "doctrinal_mappings",
+        "era_definitions",
+        "framework_context",
+        "semantic_drift",
+        "contradictions"
+      ]
+    },
+    "semantic_drift": {
+      "description": "Semantic drift analysis across eras",
+      "drift_score_range": {
+        "min": 0.0,
+        "max": 1.0,
+        "interpretation": {
+          "0.0": "no drift",
+          "0.2": "minimal drift",
+          "0.4": "low drift",
+          "0.6": "moderate drift",
+          "0.8": "high drift",
+          "1.0": "full meaning inversion"
+        }
+      },
+      "drift_categories": [
+        "minimal",
+        "low",
+        "moderate",
+        "high",
+        "severe"
+      ],
+      "weighting_factors": {
+        "linguistic_lineage": "latin=1.0, greek=0.95, canon_law=0.9, common_law=0.85, statutory=0.7, colloquial=0.5",
+        "era_difference": "<=10 years=0.5, <=50 years=0.7, <=100 years=0.9, >100 years=1.0",
+        "CLF_interpretive_method": "weight varies by framework"
+      }
+    },
+    "anomaly_types": {
+      "description": "Types of semiotic anomalies detected",
+      "types": [
+        {
+          "type": "contradiction",
+          "severity": 0.8,
+          "description": "Two dictionaries define a term incompatibly"
+        },
+        {
+          "type": "semantic_drift_spike",
+          "severity": 0.7,
+          "description": "Modern use diverges sharply from classical/etymological meaning"
+        },
+        {
+          "type": "doctrine_meaning_inversion",
+          "severity": 0.9,
+          "description": "A doctrine's meaning has reversed over time"
+        },
+        {
+          "type": "interpretive_instability",
+          "severity": 0.6,
+          "description": "Courts use the same word inconsistently across eras"
+        },
+        {
+          "type": "cross_dictionary_conflict",
+          "severity": 0.75,
+          "description": "Term appears in two sources with competing roots or philosophical origin"
+        },
+        {
+          "type": "etymology_divergence",
+          "severity": 0.65,
+          "description": "Modern meaning has lost connection to etymological roots"
+        }
+      ]
+    },
+    "contradiction_types": {
+      "description": "Types of contradictions detected",
+      "types": [
+        {
+          "type": "lexical",
+          "weight": 0.7,
+          "description": "Dictionary definitions conflict at word level"
+        },
+        {
+          "type": "doctrinal",
+          "weight": 0.9,
+          "description": "Legal doctrine interpretations conflict"
+        },
+        {
+          "type": "interpretive",
+          "weight": 0.85,
+          "description": "Constitutional interpretation methods conflict"
+        },
+        {
+          "type": "temporal",
+          "weight": 0.75,
+          "description": "Meaning changed incompatibly over time"
+        },
+        {
+          "type": "constitutional_framework",
+          "weight": 0.8,
+          "description": "CLF frameworks provide conflicting guidance"
+        },
+        {
+          "type": "etymological",
+          "weight": 0.65,
+          "description": "Root origins suggest conflicting meanings"
+        }
+      ]
+    },
+    "graph_types": {
+      "description": "Types of semantic graphs generated",
+      "types": [
+        {
+          "name": "synonym_graph",
+          "description": "Terms with similar meanings"
+        },
+        {
+          "name": "antonym_graph",
+          "description": "Terms with opposite meanings"
+        },
+        {
+          "name": "etymology_lineage_graph",
+          "description": "Etymological relationships and derivations"
+        },
+        {
+          "name": "doctrine_meaning_graph",
+          "description": "Doctrine to term mappings"
+        },
+        {
+          "name": "concept_clusters",
+          "description": "Groups of semantically related terms"
+        }
+      ]
+    },
+    "eras": {
+      "description": "Historical eras for temporal analysis",
+      "definitions": {
+        "1789": "Founding Era",
+        "1791": "Bill of Rights",
+        "1868": "Reconstruction (14th Amendment)",
+        "1920": "Early Modern Era",
+        "1960": "Civil Rights Era",
+        "2000": "Digital Age",
+        "2024": "Contemporary Era"
+      }
+    },
+    "source_weights": {
+      "description": "Authority weights for dictionary sources",
+      "weights": {
+        "blacks": 0.35,
+        "bouvier": 0.20,
+        "webster": 0.20,
+        "oxford": 0.15,
+        "latin": 0.10
+      }
+    },
+    "integration_points": {
+      "description": "Integration with other Oraculus systems",
+      "systems": [
+        {
+          "name": "CLF-v1",
+          "description": "Constitutional Linguistic Frameworks",
+          "data_flow": "bidirectional"
+        },
+        {
+          "name": "LLEP-v1",
+          "description": "Legal Lexicon Expansion Pack",
+          "data_flow": "input"
+        },
+        {
+          "name": "LGCEP-v1",
+          "description": "Latin, Greek, Canon Etymology Pack",
+          "data_flow": "input"
+        },
+        {
+          "name": "CLEP-v2",
+          "description": "Case Law Expansion Pack",
+          "data_flow": "input"
+        },
+        {
+          "name": "JIM",
+          "description": "Judicial Interpretive Matrix",
+          "data_flow": "bidirectional"
+        },
+        {
+          "name": "ACE",
+          "description": "Anomaly Correlation Engine",
+          "data_flow": "output"
+        },
+        {
+          "name": "MSH",
+          "description": "Meaning Stabilization & Harmonization",
+          "data_flow": "bidirectional"
+        }
+      ]
+    }
+  }
+}

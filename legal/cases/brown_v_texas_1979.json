@@ -1,0 +1,22 @@
+{
+  "case_id": "brown_v_texas_1979",
+  "name": "Brown v. Texas",
+  "citation": "443 U.S. 47 (1979)",
+  "year": 1979,
+  "doctrine": "fourth_amendment",
+  "summary": "Police must have reasonable suspicion of criminal activity to stop and demand identification; cannot arrest for refusing to identify without reasonable suspicion.",
+  "holding": "Conviction for refusing to identify oneself to police violates Fourth Amendment when police lacked reasonable suspicion of criminal activity.",
+  "issue_tags": [
+    "fourth_amendment",
+    "stop_and_identify",
+    "reasonable_suspicion",
+    "free_movement",
+    "police_encounter",
+    "identification_requirement"
+  ],
+  "doctrinal_weight": 0.85,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes reasonable suspicion standard for stops and identification demands; relevant to identity control and free movement issues in administrative context.",
+  "procedural_posture": "State conviction reversed",
+  "relevance_score": 0.82
+}

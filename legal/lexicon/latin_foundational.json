@@ -1,0 +1,358 @@
+{
+  "dictionary": "latin_legal_maxims",
+  "edition": "Foundational Latin Legal Vocabulary",
+  "year": 2024,
+  "description": "Essential Latin legal terms, maxims, and phrases with translations and jurisprudential usage",
+  "terms": [
+    {
+      "latin": "stare decisis",
+      "translation": "to stand by things decided",
+      "jurisprudential_usage": "The doctrine of precedent requiring courts to follow earlier judicial decisions when the same points arise again in litigation.",
+      "doctrinal_mapping": ["common_law", "judicial_precedent", "appellate_review"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "in pari materia",
+      "translation": "in the same matter; on the same subject",
+      "jurisprudential_usage": "Statutes dealing with the same subject matter should be construed together to give effect to the legislative intent.",
+      "doctrinal_mapping": ["statutory_interpretation", "legislative_intent"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "nulla poena sine lege",
+      "translation": "no punishment without law",
+      "jurisprudential_usage": "A person cannot be punished for an act that was not prohibited by law at the time it was committed; principle against ex post facto laws.",
+      "doctrinal_mapping": ["criminal_law", "due_process", "constitutional_protection"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "actus non facit reum nisi mens sit rea",
+      "translation": "the act does not make a person guilty unless the mind is also guilty",
+      "jurisprudential_usage": "Criminal liability requires both a wrongful act (actus reus) and criminal intent (mens rea).",
+      "doctrinal_mapping": ["criminal_law", "mens_rea", "criminal_intent"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "corpus delicti",
+      "translation": "body of the crime",
+      "jurisprudential_usage": "The material evidence that a crime has been committed; the essential elements of an offense.",
+      "doctrinal_mapping": ["criminal_procedure", "evidence", "burden_of_proof"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "res judicata",
+      "translation": "a matter judged",
+      "jurisprudential_usage": "A final judgment on the merits bars further claims by the parties on the same cause of action.",
+      "doctrinal_mapping": ["civil_procedure", "claim_preclusion", "finality"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "sub judice",
+      "translation": "under judicial consideration",
+      "jurisprudential_usage": "A matter that is currently before a court and not yet decided.",
+      "doctrinal_mapping": ["civil_procedure", "pending_litigation"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "ex parte",
+      "translation": "from one party",
+      "jurisprudential_usage": "A proceeding brought by one party without notice to or contestation by any other party.",
+      "doctrinal_mapping": ["civil_procedure", "emergency_relief", "preliminary_orders"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "ultra vires",
+      "translation": "beyond the powers",
+      "jurisprudential_usage": "An act performed without authority; actions exceeding the legal power or authority of a person or institution.",
+      "doctrinal_mapping": ["administrative_law", "separation_of_powers", "delegation"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "lex specialis",
+      "translation": "special law",
+      "jurisprudential_usage": "A law governing a specific subject matter prevails over laws governing more general matters (lex generalis).",
+      "doctrinal_mapping": ["statutory_interpretation", "conflict_of_laws"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "lex posterior",
+      "translation": "later law",
+      "jurisprudential_usage": "A later enacted statute takes precedence over an earlier one when they conflict (lex posterior derogat legi priori).",
+      "doctrinal_mapping": ["statutory_interpretation", "conflict_of_laws"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "nunc pro tunc",
+      "translation": "now for then",
+      "jurisprudential_usage": "An order with retroactive effect, treating an act as if it had been done at an earlier time.",
+      "doctrinal_mapping": ["civil_procedure", "equitable_relief"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "habeas corpus",
+      "translation": "you have the body",
+      "jurisprudential_usage": "A writ requiring a person under arrest to be brought before a judge to determine if detention is lawful.",
+      "doctrinal_mapping": ["constitutional_law", "due_process", "liberty_protection"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "mandamus",
+      "translation": "we command",
+      "jurisprudential_usage": "A writ compelling a government official or entity to perform a mandatory duty.",
+      "doctrinal_mapping": ["administrative_law", "civil_procedure"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "certiorari",
+      "translation": "to be informed",
+      "jurisprudential_usage": "A writ seeking appellate review; discretionary review by a higher court of a lower court's decision.",
+      "doctrinal_mapping": ["appellate_procedure", "judicial_review"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "quo warranto",
+      "translation": "by what warrant",
+      "jurisprudential_usage": "A proceeding challenging a person's right to hold public office or exercise a franchise.",
+      "doctrinal_mapping": ["administrative_law", "public_office"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "amicus curiae",
+      "translation": "friend of the court",
+      "jurisprudential_usage": "A person or entity that is not a party to a case but offers information or expertise to assist the court.",
+      "doctrinal_mapping": ["appellate_procedure", "judicial_assistance"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "mens rea",
+      "translation": "guilty mind",
+      "jurisprudential_usage": "The mental state or intent required for criminal liability.",
+      "doctrinal_mapping": ["criminal_law", "intent", "culpability"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "actus reus",
+      "translation": "guilty act",
+      "jurisprudential_usage": "The physical act or unlawful omission that comprises the physical components of a crime.",
+      "doctrinal_mapping": ["criminal_law", "elements_of_crime"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "prima facie",
+      "translation": "at first sight",
+      "jurisprudential_usage": "Evidence sufficient to establish a fact or raise a presumption unless disproved or rebutted.",
+      "doctrinal_mapping": ["evidence", "burden_of_proof"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "res ipsa loquitur",
+      "translation": "the thing speaks for itself",
+      "jurisprudential_usage": "A doctrine allowing negligence to be inferred from the circumstances without direct evidence.",
+      "doctrinal_mapping": ["tort_law", "negligence", "evidence"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "de facto",
+      "translation": "in fact",
+      "jurisprudential_usage": "Existing in fact, whether legally recognized or not; actual rather than legal.",
+      "doctrinal_mapping": ["legal_status", "actual_practice"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "de jure",
+      "translation": "by law",
+      "jurisprudential_usage": "According to law; by right; legitimate; lawful.",
+      "doctrinal_mapping": ["legal_status", "lawful_authority"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "bona fide",
+      "translation": "in good faith",
+      "jurisprudential_usage": "Made or done sincerely, honestly, and without fraud or deceit.",
+      "doctrinal_mapping": ["contracts", "honest_dealing"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "mala fide",
+      "translation": "in bad faith",
+      "jurisprudential_usage": "With intent to deceive or defraud; dishonestly.",
+      "doctrinal_mapping": ["contracts", "fraud"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "caveat emptor",
+      "translation": "let the buyer beware",
+      "jurisprudential_usage": "Principle that the buyer purchases at their own risk without warranty unless provided.",
+      "doctrinal_mapping": ["commercial_law", "sales", "consumer_protection"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "quid pro quo",
+      "translation": "something for something",
+      "jurisprudential_usage": "An exchange of one thing for another; mutual consideration in contracts.",
+      "doctrinal_mapping": ["contracts", "consideration"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "in loco parentis",
+      "translation": "in the place of a parent",
+      "jurisprudential_usage": "Having the legal rights, responsibilities, and authority of a parent.",
+      "doctrinal_mapping": ["family_law", "education_law"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "per se",
+      "translation": "by itself",
+      "jurisprudential_usage": "In and of itself; intrinsically; without reference to extrinsic evidence.",
+      "doctrinal_mapping": ["legal_analysis", "inherent_quality"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "per curiam",
+      "translation": "by the court",
+      "jurisprudential_usage": "An opinion issued by a court as a whole rather than by a single judge.",
+      "doctrinal_mapping": ["appellate_procedure", "judicial_opinions"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "pro bono",
+      "translation": "for the public good",
+      "jurisprudential_usage": "Legal services provided without charge, especially to indigent clients.",
+      "doctrinal_mapping": ["legal_profession", "access_to_justice"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "pro se",
+      "translation": "for oneself",
+      "jurisprudential_usage": "Representing oneself in court without an attorney.",
+      "doctrinal_mapping": ["civil_procedure", "self_representation"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "in camera",
+      "translation": "in chambers",
+      "jurisprudential_usage": "A judicial proceeding conducted in private or in a judge's chambers.",
+      "doctrinal_mapping": ["civil_procedure", "confidentiality"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "sua sponte",
+      "translation": "of one's own accord",
+      "jurisprudential_usage": "An action taken by a court on its own motion, without a party's request.",
+      "doctrinal_mapping": ["civil_procedure", "judicial_discretion"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "subpoena",
+      "translation": "under penalty",
+      "jurisprudential_usage": "A court order requiring a person to appear and testify or produce documents.",
+      "doctrinal_mapping": ["civil_procedure", "discovery", "evidence"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "voir dire",
+      "translation": "to speak the truth",
+      "jurisprudential_usage": "The examination of prospective jurors or witnesses to determine their qualifications.",
+      "doctrinal_mapping": ["trial_procedure", "jury_selection"],
+      "origin_language": "French/Latin"
+    },
+    {
+      "latin": "in rem",
+      "translation": "against a thing",
+      "jurisprudential_usage": "A legal action directed against property rather than against a person.",
+      "doctrinal_mapping": ["civil_procedure", "property_law"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "in personam",
+      "translation": "against a person",
+      "jurisprudential_usage": "A legal action directed against a specific person, seeking personal liability.",
+      "doctrinal_mapping": ["civil_procedure", "jurisdiction"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "ex post facto",
+      "translation": "from after the fact",
+      "jurisprudential_usage": "A law that retroactively criminalizes conduct or increases punishment; constitutionally prohibited.",
+      "doctrinal_mapping": ["constitutional_law", "criminal_law"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "status quo",
+      "translation": "the existing state of affairs",
+      "jurisprudential_usage": "The current or existing condition; often used in injunction analysis.",
+      "doctrinal_mapping": ["equity", "preliminary_relief"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "ad hoc",
+      "translation": "for this purpose",
+      "jurisprudential_usage": "Created or done for a particular purpose as necessary; not general.",
+      "doctrinal_mapping": ["procedure", "special_purposes"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "de novo",
+      "translation": "anew",
+      "jurisprudential_usage": "A new review or trial conducted as if no previous decision had been made.",
+      "doctrinal_mapping": ["appellate_procedure", "trial_de_novo"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "inter alia",
+      "translation": "among other things",
+      "jurisprudential_usage": "Used to indicate that a list or statement is not exhaustive.",
+      "doctrinal_mapping": ["legal_writing", "judicial_opinions"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "mutatis mutandis",
+      "translation": "with necessary changes having been made",
+      "jurisprudential_usage": "Applying a rule or principle with appropriate modifications.",
+      "doctrinal_mapping": ["legal_analysis", "analogical_reasoning"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "ratio decidendi",
+      "translation": "reason for deciding",
+      "jurisprudential_usage": "The legal principle that forms the basis for a court's decision; binding precedent.",
+      "doctrinal_mapping": ["common_law", "precedent", "stare_decisis"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "obiter dictum",
+      "translation": "said by the way",
+      "jurisprudential_usage": "A judicial comment made during a decision that is not essential to the outcome; not binding precedent.",
+      "doctrinal_mapping": ["common_law", "precedent"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "lex loci",
+      "translation": "law of the place",
+      "jurisprudential_usage": "The law of the jurisdiction where an event occurred or property is located.",
+      "doctrinal_mapping": ["conflict_of_laws", "choice_of_law"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "forum non conveniens",
+      "translation": "an inconvenient forum",
+      "jurisprudential_usage": "A doctrine allowing a court to dismiss a case when another forum would be more appropriate.",
+      "doctrinal_mapping": ["civil_procedure", "jurisdiction", "venue"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "locus standi",
+      "translation": "place of standing",
+      "jurisprudential_usage": "The right or capacity to bring an action or to appear in a court; standing.",
+      "doctrinal_mapping": ["civil_procedure", "standing", "justiciability"],
+      "origin_language": "Latin"
+    },
+    {
+      "latin": "ipso facto",
+      "translation": "by the fact itself",
+      "jurisprudential_usage": "By the very nature of the fact; by that very fact or act.",
+      "doctrinal_mapping": ["legal_analysis", "automatic_consequence"],
+      "origin_language": "Latin"
+    }
+  ]
+}

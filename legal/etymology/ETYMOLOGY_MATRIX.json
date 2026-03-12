@@ -1,0 +1,77 @@
+{
+  "matrix": "etymology_harmonization_matrix",
+  "version": "1.0.0",
+  "schema_version": "1.0",
+  "description": "Harmonized etymology matrix unifying Latin, Greek, Canon Law, and modern English concepts with semantic lineage and drift analysis",
+  "generated_date": "2025-12-07",
+  "total_entries": 50,
+  "drift_score_methodology": "Drift score (0.0-1.0) measures semantic change from classical origins to modern usage. Lower scores indicate stable meaning; higher scores indicate significant evolution.",
+  "entries": [
+    {
+      "term": "justice",
+      "root_languages": {
+        "latin": "iustitia",
+        "greek": "dike / dikaiosyne",
+        "canon": "ius",
+        "english_modern": "justice"
+      },
+      "semantic_lineage": [
+        "dike (δίκη) → dikaiosyne (δικαιοσύνη) → iustitia → justice",
+        "Greek: rightful order, lawsuit → Latin: justice → English: fairness, legal system"
+      ],
+      "drift_score": 0.42,
+      "era_meanings": {
+        "classical_greek": "Right order, natural justice, lawsuit",
+        "roman_law": "Virtue of giving each their due, legal justice",
+        "medieval_canon": "Divine justice tempered with mercy",
+        "enlightenment": "Natural rights, social contract justice",
+        "modern": "Equal application of law, procedural fairness, distributive justice"
+      },
+      "legal_doctrines": [
+        "equity",
+        "natural_law",
+        "due_process",
+        "equal_protection"
+      ],
+      "citations": [
+        "Plato Republic",
+        "Aristotle Nicomachean Ethics",
+        "Institutes of Justinian",
+        "Rawls Theory of Justice"
+      ]
+    },
+    {
+      "term": "law",
+      "root_languages": {
+        "latin": "lex",
+        "greek": "nomos",
+        "canon": "lex / ius",
+        "english_modern": "law"
+      },
+      "semantic_lineage": [
+        "nomos (νόμος) → lex → law",
+        "Greek: custom, convention → Latin: statute → English: legal rule"
+      ],
+      "drift_score": 0.35,
+      "era_meanings": {
+        "classical_greek": "Custom, convention, divine law",
+        "roman_law": "Statute, written law, legal command",
+        "medieval_canon": "Hierarchy: eternal, divine, natural, human law",
+        "enlightenment": "Social contract, legislative will",
+        "modern": "Positive law, statute, regulation, constitutional provision"
+      },
+      "legal_doctrines": [
+        "rule_of_law",
+        "legal_positivism",
+        "natural_law",
+        "statutory_interpretation"
+      ],
+      "citations": [
+        "Heraclitus fragments",
+        "Twelve Tables",
+        "Aquinas Summa Theologica",
+        "Hart Concept of Law"
+      ]
+    }
+  ]
+}

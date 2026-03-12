@@ -1,0 +1,23 @@
+{
+  "case_id": "riley_v_california_2014",
+  "name": "Riley v. California",
+  "citation": "573 U.S. 373 (2014)",
+  "year": 2014,
+  "doctrine": "fourth_amendment",
+  "summary": "Police generally may not search digital information on cell phone seized from person arrested without warrant; digital data creates heightened privacy concerns requiring warrant protection.",
+  "holding": "Police must generally obtain warrant before searching digital information on cell phone, even when phone lawfully seized incident to arrest; search incident to arrest exception does not apply to digital data.",
+  "issue_tags": [
+    "digital_privacy",
+    "cell_phone_search",
+    "warrant_requirement",
+    "fourth_amendment",
+    "search_incident_to_arrest",
+    "digital_information",
+    "modern_technology"
+  ],
+  "doctrinal_weight": 0.93,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes heightened protection for digital information; critical for analyzing government access to digital records, databases, and electronic communications.",
+  "procedural_posture": "State criminal convictions reversed and remanded",
+  "relevance_score": 0.94
+}

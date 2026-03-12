@@ -1,0 +1,23 @@
+{
+  "case_id": "terry_v_ohio_1968",
+  "name": "Terry v. Ohio",
+  "citation": "392 U.S. 1 (1968)",
+  "year": 1968,
+  "doctrine": "fourth_amendment",
+  "summary": "Police may conduct limited search for weapons (stop and frisk) based on reasonable suspicion that person is armed and dangerous; established reasonable suspicion standard distinct from probable cause.",
+  "holding": "Brief investigatory stop and protective frisk permissible when officer has reasonable suspicion based on specific articulable facts that criminal activity may be afoot and person may be armed and dangerous.",
+  "issue_tags": [
+    "stop_and_frisk",
+    "reasonable_suspicion",
+    "fourth_amendment",
+    "protective_search",
+    "officer_safety",
+    "investigatory_stop",
+    "articulable_facts"
+  ],
+  "doctrinal_weight": 0.96,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Foundational case establishing reasonable suspicion standard; relevant to analyzing investigatory actions, temporary detentions, and limited searches in administrative context.",
+  "procedural_posture": "State criminal conviction affirmed",
+  "relevance_score": 0.92
+}

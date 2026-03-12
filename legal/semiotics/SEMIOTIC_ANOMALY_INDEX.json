@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-12-07T00:00:00Z",
+  "total_anomalies": 0,
+  "by_term": {},
+  "by_type": {},
+  "statistics": {
+    "total_anomalies": 0,
+    "unique_terms": 0,
+    "anomaly_types": 0,
+    "average_severity": 0.0,
+    "high_severity_count": 0
+  },
+  "metadata": {
+    "description": "CDSCE Semiotic Anomaly Index - Placeholder file to be populated by CDSCE anomaly detector",
+    "last_updated": "2025-12-07",
+    "status": "initialized"
+  }
+}

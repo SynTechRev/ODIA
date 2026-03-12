@@ -1,0 +1,208 @@
+{
+  "dictionary": "oxford_english_law_dictionary",
+  "edition": "Oxford Dictionary of Law",
+  "year": 2023,
+  "description": "Synonym and equivalent term mappings for legal terminology (definitions not included - see source dictionaries)",
+  "synonym_mappings": [
+    {
+      "term": "due process",
+      "synonyms": ["procedural fairness", "natural justice", "fair hearing", "legal fairness"]
+    },
+    {
+      "term": "probable cause",
+      "synonyms": ["reasonable grounds", "sufficient cause", "justified belief", "founded suspicion"]
+    },
+    {
+      "term": "reasonable suspicion",
+      "synonyms": ["articulable suspicion", "founded suspicion", "particularized suspicion"]
+    },
+    {
+      "term": "burden of proof",
+      "synonyms": ["onus of proof", "duty to prove", "evidential burden", "probative obligation"]
+    },
+    {
+      "term": "beyond reasonable doubt",
+      "synonyms": ["criminal standard", "moral certainty", "firm conviction", "satisfied so that sure"]
+    },
+    {
+      "term": "preponderance of evidence",
+      "synonyms": ["balance of probabilities", "more likely than not", "greater weight", "civil standard"]
+    },
+    {
+      "term": "standing",
+      "synonyms": ["locus standi", "capacity to sue", "legal interest", "right to sue"]
+    },
+    {
+      "term": "jurisdiction",
+      "synonyms": ["competence", "legal authority", "power to adjudicate", "court authority"]
+    },
+    {
+      "term": "venue",
+      "synonyms": ["forum", "locale", "proper place", "territorial jurisdiction"]
+    },
+    {
+      "term": "discovery",
+      "synonyms": ["disclosure", "fact-finding", "information exchange", "pretrial investigation"]
+    },
+    {
+      "term": "deposition",
+      "synonyms": ["examination under oath", "sworn testimony", "out-of-court testimony"]
+    },
+    {
+      "term": "interrogatories",
+      "synonyms": ["written questions", "questionnaire", "written examination"]
+    },
+    {
+      "term": "motion",
+      "synonyms": ["application", "petition", "request for order", "interlocutory application"]
+    },
+    {
+      "term": "summary judgment",
+      "synonyms": ["judgment on the pleadings", "dismissal without trial", "strike out"]
+    },
+    {
+      "term": "injunction",
+      "synonyms": ["restraining order", "prohibition", "interdict", "court order"]
+    },
+    {
+      "term": "damages",
+      "synonyms": ["compensation", "monetary relief", "recompense", "reparation"]
+    },
+    {
+      "term": "punitive damages",
+      "synonyms": ["exemplary damages", "penalty damages", "vindictive damages", "aggravated damages"]
+    },
+    {
+      "term": "negligence",
+      "synonyms": ["carelessness", "breach of duty", "lack of reasonable care", "dereliction of duty"]
+    },
+    {
+      "term": "strict liability",
+      "synonyms": ["absolute liability", "liability without fault", "no-fault liability"]
+    },
+    {
+      "term": "vicarious liability",
+      "synonyms": ["indirect liability", "imputed liability", "constructive liability"]
+    },
+    {
+      "term": "statute of limitations",
+      "synonyms": ["limitation period", "time bar", "prescription period", "filing deadline"]
+    },
+    {
+      "term": "res judicata",
+      "synonyms": ["claim preclusion", "bar by judgment", "matter adjudged", "estoppel by judgment"]
+    },
+    {
+      "term": "collateral estoppel",
+      "synonyms": ["issue preclusion", "issue estoppel", "bar by verdict"]
+    },
+    {
+      "term": "affirmative defense",
+      "synonyms": ["defensive plea", "confession and avoidance", "justification"]
+    },
+    {
+      "term": "counterclaim",
+      "synonyms": ["cross-claim", "set-off", "offset claim", "defendant's claim"]
+    },
+    {
+      "term": "class action",
+      "synonyms": ["representative action", "group litigation", "collective action"]
+    },
+    {
+      "term": "mens rea",
+      "synonyms": ["guilty mind", "criminal intent", "mental element", "blameworthy state of mind"]
+    },
+    {
+      "term": "actus reus",
+      "synonyms": ["guilty act", "wrongful deed", "physical element", "prohibited conduct"]
+    },
+    {
+      "term": "habeas corpus",
+      "synonyms": ["writ of liberty", "produce the body", "release from detention"]
+    },
+    {
+      "term": "stare decisis",
+      "synonyms": ["precedent", "binding precedent", "doctrine of precedent", "to stand by decisions"]
+    },
+    {
+      "term": "obiter dictum",
+      "synonyms": ["dicta", "non-binding statement", "by the way", "judicial comment"]
+    },
+    {
+      "term": "ratio decidendi",
+      "synonyms": ["reason for decision", "binding principle", "rule of law", "holding"]
+    },
+    {
+      "term": "prima facie",
+      "synonyms": ["at first sight", "on its face", "presumptively", "apparently"]
+    },
+    {
+      "term": "in camera",
+      "synonyms": ["in chambers", "in private", "closed session", "sealed proceeding"]
+    },
+    {
+      "term": "ex parte",
+      "synonyms": ["one-sided", "without notice", "unilateral application", "single party"]
+    },
+    {
+      "term": "amicus curiae",
+      "synonyms": ["friend of the court", "intervener", "third-party briefer"]
+    },
+    {
+      "term": "certiorari",
+      "synonyms": ["writ of review", "appeal by leave", "discretionary review"]
+    },
+    {
+      "term": "mandamus",
+      "synonyms": ["writ of mandate", "compulsory order", "command writ"]
+    },
+    {
+      "term": "subpoena",
+      "synonyms": ["summons", "court order to appear", "witness summons"]
+    },
+    {
+      "term": "indictment",
+      "synonyms": ["formal charge", "bill of indictment", "criminal accusation", "true bill"]
+    },
+    {
+      "term": "arraignment",
+      "synonyms": ["first appearance", "plea hearing", "reading of charges"]
+    },
+    {
+      "term": "voir dire",
+      "synonyms": ["jury selection", "examination of jurors", "preliminary examination"]
+    },
+    {
+      "term": "verdict",
+      "synonyms": ["judgment", "finding", "decision", "jury's conclusion"]
+    },
+    {
+      "term": "acquittal",
+      "synonyms": ["not guilty verdict", "exoneration", "discharge", "finding of innocence"]
+    },
+    {
+      "term": "conviction",
+      "synonyms": ["guilty verdict", "finding of guilt", "criminal judgment"]
+    },
+    {
+      "term": "sentencing",
+      "synonyms": ["punishment phase", "penalty determination", "imposition of sentence"]
+    },
+    {
+      "term": "appeal",
+      "synonyms": ["review", "appellate proceeding", "higher court review"]
+    },
+    {
+      "term": "remand",
+      "synonyms": ["send back", "return for reconsideration", "refer back"]
+    },
+    {
+      "term": "reversal",
+      "synonyms": ["overturn", "vacate", "set aside", "annul"]
+    },
+    {
+      "term": "affirmance",
+      "synonyms": ["uphold", "confirm", "sustain", "approve"]
+    }
+  ]
+}

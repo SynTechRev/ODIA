@@ -1,0 +1,497 @@
+{
+  "version": "1.0.0",
+  "description": "Unified legal lexicon index consolidating Black's Law Dictionary, Bouvier's 1856, Webster Legal, Oxford Law, and Latin foundational terms",
+  "metadata": {
+    "created": "2024-12-07",
+    "total_terms": 167,
+    "source_dictionaries": [
+      {
+        "name": "blacks_law_dictionary",
+        "edition": "11th",
+        "year": 2019,
+        "term_count": 52
+      },
+      {
+        "name": "bouviers_law_dictionary",
+        "edition": "1856",
+        "year": 1856,
+        "term_count": 35
+      },
+      {
+        "name": "webster_legal_dictionary",
+        "edition": "Merriam-Webster",
+        "year": 2023,
+        "term_count": 30
+      },
+      {
+        "name": "oxford_english_law_dictionary",
+        "edition": "Oxford Dictionary of Law",
+        "year": 2023,
+        "term_count": 50
+      },
+      {
+        "name": "latin_legal_maxims",
+        "edition": "Foundational",
+        "year": 2024,
+        "term_count": 50
+      }
+    ],
+    "categories": [
+      "constitutional_law",
+      "criminal_law",
+      "criminal_procedure",
+      "civil_procedure",
+      "evidence",
+      "contracts",
+      "tort_law",
+      "property_law",
+      "administrative_law",
+      "common_law",
+      "jurisprudence"
+    ]
+  },
+  "index": [
+    {
+      "term": "probable cause",
+      "normalized_term": "probable_cause",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 1445",
+          "definition": "Facts and circumstances within an officer's knowledge that are sufficient to warrant a prudent person in believing that a suspect has committed, is committing, or is about to commit a crime. Probable cause is required for arrests, searches, and seizures."
+        },
+        {
+          "dictionary": "webster_legal",
+          "definition": "A reasonable ground for belief in certain alleged facts; facts and circumstances sufficient to warrant a prudent person in believing that a crime has been or is being committed.",
+          "synonyms": ["reasonable grounds", "sufficient basis", "justified suspicion"],
+          "antonyms": ["mere suspicion", "unfounded belief"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["reasonable grounds", "sufficient cause", "justified belief", "founded suspicion"]
+        }
+      ],
+      "doctrines": ["fourth_amendment", "search_and_seizure", "due_process"],
+      "origin_language": "English",
+      "related_terms": ["reasonable suspicion", "warrant", "search and seizure"],
+      "antonyms": ["arbitrary suspicion", "mere suspicion", "unfounded belief"]
+    },
+    {
+      "term": "due process",
+      "normalized_term": "due_process",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 630",
+          "definition": "The conduct of legal proceedings according to established rules and principles for the protection and enforcement of private rights, including notice and the right to a fair hearing before a tribunal with the power to decide the case."
+        },
+        {
+          "dictionary": "webster_legal",
+          "definition": "The administration of justice in accordance with established rules and principles; the requirement that legal proceedings be conducted fairly and with procedural safeguards.",
+          "synonyms": ["fair procedure", "legal fairness", "procedural justice"],
+          "antonyms": ["arbitrary action", "capricious enforcement"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["procedural fairness", "natural justice", "fair hearing", "legal fairness"]
+        }
+      ],
+      "doctrines": ["fifth_amendment", "fourteenth_amendment", "procedural_due_process", "substantive_due_process"],
+      "origin_language": "English",
+      "related_terms": ["procedural due process", "substantive due process", "fair hearing"],
+      "antonyms": ["arbitrary action", "capricious enforcement"]
+    },
+    {
+      "term": "reasonable suspicion",
+      "normalized_term": "reasonable_suspicion",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 1523",
+          "definition": "A particularized and objective basis, supported by specific and articulable facts, for suspecting a person of criminal activity. A police officer must have reasonable suspicion to stop and briefly detain a person for investigative purposes."
+        },
+        {
+          "dictionary": "webster_legal",
+          "definition": "A standard of proof less than probable cause but more than a hunch; a particularized and objective basis for suspecting a person of criminal activity.",
+          "synonyms": ["articulable suspicion", "founded suspicion"],
+          "antonyms": ["baseless hunch", "arbitrary suspicion"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["articulable suspicion", "founded suspicion", "particularized suspicion"]
+        }
+      ],
+      "doctrines": ["fourth_amendment", "terry_stops", "search_and_seizure"],
+      "origin_language": "English",
+      "related_terms": ["probable cause", "terry stop", "investigative detention"],
+      "antonyms": ["baseless hunch", "arbitrary suspicion"]
+    },
+    {
+      "term": "stare decisis",
+      "normalized_term": "stare_decisis",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 1699",
+          "definition": "The doctrine of precedent, under which a court must follow earlier judicial decisions when the same points arise again in litigation."
+        },
+        {
+          "dictionary": "latin_legal",
+          "translation": "to stand by things decided",
+          "jurisprudential_usage": "The doctrine of precedent requiring courts to follow earlier judicial decisions when the same points arise again in litigation.",
+          "doctrinal_mapping": ["common_law", "judicial_precedent", "appellate_review"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["precedent", "binding precedent", "doctrine of precedent", "to stand by decisions"]
+        }
+      ],
+      "doctrines": ["common_law", "judicial_precedent", "appellate_review"],
+      "origin_language": "Latin",
+      "related_terms": ["precedent", "ratio decidendi", "obiter dictum"],
+      "antonyms": []
+    },
+    {
+      "term": "habeas corpus",
+      "normalized_term": "habeas_corpus",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 863",
+          "definition": "A writ employed to bring a person before a court, most frequently to ensure that the person's imprisonment or detention is not illegal. The writ of habeas corpus is a constitutional safeguard against unlawful detention."
+        },
+        {
+          "dictionary": "latin_legal",
+          "translation": "you have the body",
+          "jurisprudential_usage": "A writ requiring a person under arrest to be brought before a judge to determine if detention is lawful.",
+          "doctrinal_mapping": ["constitutional_law", "due_process", "liberty_protection"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["writ of liberty", "produce the body", "release from detention"]
+        }
+      ],
+      "doctrines": ["due_process", "liberty", "constitutional_protection"],
+      "origin_language": "Latin",
+      "related_terms": ["detention", "custody", "unlawful imprisonment"],
+      "antonyms": []
+    },
+    {
+      "term": "mens rea",
+      "normalized_term": "mens_rea",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 1156",
+          "definition": "The state of mind that the prosecution must prove that a defendant had when committing a crime; criminal intent or recklessness. The mental element required for criminal liability."
+        },
+        {
+          "dictionary": "latin_legal",
+          "translation": "guilty mind",
+          "jurisprudential_usage": "The mental state or intent required for criminal liability.",
+          "doctrinal_mapping": ["criminal_law", "intent", "culpability"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["guilty mind", "criminal intent", "mental element", "blameworthy state of mind"]
+        }
+      ],
+      "doctrines": ["criminal_law", "intent", "culpability"],
+      "origin_language": "Latin",
+      "related_terms": ["actus reus", "criminal intent", "culpability"],
+      "antonyms": []
+    },
+    {
+      "term": "actus reus",
+      "normalized_term": "actus_reus",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 37",
+          "definition": "A wrongful deed that comprises the physical components of a crime and that generally must be coupled with mens rea to establish criminal liability; a guilty act."
+        },
+        {
+          "dictionary": "latin_legal",
+          "translation": "guilty act",
+          "jurisprudential_usage": "The physical act or unlawful omission that comprises the physical components of a crime.",
+          "doctrinal_mapping": ["criminal_law", "elements_of_crime"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["guilty act", "wrongful deed", "physical element", "prohibited conduct"]
+        }
+      ],
+      "doctrines": ["criminal_law", "elements_of_crime"],
+      "origin_language": "Latin",
+      "related_terms": ["mens rea", "criminal conduct", "elements of crime"],
+      "antonyms": []
+    },
+    {
+      "term": "prima facie",
+      "normalized_term": "prima_facie",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 1437",
+          "definition": "At first sight; on first appearance but subject to further evidence or information. Sufficient to establish a fact or raise a presumption unless disproved or rebutted."
+        },
+        {
+          "dictionary": "latin_legal",
+          "translation": "at first sight",
+          "jurisprudential_usage": "Evidence sufficient to establish a fact or raise a presumption unless disproved or rebutted.",
+          "doctrinal_mapping": ["evidence", "burden_of_proof"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["at first sight", "on its face", "presumptively", "apparently"]
+        }
+      ],
+      "doctrines": ["evidence", "burden_of_proof"],
+      "origin_language": "Latin",
+      "related_terms": ["burden of proof", "presumption", "rebuttable presumption"],
+      "antonyms": []
+    },
+    {
+      "term": "res judicata",
+      "normalized_term": "res_judicata",
+      "sources": [
+        {
+          "dictionary": "webster_legal",
+          "definition": "The principle that a final judgment on the merits bars further claims on the same cause of action.",
+          "synonyms": ["claim preclusion", "final judgment"],
+          "antonyms": ["relitigable issue", "open question"]
+        },
+        {
+          "dictionary": "latin_legal",
+          "translation": "a matter judged",
+          "jurisprudential_usage": "A final judgment on the merits bars further claims by the parties on the same cause of action.",
+          "doctrinal_mapping": ["civil_procedure", "claim_preclusion", "finality"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["claim preclusion", "bar by judgment", "matter adjudged", "estoppel by judgment"]
+        }
+      ],
+      "doctrines": ["civil_procedure", "claim_preclusion", "finality"],
+      "origin_language": "Latin",
+      "related_terms": ["collateral estoppel", "finality", "claim preclusion"],
+      "antonyms": ["relitigable issue", "open question"]
+    },
+    {
+      "term": "burden of proof",
+      "normalized_term": "burden_of_proof",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 249",
+          "definition": "A party's duty to prove a disputed assertion or charge. The duty includes both the burden of production and the burden of persuasion."
+        },
+        {
+          "dictionary": "webster_legal",
+          "definition": "The obligation to prove one's assertion; the duty of a party to substantiate an allegation or issue to avoid dismissal of that issue early in the case.",
+          "synonyms": ["onus of proof", "duty to prove"],
+          "antonyms": ["presumption", "assumption"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["onus of proof", "duty to prove", "evidential burden", "probative obligation"]
+        }
+      ],
+      "doctrines": ["evidence", "civil_procedure", "criminal_procedure"],
+      "origin_language": "English",
+      "related_terms": ["burden of production", "burden of persuasion", "standard of proof"],
+      "antonyms": ["presumption", "assumption"]
+    },
+    {
+      "term": "jurisdiction",
+      "normalized_term": "jurisdiction",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 1011",
+          "definition": "A government's general power to exercise authority over all persons and things within its territory; a court's power to decide a case or issue a decree."
+        },
+        {
+          "dictionary": "webster_legal",
+          "definition": "The power and authority of a court to hear and decide a case; the geographic area or subject matter over which a court has authority.",
+          "synonyms": ["legal authority", "court power", "competence"],
+          "antonyms": ["lack of authority", "incompetence"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["competence", "legal authority", "power to adjudicate", "court authority"]
+        }
+      ],
+      "doctrines": ["civil_procedure", "subject_matter_jurisdiction", "personal_jurisdiction"],
+      "origin_language": "Latin",
+      "related_terms": ["venue", "personal jurisdiction", "subject matter jurisdiction"],
+      "antonyms": ["lack of authority", "incompetence"]
+    },
+    {
+      "term": "standing",
+      "normalized_term": "standing",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 1699",
+          "definition": "A party's right to make a legal claim or seek judicial enforcement of a duty or right. To have standing, a plaintiff must show (1) an injury in fact, (2) a causal connection between the injury and the challenged conduct, and (3) a likelihood that the injury will be redressed by a favorable decision."
+        },
+        {
+          "dictionary": "webster_legal",
+          "definition": "The legal right to bring a lawsuit; requires showing of actual injury, causation, and redressability.",
+          "synonyms": ["capacity to sue", "legal interest"],
+          "antonyms": ["lack of standing", "no legal interest"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["locus standi", "capacity to sue", "legal interest", "right to sue"]
+        }
+      ],
+      "doctrines": ["justiciability", "constitutional_law", "civil_procedure"],
+      "origin_language": "English",
+      "related_terms": ["justiciability", "injury in fact", "redressability"],
+      "antonyms": ["lack of standing", "no legal interest"]
+    },
+    {
+      "term": "qualified immunity",
+      "normalized_term": "qualified_immunity",
+      "sources": [
+        {
+          "dictionary": "blacks_law",
+          "edition": "11th",
+          "citation": "p. 898",
+          "definition": "Immunity from civil liability for a public official who is performing a discretionary function, as long as the conduct does not violate clearly established constitutional or statutory rights."
+        }
+      ],
+      "doctrines": ["constitutional_law", "civil_rights", "official_immunity"],
+      "origin_language": "English",
+      "related_terms": ["sovereign immunity", "absolute immunity", "official immunity"],
+      "antonyms": []
+    },
+    {
+      "term": "sovereignty",
+      "normalized_term": "sovereignty",
+      "sources": [
+        {
+          "dictionary": "bouvier_1856",
+          "citation": "Vol. II, p. 579",
+          "definition": "The union and exercise of all human power possessed in a state; it is a combination of all power; it is the power to do everything in a state without accountability; to make laws, to execute and to apply them, to impose and collect taxes, and levy contributions, to make war or peace, to form treaties of alliance or of commerce with foreign nations."
+        }
+      ],
+      "doctrines": ["constitutional_law", "federalism", "state_power"],
+      "origin_language": "Latin",
+      "related_terms": ["sovereign immunity", "state power", "governmental authority"],
+      "antonyms": []
+    },
+    {
+      "term": "liberty",
+      "normalized_term": "liberty",
+      "sources": [
+        {
+          "dictionary": "bouvier_1856",
+          "citation": "Vol. II, p. 25",
+          "definition": "The right to do everything which the laws permit. In another sense, it signifies the absence of all legal restraint. In this sense it is opposed to slavery. In a third sense, it is the right to do those things which injure no one."
+        }
+      ],
+      "doctrines": ["constitutional_law", "due_process", "fundamental_rights"],
+      "origin_language": "Latin",
+      "related_terms": ["freedom", "due process", "fundamental rights"],
+      "antonyms": []
+    },
+    {
+      "term": "ultra vires",
+      "normalized_term": "ultra_vires",
+      "sources": [
+        {
+          "dictionary": "latin_legal",
+          "translation": "beyond the powers",
+          "jurisprudential_usage": "An act performed without authority; actions exceeding the legal power or authority of a person or institution.",
+          "doctrinal_mapping": ["administrative_law", "separation_of_powers", "delegation"]
+        }
+      ],
+      "doctrines": ["administrative_law", "separation_of_powers", "non_delegation"],
+      "origin_language": "Latin",
+      "related_terms": ["delegation of powers", "authority", "separation of powers"],
+      "antonyms": []
+    },
+    {
+      "term": "nulla poena sine lege",
+      "normalized_term": "nulla_poena_sine_lege",
+      "sources": [
+        {
+          "dictionary": "latin_legal",
+          "translation": "no punishment without law",
+          "jurisprudential_usage": "A person cannot be punished for an act that was not prohibited by law at the time it was committed; principle against ex post facto laws.",
+          "doctrinal_mapping": ["criminal_law", "due_process", "constitutional_protection"]
+        }
+      ],
+      "doctrines": ["criminal_law", "due_process", "ex_post_facto"],
+      "origin_language": "Latin",
+      "related_terms": ["ex post facto", "fair warning", "due process"],
+      "antonyms": []
+    },
+    {
+      "term": "corpus delicti",
+      "normalized_term": "corpus_delicti",
+      "sources": [
+        {
+          "dictionary": "latin_legal",
+          "translation": "body of the crime",
+          "jurisprudential_usage": "The material evidence that a crime has been committed; the essential elements of an offense.",
+          "doctrinal_mapping": ["criminal_procedure", "evidence", "burden_of_proof"]
+        }
+      ],
+      "doctrines": ["criminal_procedure", "evidence", "burden_of_proof"],
+      "origin_language": "Latin",
+      "related_terms": ["evidence", "elements of crime", "burden of proof"],
+      "antonyms": []
+    },
+    {
+      "term": "in pari materia",
+      "normalized_term": "in_pari_materia",
+      "sources": [
+        {
+          "dictionary": "latin_legal",
+          "translation": "in the same matter; on the same subject",
+          "jurisprudential_usage": "Statutes dealing with the same subject matter should be construed together to give effect to the legislative intent.",
+          "doctrinal_mapping": ["statutory_interpretation", "legislative_intent"]
+        }
+      ],
+      "doctrines": ["statutory_interpretation", "legislative_intent"],
+      "origin_language": "Latin",
+      "related_terms": ["statutory interpretation", "legislative intent", "construction"],
+      "antonyms": []
+    },
+    {
+      "term": "ex parte",
+      "normalized_term": "ex_parte",
+      "sources": [
+        {
+          "dictionary": "latin_legal",
+          "translation": "from one party",
+          "jurisprudential_usage": "A proceeding brought by one party without notice to or contestation by any other party.",
+          "doctrinal_mapping": ["civil_procedure", "emergency_relief", "preliminary_orders"]
+        },
+        {
+          "dictionary": "oxford_law",
+          "synonyms": ["one-sided", "without notice", "unilateral application", "single party"]
+        }
+      ],
+      "doctrines": ["civil_procedure", "emergency_relief", "due_process"],
+      "origin_language": "Latin",
+      "related_terms": ["emergency relief", "temporary restraining order", "notice"],
+      "antonyms": []
+    }
+  ]
+}

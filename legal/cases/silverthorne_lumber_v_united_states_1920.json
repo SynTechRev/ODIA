@@ -1,0 +1,22 @@
+{
+  "case_id": "silverthorne_lumber_v_united_states_1920",
+  "name": "Silverthorne Lumber Co. v. United States",
+  "citation": "251 U.S. 385 (1920)",
+  "year": 1920,
+  "doctrine": "fourth_amendment",
+  "summary": "Established fruit of the poisonous tree doctrine; evidence derived from illegal search inadmissible even if independent source would have discovered it.",
+  "holding": "Government cannot use evidence derived from illegal search, nor knowledge gained from such evidence to subpoena documents, as this would make Fourth Amendment meaningless.",
+  "issue_tags": [
+    "fruit_of_poisonous_tree",
+    "exclusionary_rule",
+    "illegal_search",
+    "derivative_evidence",
+    "fourth_amendment",
+    "chain_of_custody"
+  ],
+  "doctrinal_weight": 0.90,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Critical for chain of custody analysis; evidence derived from tainted sources must be excluded. Relevant to PDF forensics and metadata integrity where evidence chain is questioned.",
+  "procedural_posture": "Federal enforcement action appealed",
+  "relevance_score": 0.92
+}

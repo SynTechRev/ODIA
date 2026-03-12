@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "total_files",
+    "extraction_success_rate"
+  ],
+  "properties": {
+    "total_files": {
+      "type": "number"
+    },
+    "extraction_success_rate": {
+      "type": "number"
+    },
+    "missing_items": {
+      "type": "array"
+    },
+    "timeline": {
+      "type": "object"
+    }
+  }
+}

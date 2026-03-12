@@ -1,0 +1,20 @@
+{
+  "id": "usc_42_1983",
+  "title": "Usc 42 1983",
+  "jurisdiction": "unknown",
+  "source": "data/sources/usc_42_1983.txt",
+  "source_url": null,
+  "version_date": null,
+  "ingest_timestamp": "2025-11-13T06:51:13.491261+00:00",
+  "checksum": "c9058ee64633d062882341aa990f0bf39c2ab3d96e18d9c122a6b4d88cb6d0e7",
+  "citations": [],
+  "metadata": {
+    "processor_version": "0.1.0",
+    "transformations": [
+      "ingest",
+      "normalize"
+    ],
+    "original_format": ".txt"
+  },
+  "text": "42 U.S.C. § 1983 - Civil action for deprivation of rights\n\nEvery person who, under color of any statute, ordinance, regulation, custom, or usage, of any State or Territory or the District of Columbia, subjects, or causes to be subjected, any citizen of the United States or other person within the jurisdiction thereof to the deprivation of any rights, privileges, or immunities secured by the Constitution and laws, shall be liable to the party injured in an action at law, suit in equity, or other proper proceeding for redress, except that in any action brought against a judicial officer for an act or omission taken in such officer's judicial capacity, injunctive relief shall not be granted unless a declaratory decree was violated or declaratory relief was unavailable.\n\nFor the purposes of this section, any Act of Congress applicable exclusively to the District of Columbia shall be considered to be a statute of the District of Columbia.\n\nEnacted: April 20, 1871\nCodified: 42 U.S.C. § 1983\nAuthority: Civil Rights Act of 1871\nJurisdiction: Federal\n"
+}

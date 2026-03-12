@@ -1,0 +1,23 @@
+{
+  "case_id": "wong_sun_v_united_states_1963",
+  "name": "Wong Sun v. United States",
+  "citation": "371 U.S. 471 (1963)",
+  "year": 1963,
+  "doctrine": "fourth_amendment",
+  "summary": "Fruit of poisonous tree doctrine applies to verbal statements and confessions obtained as result of illegal arrest; attenuation doctrine may allow admission if connection sufficiently attenuated.",
+  "holding": "Evidence obtained as fruit of unlawful arrest inadmissible unless connection attenuated by intervening circumstances; mere act of later coming to police station voluntarily does not purge taint of illegal arrest if not sufficiently attenuated.",
+  "issue_tags": [
+    "fruit_of_poisonous_tree",
+    "attenuation_doctrine",
+    "illegal_arrest",
+    "verbal_evidence",
+    "chain_of_custody",
+    "exclusionary_rule",
+    "taint_analysis"
+  ],
+  "doctrinal_weight": 0.89,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes attenuation analysis for derivative evidence; relevant to determining when tainted evidence chain is sufficiently broken by independent acts.",
+  "procedural_posture": "Conviction partially reversed",
+  "relevance_score": 0.87
+}

@@ -1,0 +1,912 @@
+{
+  "version": "2.0.0",
+  "description": "Doctrinal framework mapping for Judicial Interpretive Matrix - CLEP-v2 Enhanced with Deep Constitutional, Socioeconomic & Geopolitical Matrix",
+  "doctrines": {
+    "due_process": {
+      "name": "Due Process",
+      "constitutional_basis": ["Fifth Amendment", "Fourteenth Amendment"],
+      "key_principles": [
+        "Procedural due process requires notice and hearing",
+        "Substantive due process protects fundamental rights",
+        "Mathews v. Eldridge balancing test applies"
+      ],
+      "triggers": [
+        "Deprivation of life, liberty, or property",
+        "Government benefit termination",
+        "Administrative sanctions",
+        "Inadequate notice or hearing"
+      ],
+      "weight": 0.95
+    },
+    "non_delegation": {
+      "name": "Non-Delegation Doctrine",
+      "constitutional_basis": ["Article I, Section 1"],
+      "key_principles": [
+        "Congress cannot delegate legislative power",
+        "Intelligible principle required for delegation",
+        "Standards must guide agency discretion"
+      ],
+      "triggers": [
+        "Broad agency discretion without standards",
+        "Lack of policy guidance in statute",
+        "Unfettered executive authority"
+      ],
+      "weight": 0.9
+    },
+    "separation_of_powers": {
+      "name": "Separation of Powers",
+      "constitutional_basis": ["Article I", "Article II", "Article III"],
+      "key_principles": [
+        "Powers divided among three branches",
+        "No branch may encroach on another",
+        "Checks and balances preserved"
+      ],
+      "triggers": [
+        "Executive overreach into legislative domain",
+        "Judicial functions delegated to executive",
+        "Cross-agency jurisdiction conflicts"
+      ],
+      "weight": 0.92
+    },
+    "fourth_amendment": {
+      "name": "Fourth Amendment Privacy",
+      "constitutional_basis": ["Fourth Amendment"],
+      "key_principles": [
+        "Protection against unreasonable searches",
+        "Warrant requirement with probable cause",
+        "Reasonable expectation of privacy",
+        "Special needs exception narrowly construed"
+      ],
+      "triggers": [
+        "Surveillance programs",
+        "Warrantless searches",
+        "Digital data collection",
+        "Location tracking"
+      ],
+      "weight": 0.95
+    },
+    "equal_protection": {
+      "name": "Equal Protection",
+      "constitutional_basis": ["Fourteenth Amendment"],
+      "key_principles": [
+        "Similarly situated persons treated similarly",
+        "Rational basis for distinctions",
+        "Heightened scrutiny for suspect classifications",
+        "Class-of-one protection"
+      ],
+      "triggers": [
+        "Arbitrary discrimination",
+        "Disparate treatment without justification",
+        "Selective enforcement"
+      ],
+      "weight": 0.85
+    },
+    "administrative_law": {
+      "name": "Administrative Law",
+      "constitutional_basis": ["Article I", "Article II", "Administrative Procedure Act"],
+      "key_principles": [
+        "Reasoned decision-making required",
+        "Arbitrary and capricious standard",
+        "Substantial evidence for findings",
+        "Notice and comment for rulemaking",
+        "Independent judicial review"
+      ],
+      "triggers": [
+        "Inadequate explanation for agency action",
+        "Failure to consider relevant factors",
+        "Departure from prior practice without justification",
+        "Procedural irregularities"
+      ],
+      "weight": 0.9,
+      "note": "Post-Loper Bright (2024): Courts exercise independent judgment on statutory interpretation without agency deference"
+    },
+    "unconstitutional_conditions": {
+      "name": "Unconstitutional Conditions Doctrine",
+      "constitutional_basis": ["First Amendment", "Due Process Clause"],
+      "key_principles": [
+        "Government cannot condition benefits on surrender of rights",
+        "Coercion of constitutional rights prohibited",
+        "Voluntary acceptance must be genuine"
+      ],
+      "triggers": [
+        "Benefit conditioned on waiver of rights",
+        "Compelled speech or association",
+        "Forced surrender of constitutional protections"
+      ],
+      "weight": 0.8
+    },
+    "constitutional_torts": {
+      "name": "Constitutional Torts and Qualified Immunity",
+      "constitutional_basis": ["42 U.S.C. § 1983", "Bivens Actions", "Fourth Amendment", "Due Process"],
+      "key_principles": [
+        "Government officials liable for constitutional violations",
+        "Qualified immunity protects unless clearly established law violated",
+        "Objective reasonableness standard for official conduct",
+        "Remedy for deprivation of federal rights under color of law"
+      ],
+      "triggers": [
+        "Government official misconduct",
+        "Violation of clearly established rights",
+        "Excessive force or unlawful detention",
+        "Administrative overreach causing injury"
+      ],
+      "weight": 0.82
+    },
+    "property_rights": {
+      "name": "Property Rights and Economic Liberty",
+      "constitutional_basis": ["Fifth Amendment Takings", "Fourteenth Amendment Due Process", "Contract Clause"],
+      "key_principles": [
+        "Property includes tangible and intangible interests",
+        "Government takings require just compensation",
+        "Substantive due process protects against arbitrary deprivation",
+        "Liberty interests include contractual freedom"
+      ],
+      "triggers": [
+        "Government taking without compensation",
+        "Arbitrary interference with property or contracts",
+        "Regulatory restrictions on economic activity",
+        "Vendor contract interference"
+      ],
+      "weight": 0.78
+    },
+    "free_movement": {
+      "name": "Right to Travel and Freedom of Movement",
+      "constitutional_basis": ["Fourteenth Amendment Privileges and Immunities", "Equal Protection", "Due Process"],
+      "key_principles": [
+        "Right to interstate travel is fundamental",
+        "Durational residency requirements require compelling interest",
+        "New residents entitled to equal treatment",
+        "Identity control measures must not burden fundamental rights"
+      ],
+      "triggers": [
+        "Durational residency requirements",
+        "Restrictions on interstate migration",
+        "Identity control or tracking systems",
+        "Differential treatment based on residency status"
+      ],
+      "weight": 0.84
+    },
+    "first_amendment": {
+      "name": "First Amendment Freedoms",
+      "constitutional_basis": ["First Amendment"],
+      "key_principles": [
+        "Content-based restrictions presumptively invalid",
+        "Prior restraints on speech disfavored",
+        "Public forum doctrine protects expression in traditional public spaces",
+        "Free exercise requires neutrality and general applicability",
+        "Establishment Clause prohibits religious coercion"
+      ],
+      "triggers": [
+        "Content or viewpoint discrimination",
+        "Prior restraint on publication",
+        "Religious targeting or coercion",
+        "Compelled speech or association",
+        "Restrictions on public forum expression"
+      ],
+      "weight": 0.95
+    },
+    "second_amendment": {
+      "name": "Second Amendment Right to Keep and Bear Arms",
+      "constitutional_basis": ["Second Amendment", "Fourteenth Amendment"],
+      "key_principles": [
+        "Individual right to possess firearms for lawful purposes",
+        "Core right of self-defense in the home",
+        "Strict scrutiny applies to regulations burdening core right",
+        "Presumptively lawful regulations include felons, sensitive places, dangerous weapons"
+      ],
+      "triggers": [
+        "Firearms ban or severe restriction",
+        "Denial of concealed carry license",
+        "Regulations affecting core self-defense right",
+        "Historical analysis of regulation type"
+      ],
+      "weight": 0.90
+    },
+    "eighth_amendment": {
+      "name": "Eighth Amendment Protections",
+      "constitutional_basis": ["Eighth Amendment", "Fourteenth Amendment"],
+      "key_principles": [
+        "Excessive fines prohibited",
+        "Proportionality required for civil and criminal penalties",
+        "Cruel and unusual punishment forbidden",
+        "Evolving standards of decency govern"
+      ],
+      "triggers": [
+        "Disproportionate fine or forfeiture",
+        "Revenue-driven enforcement",
+        "Excessive bail",
+        "Cruel or degrading punishment"
+      ],
+      "weight": 0.88
+    },
+    "federal_power": {
+      "name": "Federal Power and Federalism",
+      "constitutional_basis": ["Article I", "Commerce Clause", "Supremacy Clause", "Tenth Amendment"],
+      "key_principles": [
+        "Enumerated powers limit federal authority",
+        "Commerce power extends to activities substantially affecting interstate commerce",
+        "Federal law supreme over conflicting state law",
+        "Anti-commandeering prevents federal coercion of states"
+      ],
+      "triggers": [
+        "Federal regulation of intrastate activity",
+        "Preemption of state law",
+        "Commandeering of state officials",
+        "Spending conditions coercing states"
+      ],
+      "weight": 0.90
+    },
+    "constitutional_structure": {
+      "name": "Constitutional Structure and Foundational Principles",
+      "constitutional_basis": ["Structural Constitution", "Judicial Review", "Federalism"],
+      "key_principles": [
+        "Judicial review established by Marbury v. Madison",
+        "Federal system divides power between nation and states",
+        "Bill of Rights incorporated against states through Fourteenth Amendment",
+        "Constitutional text supreme over all other law"
+      ],
+      "triggers": [
+        "Conflict between constitutional text and government action",
+        "Federal-state sovereignty disputes",
+        "Challenges to judicial authority",
+        "Incorporation questions"
+      ],
+      "weight": 0.95
+    },
+    "economic_regulation": {
+      "name": "Economic Regulation and Commerce",
+      "constitutional_basis": ["Commerce Clause", "Contract Clause", "Due Process"],
+      "key_principles": [
+        "Rational basis review for economic regulations",
+        "State police power permits health, safety, welfare regulations",
+        "Substantial impairment of contracts subject to scrutiny",
+        "Price controls permissible if reasonable"
+      ],
+      "triggers": [
+        "Economic regulation challenged as arbitrary",
+        "Price or rate controls",
+        "Contract impairment",
+        "Business licensing restrictions"
+      ],
+      "weight": 0.75
+    },
+    "police_pretext_doctrine": {
+      "name": "Police Pretext Doctrine",
+      "constitutional_basis": ["Fourth Amendment"],
+      "key_principles": [
+        "Pretextual stops permissible if objective probable cause exists",
+        "Subjective intent of officer irrelevant to Fourth Amendment analysis",
+        "Traffic violations provide lawful basis for stop regardless of ulterior motive",
+        "Pattern evidence may show discriminatory enforcement"
+      ],
+      "triggers": [
+        "Minor traffic violation used as pretext",
+        "Statistical evidence of discriminatory stop patterns",
+        "Duration of stop extended beyond traffic mission",
+        "Ulterior investigative purpose evident"
+      ],
+      "weight": 0.85
+    },
+    "metadata_exposure_doctrine": {
+      "name": "Metadata Exposure Doctrine",
+      "constitutional_basis": ["Fourth Amendment"],
+      "key_principles": [
+        "CSLI and location data protected by Fourth Amendment",
+        "Metadata collection may constitute search",
+        "Third-party doctrine limited for digital data",
+        "Warrant generally required for historical location data"
+      ],
+      "triggers": [
+        "Collection of cell-site location information",
+        "GPS tracking",
+        "Historical location data requests",
+        "Aggregated metadata analysis"
+      ],
+      "weight": 0.92
+    },
+    "administrative_delegation_drift": {
+      "name": "Administrative Delegation Drift",
+      "constitutional_basis": ["Article I", "Non-Delegation Doctrine"],
+      "key_principles": [
+        "Gradual expansion of agency authority without clear congressional authorization",
+        "Major questions doctrine limits transformative agency actions",
+        "Intelligible principle must guide discretion",
+        "Clear statement required for significant policy changes"
+      ],
+      "triggers": [
+        "Agency claims authority for unprecedented action",
+        "Vast economic or political significance",
+        "Novel assertion of regulatory power",
+        "Lack of clear congressional authorization"
+      ],
+      "weight": 0.90
+    },
+    "digital_trespass_theory": {
+      "name": "Digital Trespass Theory (Post-Carpenter)",
+      "constitutional_basis": ["Fourth Amendment"],
+      "key_principles": [
+        "Digital information may have reasonable expectation of privacy",
+        "Physical trespass not required for Fourth Amendment violation",
+        "Katz expectation of privacy test applies to digital realm",
+        "Carpenter limits third-party doctrine for digital records"
+      ],
+      "triggers": [
+        "Warrantless access to digital communications",
+        "Email or cloud storage searches",
+        "Social media account access",
+        "Digital device searches"
+      ],
+      "weight": 0.90
+    },
+    "procedural_fairness_erosion_index": {
+      "name": "Procedural Fairness Erosion Index",
+      "constitutional_basis": ["Fifth Amendment", "Fourteenth Amendment Due Process"],
+      "key_principles": [
+        "Notice and opportunity to be heard required",
+        "Mathews balancing test weighs private interest, error risk, government burden",
+        "Erosion of procedural protections triggers scrutiny",
+        "Post-deprivation remedies sometimes insufficient"
+      ],
+      "triggers": [
+        "Summary action without prior hearing",
+        "Inadequate notice",
+        "Denial of opportunity to present evidence",
+        "Biased decisionmaker"
+      ],
+      "weight": 0.88
+    },
+    "economic_sovereignty_doctrine": {
+      "name": "Economic Sovereignty Doctrine",
+      "constitutional_basis": ["Commerce Clause", "Dormant Commerce Clause", "Privileges and Immunities"],
+      "key_principles": [
+        "States may not discriminate against interstate commerce",
+        "Economic protectionism forbidden",
+        "Market participant exception permits state favoritism when state acts as buyer/seller",
+        "Undue burden on interstate commerce unconstitutional"
+      ],
+      "triggers": [
+        "State law discriminates against out-of-state goods or services",
+        "Protectionist economic regulation",
+        "Burden on interstate commerce",
+        "Differential treatment of residents vs non-residents"
+      ],
+      "weight": 0.82
+    },
+    "coercive_municipal_revenue_models": {
+      "name": "Coercive Municipal Revenue Models",
+      "constitutional_basis": ["Eighth Amendment", "Due Process", "Equal Protection"],
+      "key_principles": [
+        "Excessive fines violate Eighth Amendment",
+        "Revenue-driven enforcement may violate due process",
+        "Ability-to-pay considerations required for incarceration",
+        "Proportionality required for fines and fees"
+      ],
+      "triggers": [
+        "Fines disproportionate to offense",
+        "Revenue quotas for enforcement",
+        "Inability to pay leading to incarceration",
+        "Civil forfeiture programs targeting property value"
+      ],
+      "weight": 0.90
+    },
+    "surveillance_technology_doctrine": {
+      "name": "Surveillance Technology Doctrine",
+      "constitutional_basis": ["Fourth Amendment"],
+      "key_principles": [
+        "Sense-enhancing technology requires warrant",
+        "Aerial surveillance from navigable airspace generally permissible",
+        "Biometric collection from arrestees constitutional",
+        "Emerging technology subject to Fourth Amendment analysis"
+      ],
+      "triggers": [
+        "Thermal imaging",
+        "Drone surveillance",
+        "Facial recognition systems",
+        "ALPR/Flock camera networks",
+        "Biometric databases"
+      ],
+      "weight": 0.92
+    },
+    "traffic_enforcement_doctrine": {
+      "name": "Traffic Enforcement and Mobility Rights",
+      "constitutional_basis": ["Fourth Amendment", "Equal Protection", "Right to Travel"],
+      "key_principles": [
+        "Traffic stops require reasonable suspicion",
+        "Stop duration limited to traffic mission",
+        "Pretextual stops permissible with probable cause",
+        "Checkpoints require programmatic necessity"
+      ],
+      "triggers": [
+        "Pretextual traffic stops",
+        "Extended stop duration",
+        "Random checkpoints",
+        "Discriminatory enforcement patterns"
+      ],
+      "weight": 0.85
+    },
+    "prosecutorial_integrity_doctrine": {
+      "name": "Prosecutorial Integrity and Evidence Disclosure",
+      "constitutional_basis": ["Fifth Amendment", "Fourteenth Amendment", "Brady Doctrine"],
+      "key_principles": [
+        "Prosecution must disclose material exculpatory evidence",
+        "Knowing use of false testimony violates due process",
+        "Suppression of evidence material to guilt or punishment unconstitutional",
+        "Disclosure required even if defendant doesn't request"
+      ],
+      "triggers": [
+        "Exculpatory evidence withheld",
+        "Perjured testimony used",
+        "Witness credibility evidence suppressed",
+        "Prosecutorial misconduct"
+      ],
+      "weight": 0.95
+    },
+    "civil_rights_enforcement": {
+      "name": "Civil Rights and Anti-Discrimination",
+      "constitutional_basis": ["Thirteenth Amendment", "Fourteenth Amendment", "Fifteenth Amendment", "Civil Rights Acts"],
+      "key_principles": [
+        "Strict scrutiny for racial classifications",
+        "Intermediate scrutiny for gender classifications",
+        "Rational basis for other classifications",
+        "Disparate impact may show discrimination"
+      ],
+      "triggers": [
+        "Racial or gender discrimination",
+        "Facially neutral law with discriminatory effect",
+        "Selective enforcement",
+        "Disparate impact on protected class"
+      ],
+      "weight": 0.93
+    },
+    "voting_rights_doctrine": {
+      "name": "Voting Rights and Electoral Access",
+      "constitutional_basis": ["Fifteenth Amendment", "Fourteenth Amendment Equal Protection", "Voting Rights Act"],
+      "key_principles": [
+        "Right to vote is fundamental",
+        "One person, one vote principle",
+        "Racial discrimination in voting prohibited",
+        "Strict scrutiny for severe burdens on voting"
+      ],
+      "triggers": [
+        "Voter ID requirements",
+        "Registration restrictions",
+        "Polling place accessibility",
+        "Racial gerrymandering"
+      ],
+      "weight": 0.93
+    },
+    "takings_and_exactions": {
+      "name": "Regulatory Takings and Exactions",
+      "constitutional_basis": ["Fifth Amendment Takings Clause"],
+      "key_principles": [
+        "Physical occupation is categorical taking",
+        "Total economic deprivation is taking unless background principle",
+        "Permit conditions require essential nexus and rough proportionality",
+        "Regulatory takings analyzed under Penn Central factors"
+      ],
+      "triggers": [
+        "Permanent physical occupation",
+        "Denial of all economic use",
+        "Disproportionate permit exaction",
+        "Regulatory burden on property value"
+      ],
+      "weight": 0.90
+    },
+    "criminal_procedure_doctrine": {
+      "name": "Criminal Procedure and Fair Trial Rights",
+      "constitutional_basis": ["Fourth, Fifth, Sixth Amendments", "Due Process"],
+      "key_principles": [
+        "Right to counsel in criminal prosecutions",
+        "Protection against self-incrimination",
+        "Impartial jury trial",
+        "Confrontation of witnesses"
+      ],
+      "triggers": [
+        "Denial of counsel",
+        "Coerced confession",
+        "Biased jury",
+        "Denial of confrontation right"
+      ],
+      "weight": 0.92
+    },
+    "habeas_corpus_doctrine": {
+      "name": "Habeas Corpus and Detention",
+      "constitutional_basis": ["Suspension Clause", "Due Process"],
+      "key_principles": [
+        "Habeas corpus suspendable only in rebellion or invasion",
+        "Detainees entitled to meaningful hearing",
+        "Notice of factual basis required",
+        "Opportunity to rebut evidence"
+      ],
+      "triggers": [
+        "Indefinite detention without hearing",
+        "Denial of habeas petition",
+        "Inadequate process for detainees",
+        "Executive detention without judicial review"
+      ],
+      "weight": 0.95
+    },
+    "excessive_force_doctrine": {
+      "name": "Excessive Force and Police Use of Force",
+      "constitutional_basis": ["Fourth Amendment", "Eighth Amendment", "Due Process"],
+      "key_principles": [
+        "Objective reasonableness from officer perspective",
+        "Severity of crime, immediate threat, active resistance considered",
+        "Deadly force requires imminent threat",
+        "Qualified immunity unless clearly established law violated"
+      ],
+      "triggers": [
+        "Use of deadly force",
+        "Excessive physical force",
+        "Tasers or less-lethal weapons",
+        "Force during arrest or seizure"
+      ],
+      "weight": 0.92
+    },
+    "school_search_doctrine": {
+      "name": "School Searches and Student Rights",
+      "constitutional_basis": ["Fourth Amendment"],
+      "key_principles": [
+        "Reasonable suspicion standard for school searches",
+        "Students have reduced privacy expectations",
+        "Drug testing permissible for athletes and extracurricular participants",
+        "Strip searches require specific justification"
+      ],
+      "triggers": [
+        "Student search or seizure",
+        "Drug testing program",
+        "Locker or backpack search",
+        "Cell phone search"
+      ],
+      "weight": 0.80
+    },
+    "checkpoint_doctrine": {
+      "name": "Checkpoint and Suspicionless Search Doctrine",
+      "constitutional_basis": ["Fourth Amendment"],
+      "key_principles": [
+        "Special needs exception permits suspicionless searches",
+        "Primary purpose cannot be general crime detection",
+        "Administrative or safety purpose required",
+        "Programmatic necessity and minimal discretion"
+      ],
+      "triggers": [
+        "DUI checkpoints",
+        "Border checkpoints",
+        "Administrative inspections",
+        "Drug interdiction checkpoints"
+      ],
+      "weight": 0.85
+    },
+    "biometric_privacy_doctrine": {
+      "name": "Biometric Data and Privacy",
+      "constitutional_basis": ["Fourth Amendment", "Due Process"],
+      "key_principles": [
+        "DNA collection from arrestees constitutional",
+        "Facial recognition raises privacy concerns",
+        "Fingerprinting standard for booking",
+        "Biometric databases subject to Fourth Amendment limits"
+      ],
+      "triggers": [
+        "DNA collection",
+        "Facial recognition deployment",
+        "Biometric database creation",
+        "Fingerprint collection beyond arrest context"
+      ],
+      "weight": 0.88
+    },
+    "qualified_immunity_doctrine": {
+      "name": "Qualified Immunity",
+      "constitutional_basis": ["42 U.S.C. § 1983", "Bivens"],
+      "key_principles": [
+        "Officials immune unless clearly established law violated",
+        "Objective reasonableness standard",
+        "Particularized prior case law required",
+        "Constitutional right must be clearly established at time of conduct"
+      ],
+      "triggers": [
+        "§ 1983 lawsuit against official",
+        "Bivens action",
+        "Constitutional violation claim",
+        "Immunity defense raised"
+      ],
+      "weight": 0.85
+    },
+    "right_to_jury_doctrine": {
+      "name": "Jury Trial and Jury Selection",
+      "constitutional_basis": ["Sixth Amendment", "Fourteenth Amendment"],
+      "key_principles": [
+        "Right to impartial jury in criminal prosecutions",
+        "Jury must represent fair cross-section of community",
+        "Peremptory strikes cannot be based on race or gender",
+        "Systematic exclusion of groups unconstitutional"
+      ],
+      "triggers": [
+        "Discriminatory jury selection",
+        "Batson challenge",
+        "Systematic exclusion from jury pool",
+        "Biased jury composition"
+      ],
+      "weight": 0.90
+    },
+    "sentencing_proportionality": {
+      "name": "Sentencing and Proportionality",
+      "constitutional_basis": ["Eighth Amendment"],
+      "key_principles": [
+        "Grossly disproportionate sentences violate Eighth Amendment",
+        "Death penalty for juveniles unconstitutional",
+        "Mandatory LWOP for juveniles unconstitutional",
+        "Intellectual disability bars execution"
+      ],
+      "triggers": [
+        "Disproportionate sentence",
+        "Juvenile life sentence",
+        "Death penalty for intellectual disability",
+        "Mandatory minimums"
+      ],
+      "weight": 0.88
+    },
+    "interstate_commerce_doctrine": {
+      "name": "Interstate Commerce and Dormant Commerce Clause",
+      "constitutional_basis": ["Commerce Clause"],
+      "key_principles": [
+        "States cannot discriminate against interstate commerce",
+        "Pike balancing for non-discriminatory burdens",
+        "Market participant exception",
+        "Congressional authorization permits state regulation"
+      ],
+      "triggers": [
+        "State protectionism",
+        "Interstate trade barriers",
+        "Discriminatory taxation",
+        "Undue burden on commerce"
+      ],
+      "weight": 0.82
+    },
+    "preemption_doctrine": {
+      "name": "Federal Preemption",
+      "constitutional_basis": ["Supremacy Clause"],
+      "key_principles": [
+        "Federal law supreme over conflicting state law",
+        "Express, implied, and field preemption",
+        "Conflict preemption when compliance impossible",
+        "Obstacle preemption when state law frustrates federal objectives"
+      ],
+      "triggers": [
+        "State law conflicts with federal statute",
+        "Federal regulation of field",
+        "State law impedes federal objectives",
+        "Impossibility of dual compliance"
+      ],
+      "weight": 0.88
+    },
+    "substantive_due_process": {
+      "name": "Substantive Due Process",
+      "constitutional_basis": ["Fifth Amendment", "Fourteenth Amendment"],
+      "key_principles": [
+        "Protects fundamental rights from arbitrary government action",
+        "Shocks-the-conscience standard for executive action",
+        "Strict scrutiny for infringement of fundamental rights",
+        "Liberty includes intimate decisions"
+      ],
+      "triggers": [
+        "Infringement of fundamental right",
+        "Arbitrary or shocking government conduct",
+        "Restriction on intimate decisions",
+        "Bodily integrity violation"
+      ],
+      "weight": 0.90
+    },
+    "affirmative_action_doctrine": {
+      "name": "Affirmative Action and Race-Conscious Programs",
+      "constitutional_basis": ["Fourteenth Amendment Equal Protection"],
+      "key_principles": [
+        "Race-conscious admissions now unconstitutional (SFFA 2023)",
+        "Strict scrutiny applies to all racial classifications",
+        "Diversity no longer compelling interest for admissions",
+        "Colorblind approach required"
+      ],
+      "triggers": [
+        "Race-conscious admissions or hiring",
+        "Diversity programs using racial preferences",
+        "Remedial racial classifications",
+        "Set-asides or quotas"
+      ],
+      "weight": 0.92
+    },
+    "political_question_doctrine": {
+      "name": "Political Question and Justiciability",
+      "constitutional_basis": ["Article III"],
+      "key_principles": [
+        "Certain questions committed to political branches",
+        "Partisan gerrymandering non-justiciable",
+        "Impeachment is political question",
+        "Lack of judicially manageable standards"
+      ],
+      "triggers": [
+        "Partisan gerrymandering claim",
+        "Impeachment challenge",
+        "Foreign affairs questions",
+        "Textual commitment to political branch"
+      ],
+      "weight": 0.80
+    },
+    "establishment_clause_doctrine": {
+      "name": "Establishment Clause",
+      "constitutional_basis": ["First Amendment Establishment Clause"],
+      "key_principles": [
+        "Government cannot establish religion",
+        "No coercion of religious belief or practice",
+        "Historical practices may be constitutional",
+        "Neutrality toward religion required"
+      ],
+      "triggers": [
+        "Government religious displays",
+        "School-sponsored prayer",
+        "Religious coercion",
+        "Government funding of religious institutions"
+      ],
+      "weight": 0.88
+    },
+    "free_exercise_doctrine": {
+      "name": "Free Exercise of Religion",
+      "constitutional_basis": ["First Amendment Free Exercise Clause"],
+      "key_principles": [
+        "Neutral laws of general applicability need not accommodate religion",
+        "Targeted religious discrimination triggers strict scrutiny",
+        "Religious exemptions not required from neutral laws",
+        "Substantial burden on religious exercise requires justification"
+      ],
+      "triggers": [
+        "Religious targeting or discrimination",
+        "Substantial burden on religious practice",
+        "Denial of religious exemption",
+        "Unequal treatment of religious conduct"
+      ],
+      "weight": 0.90
+    }
+  },
+  "interpretive_frameworks": {
+    "major_questions_doctrine": {
+      "name": "Major Questions Doctrine",
+      "description": "Agency must have clear congressional authorization for decisions of vast economic and political significance",
+      "applicable_when": [
+        "Vast economic impact",
+        "Political significance",
+        "Transformative regulatory action",
+        "Novel assertion of authority"
+      ],
+      "standard": "Clear congressional authorization required",
+      "weight": 0.95
+    },
+    "clear_statement_rule": {
+      "name": "Clear Statement Rule",
+      "description": "Congress must clearly state intent when affecting fundamental rights or federal-state balance",
+      "applicable_when": [
+        "Fundamental rights implicated",
+        "Federalism concerns",
+        "Extraterritorial application",
+        "Retroactive legislation"
+      ],
+      "standard": "Plain statement of congressional intent required",
+      "weight": 0.9
+    },
+    "chevron_deference": {
+      "name": "Chevron Deference (Overruled 2024)",
+      "description": "Courts defer to reasonable agency interpretation of ambiguous statute",
+      "status": "OVERRULED by Loper Bright Enterprises v. Raimondo (2024)",
+      "replacement": "Courts now exercise independent judgment on all statutory questions",
+      "weight": 0.0,
+      "historical_note": "Prior to 2024, Chevron provided two-step framework: (1) Is statute ambiguous? (2) Is agency interpretation reasonable?"
+    },
+    "auer_deference": {
+      "name": "Auer/Seminole Rock Deference",
+      "description": "Agency interpretation of own regulation entitled to deference unless plainly erroneous",
+      "status": "LIMITED",
+      "applicable_when": [
+        "Genuine ambiguity in regulation",
+        "Interpretation reflects fair reading",
+        "Not post hoc rationalization",
+        "Not convenience of litigating position"
+      ],
+      "weight": 0.6,
+      "note": "Subject to limitations from Kisor v. Wilkie (2019)"
+    },
+    "rule_of_lenity": {
+      "name": "Rule of Lenity",
+      "description": "Ambiguous criminal statutes construed in favor of defendant",
+      "applicable_when": [
+        "Criminal penalty statute",
+        "Civil penalty with quasi-criminal nature",
+        "Ambiguity remains after interpretation"
+      ],
+      "standard": "Reasonable doubt resolved in favor of defendant",
+      "weight": 0.85
+    },
+    "constitutional_avoidance": {
+      "name": "Constitutional Avoidance Canon",
+      "description": "Interpret statutes to avoid constitutional questions",
+      "applicable_when": [
+        "Multiple plausible interpretations",
+        "One interpretation raises constitutional doubt",
+        "Another interpretation avoids doubt"
+      ],
+      "standard": "Choose interpretation avoiding constitutional problems",
+      "weight": 0.88
+    },
+    "digital_privacy_protection": {
+      "name": "Digital Privacy Protection Framework",
+      "description": "Modern Fourth Amendment protection for digital information and electronic communications",
+      "applicable_when": [
+        "Cell phone or digital device searches",
+        "Location tracking or cell-site data",
+        "Electronic communications surveillance",
+        "Database queries without warrant"
+      ],
+      "standard": "Warrant generally required absent exigent circumstances or valid exception",
+      "weight": 0.92,
+      "related_cases": ["carpenter_v_us_2018", "riley_v_california_2014", "us_v_jones_2012"]
+    },
+    "chain_of_custody_integrity": {
+      "name": "Chain of Custody and Evidence Integrity",
+      "description": "Fruit of poisonous tree doctrine and evidentiary integrity requirements",
+      "applicable_when": [
+        "Evidence derived from illegal search or seizure",
+        "Documentary integrity questioned",
+        "Metadata or timestamp conflicts",
+        "Gaps in custody documentation"
+      ],
+      "standard": "Evidence inadmissible if fruit of constitutional violation unless independent source or attenuation",
+      "weight": 0.88,
+      "related_cases": ["silverthorne_lumber_v_united_states_1920", "nardone_v_united_states_1939", "wong_sun_v_united_states_1963"]
+    },
+    "police_accountability": {
+      "name": "Police Accountability and Use of Force",
+      "description": "Fourth Amendment reasonableness standard for use of force and qualified immunity limits",
+      "applicable_when": [
+        "Excessive force allegations",
+        "Deadly force incidents",
+        "Qualified immunity defenses",
+        "Law enforcement misconduct"
+      ],
+      "standard": "Objective reasonableness from perspective of officer on scene; qualified immunity unless clearly established law violated",
+      "weight": 0.9,
+      "related_cases": ["graham_v_connor_1989", "tennessee_v_garner_1985"]
+    },
+    "rational_basis_with_bite": {
+      "name": "Rational Basis with Bite",
+      "description": "Enhanced rational basis review when classification based on animus",
+      "applicable_when": [
+        "Classification based on animus or prejudice",
+        "Arbitrary or irrational distinction",
+        "No legitimate government interest",
+        "Total deprivation of legal status"
+      ],
+      "standard": "Government must show rational relationship to legitimate interest; animus invalidates",
+      "weight": 0.85,
+      "related_cases": ["city_of_cleburne_v_cleburne_1985", "romer_v_evans_1996"]
+    },
+    "strict_scrutiny": {
+      "name": "Strict Scrutiny",
+      "description": "Highest level of judicial review for fundamental rights and suspect classifications",
+      "applicable_when": [
+        "Fundamental right infringed",
+        "Suspect classification (race, national origin, religion)",
+        "Prior restraint on speech",
+        "Voting rights burdened"
+      ],
+      "standard": "Narrowly tailored to compelling government interest",
+      "weight": 0.95
+    },
+    "intermediate_scrutiny": {
+      "name": "Intermediate Scrutiny",
+      "description": "Middle-tier review for quasi-suspect classifications",
+      "applicable_when": [
+        "Gender classification",
+        "Legitimacy classification",
+        "Commercial speech regulation"
+      ],
+      "standard": "Substantially related to important government interest",
+      "weight": 0.88
+    }
+  }
+}

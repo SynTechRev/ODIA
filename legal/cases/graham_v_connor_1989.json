@@ -1,0 +1,23 @@
+{
+  "case_id": "graham_v_connor_1989",
+  "name": "Graham v. Connor",
+  "citation": "490 U.S. 386 (1989)",
+  "year": 1989,
+  "doctrine": "fourth_amendment",
+  "summary": "Excessive force claims analyzed under Fourth Amendment reasonableness standard; objective reasonableness judged from perspective of officer on scene, not with 20/20 hindsight.",
+  "holding": "All claims that law enforcement used excessive force in course of arrest, investigatory stop, or other seizure analyzed under Fourth Amendment reasonableness standard; assessed from perspective of reasonable officer on scene considering totality of circumstances.",
+  "issue_tags": [
+    "excessive_force",
+    "fourth_amendment",
+    "reasonableness_standard",
+    "police_accountability",
+    "use_of_force",
+    "objective_reasonableness",
+    "totality_of_circumstances"
+  ],
+  "doctrinal_weight": 0.94,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes standard for evaluating use of force; critical for assessing police accountability, excessive force claims, and reasonableness of government enforcement actions.",
+  "procedural_posture": "Fourth Circuit reversed and remanded",
+  "relevance_score": 0.91
+}

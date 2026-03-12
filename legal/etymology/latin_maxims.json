@@ -1,0 +1,937 @@
+{
+  "source": "latin_legal_maxims",
+  "version": "1.0.0",
+  "description": "Latin legal maxims with translations, concepts, doctrines, eras, and usage in Anglo-American jurisprudence",
+  "total_maxims": 100,
+  "schema_version": "1.0",
+  "generated_date": "2025-12-07",
+  "maxims": [
+    {
+      "term": "audi alteram partem",
+      "literal_translation": "hear the other side",
+      "concept": "due process",
+      "doctrines": ["procedural_due_process", "natural_justice", "fair_hearing"],
+      "era": "Roman Law",
+      "used_in": ["Anglo-American common law", "Constitutional interpretation", "Administrative law"],
+      "citations": ["Bonham's Case (1610)", "Dr. Bentley's Case (1723)"]
+    },
+    {
+      "term": "fiat justitia ruat caelum",
+      "literal_translation": "let justice be done though the heavens fall",
+      "concept": "absolute justice",
+      "doctrines": ["justice", "rule_of_law", "judicial_integrity"],
+      "era": "Roman Law",
+      "used_in": ["Anglo-American common law", "Judicial opinions", "Legal philosophy"],
+      "citations": ["Lord Mansfield in Rex v. Wilkes (1770)"]
+    },
+    {
+      "term": "onus probandi",
+      "literal_translation": "burden of proving",
+      "concept": "burden of proof",
+      "doctrines": ["burden_of_proof", "evidence", "criminal_procedure"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "Criminal procedure", "Evidence law"],
+      "citations": ["Woolmington v DPP (1935)"]
+    },
+    {
+      "term": "consensus facit legem",
+      "literal_translation": "consent makes the law",
+      "concept": "contractual consent",
+      "doctrines": ["contract_law", "mutual_consent", "offer_and_acceptance"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Commercial law", "Restatement of Contracts"],
+      "citations": ["Raffles v Wichelhaus (1864)"]
+    },
+    {
+      "term": "parens patriae",
+      "literal_translation": "parent of the nation",
+      "concept": "sovereign guardianship",
+      "doctrines": ["sovereignty", "state_power", "child_welfare"],
+      "era": "Medieval Canon Law",
+      "used_in": ["Family law", "Constitutional law", "State authority"],
+      "citations": ["Mormon Church v United States (1890)"]
+    },
+    {
+      "term": "libertas est potestas faciendi id quod iure licet",
+      "literal_translation": "liberty is the power of doing that which is permitted by law",
+      "concept": "liberty under law",
+      "doctrines": ["liberty", "natural_rights", "rule_of_law"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Bill of Rights interpretation"],
+      "citations": ["Institutes of Justinian"]
+    },
+    {
+      "term": "nemo judex in causa sua",
+      "literal_translation": "no one should be a judge in their own cause",
+      "concept": "judicial impartiality",
+      "doctrines": ["impartiality", "due_process", "natural_justice"],
+      "era": "Roman Law",
+      "used_in": ["Judicial ethics", "Administrative law", "Constitutional law"],
+      "citations": ["Dr. Bonham's Case (1610)", "Tumey v Ohio (1927)"]
+    },
+    {
+      "term": "ex post facto",
+      "literal_translation": "from a thing done afterward",
+      "concept": "retroactive law prohibition",
+      "doctrines": ["constitutional_protection", "criminal_law", "due_process"],
+      "era": "Roman Law",
+      "used_in": ["U.S. Constitution Article I", "Criminal law", "Legislative limits"],
+      "citations": ["Calder v Bull (1798)", "U.S. Constitution Art. I § 9"]
+    },
+    {
+      "term": "habeas corpus",
+      "literal_translation": "you have the body",
+      "concept": "writ of liberty",
+      "doctrines": ["personal_liberty", "due_process", "unlawful_detention"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Criminal procedure", "Constitutional law", "Civil liberties"],
+      "citations": ["Habeas Corpus Act 1679", "Ex parte Milligan (1866)"]
+    },
+    {
+      "term": "nullum crimen sine lege",
+      "literal_translation": "no crime without law",
+      "concept": "legality principle",
+      "doctrines": ["criminal_law", "due_process", "rule_of_law"],
+      "era": "Roman Law",
+      "used_in": ["Criminal law", "Constitutional interpretation", "International law"],
+      "citations": ["Feuerbach's Lehrbuch (1801)"]
+    },
+    {
+      "term": "nulla poena sine lege",
+      "literal_translation": "no punishment without law",
+      "concept": "prohibition of arbitrary punishment",
+      "doctrines": ["criminal_law", "due_process", "constitutional_protection"],
+      "era": "Roman Law",
+      "used_in": ["Criminal law", "Constitutional interpretation"],
+      "citations": ["Universal Declaration of Human Rights Art. 11"]
+    },
+    {
+      "term": "actus reus",
+      "literal_translation": "guilty act",
+      "concept": "criminal act element",
+      "doctrines": ["criminal_law", "elements_of_crime", "criminal_liability"],
+      "era": "Medieval Canon Law",
+      "used_in": ["Criminal law", "Criminal procedure"],
+      "citations": ["Regina v Dudley and Stephens (1884)"]
+    },
+    {
+      "term": "mens rea",
+      "literal_translation": "guilty mind",
+      "concept": "criminal intent element",
+      "doctrines": ["criminal_intent", "criminal_law", "culpability"],
+      "era": "Medieval Canon Law",
+      "used_in": ["Criminal law", "Criminal procedure"],
+      "citations": ["Morissette v United States (1952)"]
+    },
+    {
+      "term": "res judicata",
+      "literal_translation": "a matter judged",
+      "concept": "claim preclusion",
+      "doctrines": ["civil_procedure", "finality", "judicial_efficiency"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "Constitutional law"],
+      "citations": ["Cromwell v County of Sac (1877)"]
+    },
+    {
+      "term": "stare decisis",
+      "literal_translation": "to stand by things decided",
+      "concept": "judicial precedent",
+      "doctrines": ["precedent", "common_law", "judicial_consistency"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Common law", "Constitutional interpretation", "Appellate review"],
+      "citations": ["Planned Parenthood v Casey (1992)"]
+    },
+    {
+      "term": "sui generis",
+      "literal_translation": "of its own kind",
+      "concept": "unique legal classification",
+      "doctrines": ["legal_classification", "statutory_interpretation"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Statutory interpretation"],
+      "citations": ["Federal Baseball Club v National League (1922)"]
+    },
+    {
+      "term": "ultra vires",
+      "literal_translation": "beyond the powers",
+      "concept": "exceeding authority",
+      "doctrines": ["separation_of_powers", "administrative_law", "corporate_law"],
+      "era": "Roman Law",
+      "used_in": ["Administrative law", "Constitutional law", "Corporate law"],
+      "citations": ["Ashwander v TVA (1936)"]
+    },
+    {
+      "term": "de jure",
+      "literal_translation": "by law",
+      "concept": "legal right",
+      "doctrines": ["legal_authority", "statutory_interpretation"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Administrative law"],
+      "citations": ["Brown v Board of Education (1954)"]
+    },
+    {
+      "term": "de facto",
+      "literal_translation": "in fact",
+      "concept": "actual reality",
+      "doctrines": ["factual_authority", "practical_application"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Administrative law"],
+      "citations": ["Plessy v Ferguson (1896)"]
+    },
+    {
+      "term": "in loco parentis",
+      "literal_translation": "in the place of a parent",
+      "concept": "parental authority substitute",
+      "doctrines": ["education_law", "family_law", "child_welfare"],
+      "era": "Medieval Canon Law",
+      "used_in": ["Education law", "Family law"],
+      "citations": ["Goss v Lopez (1975)"]
+    },
+    {
+      "term": "in pari delicto",
+      "literal_translation": "in equal fault",
+      "concept": "equal wrongdoing",
+      "doctrines": ["equity", "contract_law", "tort_law"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Equity", "Tort law"],
+      "citations": ["Holman v Johnson (1775)"]
+    },
+    {
+      "term": "lex non scripta",
+      "literal_translation": "unwritten law",
+      "concept": "common law",
+      "doctrines": ["common_law", "judicial_precedent"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Common law", "Constitutional law"],
+      "citations": ["Blackstone's Commentaries"]
+    },
+    {
+      "term": "lex scripta",
+      "literal_translation": "written law",
+      "concept": "statutory law",
+      "doctrines": ["statutory_law", "legislation"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "Legislative process"],
+      "citations": ["Blackstone's Commentaries"]
+    },
+    {
+      "term": "prima facie",
+      "literal_translation": "at first sight",
+      "concept": "initial evidence sufficiency",
+      "doctrines": ["evidence", "burden_of_proof", "presumption"],
+      "era": "Roman Law",
+      "used_in": ["Evidence law", "Civil procedure", "Criminal procedure"],
+      "citations": ["McDonnell Douglas Corp v Green (1973)"]
+    },
+    {
+      "term": "quid pro quo",
+      "literal_translation": "something for something",
+      "concept": "mutual exchange",
+      "doctrines": ["contract_law", "consideration", "employment_law"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Employment law", "Criminal law"],
+      "citations": ["Meritor Savings Bank v Vinson (1986)"]
+    },
+    {
+      "term": "res ipsa loquitur",
+      "literal_translation": "the thing speaks for itself",
+      "concept": "negligence inference",
+      "doctrines": ["tort_law", "negligence", "burden_of_proof"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Tort law", "Medical malpractice"],
+      "citations": ["Byrne v Boadle (1863)"]
+    },
+    {
+      "term": "per curiam",
+      "literal_translation": "by the court",
+      "concept": "unanimous court opinion",
+      "doctrines": ["judicial_opinion", "appellate_procedure"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Appellate procedure", "Judicial opinions"],
+      "citations": ["Bush v Gore (2000)"]
+    },
+    {
+      "term": "amicus curiae",
+      "literal_translation": "friend of the court",
+      "concept": "non-party court advisor",
+      "doctrines": ["appellate_procedure", "public_interest"],
+      "era": "Roman Law",
+      "used_in": ["Appellate procedure", "Constitutional litigation"],
+      "citations": ["NAACP v Button (1963)"]
+    },
+    {
+      "term": "pro bono publico",
+      "literal_translation": "for the public good",
+      "concept": "public service",
+      "doctrines": ["legal_ethics", "access_to_justice"],
+      "era": "Roman Law",
+      "used_in": ["Legal profession", "Professional responsibility"],
+      "citations": ["Model Rules of Professional Conduct"]
+    },
+    {
+      "term": "corpus delicti",
+      "literal_translation": "body of the crime",
+      "concept": "essential crime elements",
+      "doctrines": ["criminal_procedure", "evidence", "burden_of_proof"],
+      "era": "Roman Law",
+      "used_in": ["Criminal procedure", "Evidence law"],
+      "citations": ["State v Pexa (1967)"]
+    },
+    {
+      "term": "caveat emptor",
+      "literal_translation": "let the buyer beware",
+      "concept": "buyer responsibility",
+      "doctrines": ["contract_law", "consumer_protection", "commercial_law"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Consumer law", "Commercial law"],
+      "citations": ["UCC § 2-316"]
+    },
+    {
+      "term": "in camera",
+      "literal_translation": "in chambers",
+      "concept": "private judicial proceedings",
+      "doctrines": ["judicial_procedure", "privacy", "confidentiality"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Civil procedure", "Criminal procedure", "Evidence law"],
+      "citations": ["United States v Nixon (1974)"]
+    },
+    {
+      "term": "ex parte",
+      "literal_translation": "from one party",
+      "concept": "one-sided proceeding",
+      "doctrines": ["civil_procedure", "due_process"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "Constitutional law"],
+      "citations": ["Ex parte Milligan (1866)"]
+    },
+    {
+      "term": "certiorari",
+      "literal_translation": "to be more fully informed",
+      "concept": "discretionary review",
+      "doctrines": ["appellate_procedure", "judicial_review"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Appellate procedure", "Supreme Court practice"],
+      "citations": ["Supreme Court Rules"]
+    },
+    {
+      "term": "mandamus",
+      "literal_translation": "we command",
+      "concept": "writ of command",
+      "doctrines": ["administrative_law", "judicial_review"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Administrative law", "Constitutional law"],
+      "citations": ["Marbury v Madison (1803)"]
+    },
+    {
+      "term": "certiorari before judgment",
+      "literal_translation": "to be informed before judgment",
+      "concept": "accelerated review",
+      "doctrines": ["appellate_procedure", "expedited_review"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Appellate procedure", "Emergency relief"],
+      "citations": ["United States v Nixon (1974)"]
+    },
+    {
+      "term": "subpoena duces tecum",
+      "literal_translation": "bring with you under penalty",
+      "concept": "document production order",
+      "doctrines": ["evidence", "discovery", "judicial_power"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Civil procedure", "Criminal procedure", "Evidence law"],
+      "citations": ["Nixon v United States (1974)"]
+    },
+    {
+      "term": "nolo contendere",
+      "literal_translation": "I do not wish to contend",
+      "concept": "no contest plea",
+      "doctrines": ["criminal_procedure", "plea_bargaining"],
+      "era": "Roman Law",
+      "used_in": ["Criminal procedure", "Plea negotiations"],
+      "citations": ["Federal Rules of Criminal Procedure Rule 11"]
+    },
+    {
+      "term": "pro se",
+      "literal_translation": "for oneself",
+      "concept": "self-representation",
+      "doctrines": ["right_to_counsel", "access_to_justice"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "Criminal procedure"],
+      "citations": ["Faretta v California (1975)"]
+    },
+    {
+      "term": "in personam",
+      "literal_translation": "against the person",
+      "concept": "personal jurisdiction",
+      "doctrines": ["jurisdiction", "due_process", "civil_procedure"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "Constitutional law"],
+      "citations": ["Pennoyer v Neff (1877)"]
+    },
+    {
+      "term": "in rem",
+      "literal_translation": "against the thing",
+      "concept": "jurisdiction over property",
+      "doctrines": ["jurisdiction", "property_law", "civil_procedure"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "Property law"],
+      "citations": ["Shaffer v Heitner (1977)"]
+    },
+    {
+      "term": "sui juris",
+      "literal_translation": "of one's own right",
+      "concept": "legal capacity",
+      "doctrines": ["capacity", "rights", "legal_personhood"],
+      "era": "Roman Law",
+      "used_in": ["Family law", "Contract law", "Civil rights"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "voir dire",
+      "literal_translation": "to speak the truth",
+      "concept": "jury examination",
+      "doctrines": ["jury_trial", "fair_trial", "criminal_procedure"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Criminal procedure", "Civil procedure", "Evidence law"],
+      "citations": ["Batson v Kentucky (1986)"]
+    },
+    {
+      "term": "de novo",
+      "literal_translation": "anew",
+      "concept": "fresh review",
+      "doctrines": ["appellate_review", "standard_of_review"],
+      "era": "Roman Law",
+      "used_in": ["Appellate procedure", "Administrative law"],
+      "citations": ["United States v Mead Corp (2001)"]
+    },
+    {
+      "term": "per se",
+      "literal_translation": "by itself",
+      "concept": "inherently illegal",
+      "doctrines": ["antitrust_law", "constitutional_law"],
+      "era": "Roman Law",
+      "used_in": ["Antitrust law", "Constitutional law", "Tort law"],
+      "citations": ["Northern Pacific Railway v United States (1958)"]
+    },
+    {
+      "term": "inter alia",
+      "literal_translation": "among other things",
+      "concept": "inclusive list",
+      "doctrines": ["statutory_interpretation", "legal_drafting"],
+      "era": "Roman Law",
+      "used_in": ["Legal drafting", "Judicial opinions"],
+      "citations": ["Common legal usage"]
+    },
+    {
+      "term": "ex rel",
+      "literal_translation": "on the relation of",
+      "concept": "qui tam action",
+      "doctrines": ["standing", "public_interest", "civil_procedure"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "False Claims Act"],
+      "citations": ["Vermont Agency of Natural Resources v United States ex rel. Stevens (2000)"]
+    },
+    {
+      "term": "quantum meruit",
+      "literal_translation": "as much as deserved",
+      "concept": "equitable compensation",
+      "doctrines": ["contract_law", "equity", "unjust_enrichment"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Contract law", "Equity", "Restitution"],
+      "citations": ["Restatement (Third) of Restitution"]
+    },
+    {
+      "term": "locus standi",
+      "literal_translation": "place of standing",
+      "concept": "standing to sue",
+      "doctrines": ["standing", "justiciability", "constitutional_law"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Civil procedure"],
+      "citations": ["Lujan v Defenders of Wildlife (1992)"]
+    },
+    {
+      "term": "ratio decidendi",
+      "literal_translation": "reason for deciding",
+      "concept": "binding precedent",
+      "doctrines": ["precedent", "common_law", "judicial_reasoning"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Common law", "Appellate review"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "obiter dictum",
+      "literal_translation": "said in passing",
+      "concept": "non-binding statement",
+      "doctrines": ["precedent", "common_law", "judicial_reasoning"],
+      "era": "Roman Law",
+      "used_in": ["Common law", "Appellate review"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "ejusdem generis",
+      "literal_translation": "of the same kind",
+      "concept": "statutory interpretation canon",
+      "doctrines": ["statutory_interpretation", "canons_of_construction"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Statutory interpretation", "Legislative drafting"],
+      "citations": ["Circuit City Stores v Adams (2001)"]
+    },
+    {
+      "term": "expressio unius est exclusio alterius",
+      "literal_translation": "expression of one is exclusion of another",
+      "concept": "negative implication canon",
+      "doctrines": ["statutory_interpretation", "canons_of_construction"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "Constitutional interpretation"],
+      "citations": ["Chevron USA Inc v Echazabal (2002)"]
+    },
+    {
+      "term": "noscitur a sociis",
+      "literal_translation": "it is known by its associates",
+      "concept": "contextual interpretation",
+      "doctrines": ["statutory_interpretation", "canons_of_construction"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "Contract interpretation"],
+      "citations": ["Jarecki v G.D. Searle & Co (1961)"]
+    },
+    {
+      "term": "in pari materia",
+      "literal_translation": "in the same matter",
+      "concept": "related statutes interpretation",
+      "doctrines": ["statutory_interpretation", "legislative_intent"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "Legislative process"],
+      "citations": ["Erlenbaugh v United States (1973)"]
+    },
+    {
+      "term": "ab initio",
+      "literal_translation": "from the beginning",
+      "concept": "void from inception",
+      "doctrines": ["contract_law", "constitutional_law", "void_acts"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Constitutional law"],
+      "citations": ["Norton v Shelby County (1886)"]
+    },
+    {
+      "term": "bona fide",
+      "literal_translation": "in good faith",
+      "concept": "honest intention",
+      "doctrines": ["contract_law", "good_faith", "commercial_law"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Commercial law", "UCC"],
+      "citations": ["UCC § 1-201"]
+    },
+    {
+      "term": "mala fide",
+      "literal_translation": "in bad faith",
+      "concept": "dishonest intention",
+      "doctrines": ["contract_law", "fraud", "bad_faith"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Tort law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "respondeat superior",
+      "literal_translation": "let the master answer",
+      "concept": "vicarious liability",
+      "doctrines": ["tort_law", "agency", "employment_law"],
+      "era": "Roman Law",
+      "used_in": ["Tort law", "Employment law", "Agency law"],
+      "citations": ["Ira S. Bushey & Sons v United States (1968)"]
+    },
+    {
+      "term": "volenti non fit injuria",
+      "literal_translation": "to one who is willing, no harm is done",
+      "concept": "assumption of risk",
+      "doctrines": ["tort_law", "defenses", "assumption_of_risk"],
+      "era": "Roman Law",
+      "used_in": ["Tort law", "Sports law", "Negligence"],
+      "citations": ["Murphy v Steeplechase Amusement Co (1929)"]
+    },
+    {
+      "term": "damnum absque injuria",
+      "literal_translation": "loss without injury",
+      "concept": "lawful harm",
+      "doctrines": ["tort_law", "legal_injury", "harm"],
+      "era": "Roman Law",
+      "used_in": ["Tort law", "Property law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "sic utere tuo ut alienum non laedas",
+      "literal_translation": "use your own so as not to harm another's",
+      "concept": "nuisance principle",
+      "doctrines": ["property_law", "nuisance", "tort_law"],
+      "era": "Roman Law",
+      "used_in": ["Property law", "Environmental law", "Nuisance"],
+      "citations": ["Rylands v Fletcher (1868)"]
+    },
+    {
+      "term": "cuius est solum eius est usque ad coelum et ad inferos",
+      "literal_translation": "whoever owns the soil owns up to the sky and down to the depths",
+      "concept": "property extent",
+      "doctrines": ["property_law", "ownership", "air_rights"],
+      "era": "Roman Law",
+      "used_in": ["Property law", "Air rights", "Mining law"],
+      "citations": ["United States v Causby (1946)"]
+    },
+    {
+      "term": "ferae naturae",
+      "literal_translation": "of wild nature",
+      "concept": "wild animals",
+      "doctrines": ["property_law", "animal_law", "ownership"],
+      "era": "Roman Law",
+      "used_in": ["Property law", "Wildlife law"],
+      "citations": ["Pierson v Post (1805)"]
+    },
+    {
+      "term": "inter vivos",
+      "literal_translation": "between the living",
+      "concept": "lifetime transfer",
+      "doctrines": ["property_law", "trusts", "gifts"],
+      "era": "Roman Law",
+      "used_in": ["Property law", "Trust law", "Estate planning"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "donatio mortis causa",
+      "literal_translation": "gift in contemplation of death",
+      "concept": "deathbed gift",
+      "doctrines": ["property_law", "gifts", "wills"],
+      "era": "Roman Law",
+      "used_in": ["Property law", "Estate law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "compos mentis",
+      "literal_translation": "of sound mind",
+      "concept": "mental capacity",
+      "doctrines": ["capacity", "mental_competence", "wills"],
+      "era": "Roman Law",
+      "used_in": ["Wills and estates", "Contract law", "Criminal law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "non compos mentis",
+      "literal_translation": "not of sound mind",
+      "concept": "mental incompetence",
+      "doctrines": ["capacity", "mental_incompetence", "insanity_defense"],
+      "era": "Roman Law",
+      "used_in": ["Criminal law", "Contract law", "Guardianship"],
+      "citations": ["M'Naghten's Case (1843)"]
+    },
+    {
+      "term": "ignorantia legis neminem excusat",
+      "literal_translation": "ignorance of law excuses no one",
+      "concept": "legal knowledge presumption",
+      "doctrines": ["criminal_law", "legal_presumptions"],
+      "era": "Roman Law",
+      "used_in": ["Criminal law", "Tax law"],
+      "citations": ["Cheek v United States (1991)"]
+    },
+    {
+      "term": "dura lex sed lex",
+      "literal_translation": "the law is harsh but it is the law",
+      "concept": "legal obligation",
+      "doctrines": ["rule_of_law", "legal_obligation"],
+      "era": "Roman Law",
+      "used_in": ["Jurisprudence", "Legal philosophy"],
+      "citations": ["Legal maxim tradition"]
+    },
+    {
+      "term": "lex loci delicti commissi",
+      "literal_translation": "law of the place where the crime was committed",
+      "concept": "choice of law",
+      "doctrines": ["conflict_of_laws", "jurisdiction", "tort_law"],
+      "era": "Roman Law",
+      "used_in": ["Conflict of laws", "International law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "lex fori",
+      "literal_translation": "law of the forum",
+      "concept": "procedural law application",
+      "doctrines": ["conflict_of_laws", "civil_procedure"],
+      "era": "Roman Law",
+      "used_in": ["Conflict of laws", "International litigation"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "lex causae",
+      "literal_translation": "law of the cause",
+      "concept": "substantive law application",
+      "doctrines": ["conflict_of_laws", "choice_of_law"],
+      "era": "Roman Law",
+      "used_in": ["Conflict of laws", "International contracts"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "pacta sunt servanda",
+      "literal_translation": "agreements must be kept",
+      "concept": "contract sanctity",
+      "doctrines": ["contract_law", "international_law", "treaty_obligations"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "International law", "Treaty law"],
+      "citations": ["Vienna Convention on Law of Treaties Art. 26"]
+    },
+    {
+      "term": "jus cogens",
+      "literal_translation": "compelling law",
+      "concept": "peremptory norms",
+      "doctrines": ["international_law", "human_rights", "natural_law"],
+      "era": "Roman Law",
+      "used_in": ["International law", "Human rights law"],
+      "citations": ["Vienna Convention on Law of Treaties Art. 53"]
+    },
+    {
+      "term": "erga omnes",
+      "literal_translation": "towards all",
+      "concept": "universal obligations",
+      "doctrines": ["international_law", "human_rights"],
+      "era": "Roman Law",
+      "used_in": ["International law", "Human rights"],
+      "citations": ["Barcelona Traction Case (ICJ 1970)"]
+    },
+    {
+      "term": "rebus sic stantibus",
+      "literal_translation": "things thus standing",
+      "concept": "fundamental change doctrine",
+      "doctrines": ["international_law", "treaty_law", "changed_circumstances"],
+      "era": "Roman Law",
+      "used_in": ["International law", "Treaty law"],
+      "citations": ["Vienna Convention on Law of Treaties Art. 62"]
+    },
+    {
+      "term": "aut dedere aut judicare",
+      "literal_translation": "either extradite or prosecute",
+      "concept": "extradition obligation",
+      "doctrines": ["international_law", "criminal_law", "extradition"],
+      "era": "Roman Law",
+      "used_in": ["International criminal law", "Extradition"],
+      "citations": ["Geneva Conventions"]
+    },
+    {
+      "term": "nullum crimen nulla poena sine lege praevia",
+      "literal_translation": "no crime no punishment without prior law",
+      "concept": "non-retroactivity principle",
+      "doctrines": ["criminal_law", "human_rights", "due_process"],
+      "era": "Roman Law",
+      "used_in": ["Criminal law", "International criminal law"],
+      "citations": ["Rome Statute of the ICC Art. 22"]
+    },
+    {
+      "term": "ne bis in idem",
+      "literal_translation": "not twice in the same",
+      "concept": "double jeopardy",
+      "doctrines": ["criminal_procedure", "constitutional_protection", "double_jeopardy"],
+      "era": "Roman Law",
+      "used_in": ["Criminal procedure", "Constitutional law"],
+      "citations": ["U.S. Constitution Fifth Amendment"]
+    },
+    {
+      "term": "in dubio pro reo",
+      "literal_translation": "when in doubt, for the accused",
+      "concept": "presumption of innocence",
+      "doctrines": ["criminal_procedure", "burden_of_proof", "due_process"],
+      "era": "Roman Law",
+      "used_in": ["Criminal procedure", "Evidence law"],
+      "citations": ["Universal Declaration of Human Rights Art. 11"]
+    },
+    {
+      "term": "actor sequitur forum rei",
+      "literal_translation": "the plaintiff follows the forum of the defendant",
+      "concept": "defendant's forum principle",
+      "doctrines": ["jurisdiction", "civil_procedure", "conflict_of_laws"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "International litigation"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "forum non conveniens",
+      "literal_translation": "inconvenient forum",
+      "concept": "inappropriate venue",
+      "doctrines": ["civil_procedure", "jurisdiction", "venue"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "International litigation"],
+      "citations": ["Piper Aircraft Co v Reyno (1981)"]
+    },
+    {
+      "term": "lex specialis derogat legi generali",
+      "literal_translation": "special law derogates from general law",
+      "concept": "statutory interpretation canon",
+      "doctrines": ["statutory_interpretation", "conflict_resolution"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "International law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "lex posterior derogat priori",
+      "literal_translation": "later law derogates from earlier law",
+      "concept": "temporal priority canon",
+      "doctrines": ["statutory_interpretation", "legislative_process"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "Constitutional law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "lex superior derogat legi inferiori",
+      "literal_translation": "superior law derogates from inferior law",
+      "concept": "hierarchical priority",
+      "doctrines": ["constitutional_law", "separation_of_powers", "supremacy"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Administrative law"],
+      "citations": ["Marbury v Madison (1803)"]
+    },
+    {
+      "term": "salus populi suprema lex esto",
+      "literal_translation": "let the welfare of the people be the supreme law",
+      "concept": "public welfare principle",
+      "doctrines": ["public_interest", "police_power", "sovereignty"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Administrative law", "Public health law"],
+      "citations": ["Jacobson v Massachusetts (1905)"]
+    },
+    {
+      "term": "cessante ratione legis cessat ipsa lex",
+      "literal_translation": "when the reason for the law ceases, the law itself ceases",
+      "concept": "purpose-based interpretation",
+      "doctrines": ["statutory_interpretation", "purposivism"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "Common law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "quod nullius est fit domini regis",
+      "literal_translation": "what belongs to no one becomes the property of the king",
+      "concept": "escheat doctrine",
+      "doctrines": ["property_law", "sovereignty", "escheat"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Property law", "Estate law"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "nemo dat quod non habet",
+      "literal_translation": "no one gives what they do not have",
+      "concept": "title transfer limitation",
+      "doctrines": ["property_law", "commercial_law", "title"],
+      "era": "Roman Law",
+      "used_in": ["Property law", "Commercial law", "UCC"],
+      "citations": ["UCC § 2-403"]
+    },
+    {
+      "term": "ubi jus ibi remedium",
+      "literal_translation": "where there is a right, there is a remedy",
+      "concept": "right-remedy correlation",
+      "doctrines": ["equity", "remedies", "access_to_justice"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Constitutional law", "Equity", "Civil rights"],
+      "citations": ["Marbury v Madison (1803)"]
+    },
+    {
+      "term": "ex aequo et bono",
+      "literal_translation": "according to the right and good",
+      "concept": "equity and fairness",
+      "doctrines": ["equity", "international_law", "fairness"],
+      "era": "Roman Law",
+      "used_in": ["Equity", "International law"],
+      "citations": ["ICJ Statute Art. 38"]
+    },
+    {
+      "term": "nullum tempus occurrit regi",
+      "literal_translation": "no time runs against the king",
+      "concept": "sovereign immunity from limitation",
+      "doctrines": ["sovereign_immunity", "limitations", "government_immunity"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Administrative law", "Government claims"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "quieta non movere",
+      "literal_translation": "do not disturb settled matters",
+      "concept": "precedent stability",
+      "doctrines": ["precedent", "stare_decisis", "judicial_restraint"],
+      "era": "Roman Law",
+      "used_in": ["Common law", "Appellate review"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "functus officio",
+      "literal_translation": "having performed one's office",
+      "concept": "exhausted authority",
+      "doctrines": ["administrative_law", "judicial_power", "finality"],
+      "era": "Medieval English Common Law",
+      "used_in": ["Administrative law", "Civil procedure"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "lex non cogit ad impossibilia",
+      "literal_translation": "the law does not compel impossibilities",
+      "concept": "impossibility defense",
+      "doctrines": ["contract_law", "defenses", "impossibility"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Performance excuses"],
+      "citations": ["Taylor v Caldwell (1863)"]
+    },
+    {
+      "term": "juris et de jure",
+      "literal_translation": "of law and from law",
+      "concept": "irrebuttable presumption",
+      "doctrines": ["evidence", "presumptions", "legal_presumptions"],
+      "era": "Roman Law",
+      "used_in": ["Evidence law", "Civil procedure"],
+      "citations": ["Common law tradition"]
+    },
+    {
+      "term": "modus operandi",
+      "literal_translation": "method of operating",
+      "concept": "criminal pattern",
+      "doctrines": ["criminal_law", "evidence", "pattern_evidence"],
+      "era": "Roman Law",
+      "used_in": ["Criminal law", "Evidence law"],
+      "citations": ["Federal Rules of Evidence Rule 404(b)"]
+    },
+    {
+      "term": "corpus juris",
+      "literal_translation": "body of law",
+      "concept": "legal system",
+      "doctrines": ["jurisprudence", "legal_system"],
+      "era": "Roman Law",
+      "used_in": ["Legal scholarship", "Comparative law"],
+      "citations": ["Corpus Juris Civilis"]
+    },
+    {
+      "term": "mutatis mutandis",
+      "literal_translation": "with necessary changes having been made",
+      "concept": "analogical application",
+      "doctrines": ["statutory_interpretation", "analogical_reasoning"],
+      "era": "Roman Law",
+      "used_in": ["Statutory interpretation", "Legal drafting"],
+      "citations": ["Common legal usage"]
+    },
+    {
+      "term": "ipso facto",
+      "literal_translation": "by the fact itself",
+      "concept": "automatic consequence",
+      "doctrines": ["legal_consequence", "automatic_effect"],
+      "era": "Roman Law",
+      "used_in": ["Constitutional law", "Contract law"],
+      "citations": ["Common legal usage"]
+    },
+    {
+      "term": "ad hoc",
+      "literal_translation": "for this",
+      "concept": "specific purpose",
+      "doctrines": ["legal_procedure", "special_purpose"],
+      "era": "Roman Law",
+      "used_in": ["Civil procedure", "Administrative law"],
+      "citations": ["Common legal usage"]
+    },
+    {
+      "term": "status quo ante",
+      "literal_translation": "the state in which before",
+      "concept": "prior condition restoration",
+      "doctrines": ["remedies", "restitution", "rescission"],
+      "era": "Roman Law",
+      "used_in": ["Contract law", "Equity", "Remedies"],
+      "citations": ["Common law tradition"]
+    }
+  ]
+}

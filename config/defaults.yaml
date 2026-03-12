@@ -1,0 +1,92 @@
+# Oraculus DI Auditor - Default Configuration
+# Repository-level settings for audit triage and reporting
+
+# Directory Configuration
+manifests_dir: "manifests"
+extraction_dir: "extraction"
+reports_dir: "reports"
+queries_dir: "queries"
+
+# PDF Storage Configuration
+# Options: "repo" (store in repository) | "external" (store outside repository)
+# Default: external (recommended for security and size management)
+pdf_storage: "external"
+
+# External PDF storage path (used when pdf_storage is "external")
+# This should point to a secure location outside the repository in production
+# Default uses a relative path that can be created easily for testing
+# Examples: "/mnt/secure_storage/pdfs", "D:\\audit_pdfs", "/external_drive/documents"
+external_pdf_path: "external_pdfs"
+
+# Ollama Configuration
+ollama:
+  host: "localhost"
+  port: 11434
+  api_url: "http://localhost:11434"
+  default_model: "llama3-small"
+  timeout_seconds: 120
+  max_retries: 3
+
+# RAG/Retrieval Configuration
+retrieval:
+  top_k: 5
+  min_similarity: 0.3
+  chunk_size: 500
+  chunk_overlap: 50
+  use_scikit_tfidf: true  # Use scikit-learn TF-IDF if available, else naive search
+
+# Redaction Configuration
+redaction:
+  enabled: false  # Default: placeholders only, manual review required
+  auto_detect_pii: true  # Detect PII but don't auto-redact
+  placeholder_text: "[REDACTED]"
+  patterns:
+    - "ssn"  # Social Security Numbers
+    - "email"  # Email addresses
+    - "phone"  # Phone numbers
+    - "address"  # Physical addresses
+
+# OCR Configuration
+ocr:
+  default_engine: "tesseract"
+  deskew: false  # Requires opencv-python
+  default_dpi: 300
+  language: "eng"
+  confidence_threshold: 0.6
+
+# Report Generation
+reports:
+  default_format: "markdown"
+  include_manifests: true
+  include_extraction_logs: true
+  include_chain_of_custody: true
+  pandoc_available: false  # Auto-detected by render_report.py
+  wkhtmltopdf_available: false  # Auto-detected by render_report.py
+
+# Security & Legal
+security:
+  require_checksum_validation: true
+  log_chain_of_custody: true
+  warn_on_pii_detection: true
+  require_manual_redaction_review: true
+
+# Audit Categories (Four Fault Lines)
+audit_categories:
+  - "doj_certification"
+  - "irb_consent"  # 28 C.F.R. Part 46
+  - "infrastructure_policy"
+  - "federal_grant_incentives"
+
+# Logging
+logging:
+  level: "INFO"
+  log_to_file: true
+  log_path: "logs/audit.log"
+  
+# Evaluation & Testing
+evaluation:
+  enable_eval_harness: true
+  sample_queries_path: "queries/sample_queries.json"
+  eval_results_dir: "reports/eval"
+  record_latency: true
+  record_context: true

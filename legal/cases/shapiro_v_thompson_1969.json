@@ -1,0 +1,23 @@
+{
+  "case_id": "shapiro_v_thompson_1969",
+  "name": "Shapiro v. Thompson",
+  "citation": "394 U.S. 618 (1969)",
+  "year": 1969,
+  "doctrine": "free_movement",
+  "summary": "Right to travel is fundamental right; one-year residency requirement for welfare benefits impermissibly burdens right to travel and denies equal protection.",
+  "holding": "Durational residency requirements for welfare benefits unconstitutional; right to travel interstate is fundamental right protected by equal protection and privileges and immunities; requirement lacks compelling state interest.",
+  "issue_tags": [
+    "right_to_travel",
+    "interstate_migration",
+    "durational_residency",
+    "welfare_benefits",
+    "fundamental_rights",
+    "equal_protection",
+    "strict_scrutiny"
+  ],
+  "doctrinal_weight": 0.89,
+  "constitutional_basis": "Fourteenth Amendment Equal Protection, Privileges and Immunities Clause",
+  "relevance_to_audit": "Establishes fundamental right to interstate travel; relevant to restrictions on movement, residency requirements, and identity control measures.",
+  "procedural_posture": "State laws struck down",
+  "relevance_score": 0.86
+}

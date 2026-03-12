@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "summary",
+    "anomalies"
+  ],
+  "properties": {
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total_anomalies": {
+          "type": "number"
+        },
+        "by_type": {
+          "type": "object"
+        }
+      }
+    },
+    "anomalies": {
+      "type": "array"
+    },
+    "top_anomalies": {
+      "type": "array"
+    }
+  }
+}

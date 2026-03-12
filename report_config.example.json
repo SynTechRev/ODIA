@@ -1,0 +1,76 @@
+{
+  "title": "Oraculus DI Audit Report - Example",
+  "author": "Audit Team",
+  "report_id": "AUDIT_2024_EXAMPLE",
+  "executive_summary": "This report presents findings from a comprehensive audit of documents using the Oraculus DI Auditor four fault-line framework. The audit reviewed documents for DOJ certification compliance, IRB consent requirements, infrastructure policy adherence, and federal grant incentive structures. Critical findings require immediate legal review and remediation.",
+  "methodology": {
+    "ingestion": "Manual document upload and triage using triage.py script",
+    "extraction": "OCR text extraction via pytesseract for scanned documents; native text extraction for digital PDFs",
+    "analysis": "Four fault-line framework: DOJ certification, IRB consent (28 C.F.R. Part 46), infrastructure policy, federal grant incentives",
+    "review": "Manual review by qualified auditors with automated flagging and severity classification",
+    "limitations": "This audit is based on the documents available at the time of review. Additional documents may exist that were not included in this audit. All findings should be verified by qualified legal counsel."
+  },
+  "compliance": {
+    "doj_certification": "All documents were reviewed for DOJ certification requirements. Missing certifications were flagged for immediate follow-up.",
+    "irb_compliance": "IRB approval and informed consent documentation were verified for all research-related documents. Non-compliant documents were flagged as high or critical severity.",
+    "infrastructure": "Infrastructure and procurement documents were assessed for compliance with federal acquisition regulations (FAR) and facility standards.",
+    "federal_grants": "Grant funding mechanisms were reviewed for proper authorization, budget alignment, and conflict of interest management."
+  },
+  "recommendations": [
+    {
+      "title": "Immediate Legal Review of Critical Findings",
+      "priority": "CRITICAL",
+      "description": "All critical severity findings must be reviewed by qualified legal counsel within 48 hours. These findings represent potential legal violations or significant compliance risks.",
+      "actions": [
+        "Schedule emergency legal consultation",
+        "Obtain legal opinion on each critical finding",
+        "Implement immediate remediation measures",
+        "Document all remediation actions in manifest chain-of-custody"
+      ]
+    },
+    {
+      "title": "IRB Compliance Remediation",
+      "priority": "HIGH",
+      "description": "Documents flagged for IRB non-compliance must be addressed through proper IRB channels. Research activities should be suspended pending IRB approval where required.",
+      "actions": [
+        "Submit expedited IRB review applications",
+        "Suspend research activities pending approval",
+        "Develop compliant informed consent procedures",
+        "Implement IRB continuing review schedule"
+      ]
+    },
+    {
+      "title": "Infrastructure Policy Review",
+      "priority": "MEDIUM",
+      "description": "Infrastructure and procurement documents should undergo comprehensive policy review to ensure FAR compliance and proper contractor oversight.",
+      "actions": [
+        "Conduct FAR compliance audit",
+        "Review contractor selection procedures",
+        "Update procurement policies as needed",
+        "Implement enhanced oversight mechanisms"
+      ]
+    },
+    {
+      "title": "Establish Regular Audit Schedule",
+      "priority": "MEDIUM",
+      "description": "Implement a regular audit schedule using the Oraculus DI Auditor framework to prevent future compliance issues.",
+      "actions": [
+        "Schedule quarterly document audits",
+        "Train staff on triage.py usage",
+        "Establish audit report review process",
+        "Integrate findings into compliance management system"
+      ]
+    }
+  ],
+  "chain_of_custody": {
+    "initial_date": "2024-01-01",
+    "review_start": "2024-01-15",
+    "review_end": "2024-02-15",
+    "custodians": [
+      "Lead Auditor",
+      "Compliance Officer",
+      "Legal Counsel"
+    ],
+    "integrity_checks": 150
+  }
+}

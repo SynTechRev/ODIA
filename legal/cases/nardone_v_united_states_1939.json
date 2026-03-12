@@ -1,0 +1,23 @@
+{
+  "case_id": "nardone_v_united_states_1939",
+  "name": "Nardone v. United States",
+  "citation": "308 U.S. 338 (1939)",
+  "year": 1939,
+  "doctrine": "fourth_amendment",
+  "summary": "Evidence obtained through illegal wiretapping inadmissible; derivative evidence (fruit of poisonous tree) also inadmissible unless independent source established.",
+  "holding": "Federal Communications Act prohibition on wiretapping enforceable through exclusion of illegally obtained evidence; government must demonstrate independent source for derivative evidence or exclusion applies.",
+  "issue_tags": [
+    "fruit_of_poisonous_tree",
+    "wiretapping",
+    "exclusionary_rule",
+    "derivative_evidence",
+    "independent_source",
+    "chain_of_custody",
+    "illegal_surveillance"
+  ],
+  "doctrinal_weight": 0.86,
+  "constitutional_basis": "Fourth Amendment, Federal Communications Act",
+  "relevance_to_audit": "Early establishment of fruit of poisonous tree doctrine; relevant to chain of custody analysis and derivative evidence from tainted sources.",
+  "procedural_posture": "Conviction reversed, remanded for determination of independent source",
+  "relevance_score": 0.88
+}

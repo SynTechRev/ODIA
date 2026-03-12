@@ -1,0 +1,23 @@
+numpy
+pandas
+python-dateutil
+pydantic
+tqdm
+requests
+scikit-learn
+pypdf>=4.0.0
+jsonschema>=4.20.0
+SQLAlchemy>=2.0
+fastapi>=0.115.0
+uvicorn>=0.30.0
+httpx>=0.25.0
+pytesseract>=0.3.10
+pdf2image>=1.16.0
+Pillow>=10.2.0
+opencv-python>=4.8.0
+scikit-image>=0.21.0
+Jinja2>=3.0.0
+# RAG Dependencies
+openai>=1.12.0
+anthropic>=0.21.0
+tiktoken>=0.6.0

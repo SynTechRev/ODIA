@@ -1,0 +1,23 @@
+{
+  "case_id": "illinois_v_gates_1983",
+  "name": "Illinois v. Gates",
+  "citation": "462 U.S. 213 (1983)",
+  "year": 1983,
+  "doctrine": "fourth_amendment",
+  "summary": "Established totality of circumstances test for probable cause; replaced rigid two-prong Aguilar-Spinelli test with flexible standard considering all information known to officers.",
+  "holding": "Probable cause determined by totality of circumstances; magistrate makes practical, commonsense decision whether fair probability exists that contraband or evidence will be found; informant reliability and basis of knowledge considered but not separate rigid requirements.",
+  "issue_tags": [
+    "probable_cause",
+    "fourth_amendment",
+    "totality_of_circumstances",
+    "warrant_application",
+    "informant_reliability",
+    "magistrate_determination",
+    "search_warrant"
+  ],
+  "doctrinal_weight": 0.91,
+  "constitutional_basis": "Fourth Amendment",
+  "relevance_to_audit": "Establishes flexible standard for probable cause; relevant to analyzing basis for administrative searches, enforcement actions, and investigative determinations.",
+  "procedural_posture": "State conviction affirmed",
+  "relevance_score": 0.88
+}

@@ -1,0 +1,23 @@
+{
+  "case_id": "saenz_v_roe_1999",
+  "name": "Saenz v. Roe",
+  "citation": "526 U.S. 489 (1999)",
+  "year": 1999,
+  "doctrine": "free_movement",
+  "summary": "Citizenship clause of Fourteenth Amendment protects right of newly arrived citizens to same privileges and immunities as long-term residents; durational residency requirements for welfare benefits unconstitutional.",
+  "holding": "Citizenship clause protects right to travel, including right to be treated equally in new state of residence; California cannot limit welfare benefits for new residents to levels of prior state for first year.",
+  "issue_tags": [
+    "right_to_travel",
+    "citizenship_clause",
+    "durational_residency",
+    "welfare_benefits",
+    "equal_treatment",
+    "privileges_and_immunities",
+    "interstate_migration"
+  ],
+  "doctrinal_weight": 0.88,
+  "constitutional_basis": "Fourteenth Amendment Citizenship Clause, Privileges and Immunities",
+  "relevance_to_audit": "Reaffirms constitutional protection for interstate travel and equal treatment; relevant to residency requirements, movement restrictions, and discriminatory treatment of newcomers.",
+  "procedural_posture": "Ninth Circuit affirmed",
+  "relevance_score": 0.85
+}
