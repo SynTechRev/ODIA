@@ -6,7 +6,6 @@ from oraculus_di_auditor.analysis.governance_gap import (
     detect_governance_gap_anomalies,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -182,7 +181,9 @@ def test_ai_report_writing_without_oversight_high():
 
 
 def test_machine_learning_without_oversight_high():
-    doc = _doc("Machine learning model for call prioritization. No human review required.")
+    doc = _doc(
+        "Machine learning model for call prioritization. No human review required."
+    )
     cap_finding = next(
         (
             a
@@ -208,9 +209,7 @@ def test_data_sharing_without_retention_policy_flagged():
     )
     anomalies = detect_governance_gap_anomalies(doc)
     assert any(a["id"] == "governance:data-retention-gap" for a in anomalies)
-    finding = next(
-        a for a in anomalies if a["id"] == "governance:data-retention-gap"
-    )
+    finding = next(a for a in anomalies if a["id"] == "governance:data-retention-gap")
     assert finding["severity"] == "high"
     assert finding["layer"] == "governance"
 
