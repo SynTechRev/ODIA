@@ -9,6 +9,7 @@ from .constitutional import detect_constitutional_anomalies
 from .cross_reference import cross_reference_audit, detect_cross_jurisdiction_refs
 from .fiscal import detect_fiscal_anomalies
 from .pipeline import run_full_analysis
+from .governance_gap import detect_governance_gap_anomalies
 from .procurement_timeline import detect_procurement_timeline_anomalies
 from .scope_expansion import detect_scope_expansion_anomalies
 from .signature_chain import detect_signature_anomalies
@@ -20,6 +21,7 @@ __all__ = [
     "detect_cross_jurisdiction_refs",
     "detect_fiscal_anomalies",
     "detect_constitutional_anomalies",
+    "detect_governance_gap_anomalies",
     "detect_procurement_timeline_anomalies",
     "detect_scope_expansion_anomalies",
     "detect_signature_anomalies",
