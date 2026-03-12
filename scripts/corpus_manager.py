@@ -32,7 +32,7 @@ def load_corpus_manifest(manifest_path: Path | str | None = None) -> dict[str, s
 
     Args:
         manifest_path: Path to JSON file mapping corpus IDs to meeting dates.
-                       If None, looks for 'corpus_manifest.json' in the config/ directory.
+            If None, looks for 'corpus_manifest.json' in the config/ directory.
 
     Returns:
         Dictionary mapping corpus IDs to date strings (YYYY-MM-DD).
