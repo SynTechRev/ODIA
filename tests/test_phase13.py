@@ -5,34 +5,34 @@ import pytest
 from oraculus_di_auditor.qdcl import (
     AdaptiveCompressionExpansion,
     CognitionMode,
-    CognitiveMeshFusion,
+    MeshFusion,
     ConvergenceVectorGenerator,
     DecisionKernel,
     FractalPredictiveTrajectoryEngine,
-    HolographicMemoryOrganizer,
+    GridMemoryOrganizer,
     HypothesisState,
     MemoryType,
     MultiPerspectiveEvaluator,
     Perspective,
     QDCLService,
-    QuantumKernelDecisionLayer,
-    SuperpositionalHypothesisEngine,
+    KernelDecisionLayer,
+    MultiHypothesisEngine,
     VectorType,
 )
 
 
-class TestSuperpositionalHypothesisEngine:
-    """Tests for Superpositional Hypothesis Engine."""
+class TestMultiHypothesisEngine:
+    """Tests for Multi-Hypothesis Engine."""
 
     def test_engine_initialization(self):
         """Test engine initialization."""
-        engine = SuperpositionalHypothesisEngine()
+        engine = MultiHypothesisEngine()
         assert engine.version == "1.0.0"
         assert len(engine.hypotheses) == 0
 
     def test_create_hypothesis(self):
         """Test hypothesis creation."""
-        engine = SuperpositionalHypothesisEngine()
+        engine = MultiHypothesisEngine()
         hyp = engine.create_hypothesis(
             description="Test hypothesis", source_agent="test_agent"
         )
@@ -44,7 +44,7 @@ class TestSuperpositionalHypothesisEngine:
 
     def test_add_state_vector(self):
         """Test adding state vectors to hypothesis."""
-        engine = SuperpositionalHypothesisEngine()
+        engine = MultiHypothesisEngine()
         hyp = engine.create_hypothesis("Test", "agent")
 
         hyp.add_state_vector("state_a", 0.7, 0.8)
@@ -56,7 +56,7 @@ class TestSuperpositionalHypothesisEngine:
 
     def test_hypothesis_entanglement(self):
         """Test hypothesis entanglement."""
-        engine = SuperpositionalHypothesisEngine()
+        engine = MultiHypothesisEngine()
         hyp1 = engine.create_hypothesis("Hyp 1", "agent1")
         hyp2 = engine.create_hypothesis("Hyp 2", "agent2")
 
@@ -70,7 +70,7 @@ class TestSuperpositionalHypothesisEngine:
 
     def test_hypothesis_collapse(self):
         """Test hypothesis collapse."""
-        engine = SuperpositionalHypothesisEngine()
+        engine = MultiHypothesisEngine()
         hyp = engine.create_hypothesis("Test", "agent")
         hyp.add_state_vector("final_state", 0.9, 0.9)
 
@@ -81,7 +81,7 @@ class TestSuperpositionalHypothesisEngine:
 
     def test_hypothesis_matrix_generation(self):
         """Test hypothesis matrix generation."""
-        engine = SuperpositionalHypothesisEngine()
+        engine = MultiHypothesisEngine()
         engine.create_hypothesis("Hyp 1", "agent1")
         engine.create_hypothesis("Hyp 2", "agent2")
 
@@ -92,18 +92,18 @@ class TestSuperpositionalHypothesisEngine:
         assert len(matrix["hypotheses"]) == 2
 
 
-class TestCognitiveMeshFusion:
-    """Tests for Cognitive Mesh Fusion."""
+class TestMeshFusion:
+    """Tests for Mesh Fusion."""
 
     def test_fusion_initialization(self):
         """Test fusion initialization."""
-        fusion = CognitiveMeshFusion()
+        fusion = MeshFusion()
         assert fusion.version == "1.0.0"
         assert len(fusion.agent_reasoning) == 0
 
     def test_add_agent_reasoning(self):
         """Test adding agent reasoning."""
-        fusion = CognitiveMeshFusion()
+        fusion = MeshFusion()
         fusion.add_agent_reasoning(
             agent_type="constraint",
             agent_id="agent_1",
@@ -116,7 +116,7 @@ class TestCognitiveMeshFusion:
 
     def test_fuse_reasoning(self):
         """Test reasoning fusion."""
-        fusion = CognitiveMeshFusion()
+        fusion = MeshFusion()
         fusion.add_agent_reasoning(
             "constraint", "a1", {"concepts": ["safety", "performance"]}, 0.8
         )
@@ -131,7 +131,7 @@ class TestCognitiveMeshFusion:
 
     def test_cognition_graph_generation(self):
         """Test cognition graph generation."""
-        fusion = CognitiveMeshFusion()
+        fusion = MeshFusion()
         fusion.add_agent_reasoning("constraint", "a1", {"concepts": ["test"]}, 0.8)
 
         graph = fusion.generate_distributed_cognition_graph()
@@ -141,7 +141,7 @@ class TestCognitiveMeshFusion:
         assert "summary" in graph
 
 
-class TestFractalTrajectoryEngine:
+class TestTrajectoryEngineEngine:
     """Tests for Fractal Predictive Trajectory Engine."""
 
     def test_engine_initialization(self):
@@ -261,18 +261,18 @@ class TestConvergenceVectorGenerator:
         assert high_priority[0].vector_id == "a1"
 
 
-class TestHolographicMemoryOrganizer:
-    """Tests for Holographic Memory Organizer."""
+class TestGridMemoryOrganizer:
+    """Tests for Grid Memory Organizer."""
 
     def test_organizer_initialization(self):
         """Test organizer initialization."""
-        organizer = HolographicMemoryOrganizer(grid_size=50)
+        organizer = GridMemoryOrganizer(grid_size=50)
         assert organizer.version == "1.0.0"
         assert organizer.grid.grid_size == 50
 
     def test_store_insight(self):
         """Test storing insights."""
-        organizer = HolographicMemoryOrganizer()
+        organizer = GridMemoryOrganizer()
         deformation = organizer.store_insight(
             content={"insight": "test_insight"}, magnitude=0.9
         )
@@ -282,7 +282,7 @@ class TestHolographicMemoryOrganizer:
 
     def test_store_anomaly(self):
         """Test storing anomalies."""
-        organizer = HolographicMemoryOrganizer()
+        organizer = GridMemoryOrganizer()
         deformation = organizer.store_anomaly(
             content={"anomaly": "test_anomaly"}, magnitude=0.8
         )
@@ -291,7 +291,7 @@ class TestHolographicMemoryOrganizer:
 
     def test_store_transformation(self):
         """Test storing transformations."""
-        organizer = HolographicMemoryOrganizer()
+        organizer = GridMemoryOrganizer()
         deformation = organizer.store_transformation(
             content={"transform": "test"}, magnitude=0.7
         )
@@ -300,7 +300,7 @@ class TestHolographicMemoryOrganizer:
 
     def test_store_failure(self):
         """Test storing failures."""
-        organizer = HolographicMemoryOrganizer()
+        organizer = GridMemoryOrganizer()
         deformation = organizer.store_failure(
             content={"failure": "test_failure"}, magnitude=0.6
         )
@@ -309,7 +309,7 @@ class TestHolographicMemoryOrganizer:
 
     def test_store_micro_pattern(self):
         """Test storing micro-patterns."""
-        organizer = HolographicMemoryOrganizer()
+        organizer = GridMemoryOrganizer()
         deformation = organizer.store_micro_pattern(
             content={"pattern": "test_pattern"}, magnitude=0.8
         )
@@ -318,7 +318,7 @@ class TestHolographicMemoryOrganizer:
 
     def test_recall_similar_memories(self):
         """Test recalling similar memories."""
-        organizer = HolographicMemoryOrganizer()
+        organizer = GridMemoryOrganizer()
         organizer.store_insight({"key": "value1"}, 0.9)
         organizer.store_insight({"key": "value2"}, 0.8)
 
@@ -330,7 +330,7 @@ class TestHolographicMemoryOrganizer:
 
     def test_memory_decay(self):
         """Test memory decay."""
-        organizer = HolographicMemoryOrganizer()
+        organizer = GridMemoryOrganizer()
         organizer.store_insight({"test": "data"}, magnitude=0.5)
 
         initial_count = len(organizer.grid.deformations)
@@ -503,18 +503,18 @@ class TestAdaptiveCompressionExpansion:
         assert engine.current_mode == CognitionMode.EXPANSION
 
 
-class TestQuantumKernelDecisionLayer:
+class TestKernelDecisionLayer:
     """Tests for Quantum-Kernel Decision Layer."""
 
     def test_layer_initialization(self):
         """Test layer initialization."""
-        layer = QuantumKernelDecisionLayer()
+        layer = KernelDecisionLayer()
         assert layer.version == "1.0.0"
         assert len(layer.decision_kernels) == 0
 
     def test_generate_decision_kernel(self):
         """Test decision kernel generation."""
-        layer = QuantumKernelDecisionLayer()
+        layer = KernelDecisionLayer()
 
         kernel = layer.generate_decision_kernel(
             decision="Test decision",
@@ -532,7 +532,7 @@ class TestQuantumKernelDecisionLayer:
 
     def test_get_high_confidence_kernels(self):
         """Test high confidence kernel retrieval."""
-        layer = QuantumKernelDecisionLayer()
+        layer = KernelDecisionLayer()
 
         # Generate kernels with different confidence
         layer.generate_decision_kernel(
@@ -597,11 +597,11 @@ class TestQDCLService:
         assert result["cycle_number"] == 1
         assert "outputs" in result
         assert "state_space_summary" in result["outputs"]
-        assert "superpositional_hypothesis_matrix" in result["outputs"]
+        assert "multi_hypothesis_matrix" in result["outputs"]
         assert "distributed_cognition_graph" in result["outputs"]
         assert "trajectory_probability_cube" in result["outputs"]
         assert "convergence_vector_set" in result["outputs"]
-        assert "quantum_kernel_recommendation" in result["outputs"]
+        assert "decision_kernel_recommendation" in result["outputs"]
         assert "traceable_justification_layer" in result["outputs"]
 
     def test_get_status(self):
@@ -717,9 +717,9 @@ class TestPhase13Integration:
         assert "state_space_summary" in outputs
         assert outputs["state_space_summary"]["complexity_score"] > 0
 
-        # 2. Superpositional Hypothesis Matrix
-        assert "superpositional_hypothesis_matrix" in outputs
-        assert outputs["superpositional_hypothesis_matrix"]["total_hypotheses"] >= 0
+        # 2. Multi-Hypothesis Matrix
+        assert "multi_hypothesis_matrix" in outputs
+        assert outputs["multi_hypothesis_matrix"]["total_hypotheses"] >= 0
 
         # 3. Distributed Cognition Graph
         assert "distributed_cognition_graph" in outputs
@@ -734,9 +734,9 @@ class TestPhase13Integration:
         assert "total_vectors" in outputs["convergence_vector_set"]
 
         # 6. Quantum-Kernel Recommendation
-        assert "quantum_kernel_recommendation" in outputs
-        assert "decision" in outputs["quantum_kernel_recommendation"]
-        assert 0.0 <= outputs["quantum_kernel_recommendation"]["confidence"] <= 1.0
+        assert "decision_kernel_recommendation" in outputs
+        assert "decision" in outputs["decision_kernel_recommendation"]
+        assert 0.0 <= outputs["decision_kernel_recommendation"]["confidence"] <= 1.0
 
         # 7. Traceable Justification Layer
         assert "traceable_justification_layer" in outputs

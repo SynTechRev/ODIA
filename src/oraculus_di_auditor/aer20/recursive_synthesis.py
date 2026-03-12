@@ -32,7 +32,7 @@ class RecursiveSynthesisEngine:
         """Perform complete recursive synthesis.
 
         Args:
-            auf_state: Ascendant Unified Field state
+            auf_state: Composite Feature Vector state
             phase_inputs: All phase inputs (12-19)
 
         Returns:

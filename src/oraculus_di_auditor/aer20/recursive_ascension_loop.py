@@ -1,5 +1,5 @@
-# src/oraculus_di_auditor/aer20/recursive_ascension_loop.py
-"""RAL-20: Recursive Ascension Loop.
+# src/oraculus_di_auditor/aer20/validation_pipeline.py
+"""RAL-20: Validation Pipeline.
 
 Performs bounded self-evaluation and self-optimization.
 """
@@ -11,8 +11,8 @@ from .schemas import AUFState, RecursiveAscensionReport
 from .utils import sha256_hex
 
 
-class RecursiveAscensionLoop:
-    """Recursive Ascension Loop - deterministic self-evaluation and bounded optimization.
+class ValidationPipeline:
+    """Validation Pipeline - deterministic self-evaluation and bounded optimization.
 
     This is the ONLY place where self-modification occurs, strictly bounded to:
     - Internal reasoning templates
@@ -34,7 +34,7 @@ class RecursiveAscensionLoop:
         """Execute the recursive ascension loop.
 
         Args:
-            auf_state: Ascendant Unified Field state
+            auf_state: Composite Feature Vector state
             synthesis_report: Recursive synthesis report
             phase_inputs: All phase inputs
 

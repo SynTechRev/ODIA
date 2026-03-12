@@ -183,7 +183,7 @@ def test_phase20_meta_insight_generation():
     assert isinstance(mip.harmonic_stability, dict)
 
 
-def test_phase20_recursive_ascension_loop():
+def test_phase20_validation_pipeline():
     """Test recursive ascension loop execution."""
     service = Phase20Service()
     phase_inputs = _create_phase_inputs_fixture()
@@ -242,8 +242,8 @@ def test_phase20_integrity_alignment():
     assert "determinism_guarantee" in analysis.compliance_status
 
 
-def test_phase20_final_ascendant_packet():
-    """Test Final Ascendant Packet (FAP-20) structure."""
+def test_phase20_output_packet():
+    """Test Output Packet (FAP-20) structure."""
     service = Phase20Service()
     phase_inputs = _create_phase_inputs_fixture()
 
@@ -440,7 +440,7 @@ def test_phase20_explanation_narrative():
     explanation = result.fap_20_result.ascendant_explanation
 
     # Should contain key phrases
-    assert "Final Ascendant Packet" in explanation
+    assert "Output Packet" in explanation
     assert "FAP-20" in explanation
     assert "Crown" in explanation or "crown" in explanation
     assert "Phase 20" in explanation or "AER-20" in explanation

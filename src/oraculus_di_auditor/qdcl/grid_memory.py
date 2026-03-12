@@ -1,4 +1,4 @@
-"""Holographic Memory Organizer - QDCL Phase 13.
+"""Grid Memory Organizer - QDCL Phase 13.
 
 Implements a topological memory model where insights, anomalies, transformations,
 failures, and micro-patterns are stored as surface deformations in a holographic grid.
@@ -28,7 +28,7 @@ class MemoryType(Enum):
 
 @dataclass
 class SurfaceDeformation:
-    """A deformation on the holographic memory surface."""
+    """A deformation on the grid memory surface."""
 
     deformation_id: str
     memory_type: MemoryType
@@ -155,7 +155,7 @@ class HolographicGrid:
         }
 
 
-class HolographicMemoryOrganizer:
+class GridMemoryOrganizer:
     """Holographic memory organizer for QDCL.
 
     Implements a topological memory model where insights, anomalies,
@@ -164,7 +164,7 @@ class HolographicMemoryOrganizer:
     """
 
     def __init__(self, grid_size: int = 100):
-        """Initialize holographic memory organizer.
+        """Initialize grid memory organizer.
 
         Args:
             grid_size: Size of holographic grid
@@ -174,13 +174,13 @@ class HolographicMemoryOrganizer:
         self.memory_counter = 0
         self.created_at = datetime.now(UTC)
         logger.info(
-            f"HolographicMemoryOrganizer initialized with grid size {grid_size}"
+            f"GridMemoryOrganizer initialized with grid size {grid_size}"
         )
 
     def store_insight(
         self, content: dict[str, Any], magnitude: float = 1.0
     ) -> SurfaceDeformation:
-        """Store an insight in holographic memory.
+        """Store an insight in grid memory.
 
         Args:
             content: Insight content
@@ -205,7 +205,7 @@ class HolographicMemoryOrganizer:
     def store_anomaly(
         self, content: dict[str, Any], magnitude: float = 1.0
     ) -> SurfaceDeformation:
-        """Store an anomaly in holographic memory.
+        """Store an anomaly in grid memory.
 
         Args:
             content: Anomaly content
@@ -230,7 +230,7 @@ class HolographicMemoryOrganizer:
     def store_transformation(
         self, content: dict[str, Any], magnitude: float = 1.0
     ) -> SurfaceDeformation:
-        """Store a transformation in holographic memory.
+        """Store a transformation in grid memory.
 
         Args:
             content: Transformation content
@@ -255,7 +255,7 @@ class HolographicMemoryOrganizer:
     def store_failure(
         self, content: dict[str, Any], magnitude: float = 1.0
     ) -> SurfaceDeformation:
-        """Store a failure in holographic memory.
+        """Store a failure in grid memory.
 
         Args:
             content: Failure content
@@ -280,7 +280,7 @@ class HolographicMemoryOrganizer:
     def store_micro_pattern(
         self, content: dict[str, Any], magnitude: float = 1.0
     ) -> SurfaceDeformation:
-        """Store a micro-pattern in holographic memory.
+        """Store a micro-pattern in grid memory.
 
         Args:
             content: Micro-pattern content
@@ -409,7 +409,7 @@ class HolographicMemoryOrganizer:
         logger.info("Applied memory decay to holographic grid")
 
     def get_memory_summary(self) -> dict[str, Any]:
-        """Get summary of holographic memory state.
+        """Get summary of grid memory state.
 
         Returns:
             Memory summary

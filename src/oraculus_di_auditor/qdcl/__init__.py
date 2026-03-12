@@ -20,41 +20,41 @@ acting as a trans-scalar cognitive membrane that:
 """
 
 from .adaptive_cognition import AdaptiveCompressionExpansion, CognitionMode
-from .cognitive_mesh_fusion import CognitiveMeshFusion, SemanticFractalMap
+from .mesh_fusion import MeshFusion, SemanticTrajectoryMap
 from .convergence_vectors import (
     ConvergenceVector,
     ConvergenceVectorGenerator,
     ConvergenceVectorSet,
     VectorType,
 )
-from .fractal_trajectory import (
+from .trajectory_engine import (
     FractalPredictiveTrajectoryEngine,
     TrajectoryProbabilityCube,
 )
-from .holographic_memory import HolographicMemoryOrganizer, MemoryType
+from .grid_memory import GridMemoryOrganizer, MemoryType
 from .multi_perspective import (
     DeltaDifferenceMap,
     MultiPerspectiveEvaluator,
     Perspective,
 )
 from .qdcl_service import QDCLService
-from .quantum_kernel import DecisionKernel, QuantumKernelDecisionLayer
-from .superpositional_hypothesis import (
+from .decision_kernel import DecisionKernel, KernelDecisionLayer
+from .multi_hypothesis import (
     Hypothesis,
     HypothesisState,
-    SuperpositionalHypothesisEngine,
+    MultiHypothesisEngine,
 )
 
 __all__ = [
     # Main service
     "QDCLService",
     # Superpositional hypothesis engine
-    "SuperpositionalHypothesisEngine",
+    "MultiHypothesisEngine",
     "Hypothesis",
     "HypothesisState",
     # Cognitive mesh fusion
-    "CognitiveMeshFusion",
-    "SemanticFractalMap",
+    "MeshFusion",
+    "SemanticTrajectoryMap",
     # Fractal trajectory engine
     "FractalPredictiveTrajectoryEngine",
     "TrajectoryProbabilityCube",
@@ -64,7 +64,7 @@ __all__ = [
     "ConvergenceVector",
     "VectorType",
     # Holographic memory
-    "HolographicMemoryOrganizer",
+    "GridMemoryOrganizer",
     "MemoryType",
     # Multi-perspective evaluation
     "MultiPerspectiveEvaluator",
@@ -74,7 +74,7 @@ __all__ = [
     "AdaptiveCompressionExpansion",
     "CognitionMode",
     # Quantum kernel
-    "QuantumKernelDecisionLayer",
+    "KernelDecisionLayer",
     "DecisionKernel",
 ]
 

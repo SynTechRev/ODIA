@@ -1,4 +1,4 @@
-"""Cross-Agent Cognitive Mesh Fusion - QDCL Phase 13.
+"""Cross-Agent Mesh Fusion - QDCL Phase 13.
 
 Merges reasoning from multiple agents and transforms them into
 consensus-driven semantic fractal maps.
@@ -38,7 +38,7 @@ class SemanticFractalNode:
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
-class SemanticFractalMap:
+class SemanticTrajectoryMap:
     """Consensus-driven semantic fractal map from multi-agent reasoning."""
 
     def __init__(self):
@@ -148,7 +148,7 @@ class SemanticFractalMap:
         }
 
 
-class CognitiveMeshFusion:
+class MeshFusion:
     """Cross-agent cognitive mesh fusion engine.
 
     Merges reasoning from multiple agents (constraint, anomaly, semantic,
@@ -160,9 +160,9 @@ class CognitiveMeshFusion:
         """Initialize cognitive mesh fusion engine."""
         self.version = "1.0.0"
         self.agent_reasoning: list[AgentReasoning] = []
-        self.fractal_map: SemanticFractalMap | None = None
+        self.fractal_map: SemanticTrajectoryMap | None = None
         self.created_at = datetime.now(UTC)
-        logger.info("CognitiveMeshFusion initialized")
+        logger.info("MeshFusion initialized")
 
     def add_agent_reasoning(
         self,
@@ -194,13 +194,13 @@ class CognitiveMeshFusion:
             f"(confidence={confidence:.2f})"
         )
 
-    def fuse_reasoning(self) -> SemanticFractalMap:
+    def fuse_reasoning(self) -> SemanticTrajectoryMap:
         """Fuse all agent reasoning into a semantic fractal map.
 
         Returns:
             Semantic fractal map representing consensus
         """
-        self.fractal_map = SemanticFractalMap()
+        self.fractal_map = SemanticTrajectoryMap()
 
         # Extract concepts from each agent's reasoning
         concept_votes: dict[str, dict[str, float]] = {}  # concept -> agent_type -> vote

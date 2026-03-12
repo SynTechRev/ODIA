@@ -8,7 +8,7 @@ from .aer20_service import Phase20Service
 from .schemas import (
     AlignmentAnalysis,
     AUFState,
-    FinalAscendantPacket,
+    OutputPacket,
     MetaInsightPacket,
     Phase20Result,
     RecursiveAscensionReport,
@@ -20,6 +20,6 @@ __all__ = [
     "MetaInsightPacket",
     "RecursiveAscensionReport",
     "AlignmentAnalysis",
-    "FinalAscendantPacket",
+    "OutputPacket",
     "Phase20Result",
 ]

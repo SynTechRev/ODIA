@@ -1,5 +1,5 @@
-# src/oraculus_di_auditor/aer20/ascendant_unified_field.py
-"""AUF-20: Ascendant Unified Field Constructor.
+# src/oraculus_di_auditor/aer20/composite_feature_vector.py
+"""AUF-20: Composite Feature Vector Constructor.
 
 Constructs a 256-dimensional meta-field combining all phases (12-19).
 Extends UIF-19's 142 dimensions with additional synthesis dimensions.
@@ -12,8 +12,8 @@ from .schemas import AUFState
 from .utils import DeterministicRNG, seed_from_input, sha256_hex
 
 
-class AscendantUnifiedFieldConstructor:
-    """Constructs the 256-dimensional Ascendant Unified Field (AUF-20).
+class CompositeFeatureVectorConstructor:
+    """Constructs the 256-dimensional Composite Feature Vector (AUF-20).
 
     Dimensional Organization (256 total):
     - Dimensions 0-141: UIF-19 integration (all Phase 12-19 outputs)
@@ -27,7 +27,7 @@ class AscendantUnifiedFieldConstructor:
     """
 
     def construct_auf(self, phase_inputs: dict[str, Any]) -> AUFState:
-        """Construct the 256-dimensional Ascendant Unified Field.
+        """Construct the 256-dimensional Composite Feature Vector.
 
         Args:
             phase_inputs: All phase outputs (12-19), including UIF-19 state

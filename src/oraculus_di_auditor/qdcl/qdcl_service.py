@@ -2,7 +2,7 @@
 
 Orchestrates all QDCL components and generates required outputs per cycle:
 1. State-Space Summary
-2. Superpositional Hypothesis Matrix
+2. Multi-Hypothesis Matrix
 3. Distributed Cognition Graph
 4. Trajectory Probability Cube
 5. Convergence Vector Set
@@ -17,13 +17,13 @@ from datetime import UTC, datetime
 from typing import Any
 
 from .adaptive_cognition import AdaptiveCompressionExpansion, CognitionMode
-from .cognitive_mesh_fusion import CognitiveMeshFusion
+from .mesh_fusion import MeshFusion
 from .convergence_vectors import ConvergenceVectorGenerator
-from .fractal_trajectory import FractalPredictiveTrajectoryEngine
-from .holographic_memory import HolographicMemoryOrganizer
+from .trajectory_engine import FractalPredictiveTrajectoryEngine
+from .grid_memory import GridMemoryOrganizer
 from .multi_perspective import MultiPerspectiveEvaluator
-from .quantum_kernel import QuantumKernelDecisionLayer
-from .superpositional_hypothesis import SuperpositionalHypothesisEngine
+from .decision_kernel import KernelDecisionLayer
+from .multi_hypothesis import MultiHypothesisEngine
 
 logger = logging.getLogger(__name__)
 
@@ -51,14 +51,14 @@ class QDCLService:
         self.phase = 13
 
         # Initialize all QDCL components
-        self.hypothesis_engine = SuperpositionalHypothesisEngine()
-        self.cognitive_fusion = CognitiveMeshFusion()
+        self.hypothesis_engine = MultiHypothesisEngine()
+        self.cognitive_fusion = MeshFusion()
         self.trajectory_engine = FractalPredictiveTrajectoryEngine()
         self.vector_generator = ConvergenceVectorGenerator()
-        self.memory_organizer = HolographicMemoryOrganizer()
+        self.memory_organizer = GridMemoryOrganizer()
         self.multi_perspective = MultiPerspectiveEvaluator()
         self.adaptive_cognition = AdaptiveCompressionExpansion()
-        self.decision_layer = QuantumKernelDecisionLayer()
+        self.decision_layer = KernelDecisionLayer()
 
         self.created_at = datetime.now(UTC)
         self.cycle_count = 0
@@ -103,7 +103,7 @@ class QDCLService:
             system_state, processed_state
         )
 
-        # 2. Generate Superpositional Hypothesis Matrix
+        # 2. Generate Multi-Hypothesis Matrix
         hypothesis_matrix = self._generate_hypothesis_matrix(
             system_state, agent_outputs or []
         )
@@ -135,8 +135,8 @@ class QDCLService:
             kernel_recommendation, vector_set
         )
 
-        # Update holographic memory
-        self._update_holographic_memory(
+        # Update grid memory
+        self._update_grid_memory(
             hypothesis_matrix, cognition_graph, trajectory_cube
         )
 
@@ -146,11 +146,11 @@ class QDCLService:
             "cognition_mode": self.adaptive_cognition.current_mode.value,
             "outputs": {
                 "state_space_summary": state_space_summary,
-                "superpositional_hypothesis_matrix": hypothesis_matrix,
+                "multi_hypothesis_matrix": hypothesis_matrix,
                 "distributed_cognition_graph": cognition_graph,
                 "trajectory_probability_cube": trajectory_cube,
                 "convergence_vector_set": vector_set,
-                "quantum_kernel_recommendation": kernel_recommendation,
+                "decision_kernel_recommendation": kernel_recommendation,
                 "traceable_justification_layer": justification_layer,
             },
             "execution_time_ms": (datetime.now(UTC) - cycle_start).total_seconds()
@@ -461,13 +461,13 @@ class QDCLService:
             },
         }
 
-    def _update_holographic_memory(
+    def _update_grid_memory(
         self,
         hypothesis_matrix: dict[str, Any],
         cognition_graph: dict[str, Any],
         trajectory_cube: dict[str, Any],
     ):
-        """Update holographic memory with cycle results.
+        """Update grid memory with cycle results.
 
         Args:
             hypothesis_matrix: Hypothesis matrix

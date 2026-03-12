@@ -1,7 +1,7 @@
 # src/oraculus_di_auditor/aer20/ascendant_packet_publisher.py
 """APP-20: Ascendant Packet Publisher.
 
-Publishes the Final Ascendant Packet (FAP-20) - the crown jewel.
+Publishes the Output Packet (FAP-20) - the crown jewel.
 """
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from typing import Any
 from .schemas import (
     AlignmentAnalysis,
     AUFState,
-    FinalAscendantPacket,
+    OutputPacket,
     MetaInsightPacket,
     RecursiveAscensionReport,
 )
@@ -18,7 +18,7 @@ from .utils import sha256_hex
 
 
 class AscendantPacketPublisher:
-    """Publishes the Final Ascendant Packet (FAP-20)."""
+    """Publishes the Output Packet (FAP-20)."""
 
     def publish_fap(
         self,
@@ -28,11 +28,11 @@ class AscendantPacketPublisher:
         ascension_report: RecursiveAscensionReport,
         alignment_analysis: AlignmentAnalysis,
         phase_inputs: dict[str, Any],
-    ) -> FinalAscendantPacket:
-        """Publish the Final Ascendant Packet.
+    ) -> OutputPacket:
+        """Publish the Output Packet.
 
         Args:
-            auf_state: Ascendant Unified Field state
+            auf_state: Composite Feature Vector state
             synthesis_report: Recursive synthesis report
             meta_insights: Meta-insight packets
             ascension_report: Recursive ascension report
@@ -40,7 +40,7 @@ class AscendantPacketPublisher:
             phase_inputs: All phase inputs
 
         Returns:
-            FinalAscendantPacket - the crown jewel
+            OutputPacket - the crown jewel
         """
         # Generate ascendant explanation (narrative)
         ascendant_explanation = self._generate_ascendant_explanation(
@@ -96,7 +96,7 @@ class AscendantPacketPublisher:
             }
         )
 
-        return FinalAscendantPacket(
+        return OutputPacket(
             fap_id=fap_id,
             ascendant_explanation=ascendant_explanation,
             structured_packet=structured_packet,
@@ -133,13 +133,13 @@ class AscendantPacketPublisher:
         readiness = alignment_analysis.future_readiness
         risk = alignment_analysis.risk_assessment
 
-        explanation = f"""# Final Ascendant Packet (FAP-20)
+        explanation = f"""# Output Packet (FAP-20)
 ## The Crown Jewel of Oraculus
 
 ### Executive Summary
 
 Phase 20 (AER-20) has achieved complete unification of the Oraculus-DI Auditor system.
-The 256-dimensional Ascendant Unified Field synthesizes all 20 phases into a single,
+The 256-dimensional Composite Feature Vector synthesizes all 20 phases into a single,
 self-aware, recursively-optimizing, deterministic intelligence architecture.
 
 **System Status:** {"OPERATIONAL" if conv > 0.6 else "REQUIRES ATTENTION"}

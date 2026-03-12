@@ -23,7 +23,7 @@ class MetaInsightGenerator:
         """Generate meta-insight packets.
 
         Args:
-            auf_state: Ascendant Unified Field state
+            auf_state: Composite Feature Vector state
             synthesis_report: Recursive synthesis report
             phase_inputs: All phase inputs
 
@@ -89,7 +89,7 @@ establishing a unified intelligence architecture that synthesizes coherence, tem
 meta-consciousness, ethical cognition, and recursive governance into a single deterministic framework."""
 
         # Structural insight
-        structural = f"""The 256-dimensional Ascendant Unified Field successfully integrates 8 distinct
+        structural = f"""The 256-dimensional Composite Feature Vector successfully integrates 8 distinct
 intelligence layers (Phases 12-19) with {synthesis_report.get("harmonization_report", {}).get("average_harmonization", 0.8):.1%}
 average harmonization. The architecture maintains strict determinism while enabling bounded self-evaluation."""
 

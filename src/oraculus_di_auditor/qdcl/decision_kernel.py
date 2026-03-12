@@ -58,7 +58,7 @@ class DecisionKernel:
                 raise ValueError(f"{field_name} must be 0.0-1.0, got {value}")
 
 
-class QuantumKernelDecisionLayer:
+class KernelDecisionLayer:
     """Quantum-kernel decision layer for QDCL.
 
     Final reasoning integrating:
@@ -76,7 +76,7 @@ class QuantumKernelDecisionLayer:
         self.version = "1.0.0"
         self.decision_kernels: list[DecisionKernel] = []
         self.created_at = datetime.now(UTC)
-        logger.info("QuantumKernelDecisionLayer initialized")
+        logger.info("KernelDecisionLayer initialized")
 
     def generate_decision_kernel(
         self,

@@ -25,7 +25,7 @@ class IntegrityAlignmentEngine:
         """Perform complete integrity and alignment analysis.
 
         Args:
-            auf_state: Ascendant Unified Field state
+            auf_state: Composite Feature Vector state
             synthesis_report: Recursive synthesis report
             meta_insights: Meta-insight packets
             ascension_report: Recursive ascension report

@@ -1,4 +1,4 @@
-"""Superpositional Hypothesis Engine - QDCL Phase 13.
+"""Multi-Hypothesis Engine - QDCL Phase 13.
 
 Maintains simultaneous hypotheses as quantum-like state vectors with
 probability weights, coherence weights, dependency entanglements,
@@ -250,7 +250,7 @@ class Hypothesis:
         }
 
 
-class SuperpositionalHypothesisEngine:
+class MultiHypothesisEngine:
     """Engine for managing quantum-like superpositional hypotheses.
 
     Maintains simultaneous hypotheses as state vectors with probability weights,
@@ -258,11 +258,11 @@ class SuperpositionalHypothesisEngine:
     """
 
     def __init__(self):
-        """Initialize the Superpositional Hypothesis Engine."""
+        """Initialize the Multi-Hypothesis Engine."""
         self.version = "1.0.0"
         self.hypotheses: dict[str, Hypothesis] = {}
         self.created_at = datetime.now(UTC)
-        logger.info("SuperpositionalHypothesisEngine initialized")
+        logger.info("MultiHypothesisEngine initialized")
 
     def create_hypothesis(self, description: str, source_agent: str = "") -> Hypothesis:
         """Create a new hypothesis.

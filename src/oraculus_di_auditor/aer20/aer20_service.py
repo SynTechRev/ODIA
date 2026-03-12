@@ -6,10 +6,10 @@ from datetime import UTC, datetime
 from typing import Any
 
 from .ascendant_packet_publisher import AscendantPacketPublisher
-from .ascendant_unified_field import AscendantUnifiedFieldConstructor
+from .composite_feature_vector import CompositeFeatureVectorConstructor
 from .integrity_alignment_engine import IntegrityAlignmentEngine
 from .meta_insight_generator import MetaInsightGenerator
-from .recursive_ascension_loop import RecursiveAscensionLoop
+from .validation_pipeline import ValidationPipeline
 from .recursive_synthesis import RecursiveSynthesisEngine
 from .schemas import Phase20Result
 from .utils import sha256_hex
@@ -27,10 +27,10 @@ class Phase20Service:
 
     def __init__(self):
         """Initialize Phase 20 service components."""
-        self.auf_constructor = AscendantUnifiedFieldConstructor()
+        self.auf_constructor = CompositeFeatureVectorConstructor()
         self.synthesis_engine = RecursiveSynthesisEngine()
         self.meta_insight_generator = MetaInsightGenerator()
-        self.ascension_loop = RecursiveAscensionLoop()
+        self.ascension_loop = ValidationPipeline()
         self.integrity_engine = IntegrityAlignmentEngine()
         self.packet_publisher = AscendantPacketPublisher()
 
@@ -68,7 +68,7 @@ class Phase20Service:
         # Validate inputs
         self._validate_inputs(phase_inputs)
 
-        # Step 1: Construct Ascendant Unified Field (AUF-20)
+        # Step 1: Construct Composite Feature Vector (AUF-20)
         auf_state = self.auf_constructor.construct_auf(phase_inputs)
 
         # Step 2: Run Recursive Synthesis Engine (RSE-20)
@@ -79,7 +79,7 @@ class Phase20Service:
             auf_state, synthesis_report, phase_inputs
         )
 
-        # Step 4: Execute Recursive Ascension Loop (RAL-20)
+        # Step 4: Execute Validation Pipeline (RAL-20)
         ascension_report = self.ascension_loop.execute_ascension_loop(
             auf_state, synthesis_report, phase_inputs
         )
@@ -93,7 +93,7 @@ class Phase20Service:
             phase_inputs,
         )
 
-        # Step 6: Publish Final Ascendant Packet (APP-20)
+        # Step 6: Publish Output Packet (APP-20)
         fap_result = self.packet_publisher.publish_fap(
             auf_state,
             synthesis_report,

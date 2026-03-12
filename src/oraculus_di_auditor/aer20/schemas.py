@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 
 class AUFState(BaseModel):
-    """Ascendant Unified Field state (256 dimensions)."""
+    """Composite Feature Vector state (256 dimensions)."""
 
     auf_id: str = Field(..., description="SHA256 hash of AUF construction")
     dimension: int = Field(256, description="Dimensionality of ascendant field")
@@ -79,7 +79,7 @@ class MetaInsightPacket(BaseModel):
 
 
 class RecursiveAscensionReport(BaseModel):
-    """Report from Recursive Ascension Loop (RAL-20)."""
+    """Report from Validation Pipeline (RAL-20)."""
 
     ral_id: str = Field(..., description="SHA256 hash of ascension cycle")
     self_diagnosis: dict[str, Any] = Field(
@@ -142,8 +142,8 @@ class AlignmentAnalysis(BaseModel):
     )
 
 
-class FinalAscendantPacket(BaseModel):
-    """Final Ascendant Packet (FAP-20) - Crown jewel output."""
+class OutputPacket(BaseModel):
+    """Output Packet (FAP-20) - Crown jewel output."""
 
     fap_id: str = Field(..., description="Unique FAP identifier")
     ascendant_explanation: str = Field(
@@ -177,7 +177,7 @@ class Phase20Result(BaseModel):
     """Complete Phase 20 (AER-20) output structure."""
 
     auf_20_state: AUFState = Field(
-        ..., description="Ascendant Unified Field state (256-dim)"
+        ..., description="Composite Feature Vector state (256-dim)"
     )
     meta_insights: list[MetaInsightPacket] = Field(
         ..., description="Meta-insight packets from MIG-20"
@@ -188,8 +188,8 @@ class Phase20Result(BaseModel):
     alignment_analysis: AlignmentAnalysis = Field(
         ..., description="Integrity and alignment analysis from IAE-20"
     )
-    fap_20_result: FinalAscendantPacket = Field(
-        ..., description="Final Ascendant Packet - the crown jewel"
+    fap_20_result: OutputPacket = Field(
+        ..., description="Output Packet - the crown jewel"
     )
     provenance: dict[str, Any] = Field(
         ..., description="Complete provenance metadata with full audit trail"
