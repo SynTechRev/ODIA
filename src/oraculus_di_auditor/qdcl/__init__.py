@@ -20,29 +20,29 @@ acting as a trans-scalar cognitive membrane that:
 """
 
 from .adaptive_cognition import AdaptiveCompressionExpansion, CognitionMode
-from .mesh_fusion import MeshFusion, SemanticTrajectoryMap
 from .convergence_vectors import (
     ConvergenceVector,
     ConvergenceVectorGenerator,
     ConvergenceVectorSet,
     VectorType,
 )
-from .trajectory_engine import (
-    FractalPredictiveTrajectoryEngine,
-    TrajectoryProbabilityCube,
-)
+from .decision_kernel import DecisionKernel, KernelDecisionLayer
 from .grid_memory import GridMemoryOrganizer, MemoryType
+from .mesh_fusion import MeshFusion, SemanticTrajectoryMap
+from .multi_hypothesis import (
+    Hypothesis,
+    HypothesisState,
+    MultiHypothesisEngine,
+)
 from .multi_perspective import (
     DeltaDifferenceMap,
     MultiPerspectiveEvaluator,
     Perspective,
 )
 from .qdcl_service import QDCLService
-from .decision_kernel import DecisionKernel, KernelDecisionLayer
-from .multi_hypothesis import (
-    Hypothesis,
-    HypothesisState,
-    MultiHypothesisEngine,
+from .trajectory_engine import (
+    FractalPredictiveTrajectoryEngine,
+    TrajectoryProbabilityCube,
 )
 
 __all__ = [

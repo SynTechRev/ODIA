@@ -9,10 +9,10 @@ from .ascendant_packet_publisher import AscendantPacketPublisher
 from .composite_feature_vector import CompositeFeatureVectorConstructor
 from .integrity_alignment_engine import IntegrityAlignmentEngine
 from .meta_insight_generator import MetaInsightGenerator
-from .validation_pipeline import ValidationPipeline
 from .recursive_synthesis import RecursiveSynthesisEngine
 from .schemas import Phase20Result
 from .utils import sha256_hex
+from .validation_pipeline import ValidationPipeline
 
 SERVICE_VERSION = "aer20-1.0.0"
 

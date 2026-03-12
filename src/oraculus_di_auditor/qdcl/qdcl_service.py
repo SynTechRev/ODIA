@@ -17,13 +17,13 @@ from datetime import UTC, datetime
 from typing import Any
 
 from .adaptive_cognition import AdaptiveCompressionExpansion, CognitionMode
-from .mesh_fusion import MeshFusion
 from .convergence_vectors import ConvergenceVectorGenerator
-from .trajectory_engine import FractalPredictiveTrajectoryEngine
-from .grid_memory import GridMemoryOrganizer
-from .multi_perspective import MultiPerspectiveEvaluator
 from .decision_kernel import KernelDecisionLayer
+from .grid_memory import GridMemoryOrganizer
+from .mesh_fusion import MeshFusion
 from .multi_hypothesis import MultiHypothesisEngine
+from .multi_perspective import MultiPerspectiveEvaluator
+from .trajectory_engine import FractalPredictiveTrajectoryEngine
 
 logger = logging.getLogger(__name__)
 
@@ -136,9 +136,7 @@ class QDCLService:
         )
 
         # Update grid memory
-        self._update_grid_memory(
-            hypothesis_matrix, cognition_graph, trajectory_cube
-        )
+        self._update_grid_memory(hypothesis_matrix, cognition_graph, trajectory_cube)
 
         cycle_output = {
             "cycle_number": self.cycle_count,
