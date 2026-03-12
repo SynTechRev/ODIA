@@ -47,9 +47,13 @@ def load_jurisdiction_config() -> dict:
         if config_file.exists():
             with open(config_file) as _f:
                 import json as _json
+
                 data = _json.load(_f)
             return {k: v for k, v in data.items() if not k.startswith("_")}
-    return {"name": "Unknown Jurisdiction", "meeting_type": "City Council Regular Meeting"}
+    return {
+        "name": "Unknown Jurisdiction",
+        "meeting_type": "City Council Regular Meeting",
+    }
 
 
 def load_source_urls() -> dict:
@@ -60,6 +64,7 @@ def load_source_urls() -> dict:
         if config_file.exists():
             with open(config_file) as _f:
                 import json as _json
+
                 data = _json.load(_f)
             return {k: v for k, v in data.items() if not k.startswith("_")}
     return {}
@@ -243,7 +248,9 @@ def generate_extended_metadata(
                         "file_type": file_type_map.get(category, "unknown"),
                         "meeting_date": meeting_date,
                         "meeting_type": "City Council Regular Meeting",
-                        "jurisdiction": _JURISDICTION.get("name", "Unknown Jurisdiction"),
+                        "jurisdiction": _JURISDICTION.get(
+                            "name", "Unknown Jurisdiction"
+                        ),
                         "source_url": source_url,
                         "file_hash": file_hash,
                         "text_hash": text_hash,
@@ -361,7 +368,7 @@ def generate_ingestion_report_extended(
         "schema_version": "2.1",
         "year_range": year_range,
         "description": (
-            ff"Extended Ingestion Report for {_JURISDICTION.get('name', 'Unknown Jurisdiction')} "
+            f"Extended Ingestion Report for {_JURISDICTION.get('name', 'Unknown Jurisdiction')} "
             f"Legislative Corpus ({year_range})"
         ),
         "summary": {
