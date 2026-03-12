@@ -167,3 +167,4 @@ analysis/logs/*.log
 # extraction/*.txt
 # reports/eval/*/
 # reports/issues/*.md
+AUDIT_REPORT.txt
