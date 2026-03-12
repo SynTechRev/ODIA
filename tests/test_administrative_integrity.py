@@ -6,7 +6,6 @@ from oraculus_di_auditor.analysis.administrative_integrity import (
     detect_administrative_anomalies,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -213,14 +212,10 @@ def test_empty_string_fields_treated_as_blank():
 
 
 def test_retroactive_keyword_flagged():
-    doc = _complete_doc(
-        "This contract is retroactive to January 1, 2024."
-    )
+    doc = _complete_doc("This contract is retroactive to January 1, 2024.")
     anomalies = detect_administrative_anomalies(doc)
     assert any(a["id"] == "admin:retroactive-authorization" for a in anomalies)
-    finding = next(
-        a for a in anomalies if a["id"] == "admin:retroactive-authorization"
-    )
+    finding = next(a for a in anomalies if a["id"] == "admin:retroactive-authorization")
     assert finding["severity"] == "high"
     assert finding["layer"] == "administrative"
 
