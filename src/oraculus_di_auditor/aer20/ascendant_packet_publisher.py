@@ -10,8 +10,8 @@ from typing import Any
 from .schemas import (
     AlignmentAnalysis,
     AUFState,
-    OutputPacket,
     MetaInsightPacket,
+    OutputPacket,
     RecursiveAscensionReport,
 )
 from .utils import sha256_hex

@@ -8,8 +8,8 @@ from .aer20_service import Phase20Service
 from .schemas import (
     AlignmentAnalysis,
     AUFState,
-    OutputPacket,
     MetaInsightPacket,
+    OutputPacket,
     Phase20Result,
     RecursiveAscensionReport,
 )

@@ -173,9 +173,7 @@ class GridMemoryOrganizer:
         self.grid = HolographicGrid(grid_size=grid_size)
         self.memory_counter = 0
         self.created_at = datetime.now(UTC)
-        logger.info(
-            f"GridMemoryOrganizer initialized with grid size {grid_size}"
-        )
+        logger.info(f"GridMemoryOrganizer initialized with grid size {grid_size}")
 
     def store_insight(
         self, content: dict[str, Any], magnitude: float = 1.0

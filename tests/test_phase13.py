@@ -5,18 +5,18 @@ import pytest
 from oraculus_di_auditor.qdcl import (
     AdaptiveCompressionExpansion,
     CognitionMode,
-    MeshFusion,
     ConvergenceVectorGenerator,
     DecisionKernel,
     FractalPredictiveTrajectoryEngine,
     GridMemoryOrganizer,
     HypothesisState,
+    KernelDecisionLayer,
     MemoryType,
+    MeshFusion,
+    MultiHypothesisEngine,
     MultiPerspectiveEvaluator,
     Perspective,
     QDCLService,
-    KernelDecisionLayer,
-    MultiHypothesisEngine,
     VectorType,
 )
 
