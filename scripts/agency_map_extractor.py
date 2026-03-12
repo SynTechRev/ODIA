@@ -30,59 +30,21 @@ CORPUS_ROOT = Path("oraculus/corpus")
 CAIM_VERSION = "1.0"
 CAIM_SCHEMA_VERSION = "1.0"
 
-# Known agencies and their aliases
-KNOWN_AGENCIES: dict[str, list[str]] = {
-    # City Departments
-    "City Government": ["city of", "city government", "municipal"],
-    "City Council": ["city council", "council", "council meeting"],
-    "City Manager": ["city manager", "cm office", "city manager's office"],
-    "Finance Department": ["finance", "finance department", "finance dept"],
-    "Police Department": ["police", "police department", "law enforcement", "pd"],
-    "Fire Department": ["fire", "fire department", "fire services", "fd"],
-    "Public Works": ["public works", "pw", "public works department"],
-    "Parks & Recreation": [
-        "parks",
-        "recreation",
-        "parks & rec",
-        "parks and recreation",
-    ],
-    "Community Development": [
-        "community development",
-        "planning",
-        "planning department",
-    ],
-    "Human Resources": ["human resources", "hr", "hr department"],
-    "Information Technology": ["information technology", "it", "it department"],
-    "Legal/City Attorney": ["city attorney", "legal", "legal department"],
-    "Utilities": ["utilities", "utility", "utilities department"],
-    # County/Regional
-    "Tulare County": ["tulare county", "county of tulare"],
-    "Tulare County Sheriff": ["tulare county sheriff", "tcso"],
-    # State Agencies
-    "State of California": ["state of california", "california", "state"],
-    "CalTrans": ["caltrans", "california department of transportation"],
-    "DMV": ["dmv", "department of motor vehicles"],
-    "CalOES": ["caloes", "cal oes", "office of emergency services"],
-    # Federal Agencies
-    "Federal Government": ["federal", "federal government", "us government"],
-    "Department of Justice": [
-        "doj",
-        "department of justice",
-        "justice department",
-        "usdoj",
-    ],
-    "DOT": ["dot", "department of transportation", "usdot"],
-    "HUD": ["hud", "housing and urban development"],
-    "FEMA": ["fema", "federal emergency management"],
-    "EPA": ["epa", "environmental protection agency"],
-    # Grant Programs
-    "JAG Program": ["jag", "justice assistance grant", "byrne jag", "edward byrne"],
-    "COPS Program": ["cops", "cops grant", "community oriented policing"],
-    "CDBG Program": ["cdbg", "community development block grant"],
-    # Legislative Bodies
-    "State Legislature": ["state legislature", "california legislature", "assembly"],
-    "Congress": ["congress", "congressional", "us congress"],
-}
+def load_known_agencies() -> dict:
+    """Load agency aliases from config/agencies.json (falls back to example)."""
+    config_dir = _script_dir.parent / "config"
+    for filename in ("agencies.json", "agencies.example.json"):
+        config_file = config_dir / filename
+        if config_file.exists():
+            import json as _json
+            with open(config_file) as _f:
+                data = _json.load(_f)
+            return {k: v for k, v in data.items() if not k.startswith("_")}
+    return {}
+
+
+# Load agency aliases from config
+KNOWN_AGENCIES: dict[str, list[str]] = load_known_agencies()
 
 # Agency type classifications
 AGENCY_TYPES = {

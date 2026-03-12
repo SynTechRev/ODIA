@@ -1,0 +1,6 @@
+{
+  "_comment": "Copy to source_urls.json. Map corpus/document IDs to their Legistar source URLs.",
+  "_format": "{ \"DOC-ID\": \"https://yourjurisdiction.legistar.com/LegislationDetail.aspx?ID=...\" }",
+  "EXAMPLE-001": "https://example.legistar.com/LegislationDetail.aspx?ID=0000001",
+  "EXAMPLE-002": "https://example.legistar.com/LegislationDetail.aspx?ID=0000002"
+}

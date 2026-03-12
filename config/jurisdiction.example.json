@@ -1,0 +1,8 @@
+{
+  "_comment": "Copy to jurisdiction.json and customize for your jurisdiction.",
+  "name": "City of Example",
+  "meeting_type": "City Council Regular Meeting",
+  "legistar_base_url": "https://example.legistar.com",
+  "state": "CA",
+  "country": "US"
+}

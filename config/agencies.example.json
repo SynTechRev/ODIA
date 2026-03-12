@@ -1,0 +1,21 @@
+{
+  "_comment": "Copy to agencies.json. Map canonical agency names to lists of text aliases for extraction.",
+  "_format": "{ \"Agency Name\": [\"alias1\", \"alias2\", ...] }",
+  "City Government": ["city of", "city government", "municipal"],
+  "City Council": ["city council", "council", "council meeting"],
+  "City Manager": ["city manager", "city manager's office"],
+  "Finance Department": ["finance", "finance department"],
+  "Police Department": ["police", "police department", "law enforcement"],
+  "Fire Department": ["fire", "fire department", "fire services"],
+  "Public Works": ["public works", "public works department"],
+  "Parks & Recreation": ["parks", "recreation", "parks and recreation"],
+  "Community Development": ["community development", "planning", "planning department"],
+  "Human Resources": ["human resources", "hr"],
+  "Information Technology": ["information technology", "it department"],
+  "Legal/City Attorney": ["city attorney", "legal department"],
+  "Utilities": ["utilities", "utility"],
+  "Federal Government": ["federal", "federal government"],
+  "Department of Justice": ["doj", "department of justice", "usdoj"],
+  "FEMA": ["fema", "federal emergency management"],
+  "EPA": ["epa", "environmental protection agency"]
+}

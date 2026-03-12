@@ -35,54 +35,39 @@ from scripts.corpus_manager import (  # noqa: E402
     verify_hash_consistency,
 )
 
-# Constant for recovered corpus identification
+# Constant for recovered corpus identification — override via --recovered-id flag or config
 RECOVERED_CORPUS_ID = "HIST-11740"
 
-# Extended source URLs for 2021-2025 corpus entries
-EXTENDED_SOURCE_URLS = {
-    # 2021
-    "#21-0443": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6556979&GUID=6AE534FE-5694-422F-A408-61E09B851862&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "#21-0588": "https://visalia.legistar.com/LegislationDetail.aspx?ID=5201038&GUID=51FAF735-8FCD-4575-8CA7-E87D1383E7C0&Options=ID|Text|Attachments|Other|&Search=JAG",
-    # 2022
-    "#22-0012": "https://visalia.legistar.com/LegislationDetail.aspx?ID=5531572&GUID=A26C1179-4598-4549-A8AC-2797DE108B5B&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "#22-0080": "https://visalia.legistar.com/LegislationDetail.aspx?ID=5531573&GUID=E103EC4F-119B-4BA4-85B2-585EF464655D&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#22-0463": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6050807&GUID=B65F1FB3-884A-4BE9-AA89-B9CD6D2499F0&Options=ID|Text|Attachments|Other|&Search=Axon",
-    # 2023
-    "#23-0148": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6190815&GUID=93BF5B7F-BBD6-4BBB-AC96-B13F602B4566&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#23-0214": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6248369&GUID=2A5BD974-C5B3-4F27-AB66-8768C3FC38A9&Options=ID|Text|Attachments|Other|&Search=Axon",
-    # 2024
-    "#24-0034": "https://visalia.legistar.com/LegislationDetail.aspx?ID=7050372&GUID=71183219-C42E-4239-99B9-FC61CA61417B&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#24-0039": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6518797&GUID=7D5AC41F-FEF3-46DB-A24A-412A8C81C221&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#24-0163": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6712070&GUID=8BE005EA-41B1-4AC2-B703-49B6497153A5&Options=ID|Text|Attachments|Other|&Search=Flock",
-    "#24-0403": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6885625&GUID=69890EF5-FD15-4359-ADD6-7ADCDB955FED&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#24-0410": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6885627&GUID=C6692DE6-646A-475D-A48C-B94559F57DDD&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#24-0415": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6900047&GUID=BC55EDAF-4F50-456C-8857-C76DBF7166DE&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "#24-0477": "https://visalia.legistar.com/LegislationDetail.aspx?ID=7059588&GUID=A80529F7-D8A3-4BBD-84C4-F47ABE973194&Options=ID|Text|Attachments|Other|&Search=Flock",
-    "#24-0559": "https://visalia.legistar.com/LegislationDetail.aspx?ID=7099371&GUID=54AD98CC-F05C-452A-8181-7528325A95B5&Options=ID|Text|Attachments|Other|&Search=Flock",
-    # 2025
-    "#25-0171": "https://visalia.legistar.com/LegislationDetail.aspx?ID=7404093&GUID=89BB9034-E2BC-44EB-848A-50E07F79A614&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#25-0202": "https://visalia.legistar.com/LegislationDetail.aspx?ID=7421753&GUID=798D5F44-03EA-4956-9320-4C88833D5075&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#25-0203": "https://visalia.legistar.com/LegislationDetail.aspx?ID=7438906&GUID=4B5439EA-2363-4568-A6D0-7ABE615D043E&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "#25-0333": "https://visalia.legistar.com/LegislationDetail.aspx?ID=7502920&GUID=86D6E330-007C-437B-98B1-E1CD9225ECA8&Options=ID|Text|Attachments|Other|&Search=Flock",
-    # Historic HIST entries (2014-2020)
-    "HIST-6225": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6060759&GUID=19497FE7-65B7-4923-914E-3AE5362C6C26&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "HIST-7722": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6061005&GUID=B87CF8C9-74AF-4834-9768-4BDEB278DD45&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "HIST-8213": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6061085&GUID=158C3226-B821-4E97-B696-15E2FC032EDB&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "HIST-9493": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6061591&GUID=946D4078-5373-4608-B695-EDFD9812BC48&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "HIST-11153": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6060276&GUID=B56BBF59-3DAC-4775-ADA8-5AE06780D430&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "HIST-11740": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062163&GUID=C70178B5-6CAA-48A5-9D94-E667BCE842CA&Options=ID|Text|Attachments|Other|&Search=BWC",
-    "HIST-11877": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062297&GUID=BAB7266D-C49B-4C2F-AA8E-3A5F97ED8676&Options=ID|Text|Attachments|Other|&Search=BWC",
-    "HIST-11887": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062274&GUID=D894FC62-6957-4150-ACE4-D78B56A532F8&Options=ID|Text|Attachments|Other|&Search=BWC",
-    "HIST-12077": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062193&GUID=1EB2DD29-67C1-4024-9E12-BEBA6D650F4C&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "HIST-12223": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062196&GUID=C12645A3-09AE-457B-8E45-E1368AF68E32&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "HIST-13175": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6061882&GUID=BBAF7C12-0AE2-4797-9694-998C15B25D2D&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "HIST-13397": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062023&GUID=D9E6A359-5020-4360-99AD-C37ACC62CC2F&Options=ID|Text|Attachments|Other|&Search=BWC",
-    "HIST-13594": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062515&GUID=71061927-31E1-4EA1-B94F-1A2651084FD7&Options=ID|Text|Attachments|Other|&Search=BWC",
-    "HIST-13848": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062843&GUID=1FACE38B-86E2-44F8-9455-FA50D7B3E302&Options=ID|Text|Attachments|Other|&Search=JAG",
-    "HIST-14845": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062772&GUID=E0CFB31F-7ED6-41C1-8813-2307D473CC97&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "HIST-14973": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6062827&GUID=FE902739-26DA-4E2E-ADE1-0E8ED86913B4&Options=ID|Text|Attachments|Other|&Search=Axon",
-    "HIST-15517": "https://visalia.legistar.com/LegislationDetail.aspx?ID=6063025&GUID=76A8B953-E388-4EC4-944F-7346A5E6CE05&Options=ID|Text|Attachments|Other|&Search=JAG",
-}
+
+def load_jurisdiction_config() -> dict:
+    """Load jurisdiction config from config/jurisdiction.json (falls back to example)."""
+    config_dir = _script_dir.parent / "config"
+    for filename in ("jurisdiction.json", "jurisdiction.example.json"):
+        config_file = config_dir / filename
+        if config_file.exists():
+            with open(config_file) as _f:
+                import json as _json
+                data = _json.load(_f)
+            return {k: v for k, v in data.items() if not k.startswith("_")}
+    return {"name": "Unknown Jurisdiction", "meeting_type": _JURISDICTION.get("meeting_type", "City Council Regular Meeting")}
+
+
+def load_source_urls() -> dict:
+    """Load source URLs from config/source_urls.json (falls back to example)."""
+    config_dir = _script_dir.parent / "config"
+    for filename in ("source_urls.json", "source_urls.example.json"):
+        config_file = config_dir / filename
+        if config_file.exists():
+            with open(config_file) as _f:
+                import json as _json
+                data = _json.load(_f)
+            return {k: v for k, v in data.items() if not k.startswith("_")}
+    return {}
+
+
+# Load from config at module level
+_JURISDICTION = load_jurisdiction_config()
+EXTENDED_SOURCE_URLS = load_source_urls()
 
 
 def get_utc_timestamp() -> str:
@@ -192,8 +177,8 @@ def generate_extended_metadata(
             "corpus_id": hist_id,
             "file_id": hist_id,
             "meeting_date": meeting_date,
-            "meeting_type": "City Council Regular Meeting",
-            "jurisdiction": "City of Visalia",
+            "meeting_type": _JURISDICTION.get("meeting_type", "City Council Regular Meeting"),
+            "jurisdiction": _JURISDICTION.get("name", "Unknown Jurisdiction"),
             "source_url": source_url,
             "document_titles": [],
             "document_urls": {},
@@ -257,8 +242,8 @@ def generate_extended_metadata(
                         "file_name": pdf_file.name,
                         "file_type": file_type_map.get(category, "unknown"),
                         "meeting_date": meeting_date,
-                        "meeting_type": "City Council Regular Meeting",
-                        "jurisdiction": "City of Visalia",
+                        "meeting_type": _JURISDICTION.get("meeting_type", "City Council Regular Meeting"),
+                        "jurisdiction": _JURISDICTION.get("name", "Unknown Jurisdiction"),
                         "source_url": source_url,
                         "file_hash": file_hash,
                         "text_hash": text_hash,
@@ -376,7 +361,7 @@ def generate_ingestion_report_extended(
         "schema_version": "2.1",
         "year_range": year_range,
         "description": (
-            f"Extended Ingestion Report for City of Visalia "
+            ff"Extended Ingestion Report for {_JURISDICTION.get('name', 'Unknown Jurisdiction')} "
             f"Legislative Corpus ({year_range})"
         ),
         "summary": {
