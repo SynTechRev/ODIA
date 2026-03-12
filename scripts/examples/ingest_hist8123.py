@@ -49,7 +49,7 @@ def load_jurisdiction_config() -> dict:
                 import json as _json
                 data = _json.load(_f)
             return {k: v for k, v in data.items() if not k.startswith("_")}
-    return {"name": "Unknown Jurisdiction", "meeting_type": _JURISDICTION.get("meeting_type", "City Council Regular Meeting")}
+    return {"name": "Unknown Jurisdiction", "meeting_type": "City Council Regular Meeting"}
 
 
 def load_source_urls() -> dict:
@@ -177,7 +177,7 @@ def generate_extended_metadata(
             "corpus_id": hist_id,
             "file_id": hist_id,
             "meeting_date": meeting_date,
-            "meeting_type": _JURISDICTION.get("meeting_type", "City Council Regular Meeting"),
+            "meeting_type": "City Council Regular Meeting",
             "jurisdiction": _JURISDICTION.get("name", "Unknown Jurisdiction"),
             "source_url": source_url,
             "document_titles": [],
@@ -242,7 +242,7 @@ def generate_extended_metadata(
                         "file_name": pdf_file.name,
                         "file_type": file_type_map.get(category, "unknown"),
                         "meeting_date": meeting_date,
-                        "meeting_type": _JURISDICTION.get("meeting_type", "City Council Regular Meeting"),
+                        "meeting_type": "City Council Regular Meeting",
                         "jurisdiction": _JURISDICTION.get("name", "Unknown Jurisdiction"),
                         "source_url": source_url,
                         "file_hash": file_hash,

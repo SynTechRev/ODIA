@@ -199,7 +199,7 @@ class TestDetectAgencyAliases:
         result = detect_agency_aliases(agencies)
         assert "Police Department" in result
         assert "police" in result["Police Department"]
-        assert "vpd" in result["Police Department"]
+        assert "pd" in result["Police Department"]
 
 
 class TestExtractAgenciesFromMetadata:

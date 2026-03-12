@@ -15,7 +15,7 @@ import argparse
 import hashlib
 import json
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -57,7 +57,7 @@ class ManifestManager:
             "document_id": doc_id,
             "source": "manual_triage",
             "original_path": "",
-            "ingest_date": datetime.utcnow().isoformat() + "Z",
+            "ingest_date": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             "uploader": "system",
             "checksum_sha256": "",
             "extraction": {"text_present": False},
@@ -81,7 +81,7 @@ class ManifestManager:
             "flag_id": flag_id,
             "message": message,
             "severity": severity,
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             "author": author,
         }
         if category:
@@ -98,7 +98,7 @@ class ManifestManager:
     ) -> dict[str, Any]:
         """Add an audit note to the manifest."""
         note_entry = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             "author": author,
             "note": note,
         }
@@ -113,7 +113,7 @@ class ManifestManager:
     ) -> dict[str, Any]:
         """Add a chain-of-custody entry."""
         custody_entry = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             "actor": actor,
             "action": action,
             "details": details,

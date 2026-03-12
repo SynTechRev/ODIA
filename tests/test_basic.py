@@ -9,9 +9,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 def test_import():
     """Test that the package can be imported."""
-    import oraculus
+    import oraculus_di_auditor
 
-    assert oraculus.__version__ == "0.1.0"
+    assert oraculus_di_auditor.__version__ == "0.1.0"
 
 
 def test_package_structure():
@@ -21,7 +21,7 @@ def test_package_structure():
     project_root = Path(__file__).parent.parent
 
     # Check required directories exist
-    assert (project_root / "src" / "oraculus").exists()
+    assert (project_root / "src" / "oraculus_di_auditor").exists()
     assert (project_root / "tests").exists()
     assert (project_root / "docs").exists()
     assert (project_root / "schemas").exists()
