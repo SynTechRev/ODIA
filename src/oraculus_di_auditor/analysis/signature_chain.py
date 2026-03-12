@@ -46,9 +46,7 @@ _FISCAL_AMOUNT_PATTERN = re.compile(
 )
 
 # Compiled signature gap patterns (IGNORECASE applied individually)
-_COMPILED_GAP_PATTERNS = [
-    re.compile(p, re.IGNORECASE) for p in SIGNATURE_GAP_PATTERNS
-]
+_COMPILED_GAP_PATTERNS = [re.compile(p, re.IGNORECASE) for p in SIGNATURE_GAP_PATTERNS]
 
 
 def _detect_signature_gaps(text: str) -> list[str]:
@@ -106,7 +104,9 @@ def detect_signature_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
 
         if gap_matches:
             # Use the first match to find the nearest instrument keyword
-            instrument_type = _nearest_instrument(text_content, gap_matches[0]) or "UNKNOWN"
+            instrument_type = (
+                _nearest_instrument(text_content, gap_matches[0]) or "UNKNOWN"
+            )
             severity = "critical" if dollar_amounts else "high"
             anomalies.append(
                 {

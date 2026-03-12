@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from oraculus_di_auditor.analysis.signature_chain import detect_signature_anomalies
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -111,7 +110,9 @@ def test_unsigned_instrument_details_dollar_amount_captured():
 
 def test_partial_signature_one_party_blank():
     """'one party signed' should trigger unsigned-instrument."""
-    doc = _doc("MOU between City and Vendor. One party signed. Awaiting city countersignature.")
+    doc = _doc(
+        "MOU between City and Vendor. One party signed. Awaiting city countersignature."
+    )
     anomalies = detect_signature_anomalies(doc)
     assert any(a["id"] == "signature:unsigned-instrument" for a in anomalies)
 
@@ -146,9 +147,7 @@ def test_not_executed_in_msa():
 
 def test_sections_based_document_detected():
     """Text inside sections[] should be scanned, not only raw_text."""
-    doc = _sections_doc(
-        "This contract (MSA) is unsigned. Value $75,000."
-    )
+    doc = _sections_doc("This contract (MSA) is unsigned. Value $75,000.")
     anomalies = detect_signature_anomalies(doc)
     assert any(a["id"] == "signature:unsigned-instrument" for a in anomalies)
     finding = next(a for a in anomalies if a["id"] == "signature:unsigned-instrument")
@@ -199,9 +198,7 @@ def test_placeholder_token_without_contract_keyword_still_flagged():
 
 def test_placeholder_and_unsigned_instrument_both_returned():
     """A doc with both issues should produce two findings."""
-    doc = _doc(
-        "MSA for IT services. Vendor signature block blank. Signed by: \\s1\\"
-    )
+    doc = _doc("MSA for IT services. Vendor signature block blank. Signed by: \\s1\\")
     ids = [a["id"] for a in detect_signature_anomalies(doc)]
     assert "signature:unsigned-instrument" in ids
     assert "signature:placeholder-tokens" in ids
