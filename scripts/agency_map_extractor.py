@@ -30,6 +30,7 @@ CORPUS_ROOT = Path("oraculus/corpus")
 CAIM_VERSION = "1.0"
 CAIM_SCHEMA_VERSION = "1.0"
 
+
 def load_known_agencies() -> dict:
     """Load agency aliases from config/agencies.json (falls back to example)."""
     config_dir = _script_dir.parent / "config"
@@ -37,6 +38,7 @@ def load_known_agencies() -> dict:
         config_file = config_dir / filename
         if config_file.exists():
             import json as _json
+
             with open(config_file) as _f:
                 data = _json.load(_f)
             return {k: v for k, v in data.items() if not k.startswith("_")}
