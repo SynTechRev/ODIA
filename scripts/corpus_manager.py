@@ -26,6 +26,7 @@ from typing import Any
 # {"ITEM-ID": "YYYY-MM-DD", ...} mapping corpus IDs to meeting dates.
 HIST_FILES: dict[str, str] = {}
 
+
 def load_corpus_manifest(manifest_path: Path | str | None = None) -> dict[str, str]:
     """Load corpus manifest from a JSON config file.
 
@@ -48,6 +49,7 @@ def load_corpus_manifest(manifest_path: Path | str | None = None) -> dict[str, s
         with open(manifest_path) as f:
             HIST_FILES = json.load(f)
     return HIST_FILES
+
 
 # Required subdirectories for each corpus
 REQUIRED_SUBDIRS = [
