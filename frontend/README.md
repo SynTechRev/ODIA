@@ -157,7 +157,7 @@ docker run -p 3000:3000 oraculus-frontend
 
 ## Documentation
 
-Full documentation available in `../PHASE7_IMPLEMENTATION.md`.
+Full documentation available in `../docs/phases/PHASE7_IMPLEMENTATION.md`.
 
 ## License
 
