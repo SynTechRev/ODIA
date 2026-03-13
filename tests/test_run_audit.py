@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import sys
 from pathlib import Path
 
 import pytest
@@ -13,9 +12,7 @@ import pytest
 # Bootstrap: load run_audit as a module without installing it as a package
 # ---------------------------------------------------------------------------
 
-_SCRIPT = (
-    Path(__file__).resolve().parent.parent / "scripts" / "run_audit.py"
-)
+_SCRIPT = Path(__file__).resolve().parent.parent / "scripts" / "run_audit.py"
 
 
 def _load_run_audit():
@@ -48,9 +45,7 @@ def config_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
         "Police Department": ["police", "pd"],
         "City Council": ["city council", "council"],
     }
-    (d / "jurisdiction.json").write_text(
-        json.dumps(jurisdiction), encoding="utf-8"
-    )
+    (d / "jurisdiction.json").write_text(json.dumps(jurisdiction), encoding="utf-8")
     (d / "agencies.json").write_text(json.dumps(agencies), encoding="utf-8")
     return d
 
@@ -90,9 +85,7 @@ def source_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
         ),
         "title": "Contract Amendment",
     }
-    (d / "contract_amendment.json").write_text(
-        json.dumps(doc_json), encoding="utf-8"
-    )
+    (d / "contract_amendment.json").write_text(json.dumps(doc_json), encoding="utf-8")
 
     return d
 
@@ -160,7 +153,9 @@ def test_run_audit_top_findings_list(config_dir, source_dir, output_dir):
     assert len(report["top_findings"]) <= 10
 
 
-def test_run_audit_top_findings_have_required_fields(config_dir, source_dir, output_dir):
+def test_run_audit_top_findings_have_required_fields(
+    config_dir, source_dir, output_dir
+):
     report = run_audit(config_dir, source_dir, output_dir)
     for finding in report["top_findings"]:
         assert "id" in finding

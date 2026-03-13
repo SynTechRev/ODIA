@@ -14,7 +14,6 @@ from oraculus_di_auditor.config import (
     load_jurisdiction_config,
 )
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -58,9 +57,7 @@ def config_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
     (tmp_path / "jurisdiction.json").write_text(
         json.dumps(jurisdiction), encoding="utf-8"
     )
-    (tmp_path / "agencies.json").write_text(
-        json.dumps(agencies), encoding="utf-8"
-    )
+    (tmp_path / "agencies.json").write_text(json.dumps(agencies), encoding="utf-8")
     (tmp_path / "corpus_manifest.json").write_text(
         json.dumps(corpus_manifest), encoding="utf-8"
     )
@@ -156,9 +153,7 @@ def test_primary_takes_precedence_over_example(tmp_path: Path):
     """Primary file is preferred when both exist."""
     primary = {"name": "Primary City", "state": "NY", "country": "US"}
     example = {"name": "Example City", "state": "CA", "country": "US"}
-    (tmp_path / "jurisdiction.json").write_text(
-        json.dumps(primary), encoding="utf-8"
-    )
+    (tmp_path / "jurisdiction.json").write_text(json.dumps(primary), encoding="utf-8")
     (tmp_path / "jurisdiction.example.json").write_text(
         json.dumps(example), encoding="utf-8"
     )

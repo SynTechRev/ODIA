@@ -49,13 +49,9 @@ def _resolve_config_dir(config_dir: Path | str) -> Path:
     """Resolve and validate the config directory path."""
     path = Path(config_dir)
     if not path.exists():
-        raise FileNotFoundError(
-            f"Config directory not found: {path.resolve()}"
-        )
+        raise FileNotFoundError(f"Config directory not found: {path.resolve()}")
     if not path.is_dir():
-        raise NotADirectoryError(
-            f"Config path is not a directory: {path.resolve()}"
-        )
+        raise NotADirectoryError(f"Config path is not a directory: {path.resolve()}")
     return path
 
 
@@ -87,8 +83,7 @@ def _load_json_with_fallback(
 
     if required:
         raise FileNotFoundError(
-            f"Required config file not found: {primary} "
-            f"(also tried {fallback})"
+            f"Required config file not found: {primary} " f"(also tried {fallback})"
         )
     return {}
 
@@ -123,9 +118,7 @@ def load_jurisdiction_config(
     """
     resolved = _resolve_config_dir(config_dir)
 
-    jurisdiction = _load_json_with_fallback(
-        resolved, "jurisdiction", required=True
-    )
+    jurisdiction = _load_json_with_fallback(resolved, "jurisdiction", required=True)
     agencies = _load_json_with_fallback(resolved, "agencies")
     corpus_manifest = _load_json_with_fallback(resolved, "corpus_manifest")
     source_urls = _load_json_with_fallback(resolved, "source_urls")
@@ -136,21 +129,11 @@ def load_jurisdiction_config(
         country=jurisdiction.get("country", ""),
         legistar_base_url=jurisdiction.get("legistar_base_url", ""),
         meeting_type=jurisdiction.get("meeting_type", ""),
-        agencies={
-            k: v
-            for k, v in agencies.items()
-            if isinstance(v, list)
-        },
+        agencies={k: v for k, v in agencies.items() if isinstance(v, list)},
         corpus_manifest={
-            k: v
-            for k, v in corpus_manifest.items()
-            if isinstance(v, str)
+            k: v for k, v in corpus_manifest.items() if isinstance(v, str)
         },
-        source_urls={
-            k: v
-            for k, v in source_urls.items()
-            if isinstance(v, str)
-        },
+        source_urls={k: v for k, v in source_urls.items() if isinstance(v, str)},
     )
 
 

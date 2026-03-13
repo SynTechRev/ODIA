@@ -44,7 +44,10 @@ from oraculus_di_auditor.analysis import (  # noqa: E402
     detect_signature_anomalies,
     detect_surveillance_anomalies,
 )
-from oraculus_di_auditor.config import JurisdictionConfig, load_jurisdiction_config  # noqa: E402
+from oraculus_di_auditor.config import (
+    JurisdictionConfig,
+    load_jurisdiction_config,
+)  # noqa: E402
 
 logger = logging.getLogger("run_audit")
 
@@ -168,9 +171,7 @@ def _extract_pdf_text(path: Path, verbose: bool) -> str | None:
         import pdfplumber  # type: ignore[import]
 
         with pdfplumber.open(path) as pdf:
-            return "\n".join(
-                page.extract_text() or "" for page in pdf.pages
-            )
+            return "\n".join(page.extract_text() or "" for page in pdf.pages)
     except ImportError:
         pass
 
@@ -178,9 +179,7 @@ def _extract_pdf_text(path: Path, verbose: bool) -> str | None:
         try:
             mod = __import__(mod_name)
             reader = mod.PdfReader(str(path))
-            return "\n".join(
-                page.extract_text() or "" for page in reader.pages
-            )
+            return "\n".join(page.extract_text() or "" for page in reader.pages)
         except ImportError:
             continue
         except Exception as exc:  # noqa: BLE001
@@ -211,11 +210,11 @@ def _run_detectors_on_doc(
             findings = detector(doc)
             all_findings.extend(findings)
             if verbose and findings:
-                logger.info(
-                    "  [%s] %d finding(s)", layer, len(findings)
-                )
+                logger.info("  [%s] %d finding(s)", layer, len(findings))
         except Exception as exc:  # noqa: BLE001
-            logger.warning("Detector %s failed on %s: %s", layer, doc.get("document_id"), exc)
+            logger.warning(
+                "Detector %s failed on %s: %s", layer, doc.get("document_id"), exc
+            )
     return all_findings
 
 
@@ -260,13 +259,17 @@ def _run_audit(
             # Attribute each procurement finding to its document
             proc_by_doc: dict[str, list[dict[str, Any]]] = defaultdict(list)
             for pf in procurement_findings:
-                proc_by_doc[pf.get("details", {}).get("document_id", "unknown")].append(pf)
+                proc_by_doc[pf.get("details", {}).get("document_id", "unknown")].append(
+                    pf
+                )
             for result in results:
                 extra = proc_by_doc.get(result["document_id"], [])
                 result["findings"].extend(extra)
                 result["finding_count"] = len(result["findings"])
             if verbose:
-                logger.info("[procurement-timeline] %d finding(s)", len(procurement_findings))
+                logger.info(
+                    "[procurement-timeline] %d finding(s)", len(procurement_findings)
+                )
     except Exception as exc:  # noqa: BLE001
         logger.warning("Procurement timeline detector failed: %s", exc)
 
@@ -295,9 +298,7 @@ def _severity_counts(findings: list[dict[str, Any]]) -> dict[str, int]:
     return counts
 
 
-def _top_findings(
-    findings: list[dict[str, Any]], n: int = 10
-) -> list[dict[str, Any]]:
+def _top_findings(findings: list[dict[str, Any]], n: int = 10) -> list[dict[str, Any]]:
     """Return the top N findings sorted by severity then by anomaly id."""
     return sorted(
         findings,
@@ -313,7 +314,9 @@ def _date_range(results: list[dict[str, Any]]) -> tuple[str, str]:
     dates: list[str] = []
     for r in results:
         for f in r["findings"]:
-            d = f.get("details", {}).get("meeting_date") or f.get("details", {}).get("authorization_date")
+            d = f.get("details", {}).get("meeting_date") or f.get("details", {}).get(
+                "authorization_date"
+            )
             if d and isinstance(d, str) and len(d) == 10:
                 dates.append(d)
     if dates:
@@ -321,7 +324,9 @@ def _date_range(results: list[dict[str, Any]]) -> tuple[str, str]:
     return ("unknown", "unknown")
 
 
-def _anomaly_summary_by_layer(findings: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
+def _anomaly_summary_by_layer(
+    findings: list[dict[str, Any]]
+) -> dict[str, dict[str, int]]:
     """Return {layer: {severity: count}} mapping."""
     summary: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for f in findings:
@@ -494,7 +499,9 @@ def run_audit(
     if not source_dir.exists():
         raise FileNotFoundError(f"Source directory not found: {source_dir.resolve()}")
     if not source_dir.is_dir():
-        raise NotADirectoryError(f"Source path is not a directory: {source_dir.resolve()}")
+        raise NotADirectoryError(
+            f"Source path is not a directory: {source_dir.resolve()}"
+        )
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -535,7 +542,7 @@ def run_audit(
     json_path = _write_json_report(report, output_dir)
     md_path = _write_markdown_report(report, output_dir)
 
-    print(f"Reports written:")
+    print("Reports written:")
     print(f"  JSON : {json_path}")
     print(f"  MD   : {md_path}")
 

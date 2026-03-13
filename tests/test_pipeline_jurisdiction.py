@@ -10,7 +10,6 @@ import pytest
 from oraculus_di_auditor.analysis.pipeline import run_full_analysis
 from oraculus_di_auditor.config import JurisdictionConfig, clear_config_cache
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -43,8 +42,16 @@ def test_pipeline_without_config_returns_valid_structure():
     """Calling with no jurisdiction_config works exactly as before."""
     result = run_full_analysis(_SAMPLE_TEXT, _SAMPLE_META)
     assert isinstance(result, dict)
-    for key in ("metadata", "findings", "severity_score", "lattice_score",
-                "coherence_bonus", "flags", "summary", "timestamp"):
+    for key in (
+        "metadata",
+        "findings",
+        "severity_score",
+        "lattice_score",
+        "coherence_bonus",
+        "flags",
+        "summary",
+        "timestamp",
+    ):
         assert key in result
 
 
@@ -77,8 +84,16 @@ def test_pipeline_with_config_includes_jurisdiction_name():
 def test_pipeline_with_config_preserves_all_other_keys():
     cfg = _make_config()
     result = run_full_analysis(_SAMPLE_TEXT, _SAMPLE_META, jurisdiction_config=cfg)
-    for key in ("metadata", "findings", "severity_score", "lattice_score",
-                "coherence_bonus", "flags", "summary", "timestamp"):
+    for key in (
+        "metadata",
+        "findings",
+        "severity_score",
+        "lattice_score",
+        "coherence_bonus",
+        "flags",
+        "summary",
+        "timestamp",
+    ):
         assert key in result
 
 
@@ -144,9 +159,7 @@ def test_config_dir(tmp_path: Path) -> Path:
     (tmp_path / "jurisdiction.json").write_text(
         json.dumps(jurisdiction), encoding="utf-8"
     )
-    (tmp_path / "agencies.json").write_text(
-        json.dumps(agencies), encoding="utf-8"
-    )
+    (tmp_path / "agencies.json").write_text(json.dumps(agencies), encoding="utf-8")
     return tmp_path
 
 
@@ -234,9 +247,7 @@ def test_jurisdiction_endpoint_does_not_expose_legistar_url(
     from oraculus_di_auditor.config import load_jurisdiction_config
 
     cfg = load_jurisdiction_config(test_config_dir)
-    monkeypatch.setattr(
-        api_module, "_load_jurisdiction_config_at_startup", lambda: cfg
-    )
+    monkeypatch.setattr(api_module, "_load_jurisdiction_config_at_startup", lambda: cfg)
 
     app = FastAPI()
     api_module._register_routes(app)

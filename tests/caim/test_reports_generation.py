@@ -6,7 +6,6 @@ Total: 24 tests
 """
 
 import sys
-from datetime import datetime
 from pathlib import Path
 
 # Add scripts directory to path for imports
