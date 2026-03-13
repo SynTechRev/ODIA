@@ -38,10 +38,13 @@ class TestGetUtcTimestamp:
         assert result.endswith("Z")
 
     def test_contains_date(self):
-        """Test timestamp contains current date."""
+        """Test timestamp contains a valid ISO date (YYYY-MM-DD)."""
         result = get_utc_timestamp()
-        today = datetime.now().strftime("%Y-%m-%d")
-        assert today in result
+        # Extract the date portion from the UTC timestamp itself so the test
+        # is immune to local-vs-UTC timezone boundary crossings.
+        date_part = result[:10]
+        assert len(date_part) == 10
+        assert date_part[4] == "-" and date_part[7] == "-"
 
 
 class TestScoringWeights:

@@ -15,15 +15,23 @@ All functions are pure, side-effect-free, and fully testable.
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .constitutional import detect_constitutional_anomalies
 from .fiscal import detect_fiscal_anomalies
 from .scalar_core import compute_recursive_scalar_score
 from .surveillance import detect_surveillance_anomalies
 
+if TYPE_CHECKING:
+    from oraculus_di_auditor.config import JurisdictionConfig
 
-def run_full_analysis(document_text: str, metadata: dict[str, Any]) -> dict[str, Any]:
+
+def run_full_analysis(
+    document_text: str,
+    metadata: dict[str, Any],
+    *,
+    jurisdiction_config: JurisdictionConfig | None = None,
+) -> dict[str, Any]:
     """Execute complete anomaly detection analysis on document text.
 
     This is the main entry point for Phase 4 unified analysis pipeline.
@@ -37,11 +45,17 @@ def run_full_analysis(document_text: str, metadata: dict[str, Any]) -> dict[str,
             - document_type (str, optional): e.g., "act", "regulation"
             - jurisdiction (str, optional): e.g., "federal", "state"
             - Any additional metadata fields
+        jurisdiction_config: Optional JurisdictionConfig from the config package.
+            When provided, the jurisdiction name is included in the output and
+            the agencies map is embedded in the normalized document for
+            downstream extractors.  When omitted the pipeline behaves exactly
+            as before (backward compatible).
 
     Returns:
         Structured analysis result containing:
         {
             "metadata": {...},  # Original metadata plus document_id if generated
+            "jurisdiction": str | None,  # Jurisdiction name (if config provided)
             "findings": {
                 "fiscal": [...],
                 "constitutional": [...],
@@ -64,7 +78,8 @@ def run_full_analysis(document_text: str, metadata: dict[str, Any]) -> dict[str,
         0.0
     """
     # Preprocess: normalize metadata and create document structure
-    normalized_doc = _preprocess_document(document_text, metadata)
+    agencies = jurisdiction_config.agencies if jurisdiction_config else {}
+    normalized_doc = _preprocess_document(document_text, metadata, agencies=agencies)
 
     # Run all detectors
     fiscal_findings = detect_fiscal_anomalies(normalized_doc)
@@ -83,8 +98,8 @@ def run_full_analysis(document_text: str, metadata: dict[str, Any]) -> dict[str,
     flags = _extract_high_priority_flags(all_anomalies)
     summary = _generate_summary(all_anomalies, severity_score, lattice_score)
 
-    # Return structured response
-    return {
+    # Build structured response
+    result: dict[str, Any] = {
         "metadata": normalized_doc.get("metadata", metadata),
         "findings": {
             "fiscal": fiscal_findings,
@@ -99,15 +114,26 @@ def run_full_analysis(document_text: str, metadata: dict[str, Any]) -> dict[str,
         "timestamp": datetime.now(UTC).isoformat(),
     }
 
+    # Attach jurisdiction name when config is provided
+    if jurisdiction_config is not None:
+        result["jurisdiction"] = jurisdiction_config.name
+
+    return result
+
 
 def _preprocess_document(
-    document_text: str, metadata: dict[str, Any]
+    document_text: str,
+    metadata: dict[str, Any],
+    *,
+    agencies: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     """Convert raw text and metadata into normalized document structure.
 
     Args:
         document_text: Raw document text
         metadata: Metadata dictionary
+        agencies: Optional agency-name → aliases map from JurisdictionConfig.
+            Stored under ``doc["agencies"]`` for downstream extractors.
 
     Returns:
         Normalized document dict compatible with detector interfaces
@@ -129,6 +155,9 @@ def _preprocess_document(
         ],
         "metadata": {**metadata, "document_id": document_id},
     }
+
+    if agencies:
+        normalized_doc["agencies"] = agencies
 
     # Add provenance if hash is provided in metadata
     if "hash" in metadata:

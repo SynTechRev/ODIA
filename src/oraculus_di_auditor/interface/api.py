@@ -164,6 +164,23 @@ def create_app() -> Any:
     return app
 
 
+def _load_jurisdiction_config_at_startup() -> Any:
+    """Attempt to load jurisdiction config from config/; return None on failure."""
+    try:
+        from oraculus_di_auditor.config import load_jurisdiction_config
+
+        cfg = load_jurisdiction_config("config")
+        logger.info(
+            "Jurisdiction config loaded: %s (%s)",
+            cfg.name,
+            cfg.state or "unknown state",
+        )
+        return cfg
+    except Exception as exc:
+        logger.warning("Jurisdiction config not loaded (using defaults): %s", exc)
+        return None
+
+
 def _register_routes(app: Any) -> None:
     """Register API routes.
 
@@ -173,6 +190,9 @@ def _register_routes(app: Any) -> None:
     from oraculus_di_auditor.analysis import analyze_document, run_full_analysis
 
     logger = logging.getLogger(__name__)
+
+    # Load jurisdiction config once at route-registration time
+    _jurisdiction_config = _load_jurisdiction_config_at_startup()
 
     @app.get("/api/v1/health")
     async def health_check() -> dict[str, str]:
@@ -198,7 +218,11 @@ def _register_routes(app: Any) -> None:
             list(request.metadata.keys()),
         )
 
-        result = run_full_analysis(request.document_text, request.metadata)
+        result = run_full_analysis(
+            request.document_text,
+            request.metadata,
+            jurisdiction_config=_jurisdiction_config,
+        )
 
         logger.debug(
             "Analysis complete: anomaly_count=%d, severity=%.2f, lattice=%.2f",
@@ -298,6 +322,31 @@ def _register_routes(app: Any) -> None:
                 error=str(e),
             )
 
+    @app.get("/config/jurisdiction")
+    async def jurisdiction_info() -> dict[str, Any]:
+        """Return current jurisdiction configuration (non-sensitive fields only).
+
+        Returns name, state, country, meeting_type, and agency count.
+        Does not expose Legistar URLs or raw agency alias lists.
+        """
+        if _jurisdiction_config is None:
+            return {
+                "loaded": False,
+                "name": None,
+                "state": None,
+                "country": None,
+                "meeting_type": None,
+                "agency_count": 0,
+            }
+        return {
+            "loaded": True,
+            "name": _jurisdiction_config.name,
+            "state": _jurisdiction_config.state,
+            "country": _jurisdiction_config.country,
+            "meeting_type": _jurisdiction_config.meeting_type,
+            "agency_count": len(_jurisdiction_config.agencies),
+        }
+
     @app.get("/api/v1/info")
     async def info() -> dict[str, Any]:
         """Get API information and capabilities."""
@@ -308,6 +357,7 @@ def _register_routes(app: Any) -> None:
                 "/analyze",  # Primary Phase 4 endpoint
                 "/api/v1/analyze",  # Legacy endpoint
                 "/api/v1/info",
+                "/config/jurisdiction",  # Current jurisdiction metadata
                 "/api/v1/rag/query",  # RAG natural language query
                 "/orchestrator/run",  # Phase 8 multi-document orchestrator
                 "/governor/state",  # Phase 9 governor state
