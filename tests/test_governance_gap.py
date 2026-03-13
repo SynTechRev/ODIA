@@ -56,7 +56,7 @@ def test_capabilities_with_full_governance_no_anomalies():
 
 
 def test_data_sharing_with_retention_policy_no_retention_gap():
-    """Data sharing covered by explicit retention policy should not flag retention gap."""
+    """Data sharing with explicit retention policy should not flag retention gap."""
     doc = _doc(
         "Data sharing agreement with county agencies. "
         "Retention policy: records purged after 60 days per the deletion policy."
@@ -125,7 +125,6 @@ def test_body_camera_bwc_without_policy_critical():
 
 
 def test_cell_site_simulator_without_governance_critical():
-    doc = _doc("Authorized use of cell site simulator for active investigations.")
     assert "governance:capability-without-policy" in _ids(
         "Authorized use of cell site simulator for active investigations."
     )
@@ -231,10 +230,6 @@ def test_data_retention_gap_details_contain_keywords_found():
 
 def test_cloud_storage_without_retention_policy_flagged():
     """Cloud storage + data retention capability without a retention policy."""
-    doc = _doc(
-        "All records will be migrated to cloud storage. "
-        "Data retention period is 7 years per state law."
-    )
     # "data retention" is present but no "retention policy" keyword
     assert "governance:data-retention-gap" in _ids(
         "All records will be migrated to cloud storage. "

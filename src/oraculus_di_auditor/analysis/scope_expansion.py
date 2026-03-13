@@ -144,7 +144,10 @@ def detect_scope_expansion_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]
         anomalies.append(
             {
                 "id": "scope:amendment-without-baseline",
-                "issue": "Amendment instrument found with no original authorization reference",
+                "issue": (
+                    "Amendment instrument found with no original"
+                    " authorization reference"
+                ),
                 "severity": "medium",
                 "layer": "scope",
                 "details": {
