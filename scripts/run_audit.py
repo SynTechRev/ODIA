@@ -47,7 +47,7 @@ from oraculus_di_auditor.analysis import (  # noqa: E402
 from oraculus_di_auditor.config import (
     JurisdictionConfig,
     load_jurisdiction_config,
-)  # noqa: E402
+)
 
 logger = logging.getLogger("run_audit")
 
