@@ -121,7 +121,6 @@ def test_expansion_percentage_calculated_correctly():
 
 def test_suffix_amounts_parsed_correctly():
     """$1M vs $2M should be detected as 100% expansion."""
-    doc = _doc("Amendment. Not to exceed $1M. New authorized amount $2M.")
     assert "scope:significant-expansion" in _ids(
         "Amendment. Not to exceed $1M. New authorized amount $2M."
     )
@@ -129,10 +128,6 @@ def test_suffix_amounts_parsed_correctly():
 
 def test_large_expansion_in_addendum():
     """Addendum with a 5× amount expansion should be flagged."""
-    doc = _doc(
-        "Addendum to base contract. Initial authorization $50,000. "
-        "Total after addendum $300,000."
-    )
     assert "scope:significant-expansion" in _ids(
         "Addendum to base contract. Initial authorization $50,000. "
         "Total after addendum $300,000."
@@ -165,7 +160,6 @@ def test_amendment_with_baseline_reference_no_baseline_flag():
 
 def test_extension_without_original_contract_reference():
     """'Extension' with no baseline → amendment-without-baseline."""
-    doc = _doc("Contract extension for 12 months. Total value $500,000.")
     assert "scope:amendment-without-baseline" in _ids(
         "Contract extension for 12 months. Total value $500,000."
     )
@@ -191,7 +185,6 @@ def test_sole_source_with_amendment_flagged():
 
 def test_sole_source_hyphenated_form_detected():
     """'sole-source' hyphenated variant is also detected."""
-    doc = _doc("Modification No. 2. Sole-source award. Approved amount $300,000.")
     assert "scope:sole-source-expansion" in _ids(
         "Modification No. 2. Sole-source award. Approved amount $300,000."
     )
@@ -199,7 +192,6 @@ def test_sole_source_hyphenated_form_detected():
 
 def test_single_source_with_renewal_detected():
     """'single source' + renewal → sole-source-expansion."""
-    doc = _doc("Contract renewal. Single source procurement. Not to exceed $400,000.")
     assert "scope:sole-source-expansion" in _ids(
         "Contract renewal. Single source procurement. Not to exceed $400,000."
     )
@@ -223,9 +215,6 @@ def test_sole_source_details_include_matched_token():
 
 def test_sole_source_without_amendment_no_flag():
     """Sole source without any amendment keyword should not trigger."""
-    doc = _doc(
-        "Original contract. Sole source justification. Approved amount $100,000."
-    )
     assert "scope:sole-source-expansion" not in _ids(
         "Original contract. Sole source justification. Approved amount $100,000."
     )
@@ -238,10 +227,6 @@ def test_sole_source_without_amendment_no_flag():
 
 def test_amendment_can_produce_multiple_findings():
     """A bad amendment can trigger expansion + sole-source simultaneously."""
-    doc = _doc(
-        "Amendment No. 1. Sole source award. "
-        "Original contract $100,000. New total $200,000. Not to exceed $200,000."
-    )
     ids = _ids(
         "Amendment No. 1. Sole source award. "
         "Original contract $100,000. New total $200,000. Not to exceed $200,000."

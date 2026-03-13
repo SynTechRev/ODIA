@@ -1,12 +1,1 @@
-{
-  "version": "1.0.0",
-  "schema_version": "1.0",
-  "generated": "2025-12-07T00:00:00Z",
-  "total_terms": 0,
-  "terms": {},
-  "metadata": {
-    "description": "CDSCE Semiotic Corpus - Placeholder file to be populated by CDSCE engine",
-    "last_updated": "2025-12-07",
-    "status": "initialized"
-  }
-}
+{}

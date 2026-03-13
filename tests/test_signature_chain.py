@@ -36,7 +36,7 @@ def test_properly_signed_document_no_anomalies():
 
 
 def test_no_contract_keywords_no_anomalies():
-    """Signature gap indicators without any contract instrument keyword should not flag."""
+    """Signature gap indicators without contract instrument keyword should not flag."""
     doc = _doc("This memo is unsigned and has not been executed by any party.")
     assert detect_signature_anomalies(doc) == []
 

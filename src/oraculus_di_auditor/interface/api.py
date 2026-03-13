@@ -181,6 +181,64 @@ def _load_jurisdiction_config_at_startup() -> Any:
         return None
 
 
+def _execute_rag_query(
+    request: RAGQueryRequest,
+) -> RAGQueryResponse:
+    """Execute a RAG query, returning a populated response or an error response.
+
+    Args:
+        request: RAG query request containing query text, top_k, and optional filter
+
+    Returns:
+        RAGQueryResponse with answer, sources, confidence, and optional error
+    """
+    _logger = logging.getLogger(__name__)
+    try:
+        from oraculus_di_auditor.rag import OracRAG
+
+        orac_rag = OracRAG()
+        # TODO: Cache loaded index in production (e.g., using functools.lru_cache
+        # or global singleton) to avoid reloading on every request
+        orac_rag.load_index(index_name="collection")
+
+        if request.corpus_filter:
+            result = orac_rag.query_with_filter(
+                question=request.query,
+                corpus_ids=request.corpus_filter,
+                top_k=request.top_k,
+            )
+        else:
+            result = orac_rag.query(
+                question=request.query,
+                top_k=request.top_k,
+                include_sources=True,
+            )
+
+        _logger.debug(
+            "RAG query complete: confidence=%.2f, sources=%d",
+            result.get("confidence", 0),
+            len(result.get("sources", [])),
+        )
+        return RAGQueryResponse(**result)
+
+    except ImportError as e:
+        _logger.error("RAG not available: %s", e)
+        return RAGQueryResponse(
+            answer="",
+            sources=[],
+            confidence=0.0,
+            error="RAG system not available. Install required dependencies.",
+        )
+    except Exception as e:
+        _logger.error("RAG query failed: %s", e, exc_info=True)
+        return RAGQueryResponse(
+            answer="",
+            sources=[],
+            confidence=0.0,
+            error=str(e),
+        )
+
+
 def _register_routes(app: Any) -> None:
     """Register API routes.
 
@@ -272,55 +330,7 @@ def _register_routes(app: Any) -> None:
             }
         """
         logger.debug("RAG query received: %s", request.query)
-
-        try:
-            from oraculus_di_auditor.rag import OracRAG
-
-            # Initialize RAG system
-            orac_rag = OracRAG()
-
-            # TODO: Cache loaded index in production (e.g., using functools.lru_cache
-            # or global singleton) to avoid reloading on every request
-            orac_rag.load_index(index_name="collection")
-
-            # Execute query
-            if request.corpus_filter:
-                result = orac_rag.query_with_filter(
-                    question=request.query,
-                    corpus_ids=request.corpus_filter,
-                    top_k=request.top_k,
-                )
-            else:
-                result = orac_rag.query(
-                    question=request.query,
-                    top_k=request.top_k,
-                    include_sources=True,
-                )
-
-            logger.debug(
-                "RAG query complete: confidence=%.2f, sources=%d",
-                result.get("confidence", 0),
-                len(result.get("sources", [])),
-            )
-
-            return RAGQueryResponse(**result)
-
-        except ImportError as e:
-            logger.error(f"RAG not available: {e}")
-            return RAGQueryResponse(
-                answer="",
-                sources=[],
-                confidence=0.0,
-                error="RAG system not available. Install required dependencies.",
-            )
-        except Exception as e:
-            logger.error(f"RAG query failed: {e}", exc_info=True)
-            return RAGQueryResponse(
-                answer="",
-                sources=[],
-                confidence=0.0,
-                error=str(e),
-            )
+        return _execute_rag_query(request)
 
     @app.get("/config/jurisdiction")
     async def jurisdiction_info() -> dict[str, Any]:

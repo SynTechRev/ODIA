@@ -136,7 +136,9 @@ def detect_administrative_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]
             anomalies.append(
                 {
                     "id": "admin:retroactive-authorization",
-                    "issue": "Retroactive or back-dated authorization language detected",
+                    "issue": (
+                        "Retroactive or back-dated authorization language detected"
+                    ),
                     "severity": "high",
                     "layer": "administrative",
                     "details": {
