@@ -365,6 +365,9 @@ def _register_routes(app: Any) -> None:
             "endpoints": [
                 "/api/v1/health",
                 "/analyze",  # Primary Phase 4 endpoint
+                "/analyze/detailed",  # Per-detector breakdown
+                "/analyze/batch",  # Multi-document batch analysis
+                "/detectors",  # Detector registry
                 "/api/v1/analyze",  # Legacy endpoint
                 "/api/v1/info",
                 "/config/jurisdiction",  # Current jurisdiction metadata
@@ -385,7 +388,11 @@ def _register_routes(app: Any) -> None:
                 "fiscal",
                 "constitutional",
                 "surveillance",
-                "cross-reference",
+                "procurement_timeline",
+                "signature_chain",
+                "scope_expansion",
+                "governance_gap",
+                "administrative_integrity",
             ],
             "features": [
                 "Multi-format document ingestion",
@@ -410,6 +417,15 @@ def _register_routes(app: Any) -> None:
                 "Source-cited answers",
             ],
         }
+
+    # Register detector-specific routes with access to _jurisdiction_config
+    try:
+        from .routes.detectors import register_detector_routes
+
+        register_detector_routes(app, jurisdiction_config=_jurisdiction_config)
+        logger.info("Detector routes registered")
+    except Exception as e:
+        logger.warning("Detector routes not available: %s", e)
 
 
 # Create the app instance

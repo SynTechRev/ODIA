@@ -12,21 +12,25 @@ export function AnalysisSummaryCard() {
   const analyses = useAnalysisStore((state) => state.analyses);
 
   const analysisCount = Object.keys(analyses).length;
-  
+
   const totalFindings = Object.values(analyses).reduce((sum, analysis) => {
-    return sum + 
-      analysis.findings.fiscal.length +
-      analysis.findings.constitutional.length +
-      analysis.findings.surveillance.length +
-      analysis.findings.anomalies.length;
+    return (
+      sum +
+      (analysis.findings.fiscal?.length ?? 0) +
+      (analysis.findings.constitutional?.length ?? 0) +
+      (analysis.findings.surveillance?.length ?? 0) +
+      (analysis.findings.anomalies?.length ?? 0)
+    );
   }, 0);
 
-  const avgSeverity = analysisCount > 0
-    ? Object.values(analyses).reduce((sum, a) => sum + a.severity_score, 0) / analysisCount
-    : 0;
+  const avgSeverity =
+    analysisCount > 0
+      ? Object.values(analyses).reduce((sum, a) => sum + a.severity_score, 0) /
+        analysisCount
+      : 0;
 
   const highSeverityCount = Object.values(analyses).filter(
-    (a) => a.severity_score > 0.7
+    (a) => a.severity_score > 0.7,
   ).length;
 
   return (
@@ -51,9 +55,7 @@ export function AnalysisSummaryCard() {
           </div>
 
           <div>
-            <div className="text-3xl font-bold text-red-600">
-              {highSeverityCount}
-            </div>
+            <div className="text-3xl font-bold text-red-600">{highSeverityCount}</div>
             <div className="text-sm text-gray-600">High Severity</div>
           </div>
         </div>

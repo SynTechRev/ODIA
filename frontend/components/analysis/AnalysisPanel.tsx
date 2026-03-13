@@ -17,53 +17,67 @@ interface AnalysisPanelProps {
 }
 
 export function AnalysisPanel({ result, onRefresh, loading }: AnalysisPanelProps) {
-  const [activeTab, setActiveTab] = useState<'fiscal' | 'constitutional' | 'surveillance' | 'anomalies'>('fiscal');
+  const [activeTab, setActiveTab] = useState<
+    'fiscal' | 'constitutional' | 'surveillance' | 'anomalies'
+  >('fiscal');
+
+  const fiscalCount = result.findings.fiscal?.length ?? 0;
+  const constitutionalCount = result.findings.constitutional?.length ?? 0;
+  const surveillanceCount = result.findings.surveillance?.length ?? 0;
+  const anomaliesCount = result.findings.anomalies?.length ?? 0;
+  const totalFindings = fiscalCount + constitutionalCount + surveillanceCount + anomaliesCount;
 
   const tabs = [
-    { id: 'fiscal' as const, label: 'Fiscal', count: result.findings.fiscal.length },
-    { id: 'constitutional' as const, label: 'Constitutional', count: result.findings.constitutional.length },
-    { id: 'surveillance' as const, label: 'Surveillance', count: result.findings.surveillance.length },
-    { id: 'anomalies' as const, label: 'Anomalies', count: result.findings.anomalies.length },
+    { id: 'fiscal' as const, label: 'Fiscal', count: fiscalCount },
+    { id: 'constitutional' as const, label: 'Constitutional', count: constitutionalCount },
+    { id: 'surveillance' as const, label: 'Surveillance', count: surveillanceCount },
+    { id: 'anomalies' as const, label: 'Anomalies', count: anomaliesCount },
   ];
+
+  // Confidence: explicit field if present, otherwise derived from lattice_score
+  const confidence = result.confidence ?? result.lattice_score;
 
   return (
     <div className="space-y-6">
       {/* Header with Scores */}
       <Card variant="bordered">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <div className="text-sm text-gray-600 mb-1">Severity Score</div>
-            <div className="flex items-baseline gap-2">
-              <div className="text-3xl font-bold text-gray-900">
-                {result.severity_score.toFixed(2)}
+        <div className="flex items-center justify-between mb-4">
+          <div className="grid grid-cols-3 gap-6 flex-1">
+            <div>
+              <div className="text-sm text-gray-600 mb-1">Severity Score</div>
+              <div className="flex items-baseline gap-2">
+                <div className="text-3xl font-bold text-gray-900">
+                  {result.severity_score.toFixed(2)}
+                </div>
+                <div className="text-sm text-gray-500">/ 1.0</div>
               </div>
-              <div className="text-sm text-gray-500">/ 1.0</div>
             </div>
-          </div>
-          
-          <div>
-            <div className="text-sm text-gray-600 mb-1">Lattice Score</div>
-            <div className="flex items-baseline gap-2">
-              <div className="text-3xl font-bold text-gray-900">
-                {result.lattice_score.toFixed(2)}
+
+            <div>
+              <div className="text-sm text-gray-600 mb-1">Lattice Score</div>
+              <div className="flex items-baseline gap-2">
+                <div className="text-3xl font-bold text-gray-900">
+                  {result.lattice_score.toFixed(2)}
+                </div>
+                <div className="text-sm text-gray-500">/ 1.0</div>
               </div>
-              <div className="text-sm text-gray-500">/ 1.0</div>
+            </div>
+
+            <div>
+              <div className="text-sm text-gray-600 mb-1">Total Findings</div>
+              <div className="text-3xl font-bold text-gray-900">{totalFindings}</div>
             </div>
           </div>
 
-          <div>
-            <div className="text-sm text-gray-600 mb-1">Total Findings</div>
-            <div className="text-3xl font-bold text-gray-900">
-              {result.findings.fiscal.length +
-                result.findings.constitutional.length +
-                result.findings.surveillance.length +
-                result.findings.anomalies.length}
-            </div>
-          </div>
+          {onRefresh && (
+            <Button variant="ghost" onClick={onRefresh} loading={loading} size="sm">
+              Refresh
+            </Button>
+          )}
         </div>
 
-        {result.flags.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
+        {result.flags && result.flags.length > 0 && (
+          <div className="pt-4 border-t border-gray-200">
             <div className="text-sm text-gray-600 mb-2">Flags:</div>
             <div className="flex flex-wrap gap-2">
               {result.flags.map((flag, index) => (
@@ -112,10 +126,9 @@ export function AnalysisPanel({ result, onRefresh, loading }: AnalysisPanelProps
           </nav>
         </div>
 
-        {/* Findings Content */}
         <div>
           {activeTab === 'fiscal' && (
-            <FiscalFindingsView findings={result.findings.fiscal} />
+            <FiscalFindingsView findings={result.findings.fiscal ?? []} />
           )}
           {activeTab === 'constitutional' && (
             <div className="text-gray-500 text-center py-8">
@@ -129,43 +142,49 @@ export function AnalysisPanel({ result, onRefresh, loading }: AnalysisPanelProps
           )}
           {activeTab === 'anomalies' && (
             <div className="text-gray-500 text-center py-8">
-              Anomalies view (component to be implemented)
+              Additional anomalies (component to be implemented)
             </div>
           )}
         </div>
       </Card>
 
       {/* Provenance */}
-      <Card title="Provenance" variant="bordered">
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Pipeline Version:</span>
-            <span className="font-mono text-gray-900">
-              {result.provenance.pipeline_version}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Analysis Timestamp:</span>
-            <span className="font-mono text-gray-900">
-              {new Date(result.provenance.analysis_timestamp).toLocaleString()}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Confidence:</span>
-            <span className="font-mono text-gray-900">
-              {(result.confidence * 100).toFixed(1)}%
-            </span>
-          </div>
-          {result.provenance.document_hash && (
+      {result.provenance && (
+        <Card title="Provenance" variant="bordered">
+          <div className="space-y-2 text-sm">
+            {result.provenance.pipeline_version && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">Pipeline Version:</span>
+                <span className="font-mono text-gray-900">
+                  {result.provenance.pipeline_version}
+                </span>
+              </div>
+            )}
+            {result.provenance.analysis_timestamp && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">Analysis Timestamp:</span>
+                <span className="font-mono text-gray-900">
+                  {new Date(result.provenance.analysis_timestamp).toLocaleString()}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between">
-              <span className="text-gray-600">Document Hash:</span>
-              <span className="font-mono text-xs text-gray-900">
-                {result.provenance.document_hash}
+              <span className="text-gray-600">Confidence:</span>
+              <span className="font-mono text-gray-900">
+                {(confidence * 100).toFixed(1)}%
               </span>
             </div>
-          )}
-        </div>
-      </Card>
+            {result.provenance.document_hash && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">Document Hash:</span>
+                <span className="font-mono text-xs text-gray-900">
+                  {result.provenance.document_hash}
+                </span>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
     </div>
   );
 }
