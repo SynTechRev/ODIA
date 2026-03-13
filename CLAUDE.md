@@ -9,9 +9,9 @@ ODIA is a **general-purpose legal document ingestion, normalization, and anomaly
 
 ## Current State
 
-- **Version**: 0.1.0
+- **Version**: 2.0.0
 - **Python**: 3.11+ required (tested on 3.13)
-- **Tests**: ~2130 collected; 2100+ pass, 9 skipped (data-dependent corpus/transparency tests)
+- **Tests**: 2275 passing, 9 skipped (data-dependent corpus/transparency tests)
 - **Working core**: Phases 5–9 (ingestion, analysis, orchestration, governance) are functional and tested
 - **Higher phases** (12–20): Architectural scaffolding exists — these are experimental/theoretical
 - **Frontend**: Next.js 14 app in `frontend/` (production-ready skeleton)

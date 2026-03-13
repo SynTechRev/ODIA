@@ -1,5 +1,87 @@
 # Changelog
 
+## [2.0.0] - 2026-03-13 — Platform Generalization Release
+
+This release transforms ODIA from a jurisdiction-specific audit tool into a
+general-purpose legal document ingestion, normalization, and anomaly auditing platform.
+All jurisdiction-specific data has been removed; the platform is now configured via
+`config/jurisdiction.json` and `config/corpus_manifest.json`.
+
+### Breaking Changes
+- `src/oraculus/` is now a thin backward-compatibility wrapper only; all new code lives
+  in `src/oraculus_di_auditor/`
+- Anomaly detector return shape changed: `{id, issue, severity, layer, details}` replaces
+  the previous `{type, description, severity, evidence}` shape
+- `config/jurisdiction.json` must be present for jurisdiction-aware analysis (optional;
+  system degrades gracefully when absent)
+
+### Added
+
+#### Anomaly Detectors (5 new)
+- `procurement_timeline` — detects contracts executed before governing-body authorization date
+- `signature_chain` — detects unsigned, partially signed, or placeholder-signed documents
+- `scope_expansion` — detects amendment-as-procurement pattern (significant scope creep)
+- `governance_gap` — detects surveillance capabilities deployed without governance documentation
+- `administrative_integrity` — detects missing final actions, blank required fields, retroactive authorizations
+
+#### API Endpoints (3 new)
+- `POST /analyze/detailed` — per-detector anomaly breakdown with severity summary and weighted score
+- `GET /detectors` — registry of all 8 detectors with descriptions and anomaly types
+- `POST /analyze/batch` — multi-document analysis with cross-document procurement timeline patterns
+
+#### Jurisdiction & Configuration System
+- `src/oraculus_di_auditor/config/jurisdiction_loader.py` — `JurisdictionConfig` dataclass,
+  `load_jurisdiction_config()`, `get_config()` singleton, `clear_config_cache()`
+- `config/jurisdiction.json` (gitignored) — active jurisdiction config
+- `config/corpus_manifest.example.json` — template for corpus configuration
+- `config/corpus_manifest.json` — maps corpus IDs to meeting dates
+
+#### Audit CLI
+- `scripts/run_audit.py` — end-to-end audit CLI: ingest → analyze → report (JSON + Markdown)
+
+#### Frontend (Next.js 14 dashboard)
+- `frontend/lib/types/api.ts` — canonical `Anomaly`, `DetailedAnalysisResult`, `DetectorInfo`,
+  `JurisdictionInfo` TypeScript types
+- `frontend/lib/api/client.ts` — `APIClient` singleton covering all backend endpoints
+- `frontend/lib/stores/analysis.ts` — Zustand store with `detailedAnalyses` state
+- `frontend/components/anomalies/DetectorGroupPanel.tsx` — collapsible per-detector panels
+  with severity color-coding and expandable evidence
+- `frontend/components/analysis/SeverityChart.tsx` — recharts donut chart
+- `frontend/components/dashboard/JurisdictionCard.tsx` — live jurisdiction config display
+- `frontend/components/dashboard/DetectorStatusCard.tsx` — live detector registry display
+- Dashboard severity count cards; anomalies page document selector and severity filter;
+  analysis page top-10 findings panel
+
+#### Documentation
+- `CONTRIBUTING.md` — contributor guide with branch, commit, and test conventions
+- `docs/PHASES.md` — phase-by-phase engine reference (Phases 5–20)
+- `docs/phases/` — 25 phase overview and implementation files (relocated from repo root)
+- `README.md` — full rewrite (~167 lines, clean public-facing structure)
+
+### Changed
+- Unified package structure: `src/oraculus/` reduced to thin wrapper; `src/oraculus_di_auditor/`
+  is the sole authoritative package
+- Higher-phase naming: abstract/mythological names replaced with plain engineering terms
+  (rec17, rgk18, aei19, aer20, mesh, otge15, qdcl, scalar_convergence)
+- `scripts/corpus_manager.py` now loads from `config/corpus_manifest.json`
+- `datetime.utcnow()` replaced with `datetime.now(UTC)` throughout (deprecation fix)
+- All `open()` calls use `encoding="utf-8"` for Windows cp1252 compatibility
+- Unicode `✓`/`✗` in scripts replaced with `[OK]`/`[FAIL]`
+- Phase documentation files moved from repo root into `docs/phases/`
+
+### Removed
+- All jurisdiction-specific data (city names, Legistar URLs, personnel names,
+  dollar amounts from any specific audit)
+- Jurisdiction-specific hardcoded configurations
+
+### Tests
+- **2275 passing, 9 skipped, 0 failing**
+- New test files: `tests/test_jurisdiction_config.py`, `tests/test_pipeline_jurisdiction.py`,
+  `tests/test_run_audit.py`, `tests/test_api_detectors.py` (21 tests for new API endpoints)
+- 9 skipped tests are data-dependent corpus/transparency tests with explicit skip markers
+
+---
+
 ## 2024-12-29 - Audit Triage & Reporting Pipeline Scaffolding
 
 ### Added - Audit Triage & Reporting Infrastructure
