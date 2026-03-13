@@ -272,9 +272,9 @@ def test_batch_each_result_has_all_detectors(client):
     for doc_result in response.json()["results"]:
         for key in _ALL_DETECTOR_KEYS:
             doc_id = doc_result.get("document_id")
-            assert key in doc_result["detectors"], (
-                f"Missing detector '{key}' in batch result for {doc_id}"
-            )
+            assert (
+                key in doc_result["detectors"]
+            ), f"Missing detector '{key}' in batch result for {doc_id}"
 
 
 def test_batch_top_level_summary(client):
