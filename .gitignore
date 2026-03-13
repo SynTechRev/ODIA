@@ -174,3 +174,6 @@ analysis/logs/*.log
 # reports/eval/*/
 # reports/issues/*.md
 AUDIT_REPORT.txt
+
+# Jurisdiction-specific example scripts (user-generated, not committed)
+scripts/examples/*.py
