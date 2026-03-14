@@ -1,8 +1,8 @@
 {
-  "_comment": "Example jurisdiction B — copy and customize for your jurisdiction.",
-  "name": "City of Beta",
-  "meeting_type": "Town Council Regular Meeting",
-  "legistar_base_url": "https://beta.legistar.com",
-  "state": "TX",
+  "_comment": "Example jurisdiction B — City of Lakewood, CA. Copy and customize.",
+  "name": "City of Lakewood",
+  "meeting_type": "City Council Regular Meeting",
+  "legistar_base_url": "https://lakewood.legistar.com",
+  "state": "CA",
   "country": "US"
 }

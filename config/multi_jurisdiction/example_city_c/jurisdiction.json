@@ -1,0 +1,8 @@
+{
+  "_comment": "Example jurisdiction C — County of Tulare, CA. Copy and customize.",
+  "name": "County of Tulare",
+  "meeting_type": "Board of Supervisors Meeting",
+  "legistar_base_url": "https://tulare.legistar.com",
+  "state": "CA",
+  "country": "US"
+}

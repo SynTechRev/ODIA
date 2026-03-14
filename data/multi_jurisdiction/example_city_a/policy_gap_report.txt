@@ -1,0 +1,37 @@
+CITY OF RIVERSIDE — INFORMATION TECHNOLOGY DEPARTMENT
+Internal Governance Assessment — Public Safety Technology Deployment
+
+ASSESSMENT DATE: 2024-02-15
+PREPARED BY: IT Department, Policy Compliance Unit
+
+EXECUTIVE SUMMARY:
+This assessment identifies governance gaps associated with the planned deployment of the
+SecureTech Solutions public safety monitoring platform.
+
+CAPABILITY DEPLOYMENT STATUS:
+The SecureTech Solutions platform is scheduled to go live on 2024-04-01. As of the date
+of this assessment, the following governance instruments have NOT yet been established:
+
+  1. Data Retention Policy — No policy exists governing how long video feeds, license
+     plate data, and pedestrian analytics will be stored or when they will be purged.
+
+  2. Access Control Policy — No documented policy governs which City employees may
+     access real-time feeds or historical data exports.
+
+  3. Public Disclosure Notice — The City has not published a public notice describing
+     the nature, scope, or legal authority for the surveillance program.
+
+  4. Civil Liberties Impact Assessment — No independent review has been conducted
+     to assess the program's impact on First or Fourth Amendment-protected activity.
+
+RISK CLASSIFICATION: HIGH
+
+RECOMMENDATION:
+IT Department recommends that deployment be conditioned on adoption of a comprehensive
+surveillance governance policy. Deployment without such a policy creates legal exposure
+under California Civil Code and the California Consumer Privacy Act.
+
+REFERENCE:
+Similar governance gap findings have been documented in peer jurisdictions including
+the City of Lakewood and County of Tulare, which are proceeding with comparable
+technology deployments under the same vendor contract framework.

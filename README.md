@@ -108,6 +108,34 @@ See [QUICKSTART.md](QUICKSTART.md) for the full triage workflow.
 
 ---
 
+## Multi-Jurisdiction Analysis
+
+Compare anomaly patterns across multiple jurisdictions in a single run:
+
+```bash
+python scripts/run_multi_audit.py \
+    --config-dir config/multi_jurisdiction \
+    --source-dir data/multi_jurisdiction \
+    --output reports/multi_jurisdiction \
+    --verbose
+```
+
+Each jurisdiction needs a config directory under `config/multi_jurisdiction/<id>/`
+with a `jurisdiction.json` file. Documents go in `data/multi_jurisdiction/<id>/`.
+
+**What it detects across jurisdictions:**
+- Vendor playbook replication — same anomaly patterns from the same vendor across multiple jurisdictions
+- Procurement parallels — shared sole-source justifications or timeline irregularities
+- Regional governance gaps — common policy absences across a geographic cluster
+
+**Output:** JSON + Markdown comparative reports with risk ranking and recommendations.
+
+A synthetic sample dataset covering three California jurisdictions is included in
+`data/multi_jurisdiction/`. See [docs/MULTI_JURISDICTION.md](docs/MULTI_JURISDICTION.md)
+for full setup and configuration guidance.
+
+---
+
 ## Configuration
 
 ```yaml

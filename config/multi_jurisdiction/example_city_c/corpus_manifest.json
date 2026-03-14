@@ -1,0 +1,8 @@
+{
+  "_comment": "Example corpus manifest. Copy to corpus_manifest.json and customize for your jurisdiction.",
+  "_format": "Map corpus IDs to meeting dates (YYYY-MM-DD)",
+  "EXAMPLE-001": "2024-01-15",
+  "EXAMPLE-002": "2024-02-20",
+  "EXAMPLE-003": "2024-03-18",
+  "EXAMPLE-004": "2024-04-15"
+}

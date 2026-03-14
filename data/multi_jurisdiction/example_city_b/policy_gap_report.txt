@@ -1,0 +1,40 @@
+CITY OF LAKEWOOD — CITY MANAGER'S OFFICE
+Technology Deployment Readiness Assessment — Public Safety Platform
+
+ASSESSMENT DATE: 2024-02-10
+PREPARED BY: City Manager's Office, Policy and Compliance
+
+EXECUTIVE SUMMARY:
+This assessment documents the governance readiness status for deployment of the
+SecureTech Solutions public safety monitoring system.
+
+DEPLOYMENT TIMELINE:
+Planned go-live: 2024-03-20. Contract execution anticipated: 2024-03-05.
+
+GOVERNANCE GAP FINDINGS:
+The following required policy instruments have not been adopted as of this assessment:
+
+  1. Surveillance Data Retention Policy — No retention or deletion schedule exists
+     for video footage, license plate records, or behavioral analytics produced
+     by the system.
+
+  2. Data Access and Authorization Policy — No formal procedure documents who is
+     authorized to query or export data from the monitoring system.
+
+  3. Public Accountability Disclosure — The City has not issued a public notice
+     or held a public hearing regarding the planned surveillance capabilities.
+
+  4. Use-of-Force Integration Protocol — No policy governs whether or how
+     data from the monitoring system may be used in law enforcement actions.
+
+RISK CLASSIFICATION: HIGH
+
+RECOMMENDATION:
+Governance policies must be adopted before system activation. Proceeding without
+these instruments risks constitutional challenge under the Fourth Amendment and
+state privacy law.
+
+PEER JURISDICTION NOTE:
+Governance gap assessments with similar findings have been prepared by the City of
+Riverside and County of Tulare, which are procuring comparable systems under the
+same vendor relationship with SecureTech Solutions.

@@ -1,0 +1,41 @@
+COUNTY OF TULARE — INFORMATION TECHNOLOGY PROCUREMENT
+Board of Supervisors Meeting — Staff Report
+
+SUBJECT: Approval of Sole-Source Contract for County-Wide Public Safety Technology
+
+RECOMMENDATION:
+Staff recommends that the Board of Supervisors authorize the County Administrator to
+execute a sole-source agreement with SecureTech Solutions for a county-wide public
+safety monitoring platform in the amount of $2,100,000.
+
+BACKGROUND:
+The County of Tulare has identified a need to modernize its public safety technology
+infrastructure across multiple incorporated and unincorporated service areas. Following
+a market survey, staff determined that SecureTech Solutions offers the most
+comprehensive solution compatible with county-wide deployment requirements.
+
+SOLE-SOURCE JUSTIFICATION:
+The scope of county-wide deployment necessitates a vendor with experience in
+multi-site government implementations. SecureTech Solutions has completed comparable
+deployments in other California jurisdictions and is uniquely positioned to fulfill
+this requirement without a new competitive solicitation.
+
+FISCAL IMPACT:
+The total contract value of $2,100,000 is proposed to be funded from the County General
+Fund and Technology Infrastructure Reserve. No formal appropriation resolution has been
+prepared at this time. Fiscal documentation is in preparation.
+
+CONTRACT TERMS:
+The contract covers deployment across four county service areas, 48-month maintenance,
+and vendor-managed system updates. Exhibit D to the contract, which governs data
+handling and third-party sharing, remains unsigned and is subject to final legal review.
+
+DATA COLLECTION:
+The platform will deploy fixed surveillance infrastructure at 47 sites across the county,
+collecting video, license plate recognition, and acoustic sensor data. A comprehensive
+data governance policy for this program has not been finalized before this procurement
+action.
+
+COUNCIL AUTHORIZATION:
+Board authorization is requested. Preliminary implementation planning commenced on
+2024-01-15; formal board authorization is sought at this meeting on 2024-02-06.

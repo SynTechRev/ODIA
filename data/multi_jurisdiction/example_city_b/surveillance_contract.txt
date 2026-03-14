@@ -1,0 +1,40 @@
+CITY OF LAKEWOOD — INFORMATION TECHNOLOGY PROCUREMENT
+City Council Regular Meeting — Staff Report
+
+SUBJECT: Approval of Sole-Source Contract for Public Safety Monitoring System
+
+RECOMMENDATION:
+Staff recommends that the City Council authorize execution of a sole-source agreement
+with SecureTech Solutions for a real-time public safety monitoring system in the amount
+of $1,200,000.
+
+BACKGROUND:
+The City of Lakewood has identified the need for upgraded situational awareness
+capabilities for its public safety operations. Following review of available vendors,
+staff determined that SecureTech Solutions provides the most technically compatible
+solution for integration with the City's existing infrastructure.
+
+SOLE-SOURCE JUSTIFICATION:
+SecureTech Solutions is the only vendor whose platform can integrate with the City's
+current network topology without requiring a complete infrastructure replacement.
+Competitive bidding is not feasible within the required implementation timeline.
+
+FISCAL IMPACT:
+The contract value of $1,200,000 will be funded from the General Fund operating budget.
+An appropriation number has not been assigned pending council approval. The Finance
+Director has confirmed that funds are available in the unallocated reserve.
+
+CONTRACT TERMS:
+The agreement provides for installation, configuration, operator training, and a
+24-month maintenance and support period. An unsigned exhibit B to the contract
+contains the system performance specifications and service level commitments.
+
+DATA COLLECTION:
+The system will capture license plate recognition data, fixed-point video streams,
+and automated alerts based on movement pattern analytics. The City has not yet
+adopted a data governance or retention policy specific to this surveillance program.
+
+COUNCIL AUTHORIZATION:
+Staff requests council authorization to finalize and execute the contract. Note that
+the City Manager signed a letter of intent with SecureTech Solutions on 2024-02-20
+prior to this council meeting scheduled for 2024-03-05.

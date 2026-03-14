@@ -1,0 +1,48 @@
+COUNTY OF TULARE — COUNTY ADMINISTRATOR'S OFFICE
+Technology Governance Assessment — Public Safety Monitoring Program
+
+ASSESSMENT DATE: 2024-01-20
+PREPARED BY: County Administrator's Office, Compliance Division
+
+EXECUTIVE SUMMARY:
+This assessment documents governance readiness for the planned county-wide deployment
+of the SecureTech Solutions public safety monitoring platform.
+
+DEPLOYMENT SCOPE:
+The County intends to deploy surveillance infrastructure at 47 locations across the
+county. Deployment is planned to commence 2024-03-01 following board authorization
+expected at the 2024-02-06 Board of Supervisors meeting.
+
+GOVERNANCE GAP FINDINGS:
+The following policy instruments have not been adopted as of the date of this assessment:
+
+  1. Countywide Surveillance Governance Policy — No policy exists governing the
+     operation, oversight, or auditing of the proposed surveillance network.
+
+  2. Data Retention and Destruction Schedule — No formal schedule has been adopted
+     for retention, archiving, or deletion of video, license plate, or acoustic data.
+
+  3. Inter-Agency Data Sharing Protocol — The County has not established a policy
+     governing whether or how collected data may be shared with municipalities,
+     state agencies, or federal law enforcement.
+
+  4. Public Transparency and Accountability Framework — No public hearing has been
+     held and no public disclosure has been made describing the planned surveillance
+     capability or its legal basis.
+
+  5. Independent Civil Liberties Review — No independent legal or civil liberties
+     review of the program has been conducted.
+
+RISK CLASSIFICATION: CRITICAL
+
+RECOMMENDATION:
+All five governance instruments must be adopted before system activation. The scale
+of county-wide deployment and absence of any data governance framework creates
+substantial constitutional and statutory risk.
+
+PEER JURISDICTION FINDING:
+Comparable governance gap findings have been documented at the City of Riverside
+and City of Lakewood, both of which are also contracting with SecureTech Solutions
+for public safety monitoring infrastructure. The recurrence of this pattern across
+three independent jurisdictions suggests a systemic gap in vendor due diligence
+and pre-contract governance review practices.

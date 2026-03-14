@@ -1,0 +1,41 @@
+CITY OF RIVERSIDE — INFORMATION TECHNOLOGY PROCUREMENT
+City Council Regular Meeting — Staff Report
+
+SUBJECT: Approval of Sole-Source Contract for Public Safety Technology Platform
+
+RECOMMENDATION:
+Staff recommends that the City Council authorize the City Manager to execute a sole-source
+contract with SecureTech Solutions for procurement of a real-time public safety monitoring
+platform in the amount of $1,850,000.
+
+BACKGROUND:
+The City of Riverside Information Technology Department has identified a need to upgrade its
+public safety communications and monitoring infrastructure. Following an internal assessment,
+staff determined that SecureTech Solutions is uniquely qualified to provide the required
+platform capabilities.
+
+SOLE-SOURCE JUSTIFICATION:
+This contract is recommended as a sole-source procurement because SecureTech Solutions holds
+proprietary integration protocols required to connect with existing City systems. A competitive
+solicitation would delay implementation by an estimated 18 months.
+
+FISCAL IMPACT:
+The total contract value of $1,850,000 will be funded through the General Fund. No specific
+appropriation number has been assigned at this time. The Finance Department is coordinating
+funding allocation.
+
+CONTRACT TERMS:
+The agreement covers installation, configuration, and a 36-month maintenance period.
+The contract document has been reviewed by the City Attorney's office. The agreement
+references unsigned contract exhibit C which contains all technical specifications.
+
+DATA COLLECTION:
+The platform will collect real-time video feeds, license plate recognition data, and
+pedestrian movement analytics across designated zones. No formal data governance policy
+for retention and deletion of collected surveillance data has been established prior to
+platform deployment.
+
+COUNCIL AUTHORIZATION:
+Council authorization is sought for execution of the agreement. The contract was
+preliminarily executed by the City Manager on 2024-03-01 pending formal council ratification
+at this meeting scheduled for 2024-03-15.
