@@ -135,7 +135,7 @@ def test_generate_recommendation_unknown_category_uses_generic():
 
 
 def test_generate_recommendation_includes_document_id():
-    rec = generate_recommendation(
+    generate_recommendation(
         {"layer": "fiscal", "_document_id": "budget_resolution_2026"},
         "fiscal_compliance",
     )
