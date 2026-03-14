@@ -1,0 +1,8 @@
+{
+  "_comment": "Example jurisdiction A — copy and customize for your jurisdiction.",
+  "name": "City of Alpha",
+  "meeting_type": "City Council Regular Meeting",
+  "legistar_base_url": "https://alpha.legistar.com",
+  "state": "CA",
+  "country": "US"
+}

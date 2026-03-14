@@ -1,0 +1,8 @@
+{
+  "_comment": "Example jurisdiction B — copy and customize for your jurisdiction.",
+  "name": "City of Beta",
+  "meeting_type": "Town Council Regular Meeting",
+  "legistar_base_url": "https://beta.legistar.com",
+  "state": "TX",
+  "country": "US"
+}
