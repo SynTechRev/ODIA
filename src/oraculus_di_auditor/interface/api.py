@@ -161,7 +161,6 @@ def create_app() -> Any:
     except ImportError as e:
         logger.warning(f"Mesh routes not available: {e}")
 
-
     # Register multi-jurisdiction routes
     try:
         from .routes.multi_jurisdiction import register_multi_jurisdiction_routes
