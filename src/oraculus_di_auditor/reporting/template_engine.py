@@ -146,6 +146,7 @@ class ReportTemplateEngine:
 # HTML conversion helper
 # ---------------------------------------------------------------------------
 
+
 def _md_to_html(markdown_text: str) -> str:
     """Convert Markdown to HTML via pandoc (or basic fallback).
 
@@ -163,7 +164,11 @@ def _md_to_html(markdown_text: str) -> str:
             check=True,
         )
         return result.stdout
-    except (FileNotFoundError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+    except (
+        FileNotFoundError,
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+    ):
         # Fallback: minimal HTML with raw markdown preserved.
         escaped = markdown_text.replace("&", "&amp;").replace("<", "&lt;")
         return f"<pre>{escaped}</pre>"

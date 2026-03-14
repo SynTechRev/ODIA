@@ -15,6 +15,7 @@ from oraculus_di_auditor.reporting import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_analysis_result(
     doc_id: str = "doc-1",
     fiscal: list[dict] | None = None,
@@ -37,12 +38,19 @@ def _anomaly(
     severity: str = "medium",
     layer: str = "fiscal",
 ) -> dict:
-    return {"id": id_, "issue": issue, "severity": severity, "layer": layer, "details": {}}
+    return {
+        "id": id_,
+        "issue": issue,
+        "severity": severity,
+        "layer": layer,
+        "details": {},
+    }
 
 
 # ---------------------------------------------------------------------------
 # Finding model
 # ---------------------------------------------------------------------------
+
 
 def test_finding_validates_correctly():
     f = Finding(
@@ -81,6 +89,7 @@ def test_finding_accepts_optional_fields():
 # SeveritySummary
 # ---------------------------------------------------------------------------
 
+
 def test_severity_summary_total_computes_correctly():
     s = SeveritySummary(critical=2, high=3, medium=5, low=1)
     assert s.total == 11
@@ -95,6 +104,7 @@ def test_severity_summary_defaults_to_zero():
 # ---------------------------------------------------------------------------
 # AuditReport serialization
 # ---------------------------------------------------------------------------
+
 
 def test_audit_report_serializes_to_dict():
     report = AuditReport(
@@ -127,6 +137,7 @@ def test_audit_report_serializes_to_json():
 # ---------------------------------------------------------------------------
 # build_report_from_analysis
 # ---------------------------------------------------------------------------
+
 
 def test_build_report_from_analysis_converts_raw_results():
     results = [
@@ -218,7 +229,9 @@ def test_detector_summaries_populated():
     names = {d.detector_name for d in report.detector_summaries}
     assert "fiscal" in names
     assert "surveillance" in names
-    fiscal_det = next(d for d in report.detector_summaries if d.detector_name == "fiscal")
+    fiscal_det = next(
+        d for d in report.detector_summaries if d.detector_name == "fiscal"
+    )
     assert fiscal_det.anomaly_count == 2
 
 

@@ -169,9 +169,7 @@ def markdown_to_docx(
         not available.
     """
     if not shutil.which("pandoc"):
-        logger.warning(
-            "pandoc not found. Install pandoc to enable DOCX export."
-        )
+        logger.warning("pandoc not found. Install pandoc to enable DOCX export.")
         return None
 
     out = Path(output_path)

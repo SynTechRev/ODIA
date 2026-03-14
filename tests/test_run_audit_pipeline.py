@@ -46,6 +46,7 @@ def _setup(tmp_path: Path) -> tuple[Path, Path, Path]:
 # Backward compatibility — existing behavior unchanged without new flags
 # ---------------------------------------------------------------------------
 
+
 def test_backward_compat_creates_json_and_markdown(tmp_path: Path):
     """Without new flags, audit_report.json and audit_report.md are produced."""
     config_dir, source_dir, output_dir = _setup(tmp_path)
@@ -92,6 +93,7 @@ def test_backward_compat_markdown_is_nonempty(tmp_path: Path):
 # --formats flag
 # ---------------------------------------------------------------------------
 
+
 def test_formats_json_only(tmp_path: Path):
     config_dir, source_dir, output_dir = _setup(tmp_path)
     run_audit.run_audit(
@@ -132,6 +134,7 @@ def test_formats_html_creates_html_file(tmp_path: Path):
 # ---------------------------------------------------------------------------
 # --executive flag
 # ---------------------------------------------------------------------------
+
 
 def test_executive_flag_creates_executive_report(tmp_path: Path):
     config_dir, source_dir, output_dir = _setup(tmp_path)
@@ -176,6 +179,7 @@ def test_executive_flag_does_not_replace_full_report(tmp_path: Path):
 # --template flag
 # ---------------------------------------------------------------------------
 
+
 def test_custom_template_name(tmp_path: Path):
     """Passing a different template name renders that template."""
     config_dir, source_dir, output_dir = _setup(tmp_path)
@@ -194,6 +198,7 @@ def test_custom_template_name(tmp_path: Path):
 # ---------------------------------------------------------------------------
 # Error handling (inherited from existing behavior)
 # ---------------------------------------------------------------------------
+
 
 def test_missing_source_dir_raises(tmp_path: Path):
     config_dir = tmp_path / "config"

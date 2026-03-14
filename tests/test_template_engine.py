@@ -101,13 +101,17 @@ def _sample_report() -> AuditReport:
             ),
         ],
         findings=findings,
-        recommendations=["Obtain signed authorization.", "Review surveillance contract."],
+        recommendations=[
+            "Obtain signed authorization.",
+            "Review surveillance contract.",
+        ],
     )
 
 
 # ---------------------------------------------------------------------------
 # render_markdown
 # ---------------------------------------------------------------------------
+
 
 def test_render_markdown_produces_string():
     engine = ReportTemplateEngine(template_dir=TEMPLATE_DIR)
@@ -140,6 +144,7 @@ def test_render_markdown_contains_severity_table():
 # render_to_file
 # ---------------------------------------------------------------------------
 
+
 def test_render_to_file_creates_file():
     engine = ReportTemplateEngine(template_dir=TEMPLATE_DIR)
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -169,6 +174,7 @@ def test_render_to_file_returns_resolved_path():
 # available_templates
 # ---------------------------------------------------------------------------
 
+
 def test_available_templates_lists_files():
     engine = ReportTemplateEngine(template_dir=TEMPLATE_DIR)
     templates = engine.available_templates()
@@ -191,6 +197,7 @@ def test_available_templates_missing_dir_returns_empty():
 # Missing template raises TemplateNotFound
 # ---------------------------------------------------------------------------
 
+
 def test_missing_template_raises_error():
     engine = ReportTemplateEngine(template_dir=TEMPLATE_DIR)
     with pytest.raises(Exception):  # jinja2.TemplateNotFound is a subclass of Exception
@@ -200,6 +207,7 @@ def test_missing_template_raises_error():
 # ---------------------------------------------------------------------------
 # Executive template is shorter than full template
 # ---------------------------------------------------------------------------
+
 
 def test_executive_template_shorter_than_full():
     engine = ReportTemplateEngine(template_dir=TEMPLATE_DIR)
@@ -213,11 +221,15 @@ def test_executive_template_shorter_than_full():
 # All three templates render without Jinja2 errors
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("template_name", [
-    "audit_report.md",
-    "audit_report_executive.md",
-    "multi_jurisdiction_report.md",
-])
+
+@pytest.mark.parametrize(
+    "template_name",
+    [
+        "audit_report.md",
+        "audit_report_executive.md",
+        "multi_jurisdiction_report.md",
+    ],
+)
 def test_all_templates_render_without_errors(template_name):
     engine = ReportTemplateEngine(template_dir=TEMPLATE_DIR)
     report = _sample_report()
@@ -229,6 +241,7 @@ def test_all_templates_render_without_errors(template_name):
 # ---------------------------------------------------------------------------
 # build_report_from_analysis integration
 # ---------------------------------------------------------------------------
+
 
 def test_engine_renders_report_from_analysis():
     """End-to-end: build report from raw analysis then render via template."""

@@ -72,6 +72,7 @@ def _sample_report() -> AuditReport:
 # markdown_to_html
 # ---------------------------------------------------------------------------
 
+
 def test_markdown_to_html_produces_string():
     html = markdown_to_html(_SAMPLE_MD)
     assert isinstance(html, str)
@@ -95,6 +96,7 @@ def test_markdown_to_html_fallback_when_no_pandoc_no_markdown():
         with patch.dict("sys.modules", {"markdown": None}):
             # Re-import to pick up patched state.
             from oraculus_di_auditor.reporting import format_converters
+
             with patch.object(format_converters, "_can_import", return_value=False):
                 html = format_converters.markdown_to_html("# Hello")
                 assert "<pre>" in html or "Hello" in html
@@ -103,6 +105,7 @@ def test_markdown_to_html_fallback_when_no_pandoc_no_markdown():
 # ---------------------------------------------------------------------------
 # get_available_formats
 # ---------------------------------------------------------------------------
+
 
 def test_get_available_formats_always_includes_json_and_markdown():
     formats = get_available_formats()
@@ -131,6 +134,7 @@ def test_get_available_formats_html_when_markdown_available():
 # ---------------------------------------------------------------------------
 # export_report — JSON and Markdown always produced
 # ---------------------------------------------------------------------------
+
 
 def test_export_report_creates_json_and_markdown():
     report = _sample_report()
@@ -235,6 +239,7 @@ def test_export_report_html_when_available():
 # Graceful handling when pandoc/weasyprint not installed
 # ---------------------------------------------------------------------------
 
+
 def test_markdown_to_pdf_returns_none_when_no_converter():
     with patch("shutil.which", return_value=None):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -270,6 +275,7 @@ def test_export_report_skips_pdf_gracefully_when_unavailable():
 # ---------------------------------------------------------------------------
 # Integration: build_report_from_analysis → export_report
 # ---------------------------------------------------------------------------
+
 
 def test_export_report_end_to_end_from_analysis():
     results = [

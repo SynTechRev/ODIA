@@ -18,9 +18,7 @@ from oraculus_di_auditor.interface.routes.reports import (
     register_report_routes,
 )
 
-pytestmark = pytest.mark.skipif(
-    not _FASTAPI_AVAILABLE, reason="FastAPI not installed"
-)
+pytestmark = pytest.mark.skipif(not _FASTAPI_AVAILABLE, reason="FastAPI not installed")
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -168,7 +166,9 @@ def test_generate_report_generated_formats_always_includes_json():
         json={
             "report_type": "single",
             "analysis_results": [],
-            "formats": ["pdf"],  # pdf not generated at API level, but json always present
+            "formats": [
+                "pdf"
+            ],  # pdf not generated at API level, but json always present
         },
     )
     assert "json" in resp.json()["generated_formats"]
