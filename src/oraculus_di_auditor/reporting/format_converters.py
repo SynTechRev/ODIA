@@ -258,68 +258,95 @@ def export_report(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     available = get_available_formats()
-    requested = [f.lower() for f in (formats or available)]
+    requested = {f.lower() for f in (formats or available)}
     stem = f"{report.report_id}_report"
-    engine = ReportTemplateEngine(template_dir=template_dir)
-
-    # Render Markdown once — reused for HTML/PDF/DOCX.
-    md_content: str | None = None
     written: dict[str, Path] = {}
 
-    for fmt in requested:
-        if fmt not in available and fmt not in ("json", "markdown"):
-            logger.warning("Format '%s' not available — skipping.", fmt)
-            continue
+    if "json" in requested:
+        written["json"] = _export_json(report, out_dir, stem)
 
-        if fmt == "json":
-            path = out_dir / f"{stem}.json"
-            _write_json(report, path)
-            written["json"] = path
-            print(f"[OK] JSON  → {path}")
+    md_formats = requested & {"markdown", "html", "pdf", "docx"}
+    if md_formats:
+        engine = ReportTemplateEngine(template_dir=template_dir)
+        md = engine.render_markdown(report, template_name=template_name)
+        title = report.title or "ODIA Audit Report"
+        written.update(_export_md_formats(md, md_formats, out_dir, stem, title))
 
-        elif fmt == "markdown":
-            path = out_dir / f"{stem}.md"
-            if md_content is None:
-                md_content = engine.render_markdown(report, template_name=template_name)
-            path.write_text(md_content, encoding="utf-8")
-            written["markdown"] = path
-            print(f"[OK] Markdown → {path}")
-
-        elif fmt == "html":
-            path = out_dir / f"{stem}.html"
-            if md_content is None:
-                md_content = engine.render_markdown(report, template_name=template_name)
-            html = markdown_to_html(md_content)
-            path.write_text(html, encoding="utf-8")
-            written["html"] = path
-            print(f"[OK] HTML  → {path}")
-
-        elif fmt == "pdf":
-            path = out_dir / f"{stem}.pdf"
-            if md_content is None:
-                md_content = engine.render_markdown(report, template_name=template_name)
-            result = markdown_to_pdf(md_content, path, title=report.title)
-            if result:
-                written["pdf"] = result
-                print(f"[OK] PDF   → {result}")
-            else:
-                print("[SKIP] PDF — no converter available")
-
-        elif fmt == "docx":
-            path = out_dir / f"{stem}.docx"
-            if md_content is None:
-                md_content = engine.render_markdown(report, template_name=template_name)
-            result = markdown_to_docx(md_content, path)
-            if result:
-                written["docx"] = result
-                print(f"[OK] DOCX  → {result}")
-            else:
-                print("[SKIP] DOCX — pandoc not available")
-
-        else:
-            logger.warning("Unknown format '%s' — skipping.", fmt)
+    for fmt in requested - {"json", "markdown", "html", "pdf", "docx"}:
+        logger.warning("Format '%s' not available — skipping.", fmt)
 
     return written
+
+
+def _export_md_formats(
+    md: str,
+    formats: set[str],
+    out_dir: Path,
+    stem: str,
+    title: str,
+) -> dict[str, Path]:
+    """Render all Markdown-derived formats from a pre-rendered Markdown string."""
+    written: dict[str, Path] = {}
+    if "markdown" in formats:
+        written["markdown"] = _export_markdown(md, out_dir, stem)
+    if "html" in formats:
+        written["html"] = _export_html(md, out_dir, stem)
+    if "pdf" in formats:
+        result = _export_pdf(md, out_dir, stem, title)
+        if result:
+            written["pdf"] = result
+    if "docx" in formats:
+        result = _export_docx(md, out_dir, stem)
+        if result:
+            written["docx"] = result
+    return written
+
+
+def _export_json(report: AuditReport, out_dir: Path, stem: str) -> Path:
+    """Write report as JSON and return the path."""
+    path = out_dir / f"{stem}.json"
+    _write_json(report, path)
+    print(f"[OK] JSON  → {path}")
+    return path
+
+
+def _export_markdown(md: str, out_dir: Path, stem: str) -> Path:
+    """Write rendered Markdown to disk and return the path."""
+    path = out_dir / f"{stem}.md"
+    path.write_text(md, encoding="utf-8")
+    print(f"[OK] Markdown → {path}")
+    return path
+
+
+def _export_html(md: str, out_dir: Path, stem: str) -> Path:
+    """Convert Markdown to HTML, write to disk, and return the path."""
+    path = out_dir / f"{stem}.html"
+    html = markdown_to_html(md)
+    path.write_text(html, encoding="utf-8")
+    print(f"[OK] HTML  → {path}")
+    return path
+
+
+def _export_pdf(md: str, out_dir: Path, stem: str, title: str) -> Path | None:
+    """Convert Markdown to PDF and return the path, or None if unavailable."""
+    path = out_dir / f"{stem}.pdf"
+    result = markdown_to_pdf(md, path, title=title)
+    if result:
+        print(f"[OK] PDF   → {result}")
+        return result
+    print("[SKIP] PDF — no converter available")
+    return None
+
+
+def _export_docx(md: str, out_dir: Path, stem: str) -> Path | None:
+    """Convert Markdown to DOCX and return the path, or None if unavailable."""
+    path = out_dir / f"{stem}.docx"
+    result = markdown_to_docx(md, path)
+    if result:
+        print(f"[OK] DOCX  → {result}")
+        return result
+    print("[SKIP] DOCX — pandoc not available")
+    return None
 
 
 # ---------------------------------------------------------------------------

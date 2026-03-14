@@ -5,6 +5,7 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
+import jinja2
 import pytest
 
 from oraculus_di_auditor.reporting import AuditReport, ReportTemplateEngine
@@ -200,7 +201,7 @@ def test_available_templates_missing_dir_returns_empty():
 
 def test_missing_template_raises_error():
     engine = ReportTemplateEngine(template_dir=TEMPLATE_DIR)
-    with pytest.raises(Exception):  # jinja2.TemplateNotFound is a subclass of Exception
+    with pytest.raises(jinja2.TemplateNotFound):
         engine.render_markdown(_sample_report(), template_name="does_not_exist.md")
 
 
