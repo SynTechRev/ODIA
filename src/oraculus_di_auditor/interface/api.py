@@ -170,6 +170,15 @@ def create_app() -> Any:
     except Exception as e:
         logger.warning(f"Multi-jurisdiction routes not available: {e}")
 
+    # Register unified report generation routes
+    try:
+        from .routes.reports import register_report_routes
+
+        register_report_routes(app)
+        logger.info("Report generation routes registered")
+    except Exception as e:
+        logger.warning(f"Report generation routes not available: {e}")
+
     return app
 
 

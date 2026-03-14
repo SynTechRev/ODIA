@@ -207,6 +207,18 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="IDS",
         help="Comma-separated jurisdiction IDs to analyze (default: all in config-dir)",
     )
+    p.add_argument(
+        "--formats",
+        default="json,markdown",
+        metavar="LIST",
+        help="Comma-separated output formats: json,markdown,html,pdf,docx"
+        " (default: json,markdown)",
+    )
+    p.add_argument(
+        "--executive",
+        action="store_true",
+        help="Also generate an executive summary using audit_report_executive.md",
+    )
     return p
 
 
@@ -247,12 +259,15 @@ def _print_summary(
     print()
 
 
-def run(args: argparse.Namespace) -> int:
+def run(args: argparse.Namespace) -> int:  # noqa: C901
     """Execute the multi-jurisdiction audit pipeline. Returns exit code."""
     config_dir = Path(args.config_dir)
     source_dir = Path(args.source_dir)
     output_dir = Path(args.output)
     verbose = args.verbose
+    formats_raw = getattr(args, "formats", "json,markdown")
+    formats = [f.strip() for f in formats_raw.split(",") if f.strip()]
+    executive = getattr(args, "executive", False)
 
     # --- 1. Load registry ---
     if verbose:
@@ -324,7 +339,6 @@ def run(args: argparse.Namespace) -> int:
         print("Generating reports...")
     gen = ComparativeReportGenerator(runner_results, patterns)
     json_report = gen.generate_json_report()
-    md_report = gen.generate_markdown_report()
 
     # --- 6. Write output ---
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -332,14 +346,103 @@ def run(args: argparse.Namespace) -> int:
     json_path = output_dir / f"multi_audit_{ts}.json"
     md_path = output_dir / f"multi_audit_{ts}.md"
 
+    # Always write JSON (backward-compat: preserves report_type, jurisdictions,
+    # risk_ranking)
     json_path.write_text(
         json.dumps(json_report, indent=2, ensure_ascii=False), encoding="utf-8"
     )
-    md_path.write_text(md_report, encoding="utf-8")
-
     if verbose:
         print(f"  JSON report: {json_path}")
-        print(f"  Markdown report: {md_path}")
+
+    # Build AuditReport wrapper so the template engine can render markdown
+    _repo_root = Path(__file__).resolve().parent.parent
+    _template_dir = _repo_root / "templates"
+    try:
+        from oraculus_di_auditor.reporting import AuditReport, ReportTemplateEngine
+        from oraculus_di_auditor.reporting.format_converters import (
+            markdown_to_docx,
+            markdown_to_html,
+            markdown_to_pdf,
+        )
+
+        # Wrap ComparativeReportGenerator JSON into an AuditReport for templating
+        audit_report = AuditReport(
+            report_id=json_report.get("report_id", f"MULTI-{ts}"),
+            report_type=json_report.get("report_type", "multi_jurisdiction"),
+            generated_at=json_report.get("generated_at", datetime.now(UTC).isoformat()),
+            title="Multi-Jurisdiction Comparative Audit Report",
+            executive_summary=(
+                f"Analysis of {len(runner_results)} jurisdiction(s) complete. "
+                f"See comparison matrix and cross-jurisdiction patterns below."
+            ),
+            metadata={
+                "jurisdictions": list(runner_results.keys()),
+                "jurisdiction_count": len(runner_results),
+                "cross_jurisdiction_patterns": json_report.get(
+                    "cross_jurisdiction_patterns", []
+                ),
+                "risk_ranking": json_report.get("risk_ranking", []),
+            },
+        )
+        engine = ReportTemplateEngine(template_dir=_template_dir)
+        md_content: str | None = None
+
+        for fmt in formats:
+            if fmt == "markdown":
+                if md_content is None:
+                    md_content = engine.render_markdown(
+                        audit_report, template_name="multi_jurisdiction_report.md"
+                    )
+                md_path.write_text(md_content, encoding="utf-8")
+                if verbose:
+                    print(f"  Markdown report: {md_path}")
+            elif fmt == "html":
+                if md_content is None:
+                    md_content = engine.render_markdown(
+                        audit_report, template_name="multi_jurisdiction_report.md"
+                    )
+                html_path = output_dir / f"multi_audit_{ts}.html"
+                html_path.write_text(markdown_to_html(md_content), encoding="utf-8")
+                if verbose:
+                    print(f"  HTML report: {html_path}")
+            elif fmt == "pdf":
+                if md_content is None:
+                    md_content = engine.render_markdown(
+                        audit_report, template_name="multi_jurisdiction_report.md"
+                    )
+                pdf_path = output_dir / f"multi_audit_{ts}.pdf"
+                result = markdown_to_pdf(
+                    md_content, pdf_path, title="Multi-Jurisdiction Audit Report"
+                )
+                if result and verbose:
+                    print(f"  PDF report: {result}")
+            elif fmt == "docx":
+                if md_content is None:
+                    md_content = engine.render_markdown(
+                        audit_report, template_name="multi_jurisdiction_report.md"
+                    )
+                docx_path = output_dir / f"multi_audit_{ts}.docx"
+                result = markdown_to_docx(md_content, docx_path)
+                if result and verbose:
+                    print(f"  DOCX report: {result}")
+
+        if executive:
+            exec_md = engine.render_markdown(
+                audit_report, template_name="audit_report_executive.md"
+            )
+            exec_path = output_dir / f"multi_audit_{ts}_executive.md"
+            exec_path.write_text(exec_md, encoding="utf-8")
+            if verbose:
+                print(f"  Executive summary: {exec_path}")
+
+    except Exception as exc:  # noqa: BLE001
+        # Fallback: use legacy markdown generator if reporting system unavailable
+        logger.warning("Template rendering failed (%s); using legacy markdown.", exc)
+        if "markdown" in formats:
+            md_report = gen.generate_markdown_report()
+            md_path.write_text(md_report, encoding="utf-8")
+            if verbose:
+                print(f"  Markdown report (legacy): {md_path}")
 
     # --- 7. Print summary ---
     _print_summary(runner_results, patterns, output_dir)

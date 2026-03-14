@@ -3,6 +3,8 @@
 Usage:
     python scripts/run_audit.py --config-dir config/ --source data/sources/ --output reports/
     python scripts/run_audit.py --config-dir config/ --source data/ --output out/ --verbose
+    python scripts/run_audit.py ... --formats json,markdown,html
+    python scripts/run_audit.py ... --template audit_report.md --executive
 
 What it does:
     1. Load jurisdiction config from --config-dir
@@ -98,6 +100,23 @@ def _build_parser() -> argparse.ArgumentParser:
         "--verbose",
         action="store_true",
         help="Print per-document detector output",
+    )
+    p.add_argument(
+        "--formats",
+        default="json,markdown",
+        metavar="LIST",
+        help="Comma-separated output formats: json,markdown,html,pdf,docx (default: json,markdown)",
+    )
+    p.add_argument(
+        "--template",
+        default="audit_report.md",
+        metavar="TMPL",
+        help="Jinja2 template to use for Markdown output (default: audit_report.md)",
+    )
+    p.add_argument(
+        "--executive",
+        action="store_true",
+        help="Also generate an executive summary report using audit_report_executive.md",
     )
     return p
 
@@ -362,91 +381,141 @@ def _build_report(
     }
 
 
+def _to_analysis_format(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Adapt _run_audit() output to build_report_from_analysis() input format.
+
+    Groups flat finding lists by detector layer so the unified reporting
+    system can build structured AuditReport models.
+    """
+    adapted = []
+    for r in results:
+        findings_by_layer: dict[str, list[dict[str, Any]]] = {}
+        for f in r.get("findings", []):
+            layer = f.get("layer", "unknown")
+            findings_by_layer.setdefault(layer, []).append(f)
+        adapted.append(
+            {
+                "metadata": {
+                    "document_id": r["document_id"],
+                    "title": r.get("title", r["document_id"]),
+                    "source": r.get("source_path", ""),
+                },
+                "findings": findings_by_layer,
+            }
+        )
+    return adapted
+
+
 # ---------------------------------------------------------------------------
 # Output writers
 # ---------------------------------------------------------------------------
 
 
-def _write_json_report(report: dict[str, Any], output_dir: Path) -> Path:
-    path = output_dir / "audit_report.json"
-    path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    return path
+def _write_reports(
+    jcfg: JurisdictionConfig,
+    results: list[dict[str, Any]],
+    output_dir: Path,
+    *,
+    formats: list[str],
+    template_name: str,
+    executive: bool,
+    template_dir: Path,
+) -> dict[str, Path]:
+    """Build an AuditReport and write all requested formats.
 
+    Always writes ``audit_report.json`` and ``audit_report.md`` when those
+    formats are requested (backward-compatible filenames). Additional formats
+    (html, pdf, docx) are written as ``audit_report.{ext}``. The executive
+    summary is written as ``audit_report_executive.md``.
 
-def _write_markdown_report(report: dict[str, Any], output_dir: Path) -> Path:
-    jur = report["jurisdiction"]
-    sev = report["severity_summary"]
-    lines: list[str] = [
-        f"# Audit Report — {jur['name']}",
-        "",
-        f"**Generated:** {report['audit_timestamp']}  ",
-        f"**Jurisdiction:** {jur['name']}, {jur['state']} ({jur['country']})  ",
-        f"**Meeting type:** {jur['meeting_type'] or 'N/A'}  ",
-        f"**Date range:** {report['date_range']['earliest']} → {report['date_range']['latest']}  ",
-        f"**Documents analyzed:** {report['document_count']}  ",
-        f"**Total findings:** {report['total_findings']}  ",
-        "",
-        "## Severity Summary",
-        "",
-        "| Severity | Count |",
-        "|----------|-------|",
-    ]
-    for severity in ("critical", "high", "medium", "low"):
-        count = sev.get(severity, 0)
-        lines.append(f"| {severity.capitalize()} | {count} |")
+    Returns a dict mapping format name to the written Path.
+    """
+    from oraculus_di_auditor.reporting import ReportTemplateEngine
+    from oraculus_di_auditor.reporting.format_converters import (
+        markdown_to_docx,
+        markdown_to_html,
+        markdown_to_pdf,
+    )
+    from oraculus_di_auditor.reporting.models import build_report_from_analysis
 
-    lines += [
-        "",
-        "## Findings by Layer",
-        "",
-        "| Layer | Critical | High | Medium | Low |",
-        "|-------|----------|------|--------|-----|",
-    ]
-    for layer, counts in sorted(report["findings_by_layer"].items()):
-        lines.append(
-            f"| {layer} "
-            f"| {counts.get('critical', 0)} "
-            f"| {counts.get('high', 0)} "
-            f"| {counts.get('medium', 0)} "
-            f"| {counts.get('low', 0)} |"
+    analysis_format = _to_analysis_format(results)
+    audit_report = build_report_from_analysis(
+        analysis_format,
+        jurisdiction=jcfg.name,
+        title=f"Audit Report — {jcfg.name}",
+        report_type="single_jurisdiction",
+    )
+
+    engine = ReportTemplateEngine(template_dir=template_dir)
+    written: dict[str, Path] = {}
+    md_content: str | None = None
+
+    for fmt in formats:
+        if fmt == "json":
+            path = output_dir / "audit_report.json"
+            path.write_text(
+                json.dumps(json.loads(audit_report.model_dump_json()), indent=2),
+                encoding="utf-8",
+            )
+            written["json"] = path
+            print(f"  JSON : {path}")
+
+        elif fmt == "markdown":
+            if md_content is None:
+                md_content = engine.render_markdown(
+                    audit_report, template_name=template_name
+                )
+            path = output_dir / "audit_report.md"
+            path.write_text(md_content, encoding="utf-8")
+            written["markdown"] = path
+            print(f"  MD   : {path}")
+
+        elif fmt == "html":
+            if md_content is None:
+                md_content = engine.render_markdown(
+                    audit_report, template_name=template_name
+                )
+            path = output_dir / "audit_report.html"
+            path.write_text(markdown_to_html(md_content), encoding="utf-8")
+            written["html"] = path
+            print(f"  HTML : {path}")
+
+        elif fmt == "pdf":
+            if md_content is None:
+                md_content = engine.render_markdown(
+                    audit_report, template_name=template_name
+                )
+            path = output_dir / "audit_report.pdf"
+            result = markdown_to_pdf(md_content, path, title=audit_report.title)
+            if result:
+                written["pdf"] = result
+                print(f"  PDF  : {result}")
+            else:
+                print("  PDF  : [SKIP] no converter available")
+
+        elif fmt == "docx":
+            if md_content is None:
+                md_content = engine.render_markdown(
+                    audit_report, template_name=template_name
+                )
+            path = output_dir / "audit_report.docx"
+            result = markdown_to_docx(md_content, path)
+            if result:
+                written["docx"] = result
+                print(f"  DOCX : {result}")
+            else:
+                print("  DOCX : [SKIP] pandoc not available")
+
+    if executive:
+        exec_md = engine.render_markdown(
+            audit_report, template_name="audit_report_executive.md"
         )
+        path = output_dir / "audit_report_executive.md"
+        path.write_text(exec_md, encoding="utf-8")
+        written["executive"] = path
+        print(f"  EXEC : {path}")
 
-    lines += [
-        "",
-        "## Top 10 Findings",
-        "",
-    ]
-    for i, f in enumerate(report["top_findings"], 1):
-        doc_id = f.get("_document_id", "unknown")
-        lines += [
-            f"### {i}. `{f.get('id', 'unknown')}` ({f.get('severity', '?').upper()})",
-            "",
-            f"**Document:** {doc_id}  ",
-            f"**Layer:** {f.get('layer', '?')}  ",
-            f"**Issue:** {f.get('issue', '')}  ",
-            "",
-        ]
-        details = f.get("details", {})
-        if details:
-            lines.append("**Details:**")
-            lines.append("")
-            lines.append("```json")
-            lines.append(json.dumps(details, indent=2, ensure_ascii=False))
-            lines.append("```")
-            lines.append("")
-
-    lines += [
-        "## Documents Analyzed",
-        "",
-        "| Document | Findings |",
-        "|----------|----------|",
-    ]
-    for r in report["documents"]:
-        lines.append(f"| {r['title']} | {r['finding_count']} |")
-
-    path = output_dir / "audit_report.md"
-    path.write_text("\n".join(lines), encoding="utf-8")
-    return path
+    return written
 
 
 def _print_summary(report: dict[str, Any]) -> None:
@@ -486,10 +555,25 @@ def run_audit(
     source_dir: str | Path,
     output_dir: str | Path,
     verbose: bool = False,
+    *,
+    formats: list[str] | None = None,
+    template_name: str = "audit_report.md",
+    executive: bool = False,
+    template_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     """Programmatic entry point (also called by the CLI).
 
     Returns the full report dict so callers (and tests) can inspect results.
+
+    Args:
+        config_dir: Directory with jurisdiction config files.
+        source_dir: Directory to ingest documents from.
+        output_dir: Directory to write audit reports to.
+        verbose: Print per-document detector output.
+        formats: Output formats to generate. Default: ["json", "markdown"].
+        template_name: Jinja2 template for Markdown output.
+        executive: Also generate executive summary report.
+        template_dir: Path to Jinja2 templates. Defaults to repo_root/templates.
     """
     config_dir = Path(config_dir)
     source_dir = Path(source_dir)
@@ -537,16 +621,24 @@ def run_audit(
     run_ts = datetime.now(UTC).isoformat()
     results = _run_audit(docs, jcfg, verbose=verbose)
 
-    # 6. Build + write reports
+    # 6. Build legacy report dict (used by _print_summary)
     report = _build_report(jcfg, results, run_ts)
-    json_path = _write_json_report(report, output_dir)
-    md_path = _write_markdown_report(report, output_dir)
 
+    # 7. Write reports via unified reporting system
+    _formats = formats if formats is not None else ["json", "markdown"]
+    _template_dir = Path(template_dir) if template_dir else _REPO_ROOT / "templates"
     print("Reports written:")
-    print(f"  JSON : {json_path}")
-    print(f"  MD   : {md_path}")
+    _write_reports(
+        jcfg,
+        results,
+        output_dir,
+        formats=_formats,
+        template_name=template_name,
+        executive=executive,
+        template_dir=_template_dir,
+    )
 
-    # 7. Print summary
+    # 8. Print summary
     _print_summary(report)
 
     return report
@@ -569,6 +661,9 @@ def main() -> None:
             source_dir=args.source,
             output_dir=args.output,
             verbose=args.verbose,
+            formats=[f.strip() for f in args.formats.split(",") if f.strip()],
+            template_name=args.template,
+            executive=args.executive,
         )
     except (FileNotFoundError, NotADirectoryError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

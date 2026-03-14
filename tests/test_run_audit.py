@@ -194,14 +194,14 @@ def test_markdown_report_written(config_dir, source_dir, output_dir):
     assert md_path.exists()
     content = md_path.read_text(encoding="utf-8")
     assert "City of Testville" in content
-    assert "Severity Summary" in content
-    assert "Top 10 Findings" in content
+    assert "Severity Distribution" in content  # new template name
+    assert "Findings" in content
 
 
 def test_markdown_report_contains_document_table(config_dir, source_dir, output_dir):
     run_audit(config_dir, source_dir, output_dir)
     md = (output_dir / "audit_report.md").read_text(encoding="utf-8")
-    assert "Documents Analyzed" in md
+    assert "Document Inventory" in md  # new template name
 
 
 # ---------------------------------------------------------------------------
