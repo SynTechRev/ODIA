@@ -248,6 +248,461 @@
       "citation": "Vol. I, p. 125",
       "category": "civil_procedure",
       "origin_language": "Latin"
+    },
+    {
+      "term": "appropriation",
+      "definition": "A legislative act setting apart a sum of money for a designated purpose. Public money cannot be drawn from the treasury except in consequence of appropriations made by law.",
+      "citation": "Vol. I, p. 123",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "disbursement",
+      "definition": "The act of paying out money from a fund. The officer entrusted with public money is bound to disburse it only upon proper warrants and for lawful purposes.",
+      "citation": "Vol. I, p. 487",
+      "category": "public_finance",
+      "origin_language": "French"
+    },
+    {
+      "term": "fiscal year",
+      "definition": "The period of twelve months designated by law for the purposes of financial accounting and budgeting; the period covered by an annual financial statement of a government or corporation.",
+      "citation": "Vol. I, p. 591",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "financial warrant",
+      "definition": "An order drawn by one officer upon another, directing him to pay a sum of money to a third person. A treasury warrant is a government instrument directing payment from the public treasury.",
+      "citation": "Vol. II, p. 699",
+      "category": "public_finance",
+      "origin_language": "Germanic"
+    },
+    {
+      "term": "expenditure",
+      "definition": "Money actually paid out in exchange for goods or services, or to discharge an obligation. Distinguished from appropriation, which is merely the authority to spend.",
+      "citation": "Vol. I, p. 568",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "bid",
+      "definition": "An offer to perform a contract for work, or to supply merchandise, at a specified price. In public contracting, bids are submitted competitively in response to advertisement for proposals.",
+      "citation": "Vol. I, p. 183",
+      "category": "procurement",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "surety",
+      "definition": "One who undertakes to pay money or to do any other act in event that his principal fails therein. A surety binds himself to the creditor with his principal debtor as primarily liable.",
+      "citation": "Vol. II, p. 620",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public bond",
+      "definition": "An obligation; a written and sealed instrument by which a person acknowledges himself bound to pay money or perform some duty. A public officer's bond secures faithful performance of official duties.",
+      "citation": "Vol. I, p. 204",
+      "category": "procurement",
+      "origin_language": "Germanic"
+    },
+    {
+      "term": "public works",
+      "definition": "Constructions undertaken by a government for public use and benefit, such as roads, bridges, harbors, courthouses, and public buildings, typically procured by competitive contract.",
+      "citation": "Vol. II, p. 394",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "tender",
+      "definition": "An offer of money or service in satisfaction of a debt or obligation; in public contracting, the formal submission of a price proposal in response to a solicitation for bids.",
+      "citation": "Vol. II, p. 632",
+      "category": "procurement",
+      "origin_language": "French"
+    },
+    {
+      "term": "competitive bidding",
+      "definition": "A procedure requiring that contracts for public works or supplies be awarded on the basis of sealed bids publicly opened, to prevent favoritism and secure the best price for the public.",
+      "citation": "Vol. I, p. 376",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public contract",
+      "definition": "An agreement to which a governmental body is a party; subject to special rules requiring competitive bidding and legislative authorization for expenditure of public funds.",
+      "citation": "Vol. II, p. 380",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "collusion",
+      "definition": "A secret agreement between two or more persons to defraud another of their rights or to obtain an object forbidden by law. In procurement, collusion between bidders to eliminate competition constitutes fraud.",
+      "citation": "Vol. I, p. 322",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public officer",
+      "definition": "A person who holds a public office under the government, whose duties are defined by law, and who is charged with the performance of a public duty. Distinguished from an employee by exercise of independent discretion.",
+      "citation": "Vol. II, p. 381",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "accountability",
+      "definition": "The obligation of a person entrusted with public money or authority to answer for the manner in which such trust is discharged; liability to give account of one's conduct in office.",
+      "citation": "Vol. I, p. 44",
+      "category": "governance",
+      "origin_language": "French"
+    },
+    {
+      "term": "commission",
+      "definition": "A written authority given by a competent officer to another person authorizing him to perform some act or duty; also, a body of persons appointed to perform a public or quasi-public function.",
+      "citation": "Vol. I, p. 340",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "ordinance",
+      "definition": "The legislative enactment of a municipal or local government body; a law of local application passed by a city council or other governing body, having a more limited application than a statute.",
+      "citation": "Vol. II, p. 265",
+      "category": "governance",
+      "origin_language": "French"
+    },
+    {
+      "term": "resolution",
+      "definition": "A formal expression of opinion or intention agreed to by a vote of an assembly, legislature, or other deliberative body; less solemn than a law but binding on its adopting body.",
+      "citation": "Vol. II, p. 463",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "quorum",
+      "definition": "The number of members of a deliberative body that, when duly assembled, is legally competent to transact business; a constitutional majority necessary for the valid exercise of official power.",
+      "citation": "Vol. II, p. 412",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "charter",
+      "definition": "An instrument emanating from the sovereign power, in the nature of a grant; the instrument by which a municipal corporation is created and its powers defined. The organic law of the municipality.",
+      "citation": "Vol. I, p. 298",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "municipal corporation",
+      "definition": "A public corporation created by the state for purposes of local government; the corporate form assumed by a city, town, or borough to exercise the powers conferred upon it by its charter.",
+      "citation": "Vol. II, p. 148",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "council",
+      "definition": "The legislative or deliberative assembly of a municipal corporation; the body of persons elected or appointed to exercise legislative power within a municipality.",
+      "citation": "Vol. I, p. 420",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "vested right",
+      "definition": "A right so completely and definitely settled in a person that it cannot be impaired or taken away without that person's consent; a property interest recognized by law as belonging to a specific person.",
+      "citation": "Vol. II, p. 685",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "suffrage",
+      "definition": "The right to vote in public elections; the exercise of the elective franchise. The right to participate in government by casting a ballot for candidates for public office or on measures submitted to popular vote.",
+      "citation": "Vol. II, p. 611",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "franchise right",
+      "definition": "A special privilege conferred by government upon individuals, and which does not belong to the citizens of a country generally of common right. The right to vote; the right of a corporation to exist and exercise its powers.",
+      "citation": "Vol. I, p. 608",
+      "category": "constitutional_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "petition",
+      "definition": "A formal written application requesting a court, governmental body, or official to grant some right or relief; the right of citizens to address the government for redress of grievances, protected by the First Amendment.",
+      "citation": "Vol. II, p. 314",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "immunity",
+      "definition": "An exemption from the legal duties and penalties imposed by law upon other persons; a right or privilege which exempts a person from the operation of a rule of law.",
+      "citation": "Vol. I, p. 706",
+      "category": "constitutional_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "freedom of speech",
+      "definition": "The right to express opinions without censorship by the government; protected by the First Amendment. Includes oral and written expression, symbolic speech, and the right to refrain from speaking.",
+      "citation": "Vol. I, p. 612",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "hearsay",
+      "definition": "An out-of-court statement made by a person other than the witness who is testifying, offered to prove the truth of the matter asserted. Generally inadmissible unless covered by a recognized exception.",
+      "citation": "Vol. I, p. 669",
+      "category": "evidence",
+      "origin_language": "English"
+    },
+    {
+      "term": "circumstantial evidence",
+      "definition": "Evidence not drawn from direct observation of the fact in question but from other facts from which the existence of the fact may be inferred. Distinguished from direct evidence of the fact itself.",
+      "citation": "Vol. I, p. 309",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "documentary evidence",
+      "definition": "Evidence supplied by written instruments, contracts, books, accounts, letters, records, and other papers; distinguished from testimony given by witnesses or objects produced as exhibits.",
+      "citation": "Vol. I, p. 498",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "affidavit",
+      "definition": "A written or printed declaration or statement of facts, made voluntarily, and confirmed by the oath or affirmation of the party making it, taken before an officer having authority to administer such oath.",
+      "citation": "Vol. I, p. 57",
+      "category": "evidence",
+      "origin_language": "Medieval Latin"
+    },
+    {
+      "term": "deposition",
+      "definition": "The testimony of a witness taken upon interrogatories, not in open court, but in pursuance of a commission to take testimony issued by a court, or under a stipulation between the parties; reduced to writing and duly authenticated.",
+      "citation": "Vol. I, p. 475",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "oath",
+      "definition": "An external pledge or asseveration, made in verification of statements made, or to be made, coupled with an appeal to a sacred or revered object, in evidence of the serious and reverent state of mind of the party.",
+      "citation": "Vol. II, p. 241",
+      "category": "evidence",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "presumption",
+      "definition": "An inference affirmative or disaffirmable of the truth or falsehood of a proposition or fact, drawn by a process of probable reasoning in the absence of actual certainty of its truth or falsehood.",
+      "citation": "Vol. II, p. 345",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "admission",
+      "definition": "Any statement made or conduct exhibited by a party to an action inconsistent with the contentions maintained by him at the time of trial. An acknowledgment against one's own interest, admissible as evidence.",
+      "citation": "Vol. I, p. 62",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "subpoena duces tecum",
+      "definition": "A process by which the court commands a witness who has in his possession or control some document or paper that is pertinent to the issues to produce it at the trial or before a referee.",
+      "citation": "Vol. II, p. 602",
+      "category": "evidence",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "deed",
+      "definition": "A written instrument by which real property is conveyed; a sealed writing containing a contract or covenant, delivered by the party to be bound and accepted by the party to whom it is made.",
+      "citation": "Vol. I, p. 459",
+      "category": "property_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "conveyance",
+      "definition": "Every instrument in writing by which any estate or interest in real property is created, alienated, mortgaged, or encumbered; a transfer of title to property from one person to another.",
+      "citation": "Vol. I, p. 395",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "easement",
+      "definition": "A right in the owner of one parcel of land by reason of such ownership to use the land of another for a special purpose not inconsistent with a general property in the owner.",
+      "citation": "Vol. I, p. 535",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "fee simple",
+      "definition": "An absolute estate in land; the most complete and absolute form of ownership that the law permits; full ownership of real property that a person can hold in perpetuity and transfer freely.",
+      "citation": "Vol. I, p. 583",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "mortgage",
+      "definition": "A conveyance of an interest in property as security for the repayment of money borrowed; the instrument creating a lien on real property as security for the payment of a debt.",
+      "citation": "Vol. II, p. 137",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "lien",
+      "definition": "A charge imposed on specific property by which it is made security for the performance of an obligation; a charge or encumbrance upon a thing, giving the lien holder the right to enforce it against the property.",
+      "citation": "Vol. II, p. 28",
+      "category": "property_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "eminent domain",
+      "definition": "The power of the nation or a sovereign state to take, or to authorize the taking of, private property for a public use, with or without the consent of the owner, upon payment of just compensation.",
+      "citation": "Vol. I, p. 548",
+      "category": "property_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "title",
+      "definition": "The union of all the elements which constitute ownership; the right to, or ownership of, land; the means by which an owner of land has just possession of his property. The evidence of the right to possess.",
+      "citation": "Vol. II, p. 643",
+      "category": "property_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "breach of contract",
+      "definition": "The failure to perform any term of a contract, written or oral, without a legitimate legal excuse. A violation of a contractual obligation; the unexcused failure to perform a promise which forms the whole or part of a contract.",
+      "citation": "Vol. I, p. 222",
+      "category": "contracts",
+      "origin_language": "English"
+    },
+    {
+      "term": "damages",
+      "definition": "A pecuniary compensation or indemnity which may be recovered in the courts by any person who has suffered loss, detriment, or injury, whether to his person, property, or rights, through the unlawful act or omission of another.",
+      "citation": "Vol. I, p. 449",
+      "category": "contracts",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "specific performance",
+      "definition": "The equitable remedy of requiring exact performance of a contract in the specific form in which it was made, or according to the precise terms agreed upon. Granted where damages would be inadequate.",
+      "citation": "Vol. II, p. 584",
+      "category": "contracts",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "rescission",
+      "definition": "The cancellation or unmaking of a contract; putting an end to a contract as though it had never been. A remedy returning the parties to the position they would have occupied had no contract been made.",
+      "citation": "Vol. II, p. 456",
+      "category": "contracts",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "warranty",
+      "definition": "A promise or representation that a fact is or shall be as represented; in contracts, a promise that a statement of fact is true. Express warranties are stated; implied warranties arise by operation of law.",
+      "citation": "Vol. II, p. 703",
+      "category": "contracts",
+      "origin_language": "French"
+    },
+    {
+      "term": "indemnity",
+      "definition": "That which is given to a person to prevent his suffering damage; a sum of money paid by way of compensation for damage or loss. A contract by which one person agrees to secure another against an anticipated loss.",
+      "citation": "Vol. I, p. 706",
+      "category": "contracts",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "administrative law",
+      "definition": "The body of law that governs the activities of governmental agencies and the exercise of their powers; the branch of public law dealing with governmental regulation and administrative agencies.",
+      "citation": "Vol. I, p. 63",
+      "category": "administrative_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "summons",
+      "definition": "A writ directed to the sheriff, requiring him to notify the defendant that an action has been commenced against him in court, and that he is required to appear on a day named and answer the complaint.",
+      "citation": "Vol. II, p. 614",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "pleading",
+      "definition": "The formal written statement of a party's claims or defenses; the process in which the parties to a suit or action alternately present written statements of their contentions, each responsive to that which precedes it.",
+      "citation": "Vol. II, p. 323",
+      "category": "civil_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "venue",
+      "definition": "The particular county, city, or geographical area in which a court with jurisdiction may properly hear and determine a case; the place of trial. Distinct from jurisdiction, which is the power to hear the case.",
+      "citation": "Vol. II, p. 685",
+      "category": "civil_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "demurrer",
+      "definition": "An objection raised that, admitting the facts stated in the opposing pleading, the matter is legally insufficient. A pleading which asserts that even if all the facts alleged are true, the plaintiff has no legal claim.",
+      "citation": "Vol. I, p. 471",
+      "category": "civil_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "judgment",
+      "definition": "The official and authentic decision of a court of justice upon the respective rights and claims of the parties to an action or suit therein litigated and submitted to its determination.",
+      "citation": "Vol. I, p. 791",
+      "category": "civil_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "writ",
+      "definition": "A precept in writing, couched in the form of a letter, running in the name of the king, president, or state, issuing from a court of justice, and sealed with its seal, addressed to a sheriff or other officer of the law.",
+      "citation": "Vol. II, p. 723",
+      "category": "civil_procedure",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "execution",
+      "definition": "The carrying out or putting into effect of a court's judgment or decree; the process of enforcing a judgment. A judicial writ by which an officer of the court is empowered to carry into effect a final judgment.",
+      "citation": "Vol. I, p. 567",
+      "category": "civil_procedure",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "attachment",
+      "definition": "The act or process of taking, apprehending, or seizing a person or property by virtue of a writ or precept, for the purpose of securing satisfaction of a judgment or bringing a person before a court.",
+      "citation": "Vol. I, p. 150",
+      "category": "civil_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "due process of law",
+      "definition": "The conduct of legal proceedings according to established rules and principles for the protection of private rights; the requirement that government act through established legal procedures and not arbitrarily deprive persons of life, liberty, or property.",
+      "citation": "Vol. I, p. 529",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "equal protection",
+      "definition": "The constitutional guarantee that persons similarly situated shall be treated alike by the law; the requirement that government not discriminate unreasonably among classes of persons. Protected by the Fourteenth Amendment.",
+      "citation": "Vol. I, p. 556",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "nuisance",
+      "definition": "Anything that unlawfully worketh hurt, inconvenience, or damage. A nuisance is either public, affecting the rights of the community at large, or private, affecting only the rights of a particular individual.",
+      "citation": "Vol. II, p. 235",
+      "category": "tort_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "fraud",
+      "definition": "The knowing misrepresentation of the truth or concealment of a material fact to induce another to act to his detriment. Fraud vitiates every transaction, whether civil or criminal, into which it enters.",
+      "citation": "Vol. I, p. 613",
+      "category": "contracts",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public trust",
+      "definition": "A trust created for public or charitable purposes; an obligation incumbent upon public officers to administer public property, funds, and powers for the benefit of the people and not for private gain.",
+      "citation": "Vol. II, p. 390",
+      "category": "governance",
+      "origin_language": "English"
     }
   ]
 }

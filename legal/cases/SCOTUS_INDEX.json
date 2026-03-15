@@ -334,7 +334,8 @@
       ],
       "constitutional_basis": "Fourth Amendment",
       "relevance_to_audit": "Origin of the exclusionary rule for federal proceedings; foundational precedent for the proposition that constitutional rights require effective remedies when violated by government officers.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.9
     },
     {
       "case_id": "silverthorne_lumber_v_united_states_1920",
@@ -489,7 +490,8 @@
       "secondary_doctrines": [
         "separation_of_powers",
         "economic_regulation"
-      ]
+      ],
+      "doctrinal_weight": 0.92
     },
     {
       "case_id": "louisville_bank_v_radford_1935",
@@ -566,7 +568,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "separation_of_powers"
-      ]
+      ],
+      "doctrinal_weight": 0.88
     },
     {
       "case_id": "us_v_carolene_products_1938",
@@ -851,7 +854,8 @@
       ],
       "constitutional_basis": "First Amendment, Fourteenth Amendment",
       "relevance_to_audit": "Establishes constitutional limits on government-compelled disclosure of organizational membership and associations; relevant to auditing surveillance programs that catalog political affiliations, attendees at public meetings, or members of advocacy organizations.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.91
     },
     {
       "case_id": "napue_v_illinois_1959",
@@ -907,7 +911,8 @@
       ],
       "constitutional_basis": "42 U.S.C. § 1983, Fourth Amendment, Fourteenth Amendment",
       "relevance_to_audit": "Establishes that government officers who abuse their authority — including through unlawful surveillance, warrantless searches, or unauthorized data collection — act under color of state law and are subject to § 1983 liability for resulting constitutional violations.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.94
     },
     {
       "case_id": "brady_v_maryland_1963",
@@ -1023,7 +1028,8 @@
       ],
       "constitutional_basis": "First Amendment, Fourteenth Amendment",
       "relevance_to_audit": "Protects press coverage and public criticism of government officials' conduct; relevant to audit findings that name officials, characterize government actions, or are potentially used as a basis for defamation claims against journalists or auditors.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.96
     },
     {
       "case_id": "griswold_v_connecticut_1965",
@@ -1236,7 +1242,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "fourth_amendment"
-      ]
+      ],
+      "doctrinal_weight": 0.9
     },
     {
       "case_id": "citizens_to_preserve_overton_park_v_volpe_1971",
@@ -1256,7 +1263,8 @@
       ],
       "constitutional_basis": "Administrative Procedure Act",
       "relevance_to_audit": "Establishes that agency decisions must be grounded in the contemporaneous record and genuine consideration of alternatives; relevant to auditing procurement decisions, contract awards, and technology deployment approvals for adequate reasoned explanation.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.87
     },
     {
       "case_id": "perry_v_sindermann_1972",
@@ -1331,7 +1339,8 @@
       ],
       "constitutional_basis": "First Amendment, Fourteenth Amendment",
       "relevance_to_audit": "Protects publication of truthful information drawn from official public records; directly relevant to legal exposure for auditors and journalists who publish findings derived from government procurement records, court documents, or public administrative filings.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.85
     },
     {
       "case_id": "buckley_v_valeo_1976",
@@ -1355,7 +1364,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "separation_of_powers"
-      ]
+      ],
+      "doctrinal_weight": 0.89
     },
     {
       "case_id": "craig_v_boren_1976",
@@ -1432,7 +1442,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "due_process"
-      ]
+      ],
+      "doctrinal_weight": 0.95
     },
     {
       "case_id": "penn_central_v_new_york_1978",
@@ -1553,7 +1564,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "due_process"
-      ]
+      ],
+      "doctrinal_weight": 0.84
     },
     {
       "case_id": "richmond_newspapers_v_virginia_1980",
@@ -1573,7 +1585,8 @@
       ],
       "constitutional_basis": "First Amendment",
       "relevance_to_audit": "Establishes a First Amendment right of public access to government proceedings rooted in historical tradition; foundational authority for the public's right to scrutinize government surveillance proceedings, administrative hearings, and oversight records.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.88
     },
     {
       "case_id": "pennhurst_state_school_and_hospital_v_halderman_1981",
@@ -1596,7 +1609,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "due_process"
-      ]
+      ],
+      "doctrinal_weight": 0.85
     },
     {
       "case_id": "harlow_v_fitzgerald_1982",
@@ -1616,7 +1630,8 @@
       ],
       "constitutional_basis": "42 U.S.C. § 1983, First Amendment",
       "relevance_to_audit": "Establishes the controlling qualified immunity standard for government officers sued individually; relevant for assessing personal liability exposure of officials who authorize or operate surveillance programs, issue unlawful contracts, or direct constitutional violations.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.92
     },
     {
       "case_id": "loretto_v_teleprompter_1982",
@@ -1731,7 +1746,8 @@
       ],
       "constitutional_basis": "Administrative Procedure Act",
       "relevance_to_audit": "Establishes that agency rule changes and program cancellations require substantive reasoned explanation; directly applicable to auditing whether government technology contract awards, procurement rescissions, and policy reversals satisfy APA review standards.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.91
     },
     {
       "case_id": "chevron_v_nrdc_1984",
@@ -1772,7 +1788,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "separation_of_powers"
-      ]
+      ],
+      "doctrinal_weight": 0.96
     },
     {
       "case_id": "james_v_kentucky_1984",
@@ -1853,7 +1870,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "administrative_law"
-      ]
+      ],
+      "doctrinal_weight": 0.86
     },
     {
       "case_id": "garcia_v_san_antonio_1985",
@@ -2008,7 +2026,8 @@
       ],
       "constitutional_basis": "First Amendment",
       "relevance_to_audit": "Establishes the governing test for First Amendment access rights to government proceedings and records; applicable to auditing whether closure of oversight hearings, surveillance review proceedings, or government records satisfies constitutional standards.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.84
     },
     {
       "case_id": "nollan_v_california_1987",
@@ -2049,7 +2068,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "unconstitutional_conditions"
-      ]
+      ],
+      "doctrinal_weight": 0.93
     },
     {
       "case_id": "morrison_v_olson_1988",
@@ -2086,7 +2106,8 @@
       ],
       "constitutional_basis": "42 U.S.C. § 1983, Fourteenth Amendment",
       "relevance_to_audit": "Establishes municipal liability for deliberate indifference to constitutional requirements in training; directly applicable to governments that deploy surveillance technology without training officers on constitutional limits or that ignore known gaps in compliance procedures.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.88
     },
     {
       "case_id": "deshaney_v_winnebago_1989",
@@ -2186,7 +2207,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "separation_of_powers"
-      ]
+      ],
+      "doctrinal_weight": 0.86
     },
     {
       "case_id": "skinner_v_mid_america_1989",
@@ -2592,7 +2614,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "constitutional_torts"
-      ]
+      ],
+      "doctrinal_weight": 0.83
     },
     {
       "case_id": "saenz_v_roe_1999",
@@ -2783,7 +2806,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "administrative_law"
-      ]
+      ],
+      "doctrinal_weight": 0.87
     },
     {
       "case_id": "atkins_v_virginia_2002",
@@ -2839,7 +2863,8 @@
       ],
       "constitutional_basis": "42 U.S.C. § 1983, Eighth Amendment",
       "relevance_to_audit": "Holds that clearly established law does not require a prior case with identical facts — relevant where officials deploy novel surveillance or enforcement technology in ways that are unconstitutional under well-settled Fourth or First Amendment principles, even without cases addressing that specific technology.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.83
     },
     {
       "case_id": "grutter_v_bollinger_2003",
@@ -2935,7 +2960,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "constitutional_structure"
-      ]
+      ],
+      "doctrinal_weight": 0.86
     },
     {
       "case_id": "gonzales_v_raich_2005",
@@ -3046,7 +3072,8 @@
       ],
       "constitutional_basis": "Article I, § 8 (Spending Clause)",
       "relevance_to_audit": "Illustrates how courts apply Pennhurst's clear-notice rule to reject ambiguous conditions on federal grantees; directly relevant to auditing whether technology grant agreements clearly disclose civil rights obligations, data restrictions, and compliance costs that recipient agencies are expected to bear.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.82
     },
     {
       "case_id": "boumediene_v_bush_2008",
@@ -3102,7 +3129,8 @@
       ],
       "constitutional_basis": "42 U.S.C. § 1983, Fourth Amendment",
       "relevance_to_audit": "Controls the procedural order for qualified immunity analysis; allows courts to dispose of civil rights cases on immunity grounds without deciding whether a constitutional violation occurred, which has implications for developing clear constitutional standards governing surveillance and law enforcement technology.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.85
     },
     {
       "case_id": "safford_v_redding_2009",
@@ -3287,7 +3315,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "unconstitutional_conditions"
-      ]
+      ],
+      "doctrinal_weight": 0.91
     },
     {
       "case_id": "us_v_jones_2012",
@@ -3326,7 +3355,8 @@
       ],
       "constitutional_basis": "Fourth Amendment",
       "relevance_to_audit": "Establishes that physical attachment of tracking devices is a Fourth Amendment search; relevant to ALPR infrastructure, GPS mandates, and persistent vehicular surveillance programs.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.92
     },
     {
       "case_id": "florida_v_jardines_2013",
@@ -3468,7 +3498,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "administrative_law"
-      ]
+      ],
+      "doctrinal_weight": 0.83
     },
     {
       "case_id": "horne_v_usda_2015",
@@ -3543,7 +3574,8 @@
       ],
       "constitutional_basis": "Fourth Amendment",
       "relevance_to_audit": "Calibrates Fourth Amendment protection based on degree of bodily intrusion; relevant to programs requiring biological sample collection or biometric data submission as a condition of government interaction.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.85
     },
     {
       "case_id": "fisher_v_texas_2016",
@@ -3617,7 +3649,8 @@
       ],
       "constitutional_basis": "Fourth Amendment",
       "relevance_to_audit": "Limits the automobile exception at curtilage boundary; relevant to analysis of vehicle-focused surveillance programs that may extend searches into residential property.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.84
     },
     {
       "case_id": "gundy_v_us_2019",
@@ -3658,7 +3691,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "separation_of_powers"
-      ]
+      ],
+      "doctrinal_weight": 0.87
     },
     {
       "case_id": "kisor_v_wilkie_2019",
@@ -3678,7 +3712,8 @@
       ],
       "constitutional_basis": "Administrative Procedure Act",
       "relevance_to_audit": "Narrows deference to agency self-interpretations of regulations; relevant to auditing whether agency interpretations of their own procurement rules, grant conditions, and compliance guidance are entitled to any judicial deference after Kisor's preconditions.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.88
     },
     {
       "case_id": "rucho_v_common_cause_2019",
@@ -3752,7 +3787,8 @@
       ],
       "constitutional_basis": "Fourth Amendment",
       "relevance_to_audit": "Limits warrantless home entries in misdemeanor pursuit; relevant to enforcement programs that use surveillance technology to identify and pursue low-level offenders into residential areas.",
-      "expanded_file": true
+      "expanded_file": true,
+      "doctrinal_weight": 0.82
     },
     {
       "case_id": "dobbs_v_jackson_2022",
@@ -3813,7 +3849,8 @@
       "secondary_doctrines": [
         "administrative_law",
         "separation_of_powers"
-      ]
+      ],
+      "doctrinal_weight": 0.94
     },
     {
       "case_id": "students_for_fair_admissions_v_harvard_2023",
@@ -3872,7 +3909,8 @@
       "expanded_file": true,
       "secondary_doctrines": [
         "separation_of_powers"
-      ]
+      ],
+      "doctrinal_weight": 0.93
     },
     {
       "case_id": "trump_v_united_states_2024",

@@ -1,0 +1,372 @@
+{
+  "dictionary": "andersons_law_dictionary",
+  "edition": "1889",
+  "year": 1889,
+  "description": "Key terms from Anderson's Dictionary of Law (1889) - municipal law, public officers, and procurement",
+  "terms": [
+    {
+      "term": "alderman",
+      "definition": "A member of the governing body of a municipal corporation; a legislative officer of a city or borough. The board of aldermen typically exercises general legislative authority over municipal affairs.",
+      "citation": "p. 48",
+      "category": "municipal_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "board of supervisors",
+      "definition": "The governing body of a county in many states; a board of elected officers charged with the general administration and legislation of county affairs including appropriations and contracts.",
+      "citation": "p. 121",
+      "category": "municipal_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "borough",
+      "definition": "An incorporated municipal unit with a charter from the state; an incorporated town or village. In Pennsylvania and New Jersey, the name given to an incorporated municipality ranking between a village and a city.",
+      "citation": "p. 131",
+      "category": "municipal_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "city",
+      "definition": "A municipal corporation having a charter granted by the legislature, with defined powers of local government over a compact area. Cities are distinguished from towns and villages by population and governmental complexity.",
+      "citation": "p. 193",
+      "category": "municipal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "city attorney",
+      "definition": "The legal officer of a city who advises the municipal government, represents it in legal proceedings, and reviews contracts and ordinances for legal sufficiency; also called city solicitor or corporation counsel.",
+      "citation": "p. 194",
+      "category": "municipal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "city council",
+      "definition": "The legislative body of a city government; the elected representatives of the city who exercise legislative power, adopt ordinances, authorize expenditures, and approve contracts.",
+      "citation": "p. 194",
+      "category": "municipal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "city treasurer",
+      "definition": "The municipal officer charged with the receipt, safe-keeping, and disbursement of public funds; responsible for maintaining accounts of revenues and expenditures and reporting to the governing body.",
+      "citation": "p. 195",
+      "category": "municipal_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "civil service",
+      "definition": "The body of non-elected government employees selected by examination or merit rather than patronage; the system of employment in government positions based on qualifications rather than political affiliation.",
+      "citation": "p. 205",
+      "category": "public_administration",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "comptroller",
+      "definition": "The governmental officer charged with auditing public accounts, examining the accounts of other officers, and ensuring that expenditures conform to appropriations; the chief financial accountability officer.",
+      "citation": "p. 239",
+      "category": "public_administration",
+      "origin_language": "French"
+    },
+    {
+      "term": "county",
+      "definition": "The largest political subdivision of a state; a territorial division of a state organized for local government purposes with defined powers of taxation, road maintenance, law enforcement, and judicial administration.",
+      "citation": "p. 270",
+      "category": "municipal_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "county auditor",
+      "definition": "The officer who examines and certifies public accounts; responsible for auditing the accounts of county officers and ensuring the accuracy and legality of expenditures from public funds.",
+      "citation": "p. 271",
+      "category": "public_administration",
+      "origin_language": "French"
+    },
+    {
+      "term": "county clerk",
+      "definition": "The officer who maintains the official records of the county, including deeds, mortgages, court records, and official proceedings; serves as secretary to the county governing board.",
+      "citation": "p. 271",
+      "category": "municipal_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "eminent domain",
+      "definition": "The inherent power of the sovereign to take private property for public use upon payment of just compensation; the right of the state to assert dominion over private property for a public purpose.",
+      "citation": "p. 377",
+      "category": "property_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "improvement bond",
+      "definition": "A municipal bond issued to finance the construction of public improvements such as streets, sidewalks, sewers, or public buildings; typically repaid from special assessments or general revenues.",
+      "citation": "p. 563",
+      "category": "public_finance",
+      "origin_language": "English"
+    },
+    {
+      "term": "inspector",
+      "definition": "A public officer authorized and required to examine objects or operations to ensure compliance with law or regulations; appointed to examine and report on the condition of public works, buildings, weights and measures, or business operations.",
+      "citation": "p. 571",
+      "category": "public_administration",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "levy",
+      "definition": "The imposition of a tax or assessment; the act of imposing and collecting a tax; also, the seizure of property pursuant to an execution. A tax levy is the formal act imposing the rate of taxation.",
+      "citation": "p. 659",
+      "category": "public_finance",
+      "origin_language": "French"
+    },
+    {
+      "term": "license",
+      "definition": "Permission granted by a competent authority to do an act which without such permission would be illegal; in municipal law, a grant of permission to engage in a trade, occupation, or activity within the jurisdiction.",
+      "citation": "p. 663",
+      "category": "municipal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "municipal bond",
+      "definition": "A debt security issued by a state or local government to finance capital expenditures such as public buildings, highways, and school construction; interest is generally exempt from federal income taxation.",
+      "citation": "p. 762",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "municipal corporation",
+      "definition": "A public body politic created by the legislature out of the inhabitants of a particular locality, invested with subordinate powers of legislation, and a separate legal existence for purposes of local government.",
+      "citation": "p. 762",
+      "category": "municipal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "municipal debt",
+      "definition": "The total indebtedness of a municipal corporation outstanding at a given time; subject to constitutional and statutory debt limits restricting the total indebtedness municipalities may incur.",
+      "citation": "p. 763",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "municipal officer",
+      "definition": "A person holding an office in a municipal corporation, either by election, appointment, or otherwise; one who exercises the public functions of a municipal government under authority of law.",
+      "citation": "p. 764",
+      "category": "municipal_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "no-bid contract",
+      "definition": "A government contract awarded to a vendor without competitive solicitation; generally disfavored and subject to strict justification requirements to prevent favoritism and ensure best value.",
+      "citation": "p. 788",
+      "category": "procurement",
+      "origin_language": "English"
+    },
+    {
+      "term": "official bond",
+      "definition": "A bond given by a public officer as security for the faithful performance of his duties; a surety instrument protecting the public against loss caused by the officer's default, misconduct, or negligence.",
+      "citation": "p. 812",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "park commission",
+      "definition": "A governmental body created by municipal charter or statute to manage public parks, recreation areas, and related facilities; may have authority to acquire land and enter contracts for park improvements.",
+      "citation": "p. 831",
+      "category": "municipal_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "police power",
+      "definition": "The inherent authority of the state to enact reasonable laws and regulations to protect the public health, safety, morals, and general welfare; the most fundamental exercise of governmental authority over private conduct.",
+      "citation": "p. 859",
+      "category": "constitutional_law",
+      "origin_language": "Greek"
+    },
+    {
+      "term": "property tax",
+      "definition": "A tax levied on real and personal property based on its assessed value; the primary revenue source for local governments, typically assessed and collected by county or municipal officers.",
+      "citation": "p. 900",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public fund",
+      "definition": "Money belonging to the government held for public purposes; trust moneys in the custody of a public officer; funds raised by taxation or other public means for the support of governmental functions.",
+      "citation": "p. 906",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public office",
+      "definition": "A position of trust, authority, and duty created and given existence by law; an employment on behalf of the public in some matter of governmental functions; a position under government imposing public duties.",
+      "citation": "p. 906",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public property",
+      "definition": "Property owned by a government or one of its agencies for public use and benefit; property held in trust for the citizens by the government that may not be alienated without legislative authorization.",
+      "citation": "p. 907",
+      "category": "property_law",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "public procurement",
+      "definition": "The acquisition of goods, services, or works by a government entity using public funds; subject to competitive bidding requirements and other regulations designed to ensure fair competition and best value.",
+      "citation": "p. 908",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "receiver",
+      "definition": "An officer appointed by the court to receive and preserve the property or funds in litigation pending final disposition; an indifferent person between the parties appointed by the court to hold property.",
+      "citation": "p. 945",
+      "category": "civil_procedure",
+      "origin_language": "French"
+    },
+    {
+      "term": "recorder",
+      "definition": "A public officer who maintains and preserves official records; particularly, the officer charged with recording instruments relating to real property such as deeds, mortgages, and liens.",
+      "citation": "p. 950",
+      "category": "public_administration",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "removal from office",
+      "definition": "The termination of a public officer's service before the natural expiration of the term; may be accomplished by impeachment, recall, judicial proceedings, or executive action depending on the office.",
+      "citation": "p. 958",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "school board",
+      "definition": "The body created by law to govern a public school district; vested with authority to levy taxes for school purposes, employ teachers, manage school property, and enter contracts for school facilities.",
+      "citation": "p. 990",
+      "category": "municipal_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "sheriff",
+      "definition": "The chief law enforcement officer of a county; an officer elected or appointed to preserve the peace, execute process, and perform other duties prescribed by law within the county.",
+      "citation": "p. 1009",
+      "category": "municipal_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "sole source contract",
+      "definition": "A contract awarded to a single contractor without competition, justified by unique expertise, proprietary rights, emergency, or other circumstances making competition impracticable; requires specific justification.",
+      "citation": "p. 1037",
+      "category": "procurement",
+      "origin_language": "English"
+    },
+    {
+      "term": "special assessment",
+      "definition": "A charge levied on property owners who benefit from a local improvement such as a street, sewer, or sidewalk; differs from a general tax in that it is proportionate to the benefit received.",
+      "citation": "p. 1040",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "tax collector",
+      "definition": "The public officer responsible for collecting taxes; may receive and account for taxes levied by the municipality or county, issuing receipts and remitting collections to the treasurer.",
+      "citation": "p. 1086",
+      "category": "public_administration",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "tax levy",
+      "definition": "The formal act by which a legislative body imposes the rate of taxation upon persons or property subject to tax; the act of fixing the rate and directing the assessment and collection of taxes.",
+      "citation": "p. 1087",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "town",
+      "definition": "An incorporated municipality ranking below a city; a political subdivision of a county with defined powers of local self-government granted by state law, including authority to levy taxes and adopt ordinances.",
+      "citation": "p. 1102",
+      "category": "municipal_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "township",
+      "definition": "A governmental and geographic subdivision of a county in many states; an area of land six miles square established by federal land surveys; a body politic organized for local government purposes.",
+      "citation": "p. 1102",
+      "category": "municipal_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "treasurer",
+      "definition": "The officer of a government, corporation, or association charged with receiving, safely keeping, and disbursing public funds; accountable for all moneys received and obligated to disburse only on lawful authority.",
+      "citation": "p. 1110",
+      "category": "public_administration",
+      "origin_language": "French"
+    },
+    {
+      "term": "village",
+      "definition": "The smallest form of incorporated municipality; a public corporation with limited powers of local government over a small community, organized by charter or statute with authority to levy taxes and adopt ordinances.",
+      "citation": "p. 1147",
+      "category": "municipal_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "water board",
+      "definition": "A governmental body created to manage public water systems, water supply, and related infrastructure; may have authority to levy assessments, contract for improvements, and regulate water usage.",
+      "citation": "p. 1162",
+      "category": "municipal_law",
+      "origin_language": "Old English"
+    },
+    {
+      "term": "zoning",
+      "definition": "The division of a municipality into zones or districts and the regulation of land use within those districts; the exercise of police power to regulate the use of private property for the public welfare.",
+      "citation": "p. 1195",
+      "category": "municipal_law",
+      "origin_language": "French"
+    },
+    {
+      "term": "competitive bid",
+      "definition": "A bid submitted in response to a public solicitation for proposals, subject to the requirement of public opening and award to the lowest responsible bidder; the mechanism for ensuring fair competition in public procurement.",
+      "citation": "p. 238",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "contract award",
+      "definition": "The formal act of accepting a bid or proposal and creating a binding government contract; the official notification to a bidder that its proposal has been accepted and a contract is formed.",
+      "citation": "p. 263",
+      "category": "procurement",
+      "origin_language": "French"
+    },
+    {
+      "term": "public works contract",
+      "definition": "An agreement for the construction, repair, or maintenance of public infrastructure entered into by a governmental body; subject to competitive bidding requirements, prevailing wage laws, and performance bond requirements.",
+      "citation": "p. 909",
+      "category": "procurement",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "fiscal officer",
+      "definition": "A public officer charged with the receipt, safekeeping, and disbursement of public funds; responsible for maintaining financial records, preparing financial reports, and ensuring compliance with appropriation law.",
+      "citation": "p. 461",
+      "category": "public_administration",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "open meetings law",
+      "definition": "A statute requiring governmental bodies to conduct their deliberations and decisions in public; prohibiting secret meetings except for specified executive session purposes such as personnel matters and litigation.",
+      "citation": "p. 818",
+      "category": "governance",
+      "origin_language": "English"
+    },
+    {
+      "term": "public records",
+      "definition": "Official records required by law to be kept, or necessarily kept in the discharge of a duty imposed by law; records of governmental proceedings which are open to public inspection under public records laws.",
+      "citation": "p. 907",
+      "category": "governance",
+      "origin_language": "Latin"
+    },
+    {
+      "term": "appropriation ordinance",
+      "definition": "A local legislative enactment authorizing the expenditure of public funds for specified purposes during a fiscal year; the operative budget legislation of a municipal corporation.",
+      "citation": "p. 75",
+      "category": "public_finance",
+      "origin_language": "Latin"
+    }
+  ]
+}

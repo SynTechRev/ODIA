@@ -1,0 +1,379 @@
+{
+  "dictionary": "wex_cornell_legal_dictionary",
+  "edition": "Cornell Law School Legal Information Institute",
+  "year": 2024,
+  "description": "Modern legal terms from Cornell Law's Wex Legal Dictionary — focused on digital rights, government accountability, and civil rights",
+  "terms": [
+    {
+      "term": "Freedom of Information Act (FOIA)",
+      "definition": "The federal statute, 5 U.S.C. § 552, requiring federal agencies to make records available to any person upon request, subject to nine specified exemptions including national security, deliberative process, and personal privacy.",
+      "citation": "5 U.S.C. § 552",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "Foreign Intelligence Surveillance Act (FISA)",
+      "definition": "Federal law establishing procedures for physical and electronic surveillance of foreign powers and their agents within the United States; creates the Foreign Intelligence Surveillance Court (FISC) for approval of surveillance orders.",
+      "citation": "50 U.S.C. § 1801 et seq.",
+      "category": "surveillance_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "Fourth Amendment",
+      "definition": "Constitutional protection against unreasonable searches and seizures; requires probable cause supported by oath for issuance of warrants. Extended to digital data in Carpenter v. United States and Riley v. California.",
+      "citation": "U.S. Const. amend. IV",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "automated license plate reader (ALPR)",
+      "definition": "Technology that uses optical character recognition to capture images of license plates and automatically compare them to databases; generates records of vehicle location at specific times, raising Fourth Amendment concerns when used by government.",
+      "citation": "Cal. Civ. Code § 1798.90.5",
+      "category": "surveillance_technology",
+      "origin_language": "English"
+    },
+    {
+      "term": "biometric data",
+      "definition": "Physiological or behavioral characteristics used for automated identification including fingerprints, facial geometry, iris patterns, voiceprints, and gait; subject to specialized state privacy laws (BIPA) and Fourth Amendment protections when collected by government.",
+      "citation": "Illinois BIPA, 740 ILCS 14/",
+      "category": "privacy_law",
+      "origin_language": "Greek"
+    },
+    {
+      "term": "body-worn camera",
+      "definition": "A recording device worn by law enforcement officers to document their interactions with the public; policies governing activation, retention, and public access vary by jurisdiction and raise transparency and civil rights issues.",
+      "citation": "34 U.S.C. § 10381",
+      "category": "surveillance_technology",
+      "origin_language": "English"
+    },
+    {
+      "term": "cell-site simulator",
+      "definition": "A device that mimics a cell tower to force nearby mobile phones to transmit identifying information; also called Stingray or IMSI catcher. Warrant requirement confirmed in several federal circuits; raises Fourth Amendment concerns.",
+      "citation": "United States v. Diggs, 5th Cir. 2021",
+      "category": "surveillance_technology",
+      "origin_language": "English"
+    },
+    {
+      "term": "civil asset forfeiture",
+      "definition": "The government seizure of property alleged to be connected to criminal activity, without a criminal conviction; proceeds typically flow to the seizing agency creating revenue incentives. Subject to Eighth Amendment excessive fines analysis.",
+      "citation": "Timbs v. Indiana, 586 U.S. 146 (2019)",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "civil rights",
+      "definition": "Rights guaranteed to individuals by the Constitution and federal statutes, including equal protection, due process, freedom from unreasonable searches, and protections against discrimination; enforceable against state actors under 42 U.S.C. § 1983.",
+      "citation": "42 U.S.C. § 1983",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "color of law",
+      "definition": "Acting under the authority of state or local government; a § 1983 plaintiff must show the defendant acted under color of state law. Includes action taken under authority of ordinance, regulation, custom, or usage of a state.",
+      "citation": "42 U.S.C. § 1983; West v. Atkins, 487 U.S. 42",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "consent decree",
+      "definition": "A court-approved settlement agreement resolving claims of civil rights violations or regulatory non-compliance; typically includes injunctive relief, monitoring requirements, and reporting obligations. Enforceable as a court order.",
+      "citation": "United States v. City of Ferguson, E.D. Mo. 2016",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "constitutional tort",
+      "definition": "A civil claim under 42 U.S.C. § 1983 for deprivation of constitutional rights by state actors; requires showing (1) deprivation of a right secured by the Constitution, (2) by a person acting under color of state law.",
+      "citation": "42 U.S.C. § 1983; Monroe v. Pape, 365 U.S. 167",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "data retention policy",
+      "definition": "Organizational rules governing how long electronic data, records, and communications must be preserved; government agencies are subject to statutory retention schedules; failure to follow policies may constitute spoliation.",
+      "citation": "44 U.S.C. § 3101 (Federal Records Act)",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "de-identified data",
+      "definition": "Information from which all direct and indirect personal identifiers have been removed such that re-identification risk is low; de-identification does not eliminate all privacy concerns, particularly for location data and biometrics.",
+      "citation": "45 C.F.R. § 164.514 (HIPAA Safe Harbor)",
+      "category": "privacy_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "digital evidence",
+      "definition": "Electronic data that may be used in legal proceedings, including emails, text messages, metadata, GPS records, server logs, and surveillance footage; requires proper chain of custody, authentication, and compliance with search warrant requirements.",
+      "citation": "Fed. R. Evid. 901(b)(9)",
+      "category": "evidence",
+      "origin_language": "English"
+    },
+    {
+      "term": "disparate impact",
+      "definition": "A facially neutral policy or practice that has a disproportionate adverse effect on a protected class; actionable under Title VII, the Fair Housing Act, and Title VI without proof of discriminatory intent.",
+      "citation": "42 U.S.C. § 2000e; Griggs v. Duke Power Co., 401 U.S. 424",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "executive order",
+      "definition": "A directive issued by the President or a state governor with the force of law; must be grounded in statutory or constitutional authority; subject to judicial review. Federal executive orders are published in the Federal Register.",
+      "citation": "U.S. Const. art. II, § 1; 3 C.F.R.",
+      "category": "administrative_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "facial recognition technology",
+      "definition": "Biometric software analyzing facial geometry to identify or verify individuals from images or video; used by law enforcement and government agencies; accuracy disparities across demographic groups raise equal protection concerns.",
+      "citation": "NIST FRVT Report 2019",
+      "category": "surveillance_technology",
+      "origin_language": "English"
+    },
+    {
+      "term": "federal preemption",
+      "definition": "The doctrine that federal law supersedes conflicting state law pursuant to the Supremacy Clause; may be express, implied by field occupation, or implied by conflict. Federal spending conditions may also preempt inconsistent state practices.",
+      "citation": "U.S. Const. art. VI, cl. 2",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "First Amendment",
+      "definition": "Constitutional protection of freedom of speech, press, religion, assembly, and petition; applies to government censorship and compelled speech. Content-based restrictions are subject to strict scrutiny; content-neutral restrictions to intermediate scrutiny.",
+      "citation": "U.S. Const. amend. I",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "geofence warrant",
+      "definition": "A warrant ordering a technology company to identify all devices located within a defined geographic area during a specified time period; raises Fourth Amendment third-party doctrine and particularity concerns.",
+      "citation": "United States v. Chatrie, 4th Cir. 2022",
+      "category": "surveillance_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "government accountability",
+      "definition": "The obligation of public officials and agencies to answer for their exercise of public power; enforced through audits, oversight, public records laws, and judicial review; foundational to democratic governance.",
+      "citation": "Inspector General Act, 5 U.S.C. app. 3",
+      "category": "governance",
+      "origin_language": "English"
+    },
+    {
+      "term": "grant agreement",
+      "definition": "A legal instrument reflecting a relationship between a federal or state award agency and a recipient, in which the principal purpose is transfer of money or property to carry out a public purpose; subject to conditions attached by the grantor.",
+      "citation": "2 C.F.R. § 200.1",
+      "category": "public_finance",
+      "origin_language": "English"
+    },
+    {
+      "term": "grant condition",
+      "definition": "A requirement attached to receipt of federal or state funds; conditions must be unambiguous, directly related to the federal interest, and not constitute coercion; compliance is subject to audit and may result in disallowance of costs.",
+      "citation": "South Dakota v. Dole, 483 U.S. 203; 2 C.F.R. Part 200",
+      "category": "public_finance",
+      "origin_language": "English"
+    },
+    {
+      "term": "independent audit",
+      "definition": "An examination of financial statements or compliance with laws and regulations by a qualified auditor who is independent of the audited entity; required for federal grant recipients under the Single Audit Act.",
+      "citation": "31 U.S.C. § 7501 (Single Audit Act)",
+      "category": "public_finance",
+      "origin_language": "English"
+    },
+    {
+      "term": "investigative journalism privilege",
+      "definition": "The First Amendment protection for journalists' confidential sources and work product; recognized in varying degrees by federal and state shield laws; limits government subpoenas seeking journalist's sources.",
+      "citation": "Branzburg v. Hayes, 408 U.S. 665 (1972)",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "major questions doctrine",
+      "definition": "Courts require clear congressional authorization for agency actions of vast economic or political significance; applied in West Virginia v. EPA (2022) to limit EPA's Clean Power Plan; increasingly invoked against expansive agency surveillance and data programs.",
+      "citation": "West Virginia v. EPA, 597 U.S. 697 (2022)",
+      "category": "administrative_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "Monell liability",
+      "definition": "Municipal liability under § 1983 for constitutional violations caused by an official policy, widespread custom, or deliberate indifference to training needs; requires that the municipality's policy or custom be the moving force behind the violation.",
+      "citation": "Monell v. Department of Social Services, 436 U.S. 658 (1978)",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "no-knock warrant",
+      "definition": "A warrant authorizing law enforcement to enter a premises without prior announcement of their presence; disfavored due to safety risks and Fourth Amendment concerns; subject to constitutional reasonableness requirements.",
+      "citation": "Wilson v. Arkansas, 514 U.S. 927 (1995)",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "non-delegation doctrine",
+      "definition": "The constitutional prohibition on Congress delegating its legislative power to administrative agencies without an intelligible principle to guide the delegation; the Court has signaled renewed interest in limiting agency authority under this doctrine.",
+      "citation": "A.L.A. Schechter Poultry Corp. v. United States, 295 U.S. 495 (1935)",
+      "category": "administrative_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "open meetings law",
+      "definition": "State statutes requiring governmental bodies to conduct their deliberations and decisions in public; prohibiting secret meetings except for specified executive session purposes; violations may render decisions voidable.",
+      "citation": "Government in the Sunshine Act, 5 U.S.C. § 552b",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "open records law",
+      "definition": "State public records statutes analogous to federal FOIA requiring government agencies to make records available for public inspection and copying; vary in scope, exemptions, and enforcement mechanisms.",
+      "citation": "5 U.S.C. § 552; Cal. Gov. Code § 7920 et seq.",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "pattern or practice",
+      "definition": "A course of governmental conduct constituting a systemic violation of civil rights; actionable by the Department of Justice under 42 U.S.C. § 14141 to require reform of police and corrections agencies.",
+      "citation": "42 U.S.C. § 14141",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "pen register",
+      "definition": "A device or process that records or decodes dialing, routing, addressing, or signaling information transmitted by an instrument or facility; requires court order under 18 U.S.C. § 3121; subject to Third-Party Doctrine analysis.",
+      "citation": "18 U.S.C. § 3121; Smith v. Maryland, 442 U.S. 735",
+      "category": "surveillance_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "predictive policing",
+      "definition": "The application of statistical and data analysis tools to forecast criminal activity and direct law enforcement resources; subject to civil rights scrutiny for disparate impact, transparency requirements, and accuracy standards.",
+      "citation": "ACLU v. Clearview AI; Santa Cruz Ordinance 2020",
+      "category": "surveillance_technology",
+      "origin_language": "English"
+    },
+    {
+      "term": "proportionality",
+      "definition": "The requirement that government means be proportionate to the legitimate aim pursued; applied in Fourth Amendment reasonableness analysis, civil rights remedies, and administrative penalties; excessive measures are subject to constitutional challenge.",
+      "citation": "Graham v. Connor, 490 U.S. 386 (1989)",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "qualified immunity",
+      "definition": "A judicially created doctrine protecting government officials from civil liability for constitutional violations unless the right was clearly established at the time of the conduct; shielding officials from suits where prior cases did not put the constitutional question beyond debate.",
+      "citation": "Harlow v. Fitzgerald, 457 U.S. 800 (1982); Pearson v. Callahan, 555 U.S. 223",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "retention schedule",
+      "definition": "A schedule specifying how long types of government records must be preserved before they may be destroyed; required by the Federal Records Act for federal agencies; forms the backbone of government records management and audit trail preservation.",
+      "citation": "44 U.S.C. § 3303a; 36 C.F.R. Part 1225",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "right to know",
+      "definition": "The public's right to access information held by government; encompasses FOIA rights, state open records rights, and constitutional protections for access to judicial proceedings; foundational to governmental accountability.",
+      "citation": "5 U.S.C. § 552; Nixon v. Warner Communications, 435 U.S. 589",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "Section 1983",
+      "definition": "42 U.S.C. § 1983, the Reconstruction-era civil rights statute providing a civil remedy against any person who, acting under color of state law, deprives another of rights secured by the Constitution or federal law.",
+      "citation": "42 U.S.C. § 1983; Monroe v. Pape, 365 U.S. 167 (1961)",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "Single Audit Act",
+      "definition": "Federal statute requiring non-federal entities that expend $750,000 or more in federal awards in a fiscal year to obtain an annual single audit covering financial statements and compliance with federal program requirements.",
+      "citation": "31 U.S.C. § 7501; 2 C.F.R. Part 200 Subpart F",
+      "category": "public_finance",
+      "origin_language": "English"
+    },
+    {
+      "term": "sole source procurement",
+      "definition": "Acquisition of goods or services from a single vendor without competitive solicitation; justified by unique capabilities, proprietary rights, urgency, or other circumstances; requires documented justification and approval authority.",
+      "citation": "FAR 6.302; 2 C.F.R. § 200.320",
+      "category": "procurement",
+      "origin_language": "English"
+    },
+    {
+      "term": "spending clause",
+      "definition": "Article I, Section 8, Clause 1 authority allowing Congress to spend for the general welfare with conditions; conditions must be unambiguous, related to the federal interest, and not coercive; source of federal grant programs and accompanying compliance requirements.",
+      "citation": "U.S. Const. art. I, § 8, cl. 1; South Dakota v. Dole, 483 U.S. 203",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "Stingray device",
+      "definition": "A brand name for a cell-site simulator used by law enforcement to identify mobile devices in a geographic area; requires warrant in most federal circuits after Carpenter v. United States; subject to non-disclosure agreements limiting transparency.",
+      "citation": "Carpenter v. United States, 585 U.S. 296 (2018)",
+      "category": "surveillance_technology",
+      "origin_language": "English"
+    },
+    {
+      "term": "surveillance technology",
+      "definition": "Electronic means of monitoring, tracking, recording, or analyzing individuals' activities, communications, or locations; subject to Fourth Amendment warrant requirements when used by government; increasingly subject to local oversight ordinances.",
+      "citation": "Carpenter v. United States, 585 U.S. 296 (2018)",
+      "category": "surveillance_technology",
+      "origin_language": "English"
+    },
+    {
+      "term": "third-party doctrine",
+      "definition": "The Fourth Amendment principle that information voluntarily shared with third parties is not protected; significantly curtailed by Carpenter v. United States for comprehensive cell-site location information.",
+      "citation": "Smith v. Maryland, 442 U.S. 735 (1979); Carpenter v. United States, 585 U.S. 296",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "Title VI",
+      "definition": "Section of the Civil Rights Act of 1964 prohibiting discrimination on the basis of race, color, and national origin in programs and activities receiving federal financial assistance; compliance is a condition of all federal grants and subject to audit.",
+      "citation": "42 U.S.C. § 2000d; Lau v. Nichols, 414 U.S. 563 (1974)",
+      "category": "civil_rights",
+      "origin_language": "English"
+    },
+    {
+      "term": "transparency report",
+      "definition": "A public disclosure by a government agency or technology company of information about data requests, surveillance orders, access demands, or other activities affecting privacy; promotes accountability for surveillance programs.",
+      "citation": "USA FREEDOM Act, Pub. L. 114-23",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "voluntary disclosure",
+      "definition": "An agency's proactive release of records or information without a formal FOIA request; encouraged under FOIA and open government policies; reduces information asymmetry between government and the public.",
+      "citation": "5 U.S.C. § 552(a)(2); OMB Open Government Directive",
+      "category": "government_transparency",
+      "origin_language": "English"
+    },
+    {
+      "term": "whistleblower protection",
+      "definition": "Legal protection for individuals who report government misconduct, fraud, waste, or abuse; federal protections include the Whistleblower Protection Act, False Claims Act, and Inspector General Act; state equivalents vary in scope.",
+      "citation": "5 U.S.C. § 2302 (WPA); 31 U.S.C. § 3729 (FCA)",
+      "category": "governance",
+      "origin_language": "English"
+    },
+    {
+      "term": "Carpenter doctrine",
+      "definition": "The rule from Carpenter v. United States (2018) requiring a warrant for government access to historical cell-site location information spanning seven or more days; marks a significant limitation on the third-party doctrine for comprehensive digital surveillance.",
+      "citation": "Carpenter v. United States, 585 U.S. 296 (2018)",
+      "category": "constitutional_law",
+      "origin_language": "English"
+    },
+    {
+      "term": "False Claims Act",
+      "definition": "Federal statute imposing civil liability on those who submit false claims to the government; provides for qui tam actions by private whistleblowers (relators) who may recover a portion of any recovery; primary anti-fraud enforcement tool for government contracts and grants.",
+      "citation": "31 U.S.C. § 3729 et seq.",
+      "category": "procurement",
+      "origin_language": "English"
+    },
+    {
+      "term": "qui tam",
+      "definition": "A provision allowing a private person (relator) to file suit on behalf of the government to recover damages for fraudulent claims against the government; the relator receives a portion of any recovery as an incentive to expose fraud.",
+      "citation": "31 U.S.C. § 3730(b); False Claims Act",
+      "category": "procurement",
+      "origin_language": "Latin"
+    }
+  ]
+}
