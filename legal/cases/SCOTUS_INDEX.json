@@ -3,8 +3,8 @@
   "generated_at": "2026-03-15T00:00:00.000000+00:00",
   "description": "Supreme Court constitutional doctrine index for Judicial Interpretive Matrix (JIM) - CLEP-v2 Enhanced + Sprint 8.2 expansion",
   "metadata": {
-    "total_cases": 169,
-    "expanded_individual_files": 30,
+    "total_cases": 177,
+    "expanded_individual_files": 38,
     "sprint_8_2_additions": [
       "katz_v_united_states_1967",
       "carpenter_v_united_states_2018",
@@ -15,7 +15,15 @@
       "collins_v_virginia_2018",
       "lange_v_california_2021",
       "mapp_v_ohio_1961",
-      "weeks_v_united_states_1914"
+      "weeks_v_united_states_1914",
+      "chevron_usa_v_natural_resources_defense_council_1984",
+      "loper_bright_enterprises_v_raimondo_2024",
+      "citizens_to_preserve_overton_park_v_volpe_1971",
+      "motor_vehicle_manufacturers_assn_v_state_farm_1983",
+      "mathews_v_eldridge_1976",
+      "cleveland_board_of_education_v_loudermill_1985",
+      "auer_v_robbins_1997",
+      "kisor_v_wilkie_2019"
     ],
     "doctrinal_categories": [
       "administrative_law",

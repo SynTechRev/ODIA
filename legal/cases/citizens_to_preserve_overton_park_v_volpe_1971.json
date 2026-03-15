@@ -1,0 +1,47 @@
+{
+  "case_id": "citizens_to_preserve_overton_park_v_volpe_1971",
+  "name": "Citizens to Preserve Overton Park, Inc. v. Volpe",
+  "citation": "401 U.S. 402 (1971)",
+  "year": 1971,
+  "court": "SCOTUS",
+  "doctrine": "administrative_law",
+  "secondary_doctrines": [],
+  "summary": "The Secretary of Transportation approved federal funds for routing Interstate 40 through Overton Park in Memphis without formally determining that no feasible and prudent alternative route existed, as required by statute. The Court held that the Secretary's approval required genuine substantive inquiry into alternatives and that courts must engage in searching and careful review of the administrative record to determine whether the agency acted arbitrarily.",
+  "holding": "Courts reviewing agency decisions under the APA's arbitrary-and-capricious standard must conduct a searching and careful inquiry into the administrative record to ensure the agency considered the relevant factors and did not commit a clear error of judgment. The record must adequately disclose the factors the agency considered and the rationale for its decision; post-hoc rationalizations supplied by agency counsel in litigation do not satisfy this standard.",
+  "legal_definitions": [
+    {
+      "term": "arbitrary and capricious review",
+      "definition": "Judicial review under 5 U.S.C. § 706(2)(A) requiring a court to engage in a searching and careful inquiry to determine whether an agency considered the relevant factors and avoided a clear error of judgment, without substituting the court's judgment for the agency's on the merits.",
+      "context": "Overton Park established that arbitrary-and-capricious review is not a rubber stamp; courts must look hard at the agency's reasoning based on the contemporaneous administrative record, not post-hoc litigation rationalizations.",
+      "pinpoint_citation": "401 U.S. 402, 416",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "arbitrary_and_capricious",
+    "apa_review",
+    "administrative_record",
+    "agency_decision_making",
+    "feasible_alternatives",
+    "administrative_law"
+  ],
+  "constitutional_basis": [
+    "Administrative Procedure Act"
+  ],
+  "relevance_to_audit": "Establishes that agency decisions must be grounded in the contemporaneous record and genuine consideration of alternatives; relevant to auditing procurement decisions, contract awards, and technology deployment approvals for adequate reasoned explanation.",
+  "key_quotes": [
+    {
+      "text": "The reviewing court must consider whether the decision was based on a consideration of the relevant factors and whether there has been a clear error of judgment.",
+      "pinpoint_citation": "401 U.S. 402, 416",
+      "context": "Articulating the substantive component of arbitrary-and-capricious review under the APA."
+    }
+  ],
+  "procedural_posture": "District court granted summary judgment for government; reversed and remanded",
+  "vote": "8-1",
+  "majority_author": "Marshall, J.",
+  "dissent_authors": [
+    "Black, J."
+  ],
+  "subsequent_treatment": "Foundational APA review standard; elaborated by Motor Vehicle Manufacturers v. State Farm (1983)",
+  "source_url": "https://www.courtlistener.com/opinion/108187/citizens-to-preserve-overton-park-inc-v-volpe/"
+}

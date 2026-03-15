@@ -1,0 +1,48 @@
+{
+  "case_id": "chevron_usa_v_natural_resources_defense_council_1984",
+  "name": "Chevron U.S.A., Inc. v. Natural Resources Defense Council, Inc.",
+  "citation": "467 U.S. 837 (1984)",
+  "year": 1984,
+  "court": "SCOTUS",
+  "doctrine": "administrative_law",
+  "secondary_doctrines": [
+    "separation_of_powers"
+  ],
+  "summary": "The EPA interpreted the term 'stationary source' in the Clean Air Act to allow a plant-wide 'bubble' that permitted companies to offset increased pollution from one piece of equipment against reductions elsewhere. The Court upheld the interpretation and established a two-step framework requiring courts to defer to reasonable agency interpretations of ambiguous statutory terms.",
+  "holding": "When a statute is silent or ambiguous on a specific issue, courts must defer to the administering agency's reasonable interpretation of that statute. The two-step Chevron framework asks first whether Congress spoke directly to the question, and if not, whether the agency's interpretation is a permissible construction. NOTE: Overruled by Loper Bright Enterprises v. Raimondo, 144 S. Ct. 2244 (2024).",
+  "legal_definitions": [
+    {
+      "term": "Chevron deference",
+      "definition": "A two-step test for judicial review of agency statutory interpretations: Step 1 asks whether Congress has directly spoken to the question; if the statute is silent or ambiguous, Step 2 asks whether the agency's interpretation is a permissible and reasonable construction of the statute.",
+      "context": "Established as the controlling framework for agency statutory interpretation from 1984 until overruled by Loper Bright (2024). Courts applied this two-step test to uphold or invalidate agency rules across virtually every area of federal regulatory law.",
+      "pinpoint_citation": "467 U.S. 837, 842–843",
+      "binding_authority": false
+    }
+  ],
+  "issue_tags": [
+    "agency_deference",
+    "statutory_interpretation",
+    "administrative_law",
+    "apa_review",
+    "rulemaking",
+    "overruled"
+  ],
+  "constitutional_basis": [
+    "Article I",
+    "Article III"
+  ],
+  "relevance_to_audit": "Chevron's two-step framework governed agency statutory interpretation for four decades; understanding it is essential context for auditing administrative decisions made under its authority. Overruled in 2024.",
+  "key_quotes": [
+    {
+      "text": "If the statute is silent or ambiguous with respect to the specific issue, the question for the court is whether the agency's answer is based on a permissible construction of the statute.",
+      "pinpoint_citation": "467 U.S. 837, 843",
+      "context": "Articulating Step 2 of the Chevron deference framework — the 'permissible construction' standard."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit reversed EPA rule; reversed — EPA rule upheld",
+  "vote": "6-0 (three justices recused)",
+  "majority_author": "Stevens, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Overruled by Loper Bright Enterprises v. Raimondo, 144 S. Ct. 2244 (2024); applied in thousands of cases between 1984 and 2024",
+  "source_url": "https://www.courtlistener.com/opinion/111375/chevron-u-s-a-inc-v-natural-resources-defense/"
+}

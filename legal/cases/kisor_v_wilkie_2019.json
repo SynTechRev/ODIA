@@ -1,0 +1,50 @@
+{
+  "case_id": "kisor_v_wilkie_2019",
+  "name": "Kisor v. Wilkie",
+  "citation": "588 U.S. 558 (2019)",
+  "year": 2019,
+  "court": "SCOTUS",
+  "doctrine": "administrative_law",
+  "secondary_doctrines": [],
+  "summary": "A Vietnam War veteran sought benefits for post-traumatic stress disorder but the Board of Veterans' Appeals applied a VA regulation in a way that reduced his entitlement, relying on an agency interpretation that conflicted with his reading of the regulatory text. The Court declined to overrule Auer but substantially narrowed it by requiring that multiple preconditions be satisfied before a court may defer to an agency's interpretation of its own regulation.",
+  "holding": "Auer deference is retained but significantly narrowed. Before deferring to an agency's interpretation of its own regulation, a court must find: (1) the regulation is genuinely ambiguous after exhausting all standard interpretive tools; (2) the agency's reading is reasonable; (3) it reflects the agency's authoritative or official position rather than a litigating stance; (4) it implicates the agency's substantive expertise; and (5) it reflects the agency's fair and considered judgment, not a convenient post-hoc rationalization.",
+  "legal_definitions": [
+    {
+      "term": "genuine ambiguity (regulatory)",
+      "definition": "A precondition for Auer deference: a regulation is genuinely ambiguous only after a court has exhausted all the standard tools of textual interpretation — including text, structure, history, and purpose — and still cannot resolve its meaning. Facial ambiguity is insufficient.",
+      "context": "Kisor held that genuine ambiguity is the threshold inquiry for Auer deference; if standard interpretive tools resolve the regulatory meaning, no deference is owed regardless of the agency's position.",
+      "pinpoint_citation": "588 U.S. 558, 575",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "auer_deference",
+    "regulatory_interpretation",
+    "agency_deference",
+    "genuine_ambiguity",
+    "administrative_law",
+    "veterans_benefits"
+  ],
+  "constitutional_basis": [
+    "Administrative Procedure Act"
+  ],
+  "relevance_to_audit": "Narrows deference to agency self-interpretations of regulations; relevant to auditing whether agency interpretations of their own procurement rules, grant conditions, and compliance guidance are entitled to any judicial deference after Kisor's preconditions.",
+  "key_quotes": [
+    {
+      "text": "Before giving deference, a court must determine that the regulation is genuinely ambiguous, after exhausting all the standard tools of interpretation.",
+      "pinpoint_citation": "588 U.S. 558, 575",
+      "context": "Requiring exhaustion of interpretive tools as the threshold inquiry before Auer deference may be applied."
+    }
+  ],
+  "procedural_posture": "Federal Circuit affirmed Board of Veterans' Appeals; vacated and remanded",
+  "vote": "5-4 (narrowing); separate 5-4 on whether to overrule",
+  "majority_author": "Kagan, J.",
+  "dissent_authors": [
+    "Gorsuch, J.",
+    "Roberts, C.J.",
+    "Thomas, J.",
+    "Kavanaugh, J."
+  ],
+  "subsequent_treatment": "Current governing standard for Auer deference; courts apply the five-part Kisor inquiry before deferring to agency regulatory interpretations",
+  "source_url": "https://www.courtlistener.com/opinion/4604849/kisor-v-wilkie/"
+}

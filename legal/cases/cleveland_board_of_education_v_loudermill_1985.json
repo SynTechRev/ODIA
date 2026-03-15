@@ -1,0 +1,49 @@
+{
+  "case_id": "cleveland_board_of_education_v_loudermill_1985",
+  "name": "Cleveland Board of Education v. Loudermill",
+  "citation": "470 U.S. 532 (1985)",
+  "year": 1985,
+  "court": "SCOTUS",
+  "doctrine": "due_process",
+  "secondary_doctrines": [
+    "administrative_law"
+  ],
+  "summary": "A classified civil service employee was dismissed for lying on his employment application without any opportunity to respond to the charges before termination. The Board argued that because Ohio statute defined the property right to include the termination procedures, those procedures satisfied due process. The Court rejected this reasoning and held that the Constitution itself — not the statute creating the property right — defines the procedural protections owed.",
+  "holding": "When a state creates a property interest in continued employment, the Due Process Clause requires at least a pre-termination opportunity to respond before the employment may be ended. The property interest and the procedures for its deprivation are analytically separate: the state may create the interest, but the Constitution independently defines the minimum process that must attend its removal. That minimum includes notice of the charges, an explanation of the evidence, and an opportunity to tell the employee's side of the story.",
+  "legal_definitions": [
+    {
+      "term": "pretermination hearing",
+      "definition": "The minimum pre-deprivation procedural protection required before a government employer may terminate a classified civil servant: oral or written notice of the charges, an explanation of the employer's evidence, and a meaningful opportunity for the employee to respond before the termination takes effect.",
+      "context": "Loudermill held that this threshold hearing, even if informal, is constitutionally required before property interests in continued public employment may be terminated.",
+      "pinpoint_citation": "470 U.S. 532, 546",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "procedural_due_process",
+    "pretermination_hearing",
+    "public_employment",
+    "property_interest",
+    "notice",
+    "due_process"
+  ],
+  "constitutional_basis": [
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Requires minimum pre-deprivation process before government terminates protected property interests; relevant to auditing whether agency contract terminations, benefit denials, and license revocations provide constitutionally adequate pre-deprivation notice and hearing.",
+  "key_quotes": [
+    {
+      "text": "The tenured public employee is entitled to oral or written notice of the charges against him, an explanation of the employer's evidence, and an opportunity to present his side of the story.",
+      "pinpoint_citation": "470 U.S. 532, 546",
+      "context": "Prescribing the constitutional minimum for a pretermination hearing as a matter of due process."
+    }
+  ],
+  "procedural_posture": "Sixth Circuit affirmed district court order requiring reinstatement; affirmed",
+  "vote": "8-1",
+  "majority_author": "White, J.",
+  "dissent_authors": [
+    "Rehnquist, J."
+  ],
+  "subsequent_treatment": "Controlling standard for pre-deprivation process in public employment; applied broadly to other property interests in government benefits",
+  "source_url": "https://www.courtlistener.com/opinion/111253/cleveland-board-of-education-v-loudermill/"
+}

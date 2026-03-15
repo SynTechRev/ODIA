@@ -1,0 +1,50 @@
+{
+  "case_id": "motor_vehicle_manufacturers_assn_v_state_farm_1983",
+  "name": "Motor Vehicle Manufacturers Ass'n v. State Farm Mutual Automobile Insurance Co.",
+  "citation": "463 U.S. 29 (1983)",
+  "year": 1983,
+  "court": "SCOTUS",
+  "doctrine": "administrative_law",
+  "secondary_doctrines": [],
+  "summary": "The National Highway Traffic Safety Administration rescinded a regulation requiring passive restraints in new automobiles — including automatic seatbelts and airbags — without adequately explaining why it did not adopt less extreme alternatives. The Court held that rescission of a rule is subject to the same arbitrary-and-capricious standard as initial rulemaking and that the agency's explanation was inadequate.",
+  "holding": "An agency rescinding a rule must comply with the same notice-and-comment and reasoned-explanation requirements that govern initial rulemaking. A rule is arbitrary and capricious if the agency fails to consider an important aspect of the problem, offers an explanation that runs counter to the evidence before it, or acts in a manner so implausible that it cannot be ascribed to a difference in view or the product of agency expertise.",
+  "legal_definitions": [
+    {
+      "term": "hard look review",
+      "definition": "A rigorous application of arbitrary-and-capricious review requiring courts to verify that the agency examined the relevant data, articulated a satisfactory explanation for its action, considered significant alternatives, and did not overlook an important aspect of the problem.",
+      "context": "State Farm crystallized what became known as 'hard look' review, which requires agencies to explain their reasoning with specificity and ensures that important alternatives are genuinely considered before a rule is adopted or rescinded.",
+      "pinpoint_citation": "463 U.S. 29, 43",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "arbitrary_and_capricious",
+    "rulemaking_rescission",
+    "hard_look_review",
+    "apa_review",
+    "reasoned_explanation",
+    "administrative_law"
+  ],
+  "constitutional_basis": [
+    "Administrative Procedure Act"
+  ],
+  "relevance_to_audit": "Establishes that agency rule changes and program cancellations require substantive reasoned explanation; directly applicable to auditing whether government technology contract awards, procurement rescissions, and policy reversals satisfy APA review standards.",
+  "key_quotes": [
+    {
+      "text": "An agency rule would be arbitrary and capricious if the agency has entirely failed to consider an important aspect of the problem, offered an explanation for its decision that runs counter to the evidence before the agency.",
+      "pinpoint_citation": "463 U.S. 29, 43",
+      "context": "Articulating the State Farm standard for when agency action is arbitrary and capricious under APA § 706(2)(A)."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit vacated NHTSA rule; affirmed in part",
+  "vote": "5-4 on some issues; unanimous on core standard",
+  "majority_author": "White, J.",
+  "dissent_authors": [
+    "Rehnquist, J.",
+    "Powell, J.",
+    "O'Connor, J.",
+    "Burger, C.J."
+  ],
+  "subsequent_treatment": "Cornerstone of modern APA hard-look review; applied in virtually every major agency rulemaking challenge",
+  "source_url": "https://www.courtlistener.com/opinion/110985/motor-vehicle-mfrs-assn-of-us-inc-v-state-farm/"
+}

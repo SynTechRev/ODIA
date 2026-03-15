@@ -1,0 +1,44 @@
+{
+  "case_id": "auer_v_robbins_1997",
+  "name": "Auer v. Robbins",
+  "citation": "519 U.S. 452 (1997)",
+  "year": 1997,
+  "court": "SCOTUS",
+  "doctrine": "administrative_law",
+  "secondary_doctrines": [],
+  "summary": "Police sergeants and a lieutenant challenged the Department of Labor's interpretation of its own Fair Labor Standards Act regulation governing the salary-basis test for overtime exemptions. The Court held that an agency's interpretation of its own ambiguous regulation is controlling unless the interpretation is plainly erroneous or inconsistent with the regulation's text, reaffirming Bowles v. Seminole Rock (1945).",
+  "holding": "An agency's interpretation of its own genuinely ambiguous regulation is controlling — entitled to deference — unless the interpretation is plainly erroneous or inconsistent with the regulation. Because the salary-basis regulation at issue was a product of the Secretary's own regulatory authority, his interpretation of what it required was entitled to deference by the reviewing courts.",
+  "legal_definitions": [
+    {
+      "term": "Auer deference",
+      "definition": "The rule that a court must defer to an agency's reasonable interpretation of its own genuinely ambiguous regulation, unless that interpretation is plainly erroneous or inconsistent with the regulation. Also called Seminole Rock deference. Substantially narrowed by Kisor v. Wilkie (2019).",
+      "context": "Auer deference applies only to an agency's interpretation of its own regulations, not to statutory interpretations — a distinction from Chevron. Kisor (2019) added multiple preconditions before deference is appropriate.",
+      "pinpoint_citation": "519 U.S. 452, 461",
+      "binding_authority": false
+    }
+  ],
+  "issue_tags": [
+    "auer_deference",
+    "regulatory_interpretation",
+    "agency_deference",
+    "administrative_law",
+    "salary_basis_test"
+  ],
+  "constitutional_basis": [
+    "Administrative Procedure Act"
+  ],
+  "relevance_to_audit": "Governs how agencies interpret their own procurement and enforcement regulations; relevant to auditing whether agency interpretations of grant conditions, compliance requirements, and contract terms are entitled to judicial deference. Narrowed by Kisor (2019).",
+  "key_quotes": [
+    {
+      "text": "Because the salary-basis test is a creature of the Secretary's own regulations, his interpretation of it is, under our jurisprudence, controlling unless plainly erroneous or inconsistent with the regulation.",
+      "pinpoint_citation": "519 U.S. 452, 461",
+      "context": "Establishing Auer deference for agency interpretations of the agency's own ambiguous regulations."
+    }
+  ],
+  "procedural_posture": "Eighth Circuit affirmed summary judgment for employers; affirmed",
+  "vote": "9-0",
+  "majority_author": "Scalia, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Substantially narrowed by Kisor v. Wilkie, 588 U.S. 558 (2019), which added preconditions before deference is appropriate",
+  "source_url": "https://www.courtlistener.com/opinion/118075/auer-v-robbins/"
+}

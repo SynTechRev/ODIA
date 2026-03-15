@@ -1,0 +1,52 @@
+{
+  "case_id": "loper_bright_enterprises_v_raimondo_2024",
+  "name": "Loper Bright Enterprises v. Raimondo",
+  "citation": "144 S. Ct. 2244 (2024)",
+  "year": 2024,
+  "court": "SCOTUS",
+  "doctrine": "administrative_law",
+  "secondary_doctrines": [
+    "separation_of_powers"
+  ],
+  "summary": "Federal fishing vessels challenged a National Marine Fisheries Service rule requiring them to pay the costs of federal observers placed aboard their boats, arguing the agency lacked statutory authority for cost shifting. The Court used the case to overrule Chevron, holding that the APA requires courts to exercise independent judgment when determining whether an agency has acted within its statutory authority.",
+  "holding": "Chevron U.S.A., Inc. v. Natural Resources Defense Council is overruled. Courts must exercise their own independent judgment when interpreting statutes administered by federal agencies; the Administrative Procedure Act does not permit courts to defer to agencies on pure questions of statutory meaning simply because a provision is ambiguous. Prior decisions relying on Chevron deference remain valid if they used the best statutory reading, but no new deference to agency interpretations is permissible.",
+  "legal_definitions": [
+    {
+      "term": "independent judgment",
+      "definition": "The APA-required standard for judicial review of agency statutory interpretation, under which courts must determine the best meaning of a statute using traditional tools of construction without deferring to the agency's preferred reading simply because the text is ambiguous.",
+      "context": "Post-Loper Bright, courts no longer apply Chevron deference to agency statutory interpretations; instead, they exercise independent judgment as to what the statute means.",
+      "pinpoint_citation": "144 S. Ct. 2244, 2273",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "chevron_overruled",
+    "agency_deference",
+    "statutory_interpretation",
+    "administrative_law",
+    "apa_review",
+    "judicial_review"
+  ],
+  "constitutional_basis": [
+    "Article III",
+    "Administrative Procedure Act"
+  ],
+  "relevance_to_audit": "Fundamentally changes judicial review of agency action; post-2024 agency rules and enforcement positions are subject to de novo statutory interpretation, affecting the legal weight of agency procurement guidance, grant conditions, and enforcement interpretations.",
+  "key_quotes": [
+    {
+      "text": "Chevron is overruled. Courts must exercise their own judgment in determining the meaning of the law and cannot defer to an agency interpretation of the law simply because a statute is ambiguous.",
+      "pinpoint_citation": "144 S. Ct. 2244, 2273",
+      "context": "Overruling Chevron and returning statutory interpretation to the judiciary under the APA's commands."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit upheld rule; reversed and remanded",
+  "vote": "6-3",
+  "majority_author": "Roberts, C.J.",
+  "dissent_authors": [
+    "Kagan, J.",
+    "Sotomayor, J.",
+    "Jackson, J."
+  ],
+  "subsequent_treatment": "Immediately effective; prior Chevron-based decisions remain valid as precedents but courts no longer apply Chevron two-step going forward",
+  "source_url": "https://www.courtlistener.com/opinion/9443053/loper-bright-enterprises-v-raimondo/"
+}

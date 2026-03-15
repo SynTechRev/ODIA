@@ -1,0 +1,51 @@
+{
+  "case_id": "mathews_v_eldridge_1976",
+  "name": "Mathews v. Eldridge",
+  "citation": "424 U.S. 319 (1976)",
+  "year": 1976,
+  "court": "SCOTUS",
+  "doctrine": "due_process",
+  "secondary_doctrines": [
+    "administrative_law"
+  ],
+  "summary": "A disability benefits recipient whose payments were terminated without a prior evidentiary hearing challenged the procedures as constitutionally inadequate. The Court declined to extend Goldberg v. Kelly's requirement of a pre-termination hearing to disability benefits and established a flexible three-factor balancing test to determine what process is due in any given context.",
+  "holding": "Procedural due process does not require a pre-termination evidentiary hearing before Social Security disability benefits may be suspended. The appropriate level of procedural protection is determined by balancing three factors: the private interest at stake, the risk of erroneous deprivation under existing procedures and the probable value of additional safeguards, and the government's interest including administrative and fiscal burdens of additional process.",
+  "legal_definitions": [
+    {
+      "term": "Mathews balancing test",
+      "definition": "The three-factor test for determining what process the Due Process Clause requires: (1) the private interest affected; (2) the risk of erroneous deprivation through current procedures and the value of additional safeguards; and (3) the government's interest, including the burden of providing greater procedural protections.",
+      "context": "Established as the controlling standard for procedural due process analysis outside the public employment and welfare benefit contexts that had previously required full hearings.",
+      "pinpoint_citation": "424 U.S. 319, 335",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "procedural_due_process",
+    "balancing_test",
+    "disability_benefits",
+    "administrative_hearing",
+    "property_interest",
+    "due_process"
+  ],
+  "constitutional_basis": [
+    "Fifth Amendment",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Controls the minimum procedural requirements for government actions depriving individuals of benefits or property; relevant to auditing whether agency enforcement actions, contract terminations, and license revocations afford constitutionally adequate process.",
+  "key_quotes": [
+    {
+      "text": "Due process is flexible and calls for such procedural protections as the particular situation demands.",
+      "pinpoint_citation": "424 U.S. 319, 334",
+      "context": "Framing the flexible balancing approach to procedural due process as an alternative to categorical rules."
+    }
+  ],
+  "procedural_posture": "District court ordered reinstatement; reversed",
+  "vote": "6-2",
+  "majority_author": "Powell, J.",
+  "dissent_authors": [
+    "Brennan, J.",
+    "Marshall, J."
+  ],
+  "subsequent_treatment": "Governing test for procedural due process across government benefit, license, and employment contexts",
+  "source_url": "https://www.courtlistener.com/opinion/109305/mathews-v-eldridge/"
+}
