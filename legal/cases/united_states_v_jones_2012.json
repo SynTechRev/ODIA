@@ -1,0 +1,38 @@
+{
+  "case_id": "united_states_v_jones_2012",
+  "name": "United States v. Jones",
+  "citation": "565 U.S. 400 (2012)",
+  "year": 2012,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "FBI agents and police attached a GPS tracking device to a suspect's vehicle and monitored its movements for 28 days without a valid warrant. A unanimous Court held the attachment constituted a Fourth Amendment search, though five justices wrote separately to address long-term surveillance under a broader mosaic theory.",
+  "holding": "The government's physical attachment of a GPS device to a privately owned vehicle constitutes a Fourth Amendment search under the common-law trespass theory. Five concurring justices also indicated that long-term GPS monitoring would independently constitute a search under the reasonable-expectation-of-privacy standard.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "gps_tracking",
+    "physical_trespass",
+    "long_term_surveillance",
+    "mosaic_theory",
+    "fourth_amendment",
+    "vehicle_tracking",
+    "warrant_requirement"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Establishes that physical attachment of tracking devices is a Fourth Amendment search; relevant to ALPR infrastructure, GPS mandates, and persistent vehicular surveillance programs.",
+  "key_quotes": [
+    {
+      "text": "We hold that the Government's installation of a GPS device on a target's vehicle, and its use of that device to monitor the vehicle's movements, constitutes a 'search.'",
+      "pinpoint_citation": "565 U.S. 400, 404",
+      "context": "Applying the trespass-based Fourth Amendment test alongside the Katz privacy framework."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit reversed conviction; Supreme Court affirmed reversal",
+  "vote": "9-0 (judgment); 5-4 on majority rationale",
+  "majority_author": "Scalia, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Extended by Carpenter v. United States (2018) to digital location data; Alito and Sotomayor concurrences influential in lower court decisions on long-term surveillance",
+  "source_url": "https://www.courtlistener.com/opinion/622732/united-states-v-jones/"
+}

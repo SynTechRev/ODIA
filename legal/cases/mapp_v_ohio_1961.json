@@ -1,0 +1,50 @@
+{
+  "case_id": "mapp_v_ohio_1961",
+  "name": "Mapp v. Ohio",
+  "citation": "367 U.S. 643 (1961)",
+  "year": 1961,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "Police forcibly entered a home without a valid warrant in search of a bombing suspect, discovered obscene materials, and used them to prosecute the homeowner. The Court held that the exclusionary rule — previously applicable only to federal prosecutions under Weeks — is constitutionally required in state criminal proceedings through incorporation via the Fourteenth Amendment.",
+  "holding": "All evidence obtained by searches and seizures in violation of the Fourth Amendment is inadmissible in state courts. The exclusionary rule is an essential component of the Fourth Amendment right, not merely a judicially created remedy, and is fully applicable to the states through the Fourteenth Amendment.",
+  "legal_definitions": [
+    {
+      "term": "exclusionary rule",
+      "definition": "The constitutional principle that evidence obtained through a violation of the Fourth Amendment is inadmissible in a criminal prosecution, whether in federal or state court.",
+      "context": "The Court extended the federal exclusionary rule from Weeks v. United States to all state criminal proceedings, holding it to be a constitutionally mandated remedy rather than a discretionary deterrent.",
+      "pinpoint_citation": "367 U.S. 643, 655",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "exclusionary_rule",
+    "incorporation",
+    "fourth_amendment",
+    "state_prosecution",
+    "warrantless_search",
+    "constitutional_remedy"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Establishes the constitutional remedy for Fourth Amendment violations; critical for assessing legal exposure from unlawful surveillance data collection and its use in enforcement or prosecution.",
+  "key_quotes": [
+    {
+      "text": "The ignoble shortcut to conviction left open to the State tends to destroy the entire system of constitutional restraints on which the liberties of the people rest.",
+      "pinpoint_citation": "367 U.S. 643, 656",
+      "context": "Justifying incorporation of the exclusionary rule as essential to preserving constitutional government."
+    }
+  ],
+  "procedural_posture": "Ohio Supreme Court affirmed conviction; reversed",
+  "vote": "6-3",
+  "majority_author": "Clark, J.",
+  "dissent_authors": [
+    "Harlan, J.",
+    "Frankfurter, J.",
+    "Whittaker, J."
+  ],
+  "subsequent_treatment": "Modified by good-faith exception in United States v. Leon (1984); remains controlling for constitutional remedy analysis",
+  "source_url": "https://www.courtlistener.com/opinion/106277/mapp-v-ohio/"
+}

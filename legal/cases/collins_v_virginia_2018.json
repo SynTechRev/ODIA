@@ -1,0 +1,47 @@
+{
+  "case_id": "collins_v_virginia_2018",
+  "name": "Collins v. Virginia",
+  "citation": "584 U.S. 586 (2018)",
+  "year": 2018,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "A police officer, following up on a stolen motorcycle lead, walked up the driveway of a private home and looked under a tarp parked in an attached carport to confirm the vehicle's identity, without obtaining a warrant. The Court held that the automobile exception to the warrant requirement does not permit officers to enter the curtilage of a home to search a vehicle.",
+  "holding": "The automobile exception does not extend to vehicles located within the curtilage of a home. The curtilage receives the same Fourth Amendment protection as the home itself, and no categorical exception displaces that protection merely because the item to be searched is a vehicle.",
+  "legal_definitions": [
+    {
+      "term": "curtilage",
+      "definition": "The area immediately surrounding and associated with a home that shares the Fourth Amendment protections afforded to the home itself; typically includes attached garages, driveways, and enclosed yards immediately adjacent to the dwelling.",
+      "context": "The Court reaffirmed that the curtilage is constitutionally equivalent to the home for Fourth Amendment purposes, rejecting any automobile exception that would override this protection.",
+      "pinpoint_citation": "584 U.S. 586, 593",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "curtilage",
+    "automobile_exception",
+    "home_privacy",
+    "fourth_amendment",
+    "warrant_requirement",
+    "carport"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Limits the automobile exception at curtilage boundary; relevant to analysis of vehicle-focused surveillance programs that may extend searches into residential property.",
+  "key_quotes": [
+    {
+      "text": "The automobile exception does not permit an officer without a warrant to enter a home or its curtilage in order to search a vehicle therein.",
+      "pinpoint_citation": "584 U.S. 586, 594",
+      "context": "Holding that the automobile exception yields to curtilage protection when the two doctrines conflict."
+    }
+  ],
+  "procedural_posture": "Virginia Supreme Court reversed suppression order; reversed",
+  "vote": "8-1",
+  "majority_author": "Sotomayor, J.",
+  "dissent_authors": [
+    "Alito, J."
+  ],
+  "subsequent_treatment": "Applied to drone surveillance of curtilage and ALPR capture of vehicles parked in residential driveways",
+  "source_url": "https://www.courtlistener.com/opinion/4201913/collins-v-virginia/"
+}

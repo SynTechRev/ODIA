@@ -1,0 +1,42 @@
+{
+  "case_id": "birchfield_v_north_dakota_2016",
+  "name": "Birchfield v. North Dakota",
+  "citation": "579 U.S. 438 (2016)",
+  "year": 2016,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "Consolidated cases challenged state statutes that criminalized refusal to submit to breath or blood tests for suspected drunk driving. The Court held that warrantless breath tests incident to a lawful DUI arrest are permissible but that warrantless blood tests incident to arrest are not, because blood draws are far more physically intrusive and reveal far more private information.",
+  "holding": "Warrantless breath tests administered to DUI arrestees are permissible as searches incident to arrest because they are minimally intrusive. Warrantless blood draws on DUI arrestees are not permissible as searches incident to arrest because blood tests are significantly more intrusive and the government's interest in convenience does not outweigh that invasion. Criminal penalties for refusing a blood test are therefore unconstitutional.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "search_incident_to_arrest",
+    "blood_draw",
+    "breath_test",
+    "drunk_driving",
+    "fourth_amendment",
+    "implied_consent",
+    "bodily_intrusion"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Calibrates Fourth Amendment protection based on degree of bodily intrusion; relevant to programs requiring biological sample collection or biometric data submission as a condition of government interaction.",
+  "key_quotes": [
+    {
+      "text": "Blood tests are significantly more intrusive, and their reasonableness must be judged by reference to the usual rules for searches incident to arrest.",
+      "pinpoint_citation": "579 U.S. 438, 476",
+      "context": "Distinguishing minimally intrusive breath tests from more invasive blood draws under the search-incident-to-arrest doctrine."
+    }
+  ],
+  "procedural_posture": "State convictions reviewed; mixed results — breath conviction affirmed, blood conviction reversed",
+  "vote": "Majority on each issue varied; Alito wrote for the Court",
+  "majority_author": "Alito, J.",
+  "dissent_authors": [
+    "Sotomayor, J.",
+    "Ginsburg, J.",
+    "Thomas, J."
+  ],
+  "subsequent_treatment": "Applied to warrantless biometric collection programs; lower courts cite the invasiveness spectrum established in Birchfield",
+  "source_url": "https://www.courtlistener.com/opinion/3728434/birchfield-v-north-dakota/"
+}

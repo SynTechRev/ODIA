@@ -1,0 +1,53 @@
+{
+  "case_id": "carpenter_v_united_states_2018",
+  "name": "Carpenter v. United States",
+  "citation": "585 U.S. 296 (2018)",
+  "year": 2018,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [
+    "digital_privacy"
+  ],
+  "summary": "The government obtained 127 days of historical cell-site location information (CSLI) from a wireless carrier without a warrant, using the data to place a robbery suspect near crime scenes. The Court held that the third-party doctrine does not extend to comprehensive digital location records that reveal the privacies of daily life.",
+  "holding": "The government must obtain a warrant supported by probable cause before accessing historical CSLI records. The third-party doctrine does not apply to the long-term tracking of a person's movements through carrier-held CSLI because such records are not truly voluntarily disclosed and create a comprehensive chronicle of the individual's life.",
+  "legal_definitions": [
+    {
+      "term": "cell-site location information (CSLI)",
+      "definition": "Time-stamped records generated each time a mobile phone connects to a cell tower, which when aggregated provide a detailed chronicle of an individual's past physical movements.",
+      "context": "The Court explained that CSLI differs from ordinary business records because individuals do not truly voluntarily share it and it enables near-perfect retrospective surveillance.",
+      "pinpoint_citation": "585 U.S. 296, 308–309",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "cell_site_location",
+    "third_party_doctrine",
+    "digital_privacy",
+    "warrant_requirement",
+    "fourth_amendment",
+    "location_tracking",
+    "big_data"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Limits the third-party doctrine for comprehensive digital location data; directly relevant to government acquisition of ALPR data, cellular tracking, and other persistent location surveillance programs.",
+  "key_quotes": [
+    {
+      "text": "When the Government tracks the location of a cell phone it achieves near perfect surveillance, as if it had attached an ankle monitor to the phone's user.",
+      "pinpoint_citation": "585 U.S. 296, 317",
+      "context": "Explaining why long-term CSLI collection is categorically different from ordinary third-party business records."
+    }
+  ],
+  "procedural_posture": "Sixth Circuit affirmed; reversed and remanded",
+  "vote": "5-4",
+  "majority_author": "Roberts, C.J.",
+  "dissent_authors": [
+    "Kennedy, J.",
+    "Thomas, J.",
+    "Alito, J.",
+    "Gorsuch, J."
+  ],
+  "subsequent_treatment": "Leading digital-privacy precedent; applied to ALPR data, tower dumps, and other comprehensive surveillance records by lower courts",
+  "source_url": "https://www.courtlistener.com/opinion/4175936/carpenter-v-united-states/"
+}

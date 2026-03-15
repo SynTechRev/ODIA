@@ -1,0 +1,36 @@
+{
+  "case_id": "weeks_v_united_states_1914",
+  "name": "Weeks v. United States",
+  "citation": "232 U.S. 383 (1914)",
+  "year": 1914,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "Federal officers conducted warrantless searches of a suspect's home and office, seizing papers used as evidence at trial. The Court held that evidence seized by federal officers in violation of the Fourth Amendment may not be used in a federal criminal prosecution, establishing for the first time what became known as the exclusionary rule.",
+  "holding": "Evidence seized by federal officers in violation of the Fourth Amendment is inadmissible in federal court. The constitutional protection against unreasonable searches and seizures would be meaningless if illegally obtained evidence could be freely used to convict the very person whose rights were violated. Federal officers must return improperly seized materials upon motion.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "exclusionary_rule",
+    "federal_prosecution",
+    "warrantless_search",
+    "fourth_amendment",
+    "suppression_of_evidence"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Origin of the exclusionary rule for federal proceedings; foundational precedent for the proposition that constitutional rights require effective remedies when violated by government officers.",
+  "key_quotes": [
+    {
+      "text": "If letters and private documents can thus be seized and held and used in evidence against a citizen accused of an offense, the protection of the Fourth Amendment is of no value, and might as well be stricken from the Constitution.",
+      "pinpoint_citation": "232 U.S. 383, 393",
+      "context": "Establishing that Fourth Amendment protections require meaningful judicial enforcement through exclusion."
+    }
+  ],
+  "procedural_posture": "Federal conviction reversed",
+  "vote": "9-0",
+  "majority_author": "Day, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Extended to states in Mapp v. Ohio (1961); modified by good-faith exception in United States v. Leon (1984)",
+  "source_url": "https://www.courtlistener.com/opinion/98064/weeks-v-united-states/"
+}

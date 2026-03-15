@@ -1,0 +1,53 @@
+{
+  "case_id": "city_of_los_angeles_v_patel_2015",
+  "name": "City of Los Angeles v. Patel",
+  "citation": "576 U.S. 409 (2015)",
+  "year": 2015,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [
+    "administrative_law"
+  ],
+  "summary": "A Los Angeles ordinance required hotel operators to make guest registry records immediately available for police inspection on demand, with criminal penalties for refusal and no mechanism to seek pre-compliance judicial review. The Court held the ordinance facially unconstitutional because it failed to provide any opportunity for pre-compliance review before a search could occur.",
+  "holding": "A statute authorizing warrantless searches of business records is facially unconstitutional when it provides no opportunity for the subject of the search to obtain pre-compliance judicial review. Hotels are not so pervasively regulated that they fall within the closely regulated industry exception, and their operators retain Fourth Amendment protections against unreasonable inspections.",
+  "legal_definitions": [
+    {
+      "term": "pre-compliance review",
+      "definition": "An opportunity for the party subject to an administrative inspection demand to seek judicial review of the demand before being required to comply, thereby preserving Fourth Amendment protections against unreasonable searches.",
+      "context": "The Court held that administrative subpoenas and inspection regimes must afford a meaningful opportunity for pre-compliance judicial review to satisfy the Fourth Amendment.",
+      "pinpoint_citation": "576 U.S. 409, 420–421",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "administrative_search",
+    "hotel_records",
+    "pre_compliance_review",
+    "fourth_amendment",
+    "facial_challenge",
+    "closely_regulated_industry",
+    "business_records"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Establishes that mandatory disclosure ordinances for business records must afford pre-compliance review; relevant to government data demands, surveillance registry requirements, and administrative search programs.",
+  "key_quotes": [
+    {
+      "text": "Absent an opportunity for precompliance review, the ordinance creates an intolerable risk that searches authorized by it will exceed statutory limits, or be used as a pretext to harass hotel operators and their guests.",
+      "pinpoint_citation": "576 U.S. 409, 421",
+      "context": "Explaining why the absence of pre-compliance judicial review renders the ordinance constitutionally defective."
+    }
+  ],
+  "procedural_posture": "Ninth Circuit affirmed permanent injunction; affirmed",
+  "vote": "5-4",
+  "majority_author": "Sotomayor, J.",
+  "dissent_authors": [
+    "Scalia, J.",
+    "Roberts, C.J.",
+    "Thomas, J.",
+    "Alito, J."
+  ],
+  "subsequent_treatment": "Applied to digital records disclosure demands and surveillance data retention ordinances by lower courts",
+  "source_url": "https://www.courtlistener.com/opinion/2812651/city-of-los-angeles-v-patel/"
+}

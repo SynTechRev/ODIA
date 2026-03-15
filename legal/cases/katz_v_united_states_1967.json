@@ -1,0 +1,47 @@
+{
+  "case_id": "katz_v_united_states_1967",
+  "name": "Katz v. United States",
+  "citation": "389 U.S. 347 (1967)",
+  "year": 1967,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "Federal agents attached a listening device to the exterior of a public telephone booth and recorded a gambling suspect's conversations without obtaining a warrant. The Court departed from the physical-trespass model and held that the Fourth Amendment safeguards people's justified expectations of privacy wherever those expectations arise.",
+  "holding": "The Fourth Amendment protects people from unreasonable government intrusions, not merely places or property. Electronic eavesdropping on private telephone communications without prior judicial authorization violates the Fourth Amendment even when no physical trespass occurs. Justice Harlan's concurrence established the controlling two-part reasonable-expectation-of-privacy standard.",
+  "legal_definitions": [
+    {
+      "term": "reasonable expectation of privacy",
+      "definition": "A two-part standard: the individual must have exhibited a subjective expectation of privacy, and that expectation must be one that society is prepared to recognize as reasonable.",
+      "context": "Justice Harlan's concurrence articulated this test, which became the governing standard for determining whether the Fourth Amendment is triggered.",
+      "pinpoint_citation": "389 U.S. 347, 360–361 (Harlan, J., concurring)",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "reasonable_expectation_of_privacy",
+    "wiretapping",
+    "electronic_surveillance",
+    "warrant_requirement",
+    "fourth_amendment",
+    "public_telephone"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Establishes the foundational privacy framework for all Fourth Amendment analysis; essential for evaluating whether government surveillance technology deployments satisfy constitutional requirements.",
+  "key_quotes": [
+    {
+      "text": "The Fourth Amendment protects people, not places. What a person knowingly exposes to the public, even in his own home or office, is not a subject of Fourth Amendment protection.",
+      "pinpoint_citation": "389 U.S. 347, 351",
+      "context": "Rejecting the physical-trespass model and establishing a people-centered privacy analysis."
+    }
+  ],
+  "procedural_posture": "Federal conviction reversed and remanded",
+  "vote": "7-1",
+  "majority_author": "Stewart, J.",
+  "dissent_authors": [
+    "Black, J."
+  ],
+  "subsequent_treatment": "Governing standard for Fourth Amendment analysis; refined by Smith v. Maryland (1979), United States v. Jones (2012), and Carpenter v. United States (2018)",
+  "source_url": "https://www.courtlistener.com/opinion/107564/katz-v-united-states/"
+}

@@ -1,0 +1,42 @@
+{
+  "case_id": "kyllo_v_united_states_2001",
+  "name": "Kyllo v. United States",
+  "citation": "533 U.S. 27 (2001)",
+  "year": 2001,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "Federal agents used a thermal imager from a public street to detect heat patterns consistent with high-intensity grow lights inside a private home, without obtaining a warrant. The Court held that using sense-enhancing technology not in general public use to reveal details of the home's interior is a Fourth Amendment search.",
+  "holding": "Where the government employs technology that is not in general public use to explore details of the interior of a home that would otherwise be unknowable without physical intrusion, the observation constitutes a search and is presumptively unreasonable without a warrant. The home receives the full protection of the Fourth Amendment even against remote sensing technologies.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "thermal_imaging",
+    "home_privacy",
+    "sense_enhancing_technology",
+    "warrant_requirement",
+    "fourth_amendment",
+    "surveillance_technology"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Restricts warrantless use of advanced sensing technology against homes; relevant to aerial surveillance, drone-based thermal imaging, and automated detection technology programs.",
+  "key_quotes": [
+    {
+      "text": "Where, as here, the Government uses a device that is not in general public use, to explore details of the home that would previously have been unknowable without physical intrusion, the surveillance is a 'search' and is presumptively unreasonable without a warrant.",
+      "pinpoint_citation": "533 U.S. 27, 40",
+      "context": "Establishing the rule for technology-assisted surveillance of private homes."
+    }
+  ],
+  "procedural_posture": "Ninth Circuit affirmed conviction; reversed and remanded",
+  "vote": "5-4",
+  "majority_author": "Scalia, J.",
+  "dissent_authors": [
+    "Stevens, J.",
+    "Rehnquist, C.J.",
+    "O'Connor, J.",
+    "Kennedy, J."
+  ],
+  "subsequent_treatment": "Applied to drone surveillance and aerial imaging cases; extended by lower courts to heat-detection and millimeter-wave scanning",
+  "source_url": "https://www.courtlistener.com/opinion/118467/kyllo-v-united-states/"
+}

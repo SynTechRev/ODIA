@@ -1,0 +1,37 @@
+{
+  "case_id": "lange_v_california_2021",
+  "name": "Lange v. California",
+  "citation": "594 U.S. 295 (2021)",
+  "year": 2021,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [],
+  "summary": "A highway patrol officer followed a suspected misdemeanant into his attached garage and conducted an investigation inside the home, without a warrant, on the theory that pursuit of a fleeing suspect is always an exigent circumstance. The Court unanimously rejected a categorical rule and held that officers must assess whether actual exigency exists before entering a home in pursuit of a misdemeanor suspect.",
+  "holding": "The pursuit of a suspected misdemeanant does not categorically authorize warrantless entry into a home. Officers may enter without a warrant only where the specific circumstances create a genuine exigency — such as imminent danger, threatened destruction of evidence, or risk of escape — not merely because a suspect retreated into a home after a minor offense.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "exigent_circumstances",
+    "hot_pursuit",
+    "misdemeanor",
+    "home_privacy",
+    "fourth_amendment",
+    "warrantless_entry"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Limits warrantless home entries in misdemeanor pursuit; relevant to enforcement programs that use surveillance technology to identify and pursue low-level offenders into residential areas.",
+  "key_quotes": [
+    {
+      "text": "The flight of a suspected misdemeanant does not always—or even usually—create the exigent circumstances that can justify a warrantless home entry.",
+      "pinpoint_citation": "594 U.S. 295, 298",
+      "context": "Rejecting the government's proposed categorical rule that any hot pursuit justifies warrantless home entry."
+    }
+  ],
+  "procedural_posture": "California Court of Appeal affirmed conviction; reversed and remanded",
+  "vote": "9-0",
+  "majority_author": "Kagan, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Applied to limit warrantless entries in administrative enforcement contexts; Kavanaugh and Roberts concurrences suggest narrower application",
+  "source_url": "https://www.courtlistener.com/opinion/7761705/lange-v-california/"
+}
