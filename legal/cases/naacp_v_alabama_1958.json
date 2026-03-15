@@ -1,0 +1,46 @@
+{
+  "case_id": "naacp_v_alabama_1958",
+  "name": "NAACP v. Alabama ex rel. Patterson",
+  "citation": "357 U.S. 449 (1958)",
+  "year": 1958,
+  "court": "SCOTUS",
+  "doctrine": "first_amendment",
+  "secondary_doctrines": [],
+  "summary": "Alabama sought to compel the NAACP to produce its membership lists as a condition of continuing to operate in the state, threatening to hold the organization in contempt. The Court unanimously held that compelled disclosure of membership would restrain freedom of association, which the First Amendment protects through the Fourteenth Amendment's incorporation against state action.",
+  "holding": "The First Amendment, as applied to the states through the Fourteenth Amendment, protects freedom of association as a cognate right of free speech and press. Compelled disclosure of an organization's membership list is unconstitutional when there is a reasonable probability that disclosure will subject members to reprisals, harassment, or economic loss, absent a sufficiently overriding governmental interest.",
+  "legal_definitions": [
+    {
+      "term": "freedom of association",
+      "definition": "A First Amendment right, implicit in the rights of assembly and petition, protecting individuals' ability to associate with others to advance shared beliefs and causes without government compulsion to disclose membership, particularly when disclosure would expose members to retaliation.",
+      "context": "The Court recognized freedom of association as a constitutional right distinct from—though related to—freedom of speech and assembly, applying it to shield organizational membership lists from compelled government disclosure.",
+      "pinpoint_citation": "357 U.S. 449, 460–461",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "freedom_of_association",
+    "first_amendment",
+    "compelled_disclosure",
+    "membership_lists",
+    "organizational_privacy",
+    "chilling_effect"
+  ],
+  "constitutional_basis": [
+    "First Amendment",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Establishes constitutional limits on government-compelled disclosure of organizational membership and associations; relevant to auditing surveillance programs that catalog political affiliations, attendees at public meetings, or members of advocacy organizations.",
+  "key_quotes": [
+    {
+      "text": "Effective advocacy of both public and private points of view, particularly controversial ones, is undeniably enhanced by group association.",
+      "pinpoint_citation": "357 U.S. 449, 460",
+      "context": "Recognizing freedom of association as a protected right essential to political advocacy and civic engagement."
+    }
+  ],
+  "procedural_posture": "Alabama Supreme Court upheld contempt citation; reversed",
+  "vote": "9-0",
+  "majority_author": "Harlan, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Foundational freedom-of-association precedent; applied to government demands for donor lists, membership rosters, and organizational records in Shelton v. Tucker (1960) and beyond",
+  "source_url": "https://www.courtlistener.com/opinion/105766/naacp-v-alabama-ex-rel-patterson/"
+}

@@ -1,0 +1,47 @@
+{
+  "case_id": "new_york_times_co_v_sullivan_1964",
+  "name": "New York Times Co. v. Sullivan",
+  "citation": "376 U.S. 254 (1964)",
+  "year": 1964,
+  "court": "SCOTUS",
+  "doctrine": "first_amendment",
+  "secondary_doctrines": [],
+  "summary": "An Alabama public safety commissioner sued the New York Times for defamation over a paid civil rights advertisement that contained factual inaccuracies about police conduct in Montgomery. The Court unanimously held that the First Amendment imposes a constitutional limitation on defamation suits by public officials, requiring them to prove actual malice to recover for statements about their official conduct.",
+  "holding": "The First Amendment prohibits a public official from recovering damages for defamation relating to official conduct unless the official proves that the statement was made with actual malice — knowledge that it was false or reckless disregard for whether it was false or not. This standard is necessary to preserve the breathing space that free debate on public affairs requires, even at the cost of protecting some erroneous statements.",
+  "legal_definitions": [
+    {
+      "term": "actual malice",
+      "definition": "The constitutional standard for defamation liability in suits brought by public officials or public figures: the plaintiff must prove by clear and convincing evidence that the defendant made the statement with knowledge of its falsity or with reckless disregard for whether it was false or not.",
+      "context": "Established to prevent defamation suits from chilling vigorous criticism of public officials; prevents officials from using libel law to suppress press coverage of their exercise of official duties.",
+      "pinpoint_citation": "376 U.S. 254, 279–280",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "actual_malice",
+    "defamation",
+    "press_freedom",
+    "first_amendment",
+    "public_official",
+    "government_accountability",
+    "chilling_effect"
+  ],
+  "constitutional_basis": [
+    "First Amendment",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Protects press coverage and public criticism of government officials' conduct; relevant to audit findings that name officials, characterize government actions, or are potentially used as a basis for defamation claims against journalists or auditors.",
+  "key_quotes": [
+    {
+      "text": "Debate on public issues should be uninhibited, robust, and wide-open, and that it may well include vehement, caustic, and sometimes unpleasantly sharp attacks on government and public officials.",
+      "pinpoint_citation": "376 U.S. 254, 270",
+      "context": "Articulating the First Amendment value of unfettered debate on public affairs as the foundation for the actual malice rule."
+    }
+  ],
+  "procedural_posture": "Alabama Supreme Court affirmed $500,000 jury verdict; reversed",
+  "vote": "9-0",
+  "majority_author": "Brennan, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Extended to public figures in Curtis Publishing Co. v. Butts (1967) and Gertz v. Robert Welch, Inc. (1974); foundational press freedom precedent",
+  "source_url": "https://www.courtlistener.com/opinion/106761/new-york-times-co-v-sullivan/"
+}

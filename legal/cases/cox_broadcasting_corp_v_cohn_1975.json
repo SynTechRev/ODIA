@@ -1,0 +1,49 @@
+{
+  "case_id": "cox_broadcasting_corp_v_cohn_1975",
+  "name": "Cox Broadcasting Corp. v. Cohn",
+  "citation": "420 U.S. 469 (1975)",
+  "year": 1975,
+  "court": "SCOTUS",
+  "doctrine": "first_amendment",
+  "secondary_doctrines": [],
+  "summary": "A Georgia television reporter obtained the name of a rape-murder victim from publicly available court indictments and broadcast it on the news, in violation of a state statute prohibiting such disclosure. The victim's father sued for damages, and the Court held that states may not impose civil liability on the press for truthfully publishing information obtained from official public court records.",
+  "holding": "The First and Fourteenth Amendments bar states from imposing civil liability for the truthful publication of information contained in official court records that are open to public inspection, even where the information might otherwise be considered private. Where the press lawfully obtains truthful information about a matter of public significance from public official records, the state may not constitutionally punish publication absent a need to further a state interest of the highest order.",
+  "legal_definitions": [
+    {
+      "term": "public record privilege (press)",
+      "definition": "The First Amendment protection shielding the press — and the public — from civil or criminal liability for truthfully publishing information that was lawfully obtained from official records open to public inspection, absent a countervailing state interest of the highest order.",
+      "context": "Cox Broadcasting established that once information appears in official public records it loses its private character for First Amendment purposes, and the press may publish it without fear of state-imposed liability.",
+      "pinpoint_citation": "420 U.S. 469, 495–496",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "public_records",
+    "press_freedom",
+    "first_amendment",
+    "privacy",
+    "truthful_publication",
+    "government_transparency",
+    "court_records"
+  ],
+  "constitutional_basis": [
+    "First Amendment",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Protects publication of truthful information drawn from official public records; directly relevant to legal exposure for auditors and journalists who publish findings derived from government procurement records, court documents, or public administrative filings.",
+  "key_quotes": [
+    {
+      "text": "At the very least, the First and Fourteenth Amendments will not allow the imposition of sanctions on the publication of truthful information contained in official court records open to public inspection.",
+      "pinpoint_citation": "420 U.S. 469, 491",
+      "context": "Establishing that public official records create a First Amendment floor against liability for truthful publication."
+    }
+  ],
+  "procedural_posture": "Georgia Supreme Court reversed dismissal; reversed",
+  "vote": "8-1",
+  "majority_author": "White, J.",
+  "dissent_authors": [
+    "Rehnquist, J."
+  ],
+  "subsequent_treatment": "Extended in Florida Star v. B.J.F. (1989) to any lawfully obtained truthful information of public concern from public records",
+  "source_url": "https://www.courtlistener.com/opinion/109233/cox-broadcasting-corp-v-cohn/"
+}

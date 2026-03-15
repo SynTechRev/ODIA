@@ -3,8 +3,8 @@
   "generated_at": "2026-03-15T00:00:00.000000+00:00",
   "description": "Supreme Court constitutional doctrine index for Judicial Interpretive Matrix (JIM) - CLEP-v2 Enhanced + Sprint 8.2 expansion",
   "metadata": {
-    "total_cases": 177,
-    "expanded_individual_files": 38,
+    "total_cases": 183,
+    "expanded_individual_files": 44,
     "sprint_8_2_additions": [
       "katz_v_united_states_1967",
       "carpenter_v_united_states_2018",
@@ -23,7 +23,13 @@
       "mathews_v_eldridge_1976",
       "cleveland_board_of_education_v_loudermill_1985",
       "auer_v_robbins_1997",
-      "kisor_v_wilkie_2019"
+      "kisor_v_wilkie_2019",
+      "naacp_v_alabama_1958",
+      "richmond_newspapers_v_virginia_1980",
+      "press_enterprise_co_v_superior_court_1986",
+      "new_york_times_co_v_sullivan_1964",
+      "buckley_v_valeo_1976",
+      "cox_broadcasting_corp_v_cohn_1975"
     ],
     "doctrinal_categories": [
       "administrative_law",

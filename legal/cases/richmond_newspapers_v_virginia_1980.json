@@ -1,0 +1,47 @@
+{
+  "case_id": "richmond_newspapers_v_virginia_1980",
+  "name": "Richmond Newspapers, Inc. v. Virginia",
+  "citation": "448 U.S. 555 (1980)",
+  "year": 1980,
+  "court": "SCOTUS",
+  "doctrine": "first_amendment",
+  "secondary_doctrines": [],
+  "summary": "A trial judge closed a murder retrial to the press and public at the defendant's request, and the Supreme Court granted certiorari to determine whether such closure was constitutionally permissible. The Court held for the first time that the First Amendment guarantees the public and press an affirmative right to attend criminal trials, grounded in the long historical tradition of open judicial proceedings.",
+  "holding": "The First Amendment guarantees the public and press a right of access to criminal trials that cannot be overcome by a blanket closure order. This right derives from the unbroken tradition of open trials in Anglo-American law and the structural function openness serves in ensuring the integrity and accountability of the criminal justice system. Closure is permissible only upon an overriding interest articulated in findings.",
+  "legal_definitions": [
+    {
+      "term": "right of access (First Amendment)",
+      "definition": "A First Amendment right of the public and press to attend and observe criminal proceedings, derived from historical tradition and the structural role openness plays in ensuring governmental accountability. Closure is permissible only where there is an overriding interest and the closure is no broader than necessary.",
+      "context": "Richmond Newspapers was the Court's first explicit recognition of an affirmative First Amendment access right rather than merely a protection against prior restraints on publication.",
+      "pinpoint_citation": "448 U.S. 555, 576–577",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "right_of_access",
+    "open_trials",
+    "press_freedom",
+    "first_amendment",
+    "government_transparency",
+    "public_proceedings"
+  ],
+  "constitutional_basis": [
+    "First Amendment"
+  ],
+  "relevance_to_audit": "Establishes a First Amendment right of public access to government proceedings rooted in historical tradition; foundational authority for the public's right to scrutinize government surveillance proceedings, administrative hearings, and oversight records.",
+  "key_quotes": [
+    {
+      "text": "We hold that the right to attend criminal trials is implicit in the guarantees of the First Amendment; without the freedom to attend such trials, which people have exercised for centuries, important aspects of freedom of speech and of the press could be eviscerated.",
+      "pinpoint_citation": "448 U.S. 555, 580",
+      "context": "Recognizing for the first time an affirmative First Amendment right of public access to criminal trials."
+    }
+  ],
+  "procedural_posture": "Virginia Supreme Court dismissed appeal; reversed",
+  "vote": "7-1",
+  "majority_author": "Burger, C.J.",
+  "dissent_authors": [
+    "Rehnquist, J."
+  ],
+  "subsequent_treatment": "Extended to preliminary hearings and other proceedings by Press-Enterprise Co. v. Superior Court (1986); foundational transparency precedent",
+  "source_url": "https://www.courtlistener.com/opinion/110337/richmond-newspapers-inc-v-virginia/"
+}

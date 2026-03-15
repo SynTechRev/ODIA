@@ -1,0 +1,49 @@
+{
+  "case_id": "press_enterprise_co_v_superior_court_1986",
+  "name": "Press-Enterprise Co. v. Superior Court",
+  "citation": "478 U.S. 1 (1986)",
+  "year": 1986,
+  "court": "SCOTUS",
+  "doctrine": "first_amendment",
+  "secondary_doctrines": [],
+  "summary": "A newspaper sought access to the transcript of a preliminary hearing in a capital murder case that had been closed to the public and the press. The Court extended Richmond Newspapers to pretrial proceedings and established the 'experience and logic' test for determining whether a First Amendment right of access attaches to any particular governmental proceeding.",
+  "holding": "A First Amendment right of access attaches to any governmental proceeding that satisfies a two-part test: (1) the proceeding has historically been open to the press and public — the experience prong; and (2) public access plays a significant positive role in the functioning of that process — the logic prong. Closure requires a substantial probability that it will protect an overriding interest, and the closure must be no broader than necessary.",
+  "legal_definitions": [
+    {
+      "term": "experience and logic test",
+      "definition": "The two-part First Amendment access test: first, whether the proceeding or record has historically been open to the press and general public ('experience'); second, whether public access plays a significant positive role in the functioning of the process ('logic'). Both prongs must be satisfied for a First Amendment right of access to attach.",
+      "context": "Adopted in Press-Enterprise II to determine which governmental proceedings — beyond criminal trials — carry a constitutional right of public access that can override closure requests.",
+      "pinpoint_citation": "478 U.S. 1, 8",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "right_of_access",
+    "experience_and_logic",
+    "preliminary_hearing",
+    "press_freedom",
+    "first_amendment",
+    "government_transparency",
+    "courtroom_closure"
+  ],
+  "constitutional_basis": [
+    "First Amendment"
+  ],
+  "relevance_to_audit": "Establishes the governing test for First Amendment access rights to government proceedings and records; applicable to auditing whether closure of oversight hearings, surveillance review proceedings, or government records satisfies constitutional standards.",
+  "key_quotes": [
+    {
+      "text": "The first question is whether the place and process has historically been open to the press and general public; the second question is whether public access plays a significant positive role in the functioning of the particular process.",
+      "pinpoint_citation": "478 U.S. 1, 8",
+      "context": "Articulating the two-part 'experience and logic' test for determining when a First Amendment right of access attaches."
+    }
+  ],
+  "procedural_posture": "California Supreme Court denied mandamus; reversed",
+  "vote": "7-2",
+  "majority_author": "Burger, C.J.",
+  "dissent_authors": [
+    "Stevens, J.",
+    "Rehnquist, J."
+  ],
+  "subsequent_treatment": "Controlling test for First Amendment access to any governmental proceeding or record; widely applied in FOIA-adjacent litigation and open government challenges",
+  "source_url": "https://www.courtlistener.com/opinion/111590/press-enterprise-co-v-superior-court-of-cal-county/"
+}

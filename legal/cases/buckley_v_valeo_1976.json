@@ -1,0 +1,54 @@
+{
+  "case_id": "buckley_v_valeo_1976",
+  "name": "Buckley v. Valeo",
+  "citation": "424 U.S. 1 (1976)",
+  "year": 1976,
+  "court": "SCOTUS",
+  "doctrine": "first_amendment",
+  "secondary_doctrines": [
+    "separation_of_powers"
+  ],
+  "summary": "Presidential candidates, a political party, and others challenged various provisions of the Federal Election Campaign Act, including contribution limits, expenditure limits, and financial disclosure requirements. The Court held that political spending is protected speech under the First Amendment, struck down most expenditure limits as unconstitutional, upheld contribution limits as permissible regulations of conduct, and sustained the disclosure and reporting requirements as serving vital governmental interests.",
+  "holding": "Limits on independent political expenditures violate the First Amendment because spending money to express political views is protected speech and the government's interest in preventing corruption does not justify restricting independent spending. Contribution limits are constitutional as they directly regulate the potential for quid pro quo corruption with only marginal expressive impact. Financial disclosure and reporting requirements are constitutional because they serve the important interests in informing voters, deterring actual corruption, and enforcing contribution limits.",
+  "legal_definitions": [
+    {
+      "term": "contribution-expenditure distinction",
+      "definition": "The constitutional distinction between limits on direct contributions to candidates — permissible as regulations of conduct with only marginal expressive impact — and limits on independent political expenditures — impermissible because they directly restrict the quantity of political expression.",
+      "context": "Buckley established that the severity of the First Amendment burden, and therefore the level of scrutiny applied, differs depending on whether the regulation targets contributions or independent expenditures.",
+      "pinpoint_citation": "424 U.S. 1, 20–21",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "campaign_finance",
+    "political_spending",
+    "first_amendment",
+    "disclosure_requirements",
+    "corruption",
+    "contribution_limits",
+    "government_transparency"
+  ],
+  "constitutional_basis": [
+    "First Amendment"
+  ],
+  "relevance_to_audit": "Upholds mandatory financial disclosure requirements for political spending as constitutional; establishes that government interests in transparency and anti-corruption can justify disclosure mandates that would otherwise implicate associational or expressive rights.",
+  "key_quotes": [
+    {
+      "text": "A restriction on the amount of money a person or group can spend on political communication during a campaign necessarily reduces the quantity of expression by restricting the number of issues discussed, the depth of their exploration, and the size of the audience reached.",
+      "pinpoint_citation": "424 U.S. 1, 19",
+      "context": "Equating political spending with protected First Amendment expression, forming the basis for heightened scrutiny of expenditure limits."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit upheld most provisions; partially affirmed, partially reversed",
+  "vote": "Per curiam; various justices joining different sections",
+  "majority_author": "Per Curiam",
+  "dissent_authors": [
+    "Burger, C.J. (partial)",
+    "White, J. (partial)",
+    "Marshall, J. (partial)",
+    "Blackmun, J. (partial)",
+    "Rehnquist, J. (partial)"
+  ],
+  "subsequent_treatment": "Modified by Citizens United v. FEC (2010) and McCutcheon v. FEC (2014); disclosure requirements upheld in Citizens United",
+  "source_url": "https://www.courtlistener.com/opinion/109471/buckley-v-valeo/"
+}
