@@ -11,6 +11,12 @@ from oraculus_di_auditor.legal.definition_extractor import (
     CaseLawDictionary,
     DefinitionExtractor,
 )
+from oraculus_di_auditor.legal.reference_service import (
+    DefinitionEntry,
+    DoctrineLookupResult,
+    LegalReferenceService,
+    TermLookupResult,
+)
 
 __all__ = [
     "CaseLawBuilder",
@@ -20,4 +26,8 @@ __all__ = [
     "CaseDefinition",
     "CaseLawDictionary",
     "DefinitionExtractor",
+    "DefinitionEntry",
+    "DoctrineLookupResult",
+    "LegalReferenceService",
+    "TermLookupResult",
 ]

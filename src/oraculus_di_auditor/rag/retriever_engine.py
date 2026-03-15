@@ -142,6 +142,35 @@ class RetrievalEngine:
         self._refit()
         return len(results)
 
+    def index_legal_references(self, chunks: list[dict]) -> int:
+        """Index legal reference chunks (case law, dictionaries) for retrieval.
+
+        Accepts the output of LegalReferenceService.export_all_for_rag().
+        Returns count indexed.
+        """
+        for chunk in chunks:
+            doc_id = chunk.get("document_id", _stable_id(chunk, "legal"))
+            text = " ".join(
+                filter(
+                    None,
+                    [
+                        chunk.get("title", ""),
+                        chunk.get("content", ""),
+                    ],
+                )
+            )
+            self._corpus_texts.append(text)
+            self._entry_map.append(
+                {
+                    "source_type": chunk.get("source_type", "legal_reference"),
+                    "source_id": str(doc_id),
+                    "content": text,
+                    "original": chunk,
+                }
+            )
+        self._refit()
+        return len(chunks)
+
     def search(
         self,
         query: str,
