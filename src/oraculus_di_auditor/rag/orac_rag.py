@@ -13,17 +13,17 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from .embeddings import LocalEmbedder
-from .llm_providers import get_provider
-from .rag_context import ContextAssembler
-from .rag_prompts import get_prompt_for_query
-from .retriever import Retriever
+from ..embeddings import LocalEmbedder
+from ..llm_providers import get_provider
+from ..rag_context import ContextAssembler
+from ..rag_prompts import get_prompt_for_query
+from ..retriever import Retriever
 
 # Import config
 try:
     import sys
 
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "config"))
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "config"))
     from rag_config import (
         DEFAULT_VOCAB_PATH,
         RAG_LLM_MODEL,

@@ -179,6 +179,15 @@ def create_app() -> Any:
     except Exception as e:
         logger.warning(f"Report generation routes not available: {e}")
 
+    # Register RAG query routes
+    try:
+        from .routes.rag import register_rag_routes
+
+        register_rag_routes(app)
+        logger.info("RAG query routes registered")
+    except Exception as e:
+        logger.warning(f"RAG query routes not available: {e}")
+
     return app
 
 
