@@ -46,6 +46,8 @@ cd frontend && npm install && npm run dev
 - **REST API** — FastAPI with endpoints for analysis, orchestration, and governance
 - **Frontend** — Next.js 14 dashboard (ingest, analysis, anomalies, documents, orchestrator)
 - **Audit triage pipeline** — manifest management, OCR extraction, report generation, issue drafts
+- **RAG query engine** — multi-source retrieval (documents, findings, analysis results, legal reference) with LLM-ready context building
+- **Legal reference system** — 255 searchable terms (Bouvier 1856, Anderson 1889, Cornell Wex, Latin maxims), 64 SCOTUS/federal cases, 35 extracted holdings, superseded-doctrine tracking; all public domain / open access; 433 RAG-indexed chunks ([docs/LEGAL_REFERENCE.md](docs/LEGAL_REFERENCE.md))
 - **Privacy-first** — all processing is local; no external API calls required
 
 ---
