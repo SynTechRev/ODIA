@@ -1,0 +1,54 @@
+{
+  "case_id": "nfib_v_sebelius_2012",
+  "name": "National Federation of Independent Business v. Sebelius",
+  "citation": "567 U.S. 519 (2012)",
+  "year": 2012,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "unconstitutional_conditions"
+  ],
+  "summary": "The Affordable Care Act required states to dramatically expand Medicaid eligibility or forfeit all existing federal Medicaid funding — potentially billions of dollars — a condition the states argued was unconstitutionally coercive. Seven justices agreed the condition crossed the constitutional line, with a majority holding it must be severed and made optional rather than mandatory.",
+  "holding": "Congress may not threaten to withhold all pre-existing federal grant funding to compel states to accept entirely new and substantially expanded program conditions. When the financial pressure attached to a Spending Clause condition is so severe that states have no real choice but to comply — the equivalent of a 'gun to the head' — the condition is unconstitutionally coercive and violates the anti-coercion principle implicit in the Spending Clause. The remedy is to make the new condition optional, not to invalidate the entire program.",
+  "legal_definitions": [
+    {
+      "term": "Spending Clause coercion",
+      "definition": "The constitutional doctrine that conditions on federal grants are invalid when the financial inducement to comply is so overwhelming that states lose their genuine choice to accept or reject the condition. A condition is coercive when it threatens the loss of pre-existing funds to pressure states into accepting a new, substantially expanded program.",
+      "context": "First time the Court applied Dole's anti-coercion principle to actually invalidate a federal spending condition; the Medicaid expansion threatened the loss of all existing Medicaid funding — approximately 10% of states' budgets.",
+      "pinpoint_citation": "567 U.S. 519, 577–582",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "spending_clause",
+    "coercion",
+    "medicaid_expansion",
+    "conditional_grants",
+    "federal_power",
+    "state_sovereignty"
+  ],
+  "constitutional_basis": [
+    "Article I, § 8 (Spending Clause)",
+    "Tenth Amendment"
+  ],
+  "relevance_to_audit": "Establishes constitutional limits on coercive federal grant conditions; directly relevant to auditing whether federal law enforcement and surveillance grant programs — particularly those threatening loss of existing funding to compel technology adoption — are coercive.",
+  "key_quotes": [
+    {
+      "text": "In this case, the financial 'inducement' Congress has chosen is much more than 'relatively mild encouragement' — it is a gun to the head.",
+      "pinpoint_citation": "567 U.S. 519, 581",
+      "context": "Explaining why the threat to withhold all pre-existing Medicaid funds crossed from permissible inducement into unconstitutional coercion."
+    }
+  ],
+  "procedural_posture": "Eleventh Circuit partially invalidated ACA; individual mandate upheld, Medicaid expansion condition severed",
+  "vote": "5-4 on individual mandate; 7-2 on Medicaid coercion",
+  "majority_author": "Roberts, C.J.",
+  "dissent_authors": [
+    "Scalia, J.",
+    "Kennedy, J.",
+    "Thomas, J.",
+    "Alito, J.",
+    "Ginsburg, J. (partial)"
+  ],
+  "subsequent_treatment": "Leading Spending Clause coercion precedent; lower courts regularly cite NFIB when evaluating conditions that threaten withdrawal of pre-existing grant funds",
+  "source_url": "https://www.courtlistener.com/opinion/793925/national-federation-of-independent-business-v-sebelius/"
+}

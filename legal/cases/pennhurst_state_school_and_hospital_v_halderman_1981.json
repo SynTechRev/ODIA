@@ -1,0 +1,52 @@
+{
+  "case_id": "pennhurst_state_school_and_hospital_v_halderman_1981",
+  "name": "Pennhurst State School & Hospital v. Halderman",
+  "citation": "451 U.S. 1 (1981)",
+  "year": 1981,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "due_process"
+  ],
+  "summary": "Residents of a Pennsylvania institution for people with intellectual disabilities sued, arguing that the Developmentally Disabled Assistance and Bill of Rights Act required states to provide adequate habilitation in the least restrictive setting. The Court held that Congress must state conditions on the receipt of federal funds with clear and unambiguous language, because Spending Clause legislation operates like a contract and states must knowingly accept its terms.",
+  "holding": "When Congress legislates under the Spending Clause, the conditions it imposes on states must be stated in clear and unambiguous language because the legitimacy of the arrangement depends on the state voluntarily and knowingly accepting the terms. Congress cannot impose obligations on grant recipients through mere aspiration or vague declarations of policy; if Congress intends to create enforceable conditions, it must do so with unmistakable clarity so that states have actual notice of what they are agreeing to.",
+  "legal_definitions": [
+    {
+      "term": "clear notice rule (Spending Clause)",
+      "definition": "The requirement that conditions Congress attaches to federal grants must be expressed in clear and unambiguous statutory language, because Spending Clause legislation is contractual in nature and states must have unambiguous notice of what obligations they accept when they take federal funds.",
+      "context": "Pennhurst's clear-notice rule ensures that states can make an informed choice about accepting federal funds, since the Spending Clause's legitimacy rests on voluntary acceptance of conditions rather than sovereign compulsion.",
+      "pinpoint_citation": "451 U.S. 1, 17",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "spending_clause",
+    "clear_notice",
+    "grant_conditions",
+    "voluntary_acceptance",
+    "federal_power",
+    "contractual_consent"
+  ],
+  "constitutional_basis": [
+    "Article I, § 8 (Spending Clause)"
+  ],
+  "relevance_to_audit": "Requires that federal grant conditions be stated unambiguously; essential for auditing whether law enforcement technology grants clearly disclose use restrictions, reporting obligations, and civil rights compliance requirements so that recipient agencies have genuine notice of what they are accepting.",
+  "key_quotes": [
+    {
+      "text": "In return for federal funds, the States agree to comply with federally imposed conditions. The legitimacy of Congress' power to legislate under the spending power rests on whether the State voluntarily and knowingly accepts the terms of the contract.",
+      "pinpoint_citation": "451 U.S. 1, 17",
+      "context": "Explaining the contractual basis of Spending Clause legislation and why conditions must be clearly stated for knowing acceptance to be possible."
+    }
+  ],
+  "procedural_posture": "Third Circuit affirmed judgment for plaintiffs; reversed",
+  "vote": "5-4",
+  "majority_author": "Rehnquist, J.",
+  "dissent_authors": [
+    "Brennan, J.",
+    "White, J.",
+    "Marshall, J.",
+    "Blackmun, J."
+  ],
+  "subsequent_treatment": "Clear-notice rule applied in Arlington Central School District v. Murphy (2006) and throughout Spending Clause jurisprudence",
+  "source_url": "https://www.courtlistener.com/opinion/110508/pennhurst-state-school-and-hospital-v-halderman/"
+}

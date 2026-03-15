@@ -1,0 +1,54 @@
+{
+  "case_id": "davis_v_monroe_county_board_of_education_1999",
+  "name": "Davis v. Monroe County Board of Education",
+  "citation": "526 U.S. 629 (1999)",
+  "year": 1999,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "constitutional_torts"
+  ],
+  "summary": "A fifth-grade student was subjected to a sustained campaign of sexual harassment by a classmate; school officials were informed repeatedly but took no effective action. The Court held that recipients of federal education funds can be liable under Title IX for peer-on-peer sexual harassment when they have actual knowledge of the harassment and respond with deliberate indifference.",
+  "holding": "A Title IX recipient of federal funds may be held liable for damages caused by student-on-student sexual harassment where the funding recipient had actual knowledge of the harassment, the harasser was subject to the recipient's disciplinary authority, the recipient responded with deliberate indifference, and the harassment was so severe, pervasive, and objectively offensive that it effectively denied the victim equal access to educational opportunities. Liability derives from the recipient's knowing acceptance of federal funds with the attendant statutory obligations.",
+  "legal_definitions": [
+    {
+      "term": "deliberate indifference (Spending Clause)",
+      "definition": "The standard for imposing liability on a federal-fund recipient for peer harassment under Title IX: the recipient must have had actual knowledge of the harassment and responded — or failed to respond — in a manner that was clearly unreasonable under the known circumstances, effectively ratifying the violation.",
+      "context": "Davis extended the deliberate indifference standard from employee-on-student harassment (Gebser v. Lago Vista) to peer harassment, demonstrating that Spending Clause recipients bear ongoing compliance obligations proportionate to their actual knowledge.",
+      "pinpoint_citation": "526 U.S. 629, 648",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "spending_clause",
+    "title_ix",
+    "deliberate_indifference",
+    "actual_knowledge",
+    "peer_harassment",
+    "federal_power",
+    "grant_recipient_liability"
+  ],
+  "constitutional_basis": [
+    "Article I, § 8 (Spending Clause)",
+    "Title IX"
+  ],
+  "relevance_to_audit": "Establishes that federal grant recipients bear ongoing compliance obligations and can be held liable when they have actual knowledge of violations and respond with deliberate indifference; applicable to auditing whether grant recipients with known civil rights compliance gaps take reasonable corrective action.",
+  "key_quotes": [
+    {
+      "text": "A recipient of federal education funds may be liable for subjecting their students to discrimination where the recipient is deliberately indifferent to known acts of student-on-student sexual harassment and the harasser is under the school's disciplinary authority.",
+      "pinpoint_citation": "526 U.S. 629, 646",
+      "context": "Announcing the conditions for Title IX peer harassment liability as a function of the grant recipient's actual knowledge and deliberate indifference."
+    }
+  ],
+  "procedural_posture": "Eleventh Circuit affirmed dismissal; reversed and remanded",
+  "vote": "5-4",
+  "majority_author": "O'Connor, J.",
+  "dissent_authors": [
+    "Kennedy, J.",
+    "Rehnquist, C.J.",
+    "Scalia, J.",
+    "Thomas, J."
+  ],
+  "subsequent_treatment": "Controlling Title IX peer harassment standard; deliberate-indifference framework applied to other Spending Clause recipient compliance obligations",
+  "source_url": "https://www.courtlistener.com/opinion/118320/davis-next-friend-lashonda-d-v-monroe-county-bd/"
+}

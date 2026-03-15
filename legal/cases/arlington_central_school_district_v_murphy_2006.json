@@ -1,0 +1,42 @@
+{
+  "case_id": "arlington_central_school_district_v_murphy_2006",
+  "name": "Arlington Central School District Board of Education v. Murphy",
+  "citation": "548 U.S. 291 (2006)",
+  "year": 2006,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [],
+  "summary": "Parents of a child with a disability prevailed in an IDEA due process proceeding and sought reimbursement for their expert educational consultant's fees as part of attorneys' fees. Because the IDEA is Spending Clause legislation, the Court applied Pennhurst's clear-notice rule and held that the IDEA's fee provision did not unambiguously authorize reimbursement of expert witness fees, so states had no notice they were accepting that obligation.",
+  "holding": "When Congress seeks to impose obligations on states through Spending Clause legislation, those obligations must be clear enough that a state official reading the statute would have unambiguous notice of what the state is agreeing to accept. Because the IDEA's fee provision did not unambiguously authorize expert consultant fees, states that accepted IDEA funds were not on notice that they were agreeing to pay such fees and cannot be held liable for them.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "spending_clause",
+    "clear_notice",
+    "idea",
+    "attorney_fees",
+    "grant_conditions",
+    "federal_power",
+    "disability_rights"
+  ],
+  "constitutional_basis": [
+    "Article I, § 8 (Spending Clause)"
+  ],
+  "relevance_to_audit": "Illustrates how courts apply Pennhurst's clear-notice rule to reject ambiguous conditions on federal grantees; directly relevant to auditing whether technology grant agreements clearly disclose civil rights obligations, data restrictions, and compliance costs that recipient agencies are expected to bear.",
+  "key_quotes": [
+    {
+      "text": "States cannot knowingly accept conditions of which they are unaware, leaving us to wonder just what States are consenting to when they accept funds under the Act.",
+      "pinpoint_citation": "548 U.S. 291, 296",
+      "context": "Applying Pennhurst's clear-notice rule to reject an ambiguous fee-shifting obligation in IDEA as an enforceable Spending Clause condition."
+    }
+  ],
+  "procedural_posture": "Second Circuit affirmed fee award; reversed",
+  "vote": "6-3",
+  "majority_author": "Alito, J.",
+  "dissent_authors": [
+    "Ginsburg, J.",
+    "Souter, J.",
+    "Stevens, J."
+  ],
+  "subsequent_treatment": "Standard application of Pennhurst's clear-notice rule to specific statutory obligations under Spending Clause programs",
+  "source_url": "https://www.courtlistener.com/opinion/145545/arlington-central-school-dist-bd-of-ed-v-murphy/"
+}

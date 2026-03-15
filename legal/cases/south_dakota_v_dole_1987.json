@@ -1,0 +1,50 @@
+{
+  "case_id": "south_dakota_v_dole_1987",
+  "name": "South Dakota v. Dole",
+  "citation": "483 U.S. 203 (1987)",
+  "year": 1987,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "unconstitutional_conditions"
+  ],
+  "summary": "Congress conditioned five percent of a state's federal highway funds on the state adopting a minimum drinking age of twenty-one, and South Dakota challenged the condition as exceeding Congress's spending power. The Court upheld the condition and articulated a four-part test for evaluating whether conditions attached to federal grants are a valid exercise of the Spending Clause.",
+  "holding": "Congress may attach conditions to federal grants as long as the conditions satisfy four requirements: (1) the expenditure serves the general welfare; (2) the conditions are stated unambiguously so states can knowingly accept them; (3) the conditions are reasonably related to the federal interest in the particular program; and (4) the conditions do not require the states to engage in activities that would themselves be unconstitutional. A relatively mild financial inducement does not cross into unconstitutional coercion.",
+  "legal_definitions": [
+    {
+      "term": "Dole test",
+      "definition": "The four-part standard for valid Spending Clause conditions: (1) expenditure must serve the general welfare; (2) conditions must be stated unambiguously; (3) conditions must be reasonably related to the federal interest in the program; and (4) conditions must not require violation of independent constitutional prohibitions.",
+      "context": "Dole's four-part test controls whether Congress may attach conditions to federal grants to states; subsequent decisions added a fifth implicit element — the conditions must not be so coercive as to effectively compel compliance.",
+      "pinpoint_citation": "483 U.S. 203, 207–208",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "spending_clause",
+    "conditional_grants",
+    "federal_highway_funds",
+    "drinking_age",
+    "coercion",
+    "general_welfare"
+  ],
+  "constitutional_basis": [
+    "Article I, § 8 (Spending Clause)"
+  ],
+  "relevance_to_audit": "Establishes the governing test for conditions attached to federal grants; critical for auditing whether federal technology, law enforcement, or surveillance grant conditions — including JAG, Byrne, and COPS grants — satisfy constitutional requirements and whether grantees have received adequate notice of obligations.",
+  "key_quotes": [
+    {
+      "text": "The spending power is of course not unlimited, but is instead subject to several general restrictions articulated in our cases.",
+      "pinpoint_citation": "483 U.S. 203, 207",
+      "context": "Introducing the four-part framework for evaluating Spending Clause conditions and acknowledging constitutional limits on conditional federal grants."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit upheld statute; affirmed",
+  "vote": "7-2",
+  "majority_author": "Rehnquist, C.J.",
+  "dissent_authors": [
+    "Brennan, J.",
+    "O'Connor, J."
+  ],
+  "subsequent_treatment": "Governing Spending Clause framework; coercion element applied to invalidate Medicaid expansion mandate in NFIB v. Sebelius (2012)",
+  "source_url": "https://www.courtlistener.com/opinion/111905/south-dakota-v-dole/"
+}

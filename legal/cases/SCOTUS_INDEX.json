@@ -3,8 +3,8 @@
   "generated_at": "2026-03-15T00:00:00.000000+00:00",
   "description": "Supreme Court constitutional doctrine index for Judicial Interpretive Matrix (JIM) - CLEP-v2 Enhanced + Sprint 8.2 expansion",
   "metadata": {
-    "total_cases": 191,
-    "expanded_individual_files": 52,
+    "total_cases": 197,
+    "expanded_individual_files": 58,
     "sprint_8_2_additions": [
       "katz_v_united_states_1967",
       "carpenter_v_united_states_2018",
@@ -37,7 +37,13 @@
       "city_of_canton_v_harris_1989",
       "pearson_v_callahan_2009",
       "hope_v_pelzer_2002",
-      "owen_v_city_of_independence_1980"
+      "owen_v_city_of_independence_1980",
+      "south_dakota_v_dole_1987",
+      "nfib_v_sebelius_2012",
+      "pennhurst_state_school_and_hospital_v_halderman_1981",
+      "arlington_central_school_district_v_murphy_2006",
+      "sabri_v_united_states_2004",
+      "davis_v_monroe_county_board_of_education_1999"
     ],
     "doctrinal_categories": [
       "administrative_law",

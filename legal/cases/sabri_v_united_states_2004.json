@@ -1,0 +1,49 @@
+{
+  "case_id": "sabri_v_united_states_2004",
+  "name": "Sabri v. United States",
+  "citation": "541 U.S. 600 (2004)",
+  "year": 2004,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "constitutional_structure"
+  ],
+  "summary": "A real estate developer offered cash bribes to a Minneapolis city council member seeking support for a proposed project, and was prosecuted under 18 U.S.C. § 666, which criminalizes bribery of officials of entities receiving more than $10,000 in federal funds annually, even where the bribe itself does not involve federal money. The Court unanimously upheld the statute as a valid exercise of Congress's authority to protect the integrity of federal grant programs.",
+  "holding": "Congress has authority under the Spending Clause and the Necessary and Proper Clause to criminalize bribery of officials of entities that receive federal funds, even when the specific bribe does not involve federal money. Because money is fungible and bribed officials are untrustworthy stewards of federal funds, Congress rationally could conclude that all bribery of federal-fund recipients threatens the integrity of federal grant programs and warrants federal criminal prohibition.",
+  "legal_definitions": [
+    {
+      "term": "fungibility rationale",
+      "definition": "The constitutional justification for federal anti-bribery jurisdiction over officials of federal grant recipients: because money is fungible, corruption of any official of a grant recipient poses a threat to federal funds even if the bribe does not directly involve federally appropriated money.",
+      "context": "Sabri's fungibility rationale underpins 18 U.S.C. § 666 jurisdiction over bribery of state and local officials whose agencies receive federal grants — a critical statutory enforcement tool for federal oversight of grant recipients.",
+      "pinpoint_citation": "541 U.S. 600, 606",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "federal_bribery",
+    "grant_recipients",
+    "spending_clause",
+    "necessary_and_proper",
+    "18_usc_666",
+    "federal_power",
+    "anti_corruption"
+  ],
+  "constitutional_basis": [
+    "Article I, § 8 (Spending Clause)",
+    "Article I, § 8 (Necessary and Proper Clause)"
+  ],
+  "relevance_to_audit": "Upholds federal authority to prosecute corruption involving federal grant recipients regardless of whether the bribe directly touches federal funds; foundational authority for auditing corruption in federal technology and law enforcement grants and for understanding the scope of 18 U.S.C. § 666 in procurement fraud contexts.",
+  "key_quotes": [
+    {
+      "text": "Money is fungible, bribed officials are untrustworthy stewards of federal funds, and corrupt contractors do not deliver dollar-for-dollar value.",
+      "pinpoint_citation": "541 U.S. 600, 606",
+      "context": "Explaining the rational basis for extending federal anti-bribery jurisdiction to all officials of federal grant recipients, even when the bribe doesn't directly involve federal money."
+    }
+  ],
+  "procedural_posture": "Eighth Circuit affirmed conviction; affirmed",
+  "vote": "9-0",
+  "majority_author": "Souter, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Foundational authority for 18 U.S.C. § 666 prosecutions; widely cited in federal grant fraud and public corruption cases",
+  "source_url": "https://www.courtlistener.com/opinion/136547/sabri-v-united-states/"
+}
