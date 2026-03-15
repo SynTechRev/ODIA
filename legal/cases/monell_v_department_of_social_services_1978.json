@@ -1,0 +1,51 @@
+{
+  "case_id": "monell_v_department_of_social_services_1978",
+  "name": "Monell v. Department of Social Services of the City of New York",
+  "citation": "436 U.S. 658 (1978)",
+  "year": 1978,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_torts",
+  "secondary_doctrines": [
+    "due_process"
+  ],
+  "summary": "Female city employees challenged a policy requiring pregnant workers to take unpaid leave before medically necessary. The Court used the case to overrule Monroe v. Pape's holding that municipalities are not 'persons' subject to suit under 42 U.S.C. § 1983, holding instead that local governments can be sued directly when an official policy or custom is the moving force behind a constitutional violation.",
+  "holding": "Municipalities and other local government units are 'persons' for purposes of 42 U.S.C. § 1983 and may be sued directly for constitutional violations caused by their official policies or customs. However, municipalities are not vicariously liable under respondeat superior for the acts of their employees; the plaintiff must show that an official policy or custom was the moving force behind the specific constitutional deprivation.",
+  "legal_definitions": [
+    {
+      "term": "official policy or custom",
+      "definition": "A municipality's formal enactments, regulations, or decisions adopted through official channels, or persistent widespread practices that, even if not formally authorized, are so well settled as to constitute a custom with the force of law and fairly attributable to the governmental entity.",
+      "context": "Monell requires plaintiffs to identify an 'official policy or custom' as the moving force behind the constitutional violation because municipalities are not vicariously liable for the independent acts of their employees.",
+      "pinpoint_citation": "436 U.S. 658, 694",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "section_1983",
+    "municipal_liability",
+    "official_policy",
+    "custom",
+    "moving_force",
+    "constitutional_torts"
+  ],
+  "constitutional_basis": [
+    "42 U.S.C. § 1983",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Establishes when local government entities are directly liable for constitutional violations; essential for auditing whether surveillance technology programs, procurement policies, or contract practices that cause rights violations expose a municipality to § 1983 liability.",
+  "key_quotes": [
+    {
+      "text": "Congress did intend municipalities and other local government units to be included among those persons to whom § 1983 applies.",
+      "pinpoint_citation": "436 U.S. 658, 690",
+      "context": "Overruling Monroe v. Pape's exclusion of municipalities from § 1983 coverage by examining the Act's legislative history."
+    }
+  ],
+  "procedural_posture": "Second Circuit dismissed; reversed in part and remanded",
+  "vote": "7-2",
+  "majority_author": "Brennan, J.",
+  "dissent_authors": [
+    "Rehnquist, J.",
+    "Burger, C.J."
+  ],
+  "subsequent_treatment": "Elaborated by City of Canton v. Harris (1989) — failure-to-train liability; Board of County Commissioners v. Brown (1997) — hiring decisions; foundational municipal liability precedent",
+  "source_url": "https://www.courtlistener.com/opinion/109875/monell-v-new-york-city-dept-of-social-services/"
+}

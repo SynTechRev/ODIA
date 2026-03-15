@@ -1,0 +1,38 @@
+{
+  "case_id": "pearson_v_callahan_2009",
+  "name": "Pearson v. Callahan",
+  "citation": "555 U.S. 223 (2009)",
+  "year": 2009,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_torts",
+  "secondary_doctrines": [],
+  "summary": "Officers entered a home without a warrant based on consent given by a police informant who had been invited inside, and the homeowner asserted a Fourth Amendment violation. In resolving the qualified immunity question, the Court revisited Saucier v. Katz's mandatory sequencing rule and held that district courts are no longer required to address the constitutional merits before determining whether the right was clearly established.",
+  "holding": "Courts addressing qualified immunity defenses are not required to follow Saucier v. Katz's mandatory two-step sequence — first deciding whether the plaintiff's rights were violated, then deciding whether those rights were clearly established. Courts have discretion to grant qualified immunity by addressing only the 'clearly established' prong when appropriate, without reaching the constitutional merits.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "qualified_immunity",
+    "clearly_established_law",
+    "sequencing",
+    "fourth_amendment",
+    "consent_search",
+    "constitutional_torts"
+  ],
+  "constitutional_basis": [
+    "42 U.S.C. § 1983",
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Controls the procedural order for qualified immunity analysis; allows courts to dispose of civil rights cases on immunity grounds without deciding whether a constitutional violation occurred, which has implications for developing clear constitutional standards governing surveillance and law enforcement technology.",
+  "key_quotes": [
+    {
+      "text": "The judges of the district courts and the courts of appeals are in the best position to determine the order of decision that will best facilitate the fair and efficient disposition of each case.",
+      "pinpoint_citation": "555 U.S. 223, 242",
+      "context": "Overruling Saucier's mandatory two-step sequence and giving lower courts discretion to address qualified immunity prongs in either order."
+    }
+  ],
+  "procedural_posture": "Tenth Circuit reversed denial of qualified immunity; reversed",
+  "vote": "9-0",
+  "majority_author": "Alito, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Discretionary sequencing rule governs qualified immunity analysis; courts routinely resolve immunity on 'clearly established' prong alone under Pearson",
+  "source_url": "https://www.courtlistener.com/opinion/145849/pearson-v-callahan/"
+}

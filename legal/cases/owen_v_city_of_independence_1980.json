@@ -1,0 +1,53 @@
+{
+  "case_id": "owen_v_city_of_independence_1980",
+  "name": "Owen v. City of Independence, Missouri",
+  "citation": "445 U.S. 622 (1980)",
+  "year": 1980,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_torts",
+  "secondary_doctrines": [
+    "due_process"
+  ],
+  "summary": "A police chief was dismissed without notice or a hearing after the city manager released incriminating investigative reports to the city council. The municipality argued it should benefit from the same good-faith immunity available to individual officers. The Court held that unlike individual officials, municipalities have no good-faith immunity defense in § 1983 suits.",
+  "holding": "A municipality may not assert a good-faith or qualified immunity defense in a § 1983 action. The purposes behind the Civil Rights Act — compensating victims of constitutional violations and deterring unconstitutional governmental conduct — are best served by imposing full liability on municipalities when their official policies or customs cause constitutional harm, regardless of whether municipal officers acted in subjective good faith.",
+  "legal_definitions": [
+    {
+      "term": "municipal immunity (absence of)",
+      "definition": "The rule that municipalities and local government units have no good-faith or qualified immunity defense available in § 1983 suits for constitutional violations caused by their official policies or customs. Unlike individual officers, municipalities bear strict liability when an official policy is the moving force behind a constitutional deprivation.",
+      "context": "Owen held that § 1983's twin goals of deterrence and compensation require full municipal accountability, without the safe harbor of good faith that individual officers enjoy through qualified immunity.",
+      "pinpoint_citation": "445 U.S. 622, 650–651",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "municipal_liability",
+    "good_faith_immunity",
+    "section_1983",
+    "constitutional_torts",
+    "due_process",
+    "property_interest"
+  ],
+  "constitutional_basis": [
+    "42 U.S.C. § 1983",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Eliminates good-faith defenses for municipalities in § 1983 actions; relevant to auditing local government surveillance programs and procurement practices that cause constitutional harm — the city cannot escape liability by claiming its officials believed their policies were lawful.",
+  "key_quotes": [
+    {
+      "text": "We hold that municipalities and other local governmental units may no longer be shielded from suit by the good faith of their officers or agents.",
+      "pinpoint_citation": "445 U.S. 622, 638",
+      "context": "Rejecting the municipal good-faith immunity defense and imposing full liability where an official policy causes a constitutional violation."
+    }
+  ],
+  "procedural_posture": "Eighth Circuit affirmed dismissal; reversed and remanded",
+  "vote": "5-4",
+  "majority_author": "Brennan, J.",
+  "dissent_authors": [
+    "Powell, J.",
+    "Stewart, J.",
+    "Rehnquist, J.",
+    "Burger, C.J."
+  ],
+  "subsequent_treatment": "Good law; municipalities may not plead good faith or qualified immunity in § 1983 actions — confirmed in later municipal liability cases",
+  "source_url": "https://www.courtlistener.com/opinion/110189/owen-v-city-of-independence/"
+}

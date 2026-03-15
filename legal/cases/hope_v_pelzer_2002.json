@@ -1,0 +1,50 @@
+{
+  "case_id": "hope_v_pelzer_2002",
+  "name": "Hope v. Pelzer",
+  "citation": "536 U.S. 730 (2002)",
+  "year": 2002,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_torts",
+  "secondary_doctrines": [],
+  "summary": "An Alabama prisoner was handcuffed to a metal hitching post for several hours as punishment for disruptive conduct, restrained in painful positions and denied bathroom breaks. Corrections officers asserted qualified immunity, arguing no prior case with identical facts had held such treatment unconstitutional. The Court rejected the requirement of a factually identical precedent and held the Eighth Amendment violation was obvious under existing doctrine.",
+  "holding": "An official may be denied qualified immunity even without a prior case presenting identical facts. Officials can have 'fair warning' that conduct is unconstitutional from the general constitutional principles established by prior cases — officials are not entitled to qualified immunity simply because no prior decision condemned the exact conduct at issue if the unconstitutionality of the conduct was apparent under clearly established principles.",
+  "legal_definitions": [
+    {
+      "term": "fair warning standard",
+      "definition": "The principle that officials lose qualified immunity when existing legal standards gave them fair warning that their specific conduct was unconstitutional, even absent a prior case with materially identical facts. Unconstitutionality may be apparent from general doctrinal principles.",
+      "context": "Hope v. Pelzer rejected an overly narrow reading of the 'clearly established' requirement that would demand a case with precisely identical facts before officers are on notice that their conduct violates the Constitution.",
+      "pinpoint_citation": "536 U.S. 730, 741",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "qualified_immunity",
+    "clearly_established_law",
+    "fair_warning",
+    "eighth_amendment",
+    "constitutional_torts",
+    "excessive_force"
+  ],
+  "constitutional_basis": [
+    "42 U.S.C. § 1983",
+    "Eighth Amendment"
+  ],
+  "relevance_to_audit": "Holds that clearly established law does not require a prior case with identical facts — relevant where officials deploy novel surveillance or enforcement technology in ways that are unconstitutional under well-settled Fourth or First Amendment principles, even without cases addressing that specific technology.",
+  "key_quotes": [
+    {
+      "text": "For a constitutional right to be clearly established, its contours must be sufficiently clear that a reasonable official would understand that what he is doing violates that right.",
+      "pinpoint_citation": "536 U.S. 730, 741",
+      "context": "Articulating that clear constitutional contours, not factual identity with prior cases, determine whether a right is clearly established for qualified immunity."
+    }
+  ],
+  "procedural_posture": "Eleventh Circuit affirmed qualified immunity; reversed",
+  "vote": "6-3",
+  "majority_author": "Stevens, J.",
+  "dissent_authors": [
+    "Thomas, J.",
+    "Scalia, J.",
+    "Rehnquist, C.J."
+  ],
+  "subsequent_treatment": "Applied alongside Pearson v. Callahan (2009); Hope's fair-warning analysis invoked to deny qualified immunity where constitutional violation was obvious under general principles",
+  "source_url": "https://www.courtlistener.com/opinion/121218/hope-v-pelzer/"
+}

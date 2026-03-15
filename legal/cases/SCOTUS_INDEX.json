@@ -3,8 +3,8 @@
   "generated_at": "2026-03-15T00:00:00.000000+00:00",
   "description": "Supreme Court constitutional doctrine index for Judicial Interpretive Matrix (JIM) - CLEP-v2 Enhanced + Sprint 8.2 expansion",
   "metadata": {
-    "total_cases": 183,
-    "expanded_individual_files": 44,
+    "total_cases": 191,
+    "expanded_individual_files": 52,
     "sprint_8_2_additions": [
       "katz_v_united_states_1967",
       "carpenter_v_united_states_2018",
@@ -29,7 +29,15 @@
       "press_enterprise_co_v_superior_court_1986",
       "new_york_times_co_v_sullivan_1964",
       "buckley_v_valeo_1976",
-      "cox_broadcasting_corp_v_cohn_1975"
+      "cox_broadcasting_corp_v_cohn_1975",
+      "monell_v_department_of_social_services_1978",
+      "monroe_v_pape_1961",
+      "bivens_v_six_unknown_named_agents_1971",
+      "harlow_v_fitzgerald_1982",
+      "city_of_canton_v_harris_1989",
+      "pearson_v_callahan_2009",
+      "hope_v_pelzer_2002",
+      "owen_v_city_of_independence_1980"
     ],
     "doctrinal_categories": [
       "administrative_law",

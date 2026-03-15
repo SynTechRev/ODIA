@@ -1,0 +1,51 @@
+{
+  "case_id": "bivens_v_six_unknown_named_agents_1971",
+  "name": "Bivens v. Six Unknown Named Federal Narcotics Agents",
+  "citation": "403 U.S. 388 (1971)",
+  "year": 1971,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_torts",
+  "secondary_doctrines": [
+    "fourth_amendment"
+  ],
+  "summary": "Federal narcotics agents entered an apartment without a warrant, arrested the occupant in front of his family, and subjected him to a strip search, without any applicable federal statute providing a damages remedy. The Court held that the Constitution itself implies a private right of action for damages when federal officers violate the Fourth Amendment, even without congressional authorization.",
+  "holding": "A person whose Fourth Amendment rights are violated by federal officers acting under color of federal authority has an implied cause of action for money damages directly under the Constitution, notwithstanding the absence of a federal statute expressly authorizing such relief. The Fourth Amendment operates as a limitation on federal power and courts may fashion remedies appropriate to vindicate that constitutional guarantee.",
+  "legal_definitions": [
+    {
+      "term": "Bivens action",
+      "definition": "An implied constitutional cause of action for money damages against federal officers who violate an individual's constitutional rights, recognized by courts in the absence of a federal statutory remedy. Available only in limited contexts involving the Fourth Amendment, the Fifth Amendment, and the Eighth Amendment following subsequent restrictions.",
+      "context": "The Court later substantially limited Bivens actions in Ziglar v. Abbasi (2017), requiring courts to decline to extend Bivens to new contexts absent compelling circumstances.",
+      "pinpoint_citation": "403 U.S. 388, 395–396",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "bivens_action",
+    "implied_right_of_action",
+    "fourth_amendment",
+    "federal_officers",
+    "constitutional_remedy",
+    "constitutional_torts"
+  ],
+  "constitutional_basis": [
+    "Fourth Amendment"
+  ],
+  "relevance_to_audit": "Establishes that individuals harmed by unconstitutional federal officer conduct — including unlawful federal surveillance, warrantless searches, or unauthorized data collection — may have an implied damages remedy even without a statutory cause of action.",
+  "key_quotes": [
+    {
+      "text": "We hold that petitioner is entitled to recover money damages for any injuries he has suffered as a result of the agents' violation of the Amendment.",
+      "pinpoint_citation": "403 U.S. 388, 397",
+      "context": "Recognizing an implied damages remedy directly under the Fourth Amendment against federal officers, absent a federal statutory cause of action."
+    }
+  ],
+  "procedural_posture": "Second Circuit affirmed dismissal; reversed",
+  "vote": "6-3",
+  "majority_author": "Brennan, J.",
+  "dissent_authors": [
+    "Burger, C.J.",
+    "Black, J.",
+    "Blackmun, J."
+  ],
+  "subsequent_treatment": "Substantially limited by Ziglar v. Abbasi, 582 U.S. 120 (2017), which requires courts to decline extension to new Bivens contexts; Egbert v. Boule (2022) further restricted",
+  "source_url": "https://www.courtlistener.com/opinion/108375/bivens-v-six-unknown-named-agents-of-federal/"
+}

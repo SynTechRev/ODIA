@@ -1,0 +1,48 @@
+{
+  "case_id": "harlow_v_fitzgerald_1982",
+  "name": "Harlow v. Fitzgerald",
+  "citation": "457 U.S. 800 (1982)",
+  "year": 1982,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_torts",
+  "secondary_doctrines": [],
+  "summary": "White House aides were sued for allegedly conspiring to retaliate against a Pentagon whistleblower by suppressing his congressional testimony. The Court replaced the prior subjective good-faith qualified immunity test with an objective standard based solely on whether the law was clearly established at the time of the allegedly unconstitutional conduct.",
+  "holding": "Government officials performing discretionary functions are entitled to qualified immunity from civil liability unless their conduct violates clearly established statutory or constitutional rights of which a reasonable person would have known at the time of the act. The test is objective, not subjective — the official's actual beliefs or motives are irrelevant; only the state of clearly established law governs the immunity determination.",
+  "legal_definitions": [
+    {
+      "term": "qualified immunity",
+      "definition": "A defense available to government officials sued in their individual capacities for civil rights violations, shielding them from damages liability unless their conduct violated clearly established law that a reasonable official would have known. The inquiry is entirely objective — the official's personal beliefs or intentions are irrelevant.",
+      "context": "Harlow reformulated qualified immunity to protect all but the plainly incompetent or those who knowingly violate the law, replacing the prior Scheuer v. Rhodes test that included a subjective good-faith inquiry.",
+      "pinpoint_citation": "457 U.S. 800, 818",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "qualified_immunity",
+    "clearly_established_law",
+    "individual_liability",
+    "constitutional_torts",
+    "section_1983",
+    "discretionary_function"
+  ],
+  "constitutional_basis": [
+    "42 U.S.C. § 1983",
+    "First Amendment"
+  ],
+  "relevance_to_audit": "Establishes the controlling qualified immunity standard for government officers sued individually; relevant for assessing personal liability exposure of officials who authorize or operate surveillance programs, issue unlawful contracts, or direct constitutional violations.",
+  "key_quotes": [
+    {
+      "text": "Government officials performing discretionary functions generally are shielded from liability for civil damages insofar as their conduct does not violate clearly established statutory or constitutional rights of which a reasonable person would have known.",
+      "pinpoint_citation": "457 U.S. 800, 818",
+      "context": "Articulating the objective clearly-established-law standard that replaced the prior subjective good-faith test for qualified immunity."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit reversed dismissal; affirmed in part",
+  "vote": "8-1",
+  "majority_author": "Powell, J.",
+  "dissent_authors": [
+    "Brennan, J."
+  ],
+  "subsequent_treatment": "Governing qualified immunity standard; clarified by Hope v. Pelzer (2002) and Pearson v. Callahan (2009); increasingly criticized by courts and commentators",
+  "source_url": "https://www.courtlistener.com/opinion/110728/harlow-v-fitzgerald/"
+}
