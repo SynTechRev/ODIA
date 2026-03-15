@@ -1,0 +1,54 @@
+{
+  "case_id": "west_virginia_v_environmental_protection_agency_2022",
+  "name": "West Virginia v. Environmental Protection Agency",
+  "citation": "597 U.S. 697 (2022)",
+  "year": 2022,
+  "court": "SCOTUS",
+  "doctrine": "non_delegation",
+  "secondary_doctrines": [
+    "administrative_law",
+    "separation_of_powers"
+  ],
+  "summary": "The EPA's Clean Power Plan used § 111(d) of the Clean Air Act to mandate a generation-shifting approach requiring the electricity sector to move from coal to renewable energy sources — a regulatory program of enormous economic and political significance. The Court invoked the major questions doctrine to hold the EPA lacked clear congressional authority to impose such a sweeping restructuring of the electricity sector, even if § 111(d) could be read to authorize it.",
+  "holding": "When an administrative agency claims authority to resolve a question of vast economic and political significance — a 'major question' — courts will not presume that a vague or ambiguous statutory provision silently grants such broad authority. Congress must speak clearly to authorize agency action on major questions. Because the Clean Air Act did not unambiguously authorize the EPA to mandate generation-shifting across the electricity sector, the Clean Power Plan exceeded the EPA's statutory authority.",
+  "legal_definitions": [
+    {
+      "term": "major questions doctrine",
+      "definition": "A canon of statutory interpretation holding that when an agency claims authority to regulate on a question of major economic or political significance, courts require a clear statement from Congress — not merely a plausible textual argument — before recognizing that authority. Ambiguous or broadly worded provisions are insufficient to grant transformative regulatory power.",
+      "context": "West Virginia v. EPA crystallized the major questions doctrine as a distinct clear-statement rule that operates independently of the Chevron framework, requiring explicit congressional authorization before agencies may claim authority over questions of vast significance.",
+      "pinpoint_citation": "597 U.S. 697, 721",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "major_questions_doctrine",
+    "non_delegation",
+    "clean_air_act",
+    "agency_authority",
+    "separation_of_powers",
+    "clear_statement_rule",
+    "administrative_law"
+  ],
+  "constitutional_basis": [
+    "Article I",
+    "Separation of Powers"
+  ],
+  "relevance_to_audit": "Establishes that agencies claiming authority over questions of major political or economic significance must point to clear congressional authorization; directly relevant to auditing whether federal surveillance technology mandates, AI regulation programs, and large-scale data collection regimes rest on adequate statutory authority or exceed agency power under the major questions doctrine.",
+  "key_quotes": [
+    {
+      "text": "A decision of such magnitude and consequence rests with Congress itself, or an agency acting pursuant to a clear delegation from that representative body.",
+      "pinpoint_citation": "597 U.S. 697, 721",
+      "context": "Articulating the core requirement of the major questions doctrine: transformative regulatory programs require clear and specific congressional authorization."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit vacated EPA stay of Clean Power Plan; reversed",
+  "vote": "6-3",
+  "majority_author": "Roberts, C.J.",
+  "dissent_authors": [
+    "Kagan, J.",
+    "Sotomayor, J.",
+    "Breyer, J."
+  ],
+  "subsequent_treatment": "Immediately applied to agency rulemaking challenges across regulated industries; lower courts cite West Virginia to reject broad agency authority claims in health, environment, and technology regulation contexts",
+  "source_url": "https://www.courtlistener.com/opinion/8992939/west-virginia-v-environmental-protection-agency/"
+}

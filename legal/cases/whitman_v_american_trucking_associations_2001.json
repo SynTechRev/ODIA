@@ -1,0 +1,41 @@
+{
+  "case_id": "whitman_v_american_trucking_associations_2001",
+  "name": "Whitman v. American Trucking Associations, Inc.",
+  "citation": "531 U.S. 457 (2001)",
+  "year": 2001,
+  "court": "SCOTUS",
+  "doctrine": "non_delegation",
+  "secondary_doctrines": [
+    "administrative_law"
+  ],
+  "summary": "The EPA revised national ambient air quality standards under the Clean Air Act, which directed the agency to set standards at levels 'requisite to protect the public health' with 'an adequate margin of safety.' Trucking associations argued this was an unconstitutional delegation of legislative power because it gave the EPA no principle for determining how much public health protection was required. The Court unanimously rejected the non-delegation challenge and also held the EPA may not consider implementation costs when setting NAAQS.",
+  "holding": "The Clean Air Act's directive to set air quality standards 'requisite to protect the public health' with an adequate margin of safety provides an intelligible principle sufficient to guide the EPA's discretion. Congress need not provide highly specific guidance — the degree of acceptable discretion varies with the scope of the delegated authority — and the CAA provides sufficient direction to satisfy the non-delegation doctrine. The intelligible principle requirement has been found lacking in only two instances in the Court's history.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "non_delegation",
+    "intelligible_principle",
+    "clean_air_act",
+    "air_quality_standards",
+    "administrative_law",
+    "separation_of_powers",
+    "agency_authority"
+  ],
+  "constitutional_basis": [
+    "Article I",
+    "Separation of Powers"
+  ],
+  "relevance_to_audit": "Confirms the modern permissive approach to the intelligible-principle test and holds that EPA may not consider costs in setting health standards; relevant to understanding the breadth of permissible agency statutory authority before the major questions doctrine imposed additional limits in West Virginia v. EPA (2022).",
+  "key_quotes": [
+    {
+      "text": "It is true enough that the degree of agency discretion that is acceptable varies according to the scope of the power congressionally conferred.",
+      "pinpoint_citation": "531 U.S. 457, 475",
+      "context": "Confirming that the intelligible-principle standard is flexible and that broad delegations may satisfy it so long as some policy direction is provided."
+    }
+  ],
+  "procedural_posture": "D.C. Circuit vacated EPA standards in part; reversed and remanded",
+  "vote": "9-0 on non-delegation; 9-0 on costs",
+  "majority_author": "Scalia, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Confirms the permissive modern intelligible-principle standard; subsequently limited in scope by the major questions doctrine in West Virginia v. EPA (2022)",
+  "source_url": "https://www.courtlistener.com/opinion/118373/whitman-v-american-trucking-assns-inc/"
+}

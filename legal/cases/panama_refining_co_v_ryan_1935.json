@@ -1,0 +1,50 @@
+{
+  "case_id": "panama_refining_co_v_ryan_1935",
+  "name": "Panama Refining Co. v. Ryan",
+  "citation": "293 U.S. 388 (1935)",
+  "year": 1935,
+  "court": "SCOTUS",
+  "doctrine": "non_delegation",
+  "secondary_doctrines": [
+    "separation_of_powers"
+  ],
+  "summary": "Congress authorized the President to prohibit the interstate transportation of petroleum produced in excess of state quota allowances — so-called 'hot oil' — without specifying any standards or conditions guiding when or whether the President should exercise that authority. The Court struck down the delegation as unconstitutional because Congress had provided no policy, no standard, and no rule to constrain the President's discretion.",
+  "holding": "Congress may not delegate its legislative power to the President without providing an intelligible principle, standard, or declared policy to guide that exercise of authority. Where a statute gives the executive unfettered discretion to decide whether to prohibit activity without any legislative determination of the circumstances warranting action, the delegation is unconstitutional. Panama Refining and A.L.A. Schechter Poultry remain the only two cases in which the Supreme Court has struck down federal legislation on non-delegation grounds before West Virginia v. EPA (2022).",
+  "legal_definitions": [
+    {
+      "term": "intelligible principle",
+      "definition": "The constitutional minimum required for a valid delegation of legislative authority from Congress to the executive: Congress must lay down a discernible policy, standard, or rule that directs the exercise of delegated power, so that the delegation does not amount to a transfer of legislative power itself. First articulated in J.W. Hampton, Jr. & Co. v. United States (1928); applied to invalidate a delegation in Panama Refining.",
+      "context": "The statute at issue in Panama Refining contained 'literally no guidance' — no policy, standard, or definition of the circumstances warranting exercise of the delegated authority — making it the paradigm case of an unconstitutional delegation.",
+      "pinpoint_citation": "293 U.S. 388, 430",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "non_delegation",
+    "intelligible_principle",
+    "legislative_power",
+    "executive_discretion",
+    "separation_of_powers",
+    "hot_oil"
+  ],
+  "constitutional_basis": [
+    "Article I",
+    "Separation of Powers"
+  ],
+  "relevance_to_audit": "First case striking down a federal statute on non-delegation grounds; illustrates the constitutional minimum of policy direction Congress must provide when authorizing administrative agencies to regulate — relevant to auditing whether agency surveillance and technology programs rest on adequate statutory authority.",
+  "key_quotes": [
+    {
+      "text": "The Congress has declared no policy, has established no standard, has laid down no rule. There is no requirement, no definition of circumstances and conditions in which the transportation is to be allowed or prohibited.",
+      "pinpoint_citation": "293 U.S. 388, 430",
+      "context": "Explaining why the delegation of hot-oil prohibition authority to the President was unconstitutional — the statute provided no intelligible principle whatsoever."
+    }
+  ],
+  "procedural_posture": "District court enjoined enforcement; affirmed",
+  "vote": "8-1",
+  "majority_author": "Hughes, C.J.",
+  "dissent_authors": [
+    "Cardozo, J."
+  ],
+  "subsequent_treatment": "One of only two cases ever striking down a federal statute on non-delegation grounds (with A.L.A. Schechter Poultry); the intelligible-principle test from J.W. Hampton was applied here and remains the governing standard",
+  "source_url": "https://www.courtlistener.com/opinion/102280/panama-refining-co-v-ryan/"
+}

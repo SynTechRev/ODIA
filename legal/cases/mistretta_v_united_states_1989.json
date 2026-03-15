@@ -1,0 +1,51 @@
+{
+  "case_id": "mistretta_v_united_states_1989",
+  "name": "Mistretta v. United States",
+  "citation": "488 U.S. 361 (1989)",
+  "year": 1989,
+  "court": "SCOTUS",
+  "doctrine": "non_delegation",
+  "secondary_doctrines": [
+    "separation_of_powers"
+  ],
+  "summary": "Congress created the United States Sentencing Commission as an independent body within the judicial branch and gave it authority to promulgate binding sentencing guidelines with detailed statutory factors and goals. A defendant sentenced under the Guidelines challenged the Commission as an unconstitutional delegation of legislative power and an improper commingling of judicial and legislative functions. The Court upheld the Commission by a decisive margin.",
+  "holding": "Congress may delegate authority to an expert commission to promulgate binding sentencing guidelines when it provides an intelligible principle by specifying detailed goals, factors, and constraints that channel the Commission's discretion. Placing the Commission within the judicial branch does not violate separation of powers as long as the arrangement does not impermissibly aggrandize one branch at the expense of another or undermine the integrity of the judiciary.",
+  "legal_definitions": [
+    {
+      "term": "intelligible principle (applied)",
+      "definition": "A sufficient legislative direction to an agency or commission when Congress specifies the goals, factors, and ranges that must guide the exercise of delegated authority. The intelligible principle standard is satisfied when Congress has made the basic policy choice and left the delegee to fill in the details within those parameters.",
+      "context": "Mistretta held that the Sentencing Reform Act's detailed direction to the Commission — specifying seven factors, three purposes, and a mid-range guideline requirement — provided an intelligible principle that satisfies the non-delegation doctrine.",
+      "pinpoint_citation": "488 U.S. 361, 379",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "non_delegation",
+    "intelligible_principle",
+    "sentencing_commission",
+    "separation_of_powers",
+    "judicial_branch",
+    "rulemaking"
+  ],
+  "constitutional_basis": [
+    "Article I",
+    "Article III",
+    "Separation of Powers"
+  ],
+  "relevance_to_audit": "Illustrates how detailed statutory guidance satisfies the intelligible principle requirement for delegating rulemaking authority; relevant to evaluating whether agency technology and surveillance programs are grounded in adequately specific congressional mandates.",
+  "key_quotes": [
+    {
+      "text": "In creating the Sentencing Commission, an unusual hybrid in structure and authority, Congress neither delegated excessive legislative power nor upset the constitutionally mandated balance of powers among the coordinate Branches.",
+      "pinpoint_citation": "488 U.S. 361, 412",
+      "context": "Upholding the Sentencing Commission against both the non-delegation and separation-of-powers challenges."
+    }
+  ],
+  "procedural_posture": "Pre-trial challenge to Guidelines; upheld",
+  "vote": "8-1",
+  "majority_author": "Blackmun, J.",
+  "dissent_authors": [
+    "Scalia, J."
+  ],
+  "subsequent_treatment": "Controlling authority on permissible delegation to expert commissions; Scalia's dissent anticipated modern non-delegation revival arguments in Gundy (2019)",
+  "source_url": "https://www.courtlistener.com/opinion/112101/mistretta-v-united-states/"
+}

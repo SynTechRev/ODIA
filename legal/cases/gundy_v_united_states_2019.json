@@ -1,0 +1,53 @@
+{
+  "case_id": "gundy_v_united_states_2019",
+  "name": "Gundy v. United States",
+  "citation": "588 U.S. 128 (2019)",
+  "year": 2019,
+  "court": "SCOTUS",
+  "doctrine": "non_delegation",
+  "secondary_doctrines": [
+    "separation_of_powers"
+  ],
+  "summary": "The Sex Offender Registration and Notification Act delegated to the Attorney General authority to determine whether, and on what terms, its registration requirements applied to sex offenders convicted before the Act's enactment. A four-justice plurality upheld the delegation, Justice Alito concurred in judgment while expressing willingness to reinvigorate the non-delegation doctrine in a future case with a full nine-member Court, and Justice Gorsuch's dissent — joined by three others — argued for a more demanding intelligible principle standard.",
+  "holding": "The delegation of authority to the Attorney General to apply SORNA to pre-Act offenders is constitutional under the existing intelligible-principle standard because the statute's structure, context, and purpose provide adequate guidance. However, the fractured decision — four justices upholding, one concurring narrowly, and four dissenting — signals that a majority of the current Court may be willing to substantially tighten the non-delegation doctrine in a future case.",
+  "legal_definitions": [
+    {
+      "term": "nondelegation doctrine (modern state)",
+      "definition": "The constitutional principle that Congress may not transfer its legislative power to executive agencies without providing an intelligible principle to guide that power. As of Gundy (2019), the Court applies a permissive intelligible-principle test but a fragmented Court signaled potential for tightening; the major questions doctrine in West Virginia v. EPA (2022) now imposes additional constraints for major policy questions.",
+      "context": "Gundy's fractured outcome — five votes to uphold the delegation but four justices ready to revisit the doctrine — created significant uncertainty about the future of the non-delegation doctrine that was partially resolved in West Virginia v. EPA.",
+      "pinpoint_citation": "588 U.S. 128, 135",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "non_delegation",
+    "intelligible_principle",
+    "sorna",
+    "sex_offender_registration",
+    "separation_of_powers",
+    "attorney_general"
+  ],
+  "constitutional_basis": [
+    "Article I",
+    "Separation of Powers"
+  ],
+  "relevance_to_audit": "Signals the Court's fractured and potentially shifting approach to the nondelegation doctrine; directly relevant to auditing whether broad delegations to federal agencies authorizing surveillance technology programs, data collection, or enforcement discretion will survive future nondelegation challenges.",
+  "key_quotes": [
+    {
+      "text": "We have held, time and again, that a statutory delegation is constitutional as long as Congress lays down by legislative act an intelligible principle to which the person or body authorized to act is directed to conform.",
+      "pinpoint_citation": "588 U.S. 128, 135",
+      "context": "Plurality restating the existing intelligible-principle standard before applying it to uphold the SORNA delegation to the Attorney General."
+    }
+  ],
+  "procedural_posture": "Second Circuit affirmed conviction; affirmed",
+  "vote": "4-1-4 (plurality upholding; Alito concurring; Gorsuch dissenting joined by Roberts, Thomas, Kavanaugh)",
+  "majority_author": "Kagan, J.",
+  "dissent_authors": [
+    "Gorsuch, J.",
+    "Roberts, C.J.",
+    "Thomas, J.",
+    "Kavanaugh, J."
+  ],
+  "subsequent_treatment": "Gorsuch's dissent cited in West Virginia v. EPA (2022) as a foundation for the major questions doctrine; the fragile holding reinforces the significance of clear statutory delegations",
+  "source_url": "https://www.courtlistener.com/opinion/4602936/gundy-v-united-states/"
+}

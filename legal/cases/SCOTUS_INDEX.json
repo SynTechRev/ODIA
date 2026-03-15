@@ -3,8 +3,8 @@
   "generated_at": "2026-03-15T00:00:00.000000+00:00",
   "description": "Supreme Court constitutional doctrine index for Judicial Interpretive Matrix (JIM) - CLEP-v2 Enhanced + Sprint 8.2 expansion",
   "metadata": {
-    "total_cases": 197,
-    "expanded_individual_files": 58,
+    "total_cases": 203,
+    "expanded_individual_files": 64,
     "sprint_8_2_additions": [
       "katz_v_united_states_1967",
       "carpenter_v_united_states_2018",
@@ -43,7 +43,13 @@
       "pennhurst_state_school_and_hospital_v_halderman_1981",
       "arlington_central_school_district_v_murphy_2006",
       "sabri_v_united_states_2004",
-      "davis_v_monroe_county_board_of_education_1999"
+      "davis_v_monroe_county_board_of_education_1999",
+      "panama_refining_co_v_ryan_1935",
+      "ala_schechter_poultry_corp_v_united_states_1935",
+      "mistretta_v_united_states_1989",
+      "whitman_v_american_trucking_associations_2001",
+      "gundy_v_united_states_2019",
+      "west_virginia_v_environmental_protection_agency_2022"
     ],
     "doctrinal_categories": [
       "administrative_law",

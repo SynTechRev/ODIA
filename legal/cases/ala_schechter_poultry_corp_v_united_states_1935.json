@@ -1,0 +1,43 @@
+{
+  "case_id": "ala_schechter_poultry_corp_v_united_states_1935",
+  "name": "A.L.A. Schechter Poultry Corp. v. United States",
+  "citation": "295 U.S. 495 (1935)",
+  "year": 1935,
+  "court": "SCOTUS",
+  "doctrine": "non_delegation",
+  "secondary_doctrines": [
+    "separation_of_powers",
+    "economic_regulation"
+  ],
+  "summary": "The National Industrial Recovery Act authorized the President to approve 'codes of fair competition' drafted by private trade associations without providing any meaningful standard to guide that approval authority, and with no limitation on the subjects the codes could address. A poultry company challenged its prosecution under the live poultry code governing wages, hours, and trade practices. The Court unanimously struck down the NIRA as an unconstitutional delegation of legislative power and also held the regulations exceeded Congress's commerce power.",
+  "holding": "Congress may not delegate its legislative power to private trade associations and the President without providing an intelligible principle to guide the exercise of that authority. The NIRA's blanket authorization to approve whatever codes of fair competition industry groups proposed — with no declared policy, no standards, and no limits on subject matter — was an unconstitutional delegation of legislative power. This was also an invalid exercise of the commerce power as applied to local transactions.",
+  "legal_definitions": [],
+  "issue_tags": [
+    "non_delegation",
+    "intelligible_principle",
+    "codes_of_fair_competition",
+    "private_delegation",
+    "separation_of_powers",
+    "commerce_clause",
+    "nira"
+  ],
+  "constitutional_basis": [
+    "Article I",
+    "Separation of Powers",
+    "Commerce Clause"
+  ],
+  "relevance_to_audit": "The paradigm example of unconstitutional delegation to private entities; relevant where government technology programs delegate regulatory authority to vendors, industry consortia, or private contractors without adequate public standards or oversight.",
+  "key_quotes": [
+    {
+      "text": "Congress cannot delegate legislative power to the President to exercise an unfettered discretion to make whatever laws he thinks may be needed or advisable for the rehabilitation and expansion of trade or industry.",
+      "pinpoint_citation": "295 U.S. 495, 537–538",
+      "context": "Holding the NIRA's 'codes of fair competition' authorization was an unconstitutional grant of unbounded legislative power to the President and private trade associations."
+    }
+  ],
+  "procedural_posture": "Second Circuit affirmed conviction; reversed",
+  "vote": "9-0",
+  "majority_author": "Hughes, C.J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "One of only two cases striking a federal statute on non-delegation grounds (with Panama Refining); still invoked as the outer limit of permissible delegation in modern cases including Gundy (2019) and West Virginia v. EPA (2022)",
+  "source_url": "https://www.courtlistener.com/opinion/102322/ala-schechter-poultry-corp-v-united-states/"
+}
