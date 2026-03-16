@@ -1,0 +1,56 @@
+{
+  "case_id": "heart_of_atlanta_motel_v_united_states_1964",
+  "name": "Heart of Atlanta Motel, Inc. v. United States",
+  "citation": "379 U.S. 241 (1964)",
+  "year": 1964,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "commerce_clause",
+    "civil_rights",
+    "equal_protection"
+  ],
+  "summary": "The Heart of Atlanta Motel refused to rent rooms to Black Americans in violation of Title II of the Civil Rights Act of 1964, which prohibited discrimination in public accommodations affecting interstate commerce. The motel challenged Title II as exceeding congressional power under the Commerce Clause and as violating the Fifth Amendment.",
+  "holding": "Title II of the Civil Rights Act of 1964 was a valid exercise of Congress's Commerce Clause power. The power of Congress to promote interstate commerce includes the power to regulate local incidents thereof which might have a substantial and harmful effect on that commerce. Racial discrimination by hotels serving interstate travelers substantially affects interstate commerce.",
+  "legal_definitions": [
+    {
+      "term": "substantial effect on interstate commerce",
+      "definition": "The standard under which Congress may regulate purely local or intrastate activity when that activity, individually or in the aggregate, has a substantial effect on interstate commerce. The reach of the commerce power extends to intrastate activities that have a close and substantial relation to interstate commerce.",
+      "context": "The Court applied the aggregation principle: although a single motel's discrimination might have minimal effect, racial discrimination by hotels across the nation substantially burdens interstate travel by Black Americans.",
+      "pinpoint_citation": "379 U.S. 241, 258",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "commerce_clause",
+    "civil_rights_act",
+    "public_accommodations",
+    "racial_discrimination",
+    "interstate_commerce",
+    "congressional_power",
+    "substantial_effects_test"
+  ],
+  "constitutional_basis": [
+    "Article I, Section 8, Clause 3 (Commerce Clause)"
+  ],
+  "relevance_to_audit": "Establishes Congress's authority to regulate local conduct affecting interstate commerce; provides the constitutional basis for federal civil rights laws requiring non-discrimination in government contracting, procurement, and grant programs. Audit findings involving discriminatory patterns in vendor selection or procurement must be evaluated against the civil rights statutory framework authorized by this doctrine.",
+  "key_quotes": [
+    {
+      "text": "That the 'commerce' power of the Congress may be exercised to prevent racial discrimination in facilities which substantially affect interstate commerce is no longer open to question.",
+      "pinpoint_citation": "379 U.S. 241, 261",
+      "context": "Confirming Congress's authority under the Commerce Clause to prohibit racial discrimination affecting interstate commerce."
+    },
+    {
+      "text": "The power of Congress to promote interstate commerce also includes the power to regulate the local incidents thereof, including local activities in both the States of origin and destination, which might have a substantial and harmful effect upon that commerce.",
+      "pinpoint_citation": "379 U.S. 241, 258",
+      "context": "Applying the substantial effects test to uphold the Civil Rights Act."
+    }
+  ],
+  "procedural_posture": "District court upheld Act; SCOTUS affirmed",
+  "vote": "9-0 (Black, Douglas, and Goldberg concurred separately)",
+  "majority_author": "Clark, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Settled the constitutionality of the public accommodations provisions of the Civil Rights Act; foundational for Commerce Clause-based anti-discrimination statutes",
+  "source_url": "https://www.courtlistener.com/opinion/106965/heart-of-atlanta-motel-inc-v-united-states/",
+  "doctrinal_weight": 0.90
+}

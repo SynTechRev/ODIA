@@ -1,0 +1,57 @@
+{
+  "case_id": "garcia_v_san_antonio_metropolitan_transit_authority_1985",
+  "name": "Garcia v. San Antonio Metropolitan Transit Authority",
+  "citation": "469 U.S. 528 (1985)",
+  "year": 1985,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "federalism",
+    "commerce_clause",
+    "tenth_amendment"
+  ],
+  "summary": "The San Antonio Metropolitan Transit Authority (SAMTA) operated a city-owned mass transit system. The Department of Labor determined SAMTA was subject to the Fair Labor Standards Act's minimum wage and overtime requirements. SAMTA argued the FLSA could not constitutionally be applied to it because mass transit was a traditional governmental function protected from federal regulation.",
+  "holding": "The Fair Labor Standards Act applies to state and local governments including municipal mass transit authorities. The National League of Cities v. Usery (1976) was overruled. States must look primarily to the political process — Congress's structural accountability to state interests through the composition of the Senate and the Electoral College — rather than to judicial doctrine to protect their sovereign functions from federal regulation.",
+  "legal_definitions": [
+    {
+      "term": "political safeguards of federalism",
+      "definition": "The structural protections for state sovereignty inherent in the composition of the federal government — the equal representation of states in the Senate, state participation in the selection of the President, and state control of federal congressional redistricting — which provide states with sufficient representation in the national political process to protect their interests from federal overreach.",
+      "context": "The Court held that these structural safeguards, rather than judicially enforced limits on commerce power, are the primary protection for state sovereignty, and overruled the traditional governmental functions test.",
+      "pinpoint_citation": "469 U.S. 528, 550-554",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "fair_labor_standards_act",
+    "tenth_amendment",
+    "state_sovereignty",
+    "federalism",
+    "commerce_clause",
+    "municipal_government",
+    "political_safeguards"
+  ],
+  "constitutional_basis": [
+    "Article I, Section 8 (Commerce Clause)",
+    "Tenth Amendment"
+  ],
+  "relevance_to_audit": "Establishes that federal labor and employment laws apply to state and local governments, including their employees and contractors; relevant to audit findings involving federal grant conditions, prevailing wage requirements, and labor standards imposed on municipalities receiving federal funds. Confirms that states cannot claim constitutional exemption from generally applicable federal regulatory requirements.",
+  "key_quotes": [
+    {
+      "text": "The principal means chosen to balance the competing interests of the national and state governments is in the structure of the Federal Government itself. The Framers chose to rely on a federal system in which special restraints on federal power over the States inhered principally in the workings of the National Government itself.",
+      "pinpoint_citation": "469 U.S. 528, 551",
+      "context": "Explaining why structural political safeguards, not judicial limits on commerce power, protect state sovereignty."
+    }
+  ],
+  "procedural_posture": "District court dismissed FLSA claims; SCOTUS reversed",
+  "vote": "5-4",
+  "majority_author": "Blackmun, J.",
+  "dissent_authors": [
+    "Powell, J.",
+    "Burger, C.J.",
+    "Rehnquist, J.",
+    "O'Connor, J."
+  ],
+  "subsequent_treatment": "Settled federal power to regulate state and local government employment; partially limited by New York v. United States (1992) and Printz v. United States (1997) which established anti-commandeering doctrine",
+  "source_url": "https://www.courtlistener.com/opinion/111394/garcia-v-san-antonio-metropolitan-transit-authority/",
+  "doctrinal_weight": 0.87
+}

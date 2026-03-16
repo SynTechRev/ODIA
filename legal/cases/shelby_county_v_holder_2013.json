@@ -1,0 +1,63 @@
+{
+  "case_id": "shelby_county_v_holder_2013",
+  "name": "Shelby County v. Holder",
+  "citation": "570 U.S. 529 (2013)",
+  "year": 2013,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "equal_sovereignty",
+    "voting_rights",
+    "fifteenth_amendment"
+  ],
+  "summary": "Shelby County, Alabama challenged the constitutionality of Sections 4(b) and 5 of the Voting Rights Act of 1965. Section 4(b) established a coverage formula identifying jurisdictions required to obtain federal preclearance before changing voting laws. Section 5 required covered jurisdictions to obtain advance approval from the federal government or courts before implementing voting changes.",
+  "holding": "Section 4(b) of the Voting Rights Act, which determined which jurisdictions were subject to preclearance under Section 5, was unconstitutional because the coverage formula was based on decades-old data and practices no longer reflective of current conditions. The disparate treatment of states based on historical data that bears no logical relationship to present-day conditions violated the constitutional principle of equal sovereignty among the states.",
+  "legal_definitions": [
+    {
+      "term": "equal sovereignty doctrine",
+      "definition": "The constitutional principle that the federal government must treat states as equals and may not impose extraordinary requirements on some states but not others absent current justification; while differential treatment of states is permissible to address identified constitutional violations, such treatment must be grounded in current needs rather than historical circumstances.",
+      "context": "The Court extended the equal sovereignty principle from the admissions context to strike down a coverage formula that was based on voting data from 1964 and 1968.",
+      "pinpoint_citation": "570 U.S. 529, 543-544",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "voting_rights",
+    "equal_sovereignty",
+    "preclearance",
+    "federal_oversight",
+    "section_5",
+    "fifteenth_amendment",
+    "congruence_and_proportionality"
+  ],
+  "constitutional_basis": [
+    "Fifteenth Amendment",
+    "Fourteenth Amendment",
+    "Article IV (equal footing doctrine)"
+  ],
+  "relevance_to_audit": "Relevant to the constitutional limits of federal oversight mechanisms over state and local governments; the congruence and proportionality requirement applies to federal enforcement legislation directed at state conduct. Audit findings recommending federal oversight of local government programs must account for constitutional limits on differential federal regulation of state entities.",
+  "key_quotes": [
+    {
+      "text": "Our country has changed, and while any racial discrimination in voting is too much, Congress must ensure that the legislation it passes to remedy that problem speaks to current conditions.",
+      "pinpoint_citation": "570 U.S. 529, 557",
+      "context": "Explaining that an outdated coverage formula cannot justify extraordinary federal intervention in state voting processes."
+    },
+    {
+      "text": "Not only do States retain sovereignty under the Constitution, there is also a fundamental principle of equal sovereignty among the States.",
+      "pinpoint_citation": "570 U.S. 529, 544",
+      "context": "Articulating the equal sovereignty principle as a constitutional limit on differential federal treatment of states."
+    }
+  ],
+  "procedural_posture": "District court and D.C. Circuit upheld the Act; SCOTUS reversed",
+  "vote": "5-4",
+  "majority_author": "Roberts, C.J.",
+  "dissent_authors": [
+    "Ginsburg, J.",
+    "Breyer, J.",
+    "Sotomayor, J.",
+    "Kagan, J."
+  ],
+  "subsequent_treatment": "Effectively suspended preclearance under the VRA; Congress has not enacted a new coverage formula as of 2026",
+  "source_url": "https://www.courtlistener.com/opinion/2621588/shelby-county-v-holder/",
+  "doctrinal_weight": 0.90
+}

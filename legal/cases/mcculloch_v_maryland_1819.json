@@ -1,0 +1,64 @@
+{
+  "case_id": "mcculloch_v_maryland_1819",
+  "name": "McCulloch v. Maryland",
+  "citation": "17 U.S. (4 Wheat.) 316 (1819)",
+  "year": 1819,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "implied_powers",
+    "supremacy_clause",
+    "federalism"
+  ],
+  "summary": "Maryland imposed a tax on notes issued by the Second Bank of the United States. James McCulloch, the cashier of the Bank's Baltimore branch, refused to pay the tax. The case presented two questions: whether Congress had power to incorporate a national bank, and whether Maryland could constitutionally tax an instrument of the federal government.",
+  "holding": "Congress has implied power to incorporate a national bank as a means of executing its enumerated powers, because the Necessary and Proper Clause grants Congress discretion to choose the means appropriate to carrying out its enumerated powers. Additionally, a state may not impose a tax on an instrument of the federal government because the power to tax is the power to destroy, and state taxation of federal instrumentalities is incompatible with federal supremacy.",
+  "legal_definitions": [
+    {
+      "term": "implied powers",
+      "definition": "Powers of Congress not expressly enumerated in Article I but reasonably inferred as means of executing the enumerated powers. The Necessary and Proper Clause authorizes Congress to employ any means rationally related to the exercise of an enumerated power, so long as the end is legitimate and the means not prohibited by the Constitution.",
+      "context": "Chief Justice Marshall rejected the argument that 'necessary' means absolutely indispensable, holding that it means 'convenient, useful, or essential' in context.",
+      "pinpoint_citation": "17 U.S. 316, 413-415",
+      "binding_authority": true
+    },
+    {
+      "term": "intergovernmental immunity",
+      "definition": "The constitutional principle that states may not tax or burden the operations of the federal government, derived from the Supremacy Clause and the nature of the federal system.",
+      "context": "The power to tax involves the power to destroy; a taxing power over instruments of the federal government would give states the power to cripple or defeat those instruments and is therefore unconstitutional.",
+      "pinpoint_citation": "17 U.S. 316, 431",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "implied_powers",
+    "necessary_and_proper_clause",
+    "supremacy_clause",
+    "intergovernmental_immunity",
+    "federalism",
+    "national_bank",
+    "state_taxation"
+  ],
+  "constitutional_basis": [
+    "Article I, Section 8 (Necessary and Proper Clause)",
+    "Article VI (Supremacy Clause)"
+  ],
+  "relevance_to_audit": "Establishes implied federal power doctrine and federal supremacy over state action; relevant when auditing government programs funded by or subject to federal law — states and localities may not take action that impedes or taxes federal functions, and federal grant conditions prevail over conflicting state practices.",
+  "key_quotes": [
+    {
+      "text": "Let the end be legitimate, let it be within the scope of the constitution, and all means which are appropriate, which are plainly adapted to that end, which are not prohibited, but consist with the letter and spirit of the constitution, are constitutional.",
+      "pinpoint_citation": "17 U.S. 316, 421",
+      "context": "Establishing the test for whether a congressional means of executing its enumerated powers is constitutionally valid."
+    },
+    {
+      "text": "The power to tax involves the power to destroy.",
+      "pinpoint_citation": "17 U.S. 316, 431",
+      "context": "Establishing the basis for federal immunity from state taxation."
+    }
+  ],
+  "procedural_posture": "Maryland Court of Appeals affirmed tax; SCOTUS reversed",
+  "vote": "7-0",
+  "majority_author": "Marshall, C.J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Foundational case for implied powers, the Necessary and Proper Clause, and intergovernmental tax immunity; applied in every federal-state power conflict",
+  "source_url": "https://www.courtlistener.com/opinion/85272/mccullock-v-state-of-maryland/",
+  "doctrinal_weight": 0.98
+}

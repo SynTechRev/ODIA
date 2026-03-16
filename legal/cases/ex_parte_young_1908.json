@@ -1,0 +1,55 @@
+{
+  "case_id": "ex_parte_young_1908",
+  "name": "Ex parte Young",
+  "citation": "209 U.S. 123 (1908)",
+  "year": 1908,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_structure",
+  "secondary_doctrines": [
+    "sovereign_immunity",
+    "federalism",
+    "fourteenth_amendment"
+  ],
+  "summary": "Minnesota enacted railroad rate regulations under penalty of heavy fines and imprisonment. Shareholders sought an injunction against the state Attorney General, Edward Young, to prevent enforcement of unconstitutional regulations. Young resisted on sovereign immunity grounds, arguing a suit against him was effectively a suit against the state.",
+  "holding": "A state official who acts in violation of federal constitutional rights is stripped of his official character and may be enjoined by a federal court from continuing such unconstitutional action. The fiction that such a suit is against the officer rather than the state allows the Ex parte Young doctrine to coexist with the Eleventh Amendment's bar on suits against states in federal court.",
+  "legal_definitions": [
+    {
+      "term": "Ex parte Young doctrine",
+      "definition": "The principle that a state official who acts in violation of federal law is not acting on behalf of the state for Eleventh Amendment purposes and may be sued in federal court for prospective injunctive relief to stop ongoing violations of federal law.",
+      "context": "Permits federal courts to issue prospective injunctions against state officials notwithstanding sovereign immunity; does not extend to retrospective money damages payable from the state treasury.",
+      "pinpoint_citation": "209 U.S. 123, 159-160",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "sovereign_immunity",
+    "eleventh_amendment",
+    "federal_court_jurisdiction",
+    "state_officials",
+    "injunctive_relief",
+    "constitutional_violations",
+    "prospective_relief"
+  ],
+  "constitutional_basis": [
+    "Eleventh Amendment",
+    "Fourteenth Amendment",
+    "Article III"
+  ],
+  "relevance_to_audit": "Permits federal injunctions against state and local officials conducting unconstitutional surveillance programs or procurement schemes. Audit findings involving ongoing constitutional violations by government officials may be remedied through prospective injunctive relief under this doctrine even where the governmental entity itself is immune from suit.",
+  "key_quotes": [
+    {
+      "text": "The State has no power to impart to him any immunity from responsibility to the supreme authority of the United States.",
+      "pinpoint_citation": "209 U.S. 123, 160",
+      "context": "Explaining why a state officer violating federal constitutional rights loses the protection of state sovereign immunity."
+    }
+  ],
+  "procedural_posture": "Petition for writ of habeas corpus by state Attorney General held in contempt for violating federal injunction; SCOTUS denied the writ and affirmed jurisdiction",
+  "vote": "8-1",
+  "majority_author": "Peckham, J.",
+  "dissent_authors": [
+    "Harlan, J."
+  ],
+  "subsequent_treatment": "Foundational doctrine for federal court enforcement of constitutional rights against state officials; repeatedly applied in civil rights litigation",
+  "source_url": "https://www.courtlistener.com/opinion/97009/ex-parte-young/",
+  "doctrinal_weight": 0.94
+}

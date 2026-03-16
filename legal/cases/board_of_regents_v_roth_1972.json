@@ -1,0 +1,61 @@
+{
+  "case_id": "board_of_regents_v_roth_1972",
+  "name": "Board of Regents of State Colleges v. Roth",
+  "citation": "408 U.S. 564 (1972)",
+  "year": 1972,
+  "court": "SCOTUS",
+  "doctrine": "due_process",
+  "secondary_doctrines": [
+    "government_employment",
+    "administrative_law"
+  ],
+  "summary": "David Roth was hired as an assistant professor at Wisconsin State University-Oshkosh for a fixed one-year term. At the end of that term, the university chose not to rehire him, providing no statement of reasons and no hearing. Roth contended this violated his Due Process rights under the Fourteenth Amendment.",
+  "holding": "The Due Process Clause protects against deprivations of interests in life, liberty, and property. A non-tenured public employee hired for a fixed term has no constitutionally protected property interest in continued employment if the terms of employment create no entitlement to re-employment and no stigmatizing public charge was made depriving the employee of liberty.",
+  "legal_definitions": [
+    {
+      "term": "protected property interest",
+      "definition": "A legitimate claim of entitlement to a benefit, grounded in and defined by existing rules or understandings that stem from an independent source such as state law. A unilateral expectation alone does not constitute a protected property interest.",
+      "context": "The Court distinguished between abstract needs, desires, or unilateral expectations (no due process protection) and legitimate claims of entitlement (protected property interests triggering procedural due process).",
+      "pinpoint_citation": "408 U.S. 564, 577",
+      "binding_authority": true
+    },
+    {
+      "term": "protected liberty interest",
+      "definition": "A liberty interest encompassing not merely freedom from bodily restraint but also the right of the individual to engage in common occupations of life, to acquire useful knowledge, to marry, to establish a home, and to worship God according to conscience. Government action that imposes a stigma foreclosing opportunities for future employment implicates a protected liberty interest.",
+      "context": "The Court held that failure to rehire Roth did not deprive him of a liberty interest because no stigmatizing charge was made publicly and his freedom to seek other employment was not foreclosed.",
+      "pinpoint_citation": "408 U.S. 564, 572-573",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "due_process",
+    "property_interest",
+    "liberty_interest",
+    "government_employment",
+    "procedural_due_process",
+    "fourteenth_amendment",
+    "entitlement",
+    "public_employee"
+  ],
+  "constitutional_basis": [
+    "Fourteenth Amendment Due Process Clause"
+  ],
+  "relevance_to_audit": "Defines the threshold for when due process protections are triggered in government action; relevant when audit findings involve terminations of contracts, licenses, grants, or employment by government agencies — the Roth analysis determines whether the affected party had a cognizable property or liberty interest requiring procedural protection.",
+  "key_quotes": [
+    {
+      "text": "To have a property interest in a benefit, a person clearly must have more than an abstract need or desire for it. He must have more than a unilateral expectation of it. He must, instead, have a legitimate claim of entitlement to it.",
+      "pinpoint_citation": "408 U.S. 564, 577",
+      "context": "Establishing the test for protected property interests under the Due Process Clause."
+    }
+  ],
+  "procedural_posture": "District court found due process violation; Seventh Circuit affirmed; SCOTUS reversed",
+  "vote": "5-3 (Douglas, J. dissented separately; Marshall, J. dissented separately)",
+  "majority_author": "Stewart, J.",
+  "dissent_authors": [
+    "Douglas, J.",
+    "Marshall, J."
+  ],
+  "subsequent_treatment": "The foundational case for defining protected interests under procedural due process; read together with Perry v. Sindermann (1972) and Mathews v. Eldridge (1976)",
+  "source_url": "https://www.courtlistener.com/opinion/108580/board-of-regents-of-state-colleges-v-roth/",
+  "doctrinal_weight": 0.90
+}

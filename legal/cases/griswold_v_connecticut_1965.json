@@ -1,0 +1,71 @@
+{
+  "case_id": "griswold_v_connecticut_1965",
+  "name": "Griswold v. Connecticut",
+  "citation": "381 U.S. 479 (1965)",
+  "year": 1965,
+  "court": "SCOTUS",
+  "doctrine": "fourth_amendment",
+  "secondary_doctrines": [
+    "privacy",
+    "substantive_due_process",
+    "bill_of_rights"
+  ],
+  "summary": "The Executive Director of the Planned Parenthood League of Connecticut and a licensed physician were convicted under a Connecticut statute that prohibited the use of contraceptives and punished those who assisted in their use. The statute was challenged as violating the constitutional right to privacy of married persons.",
+  "holding": "The Connecticut statute, as applied to married persons' use of contraceptives, violated a constitutional right to privacy that inheres in the penumbras of the First, Third, Fourth, Fifth, and Ninth Amendments. Specific guarantees in the Bill of Rights have penumbras formed by emanations that help give those guarantees life and substance.",
+  "legal_definitions": [
+    {
+      "term": "constitutional right to privacy",
+      "definition": "A fundamental right recognized as emanating from the penumbras of specific Bill of Rights guarantees — particularly the First, Third, Fourth, Fifth, and Ninth Amendments — protecting intimate personal decisions from government intrusion.",
+      "context": "The Court held that the relationship of marriage lies within a zone of privacy created by several fundamental constitutional guarantees; government intrusion into the marital bedroom was held inconsistent with the spirit and letter of those guarantees.",
+      "pinpoint_citation": "381 U.S. 479, 484-485",
+      "binding_authority": true
+    },
+    {
+      "term": "penumbral rights",
+      "definition": "Constitutional rights not expressly enumerated but inferred from the combined effect and purposes of explicit constitutional guarantees; the concept that express rights carry implicit protections necessary to make them meaningful.",
+      "context": "Justice Douglas derived the right to privacy from the combined penumbras of the First, Third, Fourth, Fifth, and Ninth Amendments rather than from any single provision.",
+      "pinpoint_citation": "381 U.S. 479, 484",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "privacy",
+    "penumbral_rights",
+    "marriage",
+    "contraception",
+    "bill_of_rights",
+    "fundamental_right",
+    "surveillance",
+    "intimate_association"
+  ],
+  "constitutional_basis": [
+    "First Amendment",
+    "Third Amendment",
+    "Fourth Amendment",
+    "Fifth Amendment",
+    "Ninth Amendment"
+  ],
+  "relevance_to_audit": "Foundation for constitutional privacy protections directly relevant to surveillance analysis; audit findings involving government programs that collect intimate personal data, monitor private communications, or invade zones of personal privacy must be evaluated against the line of privacy doctrine beginning with Griswold.",
+  "key_quotes": [
+    {
+      "text": "The present case, then, concerns a relationship lying within the zone of privacy created by several fundamental constitutional guarantees. And it concerns a law which, in forbidding the use of contraceptives rather than regulating their manufacture or sale, seeks to achieve its goals by means having a maximum destructive impact upon that relationship.",
+      "pinpoint_citation": "381 U.S. 479, 485",
+      "context": "Applying the penumbra doctrine to strike down Connecticut's anti-contraception statute."
+    },
+    {
+      "text": "Would we allow the police to search the sacred precincts of marital bedrooms for telltale signs of the use of contraceptives? The very idea is repulsive to the notions of privacy surrounding the marriage relationship.",
+      "pinpoint_citation": "381 U.S. 479, 485-486",
+      "context": "Illustrating the invasion of privacy that would result from enforcement of the statute."
+    }
+  ],
+  "procedural_posture": "Connecticut courts affirmed convictions; SCOTUS reversed",
+  "vote": "7-2",
+  "majority_author": "Douglas, J.",
+  "dissent_authors": [
+    "Black, J.",
+    "Stewart, J."
+  ],
+  "subsequent_treatment": "Foundation for privacy jurisprudence; extended in Eisenstadt v. Baird (1972), Roe v. Wade (1973), Lawrence v. Texas (2003), and Obergefell v. Hodges (2015)",
+  "source_url": "https://www.courtlistener.com/opinion/107153/griswold-v-connecticut/",
+  "doctrinal_weight": 0.95
+}

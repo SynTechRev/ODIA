@@ -1,0 +1,60 @@
+{
+  "case_id": "youngstown_sheet_tube_co_v_sawyer_1952",
+  "name": "Youngstown Sheet & Tube Co. v. Sawyer",
+  "citation": "343 U.S. 579 (1952)",
+  "year": 1952,
+  "court": "SCOTUS",
+  "doctrine": "separation_of_powers",
+  "secondary_doctrines": [
+    "executive_power",
+    "constitutional_structure"
+  ],
+  "summary": "During the Korean War, a labor dispute threatened a steel industry strike. President Truman, asserting inherent executive power as Commander in Chief, ordered the Secretary of Commerce to seize and operate the steel mills. Congress had previously declined to authorize seizure in the Taft-Hartley Act. The steel companies immediately challenged the seizure.",
+  "holding": "The President's order directing the Secretary of Commerce to seize and operate the nation's steel mills exceeded constitutional authority. The President's power to act must stem either from an act of Congress or from the Constitution itself. Congressional refusal to authorize seizure was a significant factor militating against inherent executive authority, and neither the Take Care Clause nor the Commander in Chief Clause authorized the seizure of private property.",
+  "legal_definitions": [
+    {
+      "term": "Jackson tripartite framework",
+      "definition": "Justice Jackson's framework for analyzing executive power, distinguishing three zones: (1) when the President acts pursuant to congressional authorization, executive power is at its maximum; (2) when the President acts without congressional authorization in a zone of twilight, there is a concurrent sphere of authority; (3) when the President takes measures incompatible with the express or implied will of Congress, executive power is at its lowest ebb.",
+      "context": "Justice Jackson's concurrence has become the dominant analytical framework for separation of powers challenges to executive action, widely regarded as more authoritative than the majority opinion.",
+      "pinpoint_citation": "343 U.S. 579, 635-638 (Jackson, J., concurring)",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "executive_power",
+    "separation_of_powers",
+    "commander_in_chief",
+    "inherent_power",
+    "property_seizure",
+    "congressional_authorization",
+    "article_ii"
+  ],
+  "constitutional_basis": [
+    "Article II",
+    "Article I"
+  ],
+  "relevance_to_audit": "Establishes constitutional limits on executive authority absent congressional authorization; relevant when audit findings involve executive officials — including local government executives — taking unilateral action (e.g., surveillance deployments, emergency procurement) without statutory authorization, particularly when the legislature has considered and declined to grant the relevant power.",
+  "key_quotes": [
+    {
+      "text": "In the absence of either a congressional grant or denial of power, but where independent presidential responsibility is felt, incompatibility is behoveful; compatibility, not required. When the President acts in absence of either a congressional grant or denial of power, he can only rely upon his own independent powers, but there is a zone of twilight in which he and Congress may have concurrent authority.",
+      "pinpoint_citation": "343 U.S. 579, 637 (Jackson, J., concurring)",
+      "context": "Second zone of the tripartite framework — the twilight zone of concurrent authority."
+    },
+    {
+      "text": "When the President takes measures incompatible with the expressed or implied will of Congress, his power is at its lowest ebb, for then he can rely only upon his own constitutional powers minus any constitutional powers of Congress over the matter.",
+      "pinpoint_citation": "343 U.S. 579, 637 (Jackson, J., concurring)",
+      "context": "Third zone of the tripartite framework — executive action against congressional will."
+    }
+  ],
+  "procedural_posture": "District court enjoined seizure; D.C. Circuit stayed injunction; SCOTUS reversed stay and affirmed injunction",
+  "vote": "6-3",
+  "majority_author": "Black, J.",
+  "dissent_authors": [
+    "Vinson, C.J.",
+    "Reed, J.",
+    "Minton, J."
+  ],
+  "subsequent_treatment": "Jackson concurrence adopted as the authoritative framework for executive power analysis; applied in Hamdi v. Rumsfeld, Dames & Moore v. Regan, and Zivotofsky v. Kerry",
+  "source_url": "https://www.courtlistener.com/opinion/105017/youngstown-sheet-tube-co-v-sawyer/",
+  "doctrinal_weight": 0.97
+}

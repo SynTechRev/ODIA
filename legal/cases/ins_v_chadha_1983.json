@@ -1,0 +1,58 @@
+{
+  "case_id": "ins_v_chadha_1983",
+  "name": "INS v. Chadha",
+  "citation": "462 U.S. 919 (1983)",
+  "year": 1983,
+  "court": "SCOTUS",
+  "doctrine": "separation_of_powers",
+  "secondary_doctrines": [
+    "administrative_law",
+    "legislative_authority"
+  ],
+  "summary": "Jagdish Rai Chadha, a Kenyan student, was subject to deportation. An immigration judge suspended his deportation. The House of Representatives exercised a one-house legislative veto to override the suspension. Chadha challenged the constitutionality of the legislative veto provision in the Immigration and Nationality Act.",
+  "holding": "The one-house legislative veto is unconstitutional as a violation of the bicameralism and presentment requirements of Article I. Any congressional action with the force of legislation must be passed by both houses of Congress and presented to the President for signature or veto. Congress may not short-circuit the constitutional lawmaking process through devices that circumvent bicameralism or presentment.",
+  "legal_definitions": [
+    {
+      "term": "legislative veto",
+      "definition": "A statutory provision by which Congress, or one house or committee thereof, reserves the power to disapprove executive or administrative action without enacting new legislation through the constitutionally prescribed bicameralism and presentment process.",
+      "context": "The Court held that any action with the purpose and effect of altering legal rights, duties, and relations outside the legislative process established in the Constitution is legislative in nature and must comply with bicameralism and presentment.",
+      "pinpoint_citation": "462 U.S. 919, 952-954",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "legislative_veto",
+    "bicameralism",
+    "presentment",
+    "separation_of_powers",
+    "article_i",
+    "congressional_authority",
+    "administrative_law"
+  ],
+  "constitutional_basis": [
+    "Article I, Sections 1 and 7 (Bicameralism and Presentment Clauses)"
+  ],
+  "relevance_to_audit": "Establishes constitutional limits on congressional oversight mechanisms; relevant when audit findings involve government agencies claiming authority under statutes that contain unconstitutional veto provisions, or when examining the constitutional validity of oversight structures for surveillance programs or procurement authorizations.",
+  "key_quotes": [
+    {
+      "text": "The Constitution sought to divide the delegated powers of the new Federal Government into three defined categories, Legislative, Executive, and Judicial, to assure, as nearly as possible, that each branch of government would confine itself to its assigned responsibility.",
+      "pinpoint_citation": "462 U.S. 919, 951",
+      "context": "Explaining the structural purpose underlying the bicameralism and presentment requirements."
+    },
+    {
+      "text": "The hydraulic pressure inherent within each of the separate Branches to exceed the outer limits of its power, even to accomplish desirable objectives, must be resisted.",
+      "pinpoint_citation": "462 U.S. 919, 951",
+      "context": "Emphasizing the importance of maintaining constitutional limits on each branch."
+    }
+  ],
+  "procedural_posture": "Ninth Circuit invalidated legislative veto; SCOTUS affirmed",
+  "vote": "7-2",
+  "majority_author": "Burger, C.J.",
+  "dissent_authors": [
+    "White, J.",
+    "Rehnquist, J."
+  ],
+  "subsequent_treatment": "Struck down hundreds of legislative veto provisions in federal statutes; foundational case for bicameralism and presentment requirements",
+  "source_url": "https://www.courtlistener.com/opinion/111026/ins-v-chadha/",
+  "doctrinal_weight": 0.93
+}

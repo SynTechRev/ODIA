@@ -1,0 +1,63 @@
+{
+  "case_id": "marbury_v_madison_1803",
+  "name": "Marbury v. Madison",
+  "citation": "5 U.S. (1 Cranch) 137 (1803)",
+  "year": 1803,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_structure",
+  "secondary_doctrines": [
+    "separation_of_powers",
+    "judicial_review"
+  ],
+  "summary": "William Marbury was appointed a justice of the peace by outgoing President Adams but his commission was not delivered before President Jefferson took office. Secretary of State Madison refused to deliver it. Marbury petitioned the Supreme Court for a writ of mandamus compelling delivery. Chief Justice Marshall held the Court lacked original jurisdiction to issue the writ, but established the foundational doctrine of judicial review.",
+  "holding": "It is emphatically the province and duty of the Judicial Department to say what the law is. A legislative act repugnant to the Constitution is void, and courts have the authority and duty to so declare. The Judiciary Act of 1789 was unconstitutional insofar as it purported to grant the Supreme Court original jurisdiction over writs of mandamus, beyond what Article III specifies.",
+  "legal_definitions": [
+    {
+      "term": "judicial review",
+      "definition": "The power of federal courts, especially the Supreme Court, to examine the constitutionality of legislative and executive acts and to invalidate those that conflict with the Constitution.",
+      "context": "Established as the foundational principle of American constitutional law, derived from the logic of a written constitution with limited government.",
+      "pinpoint_citation": "5 U.S. 137, 177",
+      "binding_authority": true
+    },
+    {
+      "term": "vested legal right",
+      "definition": "A right that has accrued to a person by operation of law such that the government may not arbitrarily deny or deprive the person of it without providing a legal remedy.",
+      "context": "The Court held that Marbury had a vested right to his commission once signed and sealed, even though it was not delivered.",
+      "pinpoint_citation": "5 U.S. 137, 162",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "judicial_review",
+    "constitutional_interpretation",
+    "separation_of_powers",
+    "jurisdiction",
+    "foundational",
+    "writ_of_mandamus",
+    "supremacy_clause"
+  ],
+  "constitutional_basis": [
+    "Article III",
+    "Supremacy Clause"
+  ],
+  "relevance_to_audit": "The foundational case for judicial review of government action; any audit finding identifying unconstitutional conduct by a governmental entity ultimately rests on the Marbury principle that such action is void. Establishes that courts have authority to remedy violations by executive officials.",
+  "key_quotes": [
+    {
+      "text": "It is emphatically the province and duty of the judicial department to say what the law is.",
+      "pinpoint_citation": "5 U.S. 137, 177",
+      "context": "Establishing the supremacy of judicial interpretation in constitutional matters."
+    },
+    {
+      "text": "A legislative act contrary to the constitution is not law.",
+      "pinpoint_citation": "5 U.S. 137, 177",
+      "context": "Articulating the basis for invalidating legislation that conflicts with the Constitution."
+    }
+  ],
+  "procedural_posture": "Original jurisdiction petition for writ of mandamus; dismissed for lack of jurisdiction",
+  "vote": "4-0 (Chase, J. did not participate)",
+  "majority_author": "Marshall, C.J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Most cited case in constitutional law; foundational authority for judicial review in every subsequent constitutional case",
+  "source_url": "https://www.courtlistener.com/opinion/85201/marbury-v-madison/",
+  "doctrinal_weight": 0.99
+}

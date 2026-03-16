@@ -1,10 +1,8 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-03-15T22:08:56Z",
-  "source": "ODIA Case Law Definition Extractor",
-  "description": "Legal definitions extracted from public domain court opinions",
-  "term_count": 35,
-  "case_count": 35,
+  "generated_at": "2026-03-16T01:59:13Z",
+  "term_count": 51,
+  "case_count": 48,
   "terms": {
     "Auer deference": {
       "term": "Auer deference",
@@ -25,6 +23,39 @@
       "year": 1971,
       "court": "SCOTUS",
       "context": "The Court later substantially limited Bivens actions in Ziglar v. Abbasi (2017), requiring courts to decline to extend Bivens to new contexts absent compelling circumstances.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "protected property interest": {
+      "term": "protected property interest",
+      "definition": "A legitimate claim of entitlement to a benefit, grounded in and defined by existing rules or understandings that stem from an independent source such as state law. A unilateral expectation alone does not constitute a protected property interest.",
+      "case_name": "Board of Regents of State Colleges v. Roth",
+      "citation": "408 U.S. 564 (1972)",
+      "year": 1972,
+      "court": "SCOTUS",
+      "context": "The Court distinguished between abstract needs, desires, or unilateral expectations (no due process protection) and legitimate claims of entitlement (protected property interests triggering procedural due process).",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "protected liberty interest": {
+      "term": "protected liberty interest",
+      "definition": "A liberty interest encompassing not merely freedom from bodily restraint but also the right of the individual to engage in common occupations of life, to acquire useful knowledge, to marry, to establish a home, and to worship God according to conscience. Government action that imposes a stigma foreclosing opportunities for future employment implicates a protected liberty interest.",
+      "case_name": "Board of Regents of State Colleges v. Roth",
+      "citation": "408 U.S. 564 (1972)",
+      "year": 1972,
+      "court": "SCOTUS",
+      "context": "The Court held that failure to rehire Roth did not deprive him of a liberty interest because no stigmatizing charge was made publicly and his freedom to seek other employment was not foreclosed.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "individual standing to raise federalism claims": {
+      "term": "individual standing to raise federalism claims",
+      "definition": "The right of a private person to challenge a federal statute on grounds that it exceeds Congress's enumerated powers or violates the Tenth Amendment, without requiring a state to be the plaintiff. Federalism is not solely for the benefit of states as abstract entities but serves to protect individual liberty.",
+      "case_name": "Bond v. United States",
+      "citation": "564 U.S. 211 (2011)",
+      "year": 2011,
+      "court": "SCOTUS",
+      "context": "The Court unanimously held that Bond had standing to raise her Tenth Amendment claim, recognizing that the constitutional structure protecting state sovereignty also protects the liberty of individuals subject to overbroad federal power.",
       "is_holding": true,
       "superseded_by": null
     },
@@ -116,6 +147,17 @@
       "is_holding": true,
       "superseded_by": null
     },
+    "constitutional supremacy": {
+      "term": "constitutional supremacy",
+      "definition": "The principle established by Article VI that the Constitution is the supreme law of the land binding all state and federal officials, and that state laws and executive acts in conflict with it are without effect.",
+      "case_name": "Cooper v. Aaron",
+      "citation": "358 U.S. 1 (1958)",
+      "year": 1958,
+      "court": "SCOTUS",
+      "context": "The Court held that the interpretation of the Fourteenth Amendment enunciated in Brown v. Board of Education is the supreme law of the land, binding upon all state officials.",
+      "is_holding": true,
+      "superseded_by": null
+    },
     "public record privilege (press)": {
       "term": "public record privilege (press)",
       "definition": "The First Amendment protection shielding the press — and the public — from civil or criminal liability for truthfully publishing information that was lawfully obtained from official records open to public inspection, absent a countervailing state interest of the highest order.",
@@ -135,6 +177,50 @@
       "year": 1999,
       "court": "SCOTUS",
       "context": "Davis extended the deliberate indifference standard from employee-on-student harassment (Gebser v. Lago Vista) to peer harassment, demonstrating that Spending Clause recipients bear ongoing compliance obligations proportionate to their actual knowledge.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "Ex parte Young doctrine": {
+      "term": "Ex parte Young doctrine",
+      "definition": "The principle that a state official who acts in violation of federal law is not acting on behalf of the state for Eleventh Amendment purposes and may be sued in federal court for prospective injunctive relief to stop ongoing violations of federal law.",
+      "case_name": "Ex parte Young",
+      "citation": "209 U.S. 123 (1908)",
+      "year": 1908,
+      "court": "SCOTUS",
+      "context": "Permits federal courts to issue prospective injunctions against state officials notwithstanding sovereign immunity; does not extend to retrospective money damages payable from the state treasury.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "commerce among the states": {
+      "term": "commerce among the states",
+      "definition": "Commercial intercourse between citizens of different states, including navigation on navigable waters, that is not purely internal to a single state. Congress's power to regulate such commerce is complete in itself, may be exercised to its utmost extent, and acknowledges no limitations other than those prescribed in the Constitution.",
+      "case_name": "Gibbons v. Ogden",
+      "citation": "22 U.S. (9 Wheat.) 1 (1824)",
+      "year": 1824,
+      "court": "SCOTUS",
+      "context": "Chief Justice Marshall rejected the narrow reading that commerce meant only traffic or buying and selling, holding it comprehends every species of commercial intercourse.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "pre-termination hearing": {
+      "term": "pre-termination hearing",
+      "definition": "A hearing that must be provided before government terminates a recipient's public benefits, at which the recipient may appear personally, present evidence orally, and confront adverse witnesses, with a decision made by an impartial official.",
+      "case_name": "Goldberg v. Kelly",
+      "citation": "397 U.S. 254 (1970)",
+      "year": 1970,
+      "court": "SCOTUS",
+      "context": "The Court held that written submissions alone are insufficient when welfare benefits are at stake because recipients may be unable to communicate in writing and the oral presentation may be essential to meaningful review.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "plain statement rule": {
+      "term": "plain statement rule",
+      "definition": "A canon of statutory construction providing that if Congress intends to alter the usual constitutional balance between the federal government and the states, it must make its intent unmistakably clear in the statutory language. Courts will not lightly assume that Congress has exercised such power.",
+      "case_name": "Gregory v. Ashcroft",
+      "citation": "501 U.S. 452 (1991)",
+      "year": 1991,
+      "court": "SCOTUS",
+      "context": "The plain statement rule is not merely a principle of statutory construction but reflects a structural commitment to maintaining the federal-state balance; it requires Congress to pay the political price of explicitly displacing state authority.",
       "is_holding": true,
       "superseded_by": null
     },
@@ -160,6 +246,28 @@
       "is_holding": true,
       "superseded_by": null
     },
+    "general appearance": {
+      "term": "general appearance",
+      "definition": "An appearance in court that is not limited to contesting jurisdiction and that constitutes a voluntary submission to the court's authority, thereby waiving any objection to personal jurisdiction or service of process.",
+      "case_name": "Hawkins v. Kuhne",
+      "citation": "153 A.D. 216 (N.Y. App. Div. 1912)",
+      "year": 1912,
+      "court": "ny_appellate_division",
+      "context": "Distinguished from a special appearance, which is entered solely to contest the court's jurisdiction without submitting to it.",
+      "is_holding": false,
+      "superseded_by": null
+    },
+    "substantial effect on interstate commerce": {
+      "term": "substantial effect on interstate commerce",
+      "definition": "The standard under which Congress may regulate purely local or intrastate activity when that activity, individually or in the aggregate, has a substantial effect on interstate commerce. The reach of the commerce power extends to intrastate activities that have a close and substantial relation to interstate commerce.",
+      "case_name": "Heart of Atlanta Motel, Inc. v. United States",
+      "citation": "379 U.S. 241 (1964)",
+      "year": 1964,
+      "court": "SCOTUS",
+      "context": "The Court applied the aggregation principle: although a single motel's discrimination might have minimal effect, racial discrimination by hotels across the nation substantially burdens interstate travel by Black Americans.",
+      "is_holding": true,
+      "superseded_by": null
+    },
     "fair warning standard": {
       "term": "fair warning standard",
       "definition": "The principle that officials lose qualified immunity when existing legal standards gave them fair warning that their specific conduct was unconstitutional, even absent a prior case with materially identical facts. Unconstitutionality may be apparent from general doctrinal principles.",
@@ -168,6 +276,17 @@
       "year": 2002,
       "court": "SCOTUS",
       "context": "Hope v. Pelzer rejected an overly narrow reading of the 'clearly established' requirement that would demand a case with precisely identical facts before officers are on notice that their conduct violates the Constitution.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "legislative veto": {
+      "term": "legislative veto",
+      "definition": "A statutory provision by which Congress, or one house or committee thereof, reserves the power to disapprove executive or administrative action without enacting new legislation through the constitutionally prescribed bicameralism and presentment process.",
+      "case_name": "INS v. Chadha",
+      "citation": "462 U.S. 919 (1983)",
+      "year": 1983,
+      "court": "SCOTUS",
+      "context": "The Court held that any action with the purpose and effect of altering legal rights, duties, and relations outside the legislative process established in the Constitution is legislative in nature and must comply with bicameralism and presentment.",
       "is_holding": true,
       "superseded_by": null
     },
@@ -215,6 +334,28 @@
       "is_holding": true,
       "superseded_by": null
     },
+    "judicial review": {
+      "term": "judicial review",
+      "definition": "The power of federal courts, especially the Supreme Court, to examine the constitutionality of legislative and executive acts and to invalidate those that conflict with the Constitution.",
+      "case_name": "Marbury v. Madison",
+      "citation": "5 U.S. (1 Cranch) 137 (1803)",
+      "year": 1803,
+      "court": "SCOTUS",
+      "context": "Established as the foundational principle of American constitutional law, derived from the logic of a written constitution with limited government.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "vested legal right": {
+      "term": "vested legal right",
+      "definition": "A right that has accrued to a person by operation of law such that the government may not arbitrarily deny or deprive the person of it without providing a legal remedy.",
+      "case_name": "Marbury v. Madison",
+      "citation": "5 U.S. (1 Cranch) 137 (1803)",
+      "year": 1803,
+      "court": "SCOTUS",
+      "context": "The Court held that Marbury had a vested right to his commission once signed and sealed, even though it was not delivered.",
+      "is_holding": true,
+      "superseded_by": null
+    },
     "Mathews balancing test": {
       "term": "Mathews balancing test",
       "definition": "The three-factor test for determining what process the Due Process Clause requires: (1) the private interest affected; (2) the risk of erroneous deprivation through current procedures and the value of additional safeguards; and (3) the government's interest, including the burden of providing greater procedural protections.",
@@ -223,6 +364,28 @@
       "year": 1976,
       "court": "SCOTUS",
       "context": "Established as the controlling standard for procedural due process analysis outside the public employment and welfare benefit contexts that had previously required full hearings.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "implied powers": {
+      "term": "implied powers",
+      "definition": "Powers of Congress not expressly enumerated in Article I but reasonably inferred as means of executing the enumerated powers. The Necessary and Proper Clause authorizes Congress to employ any means rationally related to the exercise of an enumerated power, so long as the end is legitimate and the means not prohibited by the Constitution.",
+      "case_name": "McCulloch v. Maryland",
+      "citation": "17 U.S. (4 Wheat.) 316 (1819)",
+      "year": 1819,
+      "court": "SCOTUS",
+      "context": "Chief Justice Marshall rejected the argument that 'necessary' means absolutely indispensable, holding that it means 'convenient, useful, or essential' in context.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "intergovernmental immunity": {
+      "term": "intergovernmental immunity",
+      "definition": "The constitutional principle that states may not tax or burden the operations of the federal government, derived from the Supremacy Clause and the nature of the federal system.",
+      "case_name": "McCulloch v. Maryland",
+      "citation": "17 U.S. (4 Wheat.) 316 (1819)",
+      "year": 1819,
+      "court": "SCOTUS",
+      "context": "The power to tax involves the power to destroy; a taxing power over instruments of the federal government would give states the power to cripple or defeat those instruments and is therefore unconstitutional.",
       "is_holding": true,
       "superseded_by": null
     },
@@ -369,6 +532,17 @@
       "is_holding": true,
       "superseded_by": null
     },
+    "equal sovereignty doctrine": {
+      "term": "equal sovereignty doctrine",
+      "definition": "The constitutional principle that the federal government must treat states as equals and may not impose extraordinary requirements on some states but not others absent current justification; while differential treatment of states is permissible to address identified constitutional violations, such treatment must be grounded in current needs rather than historical circumstances.",
+      "case_name": "Shelby County v. Holder",
+      "citation": "570 U.S. 529 (2013)",
+      "year": 2013,
+      "court": "SCOTUS",
+      "context": "The Court extended the equal sovereignty principle from the admissions context to strike down a coverage formula that was based on voting data from 1964 and 1968.",
+      "is_holding": true,
+      "superseded_by": null
+    },
     "Dole test": {
       "term": "Dole test",
       "definition": "The four-part standard for valid Spending Clause conditions: (1) expenditure must serve the general welfare; (2) conditions must be stated unambiguously; (3) conditions must be reasonably related to the federal interest in the program; and (4) conditions must not require violation of independent constitutional prohibitions.",
@@ -391,462 +565,5 @@
       "is_holding": true,
       "superseded_by": null
     }
-  },
-  "all_definitions": {
-    "Auer deference": [
-      {
-        "term": "Auer deference",
-        "definition": "The rule that a court must defer to an agency's reasonable interpretation of its own genuinely ambiguous regulation, unless that interpretation is plainly erroneous or inconsistent with the regulation. Also called Seminole Rock deference. Substantially narrowed by Kisor v. Wilkie (2019).",
-        "case_name": "Auer v. Robbins",
-        "citation": "519 U.S. 452 (1997)",
-        "year": 1997,
-        "court": "SCOTUS",
-        "context": "Auer deference applies only to an agency's interpretation of its own regulations, not to statutory interpretations — a distinction from Chevron. Kisor (2019) added multiple preconditions before deference is appropriate.",
-        "is_holding": false,
-        "superseded_by": "Kisor v. Wilkie, 588 U.S. 558 (2019)"
-      }
-    ],
-    "Bivens action": [
-      {
-        "term": "Bivens action",
-        "definition": "An implied constitutional cause of action for money damages against federal officers who violate an individual's constitutional rights, recognized by courts in the absence of a federal statutory remedy. Available only in limited contexts involving the Fourth Amendment, the Fifth Amendment, and the Eighth Amendment following subsequent restrictions.",
-        "case_name": "Bivens v. Six Unknown Named Federal Narcotics Agents",
-        "citation": "403 U.S. 388 (1971)",
-        "year": 1971,
-        "court": "SCOTUS",
-        "context": "The Court later substantially limited Bivens actions in Ziglar v. Abbasi (2017), requiring courts to decline to extend Bivens to new contexts absent compelling circumstances.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "contribution-expenditure distinction": [
-      {
-        "term": "contribution-expenditure distinction",
-        "definition": "The constitutional distinction between limits on direct contributions to candidates — permissible as regulations of conduct with only marginal expressive impact — and limits on independent political expenditures — impermissible because they directly restrict the quantity of political expression.",
-        "case_name": "Buckley v. Valeo",
-        "citation": "424 U.S. 1 (1976)",
-        "year": 1976,
-        "court": "SCOTUS",
-        "context": "Buckley established that the severity of the First Amendment burden, and therefore the level of scrutiny applied, differs depending on whether the regulation targets contributions or independent expenditures.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "cell-site location information (CSLI)": [
-      {
-        "term": "cell-site location information (CSLI)",
-        "definition": "Time-stamped records generated each time a mobile phone connects to a cell tower, which when aggregated provide a detailed chronicle of an individual's past physical movements.",
-        "case_name": "Carpenter v. United States",
-        "citation": "585 U.S. 296 (2018)",
-        "year": 2018,
-        "court": "SCOTUS",
-        "context": "The Court explained that CSLI differs from ordinary business records because individuals do not truly voluntarily share it and it enables near-perfect retrospective surveillance.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "Chevron deference": [
-      {
-        "term": "Chevron deference",
-        "definition": "A two-step test for judicial review of agency statutory interpretations: Step 1 asks whether Congress has directly spoken to the question; if the statute is silent or ambiguous, Step 2 asks whether the agency's interpretation is a permissible and reasonable construction of the statute.",
-        "case_name": "Chevron U.S.A., Inc. v. Natural Resources Defense Council, Inc.",
-        "citation": "467 U.S. 837 (1984)",
-        "year": 1984,
-        "court": "SCOTUS",
-        "context": "Established as the controlling framework for agency statutory interpretation from 1984 until overruled by Loper Bright (2024). Courts applied this two-step test to uphold or invalidate agency rules across virtually every area of federal regulatory law.",
-        "is_holding": false,
-        "superseded_by": "Loper Bright Enterprises v. Raimondo, 603 U.S. ___ (2024)"
-      }
-    ],
-    "arbitrary and capricious review": [
-      {
-        "term": "arbitrary and capricious review",
-        "definition": "Judicial review under 5 U.S.C. § 706(2)(A) requiring a court to engage in a searching and careful inquiry to determine whether an agency considered the relevant factors and avoided a clear error of judgment, without substituting the court's judgment for the agency's on the merits.",
-        "case_name": "Citizens to Preserve Overton Park, Inc. v. Volpe",
-        "citation": "401 U.S. 402 (1971)",
-        "year": 1971,
-        "court": "SCOTUS",
-        "context": "Overton Park established that arbitrary-and-capricious review is not a rubber stamp; courts must look hard at the agency's reasoning based on the contemporaneous administrative record, not post-hoc litigation rationalizations.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "deliberate indifference (failure to train)": [
-      {
-        "term": "deliberate indifference (failure to train)",
-        "definition": "The standard of culpability required to establish municipal liability for failure to train: the municipality must have been on notice that its training was inadequate in a particular area and consciously chose not to correct the deficiency, or the need for training was so obvious that failure to provide it constituted a de facto policy of deliberate indifference.",
-        "case_name": "City of Canton v. Harris",
-        "citation": "489 U.S. 378 (1989)",
-        "year": 1989,
-        "court": "SCOTUS",
-        "context": "Canton's deliberate indifference standard applies to the threshold question of whether a failure-to-train claim can constitute the 'official policy or custom' required for Monell liability.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "pre-compliance review": [
-      {
-        "term": "pre-compliance review",
-        "definition": "An opportunity for the party subject to an administrative inspection demand to seek judicial review of the demand before being required to comply, thereby preserving Fourth Amendment protections against unreasonable searches.",
-        "case_name": "City of Los Angeles v. Patel",
-        "citation": "576 U.S. 409 (2015)",
-        "year": 2015,
-        "court": "SCOTUS",
-        "context": "The Court held that administrative subpoenas and inspection regimes must afford a meaningful opportunity for pre-compliance judicial review to satisfy the Fourth Amendment.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "pretermination hearing": [
-      {
-        "term": "pretermination hearing",
-        "definition": "The minimum pre-deprivation procedural protection required before a government employer may terminate a classified civil servant: oral or written notice of the charges, an explanation of the employer's evidence, and a meaningful opportunity for the employee to respond before the termination takes effect.",
-        "case_name": "Cleveland Board of Education v. Loudermill",
-        "citation": "470 U.S. 532 (1985)",
-        "year": 1985,
-        "court": "SCOTUS",
-        "context": "Loudermill held that this threshold hearing, even if informal, is constitutionally required before property interests in continued public employment may be terminated.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "curtilage": [
-      {
-        "term": "curtilage",
-        "definition": "The area immediately surrounding and associated with a home that shares the Fourth Amendment protections afforded to the home itself; typically includes attached garages, driveways, and enclosed yards immediately adjacent to the dwelling.",
-        "case_name": "Collins v. Virginia",
-        "citation": "584 U.S. 586 (2018)",
-        "year": 2018,
-        "court": "SCOTUS",
-        "context": "The Court reaffirmed that the curtilage is constitutionally equivalent to the home for Fourth Amendment purposes, rejecting any automobile exception that would override this protection.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "public record privilege (press)": [
-      {
-        "term": "public record privilege (press)",
-        "definition": "The First Amendment protection shielding the press — and the public — from civil or criminal liability for truthfully publishing information that was lawfully obtained from official records open to public inspection, absent a countervailing state interest of the highest order.",
-        "case_name": "Cox Broadcasting Corp. v. Cohn",
-        "citation": "420 U.S. 469 (1975)",
-        "year": 1975,
-        "court": "SCOTUS",
-        "context": "Cox Broadcasting established that once information appears in official public records it loses its private character for First Amendment purposes, and the press may publish it without fear of state-imposed liability.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "deliberate indifference (Spending Clause)": [
-      {
-        "term": "deliberate indifference (Spending Clause)",
-        "definition": "The standard for imposing liability on a federal-fund recipient for peer harassment under Title IX: the recipient must have had actual knowledge of the harassment and responded — or failed to respond — in a manner that was clearly unreasonable under the known circumstances, effectively ratifying the violation.",
-        "case_name": "Davis v. Monroe County Board of Education",
-        "citation": "526 U.S. 629 (1999)",
-        "year": 1999,
-        "court": "SCOTUS",
-        "context": "Davis extended the deliberate indifference standard from employee-on-student harassment (Gebser v. Lago Vista) to peer harassment, demonstrating that Spending Clause recipients bear ongoing compliance obligations proportionate to their actual knowledge.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "nondelegation doctrine (modern state)": [
-      {
-        "term": "nondelegation doctrine (modern state)",
-        "definition": "The constitutional principle that Congress may not transfer its legislative power to executive agencies without providing an intelligible principle to guide that power. As of Gundy (2019), the Court applies a permissive intelligible-principle test but a fragmented Court signaled potential for tightening; the major questions doctrine in West Virginia v. EPA (2022) now imposes additional constraints for major policy questions.",
-        "case_name": "Gundy v. United States",
-        "citation": "588 U.S. 128 (2019)",
-        "year": 2019,
-        "court": "SCOTUS",
-        "context": "Gundy's fractured outcome — five votes to uphold the delegation but four justices ready to revisit the doctrine — created significant uncertainty about the future of the non-delegation doctrine that was partially resolved in West Virginia v. EPA.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "qualified immunity": [
-      {
-        "term": "qualified immunity",
-        "definition": "A defense available to government officials sued in their individual capacities for civil rights violations, shielding them from damages liability unless their conduct violated clearly established law that a reasonable official would have known. The inquiry is entirely objective — the official's personal beliefs or intentions are irrelevant.",
-        "case_name": "Harlow v. Fitzgerald",
-        "citation": "457 U.S. 800 (1982)",
-        "year": 1982,
-        "court": "SCOTUS",
-        "context": "Harlow reformulated qualified immunity to protect all but the plainly incompetent or those who knowingly violate the law, replacing the prior Scheuer v. Rhodes test that included a subjective good-faith inquiry.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "fair warning standard": [
-      {
-        "term": "fair warning standard",
-        "definition": "The principle that officials lose qualified immunity when existing legal standards gave them fair warning that their specific conduct was unconstitutional, even absent a prior case with materially identical facts. Unconstitutionality may be apparent from general doctrinal principles.",
-        "case_name": "Hope v. Pelzer",
-        "citation": "536 U.S. 730 (2002)",
-        "year": 2002,
-        "court": "SCOTUS",
-        "context": "Hope v. Pelzer rejected an overly narrow reading of the 'clearly established' requirement that would demand a case with precisely identical facts before officers are on notice that their conduct violates the Constitution.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "reasonable expectation of privacy": [
-      {
-        "term": "reasonable expectation of privacy",
-        "definition": "A two-part standard: the individual must have exhibited a subjective expectation of privacy, and that expectation must be one that society is prepared to recognize as reasonable.",
-        "case_name": "Katz v. United States",
-        "citation": "389 U.S. 347 (1967)",
-        "year": 1967,
-        "court": "SCOTUS",
-        "context": "Justice Harlan's concurrence articulated this test, which became the governing standard for determining whether the Fourth Amendment is triggered.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "genuine ambiguity (regulatory)": [
-      {
-        "term": "genuine ambiguity (regulatory)",
-        "definition": "A precondition for Auer deference: a regulation is genuinely ambiguous only after a court has exhausted all the standard tools of textual interpretation — including text, structure, history, and purpose — and still cannot resolve its meaning. Facial ambiguity is insufficient.",
-        "case_name": "Kisor v. Wilkie",
-        "citation": "588 U.S. 558 (2019)",
-        "year": 2019,
-        "court": "SCOTUS",
-        "context": "Kisor held that genuine ambiguity is the threshold inquiry for Auer deference; if standard interpretive tools resolve the regulatory meaning, no deference is owed regardless of the agency's position.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "independent judgment": [
-      {
-        "term": "independent judgment",
-        "definition": "The APA-required standard for judicial review of agency statutory interpretation, under which courts must determine the best meaning of a statute using traditional tools of construction without deferring to the agency's preferred reading simply because the text is ambiguous.",
-        "case_name": "Loper Bright Enterprises v. Raimondo",
-        "citation": "144 S. Ct. 2244 (2024)",
-        "year": 2024,
-        "court": "SCOTUS",
-        "context": "Post-Loper Bright, courts no longer apply Chevron deference to agency statutory interpretations; instead, they exercise independent judgment as to what the statute means.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "exclusionary rule": [
-      {
-        "term": "exclusionary rule",
-        "definition": "The constitutional principle that evidence obtained through a violation of the Fourth Amendment is inadmissible in a criminal prosecution, whether in federal or state court.",
-        "case_name": "Mapp v. Ohio",
-        "citation": "367 U.S. 643 (1961)",
-        "year": 1961,
-        "court": "SCOTUS",
-        "context": "The Court extended the federal exclusionary rule from Weeks v. United States to all state criminal proceedings, holding it to be a constitutionally mandated remedy rather than a discretionary deterrent.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "Mathews balancing test": [
-      {
-        "term": "Mathews balancing test",
-        "definition": "The three-factor test for determining what process the Due Process Clause requires: (1) the private interest affected; (2) the risk of erroneous deprivation through current procedures and the value of additional safeguards; and (3) the government's interest, including the burden of providing greater procedural protections.",
-        "case_name": "Mathews v. Eldridge",
-        "citation": "424 U.S. 319 (1976)",
-        "year": 1976,
-        "court": "SCOTUS",
-        "context": "Established as the controlling standard for procedural due process analysis outside the public employment and welfare benefit contexts that had previously required full hearings.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "intelligible principle (applied)": [
-      {
-        "term": "intelligible principle (applied)",
-        "definition": "A sufficient legislative direction to an agency or commission when Congress specifies the goals, factors, and ranges that must guide the exercise of delegated authority. The intelligible principle standard is satisfied when Congress has made the basic policy choice and left the delegee to fill in the details within those parameters.",
-        "case_name": "Mistretta v. United States",
-        "citation": "488 U.S. 361 (1989)",
-        "year": 1989,
-        "court": "SCOTUS",
-        "context": "Mistretta held that the Sentencing Reform Act's detailed direction to the Commission — specifying seven factors, three purposes, and a mid-range guideline requirement — provided an intelligible principle that satisfies the non-delegation doctrine.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "official policy or custom": [
-      {
-        "term": "official policy or custom",
-        "definition": "A municipality's formal enactments, regulations, or decisions adopted through official channels, or persistent widespread practices that, even if not formally authorized, are so well settled as to constitute a custom with the force of law and fairly attributable to the governmental entity.",
-        "case_name": "Monell v. Department of Social Services of the City of New York",
-        "citation": "436 U.S. 658 (1978)",
-        "year": 1978,
-        "court": "SCOTUS",
-        "context": "Monell requires plaintiffs to identify an 'official policy or custom' as the moving force behind the constitutional violation because municipalities are not vicariously liable for the independent acts of their employees.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "under color of state law": [
-      {
-        "term": "under color of state law",
-        "definition": "Acting under the appearance or pretense of state authority: a state official acts under color of law when, while purporting to exercise official duties or powers, the official misuses or abuses that authority — even if the specific conduct violates state law or exceeds the official's actual authority.",
-        "case_name": "Monroe v. Pape",
-        "citation": "365 U.S. 167 (1961)",
-        "year": 1961,
-        "court": "SCOTUS",
-        "context": "Monroe established that 'under color of law' is satisfied whenever the official's conduct is made possible by virtue of state-conferred authority, regardless of whether the specific act was authorized or lawful under state law.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "hard look review": [
-      {
-        "term": "hard look review",
-        "definition": "A rigorous application of arbitrary-and-capricious review requiring courts to verify that the agency examined the relevant data, articulated a satisfactory explanation for its action, considered significant alternatives, and did not overlook an important aspect of the problem.",
-        "case_name": "Motor Vehicle Manufacturers Ass'n v. State Farm Mutual Automobile Insurance Co.",
-        "citation": "463 U.S. 29 (1983)",
-        "year": 1983,
-        "court": "SCOTUS",
-        "context": "State Farm crystallized what became known as 'hard look' review, which requires agencies to explain their reasoning with specificity and ensures that important alternatives are genuinely considered before a rule is adopted or rescinded.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "freedom of association": [
-      {
-        "term": "freedom of association",
-        "definition": "A First Amendment right, implicit in the rights of assembly and petition, protecting individuals' ability to associate with others to advance shared beliefs and causes without government compulsion to disclose membership, particularly when disclosure would expose members to retaliation.",
-        "case_name": "NAACP v. Alabama ex rel. Patterson",
-        "citation": "357 U.S. 449 (1958)",
-        "year": 1958,
-        "court": "SCOTUS",
-        "context": "The Court recognized freedom of association as a constitutional right distinct from—though related to—freedom of speech and assembly, applying it to shield organizational membership lists from compelled government disclosure.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "actual malice": [
-      {
-        "term": "actual malice",
-        "definition": "The constitutional standard for defamation liability in suits brought by public officials or public figures: the plaintiff must prove by clear and convincing evidence that the defendant made the statement with knowledge of its falsity or with reckless disregard for whether it was false or not.",
-        "case_name": "New York Times Co. v. Sullivan",
-        "citation": "376 U.S. 254 (1964)",
-        "year": 1964,
-        "court": "SCOTUS",
-        "context": "Established to prevent defamation suits from chilling vigorous criticism of public officials; prevents officials from using libel law to suppress press coverage of their exercise of official duties.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "Spending Clause coercion": [
-      {
-        "term": "Spending Clause coercion",
-        "definition": "The constitutional doctrine that conditions on federal grants are invalid when the financial inducement to comply is so overwhelming that states lose their genuine choice to accept or reject the condition. A condition is coercive when it threatens the loss of pre-existing funds to pressure states into accepting a new, substantially expanded program.",
-        "case_name": "National Federation of Independent Business v. Sebelius",
-        "citation": "567 U.S. 519 (2012)",
-        "year": 2012,
-        "court": "SCOTUS",
-        "context": "First time the Court applied Dole's anti-coercion principle to actually invalidate a federal spending condition; the Medicaid expansion threatened the loss of all existing Medicaid funding — approximately 10% of states' budgets.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "municipal immunity (absence of)": [
-      {
-        "term": "municipal immunity (absence of)",
-        "definition": "The rule that municipalities and local government units have no good-faith or qualified immunity defense available in § 1983 suits for constitutional violations caused by their official policies or customs. Unlike individual officers, municipalities bear strict liability when an official policy is the moving force behind a constitutional deprivation.",
-        "case_name": "Owen v. City of Independence, Missouri",
-        "citation": "445 U.S. 622 (1980)",
-        "year": 1980,
-        "court": "SCOTUS",
-        "context": "Owen held that § 1983's twin goals of deterrence and compensation require full municipal accountability, without the safe harbor of good faith that individual officers enjoy through qualified immunity.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "intelligible principle": [
-      {
-        "term": "intelligible principle",
-        "definition": "The constitutional minimum required for a valid delegation of legislative authority from Congress to the executive: Congress must lay down a discernible policy, standard, or rule that directs the exercise of delegated power, so that the delegation does not amount to a transfer of legislative power itself. First articulated in J.W. Hampton, Jr. & Co. v. United States (1928); applied to invalidate a delegation in Panama Refining.",
-        "case_name": "Panama Refining Co. v. Ryan",
-        "citation": "293 U.S. 388 (1935)",
-        "year": 1935,
-        "court": "SCOTUS",
-        "context": "The statute at issue in Panama Refining contained 'literally no guidance' — no policy, standard, or definition of the circumstances warranting exercise of the delegated authority — making it the paradigm case of an unconstitutional delegation.",
-        "is_holding": true,
-        "superseded_by": "Mistretta v. United States, 488 U.S. 361 (1989)"
-      }
-    ],
-    "clear notice rule (Spending Clause)": [
-      {
-        "term": "clear notice rule (Spending Clause)",
-        "definition": "The requirement that conditions Congress attaches to federal grants must be expressed in clear and unambiguous statutory language, because Spending Clause legislation is contractual in nature and states must have unambiguous notice of what obligations they accept when they take federal funds.",
-        "case_name": "Pennhurst State School & Hospital v. Halderman",
-        "citation": "451 U.S. 1 (1981)",
-        "year": 1981,
-        "court": "SCOTUS",
-        "context": "Pennhurst's clear-notice rule ensures that states can make an informed choice about accepting federal funds, since the Spending Clause's legitimacy rests on voluntary acceptance of conditions rather than sovereign compulsion.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "experience and logic test": [
-      {
-        "term": "experience and logic test",
-        "definition": "The two-part First Amendment access test: first, whether the proceeding or record has historically been open to the press and general public ('experience'); second, whether public access plays a significant positive role in the functioning of the process ('logic'). Both prongs must be satisfied for a First Amendment right of access to attach.",
-        "case_name": "Press-Enterprise Co. v. Superior Court",
-        "citation": "478 U.S. 1 (1986)",
-        "year": 1986,
-        "court": "SCOTUS",
-        "context": "Adopted in Press-Enterprise II to determine which governmental proceedings — beyond criminal trials — carry a constitutional right of public access that can override closure requests.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "right of access (First Amendment)": [
-      {
-        "term": "right of access (First Amendment)",
-        "definition": "A First Amendment right of the public and press to attend and observe criminal proceedings, derived from historical tradition and the structural role openness plays in ensuring governmental accountability. Closure is permissible only where there is an overriding interest and the closure is no broader than necessary.",
-        "case_name": "Richmond Newspapers, Inc. v. Virginia",
-        "citation": "448 U.S. 555 (1980)",
-        "year": 1980,
-        "court": "SCOTUS",
-        "context": "Richmond Newspapers was the Court's first explicit recognition of an affirmative First Amendment access right rather than merely a protection against prior restraints on publication.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "fungibility rationale": [
-      {
-        "term": "fungibility rationale",
-        "definition": "The constitutional justification for federal anti-bribery jurisdiction over officials of federal grant recipients: because money is fungible, corruption of any official of a grant recipient poses a threat to federal funds even if the bribe does not directly involve federally appropriated money.",
-        "case_name": "Sabri v. United States",
-        "citation": "541 U.S. 600 (2004)",
-        "year": 2004,
-        "court": "SCOTUS",
-        "context": "Sabri's fungibility rationale underpins 18 U.S.C. § 666 jurisdiction over bribery of state and local officials whose agencies receive federal grants — a critical statutory enforcement tool for federal oversight of grant recipients.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "Dole test": [
-      {
-        "term": "Dole test",
-        "definition": "The four-part standard for valid Spending Clause conditions: (1) expenditure must serve the general welfare; (2) conditions must be stated unambiguously; (3) conditions must be reasonably related to the federal interest in the program; and (4) conditions must not require violation of independent constitutional prohibitions.",
-        "case_name": "South Dakota v. Dole",
-        "citation": "483 U.S. 203 (1987)",
-        "year": 1987,
-        "court": "SCOTUS",
-        "context": "Dole's four-part test controls whether Congress may attach conditions to federal grants to states; subsequent decisions added a fifth implicit element — the conditions must not be so coercive as to effectively compel compliance.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ],
-    "major questions doctrine": [
-      {
-        "term": "major questions doctrine",
-        "definition": "A canon of statutory interpretation holding that when an agency claims authority to regulate on a question of major economic or political significance, courts require a clear statement from Congress — not merely a plausible textual argument — before recognizing that authority. Ambiguous or broadly worded provisions are insufficient to grant transformative regulatory power.",
-        "case_name": "West Virginia v. Environmental Protection Agency",
-        "citation": "597 U.S. 697 (2022)",
-        "year": 2022,
-        "court": "SCOTUS",
-        "context": "West Virginia v. EPA crystallized the major questions doctrine as a distinct clear-statement rule that operates independently of the Chevron framework, requiring explicit congressional authorization before agencies may claim authority over questions of vast significance.",
-        "is_holding": true,
-        "superseded_by": null
-      }
-    ]
   }
 }

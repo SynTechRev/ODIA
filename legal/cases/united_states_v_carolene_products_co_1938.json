@@ -1,0 +1,66 @@
+{
+  "case_id": "united_states_v_carolene_products_co_1938",
+  "name": "United States v. Carolene Products Co.",
+  "citation": "304 U.S. 144 (1938)",
+  "year": 1938,
+  "court": "SCOTUS",
+  "doctrine": "equal_protection",
+  "secondary_doctrines": [
+    "constitutional_structure",
+    "administrative_law"
+  ],
+  "summary": "Carolene Products Company was indicted for shipping filled milk in interstate commerce in violation of a federal statute. The company challenged the statute as exceeding congressional commerce power and violating due process. The case addressed the appropriate level of judicial scrutiny for economic legislation — and, in a famous footnote, suggested heightened scrutiny for certain categories of laws.",
+  "holding": "Legislation regulating ordinary commercial transactions is subject to rational basis review — courts will uphold such legislation if it is not arbitrary and is rationally related to a legitimate legislative purpose. The existence of facts that might justify the legislation is presumed. Footnote Four posited, however, that statutes affecting discrete and insular minorities or fundamental rights may be subject to more exacting judicial scrutiny.",
+  "legal_definitions": [
+    {
+      "term": "Carolene Products rational basis",
+      "definition": "The highly deferential standard of review applied to ordinary social and economic legislation, under which courts will not second-guess the legislature's policy choices so long as there is any conceivable rational basis for the law.",
+      "context": "The presumption of constitutionality for economic regulation adopted in Carolene Products became the baseline rational basis test in equal protection and due process analysis.",
+      "pinpoint_citation": "304 U.S. 144, 152-153",
+      "binding_authority": true
+    },
+    {
+      "term": "discrete and insular minority",
+      "definition": "A group defined by immutable characteristics and subject to prejudice, which may be unable to protect itself adequately through the ordinary political process and therefore merits heightened judicial protection from majority overreach.",
+      "context": "Footnote Four suggested that legislation adversely affecting discrete and insular minorities may call for more searching judicial scrutiny, laying the theoretical foundation for suspect classification doctrine.",
+      "pinpoint_citation": "304 U.S. 144, 153 n.4",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "rational_basis",
+    "due_process",
+    "equal_protection",
+    "heightened_scrutiny",
+    "discrete_insular_minority",
+    "footnote_four",
+    "commerce_clause",
+    "judicial_review"
+  ],
+  "constitutional_basis": [
+    "Fifth Amendment Due Process Clause",
+    "Commerce Clause (Article I, Section 8)"
+  ],
+  "relevance_to_audit": "Establishes the baseline rational basis standard for reviewing government economic regulations and procurement policies; Footnote Four provides the theoretical basis for heightened scrutiny when government programs disparately affect protected minority groups, directly relevant to civil rights and equal protection analyses in audits of government contracting patterns.",
+  "key_quotes": [
+    {
+      "text": "There may be narrower scope for operation of the presumption of constitutionality when legislation appears on its face to be within a specific prohibition of the Constitution, such as those of the first ten Amendments, which are deemed equally specific when held to be embraced within the Fourteenth.",
+      "pinpoint_citation": "304 U.S. 144, 153 n.4",
+      "context": "Opening of Footnote Four, laying the groundwork for heightened scrutiny of laws affecting fundamental rights."
+    },
+    {
+      "text": "Nor need we enquire whether similar considerations enter into the review of statutes directed at particular religious, or national, or racial minorities: whether prejudice against discrete and insular minorities may be a special condition, which tends seriously to curtail the operation of those political processes ordinarily to be relied upon to protect minorities, and which may call for a correspondingly more searching judicial inquiry.",
+      "pinpoint_citation": "304 U.S. 144, 153 n.4",
+      "context": "Suggesting that discrete and insular minorities warrant heightened judicial protection — the foundation of strict scrutiny for suspect classifications."
+    }
+  ],
+  "procedural_posture": "District court dismissed indictment; SCOTUS reversed",
+  "vote": "6-1 (McReynolds, J. dissented; two Justices did not participate)",
+  "majority_author": "Stone, J.",
+  "dissent_authors": [
+    "McReynolds, J."
+  ],
+  "subsequent_treatment": "Footnote Four became the theoretical foundation for the tiers of scrutiny in equal protection analysis; one of the most cited footnotes in American legal history",
+  "source_url": "https://www.courtlistener.com/opinion/103258/united-states-v-carolene-products-co/",
+  "doctrinal_weight": 0.94
+}

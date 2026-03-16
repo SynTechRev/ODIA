@@ -1,0 +1,59 @@
+{
+  "case_id": "goldberg_v_kelly_1970",
+  "name": "Goldberg v. Kelly",
+  "citation": "397 U.S. 254 (1970)",
+  "year": 1970,
+  "court": "SCOTUS",
+  "doctrine": "due_process",
+  "secondary_doctrines": [
+    "administrative_law",
+    "government_benefits"
+  ],
+  "summary": "New York City terminated welfare benefits to several recipients without providing them an opportunity to be heard before the termination took effect. The recipients challenged the termination procedures as violating the Due Process Clause of the Fourteenth Amendment.",
+  "holding": "Before welfare benefits may be terminated, the Due Process Clause requires that the recipient be afforded an evidentiary hearing — with the opportunity to appear personally, present evidence, and confront adverse witnesses — because the interest of the eligible recipient in uninterrupted receipt of benefits outweighs the government's interest in administrative efficiency.",
+  "legal_definitions": [
+    {
+      "term": "pre-termination hearing",
+      "definition": "A hearing that must be provided before government terminates a recipient's public benefits, at which the recipient may appear personally, present evidence orally, and confront adverse witnesses, with a decision made by an impartial official.",
+      "context": "The Court held that written submissions alone are insufficient when welfare benefits are at stake because recipients may be unable to communicate in writing and the oral presentation may be essential to meaningful review.",
+      "pinpoint_citation": "397 U.S. 254, 267-269",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "due_process",
+    "government_benefits",
+    "pre_termination_hearing",
+    "administrative_procedure",
+    "fourteenth_amendment",
+    "procedural_due_process",
+    "welfare"
+  ],
+  "constitutional_basis": [
+    "Fourteenth Amendment Due Process Clause"
+  ],
+  "relevance_to_audit": "Establishes procedural due process requirements for government benefit terminations; relevant when audit findings involve government agencies denying or terminating grants, contracts, or benefits without adequate procedural protections for the recipient.",
+  "key_quotes": [
+    {
+      "text": "The fundamental requisite of due process of law is the opportunity to be heard.",
+      "pinpoint_citation": "397 U.S. 254, 267",
+      "context": "Quoting Grannis v. Ordean and establishing that an oral evidentiary hearing is constitutionally required before welfare termination."
+    },
+    {
+      "text": "The interest of the eligible recipient in uninterrupted receipt of public assistance, coupled with the State's interest that his payments not be erroneously terminated, clearly outweighs the State's competing concern to prevent any increase in its fiscal and administrative burdens.",
+      "pinpoint_citation": "397 U.S. 254, 266",
+      "context": "Applying the balancing test that later became codified in Mathews v. Eldridge (1976)."
+    }
+  ],
+  "procedural_posture": "District court enjoined termination of benefits; SCOTUS affirmed",
+  "vote": "5-3 (Marshall, J. took no part)",
+  "majority_author": "Brennan, J.",
+  "dissent_authors": [
+    "Black, J.",
+    "Burger, C.J.",
+    "Stewart, J."
+  ],
+  "subsequent_treatment": "Foundational procedural due process case for government benefits; refined by Mathews v. Eldridge balancing test (1976)",
+  "source_url": "https://www.courtlistener.com/opinion/108108/goldberg-v-kelly/",
+  "doctrinal_weight": 0.93
+}

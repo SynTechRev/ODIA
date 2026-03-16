@@ -1,0 +1,47 @@
+{
+  "case_id": "hawkins_v_kuhne_1912",
+  "name": "Hawkins v. Kuhne",
+  "citation": "153 A.D. 216 (N.Y. App. Div. 1912)",
+  "year": 1912,
+  "court": "ny_appellate_division",
+  "doctrine": "civil_procedure",
+  "secondary_doctrines": [
+    "jurisdiction",
+    "waiver"
+  ],
+  "summary": "A defendant appeared generally in a civil proceeding without restricting the appearance to challenge jurisdiction. The New York Appellate Division addressed whether a general appearance, without reservation, waives any objection to personal jurisdiction that the defendant might otherwise have raised.",
+  "holding": "A general appearance in a judicial proceeding, without reservation or special limitation, operates as a voluntary submission to the jurisdiction of the court and waives any prior defect in the method by which the defendant was brought before it. The party who has appeared generally cannot thereafter challenge personal jurisdiction.",
+  "legal_definitions": [
+    {
+      "term": "general appearance",
+      "definition": "An appearance in court that is not limited to contesting jurisdiction and that constitutes a voluntary submission to the court's authority, thereby waiving any objection to personal jurisdiction or service of process.",
+      "context": "Distinguished from a special appearance, which is entered solely to contest the court's jurisdiction without submitting to it.",
+      "pinpoint_citation": "153 A.D. 216, 218",
+      "binding_authority": false
+    }
+  ],
+  "issue_tags": [
+    "jurisdiction",
+    "waiver",
+    "general_appearance",
+    "personal_jurisdiction",
+    "procedural_compliance",
+    "civil_procedure"
+  ],
+  "constitutional_basis": [],
+  "relevance_to_audit": "Relevant to procedural compliance in audit enforcement contexts: a party that voluntarily participates in an administrative or judicial proceeding without reserving jurisdictional objections may be held to have waived those objections. Applies when respondents to audit findings challenge the forum's authority after having participated in the process.",
+  "key_quotes": [
+    {
+      "text": "A general appearance waives all irregularities in the manner in which the defendant was brought into court.",
+      "pinpoint_citation": "153 A.D. 216, 218",
+      "context": "Explaining the waiver effect of a general appearance as to defects in service or personal jurisdiction."
+    }
+  ],
+  "procedural_posture": "Appeal from Supreme Court, Appellate Division, First Department",
+  "vote": "Panel decision",
+  "majority_author": "Per Curiam",
+  "dissent_authors": [],
+  "subsequent_treatment": "Cited for general appearance waiver rule in New York and other jurisdictions; principle codified in modern procedural codes",
+  "source_url": "",
+  "doctrinal_weight": 0.65
+}

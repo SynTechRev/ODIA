@@ -1,0 +1,62 @@
+{
+  "case_id": "gregory_v_ashcroft_1991",
+  "name": "Gregory v. Ashcroft",
+  "citation": "501 U.S. 452 (1991)",
+  "year": 1991,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "federalism",
+    "statutory_interpretation",
+    "tenth_amendment"
+  ],
+  "summary": "Missouri's constitution required state judges to retire at age 70. Missouri judges filed suit claiming the mandatory retirement age violated the federal Age Discrimination in Employment Act (ADEA). The threshold question was whether the ADEA applied to state judges, given constitutional concerns about federal regulation of core state government decisions.",
+  "holding": "The ADEA did not clearly apply to appointed state judges because Congress had not included an unmistakably clear statement that it intended to regulate the tenure conditions of state officials who exercise core governmental power. The plain statement rule requires Congress to make its intent clear if it means to alter the constitutional balance between federal and state authority in areas of traditional state prerogative.",
+  "legal_definitions": [
+    {
+      "term": "plain statement rule",
+      "definition": "A canon of statutory construction providing that if Congress intends to alter the usual constitutional balance between the federal government and the states, it must make its intent unmistakably clear in the statutory language. Courts will not lightly assume that Congress has exercised such power.",
+      "context": "The plain statement rule is not merely a principle of statutory construction but reflects a structural commitment to maintaining the federal-state balance; it requires Congress to pay the political price of explicitly displacing state authority.",
+      "pinpoint_citation": "501 U.S. 452, 460-461",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "federalism",
+    "plain_statement_rule",
+    "statutory_interpretation",
+    "adea",
+    "state_judges",
+    "tenth_amendment",
+    "federal_grant_conditions",
+    "constitutional_avoidance"
+  ],
+  "constitutional_basis": [
+    "Tenth Amendment",
+    "Article III",
+    "Supremacy Clause"
+  ],
+  "relevance_to_audit": "The plain statement rule directly governs interpretation of federal grant conditions imposed on state and local governments; federal statutes or grant terms that purport to regulate core governmental functions or alter the federal-state balance must contain clear statutory language. Audit findings involving ambiguous federal grant conditions or regulations affecting state governmental operations should apply Gregory's clear statement canon.",
+  "key_quotes": [
+    {
+      "text": "If Congress intends to alter the 'usual constitutional balance between the federal government and the States,' it must make its intention to do so 'unmistakably clear in the statutory language.'",
+      "pinpoint_citation": "501 U.S. 452, 460",
+      "context": "Stating the plain statement rule for federal legislation that would displace state authority over core governmental functions."
+    },
+    {
+      "text": "This plain statement rule is nothing more than an acknowledgment that the States retain substantial sovereign powers under our constitutional scheme, powers with which Congress does not readily interfere.",
+      "pinpoint_citation": "501 U.S. 452, 461",
+      "context": "Explaining the constitutional and structural basis for the clear statement canon."
+    }
+  ],
+  "procedural_posture": "District court granted summary judgment for plaintiffs; Eighth Circuit affirmed; SCOTUS reversed",
+  "vote": "7-2",
+  "majority_author": "O'Connor, J.",
+  "dissent_authors": [
+    "White, J.",
+    "Stevens, J."
+  ],
+  "subsequent_treatment": "Plain statement rule applied to federal preemption, RFRA as applied to states, and federal grant conditions; extended in Atascadero State Hospital v. Scanlon and Dellmuth v. Muth",
+  "source_url": "https://www.courtlistener.com/opinion/112631/gregory-v-ashcroft/",
+  "doctrinal_weight": 0.85
+}

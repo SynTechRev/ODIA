@@ -1,0 +1,57 @@
+{
+  "case_id": "gibbons_v_ogden_1824",
+  "name": "Gibbons v. Ogden",
+  "citation": "22 U.S. (9 Wheat.) 1 (1824)",
+  "year": 1824,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "commerce_clause",
+    "supremacy_clause",
+    "federalism"
+  ],
+  "summary": "New York granted Aaron Ogden an exclusive license to operate steamboats in New York waters. Thomas Gibbons operated a competing steamboat service licensed under a federal coastal licensing statute. Ogden sought an injunction against Gibbons for violating the New York monopoly. The case raised whether Congress's Commerce Clause power extended to navigation within a state's borders.",
+  "holding": "Commerce among the states, which Congress has power to regulate, includes commercial intercourse including navigation, and extends to the interior of the states. The power to regulate commerce is plenary within its sphere and may be exercised to its utmost extent. The New York steamboat monopoly, as applied to interstate navigation, was preempted by the federal coastal licensing statute.",
+  "legal_definitions": [
+    {
+      "term": "commerce among the states",
+      "definition": "Commercial intercourse between citizens of different states, including navigation on navigable waters, that is not purely internal to a single state. Congress's power to regulate such commerce is complete in itself, may be exercised to its utmost extent, and acknowledges no limitations other than those prescribed in the Constitution.",
+      "context": "Chief Justice Marshall rejected the narrow reading that commerce meant only traffic or buying and selling, holding it comprehends every species of commercial intercourse.",
+      "pinpoint_citation": "22 U.S. 1, 189-190",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "commerce_clause",
+    "navigation",
+    "interstate_commerce",
+    "preemption",
+    "federal_regulatory_power",
+    "supremacy_clause",
+    "monopoly"
+  ],
+  "constitutional_basis": [
+    "Article I, Section 8, Clause 3 (Commerce Clause)",
+    "Article VI (Supremacy Clause)"
+  ],
+  "relevance_to_audit": "The foundational case for broad federal regulatory authority under the Commerce Clause; establishes that Congress's commerce power is plenary where commerce among the states is involved, providing the constitutional basis for federal regulation of government contracts, surveillance technology markets, and grant programs involving interstate activity.",
+  "key_quotes": [
+    {
+      "text": "Commerce, undoubtedly, is traffic, but it is something more: it is intercourse. It describes the commercial intercourse between nations, and parts of nations, in all its branches, and is regulated by prescribing rules for carrying on that intercourse.",
+      "pinpoint_citation": "22 U.S. 1, 189-190",
+      "context": "Defining commerce broadly to encompass all forms of commercial intercourse including navigation."
+    },
+    {
+      "text": "The power over commerce, including navigation, was one of the primary objects for which the people of America adopted their government, and must have been contemplated in forming it.",
+      "pinpoint_citation": "22 U.S. 1, 190",
+      "context": "Establishing the historical and structural basis for Congress's broad commerce power."
+    }
+  ],
+  "procedural_posture": "New York Court of Errors affirmed injunction; SCOTUS reversed",
+  "vote": "6-0 (Johnson, J. concurred separately)",
+  "majority_author": "Marshall, C.J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Foundational case for Congress's commerce power; cited in every major Commerce Clause decision through Heart of Atlanta, Lopez, and Raich",
+  "source_url": "https://www.courtlistener.com/opinion/85378/gibbons-v-ogden/",
+  "doctrinal_weight": 0.95
+}

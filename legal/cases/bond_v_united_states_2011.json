@@ -1,0 +1,58 @@
+{
+  "case_id": "bond_v_united_states_2011",
+  "name": "Bond v. United States",
+  "citation": "564 U.S. 211 (2011)",
+  "year": 2011,
+  "court": "SCOTUS",
+  "doctrine": "federal_power",
+  "secondary_doctrines": [
+    "federalism",
+    "standing",
+    "tenth_amendment"
+  ],
+  "summary": "Carol Anne Bond was convicted under a federal chemical weapons statute after she attempted to poison a romantic rival. She challenged the statute on Tenth Amendment grounds, arguing it infringed powers reserved to the states. The threshold question was whether an individual has standing to raise a Tenth Amendment federalism challenge, or whether only states may assert such claims.",
+  "holding": "An individual has standing to raise a claim that a federal statute exceeds Congress's enumerated powers or violates the Tenth Amendment's reservation of powers to the states, even without a state's participation. Federalism protects the liberty of individuals as well as the sovereignty of states, and an individual who is injured by unconstitutionally broad federal power has standing to raise the constitutional challenge.",
+  "legal_definitions": [
+    {
+      "term": "individual standing to raise federalism claims",
+      "definition": "The right of a private person to challenge a federal statute on grounds that it exceeds Congress's enumerated powers or violates the Tenth Amendment, without requiring a state to be the plaintiff. Federalism is not solely for the benefit of states as abstract entities but serves to protect individual liberty.",
+      "context": "The Court unanimously held that Bond had standing to raise her Tenth Amendment claim, recognizing that the constitutional structure protecting state sovereignty also protects the liberty of individuals subject to overbroad federal power.",
+      "pinpoint_citation": "564 U.S. 211, 221-222",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "standing",
+    "tenth_amendment",
+    "federalism",
+    "individual_liberty",
+    "treaty_power",
+    "enumerated_powers",
+    "constitutional_accountability"
+  ],
+  "constitutional_basis": [
+    "Tenth Amendment",
+    "Article III (standing)",
+    "Necessary and Proper Clause"
+  ],
+  "relevance_to_audit": "Establishes that individuals — including citizens, organizations, and audit petitioners — have standing to challenge federal statutes or administrative programs that violate the constitutional federal-state balance. Relevant to accountability challenges where private citizens seek to contest the legality of federally funded surveillance programs or procurement authorities that exceed enumerated federal powers.",
+  "key_quotes": [
+    {
+      "text": "Federalism secures the freedom of the individual. By denying any one government complete jurisdiction over all the concerns of public life, federalism protects the liberty of the individual from arbitrary power.",
+      "pinpoint_citation": "564 U.S. 211, 222",
+      "context": "Explaining why individuals, not merely states, have standing to raise federalism challenges."
+    },
+    {
+      "text": "The individual, in a proper case, may invoke the structural protections of the Constitution to preserve the balance of powers between the States and the Federal Government.",
+      "pinpoint_citation": "564 U.S. 211, 222",
+      "context": "Affirming individual standing to raise structural constitutional claims including Tenth Amendment challenges."
+    }
+  ],
+  "procedural_posture": "Third Circuit dismissed Tenth Amendment challenge for lack of standing; SCOTUS reversed and remanded",
+  "vote": "9-0",
+  "majority_author": "Kennedy, J.",
+  "dissent_authors": [],
+  "subsequent_treatment": "Applied in Bond v. United States (2014) (second Bond decision striking down application of chemical weapons statute); cited for individual standing in federalism challenges",
+  "source_url": "https://www.courtlistener.com/opinion/218975/bond-v-united-states/",
+  "doctrinal_weight": 0.84
+}

@@ -1,0 +1,56 @@
+{
+  "case_id": "cooper_v_aaron_1958",
+  "name": "Cooper v. Aaron",
+  "citation": "358 U.S. 1 (1958)",
+  "year": 1958,
+  "court": "SCOTUS",
+  "doctrine": "constitutional_structure",
+  "secondary_doctrines": [
+    "separation_of_powers",
+    "supremacy_clause"
+  ],
+  "summary": "Arkansas officials, including Governor Faubus and the state legislature, sought to delay desegregation of Little Rock public schools following Brown v. Board of Education. The Supreme Court issued an opinion signed individually by all nine Justices reaffirming that federal constitutional requirements bind every state official.",
+  "holding": "The constitutional rights of students established in Brown v. Board of Education could not be sacrificed or yielded to violence and disorder fomented by state officials. State legislatures and executives are bound by the Supremacy Clause to give effect to constitutional interpretations by the Supreme Court, and state officials who swear to support the Constitution are bound by it as the supreme law of the land.",
+  "legal_definitions": [
+    {
+      "term": "constitutional supremacy",
+      "definition": "The principle established by Article VI that the Constitution is the supreme law of the land binding all state and federal officials, and that state laws and executive acts in conflict with it are without effect.",
+      "context": "The Court held that the interpretation of the Fourteenth Amendment enunciated in Brown v. Board of Education is the supreme law of the land, binding upon all state officials.",
+      "pinpoint_citation": "358 U.S. 1, 18",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "judicial_supremacy",
+    "constitutional_interpretation",
+    "state_compliance",
+    "supremacy_clause",
+    "desegregation",
+    "equal_protection",
+    "local_officials"
+  ],
+  "constitutional_basis": [
+    "Article VI Supremacy Clause",
+    "Fourteenth Amendment"
+  ],
+  "relevance_to_audit": "Establishes that local government officials — including procurement officers, city council members, and executive officials — cannot disregard constitutional requirements. Any audit finding that a local official acted to circumvent constitutional constraints (e.g., by structuring surveillance programs or procurement to evade federal oversight) is directly implicated by this precedent.",
+  "key_quotes": [
+    {
+      "text": "No state legislator, executive or judicial officer can war against the Constitution without violating his undertaking to support it.",
+      "pinpoint_citation": "358 U.S. 1, 18",
+      "context": "Establishing that all state officers are bound by the Oath Clause and the Supremacy Clause to comply with constitutional interpretations by the Supreme Court."
+    },
+    {
+      "text": "The federal judiciary is supreme in the exposition of the law of the Constitution.",
+      "pinpoint_citation": "358 U.S. 1, 18",
+      "context": "Reaffirming judicial supremacy in constitutional interpretation as established in Marbury v. Madison."
+    }
+  ],
+  "procedural_posture": "Eighth Circuit reversed district court; SCOTUS reversed Eighth Circuit and ordered desegregation to proceed",
+  "vote": "9-0 (per curiam, signed individually by all nine Justices)",
+  "majority_author": "Per Curiam (Warren, C.J., Black, Frankfurter, Douglas, Burton, Clark, Harlan, Brennan, Whittaker, JJ.)",
+  "dissent_authors": [],
+  "subsequent_treatment": "Foundational case for judicial supremacy; repeatedly cited for proposition that state officials must comply with Supreme Court constitutional interpretations",
+  "source_url": "https://www.courtlistener.com/opinion/105768/cooper-v-aaron/",
+  "doctrinal_weight": 0.96
+}
