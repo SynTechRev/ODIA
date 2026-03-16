@@ -374,6 +374,14 @@
       "citation": "31 U.S.C. § 3730(b); False Claims Act",
       "category": "procurement",
       "origin_language": "Latin"
+    },
+    {
+      "term": "due process",
+      "definition": "The constitutional guarantee, found in the Fifth and Fourteenth Amendments, that the government may not deprive any person of life, liberty, or property without fair procedures (procedural due process) and without sufficient justification under substantive law (substantive due process). The applicable procedures are determined by balancing private interest, risk of erroneous deprivation, and government interest.",
+      "citation": "U.S. Const. amend. V, XIV; Mathews v. Eldridge, 424 U.S. 319 (1976)",
+      "category": "constitutional_law",
+      "origin_language": "English",
+      "relevance_to_audit": "Core constitutional constraint on government action; any audit finding involving denial of benefits, license revocation, or punitive action against an individual or entity without notice and hearing implicates due process."
     }
   ]
 }

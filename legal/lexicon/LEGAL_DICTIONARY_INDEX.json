@@ -1,14 +1,14 @@
 {
   "version": "2.0.0",
-  "description": "Unified legal lexicon index consolidating Black's Law Dictionary, Bouvier's 1856, Anderson's 1889, Webster Legal, Oxford Law, Latin foundational terms, and Cornell Wex",
+  "description": "Unified legal lexicon index consolidating constitutional-law terms (public domain synthesis), Bouvier's 1856, Anderson's 1889, Webster Legal, Oxford Law, Latin foundational terms, and Cornell Wex",
   "metadata": {
     "created": "2024-12-07",
     "total_terms": 387,
     "source_dictionaries": [
       {
         "name": "blacks_law_dictionary",
-        "edition": "11th",
-        "year": 2019,
+        "edition": "public_domain_synthesis",
+        "year": 2026,
         "term_count": 52
       },
       {
