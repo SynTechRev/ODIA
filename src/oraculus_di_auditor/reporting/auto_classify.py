@@ -65,7 +65,7 @@ FINDING_CATEGORIES: dict[str, dict[str, Any]] = {
     },
     "temporal_pattern": {
         "display_name": "Temporal / Evolution Pattern",
-        "detectors": ["procurement_timeline"],
+        "detectors": ["contract_evolution"],
         "recommendation_template": (
             "Review the full contract lineage for {vendor}. "
             "The {pattern_type} pattern spans {span_years} years "

@@ -80,7 +80,7 @@ def test_temporal_pattern_category_in_registry():
     assert "temporal_pattern" in FINDING_CATEGORIES
     cat = FINDING_CATEGORIES["temporal_pattern"]
     assert cat["display_name"] == "Temporal / Evolution Pattern"
-    assert "procurement_timeline" in cat["detectors"]
+    assert "contract_evolution" in cat["detectors"]
     assert "{vendor}" in cat["recommendation_template"]
     assert "{pattern_type}" in cat["recommendation_template"]
 
@@ -88,9 +88,8 @@ def test_temporal_pattern_category_in_registry():
 def test_procurement_timeline_finding_classified_as_temporal():
     anomaly = {"layer": "procurement_timeline", "id": "PT-001", "severity": "high"}
     category = classify_finding(anomaly)
-    # procurement_timeline appears in both procurement_violation and temporal_pattern;
-    # assert it resolves to one of them
-    assert category in ("procurement_violation", "temporal_pattern")
+    # procurement_timeline belongs to procurement_violation
+    assert category == "procurement_violation"
 
 
 def test_temporal_finding_template_has_required_placeholders():
