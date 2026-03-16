@@ -1,5 +1,8 @@
 # Local lint/test artifacts
 ruff_output.txt
+
+# Adapter cache (runtime data, never committed)
+cache/
 # Python
 __pycache__/
 *.py[cod]
