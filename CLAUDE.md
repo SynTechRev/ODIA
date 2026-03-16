@@ -26,10 +26,11 @@ Two source packages under `src/`:
 
 Key module groups inside `oraculus_di_auditor/`:
 - `analysis/` — Anomaly detectors: fiscal, constitutional, surveillance, cross-reference, procurement timeline, scalar scoring
+- `adapters/` — External data source adapters (Sprint 9): `base.py` (DataSourceAdapter ABC with cache-aside), `ccops_adapter.py` (11 ACLU CCOPS mandates), `atlas_adapter.py` (EFF Atlas of Surveillance, JSON/CSV), `compliance_engine.py` (ComplianceAssessmentEngine — maps ODIA findings to CCOPS mandates, produces ComplianceScorecard)
 - `orchestrator/` — Multi-agent task graph coordination (Phase 5/8)
 - `governor/` — Pipeline governance and policy enforcement (Phase 9)
 - `ingestion/` — XML parser, checksum tracker, document engine
-- `interface/` — FastAPI REST API with routes for orchestrator, governor, mesh, GCN
+- `interface/` — FastAPI REST API with routes for orchestrator, governor, mesh, GCN, compliance (`POST /compliance/assess`, `GET /compliance/mandates`)
 - `frontend/` — Phase 6 frontend generation system (component specs, API client, gap detection)
 - `rec17/`, `rgk18/`, `aei19/`, `aer20/` — Higher-phase experimental engines (Phases 17–20)
 - `mesh/` — Adaptive agent mesh (Phase 13/14)

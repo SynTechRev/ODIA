@@ -138,6 +138,27 @@ for full setup and configuration guidance.
 
 ---
 
+## Compliance Assessment
+
+Evaluate surveillance technology procurement against the ACLU CCOPS
+(Community Control Over Police Surveillance) framework:
+
+```bash
+python scripts/run_compliance_check.py \
+  --config-dir config/ --source data/sources/ \
+  --output reports/compliance/
+```
+
+Maps ODIA detector findings to all 11 CCOPS model bill mandates and produces a
+`ComplianceScorecard` with per-mandate status (`compliant`, `non_compliant`,
+`partial`, `unknown`), overall risk level, and specific recommendations. Also
+available via `POST /compliance/assess` in the API.
+
+See [docs/COMPLIANCE_FRAMEWORK.md](docs/COMPLIANCE_FRAMEWORK.md) for the full
+mandate mapping, risk levels, and programmatic usage guide.
+
+---
+
 ## Configuration
 
 ```yaml
