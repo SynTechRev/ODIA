@@ -126,8 +126,13 @@ def create_app() -> Any:
 
     # Register routes
     _register_routes(app)
+    _register_feature_routes(app)
 
-    # Register Phase 8 orchestrator routes
+    return app
+
+
+def _register_feature_routes(app: Any) -> None:  # noqa: C901
+    """Register optional feature routes; each is best-effort (never raises)."""
     try:
         from .routes.orchestrator import register_orchestrator_routes
 
@@ -135,7 +140,6 @@ def create_app() -> Any:
     except ImportError as e:
         logger.warning(f"Orchestrator routes not available: {e}")
 
-    # Register Phase 9 governor routes
     try:
         from .routes.governor import register_governor_routes
 
@@ -143,7 +147,6 @@ def create_app() -> Any:
     except ImportError as e:
         logger.warning(f"Governor routes not available: {e}")
 
-    # Register Phase 10 GCN routes
     try:
         from .routes.gcn import router as gcn_router
 
@@ -152,7 +155,6 @@ def create_app() -> Any:
     except ImportError as e:
         logger.warning(f"GCN routes not available: {e}")
 
-    # Register Phase 10 Mesh routes
     try:
         from .routes.mesh import router as mesh_router
 
@@ -161,7 +163,6 @@ def create_app() -> Any:
     except ImportError as e:
         logger.warning(f"Mesh routes not available: {e}")
 
-    # Register multi-jurisdiction routes
     try:
         from .routes.multi_jurisdiction import register_multi_jurisdiction_routes
 
@@ -170,7 +171,6 @@ def create_app() -> Any:
     except Exception as e:
         logger.warning(f"Multi-jurisdiction routes not available: {e}")
 
-    # Register unified report generation routes
     try:
         from .routes.reports import register_report_routes
 
@@ -179,7 +179,6 @@ def create_app() -> Any:
     except Exception as e:
         logger.warning(f"Report generation routes not available: {e}")
 
-    # Register RAG query routes
     try:
         from .routes.rag import register_rag_routes
 
@@ -188,7 +187,6 @@ def create_app() -> Any:
     except Exception as e:
         logger.warning(f"RAG query routes not available: {e}")
 
-    # Register CCOPS compliance routes
     try:
         from .routes.compliance import register_compliance_routes
 
@@ -197,7 +195,13 @@ def create_app() -> Any:
     except Exception as e:
         logger.warning(f"Compliance routes not available: {e}")
 
-    return app
+    try:
+        from .routes.temporal import register_temporal_routes
+
+        register_temporal_routes(app)
+        logger.info("Temporal analysis routes registered")
+    except Exception as e:
+        logger.warning(f"Temporal routes not available: {e}")
 
 
 def _load_jurisdiction_config_at_startup() -> Any:

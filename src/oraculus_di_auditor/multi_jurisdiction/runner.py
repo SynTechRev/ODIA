@@ -114,6 +114,28 @@ class MultiJurisdictionRunner:
             "results": doc_results,
             "anomaly_summary": summary,
         }
+
+        # Temporal analysis — best-effort, never breaks the main pipeline
+        try:
+            from oraculus_di_auditor.temporal.evolution_detector import (
+                EvolutionPatternDetector,
+            )
+            from oraculus_di_auditor.temporal.lineage_builder import LineageBuilder
+
+            builder = LineageBuilder()
+            builder.load_documents(documents)
+            lineages = builder.build_lineages()
+            patterns = EvolutionPatternDetector(lineages).detect_all_patterns()
+            output["temporal"] = {
+                "lineage_count": len(lineages),
+                "pattern_count": len(patterns),
+                "lineages": [ln.model_dump() for ln in lineages],
+                "patterns": [p.model_dump() for p in patterns],
+            }
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Temporal analysis skipped for %r: %s", jurisdiction_id, exc)
+            output["temporal"] = {"lineage_count": 0, "pattern_count": 0}
+
         self._results[jurisdiction_id] = output
         return output
 

@@ -84,6 +84,10 @@ class AuditReport(BaseModel):
     chain_of_custody: dict[str, Any] = {}
     provenance: dict[str, Any] = {}
     metadata: dict[str, Any] = {}
+    # Temporal analysis (populated when --temporal / temporal analysis ran)
+    contract_lineages: list[dict[str, Any]] = []
+    evolution_patterns: list[dict[str, Any]] = []
+    timeline_data: dict[str, Any] = {}
 
 
 def build_report_from_analysis(

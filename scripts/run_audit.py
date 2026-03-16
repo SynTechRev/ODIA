@@ -118,6 +118,18 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Also generate an executive summary report using audit_report_executive.md",
     )
+    p.add_argument(
+        "--temporal",
+        action="store_true",
+        default=True,
+        help="Run temporal contract evolution analysis (default: on)",
+    )
+    p.add_argument(
+        "--no-temporal",
+        dest="temporal",
+        action="store_false",
+        help="Disable temporal contract evolution analysis",
+    )
     return p
 
 
@@ -560,6 +572,7 @@ def run_audit(
     template_name: str = "audit_report.md",
     executive: bool = False,
     template_dir: str | Path | None = None,
+    temporal: bool = True,
 ) -> dict[str, Any]:
     """Programmatic entry point (also called by the CLI).
 
@@ -621,8 +634,40 @@ def run_audit(
     run_ts = datetime.now(UTC).isoformat()
     results = _run_audit(docs, jcfg, verbose=verbose)
 
+    # 5b. Temporal analysis (best-effort)
+    temporal_data: dict[str, Any] = {}
+    if temporal:
+        try:
+            from oraculus_di_auditor.temporal.evolution_detector import (
+                EvolutionPatternDetector,
+            )
+            from oraculus_di_auditor.temporal.lineage_builder import LineageBuilder
+            from oraculus_di_auditor.temporal.timeline_generator import (
+                TimelineGenerator,
+            )
+
+            builder = LineageBuilder()
+            builder.load_documents(docs)
+            lineages = builder.build_lineages()
+            patterns = EvolutionPatternDetector(lineages).detect_all_patterns()
+            timeline = TimelineGenerator(lineages, patterns).generate_timeline_json()
+            temporal_data = {
+                "lineage_count": len(lineages),
+                "pattern_count": len(patterns),
+                "lineages": [ln.model_dump() for ln in lineages],
+                "patterns": [p.model_dump() for p in patterns],
+                "timeline": timeline,
+            }
+            print(
+                f"Temporal: {len(lineages)} lineage(s), {len(patterns)} pattern(s) detected"
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Temporal analysis skipped: %s", exc)
+
     # 6. Build legacy report dict (used by _print_summary)
     report = _build_report(jcfg, results, run_ts)
+    if temporal_data:
+        report["temporal"] = temporal_data
 
     # 7. Write reports via unified reporting system
     _formats = formats if formats is not None else ["json", "markdown"]
@@ -664,6 +709,7 @@ def main() -> None:
             formats=[f.strip() for f in args.formats.split(",") if f.strip()],
             template_name=args.template,
             executive=args.executive,
+            temporal=args.temporal,
         )
     except (FileNotFoundError, NotADirectoryError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

@@ -63,6 +63,16 @@ FINDING_CATEGORIES: dict[str, dict[str, Any]] = {
             "Assess Fourth Amendment implications of identified programs."
         ),
     },
+    "temporal_pattern": {
+        "display_name": "Temporal / Evolution Pattern",
+        "detectors": ["procurement_timeline", "scope_expansion"],
+        "recommendation_template": (
+            "Review the full contract lineage for {vendor}. "
+            "The {pattern_type} pattern spans {span_years} years "
+            "with {growth_percentage}% growth. Consider competitive "
+            "rebid or independent cost analysis."
+        ),
+    },
 }
 
 # Reverse lookup: detector name → category key
