@@ -188,6 +188,15 @@ def create_app() -> Any:
     except Exception as e:
         logger.warning(f"RAG query routes not available: {e}")
 
+    # Register CCOPS compliance routes
+    try:
+        from .routes.compliance import register_compliance_routes
+
+        register_compliance_routes(app)
+        logger.info("Compliance assessment routes registered")
+    except Exception as e:
+        logger.warning(f"Compliance routes not available: {e}")
+
     return app
 
 
