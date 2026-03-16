@@ -62,6 +62,7 @@ data/reports/
 !data/statutes/
 !data/vectors/
 !data/multi_jurisdiction/
+!data/reference/
 
 # Phase 7: External legal corpus data paths
 /data/legal/

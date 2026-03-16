@@ -1,0 +1,302 @@
+[
+  {
+    "atlas_id": "ATL-CA-001",
+    "agency_name": "Riverside County Sheriff",
+    "state": "CA",
+    "technology_type": "ALPR",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2019,
+    "notes": "Fixed and mobile ALPR deployments"
+  },
+  {
+    "atlas_id": "ATL-CA-002",
+    "agency_name": "Riverside County Sheriff",
+    "state": "CA",
+    "technology_type": "body-worn cameras",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2020,
+    "notes": "Department-wide BWC rollout"
+  },
+  {
+    "atlas_id": "ATL-CA-003",
+    "agency_name": "Riverside County Sheriff",
+    "state": "CA",
+    "technology_type": "drones",
+    "vendor": "SkyWatch",
+    "source_url": null,
+    "year_identified": 2021,
+    "notes": "Aerial surveillance drone program"
+  },
+  {
+    "atlas_id": "ATL-CA-004",
+    "agency_name": "Riverside County Sheriff",
+    "state": "CA",
+    "technology_type": "predictive policing",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2018,
+    "notes": "Risk-scoring patrol allocation system"
+  },
+  {
+    "atlas_id": "ATL-CA-005",
+    "agency_name": "Valley Metro Police",
+    "state": "CA",
+    "technology_type": "ALPR",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2017,
+    "notes": "Intersection-mounted ALPR network"
+  },
+  {
+    "atlas_id": "ATL-CA-006",
+    "agency_name": "Valley Metro Police",
+    "state": "CA",
+    "technology_type": "facial recognition",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2020,
+    "notes": "Real-time facial recognition pilot"
+  },
+  {
+    "atlas_id": "ATL-CA-007",
+    "agency_name": "Valley Metro Police",
+    "state": "CA",
+    "technology_type": "video surveillance",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2016,
+    "notes": "Downtown CCTV network"
+  },
+  {
+    "atlas_id": "ATL-CA-008",
+    "agency_name": "Valley Metro Police",
+    "state": "CA",
+    "technology_type": "gunshot detection",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2019,
+    "notes": "Acoustic sensor network in high-density areas"
+  },
+  {
+    "atlas_id": "ATL-CA-009",
+    "agency_name": "Northfield City PD",
+    "state": "CA",
+    "technology_type": "ALPR",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2018,
+    "notes": "Mobile ALPR on patrol vehicles"
+  },
+  {
+    "atlas_id": "ATL-CA-010",
+    "agency_name": "Northfield City PD",
+    "state": "CA",
+    "technology_type": "body-worn cameras",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2019,
+    "notes": "Mandatory BWC for all patrol officers"
+  },
+  {
+    "atlas_id": "ATL-CA-011",
+    "agency_name": "Northfield City PD",
+    "state": "CA",
+    "technology_type": "social media monitoring",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2020,
+    "notes": "Open-source social media intelligence gathering"
+  },
+  {
+    "atlas_id": "ATL-CA-012",
+    "agency_name": "Harborview PD",
+    "state": "CA",
+    "technology_type": "ALPR",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2016,
+    "notes": "Port-area license plate monitoring"
+  },
+  {
+    "atlas_id": "ATL-CA-013",
+    "agency_name": "Harborview PD",
+    "state": "CA",
+    "technology_type": "drones",
+    "vendor": "SkyWatch",
+    "source_url": null,
+    "year_identified": 2022,
+    "notes": "Maritime surveillance drone program"
+  },
+  {
+    "atlas_id": "ATL-CA-014",
+    "agency_name": "Harborview PD",
+    "state": "CA",
+    "technology_type": "video surveillance",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2015,
+    "notes": "Waterfront and port access CCTV"
+  },
+  {
+    "atlas_id": "ATL-CA-015",
+    "agency_name": "Harborview PD",
+    "state": "CA",
+    "technology_type": "cell-site simulators",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2017,
+    "notes": "Stingray device for criminal investigations"
+  },
+  {
+    "atlas_id": "ATL-CA-016",
+    "agency_name": "Eastbrook County SO",
+    "state": "CA",
+    "technology_type": "ALPR",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2019,
+    "notes": "Freeway entrance/exit ALPR monitoring"
+  },
+  {
+    "atlas_id": "ATL-CA-017",
+    "agency_name": "Eastbrook County SO",
+    "state": "CA",
+    "technology_type": "predictive policing",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2020,
+    "notes": "Hotspot prediction model for patrol deployment"
+  },
+  {
+    "atlas_id": "ATL-CA-018",
+    "agency_name": "Eastbrook County SO",
+    "state": "CA",
+    "technology_type": "real-time crime center",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2021,
+    "notes": "Integrated real-time crime analytics center"
+  },
+  {
+    "atlas_id": "ATL-CA-019",
+    "agency_name": "Pinecrest Unified SD",
+    "state": "CA",
+    "technology_type": "body-worn cameras",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2021,
+    "notes": "School resource officer BWC program"
+  },
+  {
+    "atlas_id": "ATL-CA-020",
+    "agency_name": "Pinecrest Unified SD",
+    "state": "CA",
+    "technology_type": "video surveillance",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2018,
+    "notes": "Campus-wide camera network"
+  },
+  {
+    "atlas_id": "ATL-CA-021",
+    "agency_name": "Pinecrest Unified SD",
+    "state": "CA",
+    "technology_type": "facial recognition",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2022,
+    "notes": "School entry facial recognition access control"
+  },
+  {
+    "atlas_id": "ATL-CA-022",
+    "agency_name": "Creekside Transit Authority",
+    "state": "CA",
+    "technology_type": "ALPR",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2018,
+    "notes": "Transit facility parking enforcement ALPR"
+  },
+  {
+    "atlas_id": "ATL-CA-023",
+    "agency_name": "Creekside Transit Authority",
+    "state": "CA",
+    "technology_type": "video surveillance",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2014,
+    "notes": "Station and vehicle surveillance network"
+  },
+  {
+    "atlas_id": "ATL-CA-024",
+    "agency_name": "Westlake County DA",
+    "state": "CA",
+    "technology_type": "facial recognition",
+    "vendor": "VisionGuard",
+    "source_url": null,
+    "year_identified": 2021,
+    "notes": "Evidence analysis facial recognition tool"
+  },
+  {
+    "atlas_id": "ATL-CA-025",
+    "agency_name": "Westlake County DA",
+    "state": "CA",
+    "technology_type": "social media monitoring",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2019,
+    "notes": "Gang intelligence social media tracking"
+  },
+  {
+    "atlas_id": "ATL-CA-026",
+    "agency_name": "Maple Ridge PD",
+    "state": "CA",
+    "technology_type": "gunshot detection",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2020,
+    "notes": "Acoustic gunshot detection system"
+  },
+  {
+    "atlas_id": "ATL-CA-027",
+    "agency_name": "Maple Ridge PD",
+    "state": "CA",
+    "technology_type": "ring/neighbors",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2021,
+    "notes": "Ring camera integration program with residential users"
+  },
+  {
+    "atlas_id": "ATL-CA-028",
+    "agency_name": "Maple Ridge PD",
+    "state": "CA",
+    "technology_type": "drones",
+    "vendor": "SkyWatch",
+    "source_url": null,
+    "year_identified": 2022,
+    "notes": "Drone-as-first-responder program"
+  },
+  {
+    "atlas_id": "ATL-CA-029",
+    "agency_name": "Summit Valley PD",
+    "state": "CA",
+    "technology_type": "ALPR",
+    "vendor": "SecureTech",
+    "source_url": null,
+    "year_identified": 2020,
+    "notes": "Border checkpoint ALPR monitoring"
+  },
+  {
+    "atlas_id": "ATL-CA-030",
+    "agency_name": "Summit Valley PD",
+    "state": "CA",
+    "technology_type": "fusion center",
+    "vendor": null,
+    "source_url": null,
+    "year_identified": 2017,
+    "notes": "Regional intelligence fusion center participation"
+  }
+]
