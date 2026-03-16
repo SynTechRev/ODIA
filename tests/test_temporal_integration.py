@@ -81,7 +81,6 @@ def test_temporal_pattern_category_in_registry():
     cat = FINDING_CATEGORIES["temporal_pattern"]
     assert cat["display_name"] == "Temporal / Evolution Pattern"
     assert "procurement_timeline" in cat["detectors"]
-    assert "scope_expansion" in cat["detectors"]
     assert "{vendor}" in cat["recommendation_template"]
     assert "{pattern_type}" in cat["recommendation_template"]
 
