@@ -41,11 +41,12 @@ def register_auth_routes(app: Any) -> None:
     from oraculus_di_auditor.auth.auth_middleware import (
         ANONYMOUS_USER,
         _get_auth_service,
-        get_current_user,
     )
     from oraculus_di_auditor.auth.auth_service import AuthError
 
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login", auto_error=False)
+    oauth2_scheme = OAuth2PasswordBearer(
+        tokenUrl="/api/v1/auth/login", auto_error=False
+    )
     router = APIRouter(tags=["auth"])
 
     @router.get("/api/v1/auth/status")

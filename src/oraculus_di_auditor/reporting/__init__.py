@@ -12,6 +12,7 @@ from oraculus_di_auditor.reporting.auto_classify import (
     generate_executive_summary,
     generate_recommendation,
 )
+from oraculus_di_auditor.reporting.evidence_packet import generate_evidence_packet
 from oraculus_di_auditor.reporting.format_converters import (
     export_report,
     get_available_formats,
@@ -27,8 +28,10 @@ from oraculus_di_auditor.reporting.models import (
     SeveritySummary,
     build_report_from_analysis,
 )
-from oraculus_di_auditor.reporting.evidence_packet import generate_evidence_packet
-from oraculus_di_auditor.reporting.plain_language import translate_finding, translate_report
+from oraculus_di_auditor.reporting.plain_language import (
+    translate_finding,
+    translate_report,
+)
 from oraculus_di_auditor.reporting.template_engine import ReportTemplateEngine
 
 __all__ = [

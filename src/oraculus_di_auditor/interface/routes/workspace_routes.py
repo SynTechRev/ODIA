@@ -57,7 +57,9 @@ def register_workspace_routes(app: Any) -> None:
 
     from oraculus_di_auditor.auth.auth_middleware import get_current_user
 
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login", auto_error=False)
+    oauth2_scheme = OAuth2PasswordBearer(
+        tokenUrl="/api/v1/auth/login", auto_error=False
+    )
     router = APIRouter(tags=["workspaces"])
 
     def _current_user(token: str | None = Depends(oauth2_scheme)) -> dict:
@@ -76,7 +78,9 @@ def register_workspace_routes(app: Any) -> None:
             jurisdiction=request.jurisdiction,
         )
         service.log_action(
-            ws["id"], user["id"], "workspace.create",
+            ws["id"],
+            user["id"],
+            "workspace.create",
             detail=f"Created workspace '{request.name}'",
             user_email=user.get("email"),
         )
@@ -96,7 +100,9 @@ def register_workspace_routes(app: Any) -> None:
         service = _get_workspace_service()
         ws = service.get_workspace(workspace_id)
         if not ws:
-            raise HTTPException(status_code=404, detail=f"Workspace '{workspace_id}' not found")
+            raise HTTPException(
+                status_code=404, detail=f"Workspace '{workspace_id}' not found"
+            )
         return ws
 
     @router.post("/api/v1/workspaces/{workspace_id}/members")
@@ -108,10 +114,14 @@ def register_workspace_routes(app: Any) -> None:
         service = _get_workspace_service()
         ws = service.get_workspace(workspace_id)
         if not ws:
-            raise HTTPException(status_code=404, detail=f"Workspace '{workspace_id}' not found")
+            raise HTTPException(
+                status_code=404, detail=f"Workspace '{workspace_id}' not found"
+            )
         member = service.add_member(workspace_id, request.user_id, request.role)
         service.log_action(
-            workspace_id, user["id"], "member.add",
+            workspace_id,
+            user["id"],
+            "member.add",
             detail=f"Added user {request.user_id} as {request.role}",
             user_email=user.get("email"),
         )

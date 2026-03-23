@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -14,7 +13,6 @@ from oraculus_di_auditor.adapters.legistar_adapter import (
     _sha256_file,
     load_cities,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -105,20 +103,29 @@ class TestLegistarAdapterInit:
 
 
 class TestListMatters:
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_MATTERS)
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_MATTERS,
+    )
     def test_returns_list(self, mock_get, adapter):
         result = adapter.list_matters()
         assert isinstance(result, list)
         assert len(result) == 2
 
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_MATTERS)
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_MATTERS,
+    )
     def test_calls_matters_endpoint(self, mock_get, adapter):
         adapter.list_matters()
         url = mock_get.call_args[0][0]
         assert "matters" in url
         assert "testcity" in url
 
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_MATTERS)
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_MATTERS,
+    )
     def test_date_filter_in_params(self, mock_get, adapter):
         adapter.list_matters(start_date="2024-01-01", end_date="2024-12-31")
         params = mock_get.call_args[1].get("params", {})
@@ -126,7 +133,10 @@ class TestListMatters:
         assert "2024-01-01" in params["$filter"]
         assert "2024-12-31" in params["$filter"]
 
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_MATTERS)
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_MATTERS,
+    )
     def test_matter_type_filter(self, mock_get, adapter):
         adapter.list_matters(matter_type="Contract")
         params = mock_get.call_args[1].get("params", {})
@@ -139,12 +149,18 @@ class TestListMatters:
 
 
 class TestGetMatter:
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_MATTERS[0])
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_MATTERS[0],
+    )
     def test_returns_dict(self, mock_get, adapter):
         result = adapter.get_matter(1)
         assert isinstance(result, dict)
 
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_MATTERS[0])
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_MATTERS[0],
+    )
     def test_endpoint_contains_matter_id(self, mock_get, adapter):
         adapter.get_matter(42)
         url = mock_get.call_args[0][0]
@@ -157,12 +173,18 @@ class TestGetMatter:
 
 
 class TestGetMatterAttachments:
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_ATTACHMENTS)
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_ATTACHMENTS,
+    )
     def test_returns_list(self, mock_get, adapter):
         result = adapter.get_matter_attachments(1)
         assert isinstance(result, list)
 
-    @patch("oraculus_di_auditor.adapters.legistar_adapter._get", return_value=SAMPLE_ATTACHMENTS)
+    @patch(
+        "oraculus_di_auditor.adapters.legistar_adapter._get",
+        return_value=SAMPLE_ATTACHMENTS,
+    )
     def test_endpoint_contains_attachments(self, mock_get, adapter):
         adapter.get_matter_attachments(1)
         url = mock_get.call_args[0][0]
@@ -235,7 +257,9 @@ class TestDownloadAttachment:
         mock_resp.raise_for_status = lambda: None
 
         with patch("requests.get", return_value=mock_resp):
-            result = adapter.download_attachment("https://example.com/file.txt", tmp_path)
+            result = adapter.download_attachment(
+                "https://example.com/file.txt", tmp_path
+            )
         assert isinstance(result, Path)
 
 
@@ -248,7 +272,9 @@ class TestRetrieveCorpus:
     def test_returns_manifest_dict(self, tmp_path, adapter):
         with (
             patch.object(adapter, "list_matters", return_value=SAMPLE_MATTERS),
-            patch.object(adapter, "get_matter_attachments", return_value=SAMPLE_ATTACHMENTS),
+            patch.object(
+                adapter, "get_matter_attachments", return_value=SAMPLE_ATTACHMENTS
+            ),
             patch.object(adapter, "download_attachment") as mock_dl,
         ):
             dest_file = tmp_path / "contract.pdf"
@@ -272,9 +298,7 @@ class TestRetrieveCorpus:
         assert manifest["matter_count"] == 2
 
     def test_manifest_json_written(self, tmp_path, adapter):
-        with (
-            patch.object(adapter, "list_matters", return_value=[]),
-        ):
+        with (patch.object(adapter, "list_matters", return_value=[]),):
             adapter.retrieve_corpus("2024-01-01", "2024-12-31", tmp_path)
 
         assert (tmp_path / "retrieval_manifest.json").exists()
@@ -282,8 +306,12 @@ class TestRetrieveCorpus:
     def test_failed_attachment_increments_counter(self, tmp_path, adapter):
         with (
             patch.object(adapter, "list_matters", return_value=SAMPLE_MATTERS[:1]),
-            patch.object(adapter, "get_matter_attachments", return_value=SAMPLE_ATTACHMENTS),
-            patch.object(adapter, "download_attachment", side_effect=Exception("network error")),
+            patch.object(
+                adapter, "get_matter_attachments", return_value=SAMPLE_ATTACHMENTS
+            ),
+            patch.object(
+                adapter, "download_attachment", side_effect=Exception("network error")
+            ),
         ):
             manifest = adapter.retrieve_corpus("2024-01-01", "2024-12-31", tmp_path)
 

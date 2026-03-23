@@ -68,21 +68,27 @@ def _interactive_mode(cities: list[dict]) -> tuple[str, str, str, list[str] | No
         print("[ERROR] City name is required.")
         sys.exit(1)
 
-    state_input = input("State abbreviation (optional, press Enter to skip): ").strip() or None
+    state_input = (
+        input("State abbreviation (optional, press Enter to skip): ").strip() or None
+    )
     client_id = _find_client_id(city_input, state_input, cities)
     if not client_id:
         client_id = city_input.lower().strip()
     print(f"Using Legistar client ID: {client_id}")
 
     today = date.today().isoformat()
-    start = input(f"Start date YYYY-MM-DD [2020-01-01]: ").strip() or "2020-01-01"
+    start = input("Start date YYYY-MM-DD [2020-01-01]: ").strip() or "2020-01-01"
     end = input(f"End date   YYYY-MM-DD [{today}]: ").strip() or today
 
     print()
     print("Document types (comma-separated, or press Enter for all):")
     print("  Examples: Contract, Resolution, Ordinance, Minutes, Agenda")
     types_input = input("Types: ").strip()
-    types = [t.strip() for t in types_input.split(",") if t.strip()] if types_input else None
+    types = (
+        [t.strip() for t in types_input.split(",") if t.strip()]
+        if types_input
+        else None
+    )
 
     return client_id, start, end, types
 

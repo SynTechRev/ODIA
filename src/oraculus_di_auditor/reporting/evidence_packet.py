@@ -20,7 +20,6 @@ import zipfile
 from datetime import UTC, datetime
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -116,7 +115,9 @@ def _build_executive_summary(results: dict[str, Any]) -> str:
     findings = results.get("findings", [])
 
     # Top 3 critical/high findings
-    top_findings = [f for f in findings if f.get("severity") in ("critical", "high")][:3]
+    top_findings = [f for f in findings if f.get("severity") in ("critical", "high")][
+        :3
+    ]
 
     lines = [
         "# Executive Summary — O.D.I.A. Audit",
@@ -127,8 +128,8 @@ def _build_executive_summary(results: dict[str, Any]) -> str:
         "",
         "## Key Statistics",
         "",
-        f"| Severity | Count |",
-        f"|----------|-------|",
+        "| Severity | Count |",
+        "|----------|-------|",
         f"| Critical | {sev.get('critical', 0)} |",
         f"| High     | {sev.get('high', 0)} |",
         f"| Medium   | {sev.get('medium', 0)} |",
@@ -259,7 +260,7 @@ def _build_finding_sheet(index: int, finding: dict[str, Any]) -> str:
         "",
         "---",
         "",
-        f"## Issue",
+        "## Issue",
         "",
         issue,
         "",

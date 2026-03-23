@@ -146,7 +146,9 @@ class AuthService:
         """Return True if at least one user exists (auth is enforced)."""
         return self.user_count() > 0
 
-    def register(self, email: str, password: str, name: str, role: str = "auditor") -> dict[str, Any]:
+    def register(
+        self, email: str, password: str, name: str, role: str = "auditor"
+    ) -> dict[str, Any]:
         """Create a new user.
 
         The first registered user is automatically made an admin.
@@ -271,8 +273,11 @@ class AuthService:
             u = self._db.query(User).filter(User.email == email).first()
             if u:
                 return {
-                    "id": u.id, "email": u.email, "name": u.name,
-                    "hashed_password": u.hashed_password, "role": str(u.role.value),
+                    "id": u.id,
+                    "email": u.email,
+                    "name": u.name,
+                    "hashed_password": u.hashed_password,
+                    "role": str(u.role.value),
                 }
         for u in self._memory_users.values():
             if u["email"] == email:
@@ -285,7 +290,12 @@ class AuthService:
 
             u = self._db.query(User).filter(User.id == user_id).first()
             if u:
-                return {"id": u.id, "email": u.email, "name": u.name, "role": str(u.role.value)}
+                return {
+                    "id": u.id,
+                    "email": u.email,
+                    "name": u.name,
+                    "role": str(u.role.value),
+                }
         return self._memory_users.get(user_id)
 
     def _create_session(self, user_id: str, jti: str, expires_at: datetime) -> None:
@@ -300,9 +310,13 @@ class AuthService:
         if self._db is not None:
             from .auth_models import Session
 
-            session = self._db.query(Session).filter(
-                Session.token_jti == jti, Session.is_active == True  # noqa: E712
-            ).first()
+            session = (
+                self._db.query(Session)
+                .filter(
+                    Session.token_jti == jti, Session.is_active == True  # noqa: E712
+                )
+                .first()
+            )
             return session is not None
         return True  # In-memory: always active
 

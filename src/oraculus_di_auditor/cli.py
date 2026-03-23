@@ -47,7 +47,14 @@ def _cmd_demo(args: argparse.Namespace) -> int:
     script = _SCRIPTS / "run_audit.py"
     if script.exists():
         return subprocess.call(
-            [sys.executable, str(script), "--source", str(_DATA_DEMO), "--output", str(output_dir)],
+            [
+                sys.executable,
+                str(script),
+                "--source",
+                str(_DATA_DEMO),
+                "--output",
+                str(output_dir),
+            ],
             cwd=str(_REPO_ROOT),
         )
 
@@ -93,7 +100,14 @@ def _cmd_audit(args: argparse.Namespace) -> int:
 
     script = _SCRIPTS / "run_audit.py"
     if script.exists():
-        cmd = [sys.executable, str(script), "--source", str(source), "--output", str(output)]
+        cmd = [
+            sys.executable,
+            str(script),
+            "--source",
+            str(source),
+            "--output",
+            str(output),
+        ]
         if args.config_dir:
             cmd += ["--config-dir", args.config_dir]
         return subprocess.call(cmd, cwd=str(_REPO_ROOT))
@@ -113,7 +127,7 @@ def _cmd_serve(args: argparse.Namespace) -> int:
     host = args.host or "127.0.0.1"
     port = int(args.port or 8000)
     print(f"Starting O.D.I.A. API server on http://{host}:{port}")
-    print("  API docs: http://{}:{}/docs".format(host, port))
+    print(f"  API docs: http://{host}:{port}/docs")
     print("  Press Ctrl+C to stop.")
     uvicorn.run(
         "oraculus_di_auditor.interface.api:app",
@@ -184,7 +198,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  odia audit --source data/docs/     # Audit your own documents\n"
             "  odia serve                         # Start web interface\n"
             "  odia fetch --city visalia --state CA --start 2024-01-01 --end 2024-12-31\n"
-            "  odia query \"What contracts exceed 100k?\"\n"
+            '  odia query "What contracts exceed 100k?"\n'
         ),
     )
     parser.add_argument("--version", action="version", version="odia 2.1.0")
@@ -199,26 +213,47 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # audit
     audit_p = sub.add_parser("audit", help="Run audit on documents in a directory")
-    audit_p.add_argument("--source", required=True, metavar="DIR", help="Directory of documents to audit")
-    audit_p.add_argument("--output", metavar="DIR", help="Output directory for reports (default: reports/<source_name>/)")
-    audit_p.add_argument("--config-dir", default="config", metavar="DIR", help="Config directory (default: config/)")
+    audit_p.add_argument(
+        "--source", required=True, metavar="DIR", help="Directory of documents to audit"
+    )
+    audit_p.add_argument(
+        "--output",
+        metavar="DIR",
+        help="Output directory for reports (default: reports/<source_name>/)",
+    )
+    audit_p.add_argument(
+        "--config-dir",
+        default="config",
+        metavar="DIR",
+        help="Config directory (default: config/)",
+    )
 
     # serve
     serve_p = sub.add_parser("serve", help="Start the O.D.I.A. API server")
-    serve_p.add_argument("--host", default="127.0.0.1", help="Bind host (default: 127.0.0.1)")
+    serve_p.add_argument(
+        "--host", default="127.0.0.1", help="Bind host (default: 127.0.0.1)"
+    )
     serve_p.add_argument("--port", default="8000", help="Bind port (default: 8000)")
-    serve_p.add_argument("--reload", action="store_true", help="Enable auto-reload (development mode)")
+    serve_p.add_argument(
+        "--reload", action="store_true", help="Enable auto-reload (development mode)"
+    )
 
     # fetch
     fetch_p = sub.add_parser("fetch", help="Retrieve documents from Legistar API")
-    fetch_p.add_argument("--city", metavar="NAME", help="City name or Legistar client ID")
+    fetch_p.add_argument(
+        "--city", metavar="NAME", help="City name or Legistar client ID"
+    )
     fetch_p.add_argument("--state", metavar="ST", help="State abbreviation (e.g. CA)")
     fetch_p.add_argument("--start", metavar="DATE", help="Start date YYYY-MM-DD")
     fetch_p.add_argument("--end", metavar="DATE", help="End date YYYY-MM-DD")
-    fetch_p.add_argument("--output", metavar="DIR", default="data/retrieved/", help="Output directory")
+    fetch_p.add_argument(
+        "--output", metavar="DIR", default="data/retrieved/", help="Output directory"
+    )
 
     # query
-    query_p = sub.add_parser("query", help="Natural-language query over ingested corpus (RAG)")
+    query_p = sub.add_parser(
+        "query", help="Natural-language query over ingested corpus (RAG)"
+    )
     query_p.add_argument("query", metavar="QUERY", help="Question to ask")
 
     return parser

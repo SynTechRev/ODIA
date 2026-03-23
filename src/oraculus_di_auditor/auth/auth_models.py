@@ -31,7 +31,9 @@ class User(_Base):
     hashed_password = Column(Text, nullable=False)
     role = Column(Enum(UserRole), nullable=False, default=UserRole.auditor)
     is_active = Column(Boolean, nullable=False, default=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
+    created_at = Column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC)
+    )
     last_login = Column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self) -> str:
@@ -46,7 +48,9 @@ class Session(_Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = Column(String(36), nullable=False, index=True)
     token_jti = Column(String(64), unique=True, nullable=False, index=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
+    created_at = Column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC)
+    )
     expires_at = Column(DateTime(timezone=True), nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)
 

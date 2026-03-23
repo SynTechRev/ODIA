@@ -108,7 +108,9 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
 
             tree = ET.parse(str(path))
             text = " ".join(
-                (el.text or "").strip() for el in tree.iter() if el.text and el.text.strip()
+                (el.text or "").strip()
+                for el in tree.iter()
+                if el.text and el.text.strip()
             )
         except Exception:
             text = path.read_text(encoding="utf-8", errors="replace")
@@ -153,7 +155,10 @@ def _ocr_image(path: Path) -> tuple[str, str]:
         logger.warning("tesseract OCR failed for %s: %s", path.name, exc)
 
     # Fallback: return filename as stub text so the document is still auditable
-    return f"[Image: {path.name} — install pytesseract for OCR text extraction]", "unavailable"
+    return (
+        f"[Image: {path.name} — install pytesseract for OCR text extraction]",
+        "unavailable",
+    )
 
 
 def _flatten_findings(result: dict[str, Any], document_id: str) -> list[dict[str, Any]]:
@@ -263,14 +268,16 @@ def _execute_audit_job(
         total = len(files_snapshot)
 
         for i, file_meta in enumerate(files_snapshot):
-            _update({
-                "progress": {
-                    "phase": f"Analyzing {file_meta['name']} ({i + 1}/{total})",
-                    "docs_processed": i,
-                    "findings_count": len(all_findings),
-                    "total_docs": total,
+            _update(
+                {
+                    "progress": {
+                        "phase": f"Analyzing {file_meta['name']} ({i + 1}/{total})",
+                        "docs_processed": i,
+                        "findings_count": len(all_findings),
+                        "total_docs": total,
+                    }
                 }
-            })
+            )
 
             path = Path(file_meta["path"])
             doc = ingest_uploaded_file(path)
@@ -279,14 +286,16 @@ def _execute_audit_job(
             all_findings.extend(findings)
             docs_processed += 1
 
-            doc_manifests.append({
-                "document_id": doc["document_id"],
-                "filename": file_meta["name"],
-                "sha256": file_meta["sha256"],
-                "size": file_meta["size"],
-                "format": file_meta["format"],
-                "finding_count": len(findings),
-            })
+            doc_manifests.append(
+                {
+                    "document_id": doc["document_id"],
+                    "filename": file_meta["name"],
+                    "sha256": file_meta["sha256"],
+                    "size": file_meta["size"],
+                    "format": file_meta["format"],
+                    "finding_count": len(findings),
+                }
+            )
 
         # Apply plain-language translations
         try:
@@ -296,30 +305,37 @@ def _execute_audit_job(
         except Exception as exc:
             logger.warning("Plain-language translation failed: %s", exc)
 
-        severity_counts: dict[str, int] = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+        severity_counts: dict[str, int] = {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+        }
         for f in all_findings:
             sev = f.get("severity", "low")
             if sev in severity_counts:
                 severity_counts[sev] += 1
 
-        _update({
-            "status": "complete",
-            "results": {
-                "job_id": job_id,
-                "document_count": docs_processed,
-                "finding_count": len(all_findings),
-                "severity_summary": severity_counts,
-                "findings": all_findings,
-                "document_manifest": doc_manifests,
-                "generated_at": datetime.now(UTC).isoformat(),
-            },
-            "progress": {
-                "phase": "Complete",
-                "docs_processed": docs_processed,
-                "findings_count": len(all_findings),
-                "total_docs": total,
-            },
-        })
+        _update(
+            {
+                "status": "complete",
+                "results": {
+                    "job_id": job_id,
+                    "document_count": docs_processed,
+                    "finding_count": len(all_findings),
+                    "severity_summary": severity_counts,
+                    "findings": all_findings,
+                    "document_manifest": doc_manifests,
+                    "generated_at": datetime.now(UTC).isoformat(),
+                },
+                "progress": {
+                    "phase": "Complete",
+                    "docs_processed": docs_processed,
+                    "findings_count": len(all_findings),
+                    "total_docs": total,
+                },
+            }
+        )
 
     except Exception as exc:
         logger.error("Audit job %s failed: %s", job_id, exc, exc_info=True)
@@ -392,7 +408,9 @@ def register_upload_routes(app: Any) -> None:
         for file in files:
             ext = Path(file.filename or "").suffix.lower()
             if ext not in _ALLOWED_EXTENSIONS:
-                errors.append({"name": file.filename or "", "error": f"Unsupported type '{ext}'"})
+                errors.append(
+                    {"name": file.filename or "", "error": f"Unsupported type '{ext}'"}
+                )
                 continue
             content = await file.read()
             file_id = str(uuid.uuid4())[:8]
@@ -468,7 +486,9 @@ def register_upload_routes(app: Any) -> None:
         """Remove an uploaded file by ID."""
         with _STORE_LOCK:
             if file_id not in _FILES:
-                raise HTTPException(status_code=404, detail=f"File '{file_id}' not found")
+                raise HTTPException(
+                    status_code=404, detail=f"File '{file_id}' not found"
+                )
             meta = _FILES.pop(file_id)
         path = Path(meta["path"])
         if path.exists():
@@ -542,7 +562,9 @@ def register_upload_routes(app: Any) -> None:
         if not job:
             raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found")
         if job["status"] == "error":
-            raise HTTPException(status_code=500, detail=job.get("error", "Audit failed"))
+            raise HTTPException(
+                status_code=500, detail=job.get("error", "Audit failed")
+            )
         if job["status"] != "complete":
             return {"job_id": job_id, "status": job["status"], "results": None}
         return {"job_id": job_id, "status": "complete", "results": job["results"]}
@@ -632,7 +654,9 @@ def register_upload_routes(app: Any) -> None:
             raise HTTPException(status_code=409, detail="Job not yet complete")
 
         try:
-            from oraculus_di_auditor.reporting.evidence_packet import generate_evidence_packet
+            from oraculus_di_auditor.reporting.evidence_packet import (
+                generate_evidence_packet,
+            )
 
             zip_bytes = generate_evidence_packet(job["results"])
         except Exception as exc:

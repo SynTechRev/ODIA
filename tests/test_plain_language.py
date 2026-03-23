@@ -10,7 +10,6 @@ from oraculus_di_auditor.reporting.plain_language import (
     translate_report,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -70,23 +69,26 @@ class TestTranslateFindingFields:
 
 
 class TestKnownDetectorTypes:
-    @pytest.mark.parametrize("detector,subtype", [
-        ("procurement_timeline", "execution_before_authorization"),
-        ("procurement_timeline", "rapid_execution"),
-        ("signature_chain", "blank_signature"),
-        ("signature_chain", "pending_docusign"),
-        ("governance_gap", "capability_without_governance"),
-        ("scope_expansion", "amendment_exceeds_threshold"),
-        ("scope_expansion", "sole_source_expansion"),
-        ("surveillance", "outsourcing_detected"),
-        ("fiscal", "amount_without_appropriation"),
-        ("fiscal", "missing_provenance_hash"),
-        ("constitutional", "broad_delegation"),
-        ("administrative_integrity", "missing_final_action"),
-        ("administrative_integrity", "retroactive_authorization"),
-        ("cross_reference", "jurisdiction_boundary"),
-        ("temporal_pattern", "contract_evolution"),
-    ])
+    @pytest.mark.parametrize(
+        "detector,subtype",
+        [
+            ("procurement_timeline", "execution_before_authorization"),
+            ("procurement_timeline", "rapid_execution"),
+            ("signature_chain", "blank_signature"),
+            ("signature_chain", "pending_docusign"),
+            ("governance_gap", "capability_without_governance"),
+            ("scope_expansion", "amendment_exceeds_threshold"),
+            ("scope_expansion", "sole_source_expansion"),
+            ("surveillance", "outsourcing_detected"),
+            ("fiscal", "amount_without_appropriation"),
+            ("fiscal", "missing_provenance_hash"),
+            ("constitutional", "broad_delegation"),
+            ("administrative_integrity", "missing_final_action"),
+            ("administrative_integrity", "retroactive_authorization"),
+            ("cross_reference", "jurisdiction_boundary"),
+            ("temporal_pattern", "contract_evolution"),
+        ],
+    )
     def test_known_type_returns_specific_translation(self, detector, subtype):
         f = translate_finding(_make_finding(detector, subtype))
         # Specific translations should not be the generic fallback
@@ -99,12 +101,16 @@ class TestKnownDetectorTypes:
         assert any(word in text for word in ("spending", "funds", "document", "budget"))
 
     def test_procurement_summary_mentions_contract_or_council(self):
-        f = translate_finding(_make_finding("procurement_timeline", "execution_before_authorization"))
+        f = translate_finding(
+            _make_finding("procurement_timeline", "execution_before_authorization")
+        )
         text = f["plain_summary"].lower()
         assert any(word in text for word in ("contract", "council", "voted", "signed"))
 
     def test_governance_gap_mentions_surveillance(self):
-        f = translate_finding(_make_finding("governance_gap", "capability_without_governance"))
+        f = translate_finding(
+            _make_finding("governance_gap", "capability_without_governance")
+        )
         text = f["plain_summary"].lower()
         assert "surveillance" in text or "technology" in text
 
@@ -128,13 +134,15 @@ class TestAliasesAndFallbacks:
         assert "anomaly was detected" not in f["plain_summary"]
 
     def test_unknown_detector_gets_fallback(self):
-        f = translate_finding({
-            "id": "unknown_detector:unknown_subtype",
-            "issue": "test",
-            "severity": "medium",
-            "layer": "unknown_detector",
-            "details": {},
-        })
+        f = translate_finding(
+            {
+                "id": "unknown_detector:unknown_subtype",
+                "issue": "test",
+                "severity": "medium",
+                "layer": "unknown_detector",
+                "details": {},
+            }
+        )
         assert "anomaly was detected" in f["plain_summary"].lower()
         assert "professional review" in f["plain_impact"].lower()
 
@@ -156,13 +164,15 @@ class TestAliasesAndFallbacks:
         assert "plain_summary" in f
 
     def test_severity_mentioned_in_fallback(self):
-        f = translate_finding({
-            "id": "nonexistent:subtype",
-            "issue": "test",
-            "severity": "critical",
-            "layer": "nonexistent",
-            "details": {},
-        })
+        f = translate_finding(
+            {
+                "id": "nonexistent:subtype",
+                "issue": "test",
+                "severity": "critical",
+                "layer": "nonexistent",
+                "details": {},
+            }
+        )
         assert "critical" in f["plain_summary"]
 
 
@@ -201,7 +211,7 @@ class TestTranslateReport:
             _make_finding("constitutional", "broad_delegation"),
         ]
         results = translate_report(findings)
-        for original, translated in zip(findings, results):
+        for original, translated in zip(findings, results, strict=False):
             assert translated["layer"] == original["layer"]
 
 
@@ -225,7 +235,9 @@ class TestTranslationsDict:
             "temporal_pattern",
         ]
         for detector in required:
-            assert detector in TRANSLATIONS, f"Missing detector in TRANSLATIONS: {detector}"
+            assert (
+                detector in TRANSLATIONS
+            ), f"Missing detector in TRANSLATIONS: {detector}"
 
     def test_each_translation_has_required_fields(self):
         for detector, subtypes in TRANSLATIONS.items():
@@ -238,6 +250,4 @@ class TestTranslationsDict:
         for detector, subtypes in TRANSLATIONS.items():
             for subtype, t in subtypes.items():
                 for key in ("summary", "impact", "action"):
-                    assert t[key].strip(), (
-                        f"{detector}:{subtype}[{key}] is empty"
-                    )
+                    assert t[key].strip(), f"{detector}:{subtype}[{key}] is empty"

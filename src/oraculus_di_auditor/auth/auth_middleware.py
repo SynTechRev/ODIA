@@ -15,7 +15,9 @@ try:
     from fastapi import Depends, HTTPException, status
     from fastapi.security import OAuth2PasswordBearer
 
-    _oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login", auto_error=False)
+    _oauth2_scheme = OAuth2PasswordBearer(
+        tokenUrl="/api/v1/auth/login", auto_error=False
+    )
     _FASTAPI_AVAILABLE = True
 except ImportError:
     _FASTAPI_AVAILABLE = False
@@ -64,7 +66,6 @@ def get_current_user(token: str | None = None) -> dict[str, Any]:
         return ANONYMOUS_USER
 
     try:
-        from .auth_service import AuthError
 
         return service.verify_token(token)
     except Exception as exc:

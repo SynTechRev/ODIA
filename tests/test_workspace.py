@@ -31,7 +31,9 @@ class TestCreateWorkspace:
         assert creator_member["role"] == "admin"
 
     def test_jurisdiction_stored(self, service):
-        ws = service.create_workspace("Audit", created_by=USER_A, jurisdiction="Visalia, CA")
+        ws = service.create_workspace(
+            "Audit", created_by=USER_A, jurisdiction="Visalia, CA"
+        )
         assert ws["jurisdiction"] == "Visalia, CA"
 
     def test_unique_ids(self, service):

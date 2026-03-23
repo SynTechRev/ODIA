@@ -22,7 +22,7 @@ import hashlib
 import json
 import logging
 import time
-from datetime import datetime, date
+from datetime import date
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin, urlparse
@@ -54,7 +54,9 @@ def _get(url: str, params: dict | None = None) -> Any:
         except Exception as exc:
             if attempt == _MAX_RETRIES - 1:
                 raise
-            logger.warning("Request failed (attempt %d/%d): %s", attempt + 1, _MAX_RETRIES, exc)
+            logger.warning(
+                "Request failed (attempt %d/%d): %s", attempt + 1, _MAX_RETRIES, exc
+            )
             time.sleep(backoff)
     raise RuntimeError(f"All retries exhausted for {url}")
 
@@ -70,7 +72,9 @@ def _download_file(url: str, dest: Path) -> Path:
     resp.raise_for_status()
 
     # Derive filename from URL or Content-Disposition
-    filename = dest.name if dest.suffix else Path(urlparse(url).path).name or "attachment"
+    filename = (
+        dest.name if dest.suffix else Path(urlparse(url).path).name or "attachment"
+    )
     if dest.is_dir():
         dest = dest / filename
 
@@ -197,9 +201,7 @@ class LegistarAdapter:
     # Downloads
     # ------------------------------------------------------------------
 
-    def download_attachment(
-        self, attachment_url: str, output_dir: str | Path
-    ) -> Path:
+    def download_attachment(self, attachment_url: str, output_dir: str | Path) -> Path:
         """Download a single attachment to *output_dir*.
 
         Parameters
@@ -293,26 +295,32 @@ class LegistarAdapter:
             try:
                 attachments = self.get_matter_attachments(matter_id)
             except Exception as exc:
-                logger.warning("Failed to get attachments for matter %s: %s", matter_id, exc)
+                logger.warning(
+                    "Failed to get attachments for matter %s: %s", matter_id, exc
+                )
                 continue
 
             manifest["attachment_count"] += len(attachments)
 
             for att in attachments:
                 url = att.get("MatterAttachmentHyperlink") or att.get("Hyperlink") or ""
-                name = att.get("MatterAttachmentName") or att.get("Name") or "attachment"
+                name = (
+                    att.get("MatterAttachmentName") or att.get("Name") or "attachment"
+                )
                 if not url:
                     continue
                 try:
                     dest = self.download_attachment(url, output_dir)
-                    manifest["files"].append({
-                        "matter_id": matter_id,
-                        "matter_title": matter.get("MatterTitle", ""),
-                        "attachment_name": name,
-                        "local_path": str(dest),
-                        "sha256": _sha256_file(dest),
-                        "source_url": url,
-                    })
+                    manifest["files"].append(
+                        {
+                            "matter_id": matter_id,
+                            "matter_title": matter.get("MatterTitle", ""),
+                            "attachment_name": name,
+                            "local_path": str(dest),
+                            "sha256": _sha256_file(dest),
+                            "source_url": url,
+                        }
+                    )
                     manifest["downloaded_count"] += 1
                     logger.info("Downloaded: %s", dest.name)
                 except Exception as exc:
@@ -343,7 +351,9 @@ class LegistarAdapter:
         or returns an empty list if the file is not found.
         """
         candidates = [
-            Path(__file__).resolve().parent.parent.parent.parent / "config" / "legistar_cities.json",
+            Path(__file__).resolve().parent.parent.parent.parent
+            / "config"
+            / "legistar_cities.json",
             Path(__file__).resolve().parent / "legistar_cities.json",
         ]
         for path in candidates:
@@ -357,7 +367,11 @@ class LegistarAdapter:
 
 def load_cities() -> list[dict[str, str]]:
     """Load the curated list of known Legistar cities from config/legistar_cities.json."""
-    config_path = Path(__file__).resolve().parent.parent.parent.parent / "config" / "legistar_cities.json"
+    config_path = (
+        Path(__file__).resolve().parent.parent.parent.parent
+        / "config"
+        / "legistar_cities.json"
+    )
     if config_path.exists():
         return json.loads(config_path.read_text(encoding="utf-8"))
     return []

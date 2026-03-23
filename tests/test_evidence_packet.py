@@ -6,12 +6,9 @@ import io
 import json
 import zipfile
 
-import pytest
-
 from oraculus_di_auditor.reporting.evidence_packet import (
     generate_evidence_packet,
 )
-
 
 # ---------------------------------------------------------------------------
 # Test fixtures
@@ -113,8 +110,7 @@ class TestZipStructure:
         assert len(finding_files) == 1
         # Should contain severity in name
         assert any(
-            sev in finding_files[0]
-            for sev in ("critical", "high", "medium", "low")
+            sev in finding_files[0] for sev in ("critical", "high", "medium", "low")
         )
 
     def test_empty_findings_still_creates_valid_zip(self):
@@ -171,8 +167,7 @@ class TestZipContents:
             finding_files = [n for n in zf.namelist() if n.startswith("findings/")]
             content = zf.read(finding_files[0]).decode("utf-8")
         assert any(
-            sev in content.upper()
-            for sev in ("CRITICAL", "HIGH", "MEDIUM", "LOW")
+            sev in content.upper() for sev in ("CRITICAL", "HIGH", "MEDIUM", "LOW")
         )
 
     def test_finding_sheet_has_plain_summary(self):
@@ -195,7 +190,9 @@ class TestZipContents:
 
         raw = generate_evidence_packet(results)
         with zipfile.ZipFile(io.BytesIO(raw)) as zf:
-            finding_files = sorted(n for n in zf.namelist() if n.startswith("findings/"))
+            finding_files = sorted(
+                n for n in zf.namelist() if n.startswith("findings/")
+            )
         # F-001 should be the critical one
         assert "critical" in finding_files[0]
 
@@ -213,14 +210,16 @@ class TestEdgeCases:
             "document_count": 1,
             "finding_count": 1,
             "severity_summary": {"critical": 0, "high": 1, "medium": 0, "low": 0},
-            "findings": [{
-                "id": "fiscal:amount",
-                "issue": "No appropriation found",
-                "severity": "high",
-                "layer": "fiscal",
-                "document_id": "doc_001",
-                "details": {},
-            }],
+            "findings": [
+                {
+                    "id": "fiscal:amount",
+                    "issue": "No appropriation found",
+                    "severity": "high",
+                    "layer": "fiscal",
+                    "document_id": "doc_001",
+                    "details": {},
+                }
+            ],
             "document_manifest": [],
             "generated_at": "2026-01-01T00:00:00+00:00",
         }

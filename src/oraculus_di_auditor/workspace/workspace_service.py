@@ -76,7 +76,9 @@ class WorkspaceService:
                     "name": obj.name,
                     "jurisdiction": obj.jurisdiction,
                     "created_by": obj.created_by,
-                    "created_at": obj.created_at.isoformat() if obj.created_at else None,
+                    "created_at": (
+                        obj.created_at.isoformat() if obj.created_at else None
+                    ),
                 }
         return self._workspaces.get(workspace_id)
 
@@ -86,13 +88,13 @@ class WorkspaceService:
             m["workspace_id"] for m in self._members if m["user_id"] == user_id
         }
         if self._db is not None:
-            from .workspace_models import Workspace, WorkspaceMember
+            from .workspace_models import WorkspaceMember
 
             ids = [
                 row.workspace_id
-                for row in self._db.query(WorkspaceMember).filter(
-                    WorkspaceMember.user_id == user_id
-                ).all()
+                for row in self._db.query(WorkspaceMember)
+                .filter(WorkspaceMember.user_id == user_id)
+                .all()
             ]
             result = []
             for ws_id in ids:
@@ -100,7 +102,9 @@ class WorkspaceService:
                 if ws:
                     result.append(ws)
             return result
-        return [self._workspaces[wid] for wid in member_ws_ids if wid in self._workspaces]
+        return [
+            self._workspaces[wid] for wid in member_ws_ids if wid in self._workspaces
+        ]
 
     # ------------------------------------------------------------------
     # Members
@@ -141,11 +145,16 @@ class WorkspaceService:
             from .workspace_models import WorkspaceMember
 
             return [
-                {"id": m.id, "workspace_id": m.workspace_id, "user_id": m.user_id,
-                 "role": m.role, "added_at": m.added_at.isoformat() if m.added_at else None}
-                for m in self._db.query(WorkspaceMember).filter(
-                    WorkspaceMember.workspace_id == workspace_id
-                ).all()
+                {
+                    "id": m.id,
+                    "workspace_id": m.workspace_id,
+                    "user_id": m.user_id,
+                    "role": m.role,
+                    "added_at": m.added_at.isoformat() if m.added_at else None,
+                }
+                for m in self._db.query(WorkspaceMember)
+                .filter(WorkspaceMember.workspace_id == workspace_id)
+                .all()
             ]
         return [m for m in self._members if m["workspace_id"] == workspace_id]
 
@@ -206,9 +215,15 @@ class WorkspaceService:
                 .all()
             )
             return [
-                {"id": r.id, "workspace_id": r.workspace_id, "user_id": r.user_id,
-                 "user_email": r.user_email, "action": r.action, "detail": r.detail,
-                 "timestamp": r.timestamp.isoformat() if r.timestamp else None}
+                {
+                    "id": r.id,
+                    "workspace_id": r.workspace_id,
+                    "user_id": r.user_id,
+                    "user_email": r.user_email,
+                    "action": r.action,
+                    "detail": r.detail,
+                    "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                }
                 for r in rows
             ]
         entries = [e for e in self._log if e["workspace_id"] == workspace_id]

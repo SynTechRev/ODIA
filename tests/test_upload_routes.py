@@ -8,8 +8,6 @@ from __future__ import annotations
 
 import io
 import json
-import time
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -22,7 +20,6 @@ from fastapi.testclient import TestClient
 
 from oraculus_di_auditor.interface.api import create_app
 from oraculus_di_auditor.interface.routes import upload as upload_module
-
 
 # ---------------------------------------------------------------------------
 # Test client fixture
@@ -93,6 +90,7 @@ class TestUploadSingle:
 
     def test_upload_sha256_correct(self, client):
         import hashlib
+
         content = b"Known content for hashing"
         expected = hashlib.sha256(content).hexdigest()
         response = client.post(
@@ -104,7 +102,9 @@ class TestUploadSingle:
     def test_upload_unsupported_extension_returns_400(self, client):
         response = client.post(
             "/api/v1/upload",
-            files={"file": ("test.exe", io.BytesIO(b"binary"), "application/octet-stream")},
+            files={
+                "file": ("test.exe", io.BytesIO(b"binary"), "application/octet-stream")
+            },
         )
         assert response.status_code == 400
 
@@ -159,7 +159,9 @@ class TestUploadBatch:
     def test_batch_error_includes_filename(self, client):
         response = client.post(
             "/api/v1/upload/batch",
-            files=[("files", ("bad.exe", io.BytesIO(b"x"), "application/octet-stream"))],
+            files=[
+                ("files", ("bad.exe", io.BytesIO(b"x"), "application/octet-stream"))
+            ],
         )
         errors = response.json()["errors"]
         assert errors[0]["name"] == "bad.exe"
@@ -251,9 +253,7 @@ class TestAuditRun:
         assert response.status_code == 400
 
     def test_run_with_unknown_file_id_returns_404(self, client):
-        response = client.post(
-            "/api/v1/audit/run", json={"file_ids": ["nonexistent"]}
-        )
+        response = client.post("/api/v1/audit/run", json={"file_ids": ["nonexistent"]})
         assert response.status_code == 404
 
 
@@ -307,7 +307,12 @@ class TestAuditResults:
             "job_id": job_id,
             "status": "complete",
             "file_ids": [],
-            "progress": {"phase": "Complete", "docs_processed": 1, "findings_count": 2, "total_docs": 1},
+            "progress": {
+                "phase": "Complete",
+                "docs_processed": 1,
+                "findings_count": 2,
+                "total_docs": 1,
+            },
             "results": {
                 "job_id": job_id,
                 "document_count": 1,

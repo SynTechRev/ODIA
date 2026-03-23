@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -100,7 +99,9 @@ class TestBuildJurisdictionConfig:
         assert "meeting_type" in cfg
 
     def test_legistar_url_included_when_provided(self):
-        cfg = wizard.build_jurisdiction_config("Testville", "CA", "https://example.legistar.com")
+        cfg = wizard.build_jurisdiction_config(
+            "Testville", "CA", "https://example.legistar.com"
+        )
         assert cfg["legistar_base_url"] == "https://example.legistar.com"
 
     def test_legistar_url_omitted_when_empty(self):
@@ -237,13 +238,13 @@ class TestOverwriteProtection:
 
         # User says yes to overwrite, then provides new inputs
         inputs = [
-            "y",               # overwrite?
-            "New City",        # name
-            "CA",              # state
-            "",                # legistar
-            "",                # agencies (all)
-            "",                # source (default)
-            "y",               # save?
+            "y",  # overwrite?
+            "New City",  # name
+            "CA",  # state
+            "",  # legistar
+            "",  # agencies (all)
+            "",  # source (default)
+            "y",  # save?
         ]
         with patch("builtins.input", side_effect=inputs):
             result = wizard.run_wizard(config_dir=tmp_path)
@@ -276,14 +277,14 @@ class TestOverwriteProtection:
 class TestStateCodeRetry:
     def test_invalid_then_valid_state(self, tmp_path):
         inputs = [
-            "Testville",    # name
-            "CALIFORNIA",   # invalid state (too long)
-            "CALI",         # still invalid
-            "CA",           # valid
-            "",             # legistar
-            "",             # agencies
-            "",             # source
-            "y",            # save
+            "Testville",  # name
+            "CALIFORNIA",  # invalid state (too long)
+            "CALI",  # still invalid
+            "CA",  # valid
+            "",  # legistar
+            "",  # agencies
+            "",  # source
+            "y",  # save
         ]
         with patch("builtins.input", side_effect=inputs):
             result = wizard.run_wizard(config_dir=tmp_path)
