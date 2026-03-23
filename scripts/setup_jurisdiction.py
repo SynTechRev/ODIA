@@ -160,7 +160,9 @@ def _ask_source_path() -> str:
             " or press Enter to use the demo data",
             default=_DEFAULT_SOURCE,
         )
-        if validate_source_path(path):
+        # Accept the default demo path without filesystem check — the
+        # directory may not exist yet at configuration time.
+        if path == _DEFAULT_SOURCE or validate_source_path(path):
             return path
         print(f"  Directory not found: {path!r}. Please enter a valid path.")
     print("Too many invalid attempts. Exiting.")
