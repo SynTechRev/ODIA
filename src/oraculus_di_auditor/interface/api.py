@@ -203,6 +203,38 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
     except Exception as e:
         logger.warning(f"Temporal routes not available: {e}")
 
+    try:
+        from .routes.upload import register_upload_routes
+
+        register_upload_routes(app)
+        logger.info("Upload and audit pipeline routes registered")
+    except Exception as e:
+        logger.warning(f"Upload routes not available: {e}")
+
+    try:
+        from .routes.retrieval import register_retrieval_routes
+
+        register_retrieval_routes(app)
+        logger.info("Legistar retrieval routes registered")
+    except Exception as e:
+        logger.warning(f"Retrieval routes not available: {e}")
+
+    try:
+        from .routes.auth_routes import register_auth_routes
+
+        register_auth_routes(app)
+        logger.info("Auth routes registered")
+    except Exception as e:
+        logger.warning(f"Auth routes not available: {e}")
+
+    try:
+        from .routes.workspace_routes import register_workspace_routes
+
+        register_workspace_routes(app)
+        logger.info("Workspace routes registered")
+    except Exception as e:
+        logger.warning(f"Workspace routes not available: {e}")
+
 
 def _load_jurisdiction_config_at_startup() -> Any:
     """Attempt to load jurisdiction config from config/; return None on failure."""

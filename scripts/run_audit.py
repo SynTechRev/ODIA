@@ -46,12 +46,36 @@ from oraculus_di_auditor.analysis import (  # noqa: E402
     detect_signature_anomalies,
     detect_surveillance_anomalies,
 )
+from oraculus_di_auditor.analysis.text_utils import extract_text_content  # noqa: E402
 from oraculus_di_auditor.config import (
     JurisdictionConfig,
     load_jurisdiction_config,
 )
 
 logger = logging.getLogger("run_audit")
+
+
+def _detect_cross_ref_from_doc(doc: dict[str, Any]) -> list[dict[str, Any]]:
+    """Wrap detect_cross_jurisdiction_refs to accept a doc dict.
+
+    Extracts text content from the doc, calls the detector, and normalizes
+    the output to the standard {id, issue, severity, layer, details} shape.
+    """
+    text = extract_text_content(doc)
+    raw_refs = detect_cross_jurisdiction_refs(text)
+    return [
+        {
+            "id": f"cross_reference:{ref.get('type', 'unknown')}",
+            "issue": ref.get("description", "Cross-jurisdiction reference detected"),
+            "severity": "medium",
+            "layer": "cross_reference",
+            "details": {
+                k: v for k, v in ref.items() if k not in ("description", "severity")
+            },
+        }
+        for ref in raw_refs
+    ]
+
 
 # Ordered list of single-document detectors and the layer they report under
 _SINGLE_DOC_DETECTORS = [
@@ -62,7 +86,7 @@ _SINGLE_DOC_DETECTORS = [
     ("signature", detect_signature_anomalies),
     ("governance", detect_governance_gap_anomalies),
     ("administrative", detect_administrative_anomalies),
-    ("cross_reference", detect_cross_jurisdiction_refs),
+    ("cross_reference", _detect_cross_ref_from_doc),
 ]
 
 _SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3}
@@ -689,6 +713,77 @@ def run_audit(
     return report
 
 
+_EXAMPLE_JURISDICTION_NAME = "City of Example"
+
+
+def _check_first_run(config_dir: Path) -> None:
+    """Detect missing or unconfigured jurisdiction and offer wizard.
+
+    - If jurisdiction.json does not exist: offer to run the setup wizard.
+    - If jurisdiction.json exists but still has the example name: warn the user.
+
+    This function is a no-op when valid configuration is already in place,
+    so existing users experience no change.
+    """
+    jurisdiction_file = config_dir / "jurisdiction.json"
+
+    if not jurisdiction_file.exists():
+        print()
+        print("No jurisdiction configured.")
+        print(
+            "Would you like to set up a new jurisdiction now? (y/n) ",
+            end="",
+            flush=True,
+        )
+        try:
+            answer = input().strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            answer = "n"
+
+        if answer.startswith("y"):
+            import subprocess
+
+            wizard = _REPO_ROOT / "scripts" / "setup_jurisdiction.py"
+            subprocess.run(
+                [sys.executable, str(wizard), "--config-dir", str(config_dir)],
+                check=False,
+            )
+            # Re-check after wizard; exit if still not configured
+            if not jurisdiction_file.exists():
+                print(
+                    "\nJurisdiction not configured. Exiting.",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+        else:
+            print()
+            print(
+                "To configure manually, copy config/jurisdiction.example.json to\n"
+                "config/jurisdiction.json and edit the 'name' and 'state' fields.\n"
+                "\nOr use the demo dataset without any configuration:\n"
+                "    python scripts/run_audit.py"
+                " --source data/demo/ --output reports/demo/"
+            )
+            sys.exit(0)
+
+    else:
+        # Config exists — warn if it's still the unmodified example
+        try:
+            import json as _json
+
+            data = _json.loads(jurisdiction_file.read_text(encoding="utf-8"))
+            if data.get("name") == _EXAMPLE_JURISDICTION_NAME:
+                print(
+                    f"NOTE: You are using the example configuration"
+                    f" ('{_EXAMPLE_JURISDICTION_NAME}').\n"
+                    "      Run 'python scripts/setup_jurisdiction.py' to configure"
+                    " for your jurisdiction,\n"
+                    "      or use '--source data/demo/' for the built-in demo.\n"
+                )
+        except Exception:  # noqa: BLE001
+            pass  # If we can't read it, let load_jurisdiction_config handle the error
+
+
 def main() -> None:
     parser = _build_parser()
     args = parser.parse_args()
@@ -699,6 +794,9 @@ def main() -> None:
         format="%(levelname)s %(name)s: %(message)s",
         stream=sys.stderr,
     )
+
+    # First-run detection: offer wizard when config is missing or is the example
+    _check_first_run(Path(args.config_dir))
 
     try:
         run_audit(

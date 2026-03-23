@@ -1,0 +1,19 @@
+include README.md
+include LICENSE
+include CONTRIBUTING.md
+include pyproject.toml
+recursive-include src/oraculus_di_auditor *.py *.json *.yaml *.yml *.j2 *.html *.md
+recursive-include config *.json *.yaml *.yml *.example.*
+recursive-include templates *.md *.html *.j2
+recursive-include schemas *.json
+recursive-include legal *.json *.md
+recursive-include data/demo *.json *.txt *.pdf *.xml
+exclude .env
+exclude .env.*
+recursive-exclude **/__pycache__ *
+recursive-exclude *.egg-info *
+recursive-exclude dist *
+recursive-exclude build *
+recursive-exclude reports *
+recursive-exclude analysis *
+recursive-exclude manifests *

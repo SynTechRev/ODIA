@@ -1,13 +1,14 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "oraculus-di-auditor"
-version = "2.0.0"
-description = "Polymathic Synthetic Technology Oraculus DI Auditor"
+name = "odia"
+version = "2.1.0"
+description = "O.D.I.A. — Oraculus Decimus Intellect Analyst: civic accountability intelligence platform for forensic analysis of legal and government documents"
 readme = "README.md"
 requires-python = ">=3.11"
+license = {text = "MIT"}
 dependencies = [
     "pypdf>=4.0.0",
     "jsonschema>=4.20.0",
@@ -15,6 +16,7 @@ dependencies = [
     "numpy>=1.24.0",
     "pydantic>=2.0.0",
     "fastapi>=0.115.0",
+    "python-multipart>=0.0.9",
     "uvicorn>=0.30.0",
     "httpx>=0.25.0",
     "sqlalchemy>=2.0",
@@ -22,16 +24,34 @@ dependencies = [
     "markdown>=3.5.0",
     "requests>=2.28.0",
     "python-dateutil>=2.8.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-jose[cryptography]>=3.3.0",
 ]
 authors = [
     {name = "Synthetic Technology Revolution", email = "syntechrev@gmail.com"}
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Office/Business :: Financial :: Spreadsheet",
+    "Topic :: Text Processing :: Filters",
 ]
+
+[project.urls]
+Homepage = "https://github.com/SynTechRev/ODIA"
+Repository = "https://github.com/SynTechRev/ODIA"
+Documentation = "https://github.com/SynTechRev/ODIA/blob/master/docs/"
+Issues = "https://github.com/SynTechRev/ODIA/issues"
+
+[project.scripts]
+odia = "oraculus_di_auditor.cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -41,10 +61,20 @@ dev = [
     "ruff==0.8.4",
     "pre-commit==3.8.0",
     "isort==5.13.2",
+    "build>=1.0.0",
+    "twine>=5.0.0",
+]
+ocr = [
+    "pytesseract>=0.3.10",
+    "Pillow>=10.0.0",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"oraculus_di_auditor" = ["py.typed"]
+"*" = ["*.json", "*.yaml", "*.yml", "*.md", "*.j2", "*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -63,8 +93,6 @@ target-version = "py311"
 fix = true
 exclude = [".git", "build", "dist", "**/__pycache__"]
 
-# Note: E203 is not ignored here because ruff-format handles whitespace rules automatically,
-# replacing Black's handling. See https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 
@@ -120,3 +148,4 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "scripts/rag_query.py" = ["C901"]
 "scripts/search_cli.py" = ["C901"]
 "tests/test_rag.py" = ["E501"]
+"src/oraculus_di_auditor/cli.py" = ["E501", "C901"]

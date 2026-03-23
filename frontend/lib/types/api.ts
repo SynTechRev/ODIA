@@ -139,6 +139,113 @@ export interface JurisdictionInfo {
 }
 
 // ---------------------------------------------------------------------------
+// Upload & audit pipeline types (Sprint D)
+// ---------------------------------------------------------------------------
+
+export interface FileMetadata {
+  file_id: string;
+  name: string;
+  size: number;
+  sha256: string;
+  format: string;
+  path?: string;
+  uploaded_at: string;
+  ocr_method?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Timeline types (Sprint E)
+// ---------------------------------------------------------------------------
+
+export interface TimelineEvent {
+  id: string;
+  date: string;        // ISO date string
+  label: string;
+  description: string;
+  category: 'finding' | 'document' | 'milestone';
+  severity?: string;
+  document_id?: string;
+}
+
+// CCOPS mandate compliance status
+export interface CCOPSMandate {
+  id: string;
+  title: string;
+  description: string;
+  status: 'pass' | 'fail' | 'warn' | 'unknown';
+  evidence: string[];
+}
+
+export interface BatchUploadResult {
+  uploaded: FileMetadata[];
+  errors: Array<{ name: string; error: string }>;
+}
+
+export interface FilesListResult {
+  files: FileMetadata[];
+  count: number;
+}
+
+export interface AuditRunResult {
+  job_id: string;
+  status: string;
+  file_count: number;
+}
+
+export interface AuditProgress {
+  phase: string;
+  docs_processed: number;
+  findings_count: number;
+  total_docs: number;
+}
+
+export interface AuditStatus {
+  job_id: string;
+  status: 'pending' | 'running' | 'complete' | 'error';
+  progress: AuditProgress;
+  error?: string;
+}
+
+export interface AuditFinding extends Anomaly {
+  document_id: string;
+  plain_summary?: string;
+  plain_impact?: string;
+  plain_action?: string;
+}
+
+export interface AuditSeveritySummary {
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+}
+
+export interface AuditDocumentManifest {
+  document_id: string;
+  filename: string;
+  sha256: string;
+  size: number;
+  format: string;
+  finding_count: number;
+}
+
+export interface AuditResults {
+  job_id: string;
+  document_count: number;
+  finding_count: number;
+  severity_summary: AuditSeveritySummary;
+  findings: AuditFinding[];
+  document_manifest: AuditDocumentManifest[];
+  generated_at: string;
+}
+
+export interface AuditResultsResponse {
+  job_id: string;
+  status: string;
+  results: AuditResults | null;
+}
+
+// ---------------------------------------------------------------------------
 // Local document model
 // ---------------------------------------------------------------------------
 

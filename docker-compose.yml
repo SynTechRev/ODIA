@@ -1,0 +1,57 @@
+version: "3.9"
+
+# Development compose — runs backend and frontend as separate services
+# with live reload. For single-container production use, see Dockerfile.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend-builder
+    image: odia-backend-dev
+    working_dir: /build
+    command: >
+      sh -c "pip install -e '.[dev]' -q &&
+             uvicorn oraculus_di_auditor.interface.api:app
+             --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/build/src
+      - ./config:/build/config
+      - ./data:/build/data
+      - ./templates:/build/templates
+      - ./legal:/build/legal
+      - ./schemas:/build/schemas
+      - ./scripts:/build/scripts
+      - odia-reports:/build/reports
+    environment:
+      PYTHONPATH: /build/src
+      PYTHONUNBUFFERED: "1"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    image: node:20-slim
+    working_dir: /app
+    command: sh -c "npm install -q && npm run dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NODE_ENV: development
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  odia-reports:

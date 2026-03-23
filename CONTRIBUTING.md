@@ -111,3 +111,49 @@ By contributing, you agree that your contributions will be licensed under
 the project's [MIT License](LICENSE). Do not submit code containing
 jurisdiction-specific data, PII, or material subject to confidentiality
 obligations.
+
+---
+
+## PyPI Publication
+
+### Build and publish (maintainers only)
+
+```bash
+# Install build tools
+pip install build twine
+
+# Run full test suite first
+pytest
+
+# Build wheel and sdist
+python -m build
+
+# Check the distribution
+twine check dist/*
+
+# Upload to TestPyPI first
+twine upload --repository testpypi dist/*
+
+# Verify installability from TestPyPI
+pip install --index-url https://test.pypi.org/simple/ odia
+
+# Upload to production PyPI
+twine upload dist/*
+```
+
+### CLI smoke test after installation
+
+```bash
+odia --help
+odia demo
+odia audit --source data/demo/ --output reports/smoke/
+```
+
+### Version bumping
+
+Update `version` in `pyproject.toml` and create a git tag:
+
+```bash
+git tag v2.1.0
+git push origin v2.1.0
+```

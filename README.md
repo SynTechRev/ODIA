@@ -13,6 +13,24 @@ Legistar-based jurisdiction or custom legal corpus.
 
 ---
 
+## Try It Now
+
+**With Docker (no Python/Node required):**
+```bash
+docker build -t odia . && docker run -p 8080:8080 odia
+```
+Open `http://localhost:8080` — the full platform runs in a single container.
+
+**With Python:**
+```bash
+git clone https://github.com/SynTechRev/ODIA.git && cd ODIA && pip install -e .
+python scripts/run_audit.py --source data/demo/ --output reports/demo/
+```
+
+Open `reports/demo/audit_report.md` to see 10 synthetic documents analyzed across 12 detectors. Full walkthrough: [QUICKSTART.md](QUICKSTART.md)
+
+---
+
 ## Quick Start
 
 ```bash
