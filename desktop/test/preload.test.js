@@ -4,37 +4,33 @@
  * Tests for the preload script API surface.
  */
 
-// Mock electron
-const mockInvoke = jest.fn();
-
-jest.mock("electron", () => ({
-  contextBridge: {
-    exposeInMainWorld: jest.fn(),
-  },
-  ipcRenderer: {
-    invoke: mockInvoke,
-  },
-}));
-
-const { contextBridge } = require("electron");
-
 describe("Preload Script", () => {
   let exposedApi;
+  let mockInvoke;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    // Load the preload script
+    jest.resetModules();
+
+    mockInvoke = jest.fn();
+
+    jest.doMock("electron", () => ({
+      contextBridge: {
+        exposeInMainWorld: jest.fn(),
+      },
+      ipcRenderer: {
+        invoke: mockInvoke,
+      },
+    }));
+
+    // Load the preload script (triggers exposeInMainWorld)
     require("../src/preload");
 
-    // Capture the exposed API
+    const { contextBridge } = require("electron");
     exposedApi = contextBridge.exposeInMainWorld.mock.calls[0][1];
   });
 
-  afterEach(() => {
-    jest.resetModules();
-  });
-
   test("exposes API under 'odiaDesktop' namespace", () => {
+    const { contextBridge } = require("electron");
     expect(contextBridge.exposeInMainWorld).toHaveBeenCalledWith(
       "odiaDesktop",
       expect.any(Object)

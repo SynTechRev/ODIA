@@ -7,7 +7,6 @@ It starts the uvicorn server with the ODIA FastAPI application.
 from __future__ import annotations
 
 import argparse
-import sys
 
 
 def main() -> None:
