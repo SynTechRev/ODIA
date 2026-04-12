@@ -366,7 +366,10 @@ class LegistarAdapter:
 
 
 def load_cities() -> list[dict[str, str]]:
-    """Load the curated list of known Legistar cities from config/legistar_cities.json."""
+    """Load curated list of known Legistar cities.
+
+    Reads from config/legistar_cities.json.
+    """
     config_path = (
         Path(__file__).resolve().parent.parent.parent.parent
         / "config"
