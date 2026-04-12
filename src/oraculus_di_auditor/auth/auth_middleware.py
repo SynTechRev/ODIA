@@ -74,7 +74,7 @@ def get_current_user(token: str | None = None) -> dict[str, Any]:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=str(exc),
                 headers={"WWW-Authenticate": "Bearer"},
-            )
+            ) from exc
         return ANONYMOUS_USER
 
 
