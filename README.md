@@ -17,21 +17,28 @@ Legistar-based jurisdiction or custom legal corpus.
 
 **Desktop App (no installation prerequisites):**
 
-Pre-built installers will be available in the [Releases](https://github.com/SynTechRev/ODIA/releases) section soon. For now, build the desktop application locally:
+Download the standalone desktop application — no Python, Docker, or command line
+required. All analysis runs locally on your machine.
 
-```bash
-# Build desktop application
-cd desktop
-npm install
-npm run build:backend    # Build Python backend
-cd ../frontend
-npm ci
-ELECTRON_BUILD=1 npm run build  # Build frontend for Electron
-cd ../desktop
-npm run build            # Create installer for your platform
-```
+Download the latest version from the [**Releases page**](https://github.com/SynTechRev/ODIA/releases/latest):
 
-Installers are output to `desktop/dist/`. See [desktop/README.md](desktop/README.md) for detailed build instructions and platform-specific requirements.
+| Platform | Installer | Architecture |
+|----------|-----------|--------------|
+| **Windows** | `ODIA-Setup-2.1.0.exe` | x64 |
+| **macOS** | `ODIA-2.1.0.dmg` | x64, arm64 (Universal) |
+| **Linux** | `ODIA-2.1.0.AppImage` | x64 |
+
+**Direct download links (after v2.1.0 release):**
+- [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-Setup-2.1.0.exe)
+- [macOS Universal](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-2.1.0.dmg)
+- [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-2.1.0.AppImage)
+
+**System Requirements:**
+- **Windows:** Windows 10 (64-bit) or later
+- **macOS:** macOS 10.15 (Catalina) or later
+- **Linux:** Ubuntu 18.04+ or equivalent (requires libfuse2)
+
+See [desktop/README.md](desktop/README.md) for installation instructions and troubleshooting.
 
 **With Docker (no Python/Node required):**
 ```bash
