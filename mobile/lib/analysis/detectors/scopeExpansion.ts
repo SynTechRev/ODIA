@@ -48,7 +48,7 @@ const EXPANSION_THRESHOLD = 0.50;
  * Mirrors Python: _parse_dollar_amount(raw)
  */
 export function parseDollarAmount(raw: string): number | null {
-  let s = raw.replace('$', '').replace(/,/g, '').trim();
+  let s = raw.replace(/\$/g, '').replace(/,/g, '').trim();
 
   // Strip the "illion" tail so "Million" → "M", etc.
   if (s.toLowerCase().endsWith('illion')) {
