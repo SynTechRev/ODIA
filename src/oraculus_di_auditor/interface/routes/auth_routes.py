@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 try:
     from fastapi import APIRouter, Depends, HTTPException
     from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-    from pydantic import BaseModel, EmailStr
+    from pydantic import BaseModel
 
     _FASTAPI_AVAILABLE = True
 except ImportError:
