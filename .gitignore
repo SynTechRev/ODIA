@@ -79,6 +79,15 @@ data/ledger.db
 .DS_Store
 Thumbs.db
 
+# Mobile / React Native
+mobile/node_modules/
+mobile/.expo/
+mobile/ios/
+mobile/android/
+mobile/dist/
+mobile/coverage/
+mobile/.env*.local
+
 # Frontend / Node.js
 frontend/node_modules/
 frontend/.next/
