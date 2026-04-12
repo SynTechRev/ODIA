@@ -87,15 +87,23 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Build frontend
+      - name: Build frontend (static export for Electron)
         working-directory: frontend
+        shell: bash
+        env:
+          ELECTRON_BUILD: "1"
         run: npx next build
 
       - name: Copy frontend output
+        shell: bash
         run: |
           mkdir -p desktop/build/frontend
-          cp -r frontend/out/* desktop/build/frontend/ || cp -r frontend/.next/static desktop/build/frontend/ || true
-
+          if [ -d "frontend/out" ]; then
+            cp -r frontend/out/. desktop/build/frontend/
+          else
+            echo "Error: frontend/out not found. Ensure ELECTRON_BUILD=1 was set." >&2
+            exit 1
+          fi
       - name: Install desktop dependencies
         working-directory: desktop
         run: npm ci

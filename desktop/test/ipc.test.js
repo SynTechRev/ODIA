@@ -31,12 +31,14 @@ jest.mock("electron-log", () => ({
   debug: jest.fn(),
 }));
 
-// Mock fs
+// Mock fs — include promises.readFile for async file reads
 const mockStatSync = jest.fn();
-const mockReadFileSync = jest.fn();
+const mockReadFileAsync = jest.fn();
 jest.mock("fs", () => ({
   statSync: mockStatSync,
-  readFileSync: mockReadFileSync,
+  promises: {
+    readFile: mockReadFileAsync,
+  },
 }));
 
 // Mock http for backend requests
@@ -57,7 +59,51 @@ jest.mock("../src/backend", () => ({
   BACKEND_PORT: 18741,
 }));
 
-const { registerIpcHandlers, DOCUMENT_FILTERS, REPORT_FILTERS, MAX_FILE_SIZE } = require("../src/ipc");
+const {
+  registerIpcHandlers,
+  DOCUMENT_FILTERS,
+  REPORT_FILTERS,
+  MAX_FILE_SIZE,
+  backendRequest,
+} = require("../src/ipc");
+
+/**
+ * Helper to create a minimal mock HTTP response.
+ * @param {number} statusCode
+ * @param {string} body
+ * @returns {Object} mock request
+ */
+function mockHttpResponse(statusCode, body) {
+  let dataHandler;
+  let endHandler;
+
+  const mockRes = {
+    statusCode,
+    on: jest.fn((event, handler) => {
+      if (event === "data") dataHandler = handler;
+      if (event === "end") endHandler = handler;
+    }),
+  };
+
+  const mockReq = {
+    on: jest.fn(),
+    write: jest.fn(),
+    end: jest.fn(() => {
+      // Simulate async response
+      setImmediate(() => {
+        dataHandler(body);
+        endHandler();
+      });
+    }),
+  };
+
+  mockHttpRequest.mockImplementation((_opts, callback) => {
+    callback(mockRes);
+    return mockReq;
+  });
+
+  return mockReq;
+}
 
 describe("IPC Handlers", () => {
   let handlers;
@@ -125,11 +171,25 @@ describe("IPC Handlers", () => {
       });
 
       mockStatSync
-        .mockReturnValueOnce({ size: MAX_FILE_SIZE + 1 })
-        .mockReturnValueOnce({ size: 1024 });
+        .mockReturnValueOnce({ size: MAX_FILE_SIZE + 1, isFile: () => true })
+        .mockReturnValueOnce({ size: 1024, isFile: () => true });
 
       const result = await handlers["dialog:open-file"]({}, {});
       expect(result).toEqual(["/path/small-file.pdf"]);
+    });
+
+    test("filters out non-file paths (directories, special files)", async () => {
+      mockDialog.showOpenDialog.mockResolvedValue({
+        canceled: false,
+        filePaths: ["/path/a-directory", "/path/real-file.txt"],
+      });
+
+      mockStatSync
+        .mockReturnValueOnce({ size: 0, isFile: () => false })
+        .mockReturnValueOnce({ size: 512, isFile: () => true });
+
+      const result = await handlers["dialog:open-file"]({}, {});
+      expect(result).toEqual(["/path/real-file.txt"]);
     });
 
     test("supports multiple file selection", async () => {
@@ -137,15 +197,54 @@ describe("IPC Handlers", () => {
         canceled: false,
         filePaths: ["/path/a.pdf", "/path/b.txt"],
       });
-      mockStatSync.mockReturnValue({ size: 512 });
+      mockStatSync.mockReturnValue({ size: 512, isFile: () => true });
 
-      const result = await handlers["dialog:open-file"]({}, { multiple: true });
+      await handlers["dialog:open-file"]({}, { multiple: true });
 
-      // Check that multiSelections was passed
       expect(mockDialog.showOpenDialog).toHaveBeenCalledWith(
         expect.objectContaining({
           properties: expect.arrayContaining(["multiSelections"]),
         })
+      );
+    });
+
+    test("uses DOCUMENT_FILTERS when no custom filters provided", async () => {
+      mockDialog.showOpenDialog.mockResolvedValue({
+        canceled: true,
+        filePaths: [],
+      });
+
+      await handlers["dialog:open-file"]({}, {});
+
+      expect(mockDialog.showOpenDialog).toHaveBeenCalledWith(
+        expect.objectContaining({ filters: DOCUMENT_FILTERS })
+      );
+    });
+
+    test("honors custom filters from options", async () => {
+      const customFilters = [{ name: "CSV Files", extensions: ["csv"] }];
+      mockDialog.showOpenDialog.mockResolvedValue({
+        canceled: true,
+        filePaths: [],
+      });
+
+      await handlers["dialog:open-file"]({}, { filters: customFilters });
+
+      expect(mockDialog.showOpenDialog).toHaveBeenCalledWith(
+        expect.objectContaining({ filters: customFilters })
+      );
+    });
+
+    test("falls back to DOCUMENT_FILTERS when options.filters is empty", async () => {
+      mockDialog.showOpenDialog.mockResolvedValue({
+        canceled: true,
+        filePaths: [],
+      });
+
+      await handlers["dialog:open-file"]({}, { filters: [] });
+
+      expect(mockDialog.showOpenDialog).toHaveBeenCalledWith(
+        expect.objectContaining({ filters: DOCUMENT_FILTERS })
       );
     });
   });
@@ -189,25 +288,19 @@ describe("IPC Handlers", () => {
   });
 
   describe("backend:health", () => {
-    test("returns health data when backend is healthy", async () => {
-      mockCheckBackendHealth.mockResolvedValue(true);
-
-      // Mock the backendRequest inside ipc.js — we test via the handler
-      // The handler calls checkBackendHealth, then makes an HTTP request
-      // For unit tests, we just verify the checkBackendHealth path
-      const result = await handlers["backend:health"]({});
-
-      // When checkBackendHealth returns true, the handler tries to make
-      // an HTTP request; since we haven't mocked that fully, we check
-      // it doesn't throw and returns something
-      expect(result).toBeDefined();
-    });
-
     test("returns unavailable when backend is not healthy", async () => {
       mockCheckBackendHealth.mockResolvedValue(false);
 
       const result = await handlers["backend:health"]({});
       expect(result).toEqual({ status: "unavailable" });
+    });
+
+    test("returns health data on 2xx response when backend is healthy", async () => {
+      mockCheckBackendHealth.mockResolvedValue(true);
+      mockHttpResponse(200, JSON.stringify({ status: "healthy", version: "1.0.0" }));
+
+      const result = await handlers["backend:health"]({});
+      expect(result).toEqual({ status: "healthy", version: "1.0.0" });
     });
   });
 
@@ -224,26 +317,29 @@ describe("IPC Handlers", () => {
       ).rejects.toThrow("Either documentText or filePath is required");
     });
 
-    test("reads file from disk when filePath is provided", async () => {
-      const filePath = "/path/to/document.txt";
-      mockStatSync.mockReturnValue({
-        isFile: () => true,
-        size: 100,
-      });
-      mockReadFileSync.mockReturnValue("Document content here");
+    test("reads file async when filePath is provided", async () => {
+      mockStatSync.mockReturnValue({ isFile: () => true, size: 100 });
+      mockReadFileAsync.mockResolvedValue("Document content here");
+      mockHttpResponse(200, JSON.stringify({ findings: {} }));
 
-      // The handler will try to make an HTTP request to the backend
-      // Since http is mocked, this will fail, but we verify file reading works
-      try {
-        await handlers["backend:analyze"]({}, { filePath });
-      } catch {
-        // Expected: HTTP request mock isn't fully set up
-      }
+      const result = await handlers["backend:analyze"](
+        {},
+        { filePath: "/path/to/document.txt" }
+      );
 
-      expect(mockReadFileSync).toHaveBeenCalledWith(
+      expect(mockReadFileAsync).toHaveBeenCalledWith(
         expect.stringContaining("document.txt"),
         "utf-8"
       );
+      expect(result).toEqual({ findings: {} });
+    });
+
+    test("throws when file path is a directory (not a regular file)", async () => {
+      mockStatSync.mockReturnValue({ isFile: () => false, size: 0 });
+
+      await expect(
+        handlers["backend:analyze"]({}, { filePath: "/path/to/directory" })
+      ).rejects.toThrow("Path is not a file");
     });
 
     test("throws when file exceeds max size", async () => {
@@ -267,6 +363,18 @@ describe("IPC Handlers", () => {
       await expect(
         handlers["backend:analyze"]({}, { filePath: "/nonexistent.pdf" })
       ).rejects.toThrow("File not found");
+    });
+
+    test("uses documentText directly without file read", async () => {
+      mockHttpResponse(200, JSON.stringify({ findings: {} }));
+
+      const result = await handlers["backend:analyze"](
+        {},
+        { documentText: "inline content", metadata: { title: "Test" } }
+      );
+
+      expect(mockReadFileAsync).not.toHaveBeenCalled();
+      expect(result).toEqual({ findings: {} });
     });
   });
 
@@ -337,5 +445,38 @@ describe("IPC Handlers", () => {
     test("MAX_FILE_SIZE is 50MB", () => {
       expect(MAX_FILE_SIZE).toBe(50 * 1024 * 1024);
     });
+  });
+});
+
+describe("backendRequest", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("resolves with parsed body on 2xx response", async () => {
+    mockHttpResponse(200, JSON.stringify({ status: "healthy" }));
+    const result = await backendRequest("GET", "/api/v1/health");
+    expect(result).toEqual({ status: "healthy" });
+  });
+
+  test("rejects on 4xx response", async () => {
+    mockHttpResponse(400, JSON.stringify({ detail: "Bad Request" }));
+    await expect(backendRequest("POST", "/analyze", {})).rejects.toThrow(
+      "Backend request failed with status 400"
+    );
+  });
+
+  test("rejects on 5xx response", async () => {
+    mockHttpResponse(500, JSON.stringify({ detail: "Internal Server Error" }));
+    await expect(backendRequest("GET", "/analyze")).rejects.toThrow(
+      "Backend request failed with status 500"
+    );
+  });
+
+  test("rejects on invalid JSON response", async () => {
+    mockHttpResponse(200, "not json");
+    await expect(backendRequest("GET", "/api/v1/health")).rejects.toThrow(
+      "Invalid response from backend"
+    );
   });
 });

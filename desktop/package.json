@@ -9,7 +9,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "cross-env NODE_ENV=development electron .",
-    "build:frontend": "cd ../frontend && npm ci && npx next build",
+    "build:frontend": "cd ../frontend && npm ci && ELECTRON_BUILD=1 npx next build",
     "build:backend": "pyinstaller ../desktop/odia-backend.spec --distpath build/backend",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",

@@ -22,9 +22,9 @@ required. All analysis runs locally on your machine.
 
 | Platform | Download |
 |----------|----------|
-| Windows  | [ODIA-Setup.exe](https://github.com/SynTechRev/ODIA/releases/latest) |
-| macOS    | [ODIA.dmg](https://github.com/SynTechRev/ODIA/releases/latest) |
-| Linux    | [ODIA.AppImage](https://github.com/SynTechRev/ODIA/releases/latest) |
+| Windows  | [ODIA-Setup.exe](https://github.com/SynTechRev/ODIA/releases/latest/download/ODIA-Setup.exe) |
+| macOS    | [ODIA.dmg](https://github.com/SynTechRev/ODIA/releases/latest/download/ODIA.dmg) |
+| Linux    | [ODIA.AppImage](https://github.com/SynTechRev/ODIA/releases/latest/download/ODIA.AppImage) |
 
 See [desktop/README.md](desktop/README.md) for usage instructions and troubleshooting.
 

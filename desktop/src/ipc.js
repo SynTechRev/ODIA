@@ -37,6 +37,7 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 /**
  * Make an HTTP request to the backend API.
+ * Rejects on non-2xx HTTP status codes and on network errors.
  * @param {string} method - HTTP method
  * @param {string} urlPath - URL path
  * @param {Object|null} body - Request body (JSON)
@@ -61,11 +62,28 @@ function backendRequest(method, urlPath, body = null) {
         data += chunk;
       });
       res.on("end", () => {
+        let parsedData = null;
         try {
-          resolve(JSON.parse(data));
+          parsedData = data ? JSON.parse(data) : null;
         } catch {
           reject(new Error(`Invalid response from backend: ${data.substring(0, 200)}`));
+          return;
         }
+
+        if (
+          typeof res.statusCode !== "number" ||
+          res.statusCode < 200 ||
+          res.statusCode >= 300
+        ) {
+          reject(
+            new Error(
+              `Backend request failed with status ${res.statusCode}: ${data.substring(0, 200)}`
+            )
+          );
+          return;
+        }
+
+        resolve(parsedData);
       });
     });
 
@@ -93,11 +111,18 @@ function registerIpcHandlers(ipcMain, dialog) {
   /**
    * Open native file dialog for document selection.
    * Returns an array of selected file paths, or empty array if cancelled.
+   * Caller may pass `options.filters` (array of {name, extensions}) to override
+   * the default document type filters.
    */
   ipcMain.handle("dialog:open-file", async (_event, options = {}) => {
+    const filters =
+      Array.isArray(options.filters) && options.filters.length > 0
+        ? options.filters
+        : DOCUMENT_FILTERS;
+
     const result = await dialog.showOpenDialog({
       title: "Select Documents for Analysis",
-      filters: DOCUMENT_FILTERS,
+      filters,
       properties: [
         "openFile",
         options.multiple ? "multiSelections" : undefined,
@@ -108,11 +133,15 @@ function registerIpcHandlers(ipcMain, dialog) {
       return [];
     }
 
-    // Validate file sizes
+    // Validate that each path is a regular file within size limits
     const validPaths = [];
     for (const filePath of result.filePaths) {
       try {
         const stats = fs.statSync(filePath);
+        if (!stats.isFile()) {
+          log.warn(`Skipping non-file path: ${filePath}`);
+          continue;
+        }
         if (stats.size > MAX_FILE_SIZE) {
           log.warn(`File too large (${stats.size} bytes): ${filePath}`);
           continue;
@@ -163,7 +192,9 @@ function registerIpcHandlers(ipcMain, dialog) {
 
   /**
    * Submit document for analysis.
-   * Reads the file from disk and sends text content to the backend.
+   * Accepts either inline text (payload.documentText) or a file path
+   * (payload.filePath). File reads are performed asynchronously so the
+   * event loop is not blocked.
    */
   ipcMain.handle("backend:analyze", async (_event, payload) => {
     if (!payload || (!payload.documentText && !payload.filePath)) {
@@ -172,11 +203,11 @@ function registerIpcHandlers(ipcMain, dialog) {
 
     let documentText = payload.documentText;
 
-    // If a file path is provided, read the file
+    // If a file path is provided, read the file asynchronously
     if (payload.filePath && !documentText) {
       const filePath = payload.filePath;
 
-      // Security: validate the path exists and is a file
+      // Security: validate the path exists and is a regular file
       const resolvedPath = path.resolve(filePath);
       try {
         const stats = fs.statSync(resolvedPath);
@@ -193,7 +224,7 @@ function registerIpcHandlers(ipcMain, dialog) {
         throw err;
       }
 
-      documentText = fs.readFileSync(resolvedPath, "utf-8");
+      documentText = await fs.promises.readFile(resolvedPath, "utf-8");
     }
 
     try {

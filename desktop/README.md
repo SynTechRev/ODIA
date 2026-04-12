@@ -78,18 +78,25 @@ npm install
 ### Run in Development Mode
 
 ```bash
-# Terminal 1: Start the Next.js frontend in export mode
+# Terminal 1: Build the Next.js frontend as a static export (required for Electron)
 cd frontend
-npm run build
-# The static export goes to frontend/out/
+ELECTRON_BUILD=1 npm run build
+# Static assets are written to frontend/out/
+# On Windows: set ELECTRON_BUILD=1 && npm run build
 
-# Terminal 2: Start the desktop app
+# Terminal 2: Start the desktop app (reads frontend/out/)
 cd desktop
 npm run dev
 ```
 
 In development mode, the app launches uvicorn directly using your local Python
-installation instead of the bundled PyInstaller binary.
+installation instead of the bundled PyInstaller binary. The frontend must be
+built with `ELECTRON_BUILD=1` to produce the static `out/` directory that
+Electron loads as local files.
+
+> **Note:** The default `npm run build` in the `frontend/` directory uses
+> `output: "standalone"` (for Docker). Always set `ELECTRON_BUILD=1` when
+> building the frontend for the desktop app.
 
 ### Run Tests
 
@@ -108,9 +115,10 @@ and the Next.js frontend first:
 cd desktop
 npm run build:backend
 
-# 2. Build the frontend (Next.js static export)
+# 2. Build the frontend as a static export for Electron
 cd ../frontend
-npm run build
+ELECTRON_BUILD=1 npm run build
+# Output: frontend/out/   (On Windows: set ELECTRON_BUILD=1 && npm run build)
 
 # 3. Copy frontend output
 mkdir -p ../desktop/build/frontend
