@@ -15,6 +15,19 @@ Legistar-based jurisdiction or custom legal corpus.
 
 ## Try It Now
 
+**Desktop App (no installation prerequisites):**
+
+Download the standalone desktop application — no Python, Docker, or command line
+required. All analysis runs locally on your machine.
+
+| Platform | Download |
+|----------|----------|
+| Windows  | [ODIA-Setup.exe](https://github.com/SynTechRev/ODIA/releases/latest) |
+| macOS    | [ODIA.dmg](https://github.com/SynTechRev/ODIA/releases/latest) |
+| Linux    | [ODIA.AppImage](https://github.com/SynTechRev/ODIA/releases/latest) |
+
+See [desktop/README.md](desktop/README.md) for usage instructions and troubleshooting.
+
 **With Docker (no Python/Node required):**
 ```bash
 docker build -t odia . && docker run -p 8080:8080 odia

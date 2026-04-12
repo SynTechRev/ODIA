@@ -1,0 +1,9 @@
+# Desktop app build artifacts
+dist/
+build/
+node_modules/
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
