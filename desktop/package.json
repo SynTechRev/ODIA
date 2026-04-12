@@ -1,0 +1,94 @@
+{
+  "name": "odia-desktop",
+  "version": "2.1.0",
+  "description": "ODIA Desktop — Local document analysis for legal and government documents",
+  "main": "src/main.js",
+  "author": "Synthetic Technology Revolution <syntechrev@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "cross-env NODE_ENV=development electron .",
+    "build:frontend": "cd ../frontend && npm ci && ELECTRON_BUILD=1 npx next build",
+    "build:backend": "pyinstaller ../desktop/odia-backend.spec --distpath build/backend",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "build": "electron-builder",
+    "test": "jest --config jest.config.js --forceExit",
+    "test:e2e": "npx playwright test",
+    "lint": "eslint src/ test/"
+  },
+  "dependencies": {
+    "electron-log": "^5.1.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "cross-env": "^7.0.3",
+    "electron": "^39.8.1",
+    "electron-builder": "^25.1.8",
+    "eslint": "^9.0.0",
+    "jest": "^30.2.0",
+    "@testing-library/jest-dom": "^6.9.1"
+  },
+  "build": {
+    "appId": "com.syntechrev.odia",
+    "productName": "ODIA",
+    "copyright": "Copyright © 2025 Synthetic Technology Revolution",
+    "directories": {
+      "output": "dist",
+      "buildResources": "resources"
+    },
+    "files": [
+      "src/**/*",
+      "!test/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "build/backend",
+        "to": "backend",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "build/frontend",
+        "to": "frontend",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "resources/icon.ico"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "resources/icon.icns",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "resources/icon.png",
+      "category": "Office"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
