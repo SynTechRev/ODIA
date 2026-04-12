@@ -12,7 +12,7 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 try:
-    from fastapi import Depends, HTTPException, status
+    from fastapi import HTTPException, status
     from fastapi.security import OAuth2PasswordBearer
 
     _oauth2_scheme = OAuth2PasswordBearer(
