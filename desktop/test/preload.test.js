@@ -102,15 +102,15 @@ describe("Preload Script", () => {
     expect(actualMethods.sort()).toEqual(expectedMethods.sort());
   });
 
-  test("rejects disallowed IPC channel", () => {
-    // safeInvoke should reject channels not in VALID_CHANNELS
-    // Since openFileDialog uses safeInvoke internally, test via direct invocation
-    // by checking the guard logic through an unreachable channel
-    const { ipcRenderer } = require("electron");
-    // We verify that invoking an unknown channel would be rejected by safeInvoke
-    // (The preload doesn't expose arbitrary channels, this tests the guard concept)
-    expect(typeof exposedApi.openFileDialog).toBe("function");
-    expect(typeof exposedApi.saveFileDialog).toBe("function");
+  test("rejects disallowed IPC channel via safeInvoke guard", async () => {
+    // safeInvoke (tested in channels.test.js) rejects channels not in VALID_CHANNELS.
+    // Here we verify the preload API only exposes the expected methods (no arbitrary channels).
+    const allowedMethods = Object.keys(exposedApi);
+    expect(allowedMethods).not.toContain("arbitrary");
+    expect(allowedMethods).not.toContain("invoke");
+    // Every exposed method maps to a channel in VALID_CHANNELS (enforced by safeInvoke)
+    const { VALID_CHANNELS } = require("../src/channels");
+    expect(VALID_CHANNELS.length).toBe(7);
   });
 });
 

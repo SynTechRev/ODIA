@@ -64,7 +64,7 @@ function backendRequest(method, urlPath, body = null) {
       res.on("end", () => {
         let parsedData = null;
         try {
-          parsedData = data ? JSON.parse(data) : null;
+          parsedData = data.length > 0 ? JSON.parse(data) : null;
         } catch {
           reject(new Error(`Invalid response from backend: ${data.substring(0, 200)}`));
           return;

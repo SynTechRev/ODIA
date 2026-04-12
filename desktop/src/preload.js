@@ -1,38 +1,15 @@
 "use strict";
 
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge } = require("electron");
+const { VALID_CHANNELS, safeInvoke } = require("./channels");
 
 /**
  * Expose a safe, limited API to the renderer process via contextBridge.
  * This maintains context isolation while providing necessary functionality.
  *
- * VALID_CHANNELS is the exhaustive allowlist of IPC channels the renderer
- * may invoke. The safeInvoke wrapper enforces this at runtime so that
- * future refactors cannot accidentally expose arbitrary channels.
+ * safeInvoke (from channels.js) enforces the VALID_CHANNELS allowlist at
+ * runtime so that future refactors cannot accidentally expose arbitrary channels.
  */
-
-const VALID_CHANNELS = [
-  "dialog:open-file",
-  "dialog:save-file",
-  "backend:health",
-  "backend:analyze",
-  "backend:status",
-  "app:version",
-  "shell:open-external",
-];
-
-/**
- * Invoke an IPC channel after validating it against the allowlist.
- * @param {string} channel
- * @param {...any} args
- * @returns {Promise<any>}
- */
-function safeInvoke(channel, ...args) {
-  if (!VALID_CHANNELS.includes(channel)) {
-    return Promise.reject(new Error(`IPC channel not allowed: ${channel}`));
-  }
-  return ipcRenderer.invoke(channel, ...args);
-}
 
 contextBridge.exposeInMainWorld("odiaDesktop", {
   /**
@@ -91,3 +68,5 @@ contextBridge.exposeInMainWorld("odiaDesktop", {
    */
   openExternal: (url) => safeInvoke("shell:open-external", url),
 });
+
+module.exports = { VALID_CHANNELS };

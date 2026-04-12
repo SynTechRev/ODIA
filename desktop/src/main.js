@@ -147,12 +147,24 @@ app.on("before-quit", () => {
 
 // Security: Prevent navigation outside the bundled frontend directory.
 // Uses fileURLToPath for reliable cross-platform path comparison.
+// On Windows (case-insensitive filesystem) paths are normalized to lowercase.
 app.on("web-contents-created", (_event, contents) => {
   contents.on("will-navigate", (event, url) => {
     try {
-      const navigatedPath = path.resolve(fileURLToPath(new URL(url)));
-      const frontendDir = path.resolve(getFrontendPath());
-      if (!navigatedPath.startsWith(frontendDir + path.sep) && navigatedPath !== frontendDir) {
+      const rawNavigated = path.resolve(fileURLToPath(new URL(url)));
+      const rawFrontend = path.resolve(getFrontendPath());
+
+      // Normalize for case-insensitive filesystems (Windows NTFS)
+      const normalize = (p) =>
+        process.platform === "win32" ? p.toLowerCase() : p;
+
+      const navigatedPath = normalize(rawNavigated);
+      const frontendDir = normalize(rawFrontend);
+
+      if (
+        !navigatedPath.startsWith(frontendDir + path.sep) &&
+        navigatedPath !== frontendDir
+      ) {
         event.preventDefault();
         log.warn(`Blocked navigation to: ${url}`);
       }
