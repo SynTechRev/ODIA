@@ -19,6 +19,8 @@ lib/
 lib64/
 # Allow frontend/lib/ (Next.js source — not a Python virtualenv)
 !frontend/lib/
+# Allow mobile/lib/ (React Native source)
+!mobile/lib/
 parts/
 sdist/
 var/
