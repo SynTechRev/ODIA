@@ -50,7 +50,7 @@ class TestValidateStateCode:
         assert wizard.validate_state_code("NY") is True
 
     def test_lowercase_accepted(self):
-        # validate_state_code checks isalpha() and len == 2; case is caller's responsibility
+        # validate_state_code: isalpha() and len==2; caller handles case
         assert wizard.validate_state_code("ca") is True
 
     def test_one_letter_rejected(self):
@@ -247,7 +247,7 @@ class TestOverwriteProtection:
             "y",  # save?
         ]
         with patch("builtins.input", side_effect=inputs):
-            result = wizard.run_wizard(config_dir=tmp_path)
+            wizard.run_wizard(config_dir=tmp_path)
 
         data = json.loads((tmp_path / "jurisdiction.json").read_text(encoding="utf-8"))
         assert data["name"] == "New City"
