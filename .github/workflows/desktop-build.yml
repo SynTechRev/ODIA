@@ -36,6 +36,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: 'desktop/package-lock.json'
+
+      - name: Verify package-lock.json exists
+        working-directory: desktop
+        shell: bash
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "Error: desktop/package-lock.json not found" >&2
+            exit 1
+          fi
+          echo "package-lock.json found"
 
       - name: Install desktop dependencies
         working-directory: desktop
@@ -68,6 +80,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'desktop/package-lock.json'
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -104,6 +118,16 @@ jobs:
             echo "Error: frontend/out not found. Ensure ELECTRON_BUILD=1 was set." >&2
             exit 1
           fi
+      - name: Verify package-lock.json exists
+        working-directory: desktop
+        shell: bash
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "Error: desktop/package-lock.json not found" >&2
+            exit 1
+          fi
+          echo "package-lock.json found"
+
       - name: Install desktop dependencies
         working-directory: desktop
         run: npm ci
