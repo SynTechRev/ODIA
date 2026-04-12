@@ -17,16 +17,21 @@ Legistar-based jurisdiction or custom legal corpus.
 
 **Desktop App (no installation prerequisites):**
 
-Download the standalone desktop application — no Python, Docker, or command line
-required. All analysis runs locally on your machine.
+Pre-built installers will be available in the [Releases](https://github.com/SynTechRev/ODIA/releases) section soon. For now, build the desktop application locally:
 
-| Platform | Download |
-|----------|----------|
-| Windows  | [ODIA-Setup.exe](https://github.com/SynTechRev/ODIA/releases/latest/download/ODIA-Setup.exe) |
-| macOS    | [ODIA.dmg](https://github.com/SynTechRev/ODIA/releases/latest/download/ODIA.dmg) |
-| Linux    | [ODIA.AppImage](https://github.com/SynTechRev/ODIA/releases/latest/download/ODIA.AppImage) |
+```bash
+# Build desktop application
+cd desktop
+npm install
+npm run build:backend    # Build Python backend
+cd ../frontend
+npm ci
+ELECTRON_BUILD=1 npm run build  # Build frontend for Electron
+cd ../desktop
+npm run build            # Create installer for your platform
+```
 
-See [desktop/README.md](desktop/README.md) for usage instructions and troubleshooting.
+Installers are output to `desktop/dist/`. See [desktop/README.md](desktop/README.md) for detailed build instructions and platform-specific requirements.
 
 **With Docker (no Python/Node required):**
 ```bash
