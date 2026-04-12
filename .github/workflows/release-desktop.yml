@@ -57,6 +57,16 @@ jobs:
           pip install -e ".[dev]"
           pip install pyinstaller
 
+      - name: Verify package-lock.json exists
+        working-directory: desktop
+        shell: bash
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "Error: desktop/package-lock.json not found" >&2
+            exit 1
+          fi
+          echo "package-lock.json found"
+
       - name: Build Python backend
         working-directory: desktop
         run: |
