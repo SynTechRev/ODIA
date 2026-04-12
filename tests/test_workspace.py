@@ -112,7 +112,7 @@ class TestAuditLog:
         service.log_action(ws1["id"], USER_A, "action.ws1")
         service.log_action(ws2["id"], USER_A, "action.ws2")
         log1 = service.get_audit_log(ws1["id"])
-        # The workspace creation auto-logs nothing in memory mode, only explicit log_action calls
+        # Creation auto-logs nothing in memory mode; only log_action calls appear
         actions1 = [e["action"] for e in log1]
         assert "action.ws1" in actions1
         assert "action.ws2" not in actions1
