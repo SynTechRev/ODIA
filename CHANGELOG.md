@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.1.1] - 2026-04-13 — Desktop App Icons & macOS Multi-Arch Build Fix
+
+Patch release fixing desktop application packaging and CI workflows introduced in v2.1.
+
+### Fixed
+- macOS desktop build now correctly produces separate x64 (macos-13) and arm64 (macos-latest) artifacts instead of a single hardcoded arch
+- `release-desktop.yml` upgraded to `action-gh-release@v2`; per-platform build commands use the correct Electron targets
+- `desktop-build.yml` split macOS job into separate x64 and arm64 runners
+- `desktop/package.json` sets per-platform `artifactName` and removes hardcoded `mac.arch`
+
+### Added
+- `desktop/resources/icon.png` (512×512), `icon.ico` (multi-size), `icon.icns` (multi-size) — desktop application icons for all three platforms
+
+### Docs
+- README download table updated to reflect 4 platform entries (Windows, Linux, macOS arm64, macOS x64)
+- `desktop/README.md` updated with separate macOS arm64/x64 entries and per-arch build commands
+
+---
+
 ## [2.0.0] - 2026-03-13 — Platform Generalization Release
 
 This release transforms ODIA from a jurisdiction-specific audit tool into a
