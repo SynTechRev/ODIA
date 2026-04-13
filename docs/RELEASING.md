@@ -138,7 +138,7 @@ npm run build:linux   # Linux
 
 ### 🎉 First Official Release
 
-This is the first official release of ODIA (Oraculus DI Auditor) featuring desktop applications for Windows, macOS, and Linux.
+This is the first official release of ODIA (Oraculus Decimus Intellect Analyst) featuring desktop applications for Windows, macOS, and Linux.
 
 ### 📱 New Features
 

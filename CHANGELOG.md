@@ -173,7 +173,7 @@ All jurisdiction-specific data has been removed; the platform is now configured 
 ## 2025-12-04
 - Trigger CI for PR #37 by adding a small doc change to ensure GitHub Actions picks up the latest push to `copilot/initiate-full-ingestion`.
 
-All notable changes to the Oraculus DI Auditor project will be documented in this file.
+All notable changes to the Oraculus Decimus Intellect Analyst project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).

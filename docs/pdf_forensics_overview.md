@@ -288,5 +288,5 @@ DPMM produces deterministic output for identical inputs:
 
 ---
 
-*DPMM v1.0 - Part of the Oraculus DI Auditor Project*  
+*DPMM v1.0 - Part of the Oraculus Decimus Intellect Analyst Project*  
 *Generated: 2025-12-06*

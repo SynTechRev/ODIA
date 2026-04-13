@@ -527,7 +527,7 @@ pytest tests/jim/test_constitutional_frameworks.py -v
 
 ## License & Attribution
 
-Constitutional Linguistic Frameworks (CLF-v1) is part of the Oraculus DI Auditor project.
+Constitutional Linguistic Frameworks (CLF-v1) is part of the Oraculus Decimus Intellect Analyst project.
 
 **Generated:** 2025-12-07  
 **Version:** 1.0.0  
@@ -535,4 +535,4 @@ Constitutional Linguistic Frameworks (CLF-v1) is part of the Oraculus DI Auditor
 
 ---
 
-*For questions or contributions, please refer to the main Oraculus DI Auditor documentation.*
+*For questions or contributions, please refer to the main Oraculus Decimus Intellect Analyst documentation.*

@@ -1,4 +1,4 @@
-# Oraculus DI Auditor - Phase Plan
+# Oraculus Decimus Intellect Analyst - Phase Plan
 
 ## Phase 1: Ingestion & Normalization (Current)
 

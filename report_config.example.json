@@ -2,7 +2,7 @@
   "title": "Oraculus DI Audit Report - Example",
   "author": "Audit Team",
   "report_id": "AUDIT_2024_EXAMPLE",
-  "executive_summary": "This report presents findings from a comprehensive audit of documents using the Oraculus DI Auditor four fault-line framework. The audit reviewed documents for DOJ certification compliance, IRB consent requirements, infrastructure policy adherence, and federal grant incentive structures. Critical findings require immediate legal review and remediation.",
+  "executive_summary": "This report presents findings from a comprehensive audit of documents using the Oraculus Decimus Intellect Analyst four fault-line framework. The audit reviewed documents for DOJ certification compliance, IRB consent requirements, infrastructure policy adherence, and federal grant incentive structures. Critical findings require immediate legal review and remediation.",
   "methodology": {
     "ingestion": "Manual document upload and triage using triage.py script",
     "extraction": "OCR text extraction via pytesseract for scanned documents; native text extraction for digital PDFs",
@@ -53,7 +53,7 @@
     {
       "title": "Establish Regular Audit Schedule",
       "priority": "MEDIUM",
-      "description": "Implement a regular audit schedule using the Oraculus DI Auditor framework to prevent future compliance issues.",
+      "description": "Implement a regular audit schedule using the Oraculus Decimus Intellect Analyst framework to prevent future compliance issues.",
       "actions": [
         "Schedule quarterly document audits",
         "Train staff on triage.py usage",

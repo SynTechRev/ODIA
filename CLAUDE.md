@@ -1,4 +1,4 @@
-# ODIA (Oraculus DI Auditor) — Project Brief
+# ODIA (Oraculus Decimus Intellect Analyst) — Project Brief
 
 ## What This Project Is
 

@@ -1,8 +1,8 @@
-# Oraculus DI Auditor Architecture
+# Oraculus Decimus Intellect Analyst Architecture
 
 ## Overview
 
-The Oraculus DI Auditor is a foundational architecture for legal document ingestion, normalization, embedding, and anomaly auditing. It supports large-scale, chronological & cross-referenced auditing of statutes, cases, and contracts.
+The Oraculus Decimus Intellect Analyst is a foundational architecture for legal document ingestion, normalization, embedding, and anomaly auditing. It supports large-scale, chronological & cross-referenced auditing of statutes, cases, and contracts.
 
 ## Module Architecture
 

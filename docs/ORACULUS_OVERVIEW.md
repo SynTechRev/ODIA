@@ -2,7 +2,7 @@
 
 ## System Architecture
 
-The Oraculus DI Auditor is an autonomous legislative intelligence system designed to ingest, validate, and audit statutory, contractual, and administrative documents. The system maintains complete provenance tracking, builds reference graphs, and performs integrity validation on legal documents.
+The Oraculus Decimus Intellect Analyst is an autonomous legislative intelligence system designed to ingest, validate, and audit statutory, contractual, and administrative documents. The system maintains complete provenance tracking, builds reference graphs, and performs integrity validation on legal documents.
 
 ## Core Components
 
@@ -394,4 +394,4 @@ pytest -vv --tb=short
 
 ## Conclusion
 
-The Oraculus DI Auditor provides a robust, transparent, and privacy-safe system for legislative intelligence. Through its multi-layered architecture of ingestion, normalization, tracking, and auditing, it ensures that all legislative documents maintain integrity, traceability, and compliance throughout their lifecycle.
+The Oraculus Decimus Intellect Analyst provides a robust, transparent, and privacy-safe system for legislative intelligence. Through its multi-layered architecture of ingestion, normalization, tracking, and auditing, it ensures that all legislative documents maintain integrity, traceability, and compliance throughout their lifecycle.

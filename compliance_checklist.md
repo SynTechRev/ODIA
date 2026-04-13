@@ -1,6 +1,6 @@
 # Compliance Checklist: Four Fault Lines
 
-This checklist implements the four fault-line framework for auditing documents in the Oraculus DI Auditor system. Use this checklist to systematically review documents for compliance and identify potential issues.
+This checklist implements the four fault-line framework for auditing documents in the Oraculus Decimus Intellect Analyst system. Use this checklist to systematically review documents for compliance and identify potential issues.
 
 ---
 
@@ -213,7 +213,7 @@ _______________
 
 ## Automation Support
 
-The Oraculus DI Auditor provides automated support for this checklist:
+The Oraculus Decimus Intellect Analyst provides automated support for this checklist:
 
 - **Manifest Flags**: Use `scripts/triage.py` to add flags with categories matching fault lines
 - **Report Generation**: Use `scripts/render_report.py` to generate compliance reports
@@ -245,4 +245,4 @@ python scripts/triage.py --doc-id DOC123 \
 
 **Version**: 1.0.0  
 **Last Updated**: 2024  
-**Maintained by**: Oraculus DI Auditor Project
+**Maintained by**: Oraculus Decimus Intellect Analyst Project

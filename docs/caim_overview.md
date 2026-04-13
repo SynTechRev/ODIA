@@ -339,5 +339,5 @@ See [PDF Forensics Overview](pdf_forensics_overview.md) for complete DPMM docume
 
 ---
 
-*CAIM-ICM v1.0 - Part of the Oraculus DI Auditor Project*  
+*CAIM-ICM v1.0 - Part of the Oraculus Decimus Intellect Analyst Project*  
 *Generated: 2025-12-06*

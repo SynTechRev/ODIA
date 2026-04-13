@@ -1,4 +1,4 @@
-# ODIA — Oraculus DI Auditor
+# O.D.I.A. — Oraculus Decimus Intellect Analyst
 
 A general-purpose legal document ingestion, normalization, and anomaly auditing platform.
 

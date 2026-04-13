@@ -1,8 +1,8 @@
-# Data Policy - Oraculus DI Auditor
+# Data Policy - Oraculus Decimus Intellect Analyst
 
 ## Overview
 
-The Oraculus DI Auditor processes sensitive legal documents including statutes, cases, and contracts. This document outlines our data handling, privacy, and security policies.
+The Oraculus Decimus Intellect Analyst processes sensitive legal documents including statutes, cases, and contracts. This document outlines our data handling, privacy, and security policies.
 
 ## Data Classification
 
