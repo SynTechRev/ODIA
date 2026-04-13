@@ -23,10 +23,10 @@ Download the latest installer for your platform from the
 
 | Platform | File |
 |----------|------|
-| Windows  | `ODIA-Setup-x.x.x.exe` |
-| macOS (Apple Silicon) | `ODIA-x.x.x-arm64.dmg` |
-| macOS (Intel) | `ODIA-x.x.x-x64.dmg` |
-| Linux    | `ODIA-x.x.x.AppImage` |
+| Windows  | `ODIA-Setup-2.1.1.exe` |
+| macOS (Apple Silicon) | `ODIA-2.1.1-arm64.dmg` |
+| macOS (Intel) | `ODIA-2.1.1-x64.dmg` |
+| Linux    | `ODIA-2.1.1.AppImage` |
 
 ### Install and Run
 
