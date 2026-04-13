@@ -128,10 +128,10 @@ export class APIClient {
   }
 
   /** POST /api/v1/upload/image — upload JPEG/PNG and extract text via OCR */
-  async uploadImage(file: File): Promise<Record<string, unknown>> {
+  async uploadImage(file: File): Promise<FileMetadata> {
     const form = new FormData();
     form.append('file', file);
-    const { data } = await this.http.post<Record<string, unknown>>(
+    const { data } = await this.http.post<FileMetadata>(
       '/api/v1/upload/image',
       form,
       { headers: { 'Content-Type': 'multipart/form-data' } },
