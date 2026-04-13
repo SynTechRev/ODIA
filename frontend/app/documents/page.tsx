@@ -46,7 +46,9 @@ export default function DocumentsPage() {
               <Card title="Documents" variant="bordered">
                 <DocumentList
                   documents={documents}
-                  onSelectDocument={selectDocument}
+                  onSelectDocument={(id) =>
+                    selectDocument(documents.find((d) => d.document_id === id) ?? null)
+                  }
                   selectedId={selectedDocument?.document_id}
                 />
               </Card>
