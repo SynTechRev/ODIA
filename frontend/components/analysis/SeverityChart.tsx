@@ -86,7 +86,7 @@ export function SeverityChart({ bySeverity, total }: SeverityChartProps) {
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number, name: string) => [
+            formatter={(value, name) => [
               `${value} anomal${value === 1 ? 'y' : 'ies'}`,
               name,
             ]}
