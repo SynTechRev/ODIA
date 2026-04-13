@@ -23,7 +23,7 @@ jobs:
             platform: windows
             build_cmd: npm run build:win
             artifact: ODIA-Setup-*.exe
-          - os: macos-13
+          - os: macos-latest
             platform: mac-x64
             build_cmd: npm run build:mac -- --x64
             artifact: ODIA-*-x64.dmg
@@ -85,7 +85,7 @@ jobs:
         env:
           ELECTRON_BUILD: '1'
         run: |
-          npm ci
+          npm install
           npx next build
 
       - name: Copy frontend to desktop build
