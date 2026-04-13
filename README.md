@@ -25,12 +25,14 @@ Download the latest version from the [**Releases page**](https://github.com/SynT
 | Platform | Installer | Architecture |
 |----------|-----------|--------------|
 | **Windows** | `ODIA-Setup-2.1.0.exe` | x64 |
-| **macOS** | `ODIA-2.1.0.dmg` | x64, arm64 (Universal) |
+| **macOS (Apple Silicon)** | `ODIA-2.1.0-arm64.dmg` | arm64 (M1/M2/M3/M4) |
+| **macOS (Intel)** | `ODIA-2.1.0-x64.dmg` | x64 |
 | **Linux** | `ODIA-2.1.0.AppImage` | x64 |
 
 **Direct download links (after v2.1.0 release):**
 - [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-Setup-2.1.0.exe)
-- [macOS Universal](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-2.1.0.dmg)
+- [macOS Apple Silicon (arm64)](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-2.1.0-arm64.dmg)
+- [macOS Intel (x64)](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-2.1.0-x64.dmg)
 - [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v2.1.0/ODIA-2.1.0.AppImage)
 
 **System Requirements:**

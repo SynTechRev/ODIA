@@ -24,7 +24,8 @@ Download the latest installer for your platform from the
 | Platform | File |
 |----------|------|
 | Windows  | `ODIA-Setup-x.x.x.exe` |
-| macOS    | `ODIA-x.x.x.dmg` |
+| macOS (Apple Silicon) | `ODIA-x.x.x-arm64.dmg` |
+| macOS (Intel) | `ODIA-x.x.x-x64.dmg` |
 | Linux    | `ODIA-x.x.x.AppImage` |
 
 ### Install and Run
@@ -126,9 +127,10 @@ cp -r out/* ../desktop/build/frontend/
 
 # 4. Build the installer for your platform
 cd ../desktop
-npm run build:win    # Windows
-npm run build:mac    # macOS
-npm run build:linux  # Linux
+npm run build:win                  # Windows (x64)
+npm run build:mac -- --arm64      # macOS Apple Silicon (arm64)
+npm run build:mac -- --x64        # macOS Intel (x64)
+npm run build:linux                # Linux (x64)
 ```
 
 Installers are output to `desktop/dist/`.
