@@ -1,10 +1,10 @@
-# Oraculus DI Auditor Documentation
+# Oraculus Decimus Intellect Analyst Documentation
 
-This directory contains project documentation for the Oraculus DI Auditor platform.
+This directory contains project documentation for the Oraculus Decimus Intellect Analyst platform.
 
 ## Architecture Overview
 
-The Oraculus DI Auditor is structured as a modular Python application with the following components:
+The Oraculus Decimus Intellect Analyst is structured as a modular Python application with the following components:
 
 ### Core Packages
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document tracks the provenance of all data sources used in testing and development of the Oraculus DI Auditor.
+This document tracks the provenance of all data sources used in testing and development of the Oraculus Decimus Intellect Analyst.
 
 ## Test Data Sources
 

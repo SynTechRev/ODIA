@@ -1,4 +1,4 @@
-# ODIA Desktop Application
+# O.D.I.A. Desktop Application
 
 A standalone desktop application for ODIA that enables non-technical users to
 run document analysis locally — no Python, Docker, or command-line knowledge

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-RGK-18 is a fully deterministic, audit-ready governance kernel that enforces, validates, and synthesizes governance rules across the entire Oraculus DI Auditor pipeline (Phases 1–17). It provides runtime constraint enforcement, policy rollbacks, and a certified governance decision ledger.
+RGK-18 is a fully deterministic, audit-ready governance kernel that enforces, validates, and synthesizes governance rules across the entire Oraculus Decimus Intellect Analyst pipeline (Phases 1–17). It provides runtime constraint enforcement, policy rollbacks, and a certified governance decision ledger.
 
 ## Architecture
 

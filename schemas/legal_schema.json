@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "LegalDocument",
-  "description": "Canonical schema for normalized legal documents in Oraculus DI Auditor",
+  "description": "Canonical schema for normalized legal documents in Oraculus Decimus Intellect Analyst",
   "type": "object",
   "required": ["id", "title", "jurisdiction", "source", "ingest_timestamp", "text"],
   "properties": {
