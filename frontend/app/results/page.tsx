@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Results Page — displays audit findings with plain-language explanations.
  *
