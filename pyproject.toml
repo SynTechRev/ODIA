@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odia"
-version = "2.1.0"
+version = "2.1.1"
 description = "O.D.I.A. — Oraculus Decimus Intellect Analyst: civic accountability intelligence platform for forensic analysis of legal and government documents"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -131,6 +131,7 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "scripts/examples/full_ingestion.py" = ["E402", "C901", "E501"]
 "scripts/examples/generate_transparency_package.py" = ["E402", "E501"]
 "scripts/examples/ingest_hist8123.py" = ["E501", "C901"]
+"tests/test_automated_audit.py" = ["E501"]
 "scripts/generate_plaintext_audit.py" = ["E501", "C901"]
 "scripts/generate_timeline.py" = ["E402", "E501", "F841"]
 "scripts/reconcile_artifacts.py" = ["E501", "C901"]
