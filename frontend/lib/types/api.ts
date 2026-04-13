@@ -249,11 +249,17 @@ export interface AuditResultsResponse {
 // Local document model
 // ---------------------------------------------------------------------------
 
+export interface DocumentMetadata {
+  jurisdiction?: string;
+  year?: string | number;
+  [key: string]: unknown;
+}
+
 export interface Document {
   document_id: string;
   title: string;
   text: string;
-  metadata: Record<string, unknown>;
+  metadata: DocumentMetadata;
   chunks: string[];
   checksum?: string;
   created_at: string;
