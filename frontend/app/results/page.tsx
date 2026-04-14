@@ -14,8 +14,6 @@ export const dynamic = 'force-dynamic';
  *  - Download buttons: Markdown, HTML, Evidence Packet (ZIP)
  */
 
-'use client';
-
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
