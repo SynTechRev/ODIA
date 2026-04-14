@@ -1,5 +1,4 @@
 'use client';
-export const dynamic = 'force-dynamic';
 
 /**
  * Results Page — displays audit findings with plain-language explanations.
@@ -14,7 +13,7 @@ export const dynamic = 'force-dynamic';
  *  - Download buttons: Markdown, HTML, Evidence Packet (ZIP)
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
@@ -232,6 +231,14 @@ function buildCriticalSummary(results: AuditResults): string {
 // ---------------------------------------------------------------------------
 
 export default function ResultsPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center py-24"><div className="text-gray-600">Loading…</div></div>}>
+      <ResultsPageInner />
+    </Suspense>
+  );
+}
+
+function ResultsPageInner() {
   const searchParams = useSearchParams();
   const jobId = searchParams.get('job_id');
 
