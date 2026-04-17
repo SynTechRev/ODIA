@@ -89,7 +89,9 @@ describe("Backend Module", () => {
       expect(command).toMatch(/python/);
       expect(args).toContain("-m");
       expect(args).toContain("uvicorn");
-      expect(args).toContain("oraculus_di_auditor.interface.api:app");
+      // Uses the FastAPI factory form (create_app returns the app).
+      expect(args).toContain("oraculus_di_auditor.interface.api:create_app");
+      expect(args).toContain("--factory");
       expect(args).toContain("--host");
       expect(args).toContain("127.0.0.1");
       expect(args).toContain("--port");

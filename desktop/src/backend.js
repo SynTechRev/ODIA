@@ -40,13 +40,16 @@ function getBackendCommand() {
     };
   }
 
-  // Development mode: use uvicorn
+  // Development mode: use uvicorn.
+  // Note: interface/api.py exposes a `create_app()` factory (no module-level `app`),
+  // so we must invoke uvicorn with --factory.
   return {
     command: process.platform === "win32" ? "python" : "python3",
     args: [
       "-m",
       "uvicorn",
-      "oraculus_di_auditor.interface.api:app",
+      "oraculus_di_auditor.interface.api:create_app",
+      "--factory",
       "--host",
       BACKEND_HOST,
       "--port",
