@@ -1,8 +1,12 @@
 /**
- * JurisdictionCard - Displays current jurisdiction configuration from the backend.
+ * JurisdictionCard — current jurisdiction configuration summary.
  *
- * Fetches from GET /config/jurisdiction on mount and renders a summary of the
- * loaded jurisdiction (or a "not configured" state if none is loaded).
+ * Fetches GET /config/jurisdiction on mount.  Distinguishes three UI
+ * states:
+ *   1. Loading
+ *   2. Loaded + configured — structured detail table
+ *   3. Loaded + not configured — empty state with helper text
+ *   4. Error — inline error with backend context
  */
 
 'use client';
@@ -10,6 +14,11 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from '../base/Card';
 import { getAPIClient } from '@/lib/api/client';
+import {
+  MapPinIcon,
+  AlertCircleIcon,
+  CheckCircleIcon,
+} from '@/components/base/Icons';
 import type { JurisdictionInfo } from '@/lib/types/api';
 
 export function JurisdictionCard() {
@@ -18,91 +27,128 @@ export function JurisdictionCard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const client = getAPIClient();
-    client
+    let cancelled = false;
+    getAPIClient()
       .getJurisdiction()
-      .then(setInfo)
-      .catch((err) =>
-        setError(err instanceof Error ? err.message : 'Failed to load jurisdiction'),
-      )
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (!cancelled) setInfo(data);
+      })
+      .catch((err) => {
+        if (!cancelled)
+          setError(err instanceof Error ? err.message : 'Failed to load jurisdiction');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
-    <Card title="Jurisdiction" variant="bordered">
-      <div className="space-y-3">
-        {loading && (
-          <div className="text-sm text-gray-500">Loading jurisdiction config...</div>
-        )}
+    <Card
+      variant="bordered"
+      icon={<MapPinIcon size={18} />}
+      title="Jurisdiction"
+      subtitle="Active analysis context"
+    >
+      {loading && (
+        <div className="flex items-center gap-2 text-sm text-slate-500 py-2">
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-odia-pulse" />
+          Loading configuration…
+        </div>
+      )}
 
-        {error && (
-          <div className="flex items-center gap-2 text-sm text-red-600">
-            <span>⚠️</span>
-            <span>{error}</span>
+      {error && !loading && (
+        <div className="rounded-md border border-red-200 bg-red-50 p-3">
+          <div className="flex items-start gap-2">
+            <AlertCircleIcon size={16} className="text-red-600 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-red-900">
+                Jurisdiction unavailable
+              </p>
+              <p className="text-xs text-red-700 mt-1">{error}</p>
+            </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {info && !loading && (
-          <>
-            {info.loaded ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Name</span>
-                  <span className="font-medium text-gray-900">{info.name}</span>
-                </div>
+      {info && !loading && info.loaded && (
+        <div className="space-y-3">
+          <DetailRow label="Name"          value={info.name} mono={false} strong />
+          {info.state &&        <DetailRow label="State"         value={info.state} />}
+          {info.country &&      <DetailRow label="Country"       value={info.country} />}
+          {info.meeting_type && (
+            <DetailRow
+              label="Meeting Type"
+              value={
+                <span className="capitalize">{info.meeting_type}</span>
+              }
+            />
+          )}
+          <DetailRow
+            label="Agencies"
+            value={
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-medium ring-1 ring-inset ring-amber-600/20">
+                {info.agency_count}
+              </span>
+            }
+          />
+          <div className="pt-2 border-t border-slate-100">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700">
+              <CheckCircleIcon size={12} />
+              Configuration loaded
+            </span>
+          </div>
+        </div>
+      )}
 
-                {info.state && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">State</span>
-                    <span className="text-sm text-gray-900">{info.state}</span>
-                  </div>
-                )}
-
-                {info.country && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Country</span>
-                    <span className="text-sm text-gray-900">{info.country}</span>
-                  </div>
-                )}
-
-                {info.meeting_type && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Meeting Type</span>
-                    <span className="text-sm text-gray-900 capitalize">
-                      {info.meeting_type}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Agencies</span>
-                  <span className="text-sm font-medium text-blue-700">
-                    {info.agency_count}
-                  </span>
-                </div>
-
-                <div className="pt-1 border-t border-gray-100">
-                  <span className="inline-flex items-center gap-1 text-xs text-green-700 font-medium">
-                    <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
-                    Config loaded
-                  </span>
-                </div>
-              </>
-            ) : (
-              <div className="text-center py-4">
-                <div className="text-3xl mb-2">🗺️</div>
-                <p className="text-sm text-gray-500">
-                  No jurisdiction configured.
-                </p>
-                <p className="text-xs text-gray-400 mt-1">
-                  Add <span className="font-mono">config/jurisdiction.json</span> to enable
-                  jurisdiction-aware analysis.
-                </p>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+      {info && !loading && !info.loaded && (
+        <div className="text-center py-6">
+          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-3">
+            <MapPinIcon size={20} />
+          </div>
+          <p className="text-sm font-medium text-slate-700">
+            No jurisdiction configured
+          </p>
+          <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+            Add a jurisdiction config file to enable location-aware
+            analysis (agency mapping, local statute references).
+          </p>
+          <div className="inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded bg-slate-100 font-mono text-xs text-slate-700">
+            config/jurisdiction.json
+          </div>
+        </div>
+      )}
     </Card>
+  );
+}
+
+function DetailRow({
+  label,
+  value,
+  mono = false,
+  strong = false,
+}: {
+  label: string;
+  value: React.ReactNode;
+  mono?: boolean;
+  strong?: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        {label}
+      </span>
+      <span
+        className={`
+          text-right min-w-0 truncate
+          ${mono ? 'font-mono text-xs' : 'text-sm'}
+          ${strong ? 'font-semibold text-slate-900' : 'text-slate-800'}
+        `}
+      >
+        {value}
+      </span>
+    </div>
   );
 }

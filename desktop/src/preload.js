@@ -3,15 +3,38 @@
 const { contextBridge } = require("electron");
 const { VALID_CHANNELS, safeInvoke } = require("./channels");
 
+// Keep these in sync with BACKEND_HOST / BACKEND_PORT in src/backend.js.
+// Duplicated (rather than imported) so the preload script has no transitive
+// dependency on electron-log / electron app — which keeps the preload
+// surface trivially testable with a simple `jest.doMock("electron", ...)`.
+const BACKEND_HOST = "127.0.0.1";
+const BACKEND_PORT = 18741;
+
 /**
  * Expose a safe, limited API to the renderer process via contextBridge.
  * This maintains context isolation while providing necessary functionality.
  *
  * safeInvoke (from channels.js) enforces the VALID_CHANNELS allowlist at
- * runtime so that future refactors cannot accidentally expose arbitrary channels.
+ * runtime so that future refactors cannot accidentally expose arbitrary
+ * channels.
  */
 
 contextBridge.exposeInMainWorld("odiaDesktop", {
+  /**
+   * The base URL of the Python backend.  The API client in the renderer
+   * reads this at runtime so the same static build works under both
+   * file:// (Electron) and http(s):// (Docker nginx).
+   * @type {string}
+   */
+  backendBaseURL: `http://${BACKEND_HOST}:${BACKEND_PORT}`,
+
+  /**
+   * True when running inside the desktop shell.  The renderer uses this
+   * to gate features that only make sense in Electron (e.g. native
+   * file dialogs, skipping service-worker registration).
+   */
+  isDesktop: true,
+
   /**
    * Open a native file dialog to select documents for analysis.
    * @param {Object} options - Dialog options
@@ -51,7 +74,7 @@ contextBridge.exposeInMainWorld("odiaDesktop", {
 
   /**
    * Get the current backend connection status.
-   * @returns {Promise<{connected: boolean, port: number}>}
+   * @returns {Promise<{connected: boolean, host: string, port: number}>}
    */
   getBackendStatus: () => safeInvoke("backend:status"),
 

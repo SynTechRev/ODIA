@@ -91,6 +91,11 @@ jobs:
         shell: bash
         env:
           ELECTRON_BUILD: '1'
+          # Belt-and-braces with the runtime resolver in lib/api/client.ts.
+          # Even if window.odiaDesktop is not yet injected when the first
+          # render fires, this bakes the correct base URL into the bundle.
+          # Must match BACKEND_HOST:BACKEND_PORT in desktop/src/backend.js.
+          NEXT_PUBLIC_API_URL: 'http://127.0.0.1:18741'
         run: |
           npm ci
           npx next build

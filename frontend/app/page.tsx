@@ -1,9 +1,19 @@
 /**
- * Dashboard Page
+ * Dashboard — main landing view.
+ *
+ * Sections:
+ *   1. Hero — brand statement + primary CTAs
+ *   2. Severity strip (conditional — only when analyses exist)
+ *   3. System Status × Analysis Summary cards
+ *   4. Jurisdiction × Detectors cards
+ *   5. Quick Actions tiles
+ *   6. Platform Capabilities (static copy)
  */
 
 'use client';
 
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { SystemStatusCard } from '@/components/dashboard/SystemStatusCard';
 import { AnalysisSummaryCard } from '@/components/dashboard/AnalysisSummaryCard';
@@ -11,7 +21,16 @@ import { JurisdictionCard } from '@/components/dashboard/JurisdictionCard';
 import { DetectorStatusCard } from '@/components/dashboard/DetectorStatusCard';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
-import { useRouter } from 'next/navigation';
+import {
+  UploadIcon,
+  AnalysisIcon,
+  IngestIcon,
+  DocumentsIcon,
+  AnomaliesIcon,
+  OrchestratorIcon,
+  ShieldIcon,
+  CheckCircleIcon,
+} from '@/components/base/Icons';
 import { useAnalysisStore } from '@/lib/stores/analysis';
 
 export default function Home() {
@@ -21,9 +40,9 @@ export default function Home() {
   const severityTotals = Object.values(detailedAnalyses).reduce(
     (acc, a) => {
       acc.critical += a.summary.by_severity.critical;
-      acc.high += a.summary.by_severity.high;
-      acc.medium += a.summary.by_severity.medium;
-      acc.low += a.summary.by_severity.low;
+      acc.high     += a.summary.by_severity.high;
+      acc.medium   += a.summary.by_severity.medium;
+      acc.low      += a.summary.by_severity.low;
       return acc;
     },
     { critical: 0, high: 0, medium: 0, low: 0 },
@@ -33,217 +52,262 @@ export default function Home() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-
-        {/* Hero */}
-        <div
-          className="relative rounded-xl overflow-hidden p-8"
-          style={{
-            background: 'linear-gradient(135deg, #071526 0%, #0a1f3a 40%, #0d2b4e 100%)',
-            border: '1px solid var(--border)',
-          }}
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* =============================================================== */}
+        {/* 1 · Hero                                                         */}
+        {/* =============================================================== */}
+        <section
+          className="
+            relative overflow-hidden rounded-2xl text-white
+            bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800
+            ring-1 ring-slate-900/10
+          "
         >
-          {/* Decorative grid overlay */}
+          {/* Decorative grid pattern */}
           <div
-            className="absolute inset-0 opacity-5 pointer-events-none"
+            className="absolute inset-0 opacity-[0.06] pointer-events-none"
+            aria-hidden="true"
             style={{
               backgroundImage:
-                'linear-gradient(var(--accent) 1px, transparent 1px), linear-gradient(90deg, var(--accent) 1px, transparent 1px)',
-              backgroundSize: '40px 40px',
+                'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
             }}
           />
-          {/* Gold top-left accent bar */}
+          {/* Accent glow */}
           <div
-            className="absolute top-0 left-0 h-1 w-32 rounded-br"
-            style={{ background: 'linear-gradient(90deg, var(--gold), transparent)' }}
+            className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-amber-500/20 blur-3xl pointer-events-none"
+            aria-hidden="true"
           />
-
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-3">
-              <span
-                className="text-xs font-black tracking-[0.3em] px-2.5 py-1 rounded"
-                style={{
-                  background: 'rgba(212,160,23,0.15)',
-                  color: 'var(--gold)',
-                  border: '1px solid rgba(212,160,23,0.3)',
-                }}
-              >
-                O.D.I.A.
-              </span>
-              <span
-                className="text-xs font-medium"
-                style={{ color: 'var(--muted)' }}
-              >
-                v2.1.2
-              </span>
+          <div className="relative p-8 md:p-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-medium ring-1 ring-amber-500/30 mb-4">
+              <ShieldIcon size={12} />
+              Oraculus Decimus Intellect Analyst · v2.1.4
             </div>
-
-            <h1
-              className="text-3xl font-black mb-1 tracking-tight"
-              style={{ color: 'var(--foreground)' }}
-            >
-              Oraculus Decimus Intellect Analyst
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+              Civic accountability,
+              <br className="hidden md:block" />
+              at forensic resolution.
             </h1>
-            <p className="text-sm mb-6 max-w-xl" style={{ color: 'var(--muted)' }}>
-              Civic accountability intelligence — forensic anomaly detection, cross-jurisdiction
-              procurement analysis, and CCOPS compliance assessment for legal documents.
+            <p className="text-slate-300 max-w-2xl mb-6 text-sm md:text-base leading-relaxed">
+              Ingest legal and government documents. Surface fiscal anomalies,
+              constitutional concerns, surveillance outsourcing, and procurement
+              irregularities — all locally, all private, all auditable.
             </p>
-
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => router.push('/ingest')}
-                className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-150 hover:opacity-90 active:scale-95"
-                style={{ background: 'var(--accent)', color: '#fff' }}
+            <div className="flex flex-wrap items-center gap-3">
+              <Button
+                variant="accent"
+                size="lg"
+                onClick={() => router.push('/upload')}
+                icon={<UploadIcon size={16} />}
               >
                 Upload Document
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
+                size="lg"
                 onClick={() => router.push('/analysis')}
-                className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-150 hover:bg-white/10 active:scale-95"
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  color: 'var(--foreground)',
-                  border: '1px solid var(--border)',
-                }}
+                className="text-white hover:bg-white/10 border border-white/20"
+                icon={<AnalysisIcon size={16} />}
               >
                 View Analyses
-              </button>
+              </Button>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-4 text-xs text-slate-400">
+              <InlineFeature label="100% local processing" />
+              <InlineFeature label="SHA-256 provenance" />
+              <InlineFeature label="8-detector pipeline" />
+              <InlineFeature label="No outbound network" />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Severity counters */}
+        {/* =============================================================== */}
+        {/* 2 · Severity strip (conditional)                                 */}
+        {/* =============================================================== */}
         {hasAnomalyData && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { label: 'Critical', value: severityTotals.critical, color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
-              { label: 'High',     value: severityTotals.high,     color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-              { label: 'Medium',   value: severityTotals.medium,   color: '#eab308', bg: 'rgba(234,179,8,0.1)' },
-              { label: 'Low',      value: severityTotals.low,      color: 'var(--muted)', bg: 'rgba(122,154,184,0.1)' },
-            ].map(({ label, value, color, bg }) => (
-              <div
-                key={label}
-                className="rounded-lg p-4 text-center"
-                style={{ background: bg, border: `1px solid ${color}30` }}
-              >
-                <div className="text-3xl font-black mb-0.5" style={{ color }}>{value}</div>
-                <div className="text-xs font-semibold tracking-wide uppercase" style={{ color: 'var(--muted)' }}>
-                  {label}
-                </div>
-              </div>
-            ))}
-          </div>
+          <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <SeverityTile label="Critical" count={severityTotals.critical} tone="critical" />
+            <SeverityTile label="High"     count={severityTotals.high}     tone="high" />
+            <SeverityTile label="Medium"   count={severityTotals.medium}   tone="medium" />
+            <SeverityTile label="Low"      count={severityTotals.low}      tone="low" />
+          </section>
         )}
 
-        {/* Status cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* =============================================================== */}
+        {/* 3 · System × Analysis cards                                      */}
+        {/* =============================================================== */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <SystemStatusCard />
           <AnalysisSummaryCard />
-        </div>
+        </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* =============================================================== */}
+        {/* 4 · Jurisdiction × Detectors                                     */}
+        {/* =============================================================== */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <JurisdictionCard />
           <DetectorStatusCard />
-        </div>
+        </section>
 
-        {/* Quick actions */}
-        <div
-          className="rounded-xl p-6"
-          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
-        >
-          <h3
-            className="text-xs font-bold tracking-widest uppercase mb-4"
-            style={{ color: 'var(--muted)' }}
-          >
-            Quick Actions
-          </h3>
+        {/* =============================================================== */}
+        {/* 5 · Quick Actions                                                */}
+        {/* =============================================================== */}
+        <Card title="Quick Actions" variant="bordered">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[
-              { href: '/ingest',    icon: '▤', label: 'Ingest Document',  sub: 'Upload and analyze new documents' },
-              { href: '/documents', icon: '▣', label: 'Browse Documents', sub: 'View all ingested documents' },
-              { href: '/anomalies', icon: '△', label: 'Explore Anomalies',sub: 'Review detected anomalies by detector' },
-            ].map(({ href, icon, label, sub }) => (
-              <button
-                key={href}
-                onClick={() => router.push(href)}
-                className="p-4 rounded-lg text-left transition-all duration-150 hover:scale-[1.01] active:scale-95"
-                style={{
-                  background: 'var(--surface-2)',
-                  border: '1px solid var(--border)',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--accent)')}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
-              >
-                <div
-                  className="text-2xl mb-2 font-mono"
-                  style={{ color: 'var(--accent)' }}
-                >
-                  {icon}
-                </div>
-                <div className="text-sm font-semibold mb-0.5" style={{ color: 'var(--foreground)' }}>
-                  {label}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--muted)' }}>{sub}</div>
-              </button>
-            ))}
+            <ActionTile
+              onClick={() => router.push('/ingest')}
+              icon={<IngestIcon size={22} />}
+              title="Ingest Document"
+              subtitle="Upload and analyse new documents"
+            />
+            <ActionTile
+              onClick={() => router.push('/documents')}
+              icon={<DocumentsIcon size={22} />}
+              title="Browse Documents"
+              subtitle="View all ingested documents"
+            />
+            <ActionTile
+              onClick={() => router.push('/anomalies')}
+              icon={<AnomaliesIcon size={22} />}
+              title="Explore Anomalies"
+              subtitle="Review findings by detector"
+            />
           </div>
-        </div>
+        </Card>
 
-        {/* Feature overview */}
-        <div
-          className="rounded-xl p-6"
-          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
-        >
-          <h3
-            className="text-xs font-bold tracking-widest uppercase mb-4"
-            style={{ color: 'var(--muted)' }}
-          >
-            Platform Capabilities
-          </h3>
+        {/* =============================================================== */}
+        {/* 6 · Platform Capabilities                                        */}
+        {/* =============================================================== */}
+        <Card title="Platform Capabilities" variant="bordered">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {[
-              {
-                icon: '◎', color: 'var(--accent)',
-                title: '12-Detector Analysis Engine',
-                body: 'Fiscal, constitutional, surveillance, procurement, signature, scope, governance, and administrative integrity detection.',
-              },
-              {
-                icon: '⊛', color: 'var(--gold)',
-                title: 'Phase 5–9 Orchestration',
-                body: 'Multi-agent autonomous task graph with dependency resolution and parallel execution.',
-              },
-              {
-                icon: '⬡', color: '#a78bfa',
-                title: 'CCOPS Compliance Engine',
-                body: '11 ACLU mandate checks mapped to detector findings with automated scorecard generation.',
-              },
-              {
-                icon: '▤', color: '#34d399',
-                title: 'Full Provenance Tracking',
-                body: 'SHA-256 hashing, contract lineage reconstruction, and cryptographic chain-of-custody.',
-              },
-            ].map(({ icon, color, title, body }) => (
-              <div key={title} className="flex gap-3">
-                <div
-                  className="w-8 h-8 rounded-md flex items-center justify-center text-sm flex-shrink-0 font-mono"
-                  style={{ background: `${color}18`, color }}
-                >
-                  {icon}
-                </div>
-                <div>
-                  <div className="text-sm font-semibold mb-0.5" style={{ color: 'var(--foreground)' }}>
-                    {title}
-                  </div>
-                  <div className="text-xs leading-relaxed" style={{ color: 'var(--muted)' }}>
-                    {body}
-                  </div>
-                </div>
-              </div>
-            ))}
+            <Feature
+              icon={<AnalysisIcon size={18} />}
+              title="8-Detector Analysis Engine"
+              body="Fiscal, constitutional, surveillance, procurement, signature, scope, governance, and administrative integrity detection — all executed locally."
+            />
+            <Feature
+              icon={<OrchestratorIcon size={18} />}
+              title="Phase 5–9 Orchestration"
+              body="Multi-agent autonomous task graph with dependency resolution and parallel execution across the detector registry."
+            />
+            <Feature
+              icon={<CheckCircleIcon size={18} />}
+              title="CCOPS Compliance Engine"
+              body="11 ACLU mandate checks mapped to detector findings with automated scorecard generation for oversight review."
+            />
+            <Feature
+              icon={<ShieldIcon size={18} />}
+              title="Full Provenance Tracking"
+              body="SHA-256 hashing, contract lineage reconstruction, and cryptographic chain-of-custody for every analysed document."
+            />
           </div>
-        </div>
-
+        </Card>
       </div>
     </DashboardLayout>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+function InlineFeature({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span className="w-1 h-1 rounded-full bg-amber-400" />
+      {label}
+    </span>
+  );
+}
+
+function SeverityTile({
+  label,
+  count,
+  tone,
+}: {
+  label: string;
+  count: number;
+  tone: 'critical' | 'high' | 'medium' | 'low';
+}) {
+  const toneMap = {
+    critical: { text: 'text-red-700',    dot: 'bg-red-700',     ring: 'ring-red-200' },
+    high:     { text: 'text-red-600',    dot: 'bg-red-500',     ring: 'ring-red-100' },
+    medium:   { text: 'text-orange-600', dot: 'bg-orange-500',  ring: 'ring-orange-100' },
+    low:      { text: 'text-yellow-700', dot: 'bg-yellow-500',  ring: 'ring-yellow-100' },
+  };
+  const t = toneMap[tone];
+  return (
+    <div className={`bg-white border border-slate-200 rounded-xl p-4 ring-1 ${t.ring}`}>
+      <div className="flex items-center gap-2 mb-2">
+        <span className={`w-2 h-2 rounded-full ${t.dot}`} />
+        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+          {label}
+        </span>
+      </div>
+      <div className={`text-2xl font-bold tabular-nums ${t.text}`}>
+        {count}
+      </div>
+    </div>
+  );
+}
+
+function ActionTile({
+  onClick,
+  icon,
+  title,
+  subtitle,
+}: {
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="
+        group text-left p-4 rounded-lg
+        border border-slate-200 bg-white
+        hover:border-amber-400 hover:shadow-md hover:shadow-amber-500/5
+        transition-all duration-150
+        focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2
+      "
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0 w-10 h-10 rounded-md bg-slate-100 text-slate-600 group-hover:bg-amber-50 group-hover:text-amber-600 flex items-center justify-center transition-colors">
+          {icon}
+        </div>
+        <div className="min-w-0">
+          <div className="font-semibold text-slate-900 text-sm mb-0.5">
+            {title}
+          </div>
+          <div className="text-xs text-slate-500 leading-relaxed">
+            {subtitle}
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+function Feature({
+  icon,
+  title,
+  body,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="flex-shrink-0 w-9 h-9 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center ring-1 ring-amber-200">
+        {icon}
+      </div>
+      <div className="min-w-0">
+        <h4 className="font-semibold text-slate-900 text-sm mb-1">{title}</h4>
+        <p className="text-xs text-slate-600 leading-relaxed">{body}</p>
+      </div>
+    </div>
   );
 }

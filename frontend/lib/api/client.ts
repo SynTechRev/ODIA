@@ -1,9 +1,19 @@
 /**
  * API client for Oraculus-DI-Auditor backend.
  *
- * Provides a typed singleton client for all backend endpoints.
- * Backend base URL defaults to http://localhost:8000 and can be
- * overridden via NEXT_PUBLIC_API_URL environment variable.
+ * Base URL resolution (runtime, in this priority order):
+ *
+ *   1. window.odiaDesktop.backendBaseURL (Electron, injected at runtime
+ *      by the preload script — see desktop/src/preload.js)
+ *   2. NEXT_PUBLIC_API_URL env var baked in at build time (Docker / web)
+ *   3. window.location.origin when served over http(s) (same-origin SPA)
+ *   4. "http://127.0.0.1:18741" as a last-resort Electron default
+ *
+ * Why runtime: the static Electron build is loaded via file://, and the
+ * backend in packaged mode binds to 127.0.0.1:18741.  Baking that URL in
+ * at build time would break the browser/Docker build which uses a
+ * different port.  Resolving at runtime lets a single static bundle
+ * serve both deployment targets.
  */
 
 import axios, { type AxiosInstance } from 'axios';
@@ -21,6 +31,47 @@ import type {
   HealthResponse,
   JurisdictionInfo,
 } from '@/lib/types/api';
+
+// ---------------------------------------------------------------------------
+// Runtime base URL resolution
+// ---------------------------------------------------------------------------
+
+/**
+ * Shape of the preload bridge the desktop app exposes on window.  Keep
+ * this declaration loose — the renderer does not depend on the desktop
+ * app being present, it just uses the bridge when it is.
+ */
+declare global {
+  interface Window {
+    odiaDesktop?: {
+      backendBaseURL?: string;
+      getBackendStatus?: () => Promise<{ host: string; port: number; connected: boolean }>;
+      [key: string]: unknown;
+    };
+  }
+}
+
+const ELECTRON_FALLBACK = 'http://127.0.0.1:18741';
+
+function resolveBaseURL(): string {
+  // 1. Electron preload bridge
+  if (typeof window !== 'undefined' && window.odiaDesktop?.backendBaseURL) {
+    return window.odiaDesktop.backendBaseURL;
+  }
+
+  // 2. Build-time env var (NEXT_PUBLIC_API_URL is inlined by Next)
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  // 3. Same-origin SPA (Docker nginx proxy)
+  if (typeof window !== 'undefined' && window.location.protocol !== 'file:') {
+    return window.location.origin;
+  }
+
+  // 4. Electron fallback — must match BACKEND_PORT in desktop/src/backend.js
+  return ELECTRON_FALLBACK;
+}
 
 // ---------------------------------------------------------------------------
 // Request payload types
@@ -44,8 +95,10 @@ export interface BatchAnalyzePayload {
 
 export class APIClient {
   private readonly http: AxiosInstance;
+  public readonly baseURL: string;
 
   constructor(baseURL: string) {
+    this.baseURL = baseURL;
     this.http = axios.create({
       baseURL,
       headers: { 'Content-Type': 'application/json' },
@@ -285,10 +338,18 @@ let _client: APIClient | null = null;
 
 export function getAPIClient(): APIClient {
   if (!_client) {
-    const baseURL =
-      (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) ||
-      'http://localhost:8000';
-    _client = new APIClient(baseURL);
+    _client = new APIClient(resolveBaseURL());
   }
   return _client;
 }
+
+/**
+ * Force the client to re-resolve its base URL.  Useful in Electron where
+ * window.odiaDesktop may be injected slightly after the first render.
+ */
+export function resetAPIClient(): void {
+  _client = null;
+}
+
+/** Exported for tests. */
+export { resolveBaseURL };

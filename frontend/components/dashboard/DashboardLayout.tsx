@@ -1,8 +1,9 @@
 /**
- * Dashboard Layout Component - Main application layout
+ * Dashboard Layout — fixed sidebar (desktop) + bottom tab bar (mobile).
  *
- * Desktop: fixed sidebar (left)
- * Mobile:  bottom tab bar (5 primary tabs)
+ * The sidebar uses inline SVG icons (see Icons.tsx) so the UI renders
+ * correctly under file:// in Electron where emoji fonts and Google Fonts
+ * are unavailable.
  */
 
 'use client';
@@ -10,41 +11,100 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import {
+  DashboardIcon,
+  UploadIcon,
+  ResultsIcon,
+  IngestIcon,
+  AnalysisIcon,
+  DocumentsIcon,
+  AnomaliesIcon,
+  OrchestratorIcon,
+  SettingsIcon,
+  OdiaMarkIcon,
+  type IconProps,
+} from '@/components/base/Icons';
+import { getAPIClient } from '@/lib/api/client';
 
 export interface DashboardLayoutProps {
   children: ReactNode;
 }
 
-const sidebarNav = [
-  { name: 'Dashboard',    href: '/',            icon: '⬡' },
-  { name: 'Upload',       href: '/upload',       icon: '↑' },
-  { name: 'Results',      href: '/results',      icon: '≡' },
-  { name: 'Ingest',       href: '/ingest',       icon: '▤' },
-  { name: 'Analysis',     href: '/analysis',     icon: '◎' },
-  { name: 'Documents',    href: '/documents',    icon: '▣' },
-  { name: 'Anomalies',    href: '/anomalies',    icon: '△' },
-  { name: 'Orchestrator', href: '/orchestrator', icon: '⊛' },
-  { name: 'Settings',     href: '/settings',     icon: '✦' },
+interface NavItem {
+  name: string;
+  href: string;
+  Icon: React.FC<IconProps>;
+  group?: string;
+}
+
+// Grouped so the sidebar can render section headings — makes the
+// information hierarchy readable rather than a flat dump of 9 links.
+const sidebarNav: NavItem[] = [
+  { name: 'Dashboard',     href: '/',              Icon: DashboardIcon,    group: 'Overview' },
+
+  { name: 'Upload',        href: '/upload',        Icon: UploadIcon,       group: 'Workflow' },
+  { name: 'Ingest',        href: '/ingest',        Icon: IngestIcon,       group: 'Workflow' },
+  { name: 'Analysis',      href: '/analysis',      Icon: AnalysisIcon,     group: 'Workflow' },
+
+  { name: 'Documents',     href: '/documents',     Icon: DocumentsIcon,    group: 'Evidence' },
+  { name: 'Results',       href: '/results',       Icon: ResultsIcon,      group: 'Evidence' },
+  { name: 'Anomalies',     href: '/anomalies',     Icon: AnomaliesIcon,    group: 'Evidence' },
+
+  { name: 'Orchestrator',  href: '/orchestrator',  Icon: OrchestratorIcon, group: 'System' },
+  { name: 'Settings',      href: '/settings',      Icon: SettingsIcon,     group: 'System' },
 ];
 
-const tabNav = [
-  { name: 'Home',     href: '/',         icon: '⬡' },
-  { name: 'Upload',   href: '/upload',   icon: '↑' },
-  { name: 'Results',  href: '/results',  icon: '≡' },
-  { name: 'Docs',     href: '/documents',icon: '▣' },
-  { name: 'Settings', href: '/settings', icon: '✦' },
+const mobileNav: NavItem[] = [
+  { name: 'Home',     href: '/',           Icon: DashboardIcon },
+  { name: 'Upload',   href: '/upload',     Icon: UploadIcon },
+  { name: 'Results',  href: '/results',    Icon: ResultsIcon },
+  { name: 'Docs',     href: '/documents',  Icon: DocumentsIcon },
+  { name: 'Settings', href: '/settings',   Icon: SettingsIcon },
 ];
 
 function isActive(href: string, pathname: string): boolean {
   return pathname === href || (href !== '/' && pathname.startsWith(href));
 }
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const pathname = usePathname();
-  const [offline, setOffline] = useState(false);
+// ---------------------------------------------------------------------------
+
+type BackendState = 'checking' | 'connected' | 'disconnected';
+
+function useBackendStatus(): { state: BackendState; retry: () => void } {
+  const [state, setState] = useState<BackendState>('checking');
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    if (!('serviceWorker' in navigator)) return;
+    let cancelled = false;
+    const check = async () => {
+      try {
+        await getAPIClient().health();
+        if (!cancelled) setState('connected');
+      } catch {
+        if (!cancelled) setState('disconnected');
+      }
+    };
+    check();
+    const id = setInterval(check, 15_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [tick]);
+
+  return { state, retry: () => setTick((t) => t + 1) };
+}
+
+// ---------------------------------------------------------------------------
+
+export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const pathname = usePathname();
+  const { state: backendState, retry } = useBackendStatus();
+  const [offline, setOffline] = useState(false);
+
+  // Service-worker OFFLINE broadcast (web/PWA only — no-op in Electron)
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
     const handler = (event: MessageEvent) => {
       if (event.data?.type === 'OFFLINE') setOffline(true);
     };
@@ -52,197 +112,196 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => navigator.serviceWorker.removeEventListener('message', handler);
   }, []);
 
-  const currentPage =
-    sidebarNav.find((item) => isActive(item.href, pathname))?.name ?? 'O.D.I.A.';
+  const current = sidebarNav.find((n) => isActive(n.href, pathname));
+  const currentName = current?.name ?? 'O.D.I.A.';
+
+  // Group sidebar items while preserving order
+  const groups = sidebarNav.reduce<Record<string, NavItem[]>>((acc, item) => {
+    const g = item.group ?? 'Other';
+    if (!acc[g]) acc[g] = [];
+    acc[g].push(item);
+    return acc;
+  }, {});
+  const groupOrder = ['Overview', 'Workflow', 'Evidence', 'System'];
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--background)' }}>
-
-      {/* Offline banner */}
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      {/* ---- Offline banner -------------------------------------------- */}
       {offline && (
-        <div
-          className="fixed top-0 inset-x-0 z-50 text-sm text-center py-2 px-4 font-medium"
-          style={{ background: 'var(--warning)', color: '#000' }}
-        >
-          Offline mode — cached pages available.
-          <button className="ml-3 underline opacity-80" onClick={() => setOffline(false)}>
+        <div className="fixed top-0 inset-x-0 z-50 bg-amber-500 text-slate-900 text-sm text-center py-2 px-4 shadow-md">
+          <span className="font-medium">You are offline.</span> Cached pages are available.
+          <button
+            className="ml-3 underline hover:no-underline"
+            onClick={() => setOffline(false)}
+          >
             Dismiss
           </button>
         </div>
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Desktop sidebar                                                      */}
-      {/* ------------------------------------------------------------------ */}
+      {/* ================================================================== */}
+      {/* Desktop sidebar                                                     */}
+      {/* ================================================================== */}
       <aside
-        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col"
-        style={{ background: 'var(--surface)', borderRight: '1px solid var(--border)' }}
+        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-slate-950 text-slate-100 border-r border-slate-800 z-40"
+        aria-label="Primary navigation"
       >
-        {/* Branding */}
-        <div
-          className="flex flex-col justify-center px-6 py-5 flex-shrink-0"
-          style={{
-            background: 'linear-gradient(135deg, #0a1628 0%, #0d1f38 100%)',
-            borderBottom: '1px solid var(--border)',
-          }}
-        >
-          <div className="flex items-center gap-2 mb-1">
-            <div
-              className="w-7 h-7 rounded flex items-center justify-center text-xs font-black"
-              style={{ background: 'var(--gold)', color: '#000' }}
-            >
-              ⬡
-            </div>
-            <span
-              className="text-lg font-black tracking-widest"
-              style={{ color: 'var(--gold)', letterSpacing: '0.2em' }}
-            >
-              O.D.I.A.
-            </span>
+        {/* Brand */}
+        <div className="flex items-center gap-3 h-16 px-5 bg-slate-900 border-b border-slate-800 flex-shrink-0">
+          <div className="flex items-center justify-center w-9 h-9 rounded-md bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/30">
+            <OdiaMarkIcon size={20} />
           </div>
-          <p
-            className="text-xs leading-tight pl-9"
-            style={{ color: 'var(--muted)' }}
-          >
-            Oraculus Decimus<br />Intellect Analyst
-          </p>
+          <div className="leading-tight">
+            <div className="text-sm font-bold tracking-wide text-white">O.D.I.A.</div>
+            <div className="text-[10px] uppercase tracking-widest text-slate-400">
+              DI Auditor
+            </div>
+          </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto" role="navigation">
-          {sidebarNav.map((item) => {
-            const active = isActive(item.href, pathname);
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="flex items-center px-3 py-2.5 rounded-md transition-all duration-150 group"
-                style={{
-                  background: active ? 'rgba(14,165,233,0.15)' : 'transparent',
-                  color: active ? 'var(--accent-2)' : 'var(--muted)',
-                  borderLeft: active ? '2px solid var(--accent)' : '2px solid transparent',
-                }}
-                aria-current={active ? 'page' : undefined}
-              >
-                <span
-                  className="w-6 text-center text-base mr-3 font-mono"
-                  style={{ color: active ? 'var(--accent)' : 'var(--muted)' }}
-                  aria-hidden="true"
-                >
-                  {item.icon}
-                </span>
-                <span className="text-sm font-medium">{item.name}</span>
-                {active && (
-                  <span
-                    className="ml-auto w-1.5 h-1.5 rounded-full"
-                    style={{ background: 'var(--accent)' }}
-                  />
-                )}
-              </Link>
-            );
-          })}
+        {/* Navigation (scrollable) */}
+        <nav className="flex-1 px-3 py-4 overflow-y-auto" role="navigation">
+          {groupOrder
+            .filter((g) => groups[g])
+            .map((group) => (
+              <div key={group} className="mb-5 last:mb-0">
+                <div className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                  {group}
+                </div>
+                <ul className="space-y-0.5">
+                  {groups[group].map(({ name, href, Icon }) => {
+                    const active = isActive(href, pathname);
+                    return (
+                      <li key={name}>
+                        <Link
+                          href={href}
+                          className={`
+                            group relative flex items-center gap-3 px-3 py-2 rounded-md
+                            text-sm font-medium transition-colors
+                            ${active
+                              ? 'bg-slate-800 text-white'
+                              : 'text-slate-300 hover:bg-slate-900 hover:text-white'}
+                          `}
+                          aria-current={active ? 'page' : undefined}
+                        >
+                          {/* Active indicator bar */}
+                          <span
+                            className={`
+                              absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r
+                              ${active ? 'bg-amber-500' : 'bg-transparent group-hover:bg-slate-700'}
+                            `}
+                            aria-hidden="true"
+                          />
+                          <Icon size={18} className={active ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200'} />
+                          <span>{name}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
         </nav>
 
-        {/* Footer */}
-        <div
-          className="px-5 py-4 flex-shrink-0"
-          style={{ borderTop: '1px solid var(--border)' }}
-        >
-          <div className="flex items-center gap-2">
-            <div
-              className="w-2 h-2 rounded-full animate-pulse"
-              style={{ background: 'var(--success)' }}
-            />
-            <p className="text-xs" style={{ color: 'var(--muted)' }}>
-              v2.1.2 &nbsp;·&nbsp; System Online
-            </p>
-          </div>
+        {/* Backend status pill + version */}
+        <div className="px-4 py-3 border-t border-slate-800 flex-shrink-0">
+          <button
+            onClick={retry}
+            className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md bg-slate-900 hover:bg-slate-800 transition-colors text-left group"
+            title="Click to re-check backend connection"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <span
+                className={`
+                  inline-block w-2 h-2 rounded-full flex-shrink-0
+                  ${backendState === 'connected'   ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : ''}
+                  ${backendState === 'disconnected' ? 'bg-red-500' : ''}
+                  ${backendState === 'checking'     ? 'bg-amber-400 animate-odia-pulse' : ''}
+                `}
+                aria-hidden="true"
+              />
+              <span className="text-xs font-medium text-slate-200 truncate">
+                {backendState === 'connected'    && 'Backend online'}
+                {backendState === 'disconnected' && 'Backend offline'}
+                {backendState === 'checking'     && 'Connecting…'}
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-500 group-hover:text-slate-300">
+              v2.1.4
+            </span>
+          </button>
         </div>
       </aside>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Main content                                                         */}
-      {/* ------------------------------------------------------------------ */}
+      {/* ================================================================== */}
+      {/* Main content                                                        */}
+      {/* ================================================================== */}
       <main className={`md:pl-64 ${offline ? 'pt-10' : ''}`}>
-        {/* Desktop page header */}
-        <header
-          className="hidden md:block"
-          style={{
-            background: 'var(--surface)',
-            borderBottom: '1px solid var(--border)',
-          }}
-        >
-          <div className="px-8 py-4 flex items-center gap-3">
-            <div
-              className="w-1 h-6 rounded"
-              style={{ background: 'var(--accent)' }}
-            />
-            <h2
-              className="text-lg font-semibold tracking-wide"
-              style={{ color: 'var(--foreground)' }}
-            >
-              {currentPage}
+        {/* Desktop top bar */}
+        <header className="hidden md:flex sticky top-0 z-30 h-16 bg-white/95 backdrop-blur border-b border-slate-200 items-center justify-between px-8">
+          <div className="flex items-center gap-3">
+            {current?.Icon && <current.Icon size={20} className="text-slate-400" />}
+            <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
+              {currentName}
             </h2>
           </div>
-        </header>
-
-        {/* Mobile page header */}
-        <header
-          className="md:hidden"
-          style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}
-        >
-          <div className="px-4 py-3 flex items-center gap-3">
+          <div className="flex items-center gap-2 text-xs text-slate-500">
             <span
-              className="text-xs font-black tracking-widest"
-              style={{ color: 'var(--gold)' }}
-            >
-              O.D.I.A.
-            </span>
-            <span style={{ color: 'var(--border)' }}>|</span>
-            <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-              {currentPage}
+              className={`
+                inline-block w-1.5 h-1.5 rounded-full
+                ${backendState === 'connected'    ? 'bg-emerald-500' : ''}
+                ${backendState === 'disconnected' ? 'bg-red-500' : ''}
+                ${backendState === 'checking'     ? 'bg-amber-400 animate-odia-pulse' : ''}
+              `}
+            />
+            <span className="font-mono">
+              {backendState === 'connected'    && 'System Online'}
+              {backendState === 'disconnected' && 'System Offline'}
+              {backendState === 'checking'     && 'Checking…'}
             </span>
           </div>
         </header>
 
-        <div className="p-4 md:p-8 pb-24 md:pb-8">
+        {/* Mobile top bar */}
+        <header className="md:hidden sticky top-0 z-30 bg-slate-950 text-white border-b border-slate-800">
+          <div className="px-4 py-3 flex items-center gap-2">
+            <div className="flex items-center justify-center w-7 h-7 rounded bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/30">
+              <OdiaMarkIcon size={16} />
+            </div>
+            <h2 className="text-base font-semibold">{currentName}</h2>
+          </div>
+        </header>
+
+        {/* Page content — bottom padding accounts for mobile tab bar */}
+        <div className="p-4 md:p-8 pb-24 md:pb-12 animate-odia-fade">
           {children}
         </div>
       </main>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Mobile bottom tab bar                                                */}
-      {/* ------------------------------------------------------------------ */}
+      {/* ================================================================== */}
+      {/* Mobile bottom tab bar                                              */}
+      {/* ================================================================== */}
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-40"
-        style={{
-          background: 'var(--surface)',
-          borderTop: '1px solid var(--border)',
-        }}
+        className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-40 shadow-[0_-2px_12px_rgba(15,23,42,0.08)]"
         role="navigation"
         aria-label="Primary navigation"
       >
         <div className="flex">
-          {tabNav.map((item) => {
-            const active = isActive(item.href, pathname);
+          {mobileNav.map(({ name, href, Icon }) => {
+            const active = isActive(href, pathname);
             return (
               <Link
-                key={item.name}
-                href={item.href}
-                className="flex-1 flex flex-col items-center justify-center py-2.5 gap-1 transition-colors duration-150"
-                style={{ color: active ? 'var(--accent)' : 'var(--muted)' }}
+                key={name}
+                href={href}
+                className={`
+                  flex-1 flex flex-col items-center justify-center py-2.5 gap-1
+                  text-[10px] font-medium transition-colors
+                  ${active ? 'text-amber-600' : 'text-slate-500 hover:text-slate-700'}
+                `}
                 aria-current={active ? 'page' : undefined}
               >
-                <span className="text-lg leading-none font-mono" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <span className="text-xs font-medium">{item.name}</span>
-                {active && (
-                  <div
-                    className="absolute bottom-0 w-8 h-0.5 rounded-t"
-                    style={{ background: 'var(--accent)' }}
-                  />
-                )}
+                <Icon size={20} />
+                <span>{name}</span>
               </Link>
             );
           })}

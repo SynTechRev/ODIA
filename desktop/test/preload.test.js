@@ -87,8 +87,12 @@ describe("Preload Script", () => {
     );
   });
 
-  test("API has exactly the expected methods", () => {
-    const expectedMethods = [
+  test("API has exactly the expected methods and properties", () => {
+    const expectedKeys = [
+      // Properties injected at load time
+      "backendBaseURL",
+      "isDesktop",
+      // Methods
       "openFileDialog",
       "saveFileDialog",
       "checkHealth",
@@ -98,8 +102,16 @@ describe("Preload Script", () => {
       "openExternal",
     ];
 
-    const actualMethods = Object.keys(exposedApi);
-    expect(actualMethods.sort()).toEqual(expectedMethods.sort());
+    const actualKeys = Object.keys(exposedApi);
+    expect(actualKeys.sort()).toEqual(expectedKeys.sort());
+  });
+
+  test("exposes backendBaseURL pointing to 127.0.0.1:18741", () => {
+    expect(exposedApi.backendBaseURL).toBe("http://127.0.0.1:18741");
+  });
+
+  test("exposes isDesktop=true so renderer can detect Electron", () => {
+    expect(exposedApi.isDesktop).toBe(true);
   });
 
   test("rejects disallowed IPC channel via safeInvoke guard", async () => {

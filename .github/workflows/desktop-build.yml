@@ -114,6 +114,8 @@ jobs:
         shell: bash
         env:
           ELECTRON_BUILD: "1"
+          # Must match BACKEND_HOST:BACKEND_PORT in desktop/src/backend.js.
+          NEXT_PUBLIC_API_URL: "http://127.0.0.1:18741"
         run: npx next build
 
       - name: Copy frontend output
