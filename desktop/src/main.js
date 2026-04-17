@@ -102,13 +102,13 @@ async function onReady() {
     log.info("Starting Python backend...");
     startBackend();
 
-    // Wait for backend to be ready (30 second timeout)
-    const backendReady = await waitForBackend(30000);
+    // Wait for backend to be ready (60 second timeout — PyInstaller cold-start is slow)
+    const backendReady = await waitForBackend(60000);
     if (!backendReady) {
-      log.error("Backend failed to start within 30 seconds");
+      log.error("Backend failed to start within 60 seconds");
       dialog.showErrorBox(
         "Backend Startup Error",
-        "The analysis backend failed to start within 30 seconds.\n\n" +
+        "The analysis backend failed to start within 60 seconds.\n\n" +
           "Please ensure ODIA is installed correctly and try again."
       );
     } else {
