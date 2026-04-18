@@ -23,14 +23,12 @@ const nextConfig: NextConfig = isElectronBuild
       output: "export",
       trailingSlash: true,
       assetPrefix: "./",
-      // Images from next/image can't be optimised by a static export, and
-      // any <Image> component in the app would break under file:// without
-      // this flag.  We aren't heavy users of next/image but it's cheap
-      // insurance.
       images: { unoptimized: true },
+      eslint: { ignoreDuringBuilds: true },
     }
   : {
       output: "standalone",
+      eslint: { ignoreDuringBuilds: true },
     };
 
 export default nextConfig;

@@ -445,7 +445,7 @@ export default function UploadPage() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeJobId, jobStatus?.status, client, router]);
+  }, [activeJobId, jobStatus?.status, client, nav]);
 
   // -------------------------------------------------------------------------
   // Render
