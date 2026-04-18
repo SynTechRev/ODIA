@@ -230,7 +230,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </span>
             </div>
             <span className="text-[10px] text-slate-500 group-hover:text-slate-300">
-              v2.2.0
+              v2.2.1
             </span>
           </button>
         </div>

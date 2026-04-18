@@ -12,11 +12,24 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import { useAppNavigate } from '@/lib/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { getAPIClient } from '@/lib/api/client';
 import type { AuditStatus, FileMetadata } from '@/lib/types/api';
+
+function extractUploadError(err: unknown, filename: string): string {
+  if (axios.isAxiosError(err)) {
+    const detail = err.response?.data?.detail;
+    if (typeof detail === 'string') return `"${filename}": ${detail}`;
+    if (err.response?.status === 413) return `"${filename}": File too large for upload`;
+    if (err.response?.status) return `"${filename}": Server error ${err.response.status}`;
+    if (err.code === 'ECONNREFUSED' || err.code === 'ERR_NETWORK') return `"${filename}": Cannot reach backend`;
+  }
+  if (err instanceof Error) return `"${filename}": ${err.message}`;
+  return `Failed to upload "${filename}"`;
+}
 
 // ---------------------------------------------------------------------------
 // Legistar retrieval panel
@@ -297,8 +310,9 @@ export default function UploadPage() {
             });
             lastError = null;
             break;
-          } catch {
-            lastError = `Failed to upload "${file.name}"${attempt < MAX_RETRIES ? ` (retry ${attempt + 1}/${MAX_RETRIES})` : '. Check that the server is running.'}`;
+          } catch (err) {
+            const base = extractUploadError(err, file.name);
+            lastError = attempt < MAX_RETRIES ? `${base} — retrying…` : base;
           }
         }
         if (lastError) setError(lastError);
@@ -348,8 +362,9 @@ export default function UploadPage() {
             });
             lastError = null;
             break;
-          } catch {
-            lastError = `Failed to process image "${file.name}"${attempt < MAX_RETRIES ? ` (retry ${attempt + 1}/${MAX_RETRIES})` : '. Check that the server is running.'}`;
+          } catch (err) {
+            const base = extractUploadError(err, file.name);
+            lastError = attempt < MAX_RETRIES ? `${base} — retrying…` : base;
           }
         }
         if (lastError) setError(lastError);
@@ -413,8 +428,11 @@ export default function UploadPage() {
     try {
       const result = await client.runAudit(uploadedFiles.map((f) => f.file_id));
       setActiveJobId(result.job_id);
-    } catch {
-      setError('Failed to start audit. Check that the server is running.');
+    } catch (err) {
+      const msg = axios.isAxiosError(err)
+        ? (err.response?.data?.detail ?? err.message)
+        : err instanceof Error ? err.message : 'Unknown error';
+      setError(`Failed to start audit: ${msg}`);
       setIsRunning(false);
     }
   }, [client, uploadedFiles]);
