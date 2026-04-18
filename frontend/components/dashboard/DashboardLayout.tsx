@@ -157,7 +157,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="leading-tight">
             <div className="text-sm font-bold tracking-wide text-white">O.D.I.A.</div>
             <div className="text-[10px] uppercase tracking-widest text-slate-400">
-              Decimus Intellect Analyst
+              Oraculus Decimus Intellect Analyst
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </span>
             </div>
             <span className="text-[10px] text-slate-500 group-hover:text-slate-300">
-              v2.1.4
+              v2.2.0
             </span>
           </button>
         </div>
@@ -241,48 +241,70 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* ================================================================== */}
       <main className={`md:pl-64 ${offline ? 'pt-10' : ''}`}>
         {/* Desktop top bar */}
-        <header className="hidden md:flex sticky top-0 z-30 h-16 bg-white/95 backdrop-blur border-b border-slate-200 items-center justify-between px-8">
-          <div className="flex items-center gap-3">
+        <header className="hidden md:flex sticky top-0 z-30 h-14 bg-slate-900 border-b border-slate-700/60 items-center justify-between px-6 shadow-[0_1px_0_rgba(255,255,255,0.04),0_4px_16px_rgba(0,0,0,0.24)]">
+          <div className="flex items-center gap-2.5">
             {/* Back / forward — only shown in Electron where hard-nav builds real history */}
             {isFileProtocol() && (
-              <div className="flex items-center gap-0.5 mr-1">
+              <div className="flex items-center gap-0.5 mr-0.5">
                 <button
                   onClick={() => window.history.back()}
-                  className="p-1.5 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  className="p-1.5 rounded text-slate-500 hover:bg-slate-800 hover:text-slate-200 transition-colors"
                   title="Go back"
                   aria-label="Go back"
                 >
-                  <ChevronLeftIcon size={16} />
+                  <ChevronLeftIcon size={15} />
                 </button>
                 <button
                   onClick={() => window.history.forward()}
-                  className="p-1.5 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  className="p-1.5 rounded text-slate-500 hover:bg-slate-800 hover:text-slate-200 transition-colors"
                   title="Go forward"
                   aria-label="Go forward"
                 >
-                  <ChevronRightIcon size={16} />
+                  <ChevronRightIcon size={15} />
                 </button>
               </div>
             )}
-            {current?.Icon && <current.Icon size={20} className="text-slate-400" />}
-            <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
-              {currentName}
-            </h2>
+            {current?.Icon && (
+              <span className="flex items-center justify-center w-7 h-7 rounded bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20 flex-shrink-0">
+                <current.Icon size={15} />
+              </span>
+            )}
+            <div className="flex flex-col leading-none">
+              <h2 className="text-sm font-semibold text-white tracking-wide">
+                {currentName}
+              </h2>
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">
+                Oraculus Intelligence Platform
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span
+          <div className="flex items-center gap-3">
+            <button
+              onClick={retry}
               className={`
-                inline-block w-1.5 h-1.5 rounded-full
-                ${backendState === 'connected'    ? 'bg-emerald-500' : ''}
-                ${backendState === 'disconnected' ? 'bg-red-500' : ''}
-                ${backendState === 'checking'     ? 'bg-amber-400 animate-odia-pulse' : ''}
+                flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium
+                border transition-colors cursor-pointer
+                ${backendState === 'connected'
+                  ? 'bg-emerald-950/60 border-emerald-700/40 text-emerald-400 hover:bg-emerald-900/60'
+                  : backendState === 'disconnected'
+                  ? 'bg-red-950/60 border-red-700/40 text-red-400 hover:bg-red-900/60'
+                  : 'bg-amber-950/40 border-amber-700/30 text-amber-400'}
               `}
-            />
-            <span className="font-mono">
+              title="Click to re-check backend connection"
+            >
+              <span
+                className={`
+                  inline-block w-1.5 h-1.5 rounded-full flex-shrink-0
+                  ${backendState === 'connected'    ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]' : ''}
+                  ${backendState === 'disconnected' ? 'bg-red-400' : ''}
+                  ${backendState === 'checking'     ? 'bg-amber-400 animate-odia-pulse' : ''}
+                `}
+                aria-hidden="true"
+              />
               {backendState === 'connected'    && 'System Online'}
               {backendState === 'disconnected' && 'System Offline'}
-              {backendState === 'checking'     && 'Checking…'}
-            </span>
+              {backendState === 'checking'     && 'Connecting…'}
+            </button>
           </div>
         </header>
 

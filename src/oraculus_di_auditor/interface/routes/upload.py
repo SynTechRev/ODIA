@@ -164,7 +164,7 @@ def _ocr_image(path: Path) -> tuple[str, str]:
 def _flatten_findings(result: dict[str, Any], document_id: str) -> list[dict[str, Any]]:
     """Flatten the nested findings dict from analyze_document into a flat list."""
     flat: list[dict[str, Any]] = []
-    raw = result.get("findings", {})
+    raw = result.get("anomalies", result.get("findings", []))
 
     if isinstance(raw, dict):
         for detector, items in raw.items():

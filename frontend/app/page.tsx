@@ -81,7 +81,7 @@ export default function Home() {
           <div className="relative p-8 md:p-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-medium ring-1 ring-amber-500/30 mb-4">
               <ShieldIcon size={12} />
-              Oraculus Decimus Intellect Analyst · v2.1.4
+              Oraculus Decimus Intellect Analyst · v2.2.0
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
               Civic accountability,
