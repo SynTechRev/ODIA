@@ -67,13 +67,17 @@ def analyze_document(doc: dict[str, Any]) -> dict[str, Any]:
     # normalize each ref into the standard anomaly dict before appending.
     raw_text = extract_text_content(doc) or ""
     for ref in detect_cross_jurisdiction_refs(raw_text):
-        anomalies.append({
-            "id": f"cross_reference:{ref.get('type', 'unknown')}",
-            "issue": ref.get("description", "Cross-jurisdiction reference detected"),
-            "severity": "low",
-            "layer": "cross_reference",
-            "details": {k: v for k, v in ref.items() if k not in ("description",)},
-        })
+        anomalies.append(
+            {
+                "id": f"cross_reference:{ref.get('type', 'unknown')}",
+                "issue": ref.get(
+                    "description", "Cross-jurisdiction reference detected"
+                ),
+                "severity": "low",
+                "layer": "cross_reference",
+                "details": {k: v for k, v in ref.items() if k not in ("description",)},
+            }
+        )
 
     # Compute a confidence-like score (1.0 is best) using scalar core.
     score = compute_recursive_scalar_score(doc, anomalies)
