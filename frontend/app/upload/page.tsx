@@ -12,7 +12,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useAppNavigate } from '@/lib/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { getAPIClient } from '@/lib/api/client';
@@ -245,7 +245,7 @@ function SeverityDot({ severity }: { severity: string }) {
 }
 
 export default function UploadPage() {
-  const router = useRouter();
+  const nav = useAppNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -433,7 +433,7 @@ export default function UploadPage() {
         setJobStatus(status);
         if (status.status === 'complete') {
           clearInterval(interval);
-          router.push(`/results?job_id=${activeJobId}`);
+          nav(`/results?job_id=${activeJobId}`);
         } else if (status.status === 'error') {
           clearInterval(interval);
           setError(`Audit failed: ${status.error ?? 'Unknown error'}`);

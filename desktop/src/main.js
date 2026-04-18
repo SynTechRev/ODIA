@@ -86,10 +86,22 @@ function createWindow() {
 
 /**
  * Application startup sequence:
- * 1. Start Python backend
- * 2. Wait for backend health check
- * 3. Create main window
- * 4. Register IPC handlers
+ *
+ *   1. Register IPC handlers (cheap, synchronous)
+ *   2. Create the main window immediately
+ *   3. Kick off the Python backend in the background
+ *   4. The renderer's sidebar pill (DashboardLayout.tsx) drives its own
+ *      health polling against /api/v1/health and surfaces the connection
+ *      state inline, so there is no need to block the window on backend
+ *      readiness.
+ *   5. Only show a blocking error dialog if the backend *process* exits
+ *      unexpectedly (real crash), not on a slow cold-start.
+ *
+ * This matters on Windows: PyInstaller bootloader + bundled Python +
+ * sklearn/pydantic/fastapi takes noticeably longer than 30 s on first
+ * launch (antivirus scanning each extracted file), and the previous
+ * flow showed an alarming "Backend Startup Error" dialog in what was
+ * actually a perfectly normal cold start.
  */
 async function onReady() {
   log.info("ODIA Desktop starting...");
@@ -97,32 +109,47 @@ async function onReady() {
   log.info(`Electron: ${process.versions.electron}`);
   log.info(`Platform: ${process.platform} ${process.arch}`);
 
-  try {
-    // Start backend
-    log.info("Starting Python backend...");
-    startBackend();
-
-    // Wait for backend to be ready (60 second timeout — PyInstaller cold-start is slow)
-    const backendReady = await waitForBackend(60000);
-    if (!backendReady) {
-      log.error("Backend failed to start within 60 seconds");
-      dialog.showErrorBox(
-        "Backend Startup Error",
-        "The analysis backend failed to start within 60 seconds.\n\n" +
-          "Please ensure ODIA is installed correctly and try again."
-      );
-    } else {
-      log.info("Backend is ready");
-    }
-  } catch (err) {
-    log.error("Backend startup error:", err);
-  }
-
-  // Register IPC handlers
+  // 1. Register IPC handlers up front so they're ready the moment the
+  //    renderer starts making requests.
   registerIpcHandlers(ipcMain, dialog);
 
-  // Create the main window
+  // 2. Open the window immediately — don't make the user stare at a
+  //    blank screen while PyInstaller unpacks.
   createWindow();
+
+  // 3. Start the backend in the background.
+  try {
+    log.info("Starting Python backend (background)...");
+    startBackend();
+  } catch (err) {
+    log.error("Backend failed to spawn:", err);
+    // Spawn failure is the one case we surface immediately — the
+    // sidebar pill can't recover from a process that never started.
+    dialog.showErrorBox(
+      "Backend failed to start",
+      "The analysis backend could not be launched.\n\n" +
+        (err && err.message ? err.message : String(err)) +
+        "\n\nPlease reinstall O.D.I.A. or check the application logs.",
+    );
+    return;
+  }
+
+  // 4. Wait for the backend, but don't block on it.  Log timing for
+  //    diagnostics; the sidebar pill is the user-facing status.
+  const startedAt = Date.now();
+  waitForBackend(120_000)
+    .then((ready) => {
+      if (ready) {
+        log.info(`Backend ready after ${Date.now() - startedAt} ms`);
+      } else {
+        log.error(
+          `Backend did not respond within 120 s (sidebar will still show offline)`,
+        );
+      }
+    })
+    .catch((err) => {
+      log.error("Backend readiness check failed:", err);
+    });
 }
 
 // App lifecycle

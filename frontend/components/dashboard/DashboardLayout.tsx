@@ -10,7 +10,7 @@
 
 import React, { ReactNode, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { AppLink } from '@/lib/navigation';
 import {
   DashboardIcon,
   UploadIcon,
@@ -154,7 +154,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="leading-tight">
             <div className="text-sm font-bold tracking-wide text-white">O.D.I.A.</div>
             <div className="text-[10px] uppercase tracking-widest text-slate-400">
-              DI Auditor
+              Decimus Intellect Analyst
             </div>
           </div>
         </div>
@@ -173,7 +173,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     const active = isActive(href, pathname);
                     return (
                       <li key={name}>
-                        <Link
+                        <AppLink
                           href={href}
                           className={`
                             group relative flex items-center gap-3 px-3 py-2 rounded-md
@@ -194,7 +194,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                           />
                           <Icon size={18} className={active ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200'} />
                           <span>{name}</span>
-                        </Link>
+                        </AppLink>
                       </li>
                     );
                   })}
@@ -290,7 +290,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           {mobileNav.map(({ name, href, Icon }) => {
             const active = isActive(href, pathname);
             return (
-              <Link
+              <AppLink
                 key={name}
                 href={href}
                 className={`
@@ -302,7 +302,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               >
                 <Icon size={20} />
                 <span>{name}</span>
-              </Link>
+              </AppLink>
             );
           })}
         </div>

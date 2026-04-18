@@ -11,7 +11,7 @@ import React from 'react';
 import { Card } from '../base/Card';
 import { useAnalysisStore } from '@/lib/stores/analysis';
 import { AnalysisIcon, UploadIcon } from '@/components/base/Icons';
-import Link from 'next/link';
+import { AppLink } from '@/lib/navigation';
 
 export function AnalysisSummaryCard() {
   const analyses = useAnalysisStore((s) => s.analyses);
@@ -72,13 +72,13 @@ export function AnalysisSummaryCard() {
             Upload a document to begin forensic analysis. Findings and
             severity breakdowns will appear here.
           </p>
-          <Link
+          <AppLink
             href="/upload"
             className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-amber-700 hover:text-amber-800"
           >
             <UploadIcon size={14} />
             Upload your first document →
-          </Link>
+          </AppLink>
         </div>
       ) : (
         <div className="space-y-5">

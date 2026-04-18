@@ -11,7 +11,7 @@ import { AnalysisPanel } from '@/components/analysis/AnalysisPanel';
 import { SeverityChart } from '@/components/analysis/SeverityChart';
 import { Card } from '@/components/base/Card';
 import type { Anomaly } from '@/lib/types/api';
-import { useRouter } from 'next/navigation';
+import { useAppNavigate } from '@/lib/navigation';
 
 const SEVERITY_ORDER: Record<string, number> = {
   critical: 0,
@@ -21,7 +21,7 @@ const SEVERITY_ORDER: Record<string, number> = {
 };
 
 export default function AnalysisPage() {
-  const router = useRouter();
+  const nav = useAppNavigate();
   const analyses = useAnalysisStore((state) => state.analyses);
   const detailedAnalyses = useAnalysisStore((state) => state.detailedAnalyses);
   const currentAnalysis = useAnalysisStore((state) => state.currentAnalysis);
@@ -71,7 +71,7 @@ export default function AnalysisPage() {
               Upload and analyze documents to see results here.
             </p>
             <button
-              onClick={() => router.push('/ingest')}
+              onClick={() => nav('/ingest')}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Upload Document
@@ -122,7 +122,7 @@ export default function AnalysisPage() {
                       </div>
                       <button
                         className="text-xs text-blue-600 hover:underline flex-shrink-0"
-                        onClick={() => router.push('/anomalies')}
+                        onClick={() => nav('/anomalies')}
                       >
                         View
                       </button>

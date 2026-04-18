@@ -10,12 +10,12 @@ import { useAnalysisStore } from '@/lib/stores/analysis';
 import { DetectorGroupPanel } from '@/components/anomalies/DetectorGroupPanel';
 import { Card } from '@/components/base/Card';
 import type { DetailedAnalysisResult } from '@/lib/types/api';
-import { useRouter } from 'next/navigation';
+import { useAppNavigate } from '@/lib/navigation';
 
 type SeverityFilter = 'all' | 'critical' | 'high' | 'medium' | 'low';
 
 export default function AnomaliesPage() {
-  const router = useRouter();
+  const nav = useAppNavigate();
   const detailedAnalyses = useAnalysisStore((state) => state.detailedAnalyses);
   const [filterSeverity, setFilterSeverity] = useState<SeverityFilter>('all');
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
@@ -66,7 +66,7 @@ export default function AnomaliesPage() {
               Upload and analyze a document to see per-detector anomaly breakdowns here.
             </p>
             <button
-              onClick={() => router.push('/ingest')}
+              onClick={() => nav('/ingest')}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Upload Document

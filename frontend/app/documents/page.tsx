@@ -10,10 +10,10 @@ import { DocumentList } from '@/components/document/DocumentList';
 import { DocumentDetailPanel } from '@/components/document/DocumentDetailPanel';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
-import { useRouter } from 'next/navigation';
+import { useAppNavigate } from '@/lib/navigation';
 
 export default function DocumentsPage() {
-  const router = useRouter();
+  const nav = useAppNavigate();
   const documents = useDocumentStore((state) => state.documents);
   const selectedDocument = useDocumentStore((state) => state.selectedDocument);
   const selectDocument = useDocumentStore((state) => state.selectDocument);
@@ -33,7 +33,7 @@ export default function DocumentsPage() {
               </p>
               <Button
                 variant="primary"
-                onClick={() => router.push('/ingest')}
+                onClick={() => nav('/ingest')}
               >
                 Upload Document
               </Button>

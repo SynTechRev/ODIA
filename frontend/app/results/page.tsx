@@ -15,7 +15,7 @@
 
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { AppLink } from '@/lib/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { TemporalTimeline } from '@/components/timeline/TemporalTimeline';
@@ -345,12 +345,12 @@ function ResultsPageInner() {
             <div className="text-5xl mb-4">⚠️</div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Unable to load results</h3>
             <p className="text-gray-600 mb-6">{error ?? 'No results found.'}</p>
-            <Link
+            <AppLink
               href="/upload"
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Back to Upload
-            </Link>
+            </AppLink>
           </div>
         </Card>
       </DashboardLayout>

@@ -13,7 +13,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useAppNavigate } from '@/lib/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { SystemStatusCard } from '@/components/dashboard/SystemStatusCard';
 import { AnalysisSummaryCard } from '@/components/dashboard/AnalysisSummaryCard';
@@ -34,7 +34,7 @@ import {
 import { useAnalysisStore } from '@/lib/stores/analysis';
 
 export default function Home() {
-  const router = useRouter();
+  const nav = useAppNavigate();
   const detailedAnalyses = useAnalysisStore((state) => state.detailedAnalyses);
 
   const severityTotals = Object.values(detailedAnalyses).reduce(
@@ -97,7 +97,7 @@ export default function Home() {
               <Button
                 variant="accent"
                 size="lg"
-                onClick={() => router.push('/upload')}
+                onClick={() => nav('/upload')}
                 icon={<UploadIcon size={16} />}
               >
                 Upload Document
@@ -105,7 +105,7 @@ export default function Home() {
               <Button
                 variant="ghost"
                 size="lg"
-                onClick={() => router.push('/analysis')}
+                onClick={() => nav('/analysis')}
                 className="text-white hover:bg-white/10 border border-white/20"
                 icon={<AnalysisIcon size={16} />}
               >
@@ -155,19 +155,19 @@ export default function Home() {
         <Card title="Quick Actions" variant="bordered">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <ActionTile
-              onClick={() => router.push('/ingest')}
+              onClick={() => nav('/ingest')}
               icon={<IngestIcon size={22} />}
               title="Ingest Document"
               subtitle="Upload and analyse new documents"
             />
             <ActionTile
-              onClick={() => router.push('/documents')}
+              onClick={() => nav('/documents')}
               icon={<DocumentsIcon size={22} />}
               title="Browse Documents"
               subtitle="View all ingested documents"
             />
             <ActionTile
-              onClick={() => router.push('/anomalies')}
+              onClick={() => nav('/anomalies')}
               icon={<AnomaliesIcon size={22} />}
               title="Explore Anomalies"
               subtitle="Review findings by detector"
