@@ -19,6 +19,7 @@ import zlib
 # Used only when Pillow is unavailable.
 # ---------------------------------------------------------------------------
 
+
 def _write_png_chunk(chunk_type: bytes, data: bytes) -> bytes:
     chunk_len = struct.pack(">I", len(data))
     chunk_data = chunk_type + data
@@ -65,6 +66,7 @@ def _make_minimal_png(size: int, bg_rgb: tuple, fg_rgb: tuple) -> bytes:
 # ---------------------------------------------------------------------------
 # Pillow version — richer, used when available
 # ---------------------------------------------------------------------------
+
 
 def _make_pillow_icon(size: int, out_path: str) -> None:
     from PIL import Image, ImageDraw, ImageFilter
@@ -115,7 +117,10 @@ def _make_pillow_icon(size: int, out_path: str) -> None:
     hp_color = (60, 60, 80, 255)
     draw.arc(
         [cx - hp_r, cy - hp_r, cx + hp_r, cy + hp_r],
-        start=200, end=340, fill=hp_color, width=hp_w,
+        start=200,
+        end=340,
+        fill=hp_color,
+        width=hp_w,
     )
     # Ear-cups
     cup_r = int(head_r * 0.22)
@@ -139,7 +144,8 @@ def _make_pillow_icon(size: int, out_path: str) -> None:
     # Bridge
     draw.line(
         [(cx - eye_x_off + eye_r, eye_y), (cx + eye_x_off - eye_r, eye_y)],
-        fill=(60, 60, 80, 255), width=max(2, size // 80),
+        fill=(60, 60, 80, 255),
+        width=max(2, size // 80),
     )
     for side in [-1, 1]:
         ex = cx + side * eye_x_off
@@ -191,6 +197,7 @@ def _make_pillow_icon(size: int, out_path: str) -> None:
     # (text requires font; skip if default font is too small)
     try:
         from PIL import ImageFont
+
         font_size = max(16, size // 20)
         font = ImageFont.load_default(size=font_size)
         draw.text((pad * 2, pad * 2), "STR", font=font, fill=(255, 170, 0, 220))
@@ -212,6 +219,7 @@ def _make_pillow_icon(size: int, out_path: str) -> None:
 # Entry point
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     out_path = os.path.join(repo_root, "desktop", "resources", "icon.png")
@@ -224,8 +232,8 @@ def main() -> None:
         print("Pillow not available — generating minimal placeholder PNG")
         png_bytes = _make_minimal_png(
             size,
-            bg_rgb=(30, 10, 60),    # dark purple
-            fg_rgb=(180, 100, 255), # bright purple
+            bg_rgb=(30, 10, 60),  # dark purple
+            fg_rgb=(180, 100, 255),  # bright purple
         )
         with open(out_path, "wb") as f:
             f.write(png_bytes)
