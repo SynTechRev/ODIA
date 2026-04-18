@@ -121,29 +121,7 @@ jobs:
       - name: Fix _next/ asset paths for Electron subpages
         working-directory: frontend
         shell: bash
-        run: |
-          python3 - << 'PYEOF'
-          import os
-          out_dir = 'out'
-          count = 0
-          for dirpath, _, filenames in os.walk(out_dir):
-              for fname in filenames:
-                  if not fname.endswith('.html'):
-                      continue
-                  rel = os.path.relpath(out_dir, dirpath).replace('\\', '/')
-                  if rel == '.':
-                      continue  # root index.html: assetPrefix already correct
-                  fpath = os.path.join(dirpath, fname)
-                  with open(fpath, encoding='utf-8') as f:
-                      text = f.read()
-                  fixed = text.replace('./_next/', rel + '/_next/')
-                  if fixed != text:
-                      with open(fpath, 'w', encoding='utf-8') as f:
-                          f.write(fixed)
-                      count += 1
-                      print(f'  Patched: {fpath}')
-          print(f'Fixed {count} subpage HTML file(s)')
-          PYEOF
+        run: python3 ../scripts/fix_electron_paths.py
 
       - name: Copy frontend output
         shell: bash
