@@ -200,6 +200,12 @@ export const ChevronDownIcon: React.FC<IconProps> = (p) => (
   </IconBase>
 );
 
+export const ChevronLeftIcon: React.FC<IconProps> = (p) => (
+  <IconBase {...p}>
+    <polyline points="15 18 9 12 15 6" />
+  </IconBase>
+);
+
 export const ChevronRightIcon: React.FC<IconProps> = (p) => (
   <IconBase {...p}>
     <polyline points="9 18 15 12 9 6" />

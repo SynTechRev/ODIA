@@ -54,42 +54,53 @@ export function isFileProtocol(): boolean {
 // ---------------------------------------------------------------------------
 
 /**
+ * Resolve the frontend root URL regardless of which page is currently loaded.
+ *
+ * Problem: when the user navigates from /upload to /analysis, `window.location`
+ * points to `.../frontend/upload/index.html`.  A naïve `href.replace(/[^/]*$/, '')`
+ * gives `.../frontend/upload/` as the base, so the next URL resolves to
+ * `.../frontend/upload/analysis/index.html` (wrong).
+ *
+ * Fix: strip any known first-level route segment so we always return the
+ * `.../frontend/` root regardless of where we currently are.
+ */
+function getAppRootURL(): string {
+  if (typeof window === 'undefined') return '/';
+
+  const url = new URL(window.location.href);
+  let pathname = url.pathname.replace(/[^/]*$/, ''); // strip filename
+
+  // Strip one first-level route segment if present
+  const routePattern = /\/(upload|ingest|analysis|documents|results|anomalies|orchestrator|settings)\/$/;
+  const m = pathname.match(routePattern);
+  if (m) {
+    pathname = pathname.slice(0, -(m[1].length + 1));
+  }
+
+  return `${url.protocol}//${url.host}${pathname}`;
+}
+
+/**
  * Given a route path like `/upload`, return the absolute `file://` URL
- * to the corresponding `index.html` relative to the current document.
+ * to the corresponding `index.html` always relative to the app root —
+ * not to the currently loaded page.
  *
- *   current document:   file:///C:/.../frontend/index.html
- *   input:              '/upload'
- *   output:             'file:///C:/.../frontend/upload/index.html'
- *
- * The root path (`/`) resolves to the current directory's `index.html`.
- *
- * Uses the `URL` constructor so all path-segment normalisation (`..`,
- * `./`, query strings, hashes) is handled correctly on every platform.
+ *   from any page:   /upload  →  file:///C:/.../frontend/upload/index.html
+ *   from any page:   /        →  file:///C:/.../frontend/index.html
  */
 export function routeToFileURL(path: string): string {
   if (typeof window === 'undefined') return path;
 
-  // Split off query/hash so we can preserve them across the rewrite.
   const [pathname, ...rest] = path.split(/([?#])/);
   const tail = rest.join('');
-
-  // Strip leading slash — we want the route to be *relative* to the
-  // app root (the directory containing the top-level index.html), not
-  // relative to the filesystem root.
   const rel = pathname.replace(/^\/+/, '');
+  const root = getAppRootURL();
 
-  // Home route
-  if (rel === '' || rel === '/') {
-    // Use the directory of the current file as the base.
-    const base = window.location.href.replace(/[^/]*$/, '');
-    return base + 'index.html' + tail;
+  if (!rel || rel === '/') {
+    return root + 'index.html' + tail;
   }
 
-  // Any other route: /upload  →  ./upload/index.html
-  const base = window.location.href.replace(/[^/]*$/, '');
-  // Build the target using the URL constructor for correctness.
-  const target = new URL(rel.replace(/\/$/, '') + '/index.html', base);
-  return target.href + tail;
+  return root + rel.replace(/\/$/, '') + '/index.html' + tail;
 }
 
 // ---------------------------------------------------------------------------

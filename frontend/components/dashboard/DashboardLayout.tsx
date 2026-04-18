@@ -22,8 +22,11 @@ import {
   OrchestratorIcon,
   SettingsIcon,
   OdiaMarkIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   type IconProps,
 } from '@/components/base/Icons';
+import { isFileProtocol } from '@/lib/navigation';
 import { getAPIClient } from '@/lib/api/client';
 
 export interface DashboardLayoutProps {
@@ -240,6 +243,27 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Desktop top bar */}
         <header className="hidden md:flex sticky top-0 z-30 h-16 bg-white/95 backdrop-blur border-b border-slate-200 items-center justify-between px-8">
           <div className="flex items-center gap-3">
+            {/* Back / forward — only shown in Electron where hard-nav builds real history */}
+            {isFileProtocol() && (
+              <div className="flex items-center gap-0.5 mr-1">
+                <button
+                  onClick={() => window.history.back()}
+                  className="p-1.5 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  title="Go back"
+                  aria-label="Go back"
+                >
+                  <ChevronLeftIcon size={16} />
+                </button>
+                <button
+                  onClick={() => window.history.forward()}
+                  className="p-1.5 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  title="Go forward"
+                  aria-label="Go forward"
+                >
+                  <ChevronRightIcon size={16} />
+                </button>
+              </div>
+            )}
             {current?.Icon && <current.Icon size={20} className="text-slate-400" />}
             <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
               {currentName}
