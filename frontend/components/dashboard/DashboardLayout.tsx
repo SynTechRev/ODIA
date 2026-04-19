@@ -151,13 +151,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       >
         {/* Brand */}
         <div className="flex items-center gap-3 h-16 px-5 bg-slate-900 border-b border-slate-800 flex-shrink-0">
-          <div className="flex items-center justify-center w-9 h-9 rounded-md bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/30">
+          <div className="flex items-center justify-center w-9 h-9 rounded-md bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/30 flex-shrink-0">
             <OdiaMarkIcon size={20} />
           </div>
-          <div className="leading-tight">
+          <div className="leading-tight min-w-0">
             <div className="text-sm font-bold tracking-wide text-white">O.D.I.A.</div>
-            <div className="text-[10px] uppercase tracking-widest text-slate-400">
-              Oraculus Decimus Intellect Analyst
+            <div className="text-[10px] uppercase tracking-wide text-slate-400 truncate">
+              Forensic Audit Platform
             </div>
           </div>
         </div>

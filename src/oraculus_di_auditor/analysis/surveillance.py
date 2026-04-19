@@ -1,106 +1,272 @@
 """Surveillance Outsourcing Detector.
 
-Surfaces potential outsourcing of surveillance functions to private vendors
-and associated privacy risks. This initial version is a safe placeholder that
-returns no anomalies until rule heuristics are implemented.
+Detects surveillance-technology deployment patterns using the ODIA vendor
+signature database.  Unlike the previous placeholder implementation, this
+detector is calibrated against the Master Audit Synthesis methodology used
+to produce the VPD / PPD / Tulare / Lindsay / Farmersville / Woodlake /
+Exeter / Dinuba audits, where 7+ surveillance layers (Flock ALPR, Axon BWC,
+Spartan Camera, interview-room cameras, TASER, etc.) are routinely
+documented in municipal records without governance artefacts.
+
+Findings emitted (severity in parens):
+
+  surveillance:vendor-detected                         (info/low)
+    One-per-vendor finding listing every surveillance vendor that appears
+    in the document, with evidence snippets.  Establishes the vendor
+    footprint that downstream findings build on.
+
+  surveillance:alpr-without-sb524-policy               (critical when post-2026)
+    ALPR vendor present (Flock, generic ALPR, vehicle fingerprint) but no
+    SB 524 policy citation in the document.  SB 524 became effective
+    2026-01-01 and requires a written AI-transparency policy before ALPR
+    use.
+
+  surveillance:bwc-without-cjis-addendum               (high)
+    Body-worn camera vendor (Axon, Motorola WatchGuard) referenced without
+    a CJIS Security Addendum reference.  CJIS compliance is required for
+    criminal-justice data storage.
+
+  surveillance:ai-report-writing-without-policy        (critical)
+    Axon Draft One or equivalent AI report-writing tool referenced with
+    neither SB 524 nor any policy/oversight language.
+
+  surveillance:drone-without-ab481-report              (high)
+    Drone / UAS program referenced without AB 481 military equipment
+    annual-report language.  AB 481 requires annual reporting to the
+    governing body.
+
+  surveillance:multilayer-architecture                 (high)
+    Three or more distinct surveillance technology categories referenced
+    in the same document (e.g. ALPR + BWC + drone, or BWC + interview
+    room + AI report writing).  Signals an integrated surveillance
+    architecture that warrants CCOPS-style oversight.
+
+  surveillance:alpr-privacy-act-gap                    (high)
+    ALPR deployment referenced without Civil Code § 1798.90.5 (ALPR
+    Privacy Act) usage-and-privacy-policy citation.
+
+Every finding includes a ``details`` payload with the matched excerpts so
+the ODIA analyst can audit the detector's reasoning.
 """
 
 from __future__ import annotations
 
+from datetime import date
 from typing import Any
 
 from .text_utils import extract_text_content
+from .vendor_database import (
+    STATUTE_BY_KEY,
+    VENDOR_BY_NAME,
+    detect_statutes,
+    detect_technologies,
+    detect_vendors,
+)
 
-# Surveillance-related keywords
-SURVEILLANCE_KEYWORDS = [
-    "surveillance",
-    "monitoring",
-    "tracking",
-    "biometric",
-    "facial recognition",
-    "data collection",
-    "wiretap",
-    "intercept",
-    "metadata",
-    "geolocation",
-    "cell site",
-    "stingray",
-]
 
-# Private contractor indicators
-CONTRACTOR_KEYWORDS = [
-    "contractor",
-    "vendor",
-    "third party",
-    "private entity",
-    "service provider",
-]
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
-# Privacy safeguard indicators
-SAFEGUARD_KEYWORDS = [
-    "warrant",
-    "probable cause",
-    "court order",
-    "judicial authorization",
-    "minimization",
-    "oversight",
-    "privacy protection",
-    "data retention limit",
-]
+
+def _document_date(doc: dict[str, Any]) -> date | None:
+    """Best-effort extraction of a reference date from the document."""
+    for key in ("document_date", "date", "effective_date", "meeting_date"):
+        v = doc.get(key)
+        if isinstance(v, str):
+            try:
+                return date.fromisoformat(v[:10])
+            except ValueError:
+                continue
+        if isinstance(v, date):
+            return v
+    return None
+
+
+def _build_finding(
+    finding_id: str,
+    issue: str,
+    severity: str,
+    **details: Any,
+) -> dict[str, Any]:
+    return {
+        "id": finding_id,
+        "issue": issue,
+        "severity": severity,
+        "layer": "surveillance",
+        "details": details,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
 
 
 def detect_surveillance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
-    """Identify surveillance outsourcing anomalies.
-
-    Args:
-        doc: Normalized document dict
-
-    Returns:
-        List of anomaly records; empty if none found.
-    """
-    anomalies: list[dict[str, Any]] = []
-
+    """Run the full ODIA surveillance detector rule-set against a document."""
+    findings: list[dict[str, Any]] = []
     if not isinstance(doc, dict):
-        return anomalies
+        return findings
 
-    text_content = extract_text_content(doc)
-    if not text_content:
-        return anomalies
+    text = extract_text_content(doc) or ""
+    if not text.strip():
+        return findings
 
-    text_lower = text_content.lower()
+    vendors = detect_vendors(text)
+    techs = detect_technologies(text)
+    statutes = detect_statutes(text)
+    doc_date = _document_date(doc)
 
-    # Check 1: Surveillance + contractor without safeguards
-    has_surveillance = any(keyword in text_lower for keyword in SURVEILLANCE_KEYWORDS)
-    has_contractor = any(keyword in text_lower for keyword in CONTRACTOR_KEYWORDS)
-    has_safeguards = any(keyword in text_lower for keyword in SAFEGUARD_KEYWORDS)
-
-    if has_surveillance and has_contractor and not has_safeguards:
-        # Find specific surveillance keywords present
-        surveillance_found = [kw for kw in SURVEILLANCE_KEYWORDS if kw in text_lower]
-        contractor_found = [kw for kw in CONTRACTOR_KEYWORDS if kw in text_lower]
-
-        anomalies.append(
-            {
-                "id": "surveillance:outsourced-without-safeguards",
-                "issue": "Surveillance outsourcing detected without privacy safeguards",
-                "severity": "high",
-                "layer": "surveillance",
-                "details": {
-                    "surveillance_keywords": surveillance_found[:3],
-                    "contractor_keywords": contractor_found[:2],
-                },
-            }
-        )
-    elif has_surveillance and has_contractor and has_safeguards:
-        # Surveillance with safeguards - informational only
-        anomalies.append(
-            {
-                "id": "surveillance:outsourced-with-safeguards",
-                "issue": "Surveillance outsourcing detected with some safeguards",
-                "severity": "low",
-                "layer": "surveillance",
-                "details": {"requires_review": True},
-            }
+    # -----------------------------------------------------------------------
+    # 1. One low/info finding per vendor detected — establishes footprint
+    # -----------------------------------------------------------------------
+    for vendor_name, evidence in vendors.items():
+        sig = VENDOR_BY_NAME[vendor_name]
+        findings.append(
+            _build_finding(
+                f"surveillance:vendor-detected:{vendor_name.lower().replace(' ', '-')}",
+                f"Surveillance vendor '{vendor_name}' ({sig.category}) referenced",
+                "low",
+                vendor=vendor_name,
+                category=sig.category,
+                evidence=evidence,
+            )
         )
 
-    return anomalies
+    # -----------------------------------------------------------------------
+    # 2. ALPR without SB 524 policy
+    # -----------------------------------------------------------------------
+    has_alpr = "alpr" in techs or any(
+        VENDOR_BY_NAME[v].category == "alpr" for v in vendors
+    )
+    sb524 = STATUTE_BY_KEY["sb_524"]
+    if has_alpr and sb524.key not in statutes:
+        # Severity depends on whether the document is post-effective-date
+        sb524_effective = date.fromisoformat(sb524.effective_date)
+        severity = (
+            "critical"
+            if (doc_date is None or doc_date >= sb524_effective)
+            else "high"
+        )
+        findings.append(
+            _build_finding(
+                "surveillance:alpr-without-sb524-policy",
+                (
+                    "ALPR system referenced without SB 524 AI-transparency "
+                    "policy citation"
+                ),
+                severity,
+                statute=sb524.citation,
+                effective_date=sb524.effective_date,
+                document_date=doc_date.isoformat() if doc_date else None,
+                alpr_evidence=list(techs.get("alpr", []))[:3],
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 3. ALPR without ALPR Privacy Act (Civ. Code 1798.90.5)
+    # -----------------------------------------------------------------------
+    alpr_priv = STATUTE_BY_KEY["alpr_privacy"]
+    if has_alpr and alpr_priv.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:alpr-privacy-act-gap",
+                (
+                    "ALPR deployment without Civil Code § 1798.90.5 "
+                    "usage-and-privacy policy citation"
+                ),
+                "high",
+                statute=alpr_priv.citation,
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 4. BWC without CJIS addendum
+    # -----------------------------------------------------------------------
+    has_bwc = "bwc" in techs or any(
+        VENDOR_BY_NAME[v].category == "bwc" for v in vendors
+    )
+    cjis = STATUTE_BY_KEY["cjis"]
+    if has_bwc and cjis.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:bwc-without-cjis-addendum",
+                "Body-worn camera program without CJIS Security Policy reference",
+                "high",
+                statute=cjis.citation,
+                bwc_evidence=list(techs.get("bwc", []))[:3],
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 5. AI report-writing (Draft One) without policy
+    # -----------------------------------------------------------------------
+    if "ai_report_writing" in techs and sb524.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:ai-report-writing-without-policy",
+                (
+                    "AI-generated report writing (Draft One or equivalent) "
+                    "without SB 524 AI-transparency policy"
+                ),
+                "critical",
+                statute=sb524.citation,
+                ai_evidence=techs["ai_report_writing"][:3],
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 6. Drone / UAS without AB 481
+    # -----------------------------------------------------------------------
+    ab481 = STATUTE_BY_KEY["ab_481"]
+    if "drone_uas" in techs and ab481.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:drone-without-ab481-report",
+                "Drone/UAS program referenced without AB 481 annual-report language",
+                "high",
+                statute=ab481.citation,
+                drone_evidence=techs["drone_uas"][:3],
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 7. Multi-layer surveillance architecture (≥3 categories)
+    # -----------------------------------------------------------------------
+    layer_categories = set(techs.keys())
+    # Add vendor-derived categories (alpr/bwc) in case the generic tech
+    # matcher missed them but a specific vendor was named
+    for vendor_name in vendors:
+        cat = VENDOR_BY_NAME[vendor_name].category
+        if cat in {"alpr", "bwc"}:
+            layer_categories.add(cat)
+    if len(layer_categories) >= 3:
+        findings.append(
+            _build_finding(
+                "surveillance:multilayer-architecture",
+                (
+                    f"Multi-layer surveillance architecture detected "
+                    f"({len(layer_categories)} categories)"
+                ),
+                "high",
+                layer_count=len(layer_categories),
+                layers=sorted(layer_categories),
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 8. Facial recognition — always-critical regardless of governance
+    #    (California AB 1215 bans law-enforcement biometric use on BWCs)
+    # -----------------------------------------------------------------------
+    if "facial_recognition" in techs:
+        findings.append(
+            _build_finding(
+                "surveillance:facial-recognition-reference",
+                "Facial recognition referenced — AB 1215 restrictions apply",
+                "critical",
+                evidence=techs["facial_recognition"][:3],
+            )
+        )
+
+    return findings

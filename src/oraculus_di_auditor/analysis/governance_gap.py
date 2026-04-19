@@ -1,9 +1,25 @@
 """Governance Gap Detector.
 
-Detects surveillance or monitoring capabilities deployed without corresponding
-governance documentation — policies, oversight frameworks, access controls, or
-legal authority. Absence of governance documentation alongside capability
-deployment is a structural anomaly regardless of the capability's legality.
+Detects documents that deploy or fund surveillance capabilities without the
+corresponding governance artefacts.  The ODIA methodology treats governance
+absence as structurally equivalent to a finding regardless of the
+capability's underlying legality — if the governing body never saw the
+technology in a public meeting, the deployment is ungoverned.
+
+This detector builds on the vendor_database module so that vendor
+signatures (Flock, Axon, Lexipol, etc.) and statutory triggers (SB 524, AB
+481, CJIS, ALPR Privacy Act) are shared with the surveillance detector
+rather than duplicated.
+
+Findings emitted:
+
+  governance:capability-without-council-approval  (critical/high)
+  governance:data-retention-gap                   (high)
+  governance:lexipol-boilerplate                  (medium)
+  governance:consent-calendar-placement           (medium)
+  governance:sole-source-without-justification    (high)
+  governance:auto-renewal-clause                  (medium)
+  governance:transparency-portal-absence          (medium)
 """
 
 from __future__ import annotations
@@ -11,174 +27,205 @@ from __future__ import annotations
 from typing import Any
 
 from .text_utils import extract_text_content
-
-# ---------------------------------------------------------------------------
-# Capability keyword sets
-# ---------------------------------------------------------------------------
-
-# Surveillance technology — triggers critical severity when ungoverned
-SURVEILLANCE_TECH_KEYWORDS = [
-    "alpr",
-    "license plate reader",
-    "body camera",
-    "bwc",
-    "facial recognition",
-    "drone",
-    "uas",
-    "real-time",
-    "geofence",
-    "cell site simulator",
-    "stingray",
-    "predictive policing",
-]
-
-# Data-handling capabilities — triggers high severity when ungoverned
-DATA_CAPABILITY_KEYWORDS = [
-    "data sharing",
-    "data retention",
-    "cloud storage",
-    "third-party access",
-    "federal access",
-    "interagency",
-]
-
-# AI/automation capabilities — triggers high severity when ungoverned
-AI_CAPABILITY_KEYWORDS = [
-    "automated",
-    "ai-generated",
-    "machine learning",
-    "draft one",
-    "report writing",
-]
-
-# All capability keywords combined (for general capability detection)
-ALL_CAPABILITY_KEYWORDS = (
-    SURVEILLANCE_TECH_KEYWORDS + DATA_CAPABILITY_KEYWORDS + AI_CAPABILITY_KEYWORDS
+from .vendor_database import (
+    STATUTE_BY_KEY,
+    VENDOR_BY_NAME,
+    detect_auto_renewal,
+    detect_consent_calendar,
+    detect_sole_source,
+    detect_statutes,
+    detect_technologies,
+    detect_vendors,
 )
 
+
 # ---------------------------------------------------------------------------
-# Governance keyword sets
+# Governance artefact vocabulary
 # ---------------------------------------------------------------------------
 
-GOVERNANCE_KEYWORDS = [
-    # Policy
-    "privacy policy",
-    "use policy",
-    "retention policy",
-    "access control",
-    "audit log",
-    "oversight",
-    "governance framework",
-    # Legal authority
-    "warrant",
-    "court order",
-    "probable cause",
-    "privacy impact assessment",
-    "civil liberties",
-    "cjis",
-    # Public process
-    "public hearing",
+COUNCIL_APPROVAL_KEYWORDS = (
+    "council resolution",
     "council approval",
-    "community input",
-    "transparency report",
-]
+    "approved by city council",
+    "approved by the council",
+    "council vote",
+    "public hearing",
+    "adopted by the council",
+    "resolution no.",
+    "resolution no ",
+)
 
-# Retention-specific governance keywords (for data-retention gap check)
-RETENTION_GOVERNANCE_KEYWORDS = [
+RETENTION_POLICY_KEYWORDS = (
     "retention policy",
-    "data retention policy",
     "retention schedule",
-    "purge",
+    "data retention policy",
+    "data purge",
     "deletion policy",
-]
+    "records destruction",
+    "days of retention",
+    "day retention",
+)
 
-# Data sharing/retention capability keywords (for data-retention gap check)
-DATA_SHARING_RETENTION_KEYWORDS = [
-    "data sharing",
-    "data retention",
-    "third-party access",
-    "federal access",
-    "interagency",
-]
+TRANSPARENCY_PORTAL_KEYWORDS = (
+    "transparency portal",
+    "public dashboard",
+    "surveillance technology report",
+    "surveillance inventory",
+    "public-facing dashboard",
+)
+
+
+def _has_any(text_lower: str, keywords: tuple[str, ...]) -> bool:
+    return any(kw in text_lower for kw in keywords)
+
+
+def _build(finding_id: str, issue: str, severity: str, **details: Any) -> dict[str, Any]:
+    return {
+        "id": finding_id,
+        "issue": issue,
+        "severity": severity,
+        "layer": "governance",
+        "details": details,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
 
 
 def detect_governance_gap_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
-    """Identify governance gap anomalies in a normalized document.
-
-    Args:
-        doc: Normalized document dict
-
-    Returns:
-        List of anomaly records; empty if none found.
-    """
-    anomalies: list[dict[str, Any]] = []
-
+    findings: list[dict[str, Any]] = []
     if not isinstance(doc, dict):
-        return anomalies
+        return findings
 
-    text_content = extract_text_content(doc)
-    if not text_content:
-        return anomalies
+    text = extract_text_content(doc) or ""
+    if not text.strip():
+        return findings
 
-    text_lower = text_content.lower()
+    text_lower = text.lower()
+    vendors = detect_vendors(text)
+    techs = detect_technologies(text)
+    statutes = detect_statutes(text)
 
-    # Identify which capability and governance keywords are present
-    surveillance_found = [kw for kw in SURVEILLANCE_TECH_KEYWORDS if kw in text_lower]
-    data_found = [kw for kw in DATA_CAPABILITY_KEYWORDS if kw in text_lower]
-    ai_found = [kw for kw in AI_CAPABILITY_KEYWORDS if kw in text_lower]
-    capabilities_found = surveillance_found + data_found + ai_found
+    has_surveillance_capability = bool(techs) or any(
+        VENDOR_BY_NAME[v].category in {"alpr", "bwc", "drone"} for v in vendors
+    )
+    has_council_approval = _has_any(text_lower, COUNCIL_APPROVAL_KEYWORDS)
+    has_retention_policy = _has_any(text_lower, RETENTION_POLICY_KEYWORDS)
 
-    governance_found = [kw for kw in GOVERNANCE_KEYWORDS if kw in text_lower]
-    governance_missing = [kw for kw in GOVERNANCE_KEYWORDS if kw not in text_lower]
-
-    # Check 1: Capabilities present without governance documentation
-    if capabilities_found and not governance_found:
-        # Severity is critical for surveillance tech, high for data/AI only
-        severity = "critical" if surveillance_found else "high"
-        anomalies.append(
-            {
-                "id": "governance:capability-without-policy",
-                "issue": (
-                    "Surveillance or monitoring capability deployed without "
-                    "governance documentation"
+    # -----------------------------------------------------------------------
+    # 1. Capability deployed without council approval
+    # -----------------------------------------------------------------------
+    if has_surveillance_capability and not has_council_approval:
+        findings.append(
+            _build(
+                "governance:capability-without-council-approval",
+                (
+                    "Surveillance capability referenced without council "
+                    "resolution or approval language"
                 ),
-                "severity": severity,
-                "layer": "governance",
-                "details": {
-                    "capabilities_found": capabilities_found,
-                    "governance_keywords_missing": governance_missing,
-                    "capability_count": len(capabilities_found),
-                    "governance_count": 0,
-                },
-            }
+                "critical",
+                vendors=list(vendors.keys()),
+                technologies=list(techs.keys()),
+            )
         )
 
-    # Check 2: Data sharing or retention present without retention policy
-    data_sharing_present = any(
-        kw in text_lower for kw in DATA_SHARING_RETENTION_KEYWORDS
-    )
-    retention_policy_present = any(
-        kw in text_lower for kw in RETENTION_GOVERNANCE_KEYWORDS
-    )
-
-    if data_sharing_present and not retention_policy_present:
-        data_keywords_found = [
-            kw for kw in DATA_SHARING_RETENTION_KEYWORDS if kw in text_lower
-        ]
-        anomalies.append(
-            {
-                "id": "governance:data-retention-gap",
-                "issue": (
-                    "Data sharing or retention capability found without "
-                    "retention policy reference"
-                ),
-                "severity": "high",
-                "layer": "governance",
-                "details": {
-                    "data_keywords_found": data_keywords_found,
-                    "retention_keywords_checked": RETENTION_GOVERNANCE_KEYWORDS,
-                },
-            }
+    # -----------------------------------------------------------------------
+    # 2. Data-retention gap
+    # -----------------------------------------------------------------------
+    if has_surveillance_capability and not has_retention_policy:
+        findings.append(
+            _build(
+                "governance:data-retention-gap",
+                "Surveillance capability without data-retention policy reference",
+                "high",
+                technologies=list(techs.keys()),
+            )
         )
 
-    return anomalies
+    # -----------------------------------------------------------------------
+    # 3. Lexipol boilerplate signature
+    # -----------------------------------------------------------------------
+    if "Lexipol" in vendors:
+        findings.append(
+            _build(
+                "governance:lexipol-boilerplate",
+                (
+                    "Lexipol California State Master boilerplate referenced — "
+                    "verify vendor-specific provisions present"
+                ),
+                "medium",
+                evidence=vendors["Lexipol"],
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 4. Consent-calendar placement of surveillance item
+    # -----------------------------------------------------------------------
+    if has_surveillance_capability and detect_consent_calendar(text):
+        findings.append(
+            _build(
+                "governance:consent-calendar-placement",
+                (
+                    "Surveillance technology placed on consent calendar — "
+                    "bypasses individual council discussion"
+                ),
+                "medium",
+                vendors=list(vendors.keys()),
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 5. Sole-source procurement without Gov Code justification
+    # -----------------------------------------------------------------------
+    if detect_sole_source(text):
+        has_gov_code_just = STATUTE_BY_KEY["gov_code_sole_source"].key in statutes
+        if not has_gov_code_just:
+            findings.append(
+                _build(
+                    "governance:sole-source-without-justification",
+                    (
+                        "Sole-source procurement referenced without California "
+                        "Gov Code § 10340 justification citation"
+                    ),
+                    "high",
+                    vendors=list(vendors.keys()),
+                )
+            )
+
+    # -----------------------------------------------------------------------
+    # 6. Auto-renewal clause — raises renewal-deadline risk
+    # -----------------------------------------------------------------------
+    if detect_auto_renewal(text):
+        findings.append(
+            _build(
+                "governance:auto-renewal-clause",
+                (
+                    "Auto-renewal clause detected — contract renews without "
+                    "affirmative council vote unless non-renewal notice served"
+                ),
+                "medium",
+                vendors=list(vendors.keys()),
+            )
+        )
+
+    # -----------------------------------------------------------------------
+    # 7. Transparency-portal absence for deployed surveillance tech
+    # -----------------------------------------------------------------------
+    if has_surveillance_capability and not _has_any(
+        text_lower, TRANSPARENCY_PORTAL_KEYWORDS
+    ):
+        findings.append(
+            _build(
+                "governance:transparency-portal-absence",
+                (
+                    "Surveillance capability referenced but no public "
+                    "transparency-portal or inventory mentioned"
+                ),
+                "medium",
+                technologies=list(techs.keys()),
+            )
+        )
+
+    return findings

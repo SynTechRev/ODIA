@@ -130,8 +130,8 @@ def test_analyze_endpoint_detects_surveillance_anomaly(client):
     """Test that /analyze endpoint detects surveillance anomalies."""
     payload = {
         "document_text": (
-            "The agency shall contract with a vendor for surveillance "
-            "and monitoring services."
+            "The agency shall contract with Flock Safety for ALPR "
+            "license plate reader deployment and monitoring services."
         ),
         "metadata": {"title": "Security Act", "hash": "abc123"},
     }

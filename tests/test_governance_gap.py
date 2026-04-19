@@ -45,12 +45,13 @@ def test_governance_only_no_capabilities_no_anomalies():
 
 
 def test_capabilities_with_full_governance_no_anomalies():
-    """Capabilities covered by governance documentation should be clean."""
+    """Capabilities covered by all governance artefacts should be clean."""
     doc = _doc(
         "The department will deploy ALPR units under the following use policy. "
         "A privacy impact assessment has been completed. Oversight is provided "
         "by the city council following council approval and community input. "
-        "Data retention is governed by the retention policy filed with the clerk."
+        "Data retention is governed by the retention policy filed with the clerk. "
+        "All deployments are listed in the public transparency portal surveillance inventory."
     )
     assert detect_governance_gap_anomalies(doc) == []
 
@@ -66,7 +67,7 @@ def test_data_sharing_with_retention_policy_no_retention_gap():
 
 
 # ---------------------------------------------------------------------------
-# governance:capability-without-policy — surveillance tech (critical)
+# governance:capability-without-council-approval — surveillance tech (critical)
 # ---------------------------------------------------------------------------
 
 
@@ -77,9 +78,13 @@ def test_alpr_without_policy_is_critical():
         "Plates will be scanned in real-time and retained for 90 days."
     )
     anomalies = detect_governance_gap_anomalies(doc)
-    assert any(a["id"] == "governance:capability-without-policy" for a in anomalies)
+    assert any(
+        a["id"] == "governance:capability-without-council-approval" for a in anomalies
+    )
     finding = next(
-        a for a in anomalies if a["id"] == "governance:capability-without-policy"
+        a
+        for a in anomalies
+        if a["id"] == "governance:capability-without-council-approval"
     )
     assert finding["severity"] == "critical"
     assert finding["layer"] == "governance"
@@ -91,41 +96,39 @@ def test_alpr_details_contain_required_fields():
         (
             a
             for a in detect_governance_gap_anomalies(doc)
-            if a["id"] == "governance:capability-without-policy"
+            if a["id"] == "governance:capability-without-council-approval"
         ),
         None,
     )
     assert finding is not None
-    assert "capabilities_found" in finding["details"]
-    assert "governance_keywords_missing" in finding["details"]
-    assert isinstance(finding["details"]["capability_count"], int)
-    assert isinstance(finding["details"]["governance_count"], int)
-    assert finding["details"]["governance_count"] == 0
-    assert "alpr" in finding["details"]["capabilities_found"]
+    assert "technologies" in finding["details"]
+    assert "alpr" in finding["details"]["technologies"]
+    assert "vendors" in finding["details"]
 
 
 def test_facial_recognition_without_governance_critical():
     doc = _doc("Pilot program for facial recognition at city hall entrances.")
-    assert "governance:capability-without-policy" in _ids(
+    assert "governance:capability-without-council-approval" in _ids(
         "Pilot program for facial recognition at city hall entrances."
     )
     finding = next(
         a
         for a in detect_governance_gap_anomalies(doc)
-        if a["id"] == "governance:capability-without-policy"
+        if a["id"] == "governance:capability-without-council-approval"
     )
     assert finding["severity"] == "critical"
 
 
 def test_body_camera_bwc_without_policy_critical():
     doc = _doc("Officers will be issued body cameras (BWC) per department policy.")
-    # "BWC" present, no governance keywords → critical
     anomalies = detect_governance_gap_anomalies(doc)
-    assert any(a["id"] == "governance:capability-without-policy" for a in anomalies)
+    assert any(
+        a["id"] == "governance:capability-without-council-approval" for a in anomalies
+    )
 
 
 def test_cell_site_simulator_without_governance_critical():
-    assert "governance:capability-without-policy" in _ids(
+    assert "governance:capability-without-council-approval" in _ids(
         "Authorized use of cell site simulator for active investigations."
     )
 
@@ -136,7 +139,7 @@ def test_predictive_policing_without_governance_critical():
         (
             a
             for a in detect_governance_gap_anomalies(doc)
-            if a["id"] == "governance:capability-without-policy"
+            if a["id"] == "governance:capability-without-council-approval"
         ),
         None,
     )
@@ -145,66 +148,15 @@ def test_predictive_policing_without_governance_critical():
 
 
 # ---------------------------------------------------------------------------
-# governance:capability-without-policy — data / AI capabilities (high)
+# governance:data-retention-gap (high)
 # ---------------------------------------------------------------------------
 
 
-def test_data_sharing_without_governance_high():
-    """Data sharing alone (no surveillance tech) should be high, not critical."""
+def test_alpr_without_retention_policy_flagged():
+    """ALPR without a retention policy → data-retention-gap (high)."""
     doc = _doc(
-        "This agreement establishes data sharing with the county sheriff's office "
-        "and federal access to local records."
-    )
-    anomalies = detect_governance_gap_anomalies(doc)
-    cap_finding = next(
-        (a for a in anomalies if a["id"] == "governance:capability-without-policy"),
-        None,
-    )
-    assert cap_finding is not None
-    assert cap_finding["severity"] == "high"
-
-
-def test_ai_report_writing_without_oversight_high():
-    """AI/automation capabilities without governance → high severity."""
-    doc = _doc(
-        "Officers will use Draft One for automated report writing. "
-        "AI-generated reports will be submitted directly to records."
-    )
-    anomalies = detect_governance_gap_anomalies(doc)
-    cap_finding = next(
-        (a for a in anomalies if a["id"] == "governance:capability-without-policy"),
-        None,
-    )
-    assert cap_finding is not None
-    assert cap_finding["severity"] == "high"
-
-
-def test_machine_learning_without_oversight_high():
-    doc = _doc(
-        "Machine learning model for call prioritization. No human review required."
-    )
-    cap_finding = next(
-        (
-            a
-            for a in detect_governance_gap_anomalies(doc)
-            if a["id"] == "governance:capability-without-policy"
-        ),
-        None,
-    )
-    assert cap_finding is not None
-    assert cap_finding["severity"] == "high"
-
-
-# ---------------------------------------------------------------------------
-# governance:data-retention-gap
-# ---------------------------------------------------------------------------
-
-
-def test_data_sharing_without_retention_policy_flagged():
-    """Data sharing with no retention policy → data-retention-gap."""
-    doc = _doc(
-        "Data sharing agreement with county. "
-        "Interagency access to be established via MOU."
+        "The agency will deploy ALPR license plate readers on patrol routes. "
+        "Vendor will store captured images indefinitely."
     )
     anomalies = detect_governance_gap_anomalies(doc)
     assert any(a["id"] == "governance:data-retention-gap" for a in anomalies)
@@ -213,8 +165,18 @@ def test_data_sharing_without_retention_policy_flagged():
     assert finding["layer"] == "governance"
 
 
-def test_data_retention_gap_details_contain_keywords_found():
-    doc = _doc("Third-party access to records and federal access permitted.")
+def test_surveillance_capability_without_retention_high():
+    """Facial recognition without retention policy → data-retention-gap."""
+    doc = _doc(
+        "Facial recognition system installed at transit hubs. "
+        "Data stored on vendor servers."
+    )
+    anomalies = detect_governance_gap_anomalies(doc)
+    assert any(a["id"] == "governance:data-retention-gap" for a in anomalies)
+
+
+def test_data_retention_gap_details_contain_technologies():
+    doc = _doc("ALPR deployment on all major corridors. Vendor stores data indefinitely.")
     finding = next(
         (
             a
@@ -224,31 +186,50 @@ def test_data_retention_gap_details_contain_keywords_found():
         None,
     )
     assert finding is not None
-    assert len(finding["details"]["data_keywords_found"]) >= 1
-    assert "retention_keywords_checked" in finding["details"]
+    assert "technologies" in finding["details"]
+    assert len(finding["details"]["technologies"]) >= 1
 
 
-def test_cloud_storage_without_retention_policy_flagged():
-    """Cloud storage + data retention capability without a retention policy."""
-    # "data retention" is present but no "retention policy" keyword
-    assert "governance:data-retention-gap" in _ids(
-        "All records will be migrated to cloud storage. "
-        "Data retention period is 7 years per state law."
+def test_sole_source_without_justification_flagged():
+    """Sole-source procurement without Gov Code justification → high."""
+    assert "governance:sole-source-without-justification" in _ids(
+        "Sole source procurement of ALPR cameras from Flock Safety. "
+        "No competing vendors evaluated."
     )
 
 
 # ---------------------------------------------------------------------------
-# Both findings together
+# governance:auto-renewal-clause + governance:lexipol-boilerplate
+# ---------------------------------------------------------------------------
+
+
+def test_auto_renewal_clause_detected():
+    """Auto-renewal clause in contract → medium finding."""
+    assert "governance:auto-renewal-clause" in _ids(
+        "ALPR contract auto-renews annually unless written notice of non-renewal "
+        "is provided 90 days in advance."
+    )
+
+
+def test_lexipol_boilerplate_detected():
+    """Lexipol California State Master boilerplate → medium finding."""
+    assert "governance:lexipol-boilerplate" in _ids(
+        "Lexipol California State Master policy adopted for BWC deployment."
+    )
+
+
+# ---------------------------------------------------------------------------
+# Both capability findings together
 # ---------------------------------------------------------------------------
 
 
 def test_surveillance_and_data_sharing_both_ungoverned():
-    """ALPR + data sharing with no governance → both findings fire."""
+    """ALPR with no council approval and no retention policy → both findings fire."""
     text = (
         "Deploy ALPR units on patrol vehicles. "
         "Data sharing with federal agencies. "
         "No documentation has been prepared."
     )
     ids = _ids(text)
-    assert "governance:capability-without-policy" in ids
+    assert "governance:capability-without-council-approval" in ids
     assert "governance:data-retention-gap" in ids
