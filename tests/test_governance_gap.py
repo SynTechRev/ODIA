@@ -176,7 +176,9 @@ def test_surveillance_capability_without_retention_high():
 
 
 def test_data_retention_gap_details_contain_technologies():
-    doc = _doc("ALPR deployment on all major corridors. Vendor stores data indefinitely.")
+    doc = _doc(
+        "ALPR deployment on all major corridors. Vendor stores data indefinitely."
+    )
     finding = next(
         (
             a

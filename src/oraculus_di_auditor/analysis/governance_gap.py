@@ -38,7 +38,6 @@ from .vendor_database import (
     detect_vendors,
 )
 
-
 # ---------------------------------------------------------------------------
 # Governance artefact vocabulary
 # ---------------------------------------------------------------------------
@@ -79,7 +78,9 @@ def _has_any(text_lower: str, keywords: tuple[str, ...]) -> bool:
     return any(kw in text_lower for kw in keywords)
 
 
-def _build(finding_id: str, issue: str, severity: str, **details: Any) -> dict[str, Any]:
+def _build(
+    finding_id: str, issue: str, severity: str, **details: Any
+) -> dict[str, Any]:
     return {
         "id": finding_id,
         "issue": issue,

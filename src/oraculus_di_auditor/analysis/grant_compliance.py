@@ -22,7 +22,9 @@ from .text_utils import extract_text_content
 from .vendor_database import STATUTE_BY_KEY, detect_statutes, detect_vendors
 
 
-def _build(finding_id: str, issue: str, severity: str, **details: Any) -> dict[str, Any]:
+def _build(
+    finding_id: str, issue: str, severity: str, **details: Any
+) -> dict[str, Any]:
     return {
         "id": finding_id,
         "issue": issue,
@@ -87,8 +89,12 @@ def detect_grant_compliance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any
     # 3. COPS grant without cost itemisation indicator
     # -----------------------------------------------------------------------
     cops_itemisation_markers = (
-        "itemised", "itemized", "line item", "line-item",
-        "equipment cost", "technology cost",
+        "itemised",
+        "itemized",
+        "line item",
+        "line-item",
+        "equipment cost",
+        "technology cost",
     )
     text_lower = text.lower()
     if has_cops and not any(m in text_lower for m in cops_itemisation_markers):
@@ -107,8 +113,11 @@ def detect_grant_compliance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any
     # 4. Criminal-intelligence references without 28 CFR Part 23
     # -----------------------------------------------------------------------
     crim_intel_markers = (
-        "criminal intelligence", "intelligence database", "intelligence file",
-        "gang database", "gang intelligence",
+        "criminal intelligence",
+        "intelligence database",
+        "intelligence file",
+        "gang database",
+        "gang intelligence",
     )
     if any(m in text_lower for m in crim_intel_markers) and not has_28cfr23:
         findings.append(

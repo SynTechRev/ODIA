@@ -44,7 +44,9 @@ def _parse_date(value: Any) -> date | None:
         return None
 
 
-def _build(finding_id: str, issue: str, severity: str, **details: Any) -> dict[str, Any]:
+def _build(
+    finding_id: str, issue: str, severity: str, **details: Any
+) -> dict[str, Any]:
     return {
         "id": finding_id,
         "issue": issue,

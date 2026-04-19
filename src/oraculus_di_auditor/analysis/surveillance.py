@@ -63,7 +63,6 @@ from .vendor_database import (
     detect_vendors,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -145,9 +144,7 @@ def detect_surveillance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
         # Severity depends on whether the document is post-effective-date
         sb524_effective = date.fromisoformat(sb524.effective_date)
         severity = (
-            "critical"
-            if (doc_date is None or doc_date >= sb524_effective)
-            else "high"
+            "critical" if (doc_date is None or doc_date >= sb524_effective) else "high"
         )
         findings.append(
             _build_finding(

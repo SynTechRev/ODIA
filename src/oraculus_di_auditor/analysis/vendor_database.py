@@ -33,7 +33,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-
 # ---------------------------------------------------------------------------
 # Vendor signatures
 # ---------------------------------------------------------------------------
@@ -44,8 +43,8 @@ class VendorSignature:
     """Canonical reference for a surveillance vendor and its products."""
 
     name: str
-    category: str   # "alpr" | "bwc" | "policy_boilerplate" | "drone" | "other"
-    patterns: tuple[str, ...]         # case-insensitive regex patterns
+    category: str  # "alpr" | "bwc" | "policy_boilerplate" | "drone" | "other"
+    patterns: tuple[str, ...]  # case-insensitive regex patterns
     subproducts: tuple[str, ...] = ()  # optional sub-product names to tag
     governance_required: tuple[str, ...] = ()  # keyword-sets required in same corpus
 
@@ -73,14 +72,14 @@ VENDOR_CATALOGUE: tuple[VendorSignature, ...] = (
         name="Axon Enterprise",
         category="bwc",
         patterns=(
-            r"\baxon\b(?!\s+materia)",   # exclude "axon materia" false-positive
+            r"\baxon\b(?!\s+materia)",  # exclude "axon materia" false-positive
             r"\btaser\s+international\b",
             r"\bevidence\.com\b",
-            r"\bdraft\s*one\b",            # Axon's AI report writer
-            r"\bfleet\s*3\b",              # Axon dashcam product
-            r"\bauto[-\s]?tagging\b",      # Axon AI auto-tagging
+            r"\bdraft\s*one\b",  # Axon's AI report writer
+            r"\bfleet\s*3\b",  # Axon dashcam product
+            r"\bauto[-\s]?tagging\b",  # Axon AI auto-tagging
             r"\bofficer\s+safety\s+plan\b",
-            r"\bosp\s?\d+\b",              # OSP7, OSP10 etc — Axon subscription plans
+            r"\bosp\s?\d+\b",  # OSP7, OSP10 etc — Axon subscription plans
             r"\bbody[-\s]?worn\s+camer(?:a|as)\b",
             r"\bbwc\b(?!\s*fund)",
         ),
@@ -103,7 +102,7 @@ VENDOR_CATALOGUE: tuple[VendorSignature, ...] = (
         patterns=(
             r"\bmotorola\s+solutions\b",
             r"\bmotorola\s+apx\b",
-            r"\bwatchguard\b",              # Motorola-owned BWC/dashcam
+            r"\bwatchguard\b",  # Motorola-owned BWC/dashcam
             r"\bcommandcentral\b",
         ),
         governance_required=("cjis",),
@@ -154,48 +153,72 @@ VENDOR_CATALOGUE: tuple[VendorSignature, ...] = (
 # ---------------------------------------------------------------------------
 
 SURVEILLANCE_TECH: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("alpr", (
-        r"\bautomated\s+license\s+plate\s+reader",
-        r"\blicense\s+plate\s+reader",
-        r"\balpr\b",
-        r"\bplate\s+reader\s+system",
-        r"\bvehicle\s+recognition\s+system",
-    )),
-    ("bwc", (
-        r"\bbody[-\s]?worn\s+camer(?:a|as)",
-        r"\bbwc\s+(?:program|system|contract|policy|deployment)",
-        r"\bofficer\s+camera\s+system",
-    )),
-    ("drone_uas", (
-        r"\bunmanned\s+aerial\s+system",
-        r"\buas\s+program",
-        r"\bdrone\s+program",
-        r"\baerodome\b",
-    )),
-    ("facial_recognition", (
-        r"\bfacial\s+recognition",
-        r"\bface\s+recognition\s+system",
-        r"\bbiometric\s+match(?:ing)?",
-    )),
-    ("ai_report_writing", (
-        r"\bdraft\s*one\b",
-        r"\bai[-\s]generated\s+reports?",
-        r"\bautomated\s+report\s+writing",
-    )),
-    ("predictive_policing", (
-        r"\bpredictive\s+policing",
-        r"\bcrime\s+forecast(?:ing)?",
-        r"\bhotspot\s+prediction",
-    )),
-    ("stingray_imsi", (
-        r"\bstingray\b",
-        r"\bcell\s+site\s+simulator",
-        r"\bimsi\s+catcher",
-    )),
-    ("interview_room", (
-        r"\binterview\s+room\s+camera",
-        r"\bpatrol\s+vehicle\s+camera",
-    )),
+    (
+        "alpr",
+        (
+            r"\bautomated\s+license\s+plate\s+reader",
+            r"\blicense\s+plate\s+reader",
+            r"\balpr\b",
+            r"\bplate\s+reader\s+system",
+            r"\bvehicle\s+recognition\s+system",
+        ),
+    ),
+    (
+        "bwc",
+        (
+            r"\bbody[-\s]?worn\s+camer(?:a|as)",
+            r"\bbwc\s+(?:program|system|contract|policy|deployment)",
+            r"\bofficer\s+camera\s+system",
+        ),
+    ),
+    (
+        "drone_uas",
+        (
+            r"\bunmanned\s+aerial\s+system",
+            r"\buas\s+program",
+            r"\bdrone\s+program",
+            r"\baerodome\b",
+        ),
+    ),
+    (
+        "facial_recognition",
+        (
+            r"\bfacial\s+recognition",
+            r"\bface\s+recognition\s+system",
+            r"\bbiometric\s+match(?:ing)?",
+        ),
+    ),
+    (
+        "ai_report_writing",
+        (
+            r"\bdraft\s*one\b",
+            r"\bai[-\s]generated\s+reports?",
+            r"\bautomated\s+report\s+writing",
+        ),
+    ),
+    (
+        "predictive_policing",
+        (
+            r"\bpredictive\s+policing",
+            r"\bcrime\s+forecast(?:ing)?",
+            r"\bhotspot\s+prediction",
+        ),
+    ),
+    (
+        "stingray_imsi",
+        (
+            r"\bstingray\b",
+            r"\bcell\s+site\s+simulator",
+            r"\bimsi\s+catcher",
+        ),
+    ),
+    (
+        "interview_room",
+        (
+            r"\binterview\s+room\s+camera",
+            r"\bpatrol\s+vehicle\s+camera",
+        ),
+    ),
 )
 
 
@@ -229,9 +252,12 @@ STATUTE_CATALOGUE: tuple[StatuteSignature, ...] = (
         key="ab_481",
         citation="California AB 481",
         short_name="AB 481 (Military Equipment Annual Report)",
-        patterns=(r"\bab\s*481\b", r"\bassembly\s+bill\s+481\b",
-                  r"\bmilitary\s+equipment\s+use\s+policy",
-                  r"\bmilitary\s+equipment\s+annual\s+report"),
+        patterns=(
+            r"\bab\s*481\b",
+            r"\bassembly\s+bill\s+481\b",
+            r"\bmilitary\s+equipment\s+use\s+policy",
+            r"\bmilitary\s+equipment\s+annual\s+report",
+        ),
         effective_date="2022-05-01",
         triggers_when_missing=("drone_uas",),
     ),
@@ -239,68 +265,85 @@ STATUTE_CATALOGUE: tuple[StatuteSignature, ...] = (
         key="sb_978",
         citation="California SB 978",
         short_name="SB 978 (Conspicuous Policy Posting)",
-        patterns=(r"\bsb\s*978\b", r"\bsenate\s+bill\s+978\b",
-                  r"\bpost.*policies.*website",
-                  r"\bconspicuous(ly)?\s+post"),
+        patterns=(
+            r"\bsb\s*978\b",
+            r"\bsenate\s+bill\s+978\b",
+            r"\bpost.*policies.*website",
+            r"\bconspicuous(ly)?\s+post",
+        ),
     ),
     StatuteSignature(
         key="alpr_privacy",
         citation="California Civil Code §§ 1798.90.5–1798.90.55",
         short_name="ALPR Privacy Act",
-        patterns=(r"\bcivil\s+code\s+(?:§§?\s*)?1798\.90\.5\d?",
-                  r"\balpr\s+privacy\s+act",
-                  r"\busage\s+and\s+privacy\s+policy"),
+        patterns=(
+            r"\bcivil\s+code\s+(?:§§?\s*)?1798\.90\.5\d?",
+            r"\balpr\s+privacy\s+act",
+            r"\busage\s+and\s+privacy\s+policy",
+        ),
         triggers_when_missing=("alpr",),
     ),
     StatuteSignature(
         key="cjis",
         citation="FBI CJIS Security Policy",
         short_name="CJIS Security Policy",
-        patterns=(r"\bcjis\b",
-                  r"\bcriminal\s+justice\s+information\s+services",
-                  r"\bcjis\s+security\s+(?:policy|addendum)"),
+        patterns=(
+            r"\bcjis\b",
+            r"\bcriminal\s+justice\s+information\s+services",
+            r"\bcjis\s+security\s+(?:policy|addendum)",
+        ),
         triggers_when_missing=("alpr", "bwc"),
     ),
     StatuteSignature(
         key="jag",
         citation="Edward Byrne Memorial Justice Assistance Grant",
         short_name="JAG (Edward Byrne)",
-        patterns=(r"\bjag\s+(?:grant|program|allocation|fund)",
-                  r"\bedward\s+byrne\s+memorial",
-                  r"\bjustice\s+assistance\s+grant",
-                  r"\bbja\s+(?:grant|funding)",
-                  r"\bbureau\s+of\s+justice\s+assistance"),
+        patterns=(
+            r"\bjag\s+(?:grant|program|allocation|fund)",
+            r"\bedward\s+byrne\s+memorial",
+            r"\bjustice\s+assistance\s+grant",
+            r"\bbja\s+(?:grant|funding)",
+            r"\bbureau\s+of\s+justice\s+assistance",
+        ),
     ),
     StatuteSignature(
         key="cops",
         citation="COPS Hiring Grant",
         short_name="COPS (DOJ Hiring)",
-        patterns=(r"\bcops\s+(?:hiring|grant|fund|allocation)",
-                  r"\bcommunity\s+oriented\s+policing\s+services"),
+        patterns=(
+            r"\bcops\s+(?:hiring|grant|fund|allocation)",
+            r"\bcommunity\s+oriented\s+policing\s+services",
+        ),
     ),
     StatuteSignature(
         key="anti_supplanting",
         citation="JAG Anti-Supplanting Requirement",
         short_name="Anti-Supplanting Certification",
-        patterns=(r"\banti[-\s]supplant(?:ing)?",
-                  r"\bsupplant(?:ing|ation)\b",
-                  r"\bnonsupplanting\b",
-                  r"\bmust\s+not\s+supplant"),
+        patterns=(
+            r"\banti[-\s]supplant(?:ing)?",
+            r"\bsupplant(?:ing|ation)\b",
+            r"\bnonsupplanting\b",
+            r"\bmust\s+not\s+supplant",
+        ),
     ),
     StatuteSignature(
         key="28_cfr_23",
         citation="28 CFR Part 23",
         short_name="28 CFR Part 23 (Criminal Intelligence)",
-        patterns=(r"\b28\s+cfr\s+(?:part\s+)?23\b",
-                  r"\bcriminal\s+intelligence\s+systems"),
+        patterns=(
+            r"\b28\s+cfr\s+(?:part\s+)?23\b",
+            r"\bcriminal\s+intelligence\s+systems",
+        ),
     ),
     StatuteSignature(
         key="gov_code_sole_source",
         citation="California Gov Code § 10340 / § 10300–10334",
         short_name="Sole-Source Procurement Statute",
-        patterns=(r"\bgov(?:ernment)?\s+code\s+(?:§§?\s*)?1034\d",
-                  r"\bgov(?:ernment)?\s+code\s+(?:§§?\s*)?10300",
-                  r"\bsole\s+source\s+justification"),
+        patterns=(
+            r"\bgov(?:ernment)?\s+code\s+(?:§§?\s*)?1034\d",
+            r"\bgov(?:ernment)?\s+code\s+(?:§§?\s*)?10300",
+            r"\bsole\s+source\s+justification",
+        ),
     ),
 )
 
@@ -310,14 +353,16 @@ STATUTE_CATALOGUE: tuple[StatuteSignature, ...] = (
 # ---------------------------------------------------------------------------
 
 CONSENT_CALENDAR_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
-    re.compile(p, re.IGNORECASE) for p in (
+    re.compile(p, re.IGNORECASE)
+    for p in (
         r"\bconsent\s+calendar\b",
         r"\bconsent\s+agenda\b",
     )
 )
 
 SOLE_SOURCE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
-    re.compile(p, re.IGNORECASE) for p in (
+    re.compile(p, re.IGNORECASE)
+    for p in (
         r"\bsole[\s-]source\b",
         r"\bsingle[\s-]source\b",
         r"\bno[\s-]bid\s+contract",
@@ -327,7 +372,8 @@ SOLE_SOURCE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
 )
 
 AUTO_RENEWAL_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
-    re.compile(p, re.IGNORECASE) for p in (
+    re.compile(p, re.IGNORECASE)
+    for p in (
         r"\bautomatic(?:ally)?\s+renew",
         r"\bauto[-\s]renew(?:al)?",
         r"\brenew(?:s|ed)?\s+for\s+(?:an\s+)?additional",
