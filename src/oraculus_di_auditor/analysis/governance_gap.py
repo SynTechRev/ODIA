@@ -90,6 +90,24 @@ def _build(
     }
 
 
+def _check_sole_source(
+    text: str, statutes: set[str], vendors: dict[str, list[str]]
+) -> dict[str, Any] | None:
+    if not detect_sole_source(text):
+        return None
+    if STATUTE_BY_KEY["gov_code_sole_source"].key in statutes:
+        return None
+    return _build(
+        "governance:sole-source-without-justification",
+        (
+            "Sole-source procurement referenced without California "
+            "Gov Code § 10340 justification citation"
+        ),
+        "high",
+        vendors=list(vendors.keys()),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
@@ -180,20 +198,9 @@ def detect_governance_gap_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]
     # -----------------------------------------------------------------------
     # 5. Sole-source procurement without Gov Code justification
     # -----------------------------------------------------------------------
-    if detect_sole_source(text):
-        has_gov_code_just = STATUTE_BY_KEY["gov_code_sole_source"].key in statutes
-        if not has_gov_code_just:
-            findings.append(
-                _build(
-                    "governance:sole-source-without-justification",
-                    (
-                        "Sole-source procurement referenced without California "
-                        "Gov Code § 10340 justification citation"
-                    ),
-                    "high",
-                    vendors=list(vendors.keys()),
-                )
-            )
+    sole_source_finding = _check_sole_source(text, statutes, vendors)
+    if sole_source_finding:
+        findings.append(sole_source_finding)
 
     # -----------------------------------------------------------------------
     # 6. Auto-renewal clause — raises renewal-deadline risk

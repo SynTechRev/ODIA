@@ -97,6 +97,99 @@ def _build_finding(
     }
 
 
+def _check_alpr_gaps(
+    techs: dict[str, list[str]],
+    vendors: dict[str, list[str]],
+    statutes: set[str],
+    doc_date: date | None,
+) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    has_alpr = "alpr" in techs or any(
+        VENDOR_BY_NAME[v].category == "alpr" for v in vendors
+    )
+    if not has_alpr:
+        return findings
+    sb524 = STATUTE_BY_KEY["sb_524"]
+    if sb524.key not in statutes:
+        sb524_effective = date.fromisoformat(sb524.effective_date)
+        severity = (
+            "critical" if (doc_date is None or doc_date >= sb524_effective) else "high"
+        )
+        findings.append(
+            _build_finding(
+                "surveillance:alpr-without-sb524-policy",
+                "ALPR system referenced without SB 524 AI-transparency policy citation",
+                severity,
+                statute=sb524.citation,
+                effective_date=sb524.effective_date,
+                document_date=doc_date.isoformat() if doc_date else None,
+                alpr_evidence=list(techs.get("alpr", []))[:3],
+            )
+        )
+    alpr_priv = STATUTE_BY_KEY["alpr_privacy"]
+    if alpr_priv.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:alpr-privacy-act-gap",
+                (
+                    "ALPR deployment without Civil Code § 1798.90.5 "
+                    "usage-and-privacy policy citation"
+                ),
+                "high",
+                statute=alpr_priv.citation,
+            )
+        )
+    return findings
+
+
+def _check_bwc_drone_ai_gaps(
+    techs: dict[str, list[str]],
+    vendors: dict[str, list[str]],
+    statutes: set[str],
+) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    cjis = STATUTE_BY_KEY["cjis"]
+    has_bwc = "bwc" in techs or any(
+        VENDOR_BY_NAME[v].category == "bwc" for v in vendors
+    )
+    if has_bwc and cjis.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:bwc-without-cjis-addendum",
+                "Body-worn camera program without CJIS Security Policy reference",
+                "high",
+                statute=cjis.citation,
+                bwc_evidence=list(techs.get("bwc", []))[:3],
+            )
+        )
+    sb524 = STATUTE_BY_KEY["sb_524"]
+    if "ai_report_writing" in techs and sb524.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:ai-report-writing-without-policy",
+                (
+                    "AI-generated report writing (Draft One or equivalent) "
+                    "without SB 524 AI-transparency policy"
+                ),
+                "critical",
+                statute=sb524.citation,
+                ai_evidence=techs["ai_report_writing"][:3],
+            )
+        )
+    ab481 = STATUTE_BY_KEY["ab_481"]
+    if "drone_uas" in techs and ab481.key not in statutes:
+        findings.append(
+            _build_finding(
+                "surveillance:drone-without-ab481-report",
+                "Drone/UAS program referenced without AB 481 annual-report language",
+                "high",
+                statute=ab481.citation,
+                drone_evidence=techs["drone_uas"][:3],
+            )
+        )
+    return findings
+
+
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
@@ -134,99 +227,14 @@ def detect_surveillance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
         )
 
     # -----------------------------------------------------------------------
-    # 2. ALPR without SB 524 policy
+    # 2–3. ALPR statutory gaps (SB 524 + ALPR Privacy Act)
     # -----------------------------------------------------------------------
-    has_alpr = "alpr" in techs or any(
-        VENDOR_BY_NAME[v].category == "alpr" for v in vendors
-    )
-    sb524 = STATUTE_BY_KEY["sb_524"]
-    if has_alpr and sb524.key not in statutes:
-        # Severity depends on whether the document is post-effective-date
-        sb524_effective = date.fromisoformat(sb524.effective_date)
-        severity = (
-            "critical" if (doc_date is None or doc_date >= sb524_effective) else "high"
-        )
-        findings.append(
-            _build_finding(
-                "surveillance:alpr-without-sb524-policy",
-                (
-                    "ALPR system referenced without SB 524 AI-transparency "
-                    "policy citation"
-                ),
-                severity,
-                statute=sb524.citation,
-                effective_date=sb524.effective_date,
-                document_date=doc_date.isoformat() if doc_date else None,
-                alpr_evidence=list(techs.get("alpr", []))[:3],
-            )
-        )
+    findings.extend(_check_alpr_gaps(techs, vendors, statutes, doc_date))
 
     # -----------------------------------------------------------------------
-    # 3. ALPR without ALPR Privacy Act (Civ. Code 1798.90.5)
+    # 4–6. BWC / AI report-writing / drone gaps
     # -----------------------------------------------------------------------
-    alpr_priv = STATUTE_BY_KEY["alpr_privacy"]
-    if has_alpr and alpr_priv.key not in statutes:
-        findings.append(
-            _build_finding(
-                "surveillance:alpr-privacy-act-gap",
-                (
-                    "ALPR deployment without Civil Code § 1798.90.5 "
-                    "usage-and-privacy policy citation"
-                ),
-                "high",
-                statute=alpr_priv.citation,
-            )
-        )
-
-    # -----------------------------------------------------------------------
-    # 4. BWC without CJIS addendum
-    # -----------------------------------------------------------------------
-    has_bwc = "bwc" in techs or any(
-        VENDOR_BY_NAME[v].category == "bwc" for v in vendors
-    )
-    cjis = STATUTE_BY_KEY["cjis"]
-    if has_bwc and cjis.key not in statutes:
-        findings.append(
-            _build_finding(
-                "surveillance:bwc-without-cjis-addendum",
-                "Body-worn camera program without CJIS Security Policy reference",
-                "high",
-                statute=cjis.citation,
-                bwc_evidence=list(techs.get("bwc", []))[:3],
-            )
-        )
-
-    # -----------------------------------------------------------------------
-    # 5. AI report-writing (Draft One) without policy
-    # -----------------------------------------------------------------------
-    if "ai_report_writing" in techs and sb524.key not in statutes:
-        findings.append(
-            _build_finding(
-                "surveillance:ai-report-writing-without-policy",
-                (
-                    "AI-generated report writing (Draft One or equivalent) "
-                    "without SB 524 AI-transparency policy"
-                ),
-                "critical",
-                statute=sb524.citation,
-                ai_evidence=techs["ai_report_writing"][:3],
-            )
-        )
-
-    # -----------------------------------------------------------------------
-    # 6. Drone / UAS without AB 481
-    # -----------------------------------------------------------------------
-    ab481 = STATUTE_BY_KEY["ab_481"]
-    if "drone_uas" in techs and ab481.key not in statutes:
-        findings.append(
-            _build_finding(
-                "surveillance:drone-without-ab481-report",
-                "Drone/UAS program referenced without AB 481 annual-report language",
-                "high",
-                statute=ab481.citation,
-                drone_evidence=techs["drone_uas"][:3],
-            )
-        )
+    findings.extend(_check_bwc_drone_ai_gaps(techs, vendors, statutes))
 
     # -----------------------------------------------------------------------
     # 7. Multi-layer surveillance architecture (≥3 categories)

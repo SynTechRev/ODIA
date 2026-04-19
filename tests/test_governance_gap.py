@@ -51,7 +51,8 @@ def test_capabilities_with_full_governance_no_anomalies():
         "A privacy impact assessment has been completed. Oversight is provided "
         "by the city council following council approval and community input. "
         "Data retention is governed by the retention policy filed with the clerk. "
-        "All deployments are listed in the public transparency portal surveillance inventory."
+        "All deployments are listed in the public transparency portal "
+        "surveillance inventory."
     )
     assert detect_governance_gap_anomalies(doc) == []
 
