@@ -96,6 +96,16 @@ def create_app() -> Any:
             "Install with: pip install fastapi uvicorn"
         ) from e
 
+    # Configure bundled OCR binaries (tesseract, poppler) before any PDF
+    # path is triggered. Safe no-op outside PyInstaller or when binaries
+    # are absent from the bundle.
+    try:
+        from oraculus_di_auditor.bundled_binaries import configure_bundled_binaries
+
+        logger.info("Bundled OCR binary status: %s", configure_bundled_binaries())
+    except Exception as exc:  # noqa: BLE001 - never crash app startup
+        logger.warning("Bundled OCR binary configuration failed: %s", exc)
+
     app = FastAPI(
         title="Oraculus-DI-Auditor API",
         description=(
