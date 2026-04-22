@@ -18,7 +18,9 @@ from odia_ai.training.dataset_builder import (
 )
 
 
-def make_alert(alert_id: str, jurisdiction: str, severity: str = "HIGH") -> ExtractedAlert:
+def make_alert(
+    alert_id: str, jurisdiction: str, severity: str = "HIGH"
+) -> ExtractedAlert:
     return ExtractedAlert(
         alert_id=alert_id,
         jurisdiction=jurisdiction,
@@ -51,9 +53,7 @@ def test_alert_to_training_example():
     assert not ex.is_synthetic
     assert ex.input_text == alert.body
     assert "Flock Safety" in ex.output_json["vendors"]
-    assert any(
-        c["category"] == "F-2" for c in ex.output_json["anomaly_candidates"]
-    )
+    assert any(c["category"] == "F-2" for c in ex.output_json["anomaly_candidates"])
 
 
 def test_assign_split_holds_out_tcso_and_exeter():
@@ -146,6 +146,7 @@ def test_write_dataset_splits_alpaca(tmp_path: Path):
 
     # Each written line should be valid JSON with alpaca fields
     import json
+
     for split_file in tmp_path.glob("*.jsonl"):
         for line in split_file.read_text(encoding="utf-8").splitlines():
             if line.strip():

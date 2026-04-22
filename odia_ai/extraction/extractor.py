@@ -79,6 +79,7 @@ class ExtractionBackend(Protocol):
 # Backend 1: Pattern-based extractor (always available, no LLM required)
 # ------------------------------------------------------------------
 
+
 class PatternExtractionBackend:
     """Pattern-matching extractor that requires no LLM.
 
@@ -111,32 +112,38 @@ class PatternExtractionBackend:
         severity = detect_severity(document_text)
         category = detect_finding_category(document_text)
         if severity or category:
-            anomaly_candidates.append({
-                "category": category or "unspecified",
-                "severity": severity or "MEDIUM",
-                "reasoning": "Pattern-matched from document text",
-            })
+            anomaly_candidates.append(
+                {
+                    "category": category or "unspecified",
+                    "severity": severity or "MEDIUM",
+                    "reasoning": "Pattern-matched from document text",
+                }
+            )
 
         # Simple anomaly heuristics:
         # - Flock mentioned but no SB 524 reference -> candidate F-3
         if any("flock" in v.lower() for v in vendors):
             has_sb524 = any("524" in s for s in statutes)
             if not has_sb524:
-                anomaly_candidates.append({
-                    "category": "F-3",
-                    "severity": "HIGH",
-                    "reasoning": "Flock ALPR mentioned without SB 524 AI disclosure reference",
-                })
+                anomaly_candidates.append(
+                    {
+                        "category": "F-3",
+                        "severity": "HIGH",
+                        "reasoning": "Flock ALPR mentioned without SB 524 AI disclosure reference",
+                    }
+                )
 
         # - Axon mentioned without CJIS reference -> candidate F-5
         if any("axon" in v.lower() for v in vendors):
             has_cjis = any("cjis" in s.lower() for s in statutes)
             if not has_cjis:
-                anomaly_candidates.append({
-                    "category": "F-5",
-                    "severity": "HIGH",
-                    "reasoning": "Axon mentioned without CJIS Security Addendum reference",
-                })
+                anomaly_candidates.append(
+                    {
+                        "category": "F-5",
+                        "severity": "HIGH",
+                        "reasoning": "Axon mentioned without CJIS Security Addendum reference",
+                    }
+                )
 
         return ExtractionOutput(
             vendors=vendors,
@@ -153,6 +160,7 @@ class PatternExtractionBackend:
 # ------------------------------------------------------------------
 # Backend 2: RAG / general-LLM extractor
 # ------------------------------------------------------------------
+
 
 class RAGExtractionBackend:
     """Uses a general LLM via the existing oraculus_di_auditor.rag infrastructure.
@@ -172,6 +180,7 @@ class RAGExtractionBackend:
         try:
             # Import oraculus_di_auditor only when this backend is instantiated
             from oraculus_di_auditor.llm_providers import get_provider  # type: ignore
+
             kwargs: dict[str, Any] = {}
             if llm_model:
                 kwargs["model"] = llm_model
@@ -190,7 +199,10 @@ class RAGExtractionBackend:
 
     def _build_prompt(self, document_text: str) -> tuple[str, str]:
         """Return (system_prompt, user_prompt) for extraction."""
-        from odia_ai.training.dataset_builder import SYSTEM_PROMPT, EXTRACTION_INSTRUCTION  # noqa
+        from odia_ai.training.dataset_builder import (
+            EXTRACTION_INSTRUCTION,
+            SYSTEM_PROMPT,
+        )  # noqa
 
         system = SYSTEM_PROMPT
         user = f"{EXTRACTION_INSTRUCTION}\n\n---\n{document_text}\n---\n\nJSON:"
@@ -207,7 +219,9 @@ class RAGExtractionBackend:
         try:
             raw = self._provider.generate(user, context=system)
         except Exception as e:
-            logger.warning("RAG LLM call failed: %s; falling back to pattern backend", e)
+            logger.warning(
+                "RAG LLM call failed: %s; falling back to pattern backend", e
+            )
             fallback = PatternExtractionBackend().extract(document_text)
             fallback.backend_used = "pattern_after_rag_error"
             return fallback
@@ -228,6 +242,7 @@ class RAGExtractionBackend:
 # ------------------------------------------------------------------
 # Backend 3: Fine-tuned model backend (preferred once trained)
 # ------------------------------------------------------------------
+
 
 class FinetunedExtractionBackend:
     """Uses a fine-tuned ODIA model via HuggingFace transformers.
@@ -271,7 +286,10 @@ class FinetunedExtractionBackend:
             fallback.backend_used = "pattern_after_finetuned_unavailable"
             return fallback
 
-        from odia_ai.training.dataset_builder import EXTRACTION_INSTRUCTION, SYSTEM_PROMPT
+        from odia_ai.training.dataset_builder import (
+            EXTRACTION_INSTRUCTION,
+            SYSTEM_PROMPT,
+        )
 
         prompt = (
             f"### System:\n{SYSTEM_PROMPT}\n\n"
@@ -284,7 +302,7 @@ class FinetunedExtractionBackend:
             **inputs, max_new_tokens=2048, do_sample=False, temperature=0.0
         )
         raw = self._tokenizer.decode(
-            output_ids[0][inputs["input_ids"].shape[-1]:], skip_special_tokens=True
+            output_ids[0][inputs["input_ids"].shape[-1] :], skip_special_tokens=True
         )
 
         try:
@@ -302,6 +320,7 @@ class FinetunedExtractionBackend:
 # ------------------------------------------------------------------
 # Helpers
 # ------------------------------------------------------------------
+
 
 def _extract_first_json(text: str) -> dict:
     """Extract the first valid JSON object from a string (robust to wrapping prose)."""
@@ -336,7 +355,7 @@ def _extract_first_json(text: str) -> dict:
             elif c == "}":
                 depth -= 1
                 if depth == 0:
-                    candidate = text[start:i + 1]
+                    candidate = text[start : i + 1]
                     try:
                         return json.loads(candidate)
                     except json.JSONDecodeError:
@@ -345,7 +364,9 @@ def _extract_first_json(text: str) -> dict:
     raise ValueError("No valid JSON object found in text")
 
 
-def _parsed_to_output(parsed: dict, backend_used: str, raw: str | None = None) -> ExtractionOutput:
+def _parsed_to_output(
+    parsed: dict, backend_used: str, raw: str | None = None
+) -> ExtractionOutput:
     """Convert a parsed JSON dict into an ExtractionOutput with safe defaults."""
     return ExtractionOutput(
         vendors=parsed.get("vendors") or [],
@@ -363,6 +384,7 @@ def _parsed_to_output(parsed: dict, backend_used: str, raw: str | None = None) -
 # ------------------------------------------------------------------
 # ExtractionService (the main entry point)
 # ------------------------------------------------------------------
+
 
 class ExtractionService:
     """Layer 2 extraction service with automatic backend selection.

@@ -76,7 +76,9 @@ SAMPLE_DOC = (
 )
 
 
-def _make_alert(alert_id: str, jurisdiction: str, severity: str = "HIGH") -> ExtractedAlert:
+def _make_alert(
+    alert_id: str, jurisdiction: str, severity: str = "HIGH"
+) -> ExtractedAlert:
     return ExtractedAlert(
         alert_id=alert_id,
         jurisdiction=jurisdiction,
@@ -119,7 +121,9 @@ class BackrefTests(unittest.TestCase):
         self.assertIn("Axon Enterprise", vendors)
 
     def test_extract_statutes(self):
-        text = "Universal noncompliance with SB 524 since January 1, 2026. CJIS missing."
+        text = (
+            "Universal noncompliance with SB 524 since January 1, 2026. CJIS missing."
+        )
         statutes = extract_statutes(text)
         self.assertIn("SB 524", statutes)
         self.assertIn("CJIS", statutes)
@@ -311,6 +315,7 @@ class ExtractionTests(unittest.TestCase):
 class EvaluationTests(unittest.TestCase):
     def test_set_metrics_math(self):
         from odia_ai.evaluation import SetMetrics
+
         m = SetMetrics()
         m.update({"a", "b", "c"}, {"a", "b"})
         self.assertEqual(m.true_positives, 2)
@@ -322,22 +327,25 @@ class EvaluationTests(unittest.TestCase):
 
     def test_evaluate_backend_tiny(self):
         from odia_ai.evaluation import evaluate_backend
+
         with tempfile.TemporaryDirectory() as td:
             eval_file = Path(td) / "eval.jsonl"
             record = {
                 "instruction": "Extract.",
                 "input": SAMPLE_DOC,
-                "output": json.dumps({
-                    "vendors": ["Flock Safety", "Axon Enterprise"],
-                    "persons": [],
-                    "dollar_amounts": [],
-                    "statutes_cited": ["SB 524", "CJIS"],
-                    "procurement_instruments": [],
-                    "governance_bodies": [],
-                    "anomaly_candidates": [
-                        {"category": "F-2", "severity": "CRITICAL", "reasoning": ""}
-                    ],
-                }),
+                "output": json.dumps(
+                    {
+                        "vendors": ["Flock Safety", "Axon Enterprise"],
+                        "persons": [],
+                        "dollar_amounts": [],
+                        "statutes_cited": ["SB 524", "CJIS"],
+                        "procurement_instruments": [],
+                        "governance_bodies": [],
+                        "anomaly_candidates": [
+                            {"category": "F-2", "severity": "CRITICAL", "reasoning": ""}
+                        ],
+                    }
+                ),
                 "system": "",
             }
             eval_file.write_text(json.dumps(record) + "\n", encoding="utf-8")
@@ -345,14 +353,13 @@ class EvaluationTests(unittest.TestCase):
             result = evaluate_backend(backend, eval_file)
             self.assertEqual(result.num_examples, 1)
             self.assertEqual(result.errors, 0)
-            self.assertGreaterEqual(
-                result.field_metrics["vendors"].true_positives, 1
-            )
+            self.assertGreaterEqual(result.field_metrics["vendors"].true_positives, 1)
 
 
 class ContinualLearningTests(unittest.TestCase):
     def test_correction_store_round_trip(self):
         from odia_ai.continual import CorrectionStore, new_correction
+
         with tempfile.TemporaryDirectory() as td:
             store = CorrectionStore(Path(td) / "corrections.db")
             corr = new_correction(
@@ -381,13 +388,16 @@ class ContinualLearningTests(unittest.TestCase):
             new_correction,
             should_trigger_retraining,
         )
+
         with tempfile.TemporaryDirectory() as td:
             store = CorrectionStore(Path(td) / "c.db")
             for i in range(5):
                 c = new_correction(
-                    input_text=f"doc{i}", field_name="vendors",
+                    input_text=f"doc{i}",
+                    field_name="vendors",
                     correction_type="addition",
-                    original_value="[]", corrected_value=f'["v{i}"]',
+                    original_value="[]",
+                    corrected_value=f'["v{i}"]',
                     model_version_id="v1",
                 )
                 store.record(c)
@@ -402,13 +412,16 @@ class ContinualLearningTests(unittest.TestCase):
             new_correction,
             should_trigger_retraining,
         )
+
         with tempfile.TemporaryDirectory() as td:
             store = CorrectionStore(Path(td) / "c.db")
             for i in range(10):
                 c = new_correction(
-                    input_text=f"doc{i}", field_name="vendors",
+                    input_text=f"doc{i}",
+                    field_name="vendors",
                     correction_type="addition",
-                    original_value="[]", corrected_value=f'["v{i}"]',
+                    original_value="[]",
+                    corrected_value=f'["v{i}"]',
                     model_version_id="v1",
                 )
                 store.record(c)
@@ -422,6 +435,7 @@ class ContinualLearningTests(unittest.TestCase):
 class RegistryTests(unittest.TestCase):
     def test_register_and_get(self):
         from odia_ai.registry import ModelRegistry, ModelVersion, generate_version_id
+
         with tempfile.TemporaryDirectory() as td:
             registry = ModelRegistry(Path(td) / "registry")
             version = ModelVersion(
@@ -436,10 +450,15 @@ class RegistryTests(unittest.TestCase):
 
     def test_promotion_demotes_prior(self):
         from odia_ai.registry import ModelRegistry, ModelVersion, generate_version_id
+
         with tempfile.TemporaryDirectory() as td:
             registry = ModelRegistry(Path(td) / "registry")
-            v1 = ModelVersion(version_id=generate_version_id(), base_model="b", model_path="p1")
-            v2 = ModelVersion(version_id=generate_version_id(), base_model="b", model_path="p2")
+            v1 = ModelVersion(
+                version_id=generate_version_id(), base_model="b", model_path="p1"
+            )
+            v2 = ModelVersion(
+                version_id=generate_version_id(), base_model="b", model_path="p2"
+            )
             registry.register(v1)
             registry.register(v2)
             registry.set_deployment_status(v1.version_id, "production")
@@ -457,6 +476,7 @@ class RegistryTests(unittest.TestCase):
 class ConfigTests(unittest.TestCase):
     def test_config_round_trip(self):
         from odia_ai.configs import ODIAAIConfig, load_config, write_config
+
         with tempfile.TemporaryDirectory() as td:
             cfg = ODIAAIConfig()
             cfg.training.base_model = "custom/model"
@@ -469,6 +489,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_config_defaults(self):
         from odia_ai.configs import load_config
+
         cfg = load_config(None)
         self.assertTrue(cfg.training.base_model)
         self.assertEqual(cfg.dataset.holdout_validation_jurisdiction, "TCSO")

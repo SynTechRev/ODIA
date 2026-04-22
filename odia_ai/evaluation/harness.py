@@ -128,8 +128,12 @@ class EvaluationResult:
             lines.append("Per-jurisdiction vendors+statutes F1:")
             for j in sorted(self.by_jurisdiction.keys()):
                 vendors_f1 = self.by_jurisdiction[j].get("vendors", SetMetrics()).f1
-                statutes_f1 = self.by_jurisdiction[j].get("statutes_cited", SetMetrics()).f1
-                lines.append(f"  {j:15s}  vendors F1={vendors_f1:.3f}  statutes F1={statutes_f1:.3f}")
+                statutes_f1 = (
+                    self.by_jurisdiction[j].get("statutes_cited", SetMetrics()).f1
+                )
+                lines.append(
+                    f"  {j:15s}  vendors F1={vendors_f1:.3f}  statutes F1={statutes_f1:.3f}"
+                )
         return "\n".join(lines)
 
 
@@ -311,9 +315,7 @@ def write_evaluation_report(
 ) -> None:
     """Write evaluation result to a JSON file plus optional markdown summary."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(
-        json.dumps(result.to_dict(), indent=2), encoding="utf-8"
-    )
+    output_path.write_text(json.dumps(result.to_dict(), indent=2), encoding="utf-8")
     if include_summary:
         summary_path = output_path.with_suffix(".md")
         summary_path.write_text(result.summary_report(), encoding="utf-8")

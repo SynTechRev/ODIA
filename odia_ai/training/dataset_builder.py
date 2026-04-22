@@ -68,7 +68,9 @@ class TrainingExample:
     source_alert_id: str | None  # traceability back to the MAS record
     split: str = "train"  # train | validation | test
     is_synthetic: bool = False
-    synthesis_method: str = ""  # "paraphrase" | "jurisdiction_transfer" | "negative" | ""
+    synthesis_method: str = (
+        ""  # "paraphrase" | "jurisdiction_transfer" | "negative" | ""
+    )
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -107,31 +109,37 @@ def _alert_to_output_json(alert: ExtractedAlert) -> dict:
     # Build anomaly_candidates: the alert itself IS the anomaly
     anomaly_candidates: list[dict] = []
     if alert.severity or alert.finding_category:
-        anomaly_candidates.append({
-            "category": alert.finding_category or "unspecified",
-            "severity": alert.severity or "MEDIUM",
-            "reasoning": alert.title,
-        })
+        anomaly_candidates.append(
+            {
+                "category": alert.finding_category or "unspecified",
+                "severity": alert.severity or "MEDIUM",
+                "reasoning": alert.title,
+            }
+        )
 
     # Build dollar_amounts
     dollar_amounts: list[dict] = []
     for d in alert.dollar_amounts:
         # Best-effort vendor pairing: attach first mentioned vendor
         vendor = alert.vendors_mentioned[0] if alert.vendors_mentioned else None
-        dollar_amounts.append({
-            "amount_raw": d,
-            "vendor": vendor,
-            "context": alert.title[:100],
-        })
+        dollar_amounts.append(
+            {
+                "amount_raw": d,
+                "vendor": vendor,
+                "context": alert.title[:100],
+            }
+        )
 
     # Build procurement_instruments from resolution mentions
     procurement_instruments: list[dict] = []
     for r in alert.resolutions_mentioned:
-        procurement_instruments.append({
-            "type": "resolution_or_agreement",
-            "number": r,
-            "date": None,
-        })
+        procurement_instruments.append(
+            {
+                "type": "resolution_or_agreement",
+                "number": r,
+                "date": None,
+            }
+        )
 
     return {
         "vendors": alert.vendors_mentioned,
@@ -257,6 +265,7 @@ def negative_example(
 # Dataset assembly with deterministic splits
 # ------------------------------------------------------------------
 
+
 def _hash_to_float(s: str) -> float:
     """Deterministic hash → [0, 1) float for split assignment."""
     h = hashlib.sha256(s.encode("utf-8")).hexdigest()
@@ -321,7 +330,9 @@ def build_dataset(
 
     # Synthetic: jurisdiction transfer on training examples only
     if enable_jurisdiction_transfer:
-        train_examples = [e for e in examples if e.split == "train" and not e.is_synthetic]
+        train_examples = [
+            e for e in examples if e.split == "train" and not e.is_synthetic
+        ]
         for ex in train_examples:
             # Pick a random substitution pair
             pair = rng.choice(JURISDICTION_SUBSTITUTIONS)

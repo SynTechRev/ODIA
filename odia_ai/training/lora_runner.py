@@ -44,8 +44,13 @@ class LoRAConfig:
     dropout: float = 0.05
     target_modules: list[str] = field(
         default_factory=lambda: [
-            "q_proj", "k_proj", "v_proj", "o_proj",
-            "gate_proj", "up_proj", "down_proj",
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
         ]
     )
     bias: str = "none"
@@ -180,7 +185,10 @@ def train_lora(
             success=False,
             model_path="",
             error_message=message,
-            config_snapshot={"lora": lora_config.__dict__, "training": training_config.__dict__},
+            config_snapshot={
+                "lora": lora_config.__dict__,
+                "training": training_config.__dict__,
+            },
         )
 
     # Lazy imports (only reachable if deps present)
@@ -216,7 +224,11 @@ def train_lora(
             bnb_4bit_compute_dtype=torch.bfloat16,
         )
 
-    logger.info("Loading base model %s (4-bit=%s)", training_config.base_model, training_config.load_in_4bit)
+    logger.info(
+        "Loading base model %s (4-bit=%s)",
+        training_config.base_model,
+        training_config.load_in_4bit,
+    )
     model = AutoModelForCausalLM.from_pretrained(
         training_config.base_model,
         quantization_config=bnb_config,
@@ -301,7 +313,11 @@ def train_lora(
         data_collator=collator,
     )
 
-    logger.info("Starting training: %d train examples, %d eval examples", len(train_records), eval_count)
+    logger.info(
+        "Starting training: %d train examples, %d eval examples",
+        len(train_records),
+        eval_count,
+    )
     try:
         train_output = trainer.train()
         trainer.save_model(str(output_dir / "final"))

@@ -45,9 +45,7 @@ ALERT_ID_PATTERN = re.compile(
     r"\b(VPD|PPD|TUL|LIND|FAR|WDL|DIN|EXE|TCSO)[-_]?(\d{3})\b"
 )
 
-SEVERITY_PATTERN = re.compile(
-    r"\b(CRITICAL|HIGH|MEDIUM|LOW)\b", re.IGNORECASE
-)
+SEVERITY_PATTERN = re.compile(r"\b(CRITICAL|HIGH|MEDIUM|LOW)\b", re.IGNORECASE)
 
 # Structural finding category (F-1 through F-12)
 FINDING_PATTERN = re.compile(r"\bF[-\u2010\u2011]?(\d{1,2})\b")
@@ -66,24 +64,72 @@ RESOLUTION_PATTERN = re.compile(
 
 # Vendor keywords
 VENDOR_KEYWORDS = [
-    "Flock Safety", "Flock Group", "Flock", "Flock OS", "Flock Nova",
-    "Axon Enterprise", "Axon", "TASER", "Evidence.com", "Draft One", "Fleet 3",
-    "Motorola Solutions", "Motorola", "APX", "Spillman",
-    "Lexipol", "Verkada", "BCS Consulting", "Spartan Camera",
-    "ABH Fox Solutions", "SmartWater CSI", "Security Lines US",
-    "Nexanet", "Aerodome", "BRINC", "DJI", "Dell Technologies",
-    "T-Mobile", "QPCS", "Adamson", "NEC Corporation", "NEC LiveScan",
-    "Shotover-Churchill", "ActVnet", "CML Security", "Videray",
-    "AMS.NET", "Pole Camera", "Brief Cam", "Avenu",
-    "Palantir", "Andreessen Horowitz", "Founders Fund",
+    "Flock Safety",
+    "Flock Group",
+    "Flock",
+    "Flock OS",
+    "Flock Nova",
+    "Axon Enterprise",
+    "Axon",
+    "TASER",
+    "Evidence.com",
+    "Draft One",
+    "Fleet 3",
+    "Motorola Solutions",
+    "Motorola",
+    "APX",
+    "Spillman",
+    "Lexipol",
+    "Verkada",
+    "BCS Consulting",
+    "Spartan Camera",
+    "ABH Fox Solutions",
+    "SmartWater CSI",
+    "Security Lines US",
+    "Nexanet",
+    "Aerodome",
+    "BRINC",
+    "DJI",
+    "Dell Technologies",
+    "T-Mobile",
+    "QPCS",
+    "Adamson",
+    "NEC Corporation",
+    "NEC LiveScan",
+    "Shotover-Churchill",
+    "ActVnet",
+    "CML Security",
+    "Videray",
+    "AMS.NET",
+    "Pole Camera",
+    "Brief Cam",
+    "Avenu",
+    "Palantir",
+    "Andreessen Horowitz",
+    "Founders Fund",
 ]
 
 STATUTE_KEYWORDS = [
-    "SB 524", "SB524", "AB 481", "AB481", "SB 978", "SB 34", "SB 54",
-    "Penal Code \u00a713663", "Civil Code \u00a71798.90.5",
-    "Gov Code \u00a78630", "28 CFR Part 23", "42 U.S.C. \u00a7 1983",
-    "42 U.S.C. \u00a71983", "Section 1983", "Monell", "CJIS",
-    "CEQA", "Brown Act", "CPRA", "Government Code \u00a76253",
+    "SB 524",
+    "SB524",
+    "AB 481",
+    "AB481",
+    "SB 978",
+    "SB 34",
+    "SB 54",
+    "Penal Code \u00a713663",
+    "Civil Code \u00a71798.90.5",
+    "Gov Code \u00a78630",
+    "28 CFR Part 23",
+    "42 U.S.C. \u00a7 1983",
+    "42 U.S.C. \u00a71983",
+    "Section 1983",
+    "Monell",
+    "CJIS",
+    "CEQA",
+    "Brown Act",
+    "CPRA",
+    "Government Code \u00a76253",
 ]
 
 
@@ -198,7 +244,7 @@ def _parse_alert_blocks(text: str) -> list[tuple[str, str, str]]:
         prefix = m.group(1)
         num = m.group(2)
         alert_id = f"{prefix}-{num}"
-        matches.append((m.start(), m.end(), alert_id, text[m.start():m.end()]))
+        matches.append((m.start(), m.end(), alert_id, text[m.start() : m.end()]))
 
     if not matches:
         return []
@@ -318,7 +364,6 @@ def compute_corpus_stats(alerts: list[ExtractedAlert]) -> dict:
         "top_vendors": sorted(vendor_freq.items(), key=lambda x: -x[1])[:20],
         "top_statutes": sorted(statute_freq.items(), key=lambda x: -x[1])[:20],
         "avg_body_length": (
-            sum(a.body_char_length for a in alerts) // len(alerts)
-            if alerts else 0
+            sum(a.body_char_length for a in alerts) // len(alerts) if alerts else 0
         ),
     }

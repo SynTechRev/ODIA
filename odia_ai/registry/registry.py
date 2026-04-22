@@ -75,9 +75,7 @@ class ModelRegistry:
         return json.loads(self.manifest_path.read_text(encoding="utf-8"))
 
     def _write_manifest(self, manifest: dict) -> None:
-        self.manifest_path.write_text(
-            json.dumps(manifest, indent=2), encoding="utf-8"
-        )
+        self.manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     def register(self, version: ModelVersion) -> str:
         """Register a new model version. Returns the version_id."""
@@ -113,9 +111,7 @@ class ModelRegistry:
     def list_versions(self) -> list[dict]:
         return self._read_manifest()["versions"]
 
-    def set_deployment_status(
-        self, version_id: str, status: DeploymentStatus
-    ) -> bool:
+    def set_deployment_status(self, version_id: str, status: DeploymentStatus) -> bool:
         """Update deployment status of a version.
 
         When setting 'production', demotes any existing production version
@@ -129,7 +125,10 @@ class ModelRegistry:
         if status == "production":
             # Demote any existing production version
             for v in manifest["versions"]:
-                if v.get("deployment_status") == "production" and v["version_id"] != version_id:
+                if (
+                    v.get("deployment_status") == "production"
+                    and v["version_id"] != version_id
+                ):
                     v["deployment_status"] = "staging"
                     prior = self.get(v["version_id"])
                     if prior:
@@ -167,6 +166,7 @@ class ModelRegistry:
         version_dir = self.root / f"v_{version_id}"
         if version_dir.exists():
             import shutil
+
             shutil.rmtree(version_dir)
         manifest = self._read_manifest()
         manifest["versions"] = [

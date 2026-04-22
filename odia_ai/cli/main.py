@@ -42,6 +42,7 @@ def _setup_logging(verbose: bool) -> None:
 # init-config
 # ------------------------------------------------------------------
 
+
 def cmd_init_config(args: argparse.Namespace) -> int:
     from odia_ai.configs import ODIAAIConfig, write_config
 
@@ -55,6 +56,7 @@ def cmd_init_config(args: argparse.Namespace) -> int:
 # ------------------------------------------------------------------
 # build-dataset
 # ------------------------------------------------------------------
+
 
 def cmd_build_dataset(args: argparse.Namespace) -> int:
     from odia_ai.backref import compute_corpus_stats, extract_corpus, write_jsonl
@@ -120,6 +122,7 @@ def cmd_build_dataset(args: argparse.Namespace) -> int:
 # ------------------------------------------------------------------
 # train
 # ------------------------------------------------------------------
+
 
 def cmd_train(args: argparse.Namespace) -> int:
     from odia_ai.configs import load_config
@@ -207,6 +210,7 @@ def cmd_train(args: argparse.Namespace) -> int:
 # evaluate
 # ------------------------------------------------------------------
 
+
 def cmd_evaluate(args: argparse.Namespace) -> int:
     from odia_ai.configs import load_config
     from odia_ai.evaluation import (
@@ -221,8 +225,12 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
 
     cfg = load_config(args.config) if args.config else None
     dataset_path = Path(
-        args.dataset or (cfg.evaluation.test_dataset_path if cfg
-                          else "./data/training_splits/test.jsonl")
+        args.dataset
+        or (
+            cfg.evaluation.test_dataset_path
+            if cfg
+            else "./data/training_splits/test.jsonl"
+        )
     )
     report_dir = Path(
         args.report_dir or (cfg.evaluation.report_dir if cfg else "./reports/eval")
@@ -266,6 +274,7 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
 # extract
 # ------------------------------------------------------------------
 
+
 def cmd_extract(args: argparse.Namespace) -> int:
     from odia_ai.configs import load_config
     from odia_ai.extraction import ExtractionService
@@ -280,9 +289,7 @@ def cmd_extract(args: argparse.Namespace) -> int:
         text = sys.stdin.read()
 
     svc = ExtractionService(
-        finetuned_model_path=(
-            cfg.deployment.finetuned_model_path if cfg else None
-        ),
+        finetuned_model_path=(cfg.deployment.finetuned_model_path if cfg else None),
         llm_provider=(cfg.deployment.default_llm_provider if cfg else "ollama"),
         llm_model=(cfg.deployment.default_llm_model if cfg else None),
         force_backend=args.backend,
@@ -295,6 +302,7 @@ def cmd_extract(args: argparse.Namespace) -> int:
 # ------------------------------------------------------------------
 # registry
 # ------------------------------------------------------------------
+
 
 def cmd_registry(args: argparse.Namespace) -> int:
     from odia_ai.configs import load_config
@@ -313,7 +321,9 @@ def cmd_registry(args: argparse.Namespace) -> int:
             print("(registry is empty)")
             return 0
         for v in versions:
-            prod_marker = " [PROD]" if v.get("deployment_status") == "production" else ""
+            prod_marker = (
+                " [PROD]" if v.get("deployment_status") == "production" else ""
+            )
             print(
                 f"{v['version_id']:40s} "
                 f"{v.get('deployment_status', '?'):12s} "
@@ -350,6 +360,7 @@ def cmd_registry(args: argparse.Namespace) -> int:
 # ------------------------------------------------------------------
 # feedback
 # ------------------------------------------------------------------
+
 
 def cmd_feedback(args: argparse.Namespace) -> int:
     from odia_ai.configs import load_config
@@ -399,6 +410,7 @@ def cmd_feedback(args: argparse.Namespace) -> int:
 # main
 # ------------------------------------------------------------------
 
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="odia-ai",
@@ -418,13 +430,17 @@ def build_parser() -> argparse.ArgumentParser:
     p_init.set_defaults(func=cmd_init_config)
 
     # build-dataset
-    p_bd = sub.add_parser("build-dataset", help="Build training dataset from MAS corpus")
+    p_bd = sub.add_parser(
+        "build-dataset", help="Build training dataset from MAS corpus"
+    )
     p_bd.add_argument("--mas-dir", help="Directory with *.md MAS files")
     p_bd.add_argument("--output-dir", help="Where to write split JSONL files")
     p_bd.add_argument("--format", choices=["alpaca", "openai", "raw"], default=None)
     p_bd.add_argument(
-        "--enable-synthesis", action="store_true", default=True,
-        help="Produce synthetic jurisdiction-transfer variants"
+        "--enable-synthesis",
+        action="store_true",
+        default=True,
+        help="Produce synthetic jurisdiction-transfer variants",
     )
     p_bd.set_defaults(func=cmd_build_dataset)
 
@@ -457,7 +473,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_reg.set_defaults(func=cmd_registry)
 
     # feedback
-    p_fb = sub.add_parser("feedback", help="User feedback / correction store operations")
+    p_fb = sub.add_parser(
+        "feedback", help="User feedback / correction store operations"
+    )
     p_fb.add_argument("action", choices=["stats"])
     p_fb.add_argument("--db-path")
     p_fb.set_defaults(func=cmd_feedback)

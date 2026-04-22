@@ -22,6 +22,7 @@ SAMPLE_DOC = (
 
 # -------------------- Extraction tests --------------------
 
+
 def test_pattern_backend_always_available():
     backend = PatternExtractionBackend()
     assert backend.is_available()
@@ -79,11 +80,13 @@ def test_extract_first_json_handles_nested_braces():
 
 def test_extract_first_json_raises_on_no_json():
     import pytest
+
     with pytest.raises(ValueError):
         _extract_first_json("no json here at all")
 
 
 # -------------------- Evaluation tests --------------------
+
 
 def test_set_metrics_math():
     from odia_ai.evaluation import SetMetrics
@@ -107,17 +110,19 @@ def test_evaluate_backend_on_tiny_dataset(tmp_path: Path):
     record = {
         "instruction": "Extract.",
         "input": SAMPLE_DOC,
-        "output": json.dumps({
-            "vendors": ["Flock Safety", "Axon Enterprise"],
-            "persons": [],
-            "dollar_amounts": [],
-            "statutes_cited": ["SB 524", "CJIS"],
-            "procurement_instruments": [],
-            "governance_bodies": [],
-            "anomaly_candidates": [
-                {"category": "F-2", "severity": "CRITICAL", "reasoning": ""}
-            ],
-        }),
+        "output": json.dumps(
+            {
+                "vendors": ["Flock Safety", "Axon Enterprise"],
+                "persons": [],
+                "dollar_amounts": [],
+                "statutes_cited": ["SB 524", "CJIS"],
+                "procurement_instruments": [],
+                "governance_bodies": [],
+                "anomaly_candidates": [
+                    {"category": "F-2", "severity": "CRITICAL", "reasoning": ""}
+                ],
+            }
+        ),
         "system": "",
     }
     eval_file.write_text(json.dumps(record) + "\n", encoding="utf-8")
@@ -133,6 +138,7 @@ def test_evaluate_backend_on_tiny_dataset(tmp_path: Path):
 
 
 # -------------------- Continual-learning tests --------------------
+
 
 def test_correction_store_round_trip(tmp_path: Path):
     from odia_ai.continual import CorrectionStore, new_correction
@@ -174,13 +180,16 @@ def test_trigger_decision_below_threshold(tmp_path: Path):
         new_correction,
         should_trigger_retraining,
     )
+
     store = CorrectionStore(tmp_path / "c.db")
     # Add 5 corrections (below default threshold of 50)
     for i in range(5):
         c = new_correction(
-            input_text=f"doc{i}", field_name="vendors",
+            input_text=f"doc{i}",
+            field_name="vendors",
             correction_type="addition",
-            original_value="[]", corrected_value=f'["v{i}"]',
+            original_value="[]",
+            corrected_value=f'["v{i}"]',
             model_version_id="v1",
         )
         store.record(c)
@@ -197,26 +206,28 @@ def test_trigger_decision_at_threshold(tmp_path: Path):
         new_correction,
         should_trigger_retraining,
     )
+
     store = CorrectionStore(tmp_path / "c.db")
     for i in range(10):
         c = new_correction(
-            input_text=f"doc{i}", field_name="vendors",
+            input_text=f"doc{i}",
+            field_name="vendors",
             correction_type="addition",
-            original_value="[]", corrected_value=f'["v{i}"]',
+            original_value="[]",
+            corrected_value=f'["v{i}"]',
             model_version_id="v1",
         )
         store.record(c)
         store.mark_reviewed([c.correction_id])
 
     # Lower threshold to 10 -> should trigger
-    decision = should_trigger_retraining(
-        store, TriggerConfig(min_new_corrections=10)
-    )
+    decision = should_trigger_retraining(store, TriggerConfig(min_new_corrections=10))
     assert decision.should_retrain
 
 
 def test_correction_to_training_example():
     from odia_ai.continual import Correction, correction_to_training_example
+
     corr = Correction(
         correction_id="c1",
         document_hash="h1",
@@ -238,6 +249,7 @@ def test_correction_to_training_example():
 
 # -------------------- Registry tests --------------------
 
+
 def test_registry_register_and_get(tmp_path: Path):
     from odia_ai.registry import ModelRegistry, ModelVersion, generate_version_id
 
@@ -258,8 +270,12 @@ def test_registry_promotion_demotes_prior_production(tmp_path: Path):
 
     registry = ModelRegistry(tmp_path / "registry")
 
-    v1 = ModelVersion(version_id=generate_version_id(), base_model="base", model_path="p1")
-    v2 = ModelVersion(version_id=generate_version_id(), base_model="base", model_path="p2")
+    v1 = ModelVersion(
+        version_id=generate_version_id(), base_model="base", model_path="p1"
+    )
+    v2 = ModelVersion(
+        version_id=generate_version_id(), base_model="base", model_path="p2"
+    )
     registry.register(v1)
     registry.register(v2)
 
@@ -290,6 +306,7 @@ def test_registry_list_versions(tmp_path: Path):
 
 
 # -------------------- Config tests --------------------
+
 
 def test_config_round_trip(tmp_path: Path):
     from odia_ai.configs import ODIAAIConfig, load_config, write_config

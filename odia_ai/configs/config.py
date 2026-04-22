@@ -166,6 +166,7 @@ def write_config(cfg: ODIAAIConfig, path: Path) -> None:
     if suffix in (".yaml", ".yml"):
         try:
             import yaml  # type: ignore
+
             path.write_text(
                 yaml.safe_dump(cfg.to_dict(), sort_keys=False), encoding="utf-8"
             )

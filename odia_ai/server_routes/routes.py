@@ -95,7 +95,9 @@ def _build_router(config_path: str | None = None):  # -> APIRouter
     class CorrectionRequest(BaseModel):
         input_text: str
         field_name: str = Field(..., description="e.g. 'vendors', 'anomaly_candidates'")
-        correction_type: str = Field(..., description="addition | deletion | modification")
+        correction_type: str = Field(
+            ..., description="addition | deletion | modification"
+        )
         original_value: str
         corrected_value: str
         model_version_id: str = "unknown"
@@ -192,7 +194,9 @@ def _build_router(config_path: str | None = None):  # -> APIRouter
         registry = get_registry()
         v = registry.get(version_id)
         if v is None:
-            raise HTTPException(status_code=404, detail=f"Unknown version: {version_id}")
+            raise HTTPException(
+                status_code=404, detail=f"Unknown version: {version_id}"
+            )
         return v.to_dict()
 
     @router.get("/status", response_model=StatusResponse)
@@ -211,9 +215,7 @@ def _build_router(config_path: str | None = None):  # -> APIRouter
         return StatusResponse(
             backends_available=svc.available_backends(),
             corrections_total=store.count(),
-            corrections_pending=store.count(
-                reviewed_only=True, unapplied_only=True
-            ),
+            corrections_pending=store.count(reviewed_only=True, unapplied_only=True),
             should_retrain=decision.should_retrain,
             retrain_reason=decision.reason,
             production_model_version=prod.version_id if prod else None,

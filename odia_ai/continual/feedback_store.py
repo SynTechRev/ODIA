@@ -259,6 +259,7 @@ class CorrectionStore:
 # Trigger logic
 # ------------------------------------------------------------------
 
+
 @dataclass
 class TriggerConfig:
     """Thresholds for automatic re-training triggers."""
@@ -293,7 +294,7 @@ def should_trigger_retraining(
         return TriggerDecision(
             should_retrain=True,
             reason=f"{unapplied} reviewed corrections accumulated "
-                   f"(>= {config.min_new_corrections})",
+            f"(>= {config.min_new_corrections})",
             corrections_count=unapplied,
             days_since_last_training=days_since,
         )
@@ -372,6 +373,7 @@ def new_correction(
 ) -> Correction:
     """Factory for a new Correction with SHA-256 document hash and UUID id."""
     import hashlib
+
     doc_hash = hashlib.sha256(input_text.encode("utf-8")).hexdigest()
     return Correction(
         correction_id=str(uuid.uuid4()),
