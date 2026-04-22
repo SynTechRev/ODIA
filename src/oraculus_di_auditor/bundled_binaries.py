@@ -46,9 +46,7 @@ def _bundle_dir() -> Path | None:
     return Path(sys.executable).parent
 
 
-def _configure_windows_bundled(
-    bundle: Path, status: dict[str, bool]
-) -> None:
+def _configure_windows_bundled(bundle: Path, status: dict[str, bool]) -> None:
     """Wire pytesseract + pdf2image to binaries packed next to the exe."""
     tesseract_exe = bundle / "tesseract.exe"
     if tesseract_exe.exists():
@@ -90,9 +88,7 @@ def _configure_system_path(status: dict[str, bool]) -> None:
 
             pytesseract.pytesseract.tesseract_cmd = tesseract_path
             status["tesseract"] = True
-            logger.info(
-                "Configured system tesseract at %s (via PATH)", tesseract_path
-            )
+            logger.info("Configured system tesseract at %s (via PATH)", tesseract_path)
         except ImportError:
             logger.info("pytesseract module not available; system tesseract unused")
     else:
