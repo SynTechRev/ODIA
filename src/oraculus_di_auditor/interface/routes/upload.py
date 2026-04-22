@@ -116,11 +116,14 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
             text = path.read_text(encoding="utf-8", errors="replace")
 
     elif ext == ".pdf":
+        # Delegate to ingestion.engine.extract_text_from_pdf so scanned PDFs
+        # fall through to the Tesseract+Poppler OCR path. A bare pypdf call
+        # here returns empty strings for image-only PDFs and leaves the
+        # text-content detectors with nothing to analyze.
         try:
-            import pypdf  # type: ignore[import]
+            from oraculus_di_auditor.ingestion.engine import extract_text_from_pdf
 
-            reader = pypdf.PdfReader(str(path))
-            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+            text = extract_text_from_pdf(path)
         except ImportError:
             text = f"[PDF: {path.name} — install pypdf to extract text]"
         except Exception as exc:

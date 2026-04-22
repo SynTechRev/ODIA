@@ -21,6 +21,7 @@ import { Card } from '@/components/base/Card';
 import { TemporalTimeline } from '@/components/timeline/TemporalTimeline';
 import { CCOPSScorecard } from '@/components/compliance/CCOPSScorecard';
 import { getAPIClient } from '@/lib/api/client';
+import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import type { AuditFinding, AuditResults, TimelineEvent } from '@/lib/types/api';
 
 // ---------------------------------------------------------------------------
@@ -254,11 +255,21 @@ function ResultsPageInner() {
   const [filterDocument, setFilterDocument] = useState<string>('all');
 
   const client = getAPIClient();
+  const historyEntries = useAuditHistoryStore((s) => s.entries);
+  const addAuditToHistory = useAuditHistoryStore((s) => s.addAudit);
+  const getAuditFromHistory = useAuditHistoryStore((s) => s.getAudit);
 
-  // Fetch results on mount
+  // Fetch results on mount — cache-first, then backend fallback.
+  // When no jobId is present we render a history list view instead of an error.
   useEffect(() => {
     if (!jobId) {
-      setError('No job ID provided. Return to Upload and run an audit.');
+      setLoading(false);
+      return;
+    }
+
+    const cached = getAuditFromHistory(jobId);
+    if (cached) {
+      setResults(cached.results);
       setLoading(false);
       return;
     }
@@ -268,6 +279,7 @@ function ResultsPageInner() {
         const response = await client.getAuditResults(jobId);
         if (response.results) {
           setResults(response.results);
+          addAuditToHistory(jobId, response.results);
         } else {
           setError(`Job is not complete yet (status: ${response.status}). Please wait and refresh.`);
         }
@@ -331,6 +343,86 @@ function ResultsPageInner() {
           <div className="text-center">
             <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-600">Loading audit results…</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // No jobId in URL → render history list (or empty state if no past audits).
+  if (!jobId) {
+    if (historyEntries.length === 0) {
+      return (
+        <DashboardLayout>
+          <Card variant="bordered">
+            <div className="text-center py-12">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No audit history yet</h3>
+              <p className="text-gray-600 mb-6">
+                Run an audit to see its report here. Past audits are saved locally on this machine.
+              </p>
+              <AppLink
+                href="/upload"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Go to Upload
+              </AppLink>
+            </div>
+          </Card>
+        </DashboardLayout>
+      );
+    }
+    return (
+      <DashboardLayout>
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-1">Audit history</h2>
+            <p className="text-gray-600 text-sm">
+              Past audits from this machine. Click a row to reopen its report.
+            </p>
+          </div>
+          <div className="space-y-2">
+            {historyEntries.map((entry) => {
+              const r = entry.results;
+              const sev = r.severity_summary;
+              const firstDoc = r.document_manifest?.[0]?.filename ?? 'Unnamed';
+              const more = r.document_count > 1 ? ` +${r.document_count - 1} more` : '';
+              return (
+                <AppLink
+                  key={entry.job_id}
+                  href={`/results?job_id=${entry.job_id}`}
+                  className="block bg-white rounded-lg border border-gray-200 hover:border-blue-400 transition-colors p-4"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-gray-900 text-sm truncate">
+                        {firstDoc}{more}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {r.generated_at?.slice(0, 16).replace('T', ' ')}
+                        &nbsp;·&nbsp;
+                        {r.finding_count} finding{r.finding_count === 1 ? '' : 's'}
+                        &nbsp;·&nbsp;
+                        <span className="font-mono">{entry.job_id.slice(0, 8)}</span>
+                      </p>
+                    </div>
+                    <div className="flex gap-1 text-xs flex-shrink-0">
+                      {sev.critical > 0 && (
+                        <span className="px-2 py-0.5 rounded bg-red-100 text-red-700">C {sev.critical}</span>
+                      )}
+                      {sev.high > 0 && (
+                        <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-700">H {sev.high}</span>
+                      )}
+                      {sev.medium > 0 && (
+                        <span className="px-2 py-0.5 rounded bg-yellow-100 text-yellow-700">M {sev.medium}</span>
+                      )}
+                      {sev.low > 0 && (
+                        <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-700">L {sev.low}</span>
+                      )}
+                    </div>
+                  </div>
+                </AppLink>
+              );
+            })}
           </div>
         </div>
       </DashboardLayout>

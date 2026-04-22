@@ -54,6 +54,18 @@ _SUFFIX_MULTIPLIERS: dict[str, float] = {
 # Expansion threshold (50 %)
 _EXPANSION_THRESHOLD = 0.50
 
+# Sanity floor: contract baselines are not pennies. Filters out stray
+# numeric fragments (page numbers read as "$0.55", postage, per-unit fees,
+# OCR noise) that would otherwise win the min() race and produce absurd
+# expansion ratios.
+_MIN_CONTRACT_AMOUNT = 1000.0
+
+# Sanity cap: a ratio above ~10000% between the smallest and largest
+# dollar amounts in a document is almost always two unrelated amounts,
+# not a real amendment expansion. Suppress the finding rather than
+# produce a clearly false one.
+_MAX_EXPANSION_RATIO = 100.0
+
 
 def _parse_dollar_amount(raw: str) -> float | None:
     """Convert a matched dollar string to a float, handling M/B/T suffixes.
@@ -105,20 +117,26 @@ def detect_scope_expansion_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]
 
     has_baseline = any(kw in text_lower for kw in BASELINE_KEYWORDS)
 
-    # Parse all dollar amounts in the document
+    # Parse all dollar amounts in the document. Drop values below the
+    # contract-baseline floor — sub-$1000 figures are almost always page
+    # numbers, fees, per-unit costs, or OCR noise, not contract amounts.
     raw_amounts = FISCAL_AMOUNT_PATTERN.findall(text_content)
     parsed: list[tuple[str, float]] = []
     for raw in raw_amounts:
         value = _parse_dollar_amount(raw)
-        if value is not None and value > 0:
+        if value is not None and value >= _MIN_CONTRACT_AMOUNT:
             parsed.append((raw, value))
 
-    # Check 1: Significant expansion — any amount >50% above another
+    # Check 1: Significant expansion — any amount >50% above another,
+    # but below the noise ratio cap that indicates two unrelated amounts.
     if len(parsed) >= 2:
         values = [v for _, v in parsed]
         min_val = min(values)
         max_val = max(values)
-        if max_val > min_val * (1 + _EXPANSION_THRESHOLD):
+        if (
+            max_val > min_val * (1 + _EXPANSION_THRESHOLD)
+            and max_val / min_val <= _MAX_EXPANSION_RATIO
+        ):
             expansion_pct = round((max_val - min_val) / min_val * 100, 1)
             original_raw = next(r for r, v in parsed if v == min_val)
             expanded_raw = next(r for r, v in parsed if v == max_val)

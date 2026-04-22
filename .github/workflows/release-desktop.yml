@@ -57,6 +57,30 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential fakeroot rpm libfuse2
 
+      - name: Install OCR tooling (Windows)
+        # PyInstaller spec (desktop/odia-backend.spec) looks for Tesseract at
+        # C:\Program Files\Tesseract-OCR and Poppler at
+        # C:\Program Files\poppler\Library\bin. Install both here so the
+        # bundled odia-backend.exe can OCR scanned PDFs out of the box.
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          choco install tesseract --no-progress -y
+          $popplerUrl = "https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip"
+          $popplerZip = "$env:TEMP\poppler.zip"
+          Invoke-WebRequest -Uri $popplerUrl -OutFile $popplerZip
+          Expand-Archive -Path $popplerZip -DestinationPath "$env:TEMP\poppler_extract" -Force
+          $inner = Get-ChildItem -Path "$env:TEMP\poppler_extract" -Directory | Select-Object -First 1
+          if ($null -eq $inner) { throw "Poppler archive had unexpected layout" }
+          New-Item -ItemType Directory -Path "C:\Program Files\poppler" -Force | Out-Null
+          Copy-Item -Path "$($inner.FullName)\*" -Destination "C:\Program Files\poppler\" -Recurse -Force
+          if (-not (Test-Path "C:\Program Files\Tesseract-OCR\tesseract.exe")) {
+            throw "Tesseract install failed: tesseract.exe not found"
+          }
+          if (-not (Test-Path "C:\Program Files\poppler\Library\bin\pdftoppm.exe")) {
+            throw "Poppler install failed: pdftoppm.exe not found"
+          }
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
