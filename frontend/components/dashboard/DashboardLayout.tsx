@@ -19,6 +19,7 @@ import {
   AnalysisIcon,
   DocumentsIcon,
   AnomaliesIcon,
+  SynthesisIcon,
   OrchestratorIcon,
   SettingsIcon,
   OdiaMarkIcon,
@@ -52,6 +53,7 @@ const sidebarNav: NavItem[] = [
   { name: 'Documents',     href: '/documents',     Icon: DocumentsIcon,    group: 'Evidence' },
   { name: 'Results',       href: '/results',       Icon: ResultsIcon,      group: 'Evidence' },
   { name: 'Anomalies',     href: '/anomalies',     Icon: AnomaliesIcon,    group: 'Evidence' },
+  { name: 'Synthesis',     href: '/synthesis',     Icon: SynthesisIcon,    group: 'Evidence' },
 
   { name: 'Orchestrator',  href: '/orchestrator',  Icon: OrchestratorIcon, group: 'System' },
   { name: 'Settings',      href: '/settings',      Icon: SettingsIcon,     group: 'System' },
@@ -230,7 +232,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </span>
             </div>
             <span className="text-[10px] text-slate-500 group-hover:text-slate-300">
-              v2.4.0
+              v2.5.0
             </span>
           </button>
         </div>

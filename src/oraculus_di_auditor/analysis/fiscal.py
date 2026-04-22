@@ -25,9 +25,17 @@ APPROPRIATION_KEYWORDS = [
     "fiscal year",
 ]
 
-# Fiscal amount pattern (e.g., $1,000,000 or $1M)
+# Fiscal amount pattern (e.g., $1,000,000 or $1M).
+#
+# Alternatives are ordered most-specific-first: the suffixed form
+# (e.g. "$1M", "$1.5 Billion") must be tried before the comma-grouped
+# form, otherwise the shorter alternative greedy-matches "$1" out of
+# "$1M" and strips the suffix, silently mis-parsing "$1M" as 1.0.
+# Callers then observe contract amounts that look three orders of
+# magnitude too small — e.g. a $1,738,750 amendment against a "$1" (not
+# $1M) baseline reads as a 173M% expansion.
 FISCAL_AMOUNT_PATTERN = re.compile(
-    r"\$\s*\d{1,3}(?:,\d{3})*(?:\.\d{2})?|\$\s*\d+(?:\.\d+)?\s*[MBT](?:illion)?",
+    r"\$\s*\d+(?:\.\d+)?\s*[MBT](?:illion)?|\$\s*\d{1,3}(?:,\d{3})*(?:\.\d{2})?",
     re.IGNORECASE,
 )
 

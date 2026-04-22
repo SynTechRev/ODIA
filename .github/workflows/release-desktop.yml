@@ -57,6 +57,24 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential fakeroot rpm libfuse2
 
+      - name: Install OCR tooling (Linux)
+        # bundled_binaries.py runtime shim uses shutil.which on POSIX, so
+        # installing tesseract-ocr + poppler-utils here means any smoke
+        # tests run on the CI host get real OCR. End users of the AppImage
+        # still need these installed on their own machine (documented in
+        # README / QUICKSTART).
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y tesseract-ocr poppler-utils
+
+      - name: Install OCR tooling (macOS)
+        # Runtime shim falls back to PATH discovery via shutil.which on
+        # macOS too. Brew installs tesseract into /opt/homebrew/bin
+        # (arm64) or /usr/local/bin (x64); both are on the runner PATH.
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install tesseract poppler
+
       - name: Install OCR tooling (Windows)
         # PyInstaller spec (desktop/odia-backend.spec) looks for Tesseract at
         # C:\Program Files\Tesseract-OCR and Poppler at

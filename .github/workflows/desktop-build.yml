@@ -96,6 +96,17 @@ jobs:
           pip install -e ".[dev]"
           pip install pyinstaller
 
+      - name: Install OCR tooling (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr poppler-utils
+
+      - name: Install OCR tooling (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install tesseract poppler
+
       - name: Install OCR tooling (Windows)
         # Mirrors release-desktop.yml: PyInstaller spec expects Tesseract at
         # C:\Program Files\Tesseract-OCR and Poppler at

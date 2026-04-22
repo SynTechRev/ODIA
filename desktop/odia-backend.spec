@@ -20,51 +20,69 @@ src_path = os.path.join(project_root, "src")
 # ---------------------------------------------------------------------------
 # Optional OCR tooling: Tesseract + Poppler binaries.
 #
-# We bundle them when they are present on the build machine, so the
-# resulting installer can OCR scanned PDFs out of the box. When they
-# are absent the build still succeeds but the installer degrades to
-# text-layer PDFs only; src/oraculus_di_auditor/ingestion/engine.py
-# detects this and logs gracefully rather than crashing.
+# Windows (primary target): the installer bundles tesseract.exe + its DLLs
+# and the Poppler CLI binaries + DLLs. Defaults match the standard winget /
+# upstream-release paths; override via TESSERACT_ROOT / POPPLER_ROOT.
 #
-# Default paths match the standard Windows installers:
-#   - Tesseract:  winget install UB-Mannheim.TesseractOCR
-#   - Poppler:    https://github.com/oschwartz10612/poppler-windows/releases
-# Override by setting TESSERACT_ROOT / POPPLER_ROOT in the build env.
+# macOS / Linux: PyInstaller single-file bundles on POSIX don't reliably
+# ship system libraries like libtesseract without also capturing the full
+# shared-library dependency chain (libleptonica, libpng, libwebp, libtiff,
+# icu4c, liblzma, fontconfig, freetype, gomp, …). Rather than try to pack
+# the whole graph — which is fragile across brew/apt versions and fails
+# silently at runtime — we leave these platforms to use system-installed
+# tools via PATH. The bundled_binaries.py runtime shim falls back to the
+# pytesseract default ("tesseract" on PATH) and pdf2image's PATH lookup
+# for pdftoppm. Install via:
+#
+#   macOS:  brew install tesseract poppler
+#   Linux:  apt-get install tesseract-ocr poppler-utils
+#
+# If either is missing the upload flow degrades to pypdf text-layer only
+# (ingestion/engine.py returns text="" for scanned PDFs and logs a warning
+# rather than crashing).
 # ---------------------------------------------------------------------------
-TESSERACT_ROOT = os.environ.get(
-    "TESSERACT_ROOT", r"C:\Program Files\Tesseract-OCR"
-)
-POPPLER_ROOT = os.environ.get(
-    "POPPLER_ROOT", r"C:\Program Files\poppler\Library\bin"
-)
+_is_windows = sys.platform.startswith("win")
 
 _ocr_binaries = []
 _ocr_datas = []
 
-_tesseract_exe = os.path.join(TESSERACT_ROOT, "tesseract.exe")
-if os.path.isfile(_tesseract_exe):
-    _ocr_binaries.append((_tesseract_exe, "."))
-    _tessdata = os.path.join(TESSERACT_ROOT, "tessdata")
-    if os.path.isdir(_tessdata):
-        _ocr_datas.append((_tessdata, "tessdata"))
-    # Tesseract's DLL dependencies live alongside the exe.
-    for _dll in os.listdir(TESSERACT_ROOT):
-        if _dll.lower().endswith(".dll"):
-            _ocr_binaries.append((os.path.join(TESSERACT_ROOT, _dll), "."))
-else:
-    print("[odia-backend.spec] Tesseract not found at %s; OCR support will "
-          "be missing from this build. Set TESSERACT_ROOT to override."
-          % TESSERACT_ROOT)
+if _is_windows:
+    TESSERACT_ROOT = os.environ.get(
+        "TESSERACT_ROOT", r"C:\Program Files\Tesseract-OCR"
+    )
+    POPPLER_ROOT = os.environ.get(
+        "POPPLER_ROOT", r"C:\Program Files\poppler\Library\bin"
+    )
 
-if os.path.isdir(POPPLER_ROOT):
-    for _name in os.listdir(POPPLER_ROOT):
-        _path = os.path.join(POPPLER_ROOT, _name)
-        if os.path.isfile(_path) and _name.lower().endswith((".exe", ".dll")):
-            _ocr_binaries.append((_path, "."))
+    _tesseract_exe = os.path.join(TESSERACT_ROOT, "tesseract.exe")
+    if os.path.isfile(_tesseract_exe):
+        _ocr_binaries.append((_tesseract_exe, "."))
+        _tessdata = os.path.join(TESSERACT_ROOT, "tessdata")
+        if os.path.isdir(_tessdata):
+            _ocr_datas.append((_tessdata, "tessdata"))
+        # Tesseract's DLL dependencies live alongside the exe.
+        for _dll in os.listdir(TESSERACT_ROOT):
+            if _dll.lower().endswith(".dll"):
+                _ocr_binaries.append((os.path.join(TESSERACT_ROOT, _dll), "."))
+    else:
+        print("[odia-backend.spec] Tesseract not found at %s; OCR support "
+              "will be missing from this build. Set TESSERACT_ROOT to override."
+              % TESSERACT_ROOT)
+
+    if os.path.isdir(POPPLER_ROOT):
+        for _name in os.listdir(POPPLER_ROOT):
+            _path = os.path.join(POPPLER_ROOT, _name)
+            if os.path.isfile(_path) and _name.lower().endswith((".exe", ".dll")):
+                _ocr_binaries.append((_path, "."))
+    else:
+        print("[odia-backend.spec] Poppler not found at %s; OCR support "
+              "will be missing from this build. Set POPPLER_ROOT to override."
+              % POPPLER_ROOT)
 else:
-    print("[odia-backend.spec] Poppler not found at %s; OCR support will "
-          "be missing from this build. Set POPPLER_ROOT to override."
-          % POPPLER_ROOT)
+    print("[odia-backend.spec] Non-Windows platform (%s): Tesseract and "
+          "Poppler are NOT bundled. Install via the system package manager "
+          "(brew / apt) so PATH-based discovery works at runtime."
+          % sys.platform)
 
 a = Analysis(
     [os.path.join(SPECPATH, "scripts", "backend_entry.py")],

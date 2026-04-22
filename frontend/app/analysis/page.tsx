@@ -1,17 +1,22 @@
-/**
- * Analysis Page - View analysis results with severity chart and top findings.
- */
-
 'use client';
 
-import React from 'react';
+/**
+ * Analysis Page — aggregate stats across all audits in local history.
+ *
+ * Reads from useAuditHistoryStore rather than the legacy useAnalysisStore.
+ * Shows: severity distribution, per-detector finding counts, top findings
+ * by severity, and a compact audit timeline.
+ */
+
+import React, { useMemo } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
-import { useAnalysisStore } from '@/lib/stores/analysis';
-import { AnalysisPanel } from '@/components/analysis/AnalysisPanel';
-import { SeverityChart } from '@/components/analysis/SeverityChart';
 import { Card } from '@/components/base/Card';
-import type { Anomaly } from '@/lib/types/api';
-import { useAppNavigate } from '@/lib/navigation';
+import { Button } from '@/components/base/Button';
+import { AppLink, useAppNavigate } from '@/lib/navigation';
+import { useAuditHistoryStore } from '@/lib/stores/audit-history';
+import type { AuditFinding } from '@/lib/types/api';
+
+type Severity = 'critical' | 'high' | 'medium' | 'low';
 
 const SEVERITY_ORDER: Record<string, number> = {
   critical: 0,
@@ -20,168 +25,245 @@ const SEVERITY_ORDER: Record<string, number> = {
   low: 3,
 };
 
+const SEV_BADGE: Record<Severity, string> = {
+  critical: 'bg-red-100 text-red-800',
+  high: 'bg-orange-100 text-orange-800',
+  medium: 'bg-yellow-100 text-yellow-800',
+  low: 'bg-blue-100 text-blue-700',
+};
+
+const SEV_BAR: Record<Severity, string> = {
+  critical: 'bg-red-500',
+  high: 'bg-orange-500',
+  medium: 'bg-yellow-400',
+  low: 'bg-blue-400',
+};
+
+interface EnrichedFinding extends AuditFinding {
+  job_id: string;
+  generated_at: string;
+}
+
 export default function AnalysisPage() {
   const nav = useAppNavigate();
-  const analyses = useAnalysisStore((state) => state.analyses);
-  const detailedAnalyses = useAnalysisStore((state) => state.detailedAnalyses);
-  const currentAnalysis = useAnalysisStore((state) => state.currentAnalysis);
-  const setCurrentAnalysis = useAnalysisStore((state) => state.setCurrentAnalysis);
+  const entries = useAuditHistoryStore((s) => s.entries);
 
-  const analysisArray = Object.values(analyses);
+  const allFindings: EnrichedFinding[] = useMemo(() => {
+    const out: EnrichedFinding[] = [];
+    for (const entry of entries) {
+      for (const f of entry.results.findings ?? []) {
+        out.push({
+          ...f,
+          job_id: entry.job_id,
+          generated_at: entry.results.generated_at,
+        });
+      }
+    }
+    return out;
+  }, [entries]);
 
-  // --- Aggregate severity data for the chart across all detailed analyses ---
-  const aggregatedBySeverity = Object.values(detailedAnalyses).reduce(
-    (acc, a) => {
-      acc.critical += a.summary.by_severity.critical;
-      acc.high += a.summary.by_severity.high;
-      acc.medium += a.summary.by_severity.medium;
-      acc.low += a.summary.by_severity.low;
-      return acc;
-    },
-    { critical: 0, high: 0, medium: 0, low: 0 },
+  const totals = useMemo(() => {
+    const t = { critical: 0, high: 0, medium: 0, low: 0 };
+    for (const f of allFindings) {
+      if (f.severity in t) t[f.severity as Severity] += 1;
+    }
+    return t;
+  }, [allFindings]);
+
+  const byDetector = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const f of allFindings) m.set(f.layer, (m.get(f.layer) ?? 0) + 1);
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  }, [allFindings]);
+
+  const top10 = useMemo(
+    () =>
+      [...allFindings]
+        .sort(
+          (a, b) =>
+            (SEVERITY_ORDER[a.severity] ?? 99) -
+            (SEVERITY_ORDER[b.severity] ?? 99),
+        )
+        .slice(0, 10),
+    [allFindings],
   );
 
-  // --- Top findings: collect all anomalies from all detailed analyses, sort by severity ---
-  const topFindings: Array<Anomaly & { document_id: string }> = [];
-  Object.values(detailedAnalyses).forEach((da) => {
-    Object.values(da.detectors).forEach((anomalies) => {
-      anomalies.forEach((a) => topFindings.push({ ...a, document_id: da.document_id }));
-    });
-  });
-  topFindings.sort(
-    (a, b) => (SEVERITY_ORDER[a.severity] ?? 99) - (SEVERITY_ORDER[b.severity] ?? 99),
-  );
-  const top10 = topFindings.slice(0, 10);
-
-  const SEVERITY_BADGE: Record<string, string> = {
-    critical: 'bg-red-100 text-red-800',
-    high: 'bg-orange-100 text-orange-800',
-    medium: 'bg-yellow-100 text-yellow-800',
-    low: 'bg-gray-100 text-gray-800',
-  };
-
-  if (analysisArray.length === 0) {
+  if (entries.length === 0) {
     return (
       <DashboardLayout>
         <Card variant="bordered">
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Analyses Yet</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No analyses yet
+            </h3>
             <p className="text-gray-600 mb-6">
-              Upload and analyze documents to see results here.
+              Run an audit to see aggregate severity distribution, detector
+              activity, and top findings across all your local audits.
             </p>
-            <button
-              onClick={() => nav('/ingest')}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Upload Document
-            </button>
+            <Button variant="primary" onClick={() => nav('/upload')}>
+              Go to Upload
+            </Button>
           </div>
         </Card>
       </DashboardLayout>
     );
   }
 
+  const totalFindings = allFindings.length;
+  const maxDetector = byDetector[0]?.[1] ?? 1;
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Severity distribution chart + top findings — shown when detailed data exists */}
-        {Object.keys(detailedAnalyses).length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Severity chart */}
-            <Card title="Severity Distribution" variant="bordered">
-              <SeverityChart bySeverity={aggregatedBySeverity} />
-            </Card>
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-1">Analysis</h2>
+          <p className="text-gray-600 text-sm">
+            Aggregate statistics across {entries.length} audit
+            {entries.length === 1 ? '' : 's'} · {totalFindings} total findings
+          </p>
+        </div>
 
-            {/* Top findings */}
-            <Card title="Top Findings" variant="bordered">
-              {top10.length === 0 ? (
-                <div className="text-center py-8 text-gray-400">
-                  <div className="text-3xl mb-2">✓</div>
-                  <div className="text-sm">No findings across analyzed documents</div>
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-[280px] overflow-y-auto">
-                  {top10.map((finding, i) => (
-                    <div
-                      key={`${finding.id}-${i}`}
-                      className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0"
-                    >
-                      <span
-                        className={`px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 mt-0.5 ${SEVERITY_BADGE[finding.severity] ?? 'bg-gray-100 text-gray-800'}`}
-                      >
-                        {finding.severity}
+        {/* Severity distribution */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card title="Severity distribution" variant="bordered">
+            <div className="space-y-3">
+              {(['critical', 'high', 'medium', 'low'] as const).map((k) => {
+                const pct = totalFindings > 0 ? (totals[k] / totalFindings) * 100 : 0;
+                return (
+                  <div key={k}>
+                    <div className="flex items-center justify-between text-sm mb-1">
+                      <span className="capitalize font-medium text-gray-700">
+                        {k}
                       </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-gray-900 truncate">
-                          {finding.issue}
-                        </div>
-                        <div className="text-xs text-gray-500 truncate">
-                          {finding.layer} &middot; {finding.document_id}
-                        </div>
-                      </div>
-                      <button
-                        className="text-xs text-blue-600 hover:underline flex-shrink-0"
-                        onClick={() => nav('/anomalies')}
-                      >
-                        View
-                      </button>
+                      <span className="text-gray-500">
+                        {totals[k]} ({pct.toFixed(0)}%)
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </Card>
-          </div>
-        )}
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${SEV_BAR[k]}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
 
-        {/* Analysis Selector */}
-        <Card title="Select Analysis" variant="bordered">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {analysisArray.map((analysis) => (
-              <button
-                key={analysis.document_id}
-                onClick={() => setCurrentAnalysis(analysis)}
-                className={`
-                  p-4 border-2 rounded-lg text-left transition-colors
-                  ${currentAnalysis?.document_id === analysis.document_id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-blue-300'
-                  }
-                `}
-              >
-                <div className="font-medium text-gray-900 mb-1">
-                  {String(analysis.metadata?.title ?? 'Untitled')}
-                </div>
-                <div className="text-sm text-gray-600 mb-2">
-                  {new Date(analysis.timestamp).toLocaleDateString()}
-                </div>
-                <div className="flex items-center gap-4 text-xs">
-                  <span className="text-gray-500">
-                    Severity: {analysis.severity_score.toFixed(2)}
+          <Card title="Findings by detector" variant="bordered">
+            {byDetector.length === 0 ? (
+              <div className="text-center py-8 text-gray-400 text-sm">
+                No detector activity
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {byDetector.map(([layer, count]) => (
+                  <div key={layer}>
+                    <div className="flex items-center justify-between text-sm mb-1">
+                      <span className="font-mono text-gray-700">{layer}</span>
+                      <span className="text-gray-500">{count}</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-slate-500"
+                        style={{ width: `${(count / maxDetector) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {/* Top findings */}
+        <Card title="Top findings by severity" variant="bordered">
+          {top10.length === 0 ? (
+            <div className="text-center py-8 text-gray-400 text-sm">
+              No findings yet
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {top10.map((f, i) => (
+                <AppLink
+                  key={`${f.job_id}-${f.id}-${i}`}
+                  href={`/results?job_id=${f.job_id}`}
+                  className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
+                >
+                  <span
+                    className={`px-2 py-0.5 rounded text-xs font-semibold uppercase flex-shrink-0 mt-0.5 ${
+                      SEV_BADGE[f.severity as Severity] ??
+                      'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    {f.severity}
                   </span>
-                  <span className="text-gray-500">
-                    Findings:{' '}
-                    {(analysis.findings.fiscal?.length ?? 0) +
-                      (analysis.findings.constitutional?.length ?? 0) +
-                      (analysis.findings.surveillance?.length ?? 0) +
-                      (analysis.findings.anomalies?.length ?? 0)}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-gray-900 truncate">
+                      {f.issue}
+                    </div>
+                    <div className="text-xs text-gray-500 truncate">
+                      <span className="font-mono">{f.layer}</span> ·{' '}
+                      {f.document_id} · {f.generated_at.slice(0, 10)}
+                    </div>
+                  </div>
+                </AppLink>
+              ))}
+            </div>
+          )}
         </Card>
 
-        {/* Analysis Results */}
-        {currentAnalysis ? (
-          <AnalysisPanel result={currentAnalysis} />
-        ) : (
-          <Card variant="bordered">
-            <p className="text-center py-8 text-gray-500">
-              Select an analysis above to view details
-            </p>
-          </Card>
-        )}
+        {/* Audit timeline */}
+        <Card title="Audit timeline" variant="bordered">
+          <div className="space-y-2">
+            {entries.map((e) => {
+              const sev = e.results.severity_summary;
+              return (
+                <AppLink
+                  key={e.job_id}
+                  href={`/results?job_id=${e.job_id}`}
+                  className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium text-gray-900 truncate">
+                      {e.results.document_manifest?.[0]?.filename ?? 'Audit'}
+                      {e.results.document_count > 1 &&
+                        ` +${e.results.document_count - 1} more`}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {e.results.generated_at.slice(0, 16).replace('T', ' ')} ·{' '}
+                      {e.results.finding_count} finding
+                      {e.results.finding_count === 1 ? '' : 's'}
+                    </div>
+                  </div>
+                  <div className="flex gap-1 text-xs flex-shrink-0">
+                    {sev.critical > 0 && (
+                      <span className="px-1.5 py-0.5 rounded bg-red-100 text-red-700">
+                        C {sev.critical}
+                      </span>
+                    )}
+                    {sev.high > 0 && (
+                      <span className="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700">
+                        H {sev.high}
+                      </span>
+                    )}
+                    {sev.medium > 0 && (
+                      <span className="px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-700">
+                        M {sev.medium}
+                      </span>
+                    )}
+                    {sev.low > 0 && (
+                      <span className="px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
+                        L {sev.low}
+                      </span>
+                    )}
+                  </div>
+                </AppLink>
+              );
+            })}
+          </div>
+        </Card>
       </div>
     </DashboardLayout>
   );
