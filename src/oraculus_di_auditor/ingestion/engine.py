@@ -7,10 +7,14 @@ Supports PDF, HTML, and plain text with document segmentation and hash generatio
 from __future__ import annotations
 
 import hashlib
+import logging
+import os
 import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 # Optional dependencies
 try:
@@ -22,12 +26,34 @@ except ImportError:
     PdfReader = None  # type: ignore
 
 try:
+    from pdf2image import convert_from_path  # type: ignore
+
+    PDF2IMAGE_AVAILABLE = True
+except ImportError:
+    PDF2IMAGE_AVAILABLE = False
+    convert_from_path = None  # type: ignore
+
+try:
+    import pytesseract  # type: ignore
+
+    PYTESSERACT_AVAILABLE = True
+except ImportError:
+    PYTESSERACT_AVAILABLE = False
+    pytesseract = None  # type: ignore
+
+try:
     from html.parser import HTMLParser
 
     HTML_AVAILABLE = True
 except ImportError:
     HTML_AVAILABLE = False
     HTMLParser = object  # type: ignore
+
+# Threshold below which pypdf's text-layer output is considered "empty"
+# and the OCR fallback is attempted. Scanned PDFs typically return a few
+# stray characters from image metadata; 100 non-whitespace chars is the
+# point where a real text layer is almost certainly present.
+_OCR_MIN_TEXT_LENGTH = 100
 
 
 class HTMLTextExtractor(HTMLParser):  # type: ignore
@@ -55,15 +81,23 @@ class HTMLTextExtractor(HTMLParser):  # type: ignore
 def extract_text_from_pdf(file_path: str | Path) -> str:
     """Extract text from PDF file.
 
+    First attempts pypdf's native text-layer extraction. When that
+    yields fewer than ``_OCR_MIN_TEXT_LENGTH`` non-whitespace characters
+    the document is assumed to be scanned / image-only and the OCR
+    fallback is invoked (``pdf2image`` + ``pytesseract``). If OCR
+    libraries or binaries are unavailable the pypdf result (possibly
+    empty) is returned without raising, so callers see graceful
+    degradation rather than a hard failure on scanned documents.
+
     Args:
-        file_path: Path to PDF file
+        file_path: Path to PDF file.
 
     Returns:
-        Extracted text content
+        Extracted text content, best-effort across the two strategies.
 
     Raises:
-        ImportError: If PyPDF is not installed
-        FileNotFoundError: If file doesn't exist
+        ImportError: If pypdf itself is not installed.
+        FileNotFoundError: If ``file_path`` does not exist.
     """
     if not PYPDF_AVAILABLE:
         raise ImportError(
@@ -74,15 +108,48 @@ def extract_text_from_pdf(file_path: str | Path) -> str:
     if not file_path.exists():
         raise FileNotFoundError(f"PDF file not found: {file_path}")
 
-    reader = PdfReader(str(file_path))
-    text_parts = []
+    # Text-layer extraction via pypdf.
+    text = ""
+    try:
+        reader = PdfReader(str(file_path))
+        text_parts = [page.extract_text() or "" for page in reader.pages]
+        text = "\n\n".join(t for t in text_parts if t)
+    except Exception as exc:  # noqa: BLE001 - fall through to OCR
+        logger.warning("pypdf text-layer extraction failed for %s: %s", file_path, exc)
 
-    for page in reader.pages:
-        text = page.extract_text()
-        if text:
-            text_parts.append(text)
+    # If the text layer is near-empty the PDF is likely scanned. Attempt
+    # OCR via pdf2image + pytesseract. Requires Tesseract + Poppler
+    # binaries, which bundled_binaries.configure_bundled_binaries() wires
+    # up under the PyInstaller desktop bundle; otherwise they must be on
+    # the system PATH.
+    if len(text.strip()) < _OCR_MIN_TEXT_LENGTH:
+        try:
+            ocr_text = _ocr_pdf_fallback(file_path)
+            if len(ocr_text.strip()) > len(text.strip()):
+                return ocr_text
+        except ImportError as exc:
+            logger.info("OCR fallback unavailable for %s: %s", file_path, exc)
+        except Exception as exc:  # noqa: BLE001 - never propagate OCR errors
+            logger.warning("OCR fallback failed for %s: %s", file_path, exc)
 
-    return "\n\n".join(text_parts)
+    return text
+
+
+def _ocr_pdf_fallback(file_path: Path) -> str:
+    """Rasterise each PDF page and run Tesseract OCR over the images.
+
+    Raises ImportError when either ``pdf2image`` or ``pytesseract`` is
+    absent; the caller converts that into a graceful degradation.
+    """
+    if not (PDF2IMAGE_AVAILABLE and PYTESSERACT_AVAILABLE):
+        raise ImportError(
+            "OCR fallback requires pdf2image and pytesseract. "
+            "Install with: pip install pdf2image pytesseract "
+            "(also requires system Tesseract and Poppler binaries)"
+        )
+    poppler_path = os.environ.get("POPPLER_PATH") or None
+    images = convert_from_path(str(file_path), dpi=300, poppler_path=poppler_path)
+    return "\n\n".join(pytesseract.image_to_string(img) for img in images)
 
 
 def extract_text_from_html(content: str) -> str:
