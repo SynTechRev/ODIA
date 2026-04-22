@@ -25,6 +25,21 @@ const nextConfig: NextConfig = isElectronBuild
       assetPrefix: "./",
       images: { unoptimized: true },
       eslint: { ignoreDuringBuilds: true },
+      // assetPrefix "./" makes the initial <script> tags in each page's
+      // index.html resolve via relative paths, which is correct.  But
+      // webpack's *runtime* publicPath is independently derived from the
+      // same value, yielding "./_next/" — which the browser resolves
+      // relative to the CURRENT document.  On a nested route like
+      // /results/, that turns into .../results/_next/..., which does not
+      // exist (chunks live at the export root, not beneath each route),
+      // so every lazy-loaded chunk 404s under file://.  Setting webpack's
+      // publicPath to "auto" makes it compute the value at runtime from
+      // the webpack runtime script's own URL, which is always at the
+      // export root, so dynamic imports resolve correctly at any depth.
+      webpack: (config) => {
+        config.output = { ...config.output, publicPath: "auto" };
+        return config;
+      },
     }
   : {
       output: "standalone",
