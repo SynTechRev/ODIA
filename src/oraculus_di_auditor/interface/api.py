@@ -128,6 +128,21 @@ def create_app() -> Any:
     _register_routes(app)
     _register_feature_routes(app)
 
+    # ODIA AI subsystem integration (odia_ai package) - guarded import.
+    # Exposes /ai/extract, /ai/status, /ai/health, /ai/corrections,
+    # /ai/corrections/stats, /ai/registry/versions. Silent no-op if odia_ai
+    # is not installed so the core backend still starts.
+    try:
+        from odia_ai.server_routes import include_ai_routes
+
+        ai_config_path = os.environ.get("ODIA_AI_CONFIG")
+        include_ai_routes(app, config_path=ai_config_path)
+        logger.info("odia_ai routes registered under /ai/*")
+    except ImportError:
+        logger.info("odia_ai not installed; /ai/* routes unavailable")
+    except Exception as exc:  # noqa: BLE001 - never crash app startup
+        logger.warning("odia_ai route registration failed: %s", exc)
+
     return app
 
 
