@@ -17,10 +17,59 @@ block_cipher = None
 project_root = os.path.abspath(os.path.join(SPECPATH, ".."))
 src_path = os.path.join(project_root, "src")
 
+# ---------------------------------------------------------------------------
+# Optional OCR tooling: Tesseract + Poppler binaries.
+#
+# We bundle them when they are present on the build machine, so the
+# resulting installer can OCR scanned PDFs out of the box. When they
+# are absent the build still succeeds but the installer degrades to
+# text-layer PDFs only; src/oraculus_di_auditor/ingestion/engine.py
+# detects this and logs gracefully rather than crashing.
+#
+# Default paths match the standard Windows installers:
+#   - Tesseract:  winget install UB-Mannheim.TesseractOCR
+#   - Poppler:    https://github.com/oschwartz10612/poppler-windows/releases
+# Override by setting TESSERACT_ROOT / POPPLER_ROOT in the build env.
+# ---------------------------------------------------------------------------
+TESSERACT_ROOT = os.environ.get(
+    "TESSERACT_ROOT", r"C:\Program Files\Tesseract-OCR"
+)
+POPPLER_ROOT = os.environ.get(
+    "POPPLER_ROOT", r"C:\Program Files\poppler\Library\bin"
+)
+
+_ocr_binaries = []
+_ocr_datas = []
+
+_tesseract_exe = os.path.join(TESSERACT_ROOT, "tesseract.exe")
+if os.path.isfile(_tesseract_exe):
+    _ocr_binaries.append((_tesseract_exe, "."))
+    _tessdata = os.path.join(TESSERACT_ROOT, "tessdata")
+    if os.path.isdir(_tessdata):
+        _ocr_datas.append((_tessdata, "tessdata"))
+    # Tesseract's DLL dependencies live alongside the exe.
+    for _dll in os.listdir(TESSERACT_ROOT):
+        if _dll.lower().endswith(".dll"):
+            _ocr_binaries.append((os.path.join(TESSERACT_ROOT, _dll), "."))
+else:
+    print("[odia-backend.spec] Tesseract not found at %s; OCR support will "
+          "be missing from this build. Set TESSERACT_ROOT to override."
+          % TESSERACT_ROOT)
+
+if os.path.isdir(POPPLER_ROOT):
+    for _name in os.listdir(POPPLER_ROOT):
+        _path = os.path.join(POPPLER_ROOT, _name)
+        if os.path.isfile(_path) and _name.lower().endswith((".exe", ".dll")):
+            _ocr_binaries.append((_path, "."))
+else:
+    print("[odia-backend.spec] Poppler not found at %s; OCR support will "
+          "be missing from this build. Set POPPLER_ROOT to override."
+          % POPPLER_ROOT)
+
 a = Analysis(
     [os.path.join(SPECPATH, "scripts", "backend_entry.py")],
     pathex=[src_path, project_root],
-    binaries=[],
+    binaries=list(_ocr_binaries),
     datas=[
         # Include config files
         (os.path.join(project_root, "config"), "config"),
@@ -32,6 +81,8 @@ a = Analysis(
         (os.path.join(project_root, "schemas"), "schemas"),
         # Include templates
         (os.path.join(project_root, "templates"), "templates"),
+        # Tesseract language data (if bundled above)
+        *_ocr_datas,
     ],
     hiddenimports=[
         "oraculus_di_auditor",
@@ -112,6 +163,38 @@ a = Analysis(
         "httpx",
         "jinja2",
         "markdown",
+        # PDF ingestion stack. pypdf is imported inside a try/except guard
+        # in ingestion/engine.py; without an explicit hint PyInstaller's
+        # static analyser can still find it, but we list it to be safe.
+        # pdf2image + pytesseract + PIL are the OCR fallback path and
+        # MUST be listed explicitly because they only appear in a
+        # conditional branch that the analyser can skip.
+        "pypdf",
+        "pdf2image",
+        "pytesseract",
+        "PIL",
+        "PIL.Image",
+        "PIL._imaging",
+        "PIL.ImageDraw",
+        "PIL.ImageFont",
+        # Bundled-binaries runtime shim.
+        "oraculus_di_auditor.bundled_binaries",
+        # ODIA AI subsystem (odia_ai package at repo root) - imported
+        # lazily inside create_app()'s guarded try/except, so the
+        # analyser will not see it without explicit hints.
+        "odia_ai",
+        "odia_ai.backref",
+        "odia_ai.backref.extractor",
+        "odia_ai.configs",
+        "odia_ai.configs.config",
+        "odia_ai.continual",
+        "odia_ai.continual.feedback_store",
+        "odia_ai.extraction",
+        "odia_ai.extraction.extractor",
+        "odia_ai.registry",
+        "odia_ai.registry.registry",
+        "odia_ai.server_routes",
+        "odia_ai.server_routes.routes",
     ],
     hookspath=[],
     hooksconfig={},
@@ -119,7 +202,8 @@ a = Analysis(
     excludes=[
         "tkinter",
         "matplotlib",
-        "PIL",
+        # PIL / Pillow intentionally NOT excluded - pdf2image and
+        # pytesseract require it for the OCR fallback on scanned PDFs.
         "IPython",
         "notebook",
         "pytest",
