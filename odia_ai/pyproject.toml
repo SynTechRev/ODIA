@@ -1,0 +1,126 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "odia-ai"
+version = "0.1.0"
+description = "O.D.I.A. AI — fine-tuning and continual learning for surveillance audit extraction"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Synthetic Technology Revolution", email = "syntechrev@gmail.com" },
+    { name = "Marco Anthony Ramon Sanchez" },
+]
+requires-python = ">=3.11"
+keywords = [
+    "forensic-audit",
+    "surveillance-governance",
+    "fine-tuning",
+    "lora",
+    "civic-accountability",
+    "cpra",
+    "ner",
+    "legal-nlp",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Legal Industry",
+    "Intended Audience :: Other Audience",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+# Core runtime dependencies (always required; stdlib-heavy by design).
+# Extras below add ML, server, and YAML capability separately.
+dependencies = []
+
+[project.optional-dependencies]
+# Server integration (FastAPI routes for desktop/web backend)
+server = [
+    "fastapi>=0.115.0",
+    "pydantic>=2.0",
+    "uvicorn>=0.30.0",
+]
+
+# LLM-backed extraction via the parent oraculus_di_auditor RAG stack
+rag = [
+    "oraculus-di-auditor>=2.2.0",
+]
+
+# Fine-tuning (heavy ML deps; only needed when actually training)
+training = [
+    "torch>=2.1",
+    "transformers>=4.40",
+    "peft>=0.10",
+    "datasets>=2.18",
+    "accelerate>=0.28",
+    "bitsandbytes>=0.43; platform_system != 'Darwin'",
+    "trl>=0.8",
+    "sentencepiece>=0.1.99",
+]
+
+# YAML configuration support
+yaml = [
+    "pyyaml>=6.0",
+]
+
+# All optional dependencies
+all = [
+    "odia-ai[server,rag,training,yaml]",
+]
+
+# Development tools
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "black>=24.0",
+    "ruff>=0.8",
+    "mypy>=1.11",
+]
+
+[project.scripts]
+odia-ai = "odia_ai.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/SynTechRev/ODIA"
+Documentation = "https://github.com/SynTechRev/ODIA/blob/main/odia_ai/README.md"
+Repository = "https://github.com/SynTechRev/ODIA"
+Issues = "https://github.com/SynTechRev/ODIA/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["odia_ai*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+odia_ai = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["odia_ai/tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+warn_unused_ignores = true
+warn_redundant_casts = true

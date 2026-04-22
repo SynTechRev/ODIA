@@ -1,0 +1,111 @@
+# Example configuration for ODIA AI pipelines.
+#
+# Copy to ./odia_ai_config.yaml (or use JSON format) and edit to match
+# your environment. Invoke CLI commands with --config path/to/config.yaml.
+#
+# All fields are optional; any field not specified falls back to
+# odia_ai.configs.ODIAAIConfig defaults.
+
+dataset:
+  # Where to read MAS markdown files from
+  mas_corpus_dir: "./data/mas_corpus"
+
+  # Where to write the split JSONL files
+  output_dir: "./data/training_splits"
+
+  # Training-data format: alpaca (Llama/Qwen LoRA), openai (OpenAI API), raw
+  format: "alpaca"
+
+  # Synthesize jurisdiction-transferred training variants
+  enable_jurisdiction_transfer: true
+
+  # Include negative (non-anomaly) examples — requires negative_sources_dir
+  enable_negatives: false
+  negative_sources_dir: null
+
+  # Which jurisdictions to hold out (deliberate, not random)
+  holdout_validation_jurisdiction: "TCSO"
+  holdout_test_jurisdiction: "Exeter"
+
+  # Deterministic seed for reproducibility
+  random_seed: 42
+
+  # Skip alerts whose body text is too short to learn from
+  min_alert_body_chars: 80
+
+
+training:
+  # Base model — must be accessible from HuggingFace or a local path
+  # Good options:
+  #   meta-llama/Llama-3.1-8B-Instruct
+  #   Qwen/Qwen2.5-7B-Instruct
+  #   mistralai/Mistral-7B-Instruct-v0.3
+  base_model: "meta-llama/Llama-3.1-8B-Instruct"
+
+  # Where to save trained model weights
+  output_dir: "./models/odia-l2-latest"
+
+  # LoRA hyperparameters
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+
+  # Training hyperparameters
+  num_train_epochs: 3
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16  # effective batch size 16
+  learning_rate: 0.0002            # 2e-4
+  max_seq_length: 4096
+
+  # Memory optimization
+  load_in_4bit: true               # 4-bit NF4 quantization via bitsandbytes
+  bf16: true                       # bfloat16 compute (Ampere+ GPUs)
+
+  seed: 42
+
+
+evaluation:
+  # Which dataset to evaluate against
+  validation_dataset_path: "./data/training_splits/validation.jsonl"
+  test_dataset_path: "./data/training_splits/test.jsonl"
+
+  # Where to write evaluation reports (JSON + markdown summaries)
+  report_dir: "./reports/eval"
+
+  # Cap evaluation size for quick smoke tests (null = evaluate everything)
+  max_examples: null
+
+  # Which backends to evaluate
+  evaluate_backends:
+    - "pattern"
+    - "rag_llm"
+    - "finetuned"
+
+
+continual:
+  # Where to persist user corrections (SQLite)
+  correction_store_path: "./data/corrections.db"
+
+  # Trigger thresholds for automatic re-training
+  min_new_corrections: 50            # fire when 50+ reviewed corrections accumulate
+  min_days_since_last_training: 30   # or when 30+ days have passed
+  min_reviewed_fraction: 0.8         # require 80% of corrections to be reviewed
+  regression_f1_threshold: 0.02      # fire if F1 drops by 2%
+
+
+deployment:
+  # Model registry root (metadata + trained weights)
+  registry_root: "./models/registry"
+
+  # LLM provider for the RAG fallback backend
+  # Options: ollama (local), openai, anthropic
+  default_llm_provider: "ollama"
+  default_llm_model: "llama3.1:8b"
+
+  # Path to a fine-tuned model to prefer (overrides registry production model)
+  # Set to null to use the registry's production version
+  finetuned_model_path: null
+
+  # Force a specific backend for all extraction calls
+  # Options: null (auto), pattern, rag_llm, finetuned
+  force_backend: null
