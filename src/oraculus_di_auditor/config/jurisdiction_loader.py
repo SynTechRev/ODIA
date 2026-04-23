@@ -4,15 +4,24 @@ Reads jurisdiction.json, agencies.json, corpus_manifest.json, and
 source_urls.json from a config directory and exposes them as a single
 JurisdictionConfig dataclass.  Falls back to *.example.json files when the
 primary files are absent so the project works out-of-the-box on a fresh clone.
+
+v2.7.1 — `discover_jurisdictions()` scans a parent directory (typically
+`config/multi_jurisdiction/`) for subdirectories each containing a
+jurisdiction.json, and returns all configs in one dict. This is what the
+n8n workflow bundle's per-jurisdiction WF-001 duplicates bind against:
+each activation picks a jurisdiction_id that maps to a known entry here.
 """
 
 from __future__ import annotations
 
 import json
+import logging
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Data model
@@ -177,3 +186,79 @@ def clear_config_cache() -> None:
     with _cache_lock:
         _cached_config = None
         _cached_config_dir = None
+
+
+# ---------------------------------------------------------------------------
+# v2.7.1 — Multi-jurisdiction auto-loader
+# ---------------------------------------------------------------------------
+
+
+def discover_jurisdictions(
+    root_dir: Path | str = "config/multi_jurisdiction",
+) -> dict[str, JurisdictionConfig]:
+    """Scan *root_dir* for per-jurisdiction subdirectories and load them all.
+
+    Each subdirectory must contain a ``jurisdiction.json`` (or the
+    ``.example.json`` fallback) to be registered. Other config files
+    (agencies.json, corpus_manifest.json, source_urls.json) are picked up
+    per the existing `load_jurisdiction_config` rules.
+
+    Args:
+        root_dir: Parent directory that holds per-jurisdiction subdirs.
+                  Defaults to ``"config/multi_jurisdiction"`` (relative to
+                  CWD) — that's where docker-compose's backend volume is
+                  wired and where the example_city_a/b/c seed lives.
+
+    Returns:
+        Mapping of ``subdirectory_name → JurisdictionConfig``. The
+        subdirectory name is the stable jurisdiction_id — n8n workflows
+        reference it verbatim as `jurisdictionId` in their Code nodes.
+        Returns an empty dict when *root_dir* is missing or contains no
+        loadable jurisdictions (never raises for that case — startup
+        should proceed even on a fresh clone).
+
+    Error semantics:
+        A subdirectory that fails to load (missing jurisdiction.json,
+        malformed JSON, etc.) is logged at WARNING and skipped. One bad
+        jurisdiction must not block the other 21 from registering in a
+        production deployment.
+    """
+    out: dict[str, JurisdictionConfig] = {}
+    root = Path(root_dir)
+    if not root.exists() or not root.is_dir():
+        logger.info(
+            "discover_jurisdictions: %s does not exist; returning empty registry",
+            root.resolve(),
+        )
+        return out
+
+    for child in sorted(root.iterdir()):
+        if not child.is_dir():
+            continue
+        # The existing loader requires jurisdiction.json (or .example); skip
+        # subdirs that don't have one at all — they're not jurisdiction
+        # directories (could be a README dir, a credentials cache, etc.).
+        has_jurisdiction = (
+            (child / "jurisdiction.json").exists()
+            or (child / "jurisdiction.example.json").exists()
+        )
+        if not has_jurisdiction:
+            continue
+        try:
+            config = load_jurisdiction_config(child)
+        except Exception as exc:  # noqa: BLE001 — log + skip, never propagate
+            logger.warning(
+                "discover_jurisdictions: skipping %s (%s: %s)",
+                child.name,
+                type(exc).__name__,
+                exc,
+            )
+            continue
+        out[child.name] = config
+
+    logger.info(
+        "discover_jurisdictions: loaded %d jurisdiction(s) from %s",
+        len(out),
+        root.resolve(),
+    )
+    return out
