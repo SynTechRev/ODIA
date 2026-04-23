@@ -423,6 +423,68 @@ class AgentBehaviorEvent(Base):  # type: ignore
         return f"<AgentBehaviorEvent(event_id='{self.event_id}', agent_id='{self.agent_id}', type='{self.event_type}')>"  # noqa: E501
 
 
+class SeenHash(Base):  # type: ignore
+    """v2.7.1 — webhook dedup table.
+
+    Records every SHA-256 the `/api/v1/webhook/ingest-and-analyze` endpoint
+    has accepted so WF-001's retry loop + CivicPlus's duplicate URLs don't
+    cause the same document to be analysed twice. First-write-wins; the
+    webhook route queries this table before running the Tier 1 pipeline.
+
+    sha256 is the primary key so duplicate inserts raise an IntegrityError
+    that the caller can translate into an `already_seen=true` response.
+    """
+
+    __tablename__ = "seen_hashes"
+
+    sha256 = Column(String(64), primary_key=True)
+    first_seen_at = Column(
+        DateTime, default=lambda: datetime.now(UTC), nullable=False
+    )
+    document_id = Column(String(255), nullable=True, index=True)
+    jurisdiction_id = Column(String(100), nullable=True, index=True)
+
+    def __repr__(self) -> str:
+        return (
+            f"<SeenHash(sha256='{self.sha256[:16]}...', "
+            f"jurisdiction_id='{self.jurisdiction_id}')>"
+        )
+
+
+class WebhookAuditLog(Base):  # type: ignore
+    """v2.7.1 — litigation-grade audit trail for every n8n webhook call.
+
+    Written best-effort from the webhook routes. One row per call to
+    any /api/v1/webhook/* endpoint, regardless of whether the call
+    succeeded or errored. Combined with n8n's own execution history
+    (keyed by X-N8N-Execution-Id), this gives the Provenance Chain
+    Export (WF-014) a complete chain from scraper trigger → document
+    hash → finding.
+
+    Indexed on timestamp + workflow_id so the export query can slice
+    by time window or by specific workflow (e.g. "all WF-001 calls in
+    the last 30 days").
+    """
+
+    __tablename__ = "webhook_audit_log"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp = Column(
+        DateTime, default=lambda: datetime.now(UTC), nullable=False, index=True
+    )
+    endpoint = Column(String(64), nullable=False)
+    workflow_id = Column(String(64), nullable=True, index=True)
+    execution_id = Column(String(64), nullable=True)
+    status = Column(Integer, nullable=False)
+    source_ip = Column(String(45), nullable=True)  # fits IPv6
+
+    def __repr__(self) -> str:
+        return (
+            f"<WebhookAuditLog(id={self.id}, endpoint='{self.endpoint}', "
+            f"workflow_id='{self.workflow_id}', status={self.status})>"
+        )
+
+
 __all__ = [
     "Base",
     "Document",
@@ -440,4 +502,6 @@ __all__ = [
     "AgentLink",
     "MeshExecutionJob",
     "AgentBehaviorEvent",
+    "SeenHash",
+    "WebhookAuditLog",
 ]
