@@ -53,6 +53,10 @@
         "from": "build/frontend",
         "to": "frontend",
         "filter": ["**/*"]
+      },
+      {
+        "from": "resources/icon.png",
+        "to": "icon.png"
       }
     ],
     "win": {

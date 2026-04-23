@@ -31,6 +31,28 @@ function getFrontendPath() {
 }
 
 /**
+ * Resolve the runtime window-icon path.
+ *
+ * electron-builder handles installer-time icon artefacts via the
+ * package.json build config, but the runtime title-bar / task-bar
+ * icon requires an explicit ``icon:`` on the BrowserWindow constructor
+ * (handoff D5 from post-v2.7.2 audit — default Electron icon was
+ * showing in the Windows title bar across all screenshots).
+ *
+ * PNG on every platform — .ico / .icns are installer formats, not
+ * runtime window decoration formats.
+ *
+ * @returns {string} Absolute path to the runtime window icon
+ */
+function getWindowIconPath() {
+  if (app.isPackaged) {
+    // Shipped under resources/ by electron-builder's extraResources rule.
+    return path.join(process.resourcesPath, "icon.png");
+  }
+  return path.join(__dirname, "..", "resources", "icon.png");
+}
+
+/**
  * Create the main application window with security best practices.
  */
 function createWindow() {
@@ -40,6 +62,7 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     title: "ODIA — Document Analysis",
+    icon: getWindowIconPath(),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -108,6 +131,15 @@ async function onReady() {
   log.info(`App version: ${app.getVersion()}`);
   log.info(`Electron: ${process.versions.electron}`);
   log.info(`Platform: ${process.platform} ${process.arch}`);
+
+  // Windows taskbar / Start-menu grouping. Without a matching
+  // AppUserModelId Windows groups the runtime window under generic
+  // "Electron" rather than "O.D.I.A." — and the taskbar icon falls
+  // back to the default Electron icon even when BrowserWindow has
+  // ``icon:`` set. Must match ``build.appId`` in desktop/package.json.
+  if (process.platform === "win32" && app.setAppUserModelId) {
+    app.setAppUserModelId("com.syntechrev.odia");
+  }
 
   // 1. Register IPC handlers up front so they're ready the moment the
   //    renderer starts making requests.
@@ -203,4 +235,4 @@ app.on("web-contents-created", (_event, contents) => {
   });
 });
 
-module.exports = { createWindow, getFrontendPath };
+module.exports = { createWindow, getFrontendPath, getWindowIconPath };
