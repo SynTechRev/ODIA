@@ -24,7 +24,6 @@ from oraculus_di_auditor.analysis.ingestion_integrity import (
     detect_ingestion_integrity_anomalies,
 )
 
-
 # ---------------------------------------------------------------------------
 # Detector unit tests
 # ---------------------------------------------------------------------------
@@ -201,5 +200,7 @@ def test_plain_language_entry_exists_for_ingestion_extraction_failure():
     assert "anomaly was detected" not in result["plain_summary"].lower()
     # Interpolation carries through
     assert "47" in result["plain_summary"]
-    assert "1040000" in result["plain_summary"] or "1,040,000" in result["plain_summary"]
+    assert (
+        "1040000" in result["plain_summary"] or "1,040,000" in result["plain_summary"]
+    )
     assert "pdf" in result["plain_summary"]
