@@ -56,9 +56,7 @@ except ImportError:
     Query = None  # type: ignore
 
 
-_VALID_VERIFICATION_TYPES = frozenset(
-    {"photo", "pass_by", "deflock_cross_ref"}
-)
+_VALID_VERIFICATION_TYPES = frozenset({"photo", "pass_by", "deflock_cross_ref"})
 
 
 def _parse_iso_utc(raw: Any) -> datetime | None:
@@ -82,13 +80,9 @@ def _validate_coords(lat: Any, lng: Any) -> tuple[float, float]:
             status_code=400, detail="lat and lng must be numbers"
         ) from exc
     if not (-90.0 <= lat_f <= 90.0):
-        raise HTTPException(
-            status_code=400, detail="lat must be in [-90, 90]"
-        )
+        raise HTTPException(status_code=400, detail="lat must be in [-90, 90]")
     if not (-180.0 <= lng_f <= 180.0):
-        raise HTTPException(
-            status_code=400, detail="lng must be in [-180, 180]"
-        )
+        raise HTTPException(status_code=400, detail="lng must be in [-180, 180]")
     return lat_f, lng_f
 
 
@@ -109,17 +103,15 @@ def _row_to_dict(row: Any) -> dict[str, Any]:
 def register_field_routes(app: Any) -> None:
     """Attach field-observation routes to a FastAPI app."""
     if not _FASTAPI_AVAILABLE:
-        logger.warning(
-            "FastAPI not installed — field routes will not be registered."
-        )
+        logger.warning("FastAPI not installed — field routes will not be registered.")
         return
 
     router = APIRouter(tags=["field"])
 
     def _db_layer():
         try:
-            from oraculus_di_auditor.db.session import get_db
             from oraculus_di_auditor.db import models as db_models
+            from oraculus_di_auditor.db.session import get_db
         except ImportError as exc:
             raise HTTPException(
                 status_code=503,
@@ -138,9 +130,7 @@ def register_field_routes(app: Any) -> None:
         jurisdiction_id = payload.get("jurisdiction_id")
         verification_type = payload.get("verification_type")
         if not jurisdiction_id:
-            raise HTTPException(
-                status_code=400, detail="jurisdiction_id is required"
-            )
+            raise HTTPException(status_code=400, detail="jurisdiction_id is required")
         if verification_type not in _VALID_VERIFICATION_TYPES:
             raise HTTPException(
                 status_code=400,
@@ -187,7 +177,10 @@ def register_field_routes(app: Any) -> None:
         limit: int = Query(default=50, ge=1, le=500),
         offset: int = Query(default=0, ge=0),
     ) -> dict[str, Any]:
-        if verification_type is not None and verification_type not in _VALID_VERIFICATION_TYPES:
+        if (
+            verification_type is not None
+            and verification_type not in _VALID_VERIFICATION_TYPES
+        ):
             raise HTTPException(
                 status_code=400,
                 detail=(
@@ -247,6 +240,4 @@ def register_field_routes(app: Any) -> None:
         return {"count": len(items), "items": items}
 
     app.include_router(router)
-    logger.info(
-        "Field-verification routes registered at /api/v1/field/*"
-    )
+    logger.info("Field-verification routes registered at /api/v1/field/*")

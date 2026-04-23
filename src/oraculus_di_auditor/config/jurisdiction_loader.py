@@ -238,10 +238,9 @@ def discover_jurisdictions(
         # The existing loader requires jurisdiction.json (or .example); skip
         # subdirs that don't have one at all — they're not jurisdiction
         # directories (could be a README dir, a credentials cache, etc.).
-        has_jurisdiction = (
-            (child / "jurisdiction.json").exists()
-            or (child / "jurisdiction.example.json").exists()
-        )
+        has_jurisdiction = (child / "jurisdiction.json").exists() or (
+            child / "jurisdiction.example.json"
+        ).exists()
         if not has_jurisdiction:
             continue
         try:

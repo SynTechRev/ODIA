@@ -112,9 +112,7 @@ def register_cpra_routes(app: Any) -> None:
     available (per-route checks bail with 503).
     """
     if not _FASTAPI_AVAILABLE:
-        logger.warning(
-            "FastAPI not installed — CPRA routes will not be registered."
-        )
+        logger.warning("FastAPI not installed — CPRA routes will not be registered.")
         return
 
     router = APIRouter(tags=["cpra"])
@@ -124,8 +122,8 @@ def register_cpra_routes(app: Any) -> None:
     # rather than crashing the whole app factory.
     def _db_layer():
         try:
-            from oraculus_di_auditor.db.session import get_db
             from oraculus_di_auditor.db import models as db_models
+            from oraculus_di_auditor.db.session import get_db
         except ImportError as exc:
             raise HTTPException(
                 status_code=503,
@@ -226,9 +224,7 @@ def register_cpra_routes(app: Any) -> None:
         jurisdiction_id = payload.get("jurisdiction_id")
         deadline_raw = payload.get("statutory_deadline")
         if not jurisdiction_id:
-            raise HTTPException(
-                status_code=400, detail="jurisdiction_id is required"
-            )
+            raise HTTPException(status_code=400, detail="jurisdiction_id is required")
         deadline = _parse_iso_utc(deadline_raw)
         if deadline is None:
             raise HTTPException(

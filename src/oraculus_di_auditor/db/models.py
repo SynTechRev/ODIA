@@ -472,9 +472,7 @@ class CPRARequest(Base):  # type: ignore
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     jurisdiction_id = Column(String(100), nullable=False, index=True)
-    requested_at = Column(
-        DateTime, default=lambda: datetime.now(UTC), nullable=False
-    )
+    requested_at = Column(DateTime, default=lambda: datetime.now(UTC), nullable=False)
     statutory_deadline = Column(DateTime, nullable=False, index=True)
     status = Column(
         String(32), nullable=False, default="open", index=True
@@ -530,9 +528,7 @@ class FieldObservation(Base):  # type: ignore
         String(32), nullable=False, index=True
     )  # photo, pass_by, deflock_cross_ref
     notes = Column(Text, nullable=True)
-    exclusion_zone = Column(
-        Boolean, nullable=False, default=False, index=True
-    )
+    exclusion_zone = Column(Boolean, nullable=False, default=False, index=True)
     created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     def __repr__(self) -> str:

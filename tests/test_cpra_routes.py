@@ -20,7 +20,6 @@ pytest.importorskip("sqlalchemy")
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -124,15 +123,9 @@ def test_deadlines_within_skips_responded_withdrawn(client):
     """Responded / withdrawn / already-overdue rows must NOT appear in
     the watcher output — those are handled by other workflows."""
     _seed_request(client, jurisdiction="a", days_until_deadline=1)
-    _seed_request(
-        client, jurisdiction="b", days_until_deadline=1, status="responded"
-    )
-    _seed_request(
-        client, jurisdiction="c", days_until_deadline=1, status="withdrawn"
-    )
-    _seed_request(
-        client, jurisdiction="d", days_until_deadline=1, status="extended"
-    )
+    _seed_request(client, jurisdiction="b", days_until_deadline=1, status="responded")
+    _seed_request(client, jurisdiction="c", days_until_deadline=1, status="withdrawn")
+    _seed_request(client, jurisdiction="d", days_until_deadline=1, status="extended")
 
     resp = client.get("/api/v1/cpra/deadlines-within/72h")
     body = resp.json()

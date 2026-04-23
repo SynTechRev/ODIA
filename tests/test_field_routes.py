@@ -71,7 +71,9 @@ def _observation(
 def test_create_photo_observation(client):
     resp = client.post(
         "/api/v1/field/flock-observation",
-        json=_observation(notes="Flock camera mounted on light pole, corner of Valencia + Naranjo"),
+        json=_observation(
+            notes="Flock camera mounted on light pole, corner of Valencia + Naranjo"
+        ),
     )
     assert resp.status_code == 200, resp.text
     body = resp.json()
@@ -157,9 +159,7 @@ def test_list_filters_by_jurisdiction(client):
     client.post("/api/v1/field/flock-observation", json=_observation(jurisdiction="a"))
     client.post("/api/v1/field/flock-observation", json=_observation(jurisdiction="b"))
 
-    resp = client.get(
-        "/api/v1/field/observations", params={"jurisdiction_id": "a"}
-    )
+    resp = client.get("/api/v1/field/observations", params={"jurisdiction_id": "a"})
     body = resp.json()
     assert body["total"] == 2
     assert all(it["jurisdiction_id"] == "a" for it in body["items"])
@@ -198,20 +198,14 @@ def test_list_filters_by_exclusion_zone(client):
         "/api/v1/field/flock-observation", json=_observation(exclusion_zone=True)
     )
 
-    resp = client.get(
-        "/api/v1/field/observations", params={"exclusion_zone": True}
-    )
+    resp = client.get("/api/v1/field/observations", params={"exclusion_zone": True})
     assert resp.json()["total"] == 2
 
 
 def test_list_pagination(client):
     for _ in range(7):
-        client.post(
-            "/api/v1/field/flock-observation", json=_observation()
-        )
-    resp = client.get(
-        "/api/v1/field/observations", params={"limit": 3, "offset": 2}
-    )
+        client.post("/api/v1/field/flock-observation", json=_observation())
+    resp = client.get("/api/v1/field/observations", params={"limit": 3, "offset": 2})
     body = resp.json()
     assert body["total"] == 7
     assert body["limit"] == 3
@@ -270,9 +264,7 @@ def test_exclusion_zones_jurisdiction_filter(client):
         json=_observation(jurisdiction="b", exclusion_zone=True),
     )
 
-    resp = client.get(
-        "/api/v1/field/exclusion-zones", params={"jurisdiction_id": "a"}
-    )
+    resp = client.get("/api/v1/field/exclusion-zones", params={"jurisdiction_id": "a"})
     body = resp.json()
     assert body["count"] == 1
     assert body["items"][0]["jurisdiction_id"] == "a"
