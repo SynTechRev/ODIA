@@ -22,10 +22,15 @@ export interface CardProps {
   dense?: boolean;
 }
 
+// v2.6 — `bordered` and `elevated` pick up the futuristic panel chrome
+// (hairline amber border + ambient glow on hover) via the `.odia-panel`
+// utility defined in globals.css. The base slate border is kept as a
+// fallback so anything rendering without the stylesheet loaded still
+// looks intentional.
 const variantClasses: Record<NonNullable<CardProps['variant']>, string> = {
   default:  'bg-white',
-  bordered: 'bg-white border border-slate-200',
-  elevated: 'bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-900/5',
+  bordered: 'bg-white border border-slate-200 odia-panel',
+  elevated: 'bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-900/5 odia-panel',
   muted:    'bg-slate-50 border border-slate-200',
 };
 
@@ -43,7 +48,7 @@ export function Card({
   return (
     <article
       className={`
-        rounded-xl ${dense ? 'p-4' : 'p-6'}
+        rounded-md ${dense ? 'p-4' : 'p-6'}
         ${variantClasses[variant]}
         ${className}
       `}

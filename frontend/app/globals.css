@@ -146,5 +146,115 @@ pre {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes odia-radar-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 .animate-odia-pulse  { animation: odia-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 .animate-odia-fade   { animation: odia-fade-in 180ms ease-out both; }
+.animate-odia-radar  { animation: odia-radar-sweep 6s linear infinite; }
+
+/* ---------------------------------------------------------------------- */
+/* v2.6 futuristic pass — panel outlining + accent glow                   */
+/* ------------------------------------------------------------------------
+   Opinionated utilities that let individual components opt into the
+   stronger "strategic intelligence workstation" look without refactoring
+   their markup. Use sparingly — every element that glows weakens every
+   other glow. Intended targets: Card chrome, sidebar + header rails,
+   severity summary tiles, primary export/upload CTAs.
+   ---------------------------------------------------------------------- */
+
+:root {
+  /* Outlined-panel borders — crisp 1.5px hairlines. Light + dark variants
+     so the same utility class works on both themes without mode guards. */
+  --odia-outline: rgba(217, 119, 6, 0.55);      /* amber-600, 55% */
+  --odia-outline-strong: rgba(245, 158, 11, 0.9); /* amber-500, 90% */
+  --odia-outline-muted: rgba(148, 163, 184, 0.30); /* slate-400, 30% */
+
+  /* Ambient glow layered under outlined panels. Low alpha so stacking
+     doesn't turn the UI into a Christmas tree. */
+  --odia-glow-amber: 0 0 0 1px rgba(217, 119, 6, 0.35),
+                     0 0 12px -2px rgba(245, 158, 11, 0.25);
+  --odia-glow-purple: 0 0 0 1px rgba(139, 92, 246, 0.35),
+                      0 0 12px -2px rgba(168, 85, 247, 0.25);
+  --odia-glow-chrome: 0 0 0 1px rgba(100, 116, 139, 0.35),
+                      0 1px 0 0 rgba(148, 163, 184, 0.08) inset;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --odia-outline: rgba(245, 158, 11, 0.65);      /* amber-500 stronger on dark */
+    --odia-outline-muted: rgba(100, 116, 139, 0.35);
+  }
+}
+
+/* Page-level outlined panel: use on full-width page containers so every
+   route gets the same strategic-intel border framing. */
+.odia-page-frame {
+  position: relative;
+  border: 1px solid var(--odia-outline-muted);
+  border-radius: 0.25rem;    /* sharp — half of rounded-md */
+  box-shadow: var(--odia-glow-chrome);
+}
+
+/* Card / tile panel — the main workhorse. Opt-in so the existing
+   components.Card stays source-compatible; adding this class upgrades
+   its chrome without changing internals. */
+.odia-panel {
+  border: 1px solid var(--odia-outline-muted);
+  border-radius: 0.25rem;
+  box-shadow: var(--odia-glow-chrome);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.odia-panel:hover {
+  border-color: var(--odia-outline);
+  box-shadow: var(--odia-glow-amber);
+}
+
+/* Primary accent panel — used for hero CTAs, severity summary, active
+   audit banner. Stronger amber ring and a subtle outer aura. */
+.odia-panel-accent {
+  border: 1.5px solid var(--odia-outline);
+  border-radius: 0.25rem;
+  box-shadow: var(--odia-glow-amber);
+}
+
+/* Sidebar / header chrome rails — hairline amber accent at the edge that
+   faces the main content (right edge of sidebar, bottom edge of header). */
+.odia-rail-right {
+  border-right: 1px solid rgba(245, 158, 11, 0.20);
+  box-shadow: 1px 0 0 0 rgba(245, 158, 11, 0.08);
+}
+.odia-rail-bottom {
+  border-bottom: 1px solid rgba(245, 158, 11, 0.20);
+  box-shadow: 0 1px 0 0 rgba(245, 158, 11, 0.08);
+}
+
+/* Corner tick-marks — four small L-shaped corners drawn via the container
+   pseudo-elements. Adds the "targeting viewport" feel without full
+   borders; pair with .odia-panel for extra flair on hero areas only. */
+.odia-targets {
+  position: relative;
+}
+.odia-targets::before,
+.odia-targets::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--odia-outline);
+  pointer-events: none;
+}
+.odia-targets::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.odia-targets::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}

@@ -148,12 +148,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Desktop sidebar                                                     */}
       {/* ================================================================== */}
       <aside
-        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-slate-950 text-slate-100 border-r border-slate-800 z-40"
+        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-slate-950 text-slate-100 border-r border-slate-800 z-40 odia-rail-right"
         aria-label="Primary navigation"
       >
         {/* Brand */}
-        <div className="flex items-center gap-3 h-16 px-5 bg-slate-900 border-b border-slate-800 flex-shrink-0">
-          <div className="flex items-center justify-center w-9 h-9 rounded-md bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/30 flex-shrink-0">
+        <div className="flex items-center gap-3 h-16 px-5 bg-slate-900 border-b border-slate-800 flex-shrink-0 odia-rail-bottom">
+          <div className="flex items-center justify-center w-9 h-9 rounded-sm bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/50 flex-shrink-0 shadow-[0_0_12px_-2px_rgba(245,158,11,0.4)]">
             <OdiaMarkIcon size={20} />
           </div>
           <div className="leading-tight min-w-0">
@@ -232,7 +232,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </span>
             </div>
             <span className="text-[10px] text-slate-500 group-hover:text-slate-300">
-              v2.5.2
+              v2.6.0
             </span>
           </button>
         </div>
@@ -243,7 +243,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* ================================================================== */}
       <main className={`md:pl-64 ${offline ? 'pt-10' : ''}`}>
         {/* Desktop top bar */}
-        <header className="hidden md:flex sticky top-0 z-30 h-14 bg-slate-900 border-b border-slate-700/60 items-center justify-between px-6 shadow-[0_1px_0_rgba(255,255,255,0.04),0_4px_16px_rgba(0,0,0,0.24)]">
+        <header className="hidden md:flex sticky top-0 z-30 h-14 bg-slate-900 border-b border-slate-700/60 items-center justify-between px-6 shadow-[0_1px_0_rgba(255,255,255,0.04),0_4px_16px_rgba(0,0,0,0.24)] odia-rail-bottom">
           <div className="flex items-center gap-2.5">
             {/* Back / forward — only shown in Electron where hard-nav builds real history */}
             {isFileProtocol() && (
@@ -276,7 +276,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 {currentName}
               </h2>
               <span className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">
-                Oraculus Intelligence Platform
+                Forensic Audit Platform
               </span>
             </div>
           </div>

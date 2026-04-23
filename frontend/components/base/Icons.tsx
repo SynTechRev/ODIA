@@ -228,12 +228,44 @@ export const MapPinIcon: React.FC<IconProps> = (p) => (
 );
 
 // ---------------------------------------------------------------------------
-// O.D.I.A. logo mark — stylised "eye + shield" motif
+// O.D.I.A. logo mark — chess knight silhouette layered over a radar sweep.
+//
+// The mark has to read at three scales without redesign:
+//   - 16px (sidebar footer pill, window title bar on Electron)
+//   - 20px (sidebar heading, big Card accents)
+//   - 32px+ (About dialog, loading splash)
+//
+// Construction:
+//   - Three concentric radar rings (4/8/11 radius) at reduced opacity so
+//     they fall back into the background and the knight stays foreground.
+//   - A short sweep beam from center to NE quadrant, representing an
+//     active radar pulse.
+//   - Knight silhouette simplified to a single stroked path — legible at
+//     16px. Tracing a traditional profile: base, chest, chin, mane, nose,
+//     crown, back-of-head, back, tail.
 // ---------------------------------------------------------------------------
 
-export const OdiaMarkIcon: React.FC<IconProps> = (p) => (
+export const StrategyMarkIcon: React.FC<IconProps> = (p) => (
   <IconBase {...p}>
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    <circle cx="12" cy="11" r="2.5" fill="currentColor" />
+    {/* Radar rings — pushed behind via low opacity */}
+    <circle cx="12" cy="12" r="11" opacity="0.28" />
+    <circle cx="12" cy="12" r="8" opacity="0.22" />
+    <circle cx="12" cy="12" r="4" opacity="0.18" />
+    {/* Radar sweep beam, center to upper-right */}
+    <path d="M12 12 L20 6" opacity="0.55" />
+    {/* Chess knight silhouette */}
+    <path
+      d="M8.5 19 L15.5 19 L15.5 17.2 C15.5 15 17 13.6 17 11 C17 9 16 6.6 13.4 5 L13.9 3 L11.8 3.9 L10 3.4 L10.3 5.4 C9 6.3 8 7.6 7.2 9.2 L6 9.8 L7 11 L7.6 10.6 C7.5 11 7.4 11.4 7.4 11.8 L7.4 13 L8.5 14 L8.5 19 Z"
+      fill="currentColor"
+      strokeLinejoin="round"
+    />
+    {/* Knight's eye dot (filled for contrast at small sizes) */}
+    <circle cx="11.2" cy="8.2" r="0.5" fill="currentColor" stroke="none" />
   </IconBase>
 );
+
+/**
+ * @deprecated shield-era name retained as an alias so existing imports keep
+ * compiling. New code should import `StrategyMarkIcon`.
+ */
+export const OdiaMarkIcon = StrategyMarkIcon;

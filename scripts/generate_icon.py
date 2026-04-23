@@ -225,6 +225,18 @@ def main() -> None:
     out_path = os.path.join(repo_root, "desktop", "resources", "icon.png")
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
+    # If a committed icon already exists at the destination, leave it alone.
+    # This lets maintainers ship a designed PNG (e.g. the SynTechRev brand
+    # octopus) and still keep the CI step wired in as a fallback. Threshold
+    # > 100 KB distinguishes a real raster icon from an accidental empty
+    # file; the procedural octopus-DJ output is ~400 KB.
+    if os.path.isfile(out_path) and os.path.getsize(out_path) > 100_000:
+        print(
+            f"Existing icon found at {out_path} "
+            f"({os.path.getsize(out_path):,} bytes); leaving it in place."
+        )
+        return
+
     size = 1024
     try:
         _make_pillow_icon(size, out_path)

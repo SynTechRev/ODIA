@@ -28,7 +28,7 @@ import {
   DocumentsIcon,
   AnomaliesIcon,
   OrchestratorIcon,
-  ShieldIcon,
+  StrategyMarkIcon,
   CheckCircleIcon,
 } from '@/components/base/Icons';
 import { useAnalysisStore } from '@/lib/stores/analysis';
@@ -58,9 +58,10 @@ export default function Home() {
         {/* =============================================================== */}
         <section
           className="
-            relative overflow-hidden rounded-2xl text-white
+            relative overflow-hidden rounded-md text-white odia-targets
             bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800
-            ring-1 ring-slate-900/10
+            ring-1 ring-amber-500/30
+            shadow-[0_0_24px_-6px_rgba(245,158,11,0.35),0_1px_0_rgba(255,255,255,0.04)_inset]
           "
         >
           {/* Decorative grid pattern */}
@@ -79,9 +80,9 @@ export default function Home() {
             aria-hidden="true"
           />
           <div className="relative p-8 md:p-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-medium ring-1 ring-amber-500/30 mb-4">
-              <ShieldIcon size={12} />
-              Oraculus Decimus Intellect Analyst · v2.5.2
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-500/10 text-amber-300 text-xs font-medium ring-1 ring-amber-500/40 mb-4 shadow-[0_0_8px_-2px_rgba(245,158,11,0.5)]">
+              <StrategyMarkIcon size={12} />
+              Oraculus Decimus Intellect Analyst · v2.6.0
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
               Civic accountability,
@@ -196,7 +197,7 @@ export default function Home() {
               body="11 ACLU mandate checks mapped to detector findings with automated scorecard generation for oversight review."
             />
             <Feature
-              icon={<ShieldIcon size={18} />}
+              icon={<StrategyMarkIcon size={18} />}
               title="Full Provenance Tracking"
               body="SHA-256 hashing, contract lineage reconstruction, and cryptographic chain-of-custody for every analysed document."
             />
