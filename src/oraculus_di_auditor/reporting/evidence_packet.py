@@ -227,6 +227,8 @@ def _build_audit_report_md(results: dict[str, Any]) -> str:
                 f"**Recommended action**: {f.get('plain_action', '')}  ",
                 "",
             ]
+            if "plain_evidence_echo" in f:
+                lines += [f"_{f['plain_evidence_echo']}_  ", ""]
         else:
             issue = f.get("issue", "")
             if issue:
@@ -277,6 +279,8 @@ def _build_finding_sheet(index: int, finding: dict[str, Any]) -> str:
             f"**What to do**: {finding.get('plain_action', '')}",
             "",
         ]
+        if "plain_evidence_echo" in finding:
+            lines += [f"_{finding['plain_evidence_echo']}_", ""]
 
     details = finding.get("details", {})
     if details:

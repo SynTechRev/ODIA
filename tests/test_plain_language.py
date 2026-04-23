@@ -251,3 +251,245 @@ class TestTranslationsDict:
             for subtype, t in subtypes.items():
                 for key in ("summary", "impact", "action"):
                     assert t[key].strip(), f"{detector}:{subtype}[{key}] is empty"
+
+
+# ---------------------------------------------------------------------------
+# v2.7.3 D1 — canonical detector finding IDs + interpolation + evidence echo
+# ---------------------------------------------------------------------------
+
+
+# Every finding ID that the detectors in src/oraculus_di_auditor/analysis/
+# actually emit. Gathered via:
+#   grep -rnE '"id":' src/oraculus_di_auditor/analysis/
+# Plus the dynamic surveillance:vendor-detected:{name} pattern and the
+# new ingestion:extraction-failure finding from D3.
+CANONICAL_FINDING_IDS: list[str] = [
+    "admin:blank-required-fields",
+    "admin:missing-final-action",
+    "admin:potential-misfiling",
+    "admin:retroactive-authorization",
+    "constitutional:broad-delegation",
+    "fiscal:amount-without-appropriation",
+    "fiscal:missing-provenance-hash",
+    "governance:auto-renewal-clause",
+    "governance:capability-without-council-approval",
+    "governance:consent-calendar-placement",
+    "governance:data-retention-gap",
+    "governance:lexipol-boilerplate",
+    "governance:sole-source-without-justification",
+    "governance:transparency-portal-absence",
+    "grant:cops-without-itemisation",
+    "grant:crim-intel-without-28-cfr-23",
+    "grant:jag-funded-surveillance",
+    "grant:jag-without-anti-supplanting",
+    "ingestion:extraction-failure",
+    "procurement:auto-renewal-clause",
+    "procurement:consent-calendar-placement",
+    "procurement:execution-precedes-authorization",
+    "procurement:sole-source-without-gov-code-citation",
+    "scope:amendment-without-baseline",
+    "scope:significant-expansion",
+    "scope:sole-source-expansion",
+    "signature:placeholder-tokens",
+    "signature:unsigned-instrument",
+    "surveillance:ai-report-writing-without-policy",
+    "surveillance:alpr-privacy-act-gap",
+    "surveillance:alpr-without-sb524-policy",
+    "surveillance:bwc-without-cjis-addendum",
+    "surveillance:drone-without-ab481-report",
+    "surveillance:facial-recognition-reference",
+    "surveillance:multilayer-architecture",
+    "surveillance:vendor-detected:flock-safety",  # dynamic prefix form
+]
+
+
+class TestCanonicalFindingIDsHaveSpecificTranslations:
+    """Every canonical finding ID resolves to a detector-specific
+    narrative — never the generic `anomaly was detected` fallback."""
+
+    @pytest.mark.parametrize("finding_id", CANONICAL_FINDING_IDS)
+    def test_id_resolves_to_specific_translation(self, finding_id):
+        finding = {
+            "id": finding_id,
+            "issue": f"Test issue for {finding_id}",
+            "severity": "high",
+            "layer": finding_id.split(":", 1)[0],
+            "details": {},
+        }
+        result = translate_finding(finding)
+        assert "anomaly was detected" not in result["plain_summary"].lower(), (
+            f"{finding_id} fell through to the generic fallback"
+        )
+        assert len(result["plain_summary"]) > 20
+
+
+class TestDetailInterpolation:
+    """Detector-specific narratives interpolate values from details."""
+
+    def test_jag_anti_supplanting_interpolates_statute(self):
+        finding = {
+            "id": "grant:jag-without-anti-supplanting",
+            "issue": "test",
+            "severity": "critical",
+            "layer": "grant_compliance",
+            "details": {"statute": "34 U.S.C. § 10152(a)(1)(G)"},
+        }
+        result = translate_finding(finding)
+        assert "34 U.S.C." in result["plain_summary"]
+
+    def test_bwc_cjis_interpolates_bwc_evidence(self):
+        finding = {
+            "id": "surveillance:bwc-without-cjis-addendum",
+            "issue": "test",
+            "severity": "high",
+            "layer": "surveillance",
+            "details": {
+                "statute": "FBI CJIS Security Policy",
+                "bwc_evidence": ["body-worn camera", "Axon Body 3"],
+            },
+        }
+        result = translate_finding(finding)
+        assert "body-worn camera" in result["plain_summary"]
+        assert "Axon Body 3" in result["plain_summary"]
+
+    def test_blank_fields_interpolates_field_count_and_names(self):
+        finding = {
+            "id": "admin:blank-required-fields",
+            "issue": "test",
+            "severity": "medium",
+            "layer": "administrative",
+            "details": {
+                "blank_fields": ["authority", "signatory", "version_date"],
+                "field_count": 3,
+            },
+        }
+        result = translate_finding(finding)
+        assert "3" in result["plain_summary"]
+        assert "authority" in result["plain_summary"]
+
+    def test_scope_significant_expansion_interpolates_percentage(self):
+        finding = {
+            "id": "scope:significant-expansion",
+            "issue": "test",
+            "severity": "high",
+            "layer": "scope",
+            "details": {
+                "original_amount": "$250,000",
+                "expanded_amount": "$1,200,000",
+                "expansion_percentage": 380.0,
+            },
+        }
+        result = translate_finding(finding)
+        assert "380" in result["plain_summary"]
+        assert "$250,000" in result["plain_summary"]
+
+    def test_execution_precedes_authorization_interpolates_days(self):
+        finding = {
+            "id": "procurement:execution-precedes-authorization",
+            "issue": "test",
+            "severity": "high",
+            "layer": "procurement",
+            "details": {
+                "days_early": 17,
+                "execution_date": "2024-01-05",
+                "authorization_date": "2024-01-22",
+            },
+        }
+        result = translate_finding(finding)
+        assert "17" in result["plain_summary"]
+
+
+class TestDetailInterpolationDegradesGracefully:
+    """Missing detail keys must not raise — templates fall through to a
+    sensible ``not recorded`` placeholder instead of ``KeyError``."""
+
+    def test_missing_statute_key_does_not_raise(self):
+        finding = {
+            "id": "grant:jag-without-anti-supplanting",
+            "issue": "test",
+            "severity": "critical",
+            "layer": "grant_compliance",
+            "details": {},  # no `statute` key
+        }
+        result = translate_finding(finding)
+        assert result["plain_summary"]
+        assert "not recorded" in result["plain_summary"]
+
+    def test_none_values_render_as_none_literal(self):
+        finding = {
+            "id": "surveillance:alpr-without-sb524-policy",
+            "issue": "test",
+            "severity": "critical",
+            "layer": "surveillance",
+            "details": {
+                "statute": "SB 524",
+                "effective_date": "2026-01-01",
+                "document_date": None,
+                "alpr_evidence": [],
+            },
+        }
+        result = translate_finding(finding)
+        assert result["plain_summary"]
+        # document_date=None renders as "none", not "None"
+        assert "None" not in result["plain_summary"]
+
+
+class TestEvidenceEcho:
+    """Every translated finding gets a raw ``plain_evidence_echo`` recap."""
+
+    def test_evidence_echo_present(self):
+        finding = {
+            "id": "grant:jag-without-anti-supplanting",
+            "issue": "test",
+            "severity": "critical",
+            "layer": "grant_compliance",
+            "details": {"statute": "34 U.S.C. § 10152"},
+        }
+        result = translate_finding(finding)
+        assert "plain_evidence_echo" in result
+        assert "statute=34 U.S.C." in result["plain_evidence_echo"]
+
+    def test_evidence_echo_empty_details(self):
+        finding = {
+            "id": "unknown:unknown",
+            "issue": "test",
+            "severity": "low",
+            "layer": "unknown",
+            "details": {},
+        }
+        result = translate_finding(finding)
+        assert result["plain_evidence_echo"]
+        assert "no structured details" in result["plain_evidence_echo"]
+
+    def test_evidence_echo_list_values(self):
+        finding = {
+            "id": "governance:capability-without-council-approval",
+            "issue": "test",
+            "severity": "critical",
+            "layer": "governance_gap",
+            "details": {
+                "vendors": ["Flock Safety", "Axon"],
+                "technologies": ["alpr", "bwc"],
+            },
+        }
+        result = translate_finding(finding)
+        echo = result["plain_evidence_echo"]
+        assert "Flock Safety" in echo
+        assert "Axon" in echo
+        assert "alpr" in echo
+
+
+class TestDynamicVendorDetectedFindingID:
+    """``surveillance:vendor-detected:{name}`` (nested colon) still resolves."""
+
+    def test_vendor_detected_flock_resolves(self):
+        finding = {
+            "id": "surveillance:vendor-detected:flock-safety",
+            "issue": "test",
+            "severity": "low",
+            "layer": "surveillance",
+            "details": {"vendor": "Flock Safety"},
+        }
+        result = translate_finding(finding)
+        assert "anomaly was detected" not in result["plain_summary"].lower()
+        assert len(result["plain_summary"]) > 20
