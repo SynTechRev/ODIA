@@ -22,6 +22,15 @@ import { Button } from '@/components/base/Button';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import type { AuditFinding } from '@/lib/types/api';
+// Type-only imports from `docx` so we can annotate the DOCX builder's
+// intermediate variables. The actual classes are loaded at runtime via
+// a dynamic `await import('docx')` inside the export handler — these
+// type references are erased at compile time and don't bloat the bundle.
+import type {
+  Paragraph as DocxParagraph,
+  Table as DocxTable,
+  TableRow as DocxTableRow,
+} from 'docx';
 
 type Severity = 'critical' | 'high' | 'medium' | 'low';
 
@@ -320,13 +329,13 @@ export default function SynthesisPage() {
     const dataRow = (values: string[]) =>
       new TableRow({ children: values.map((v) => cell(v)) });
 
-    const table = (rows: TableRow[]) =>
+    const table = (rows: DocxTableRow[]) =>
       new Table({
         rows,
         width: { size: 100, type: WidthType.PERCENTAGE },
       });
 
-    const children: Paragraph[] | (Paragraph | Table)[] = [];
+    const children: (DocxParagraph | DocxTable)[] = [];
 
     children.push(
       new Paragraph({
