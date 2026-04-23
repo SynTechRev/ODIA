@@ -160,6 +160,61 @@ function useWebhookHealth(): WebhookHealth {
   return state;
 }
 
+interface N8nHealth {
+  online: boolean;
+  checking: boolean;
+  base_url: string;
+  api_key_configured: boolean;
+}
+
+/**
+ * v2.7.3 D8 — polls /api/v1/automation/health to gate the "Open n8n
+ * Editor" button. Without this gate, clicking the button when the
+ * container is down lands the user on ERR_CONNECTION_REFUSED with
+ * no explanation.
+ */
+function useN8nHealth(): N8nHealth {
+  const [state, setState] = useState<N8nHealth>({
+    online: false,
+    checking: true,
+    base_url: 'http://localhost:5678',
+    api_key_configured: false,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function tick() {
+      try {
+        const r = await fetch(
+          `${getAPIClient().baseURL}/api/v1/automation/health`,
+          { cache: 'no-store' },
+        );
+        if (!r.ok) throw new Error(`${r.status}`);
+        const data = await r.json();
+        if (!cancelled) {
+          setState({
+            online: !!data.n8n_online,
+            checking: false,
+            base_url: data.n8n_base_url || 'http://localhost:5678',
+            api_key_configured: !!data.api_key_configured,
+          });
+        }
+      } catch {
+        if (!cancelled) {
+          setState((s) => ({ ...s, online: false, checking: false }));
+        }
+      }
+    }
+
+    tick();
+    const iv = setInterval(tick, 10_000);
+    return () => { cancelled = true; clearInterval(iv); };
+  }, []);
+
+  return state;
+}
+
 function useExecutionLog(): ExecutionEvent[] {
   const [events, setEvents] = useState<ExecutionEvent[]>([]);
   const containerRef = useRef(events);
@@ -204,6 +259,7 @@ function useExecutionLog(): ExecutionEvent[] {
 
 export default function AutomationPage() {
   const health = useWebhookHealth();
+  const n8nHealth = useN8nHealth();
   const events = useExecutionLog();
   const [workflows] = useState<WorkflowSummary[]>(WORKFLOW_ROSTER);
 
@@ -312,10 +368,34 @@ export default function AutomationPage() {
                 {workflows.length} registered workflows
               </h2>
             </div>
-            <Button variant="ghost" size="sm" onClick={openN8nEditor}>
-              Open n8n Editor →
-            </Button>
+            {/* v2.7.3 D8 — gate the editor button on container health */}
+            <div className="flex items-center gap-2">
+              <N8nHealthPill health={n8nHealth} />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => openN8nEditor(n8nHealth.base_url)}
+                disabled={!n8nHealth.online}
+                title={
+                  n8nHealth.checking
+                    ? 'Checking n8n status…'
+                    : n8nHealth.online
+                      ? `Open ${n8nHealth.base_url}`
+                      : 'n8n container is offline — bring it up with docker compose'
+                }
+              >
+                {n8nHealth.checking
+                  ? 'Checking n8n…'
+                  : n8nHealth.online
+                    ? 'Open n8n Editor →'
+                    : 'n8n Editor (container offline)'}
+              </Button>
+            </div>
           </div>
+
+          {!n8nHealth.online && !n8nHealth.checking && (
+            <N8nOfflineHelp baseUrl={n8nHealth.base_url} />
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {workflows.map((wf) => (
@@ -476,11 +556,90 @@ function levelClass(l: ExecutionEvent['level']): string {
   }
 }
 
-function openN8nEditor() {
-  // The n8n editor URL is configurable — in production, read from
-  // NEXT_PUBLIC_N8N_URL and fall through to localhost for dev.
-  const url = process.env.NEXT_PUBLIC_N8N_URL || 'http://localhost:5678';
+function openN8nEditor(baseUrl?: string) {
+  // Priority: live n8n_base_url from /health → NEXT_PUBLIC_N8N_URL →
+  // localhost. The health-endpoint value wins because it reflects how
+  // the backend is configured right now, not what was baked into the
+  // build.
+  const url =
+    baseUrl ||
+    process.env.NEXT_PUBLIC_N8N_URL ||
+    'http://localhost:5678';
   if (typeof window !== 'undefined') window.open(url, '_blank');
+}
+
+// ---------------------------------------------------------------------------
+// v2.7.3 D8 — n8n offline UX
+// ---------------------------------------------------------------------------
+
+function N8nHealthPill({ health }: { health: N8nHealth }) {
+  if (health.checking) {
+    return (
+      <span className="hud-sev hud-sev-info animate-odia-breath">
+        checking
+      </span>
+    );
+  }
+  if (health.online) {
+    return <span className="hud-sev hud-sev-healthy">n8n online</span>;
+  }
+  return <span className="hud-sev hud-sev-medium">n8n offline</span>;
+}
+
+function N8nOfflineHelp({ baseUrl }: { baseUrl: string }) {
+  const commands = [
+    'docker compose -f docker-compose.yml -f docker-compose.n8n.yml up -d n8n',
+    'docker compose -f docker-compose.yml -f docker-compose.n8n.yml logs -f n8n',
+    `curl -sf ${baseUrl}/healthz`,
+  ];
+  return (
+    <div className="hud-panel hud-panel-dense p-4 mb-4">
+      <div className="hud-label-accent hud-flow mb-2">
+        [ n8n container is offline ]
+      </div>
+      <p className="hud-subtext text-sm mb-3">
+        The n8n automation container is not responding at{' '}
+        <code className="hud-flow">{baseUrl}</code>. Bring it up locally
+        with one of the commands below, or reach out to whoever manages
+        the shared automation host.
+      </p>
+      <div className="space-y-2">
+        {commands.map((cmd) => (
+          <N8nCommandLine key={cmd} cmd={cmd} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function N8nCommandLine({ cmd }: { cmd: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(cmd);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }
+    } catch {
+      /* clipboard blocked — silently ignore */
+    }
+  };
+  return (
+    <div className="hud-terminal flex items-center gap-2 px-3 py-2">
+      <code className="flex-1 text-xs text-cyan-200 font-mono truncate">
+        $ {cmd}
+      </code>
+      <button
+        type="button"
+        className="hud-label text-xs px-2 py-1 hover:text-amber-300"
+        onClick={handleCopy}
+        aria-label={`Copy ${cmd}`}
+      >
+        {copied ? 'copied ✓' : 'copy'}
+      </button>
+    </div>
+  );
 }
 
 async function runWorkflow(id: string) {
