@@ -449,6 +449,60 @@ class OrchestratorService:
 # ============================================================================
 
 
+# ============================================================================
+# v2.7.3 D4 — Orchestrator dashboard endpoints
+# ============================================================================
+
+# Static 6-agent task graph used by /task-graph. Matches the real agent
+# pipeline in src/oraculus_di_auditor/orchestrator/agents.py (Ingestion →
+# Analysis → Anomaly → Synthesis → Database → Interface). Positions use
+# the SVG viewBox="0 0 800 400" coordinate system the handoff specifies
+# so the frontend only has to render, not compute layout.
+_TASK_GRAPH_NODES: list[dict[str, Any]] = [
+    {"id": "ingest",    "label": "Ingestion",  "x": 80,  "y": 200, "phase": "intake"},
+    {"id": "analysis",  "label": "Analysis",   "x": 220, "y": 120, "phase": "compute"},
+    {"id": "anomaly",   "label": "Anomaly",    "x": 380, "y": 120, "phase": "compute"},
+    {"id": "synthesis", "label": "Synthesis",  "x": 540, "y": 200, "phase": "compute"},
+    {"id": "database",  "label": "Database",   "x": 680, "y": 120, "phase": "persist"},
+    {"id": "interface", "label": "Interface",  "x": 680, "y": 280, "phase": "emit"},
+]
+_TASK_GRAPH_EDGES: list[dict[str, str]] = [
+    {"source": "ingest",    "target": "analysis"},
+    {"source": "analysis",  "target": "anomaly"},
+    {"source": "anomaly",   "target": "synthesis"},
+    {"source": "synthesis", "target": "database"},
+    {"source": "synthesis", "target": "interface"},
+    {"source": "database",  "target": "interface"},
+]
+
+
+def _execution_rows_to_timeline(rows: list[Any]) -> list[dict[str, Any]]:
+    """Shape a list of MeshExecutionJob rows for the timeline panel."""
+    events: list[dict[str, Any]] = []
+    for row in rows:
+        events.append(
+            {
+                "job_id": row.job_id,
+                "job_type": row.job_type,
+                "status": row.status,
+                "created_at": (
+                    row.created_at.isoformat() if row.created_at else None
+                ),
+                "started_at": (
+                    row.started_at.isoformat() if row.started_at else None
+                ),
+                "completed_at": (
+                    row.completed_at.isoformat() if row.completed_at else None
+                ),
+                "agent_count": row.agent_count or 0,
+                "task_count": row.task_count or 0,
+                "gcn_validated": bool(row.gcn_validated),
+                "governor_approved": bool(row.governor_approved),
+            }
+        )
+    return events
+
+
 def register_orchestrator_routes(app: Any) -> None:
     """Register orchestrator routes to FastAPI app.
 
@@ -478,6 +532,137 @@ def register_orchestrator_routes(app: Any) -> None:
         result = service.execute_orchestration(request)
         logger.info(f"Orchestrator job {result.job_id} completed successfully")
         return result
+
+    @app.get("/api/v1/orchestrator/task-graph")
+    async def orchestrator_task_graph() -> dict[str, Any]:
+        """Return the static 6-agent task graph.
+
+        The orchestrator pipeline is fixed at the Python level
+        (see ``oraculus_di_auditor.orchestrator.agents``) so this
+        endpoint returns a static structure keyed to that layout.
+        The frontend's SVG renderer consumes ``{nodes, edges}``
+        directly — no runtime introspection needed.
+        """
+        return {
+            "nodes": list(_TASK_GRAPH_NODES),
+            "edges": list(_TASK_GRAPH_EDGES),
+        }
+
+    @app.get("/api/v1/orchestrator/executions")
+    async def orchestrator_executions(limit: int = 20) -> dict[str, Any]:
+        """Recent mesh-execution job rows, newest-first.
+
+        Reads from ``MeshExecutionJob`` when the DB layer is available.
+        When the DB isn't initialised (fresh dev env, desktop app
+        before first run, unit tests without ``init_db()``), returns
+        an empty list with ``available=False`` so the frontend can
+        render the empty-state panel rather than erroring.
+        """
+        limit = max(1, min(limit, 100))  # clamp to 1..100
+        try:
+            from oraculus_di_auditor.db import models as db_models
+            from oraculus_di_auditor.db.session import get_db
+        except ImportError:
+            return {"available": False, "count": 0, "items": []}
+
+        if not hasattr(db_models, "MeshExecutionJob"):
+            return {"available": False, "count": 0, "items": []}
+
+        try:
+            with get_db() as session:
+                rows = (
+                    session.query(db_models.MeshExecutionJob)
+                    .order_by(db_models.MeshExecutionJob.created_at.desc())
+                    .limit(limit)
+                    .all()
+                )
+                items = _execution_rows_to_timeline(rows)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("orchestrator executions query failed: %s", exc)
+            return {"available": False, "count": 0, "items": []}
+
+        return {
+            "available": True,
+            "count": len(items),
+            "items": items,
+        }
+
+    @app.get("/api/v1/orchestrator/status")
+    async def orchestrator_status() -> dict[str, Any]:
+        """Live counters for the orchestration dashboard.
+
+        Three numbers the sidebar + top panel render:
+          - ``agents_online``: count of ``AgentNode`` rows with
+            status == 'active'. Falls back to the static six-agent
+            count when the DB isn't initialised (the pipeline is
+            built into Python; the DB just records registrations).
+          - ``tasks_queued``: ``MeshExecutionJob`` rows with status in
+            {queued, routing, executing, synthesizing}.
+          - ``tasks_completed_today``: ``MeshExecutionJob`` rows with
+            status == 'completed' and completed_at within the last 24h.
+        """
+        status = {
+            "agents_online": 0,
+            "tasks_queued": 0,
+            "tasks_completed_today": 0,
+            "available": False,
+        }
+        try:
+            from datetime import UTC as _UTC
+            from datetime import datetime as _dt
+            from datetime import timedelta as _td
+
+            from oraculus_di_auditor.db import models as db_models
+            from oraculus_di_auditor.db.session import get_db
+        except ImportError:
+            # Fall back to the static 6-agent pipeline — the Python
+            # agents always exist even when no DB is configured.
+            status["agents_online"] = len(_TASK_GRAPH_NODES)
+            return status
+
+        try:
+            with get_db() as session:
+                if hasattr(db_models, "AgentNode"):
+                    status["agents_online"] = (
+                        session.query(db_models.AgentNode)
+                        .filter_by(status="active")
+                        .count()
+                    )
+                if hasattr(db_models, "MeshExecutionJob"):
+                    active_statuses = (
+                        "queued",
+                        "routing",
+                        "executing",
+                        "synthesizing",
+                    )
+                    status["tasks_queued"] = (
+                        session.query(db_models.MeshExecutionJob)
+                        .filter(
+                            db_models.MeshExecutionJob.status.in_(active_statuses)
+                        )
+                        .count()
+                    )
+                    cutoff = _dt.now(_UTC) - _td(hours=24)
+                    status["tasks_completed_today"] = (
+                        session.query(db_models.MeshExecutionJob)
+                        .filter(
+                            db_models.MeshExecutionJob.status == "completed",
+                            db_models.MeshExecutionJob.completed_at >= cutoff,
+                        )
+                        .count()
+                    )
+                status["available"] = True
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("orchestrator status query failed: %s", exc)
+            status["agents_online"] = len(_TASK_GRAPH_NODES)
+            return status
+
+        # Even when the DB is healthy, a zero agents_online means no
+        # AgentNode rows have been registered — but the Python
+        # pipeline still exists, so report the static count.
+        if status["agents_online"] == 0:
+            status["agents_online"] = len(_TASK_GRAPH_NODES)
+        return status
 
 
 __all__ = [
