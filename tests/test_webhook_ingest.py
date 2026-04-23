@@ -196,8 +196,8 @@ def test_ingest_persists_document_analysis_anomaly_rows(client):
     sha = resp.json()["document"]["sha256"]
     expected_anomaly_count = resp.json()["findings"].get("count", 0)
 
-    from oraculus_di_auditor.db.session import get_db
     from oraculus_di_auditor.db.models import Analysis, Anomaly, Document
+    from oraculus_di_auditor.db.session import get_db
 
     with get_db() as session:
         doc = session.query(Document).filter_by(document_id=sha).one()
@@ -238,9 +238,7 @@ def test_persist_tier1_result_never_raises_on_db_failure(client, monkeypatch):
     def _broken_get_db():
         return _BrokenSession()
 
-    monkeypatch.setattr(
-        "oraculus_di_auditor.db.session.get_db", _broken_get_db
-    )
+    monkeypatch.setattr("oraculus_di_auditor.db.session.get_db", _broken_get_db)
 
     # Invoking the helper with the broken session MUST NOT raise. If this
     # line raises, the "never raises" contract is broken.
@@ -248,7 +246,10 @@ def test_persist_tier1_result_never_raises_on_db_failure(client, monkeypatch):
         sha256="a" * 64,
         filename="test.txt",
         jurisdiction_id="woodlake",
-        result={"findings": {"anomalies": [], "count": 0}, "recursive_scalar_score": 1.0},
+        result={
+            "findings": {"anomalies": [], "count": 0},
+            "recursive_scalar_score": 1.0,
+        },
     )
     # If we got here, the helper swallowed the DB error as intended.
 

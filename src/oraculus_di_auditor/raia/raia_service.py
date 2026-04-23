@@ -192,9 +192,7 @@ class RAIAService:
             return JurisdictionSummary(jurisdiction_id=jurisdiction_id)
 
         analyses = (
-            session.query(Analysis)
-            .filter(Analysis.document_id.in_(doc_ids))
-            .all()
+            session.query(Analysis).filter(Analysis.document_id.in_(doc_ids)).all()
         )
         if not analyses:
             return JurisdictionSummary(
@@ -204,9 +202,7 @@ class RAIAService:
 
         analysis_ids = [a.id for a in analyses]
         anomalies_rows = (
-            session.query(Anomaly)
-            .filter(Anomaly.analysis_id.in_(analysis_ids))
-            .all()
+            session.query(Anomaly).filter(Anomaly.analysis_id.in_(analysis_ids)).all()
         )
 
         # Flatten anomalies to the dataclass shape so downstream code

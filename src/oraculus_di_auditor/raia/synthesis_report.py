@@ -97,9 +97,7 @@ def render_markdown(result: RAIAResult) -> str:
                 f"({len(p.jurisdictions_affected)} of "
                 f"{len(result.jurisdictions)} jurisdictions)"
             )
-            lines.append(
-                f"- **Jurisdictions:** {', '.join(p.jurisdictions_affected)}"
-            )
+            lines.append(f"- **Jurisdictions:** {', '.join(p.jurisdictions_affected)}")
             lines.append(f"- **Description:** {p.description}")
             lines.append("")
     lines.append("")

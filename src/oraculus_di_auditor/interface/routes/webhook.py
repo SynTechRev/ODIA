@@ -312,9 +312,7 @@ def _persist_tier1_result(
             # (rare — dedup short-circuits earlier — but possible on
             # concurrent requests), reuse the row.
             existing = (
-                session.query(db_models.Document)
-                .filter_by(document_id=sha256)
-                .first()
+                session.query(db_models.Document).filter_by(document_id=sha256).first()
             )
             if existing is None:
                 doc_row = db_models.Document(

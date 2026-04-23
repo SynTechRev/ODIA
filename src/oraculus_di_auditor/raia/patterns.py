@@ -37,7 +37,6 @@ from oraculus_di_auditor.raia.schemas import (
     JurisdictionSummary,
 )
 
-
 # Vendors / procurement mechanisms we want to surface when the same
 # name appears across multiple jurisdictions. Mirrors the catalogue
 # used by the in-memory multi-jurisdiction detector plus the v2.2.2

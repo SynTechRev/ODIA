@@ -28,7 +28,6 @@ from oraculus_di_auditor.raia.schemas import (  # noqa: E402
 )
 from oraculus_di_auditor.raia.synthesis_report import render_markdown  # noqa: E402
 
-
 # ---------------------------------------------------------------------------
 # Schemas
 # ---------------------------------------------------------------------------
