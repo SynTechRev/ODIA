@@ -29,9 +29,7 @@ logger = logging.getLogger(__name__)
 # Default template directory lookup — walks up from this file to the
 # repo root and appends /templates. Works for both editable installs
 # and wheel-installed copies as long as the repo layout is preserved.
-_DEFAULT_TEMPLATE_DIR = (
-    Path(__file__).resolve().parents[3] / "templates"
-)
+_DEFAULT_TEMPLATE_DIR = Path(__file__).resolve().parents[3] / "templates"
 _DEFAULT_TEMPLATE_NAME = "raia_synthesis_report.md"
 
 
