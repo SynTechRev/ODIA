@@ -234,7 +234,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </span>
             </div>
             <span className="text-[10px] text-slate-500 group-hover:text-amber-400 hud-num">
-              v2.7.0
+              v2.7.1
             </span>
           </button>
         </div>

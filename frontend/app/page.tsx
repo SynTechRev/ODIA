@@ -77,7 +77,7 @@ export default function Home() {
           <div className="relative p-8 md:p-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-300 text-[11px] font-medium ring-1 ring-amber-500/50 mb-4 uppercase tracking-[0.2em]">
               <OctopusMarkIcon size={12} />
-              O.D.I.A. · v2.7.0
+              O.D.I.A. · v2.7.1
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
               Civic accountability,

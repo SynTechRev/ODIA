@@ -340,7 +340,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": True,
-            "odia_version": os.environ.get("ODIA_VERSION", "2.7.0"),
+            "odia_version": os.environ.get("ODIA_VERSION", "2.7.1"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
