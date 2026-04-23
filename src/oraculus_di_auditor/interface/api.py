@@ -272,6 +272,14 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
     except Exception as e:
         logger.warning(f"Webhook routes not available: {e}")
 
+    try:
+        from .routes.cpra import register_cpra_routes
+
+        register_cpra_routes(app)
+        logger.info("CPRA deadline-watcher routes registered")
+    except Exception as e:
+        logger.warning(f"CPRA routes not available: {e}")
+
 
 def _load_jurisdiction_config_at_startup() -> Any:
     """Attempt to load jurisdiction config from config/; return None on failure."""

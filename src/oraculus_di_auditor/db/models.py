@@ -449,6 +449,51 @@ class SeenHash(Base):  # type: ignore
         )
 
 
+class CPRARequest(Base):  # type: ignore
+    """v2.7.1 — tracked California Public Records Act request.
+
+    Rows here are what WF-005 (CPRA Deadline Watcher) queries each
+    morning via `GET /api/v1/cpra/deadlines-within/{window}` to decide
+    which requests are approaching their statutory response deadline.
+
+    California Gov. Code § 7922.535 gives the public agency 10 calendar
+    days to respond to a CPRA request, extendable by 14 days under
+    § 7922.535(b). Most of this table's business logic lives in the
+    calling workflow (escalation rules, who gets alerted); the DB just
+    stores the facts: when filed, when due, current status, free-text
+    description for the operator.
+
+    Indexed on (jurisdiction_id, statutory_deadline) so the watcher's
+    range query is covered — `WHERE deadline BETWEEN now AND now+window`
+    on a jurisdiction-scoped slice is the hot query.
+    """
+
+    __tablename__ = "cpra_requests"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    jurisdiction_id = Column(String(100), nullable=False, index=True)
+    requested_at = Column(
+        DateTime, default=lambda: datetime.now(UTC), nullable=False
+    )
+    statutory_deadline = Column(DateTime, nullable=False, index=True)
+    status = Column(
+        String(32), nullable=False, default="open", index=True
+    )  # open, responded, extended, withdrawn, overdue
+    description = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+    updated_at = Column(
+        DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC)
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<CPRARequest(id={self.id}, "
+            f"jurisdiction_id='{self.jurisdiction_id}', "
+            f"status='{self.status}', "
+            f"deadline={self.statutory_deadline.isoformat() if self.statutory_deadline else None})>"
+        )
+
+
 class WebhookAuditLog(Base):  # type: ignore
     """v2.7.1 — litigation-grade audit trail for every n8n webhook call.
 
@@ -502,4 +547,5 @@ __all__ = [
     "AgentBehaviorEvent",
     "SeenHash",
     "WebhookAuditLog",
+    "CPRARequest",
 ]
