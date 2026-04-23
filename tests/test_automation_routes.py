@@ -31,7 +31,6 @@ from oraculus_di_auditor.interface.routes.automation import (  # noqa: E402
     _transform_workflow,
 )
 
-
 # ---------------------------------------------------------------------------
 # Pure transformer tests
 # ---------------------------------------------------------------------------

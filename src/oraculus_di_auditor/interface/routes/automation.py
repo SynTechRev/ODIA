@@ -223,17 +223,13 @@ def register_automation_routes(app: Any) -> None:
             logger.warning("n8n workflows proxy failed: %s", exc)
             raise HTTPException(
                 status_code=503,
-                detail=(
-                    f"n8n unreachable — is the container running at {base}?"
-                ),
+                detail=(f"n8n unreachable — is the container running at {base}?"),
             ) from exc
 
         if resp.status_code != 200:
             raise HTTPException(
                 status_code=502,
-                detail=(
-                    f"n8n returned HTTP {resp.status_code} for /api/v1/workflows"
-                ),
+                detail=(f"n8n returned HTTP {resp.status_code} for /api/v1/workflows"),
             )
         body = resp.json()
         items = body.get("data") if isinstance(body, dict) else body
@@ -274,9 +270,7 @@ def register_automation_routes(app: Any) -> None:
             logger.warning("n8n executions proxy failed: %s", exc)
             raise HTTPException(
                 status_code=503,
-                detail=(
-                    f"n8n unreachable — is the container running at {base}?"
-                ),
+                detail=(f"n8n unreachable — is the container running at {base}?"),
             ) from exc
 
         if resp.status_code != 200:
@@ -316,9 +310,7 @@ def register_automation_routes(app: Any) -> None:
             logger.warning("n8n activate proxy failed: %s", exc)
             raise HTTPException(
                 status_code=503,
-                detail=(
-                    f"n8n unreachable — is the container running at {base}?"
-                ),
+                detail=(f"n8n unreachable — is the container running at {base}?"),
             ) from exc
 
         if resp.status_code not in (200, 201):
