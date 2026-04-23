@@ -288,6 +288,18 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
     except Exception as e:
         logger.warning(f"Field routes not available: {e}")
 
+    try:
+        from .routes.automation import register_automation_routes
+
+        # Self-guarded on httpx + fastapi presence. No N8N_API_KEY gate
+        # at register time — the health endpoint is useful without it,
+        # and the per-endpoint 503s explain the config miss when workflow
+        # / execution endpoints are hit without a key.
+        register_automation_routes(app)
+        logger.info("n8n automation routes registered")
+    except Exception as e:
+        logger.warning(f"Automation routes not available: {e}")
+
 
 def _load_jurisdiction_config_at_startup() -> Any:
     """Attempt to load jurisdiction config from config/; return None on failure."""
