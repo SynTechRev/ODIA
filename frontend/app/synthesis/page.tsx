@@ -329,10 +329,16 @@ export default function SynthesisPage() {
     const dataRow = (values: string[]) =>
       new TableRow({ children: values.map((v) => cell(v)) });
 
-    const table = (rows: DocxTableRow[]) =>
+    // Column widths are given in DXA (twentieths of a point; 1440 DXA = 1 inch).
+    // Without explicit per-column widths, WordPad (and some older DOCX
+    // renderers) collapse every cell to minimum width and wrap text
+    // character-by-character. Total should sit around the usable page width,
+    // roughly 9360 DXA for letter-size paper with 1-inch margins.
+    const table = (rows: DocxTableRow[], columnWidths: number[]) =>
       new Table({
         rows,
         width: { size: 100, type: WidthType.PERCENTAGE },
+        columnWidths,
       });
 
     const children: (DocxParagraph | DocxTable)[] = [];
@@ -353,13 +359,16 @@ export default function SynthesisPage() {
 
     children.push(heading('Severity distribution', HeadingLevel.HEADING_1));
     children.push(
-      table([
-        headerRow(['Severity', 'Count']),
-        dataRow(['Critical', String(severity.critical)]),
-        dataRow(['High', String(severity.high)]),
-        dataRow(['Medium', String(severity.medium)]),
-        dataRow(['Low', String(severity.low)]),
-      ]),
+      table(
+        [
+          headerRow(['Severity', 'Count']),
+          dataRow(['Critical', String(severity.critical)]),
+          dataRow(['High', String(severity.high)]),
+          dataRow(['Medium', String(severity.medium)]),
+          dataRow(['Low', String(severity.low)]),
+        ],
+        [4680, 4680], // 3.25" + 3.25"
+      ),
     );
 
     children.push(
@@ -372,94 +381,106 @@ export default function SynthesisPage() {
       children.push(para('No findings.'));
     } else {
       children.push(
-        table([
-          headerRow([
-            'Finding ID',
-            'Detector',
-            'Severity',
-            'Docs',
-            'Occurrences',
-            'Issue',
-          ]),
-          ...byFinding
-            .slice(0, 25)
-            .map((f) =>
-              dataRow([
-                f.id,
-                f.layer,
-                f.severity,
-                String(f.document_ids.size),
-                String(f.count),
-                f.issue,
-              ]),
-            ),
-        ]),
+        table(
+          [
+            headerRow([
+              'Finding ID',
+              'Detector',
+              'Severity',
+              'Docs',
+              'Occurrences',
+              'Issue',
+            ]),
+            ...byFinding
+              .slice(0, 25)
+              .map((f) =>
+                dataRow([
+                  f.id,
+                  f.layer,
+                  f.severity,
+                  String(f.document_ids.size),
+                  String(f.count),
+                  f.issue,
+                ]),
+              ),
+          ],
+          [2200, 1400, 1000, 700, 1060, 3000], // 6 cols, Issue widest
+        ),
       );
     }
 
     if (byVendor.length > 0) {
       children.push(heading('Vendor aggregation', HeadingLevel.HEADING_1));
       children.push(
-        table([
-          headerRow([
-            'Vendor',
-            'Findings',
-            'Documents',
-            'Critical',
-            'High',
-            'Medium',
-            'Low',
-          ]),
-          ...byVendor.map((v) =>
-            dataRow([
-              v.vendor,
-              String(v.count),
-              String(v.document_ids.size),
-              String(v.severities.critical),
-              String(v.severities.high),
-              String(v.severities.medium),
-              String(v.severities.low),
+        table(
+          [
+            headerRow([
+              'Vendor',
+              'Findings',
+              'Documents',
+              'Critical',
+              'High',
+              'Medium',
+              'Low',
             ]),
-          ),
-        ]),
+            ...byVendor.map((v) =>
+              dataRow([
+                v.vendor,
+                String(v.count),
+                String(v.document_ids.size),
+                String(v.severities.critical),
+                String(v.severities.high),
+                String(v.severities.medium),
+                String(v.severities.low),
+              ]),
+            ),
+          ],
+          [2760, 1100, 1100, 1100, 1100, 1100, 1100], // 7 cols, Vendor widest
+        ),
       );
     }
 
     if (byStatute.length > 0) {
       children.push(heading('Statute aggregation', HeadingLevel.HEADING_1));
       children.push(
-        table([
-          headerRow(['Statute', 'Findings', 'Documents']),
-          ...byStatute.map((s) =>
-            dataRow([
-              s.statute,
-              String(s.count),
-              String(s.document_ids.size),
-            ]),
-          ),
-        ]),
+        table(
+          [
+            headerRow(['Statute', 'Findings', 'Documents']),
+            ...byStatute.map((s) =>
+              dataRow([
+                s.statute,
+                String(s.count),
+                String(s.document_ids.size),
+              ]),
+            ),
+          ],
+          [5560, 1900, 1900], // 3 cols, Statute widest
+        ),
       );
     }
 
     children.push(heading('Audit history', HeadingLevel.HEADING_1));
     children.push(
-      table([
-        headerRow(['Generated', 'Job ID', 'Document(s)', 'Findings']),
-        ...entries.map((e) => {
-          const first =
-            e.results.document_manifest?.[0]?.filename ?? 'Audit';
-          const more =
-            e.results.document_count > 1
-              ? ` +${e.results.document_count - 1} more`
-              : '';
-          return dataRow([
-            e.results.generated_at.slice(0, 16).replace('T', ' '),
-            e.job_id.slice(0, 8),
-            first + more,
-            String(e.results.finding_count),
-          ]);
-        }),
-      ]),
+      table(
+        [
+          headerRow(['Generated', 'Job ID', 'Document(s)', 'Findings']),
+          ...entries.map((e) => {
+            const first =
+              e.results.document_manifest?.[0]?.filename ?? 'Audit';
+            const more =
+              e.results.document_count > 1
+                ? ` +${e.results.document_count - 1} more`
+                : '';
+            return dataRow([
+              e.results.generated_at.slice(0, 16).replace('T', ' '),
+              e.job_id.slice(0, 8),
+              first + more,
+              String(e.results.finding_count),
+            ]);
+          }),
+        ],
+        [2200, 1400, 4700, 1060], // 4 cols, Document(s) widest
+      ),
     );
 
     const doc = new Document({
