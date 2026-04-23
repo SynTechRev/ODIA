@@ -225,22 +225,29 @@ function SeverityTile({
   count: number;
   tone: 'critical' | 'high' | 'medium' | 'low';
 }) {
-  const toneMap = {
-    critical: { text: 'text-red-700',    dot: 'bg-red-700',     ring: 'ring-red-200' },
-    high:     { text: 'text-red-600',    dot: 'bg-red-500',     ring: 'ring-red-100' },
-    medium:   { text: 'text-orange-600', dot: 'bg-orange-500',  ring: 'ring-orange-100' },
-    low:      { text: 'text-yellow-700', dot: 'bg-yellow-500',  ring: 'ring-yellow-100' },
+  // v2.7.3 D6: replaced bg-white + ring-red-* + text-red-700 chain
+  // (pale-pastel on slate-950, unreadable per post-v2.7.2 screenshots)
+  // with the HUD primitive stack shared across Automation and
+  // Orchestrator pages.
+  const toneClassMap: Record<typeof tone, string> = {
+    critical: 'text-rose-400',
+    high: 'text-orange-400',
+    medium: 'text-yellow-400',
+    low: 'text-blue-400',
   };
-  const t = toneMap[tone];
+  const dotClassMap: Record<typeof tone, string> = {
+    critical: 'bg-rose-500',
+    high: 'bg-orange-500',
+    medium: 'bg-yellow-500',
+    low: 'bg-blue-500',
+  };
   return (
-    <div className={`bg-white border border-slate-200 rounded-xl p-4 ring-1 ${t.ring}`}>
+    <div className="hud-panel hud-panel-inset p-4">
       <div className="flex items-center gap-2 mb-2">
-        <span className={`w-2 h-2 rounded-full ${t.dot}`} />
-        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-          {label}
-        </span>
+        <span className={`w-2 h-2 rounded-full ${dotClassMap[tone]}`} />
+        <span className="hud-metric-label">{label}</span>
       </div>
-      <div className={`text-2xl font-bold tabular-nums ${t.text}`}>
+      <div className={`hud-metric tabular-nums ${toneClassMap[tone]}`}>
         {count}
       </div>
     </div>
