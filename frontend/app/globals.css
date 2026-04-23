@@ -21,10 +21,12 @@
 :root {
   /* Base surface — dark HUD default */
   --background: #020617;          /* slate-950 */
+  --background-deep: #01040d;     /* v2.7.1 — below slate-950 for vignette */
   --foreground: #e2e8f0;          /* slate-200 */
   --surface: #0a1222;             /* between slate-950 and 900 */
   --surface-elevated: #0f172a;    /* slate-900 */
   --surface-muted: #1e293b;       /* slate-800 */
+  --surface-hi: #243144;          /* v2.7.1 — slate-750, one step above muted */
   --border: #334155;              /* slate-700 */
   --border-strong: #475569;       /* slate-600 */
 
@@ -37,26 +39,53 @@
   /* HUD accents */
   --hud-primary: #f59e0b;         /* amber-500 — brand hairline + heads */
   --hud-primary-bright: #fbbf24;  /* amber-400 — focus/hover intensify */
+  --hud-primary-dim: #b45309;     /* v2.7.1 — amber-700 */
   --hud-secondary: #22d3ee;       /* cyan-400 — numeric readouts */
+  --hud-secondary-bright: #67e8f9;/* v2.7.1 — cyan-300 */
   --hud-secondary-dim: #0891b2;   /* cyan-600 — muted data */
 
-  /* Severity scale */
-  --severity-critical: #ef4444;   /* red-500 */
+  /* v2.7.1 — Automation / workflow layer
+     Violet channel, distinct from audit data (cyan) so n8n surfaces
+     don't blend with findings. Used by .hud-panel-flow, .hud-flow-node,
+     .hud-btn-flow, and the /automation route. */
+  --hud-flow: #a78bfa;            /* violet-400 */
+  --hud-flow-bright: #c4b5fd;     /* violet-300 */
+  --hud-flow-dim: #7c3aed;        /* violet-600 */
+
+  /* Severity scale
+     v2.7.1 — Critical bumped red-500 → rose-500 so it reads distinctly
+     from High (orange-500); the prior red/orange pairing blended on
+     stacked severity summary tiles. Hue shift is small; semantic
+     contrast at a glance is the win. */
+  --severity-critical: #f43f5e;   /* rose-500 (was red-500) */
   --severity-high: #f97316;       /* orange-500 */
   --severity-medium: #eab308;     /* yellow-500 */
   --severity-low: #3b82f6;        /* blue-500 */
   --severity-info: #06b6d4;       /* cyan-500 */
 
   /* Status */
-  --status-healthy: #10b981;      /* emerald-500 */
+  --status-healthy: #34d399;      /* v2.7.1 — emerald-400 (was emerald-500) */
   --status-warn: #f59e0b;
-  --status-error: #ef4444;
+  --status-error: #f43f5e;        /* match new severity-critical */
+  --status-idle: #64748b;         /* v2.7.1 — slate-500 for paused/queued */
 
   /* HUD geometry tokens */
   --hud-edge: rgba(245, 158, 11, 0.35);      /* amber edge hairline */
   --hud-edge-strong: rgba(245, 158, 11, 0.7);
+  --hud-edge-data: rgba(34, 211, 238, 0.35);  /* v2.7.1 — cyan panel edge */
+  --hud-edge-flow: rgba(167, 139, 250, 0.40); /* v2.7.1 — violet panel edge */
+  --hud-edge-critical: rgba(244, 63, 94, 0.55); /* v2.7.1 — rose panel edge */
   --hud-edge-muted: rgba(148, 163, 184, 0.2); /* slate fallback */
   --hud-chamfer: 10px;             /* clip-path corner cut size */
+
+  /* v2.7.1 — Named glow system
+     Ambient panel halos used sparingly on accent / hover states. Consumed
+     via `box-shadow: var(--glow-*);` or layered alongside chamfer shadows. */
+  --glow-amber: 0 0 20px rgba(245, 158, 11, 0.25);
+  --glow-amber-strong: 0 0 32px rgba(245, 158, 11, 0.45);
+  --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.22);
+  --glow-violet: 0 0 24px rgba(167, 139, 250, 0.30);
+  --glow-critical: 0 0 24px rgba(244, 63, 94, 0.40);
 }
 
 /* Tailwind theme mapping — lets the rest of the codebase keep using
@@ -72,10 +101,18 @@
   --color-chrome: var(--chrome);
   --color-chrome-elevated: var(--chrome-elevated);
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-    "Liberation Mono", monospace;
+  /* v2.7.1 — Three-tier typography stack.
+     Fonts ship with system-stack fallbacks so the Electron desktop app
+     renders correctly under file:// without any network font fetches.
+     If self-hosted custom fonts are later added, point at their local
+     assets; DO NOT add `@import url('fonts.googleapis.com/...')` —
+     Electron file:// blocks remote font loads. */
+  --font-display: "Space Grotesk", "Inter", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono",
+    Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -135,8 +172,19 @@ pre {
   border: 2px solid transparent;
 }
 
+/* v2.7.1 — Text selection. Amber on slate so copy-paste on dark
+   panels doesn't wash out against the default browser blue. */
+::selection {
+  background: rgba(245, 158, 11, 0.35);
+  color: var(--foreground);
+}
+::-moz-selection {
+  background: rgba(245, 158, 11, 0.35);
+  color: var(--foreground);
+}
+
 /* ---------------------------------------------------------------------- */
-/* Keyframes                                                               */
+/* Keyframes + motion system                                              */
 /* ---------------------------------------------------------------------- */
 
 @keyframes odia-pulse {
@@ -154,8 +202,60 @@ pre {
   50%      { opacity: 0.4; }
 }
 
-.animate-odia-pulse { animation: odia-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-.animate-odia-fade  { animation: odia-fade-in 180ms ease-out both; }
+/* v2.7.1 — sheen sweep. Diagonal gradient that slides across a surface
+   once; used on .hud-divider and one-shot load-complete affordances. */
+@keyframes odia-sheen {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+
+/* v2.7.1 — scan line. Narrow horizontal line that descends through a
+   panel; behind .hud-terminal and the Automation live-console. */
+@keyframes odia-scan {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(100%); }
+}
+
+/* v2.7.1 — readout tick. Rapid fade used when a numeric value updates.
+   Attach via .animate-odia-tick once per re-render. */
+@keyframes odia-readout-tick {
+  0%   { opacity: 0.4; transform: translateY(-2px); }
+  60%  { opacity: 1;   transform: translateY(0); }
+  100% { opacity: 1;   transform: translateY(0); }
+}
+
+/* v2.7.1 — breath. Slow glow cycle for "live" indicators (a running
+   workflow, an active backend connection). Subtle; never paired with
+   odia-pulse on the same element. */
+@keyframes odia-glow-breath {
+  0%, 100% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.22); }
+  50%      { box-shadow: 0 0 26px rgba(245, 158, 11, 0.55); }
+}
+
+.animate-odia-pulse  { animation: odia-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.animate-odia-fade   { animation: odia-fade-in 180ms ease-out both; }
+.animate-odia-sheen  { animation: odia-sheen 2.5s ease-in-out 1; }
+.animate-odia-scan   { animation: odia-scan 2.4s linear infinite; }
+.animate-odia-tick   { animation: odia-readout-tick 600ms ease-out; }
+.animate-odia-breath { animation: odia-glow-breath 2s ease-in-out infinite; }
+
+/* Respect users who've asked for less motion. Sheen / scan / breath
+   are decorative; bracket pulse + fade-in are close to imperceptible
+   and kept but shortened. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-odia-pulse,
+  .animate-odia-sheen,
+  .animate-odia-scan,
+  .animate-odia-tick,
+  .animate-odia-breath {
+    animation: none;
+  }
+  .hud-brackets::before,
+  .hud-brackets::after {
+    animation: none;
+    opacity: 0.7;
+  }
+}
 
 /* ---------------------------------------------------------------------- */
 /* HUD panel system — JARVIS/Wayne-Enterprise tactical chrome              */
@@ -215,6 +315,105 @@ pre {
     inset 0 -1px 0 rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(245, 158, 11, 0.12),
     0 12px 32px -14px rgba(0, 0, 0, 0.7);
+}
+
+/* v2.7.1 — Data panel (cyan edge).
+   For analysis / findings surfaces where numeric readouts live. Cyan
+   is the JARVIS data channel; reserve it for panels whose primary
+   content is numbers, charts, or detector output. */
+.hud-panel-data {
+  border-color: var(--hud-edge-data);
+  box-shadow:
+    inset 0 1px 0 rgba(34, 211, 238, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 8px 24px -12px rgba(0, 0, 0, 0.6);
+}
+.hud-panel-data:hover {
+  border-color: rgba(34, 211, 238, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(34, 211, 238, 0.18),
+    0 0 0 1px rgba(34, 211, 238, 0.18),
+    0 8px 24px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* v2.7.1 — Flow panel (violet edge).
+   Reserved for automation / n8n surfaces. The violet cue distinguishes
+   workflow state (a node running, an execution succeeded) from audit
+   content (amber / cyan). Panel variant MUST be composed with .hud-panel,
+   not applied standalone. */
+.hud-panel-flow {
+  border-color: var(--hud-edge-flow);
+  box-shadow:
+    inset 0 1px 0 rgba(167, 139, 250, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 8px 24px -12px rgba(0, 0, 0, 0.6);
+}
+.hud-panel-flow:hover {
+  border-color: rgba(167, 139, 250, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(167, 139, 250, 0.22),
+    0 0 0 1px rgba(167, 139, 250, 0.22),
+    var(--glow-violet);
+}
+
+/* v2.7.1 — Critical panel (rose edge).
+   For dossier views of CRITICAL-severity findings. The rose glow is
+   louder than other variants because a CRITICAL surface is supposed to
+   demand attention; do not use this variant for ambient chrome. */
+.hud-panel-critical {
+  border-color: var(--hud-edge-critical);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 63, 94, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(244, 63, 94, 0.20),
+    var(--glow-critical);
+}
+
+/* v2.7.1 — Inset panel.
+   Flat, pressed-in look. Use INSIDE another .hud-panel to set off a
+   sub-section (a metadata strip, a manifest table) without stacking
+   two outlined panels. No chamfer, no glow, just a recessed surface. */
+.hud-panel-inset {
+  position: relative;
+  background: rgba(1, 4, 13, 0.55);
+  border: 1px solid rgba(51, 65, 85, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 0, 0, 0.4),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+  color: var(--foreground);
+}
+
+/* v2.7.1 — Terminal panel.
+   Near-black background + cyan hairline + monospace children. Intended
+   for the Automation page's live-console widget and any place raw log
+   output needs to read as an actual terminal rather than a UI element.
+   A ::before scanline animates behind the content for the "live" feel. */
+.hud-terminal {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #000 0%, #02060f 100%);
+  border: 1px solid var(--hud-edge-data);
+  color: var(--hud-secondary-bright);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  box-shadow:
+    inset 0 0 0 1px rgba(34, 211, 238, 0.08),
+    var(--glow-cyan);
+}
+.hud-terminal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.045) 50%,
+    transparent 100%
+  );
+  height: 24px;
+  animation: odia-scan 2.4s linear infinite;
 }
 
 /* Corner brackets — L-shapes at the TL + BR corners. Pair with
@@ -350,4 +549,325 @@ pre {
 .hover\:bg-gray-50:hover,
 .hover\:bg-slate-50:hover {
   background-color: rgba(245, 158, 11, 0.04) !important;
+}
+
+/* v2.7.1 — Severity tile contrast fixes.
+   The hero landing page + several dashboards use ring-red-200 /
+   text-red-700 style Tailwind utilities on severity summary tiles.
+   Under the forced-dark theme those utilities are unreadable; remap
+   them to the severity-* CSS variables so the tiles read correctly
+   without refactoring every page. */
+.ring-red-200    { --tw-ring-color: rgba(244, 63, 94, 0.30) !important; }
+.ring-red-100    { --tw-ring-color: rgba(244, 63, 94, 0.20) !important; }
+.ring-orange-100 { --tw-ring-color: rgba(249, 115, 22, 0.20) !important; }
+.ring-yellow-100 { --tw-ring-color: rgba(234, 179, 8, 0.20) !important; }
+
+.text-red-700    { color: var(--severity-critical) !important; }
+.text-red-600    { color: var(--severity-high) !important; }
+.text-orange-600 { color: var(--severity-high) !important; }
+.text-yellow-700 { color: var(--severity-medium) !important; }
+
+/* ---------------------------------------------------------------------- */
+/* v2.7.1 — Extended HUD primitives                                       */
+/* ------------------------------------------------------------------------
+   Layered additions on top of the v2.7 HUD. Everything below this line
+   is net-new for v2.7.1:
+
+     - Accent text variants  (.hud-*-bright, .hud-flow)
+     - Severity pills        (.hud-sev, .hud-sev-{critical,high,...})
+     - Metric readouts       (.hud-metric, -xl, -label, -delta)
+     - Workflow viz          (.hud-flow-node + state modifiers,
+                              .hud-flow-edge)
+     - Dividers              (.hud-divider, .hud-hairline)
+     - HUD buttons           (.hud-btn, -ghost, -flow)
+     - HUD tables            (.hud-table)
+     - Print mode            (flatten HUD for browser PDF export)
+   ---------------------------------------------------------------------- */
+
+/* Extended accent text colors */
+.hud-cyan-bright  { color: var(--hud-secondary-bright); }
+.hud-amber-bright { color: var(--hud-primary-bright); }
+.hud-flow         { color: var(--hud-flow); }
+
+/* ---- Severity pills ----------------------------------------------------
+   Square-cornered, mono-type pills with a glowing dot. Drop-in replacement
+   for the ad-hoc `<span className="bg-red-100 text-red-800 px-2 py-0.5">`
+   severity badges scattered across Results / Anomalies / Synthesis.
+   Compose as: <span className="hud-sev hud-sev-critical">CRITICAL</span>. */
+.hud-sev {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.3);
+}
+.hud-sev::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+.hud-sev-critical { color: var(--severity-critical); }
+.hud-sev-high     { color: var(--severity-high); }
+.hud-sev-medium   { color: var(--severity-medium); }
+.hud-sev-low      { color: var(--severity-low); }
+.hud-sev-info     { color: var(--severity-info); }
+.hud-sev-healthy  { color: var(--status-healthy); }
+
+/* ---- Metric readouts ---------------------------------------------------
+   Big-number dashboard tiles. Pair with .hud-panel + .hud-panel-data for
+   the Findings-by-severity style tiles on /analysis and /synthesis. */
+.hud-metric {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
+}
+.hud-metric-xl {
+  font-size: 44px;
+  letter-spacing: -0.02em;
+}
+.hud-metric-label {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--chrome-muted);
+}
+.hud-metric-delta {
+  display: inline-block;
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--hud-secondary);
+}
+
+/* ---- Workflow visualisation -------------------------------------------
+   Node + edge primitives for the /automation page. State modifiers live
+   on the node itself (is-idle, is-running, is-success, is-error) so a
+   parent component can update classNames on state transition without
+   re-rendering the graph layout. */
+.hud-flow-node {
+  position: relative;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.95));
+  border: 1px solid var(--hud-edge-flow);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  min-width: 160px;
+  clip-path: polygon(
+    6px 0, 100% 0, 100% calc(100% - 6px),
+    calc(100% - 6px) 100%, 0 100%, 0 6px
+  );
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+.hud-flow-node.is-running {
+  border-color: var(--hud-flow-bright);
+  box-shadow: var(--glow-violet);
+  animation: odia-glow-breath 2s ease-in-out infinite;
+}
+.hud-flow-node.is-success {
+  border-color: var(--status-healthy);
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.30);
+}
+.hud-flow-node.is-error {
+  border-color: var(--severity-critical);
+  box-shadow: var(--glow-critical);
+}
+
+.hud-flow-edge {
+  stroke: var(--hud-flow-dim);
+  stroke-width: 1.5px;
+  fill: none;
+  opacity: 0.6;
+  transition: stroke 200ms ease, opacity 200ms ease;
+}
+.hud-flow-edge.is-active {
+  stroke: var(--hud-flow-bright);
+  opacity: 1;
+  filter: drop-shadow(0 0 4px var(--hud-flow));
+}
+
+/* ---- Dividers ----------------------------------------------------------
+   .hud-divider gets an animated gradient sheen — use sparingly as a
+   section break in the hero / landing. .hud-hairline is the static
+   version for stacking metric rows inside a panel. */
+.hud-divider {
+  position: relative;
+  height: 1px;
+  margin: 16px 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--hud-edge-strong),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: odia-sheen 6s ease-in-out infinite;
+}
+.hud-hairline {
+  height: 1px;
+  margin: 8px 0;
+  background: var(--hud-edge-muted);
+}
+
+/* ---- HUD-styled buttons -----------------------------------------------
+   Complement the existing <Button> component. Use .hud-btn when the
+   button lives inside a .hud-panel and should visually match (same
+   chamfer, same amber hairline). Do not replace <Button variant="primary">
+   globally — the existing component carries accessibility state. */
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hud-primary);
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid var(--hud-edge-strong);
+  clip-path: polygon(
+    6px 0, 100% 0, 100% calc(100% - 6px),
+    calc(100% - 6px) 100%, 0 100%, 0 6px
+  );
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+.hud-btn:hover {
+  background: rgba(245, 158, 11, 0.18);
+  color: var(--hud-primary-bright);
+  box-shadow: var(--glow-amber);
+}
+.hud-btn:active {
+  background: rgba(245, 158, 11, 0.28);
+}
+.hud-btn-ghost {
+  background: transparent;
+  border-color: var(--hud-edge-muted);
+  color: var(--foreground);
+}
+.hud-btn-flow {
+  color: var(--hud-flow-bright);
+  background: rgba(167, 139, 250, 0.08);
+  border-color: var(--hud-edge-flow);
+}
+.hud-btn-flow:hover {
+  background: rgba(167, 139, 250, 0.20);
+  box-shadow: var(--glow-violet);
+}
+
+/* ---- HUD tables --------------------------------------------------------
+   Dark-theme data table with amber heads + cyan numerics. Scope to
+   direct children so nested tables inside Jinja reports don't inherit
+   the dark chrome. */
+.hud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+}
+.hud-table thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--hud-primary);
+  border-bottom: 1px solid var(--hud-edge);
+  background: rgba(245, 158, 11, 0.04);
+}
+.hud-table tbody td {
+  padding: 9px 12px;
+  color: var(--foreground);
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+.hud-table tbody tr:hover td {
+  background: rgba(245, 158, 11, 0.04);
+}
+
+/* ---------------------------------------------------------------------- */
+/* v2.7.1 — Print mode                                                    */
+/* ------------------------------------------------------------------------
+   Flatten HUD chrome to clean B&W so in-browser "Save as PDF" on the
+   Synthesis or Results pages produces a litigation-grade document,
+   not a screenshot of a dark glowing dashboard. Applies ONLY to print
+   media — screen rendering is untouched. */
+@media print {
+  :root {
+    --background: #ffffff;
+    --foreground: #0a0a0a;
+    --surface: #ffffff;
+  }
+  body {
+    background: #ffffff !important;
+    color: #0a0a0a !important;
+    background-image: none !important;
+  }
+  .hud-panel,
+  .hud-panel-accent,
+  .hud-panel-data,
+  .hud-panel-flow,
+  .hud-panel-critical,
+  .hud-panel-inset,
+  .hud-terminal {
+    background: #ffffff !important;
+    color: #0a0a0a !important;
+    border: 1px solid #333 !important;
+    box-shadow: none !important;
+    clip-path: none !important;
+  }
+  .hud-brackets::before,
+  .hud-brackets::after {
+    display: none !important;
+  }
+  .hud-rail-right,
+  .hud-rail-bottom,
+  .hud-scanlines {
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+  .hud-sev,
+  .hud-btn,
+  .hud-btn-ghost,
+  .hud-btn-flow {
+    background: #ffffff !important;
+    border: 1px solid #333 !important;
+    color: #0a0a0a !important;
+  }
+  .hud-divider {
+    background: #333 !important;
+    animation: none !important;
+  }
+  .animate-odia-pulse,
+  .animate-odia-fade,
+  .animate-odia-sheen,
+  .animate-odia-scan,
+  .animate-odia-tick,
+  .animate-odia-breath {
+    animation: none !important;
+  }
 }
