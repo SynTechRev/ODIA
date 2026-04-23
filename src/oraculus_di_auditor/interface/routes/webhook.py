@@ -229,6 +229,45 @@ def _dedup_check(sha256: str) -> bool:
         return False
 
 
+def _record_seen_hash(
+    sha256: str,
+    document_id: str | None = None,
+    jurisdiction_id: str | None = None,
+) -> None:
+    """Best-effort insert into SeenHash after a successful first pipeline.
+
+    The spec's `_dedup_check` reads from this table but the original
+    webhook body did not write to it — leaving the dedup mechanism
+    permanently inert. This helper closes the loop.
+
+    First-write-wins: on duplicate insert, the IntegrityError is caught
+    and suppressed. Caller semantics are "best effort" — a failed write
+    must not break the webhook response, since the pipeline has already
+    succeeded.
+    """
+    try:
+        from oraculus_di_auditor.db.session import get_db as get_session
+        from oraculus_di_auditor.db import models as db_models
+    except ImportError:
+        return
+
+    if not hasattr(db_models, "SeenHash"):
+        return
+
+    try:
+        with get_session() as session:
+            session.add(
+                db_models.SeenHash(
+                    sha256=sha256,
+                    document_id=document_id,
+                    jurisdiction_id=jurisdiction_id,
+                )
+            )
+            session.commit()
+    except Exception as exc:  # noqa: BLE001 — dedup is a nice-to-have
+        logger.warning("seen_hash write failed: %s", exc)
+
+
 def _record_webhook_call(
     *,
     endpoint: str,
@@ -362,6 +401,15 @@ def register_webhook_routes(app: Any) -> None:
             execution_id=request.headers.get(N8N_EXECUTION_HEADER),
             status=200,
             source_ip=_client_ip(request),
+        )
+        # Close the dedup loop: record the hash so the next POST with
+        # the same bytes short-circuits. Document_id is taken from the
+        # pipeline result; pipeline may or may not emit one depending
+        # on the detector path, so read it defensively.
+        _record_seen_hash(
+            sha256=sha256,
+            document_id=(result.get("document") or {}).get("document_id"),
+            jurisdiction_id=jurisdiction_id,
         )
         return {"status": "ok", "already_seen": False, **result}
 
