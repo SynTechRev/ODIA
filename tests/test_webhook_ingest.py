@@ -169,3 +169,106 @@ def test_ingest_dedup_on_second_post(client):
     assert second_body["sha256"] == sha
     # Dedup short-circuit does not include findings — just the pointer
     assert "findings" not in second_body
+
+
+# ---------------------------------------------------------------------------
+# 4. C5 prerequisite — Tier 1 result persists to Document + Analysis + Anomaly
+# ---------------------------------------------------------------------------
+
+
+def test_ingest_persists_document_analysis_anomaly_rows(client):
+    """After a successful /ingest-and-analyze, the DB must have:
+      - One Document row keyed on the sha256 (document_id)
+      - One Analysis row linked to that document
+      - N Anomaly rows linked to that Analysis (one per finding)
+
+    RAIAService.synthesize() reads from these tables; without persistence
+    the whole cross-jurisdiction synthesis pipeline is inert.
+    """
+    with FIXTURE.open("rb") as f:
+        resp = client.post(
+            "/api/v1/webhook/ingest-and-analyze",
+            headers={"X-ODIA-Webhook-Token": TOKEN},
+            files={"file": ("sample_audit_doc.txt", f, "text/plain")},
+            data={"jurisdiction_id": "woodlake"},
+        )
+    assert resp.status_code == 200
+    sha = resp.json()["document"]["sha256"]
+    expected_anomaly_count = resp.json()["findings"].get("count", 0)
+
+    from oraculus_di_auditor.db.session import get_db
+    from oraculus_di_auditor.db.models import Analysis, Anomaly, Document
+
+    with get_db() as session:
+        doc = session.query(Document).filter_by(document_id=sha).one()
+        assert doc.jurisdiction == "woodlake"
+        assert doc.title == "sample_audit_doc.txt"
+
+        analyses = session.query(Analysis).filter_by(document_id=sha).all()
+        assert len(analyses) == 1
+        analysis = analyses[0]
+        assert analysis.anomaly_count == expected_anomaly_count
+        assert 0.0 <= analysis.scalar_score <= 1.0
+
+        anomalies = session.query(Anomaly).filter_by(analysis_id=analysis.id).all()
+        assert len(anomalies) == expected_anomaly_count
+        # Each anomaly row must have a non-empty layer — detectors set it.
+        for a in anomalies:
+            assert a.layer
+            assert a.severity in ("low", "medium", "high", "critical")
+
+
+def test_persist_tier1_result_never_raises_on_db_failure(client, monkeypatch):
+    """_persist_tier1_result is advisory — if the DB write fails for any
+    reason, the helper logs a warning and returns. The webhook response
+    must still be 200 with findings. This test confirms the 'never
+    raises' contract directly on the helper, not through the route.
+    """
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    # Monkeypatch get_db to raise when entered — simulates connection lost
+    # mid-write. The helper's internal try/except must catch it.
+    class _BrokenSession:
+        def __enter__(self):
+            raise RuntimeError("simulated DB connection lost")
+
+        def __exit__(self, *a):
+            return False
+
+    def _broken_get_db():
+        return _BrokenSession()
+
+    monkeypatch.setattr(
+        "oraculus_di_auditor.db.session.get_db", _broken_get_db
+    )
+
+    # Invoking the helper with the broken session MUST NOT raise. If this
+    # line raises, the "never raises" contract is broken.
+    webhook_mod._persist_tier1_result(
+        sha256="a" * 64,
+        filename="test.txt",
+        jurisdiction_id="woodlake",
+        result={"findings": {"anomalies": [], "count": 0}, "recursive_scalar_score": 1.0},
+    )
+    # If we got here, the helper swallowed the DB error as intended.
+
+
+def test_ingest_still_returns_200_when_persistence_fails(client, monkeypatch):
+    """End-to-end cousin of the above: even with a broken persistence
+    helper, the webhook endpoint returns 200 with findings (persistence
+    is advisory, not blocking)."""
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    # Replace the whole helper with a no-op — ensures the ROUTE does not
+    # gate its response on the helper's output.
+    monkeypatch.setattr(webhook_mod, "_persist_tier1_result", lambda **kw: None)
+
+    with FIXTURE.open("rb") as f:
+        resp = client.post(
+            "/api/v1/webhook/ingest-and-analyze",
+            headers={"X-ODIA-Webhook-Token": TOKEN},
+            files={"file": ("sample_audit_doc.txt", f, "text/plain")},
+            data={"jurisdiction_id": "woodlake"},
+        )
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "ok"

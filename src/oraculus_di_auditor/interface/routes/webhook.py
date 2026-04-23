@@ -268,6 +268,92 @@ def _record_seen_hash(
         logger.warning("seen_hash write failed: %s", exc)
 
 
+def _persist_tier1_result(
+    sha256: str,
+    filename: str,
+    jurisdiction_id: str | None,
+    result: dict[str, Any],
+) -> None:
+    """Best-effort persistence of a successful Tier 1 pipeline run.
+
+    Writes three rows:
+      - Document (keyed on sha256 as document_id, unique; skip if exists)
+      - Analysis (counts + score, one row per run)
+      - Anomaly rows (one per finding)
+
+    v2.7.1 C5 prerequisite: RAIAService queries these tables to build
+    cross-jurisdiction synthesis reports. Without this persistence, Tier
+    1 results live only in the `_JOBS` process dict and are lost on
+    restart — RAIAService would find nothing.
+
+    Never raises. Persistence is a consumer convenience; the webhook
+    response has already succeeded by the time we get here, and a DB
+    write failure must not flip the overall response to 500.
+    """
+    try:
+        import json
+
+        from oraculus_di_auditor.db import models as db_models
+        from oraculus_di_auditor.db.session import get_db as get_session
+    except ImportError:
+        return
+
+    required = ("Document", "Analysis", "Anomaly")
+    if not all(hasattr(db_models, m) for m in required):
+        return
+
+    anomalies = (result.get("findings") or {}).get("anomalies", [])
+    score = result.get("recursive_scalar_score", 0.0)
+    file_format = (filename.rsplit(".", 1)[-1] or "unknown").lower()[:20]
+
+    try:
+        with get_session() as session:
+            # Document — first-writer-wins on sha256. If already present
+            # (rare — dedup short-circuits earlier — but possible on
+            # concurrent requests), reuse the row.
+            existing = (
+                session.query(db_models.Document)
+                .filter_by(document_id=sha256)
+                .first()
+            )
+            if existing is None:
+                doc_row = db_models.Document(
+                    document_id=sha256,
+                    title=filename[:255] if filename else "unknown",
+                    document_type=file_format,
+                    jurisdiction=jurisdiction_id,
+                )
+                session.add(doc_row)
+                session.flush()
+
+            # Analysis — one new row per ingest call.
+            analysis_row = db_models.Analysis(
+                document_id=sha256,
+                anomaly_count=len(anomalies),
+                scalar_score=float(score) if score is not None else 0.0,
+                engine_version=os.environ.get("ODIA_VERSION", "2.7.1"),
+                metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
+            )
+            session.add(analysis_row)
+            session.flush()
+
+            # Anomaly rows.
+            for a in anomalies:
+                session.add(
+                    db_models.Anomaly(
+                        analysis_id=analysis_row.id,
+                        anomaly_id=a.get("id", "unknown"),
+                        issue=a.get("issue", ""),
+                        severity=a.get("severity", "medium"),
+                        layer=a.get("layer", "unknown"),
+                        details_json=json.dumps(a.get("details", {})),
+                    )
+                )
+            session.commit()
+    except Exception as exc:  # noqa: BLE001 — persistence is a nice-to-have
+        logger.warning("tier1 persistence failed for sha256=%s: %s", sha256[:16], exc)
+
+
 def _record_webhook_call(
     *,
     endpoint: str,
@@ -410,6 +496,15 @@ def register_webhook_routes(app: Any) -> None:
             sha256=sha256,
             document_id=(result.get("document") or {}).get("document_id"),
             jurisdiction_id=jurisdiction_id,
+        )
+        # C5 prerequisite — persist Document + Analysis + Anomaly rows
+        # so RAIAService.synthesize() can aggregate across runs. Best-
+        # effort, never raises, does not affect the webhook response.
+        _persist_tier1_result(
+            sha256=sha256,
+            filename=file.filename or "unknown",
+            jurisdiction_id=jurisdiction_id,
+            result=result,
         )
         return {"status": "ok", "already_seen": False, **result}
 
