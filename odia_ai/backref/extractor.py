@@ -252,7 +252,7 @@ def _parse_alert_blocks(text: str) -> list[tuple[str, str, str]]:
     # Deduplicate by alert_id (first occurrence wins); later occurrences are usually cross-refs
     seen_ids: set[str] = set()
     unique: list[tuple[int, int, str]] = []
-    for start, end, alert_id, raw in matches:
+    for start, end, alert_id, _raw in matches:
         if alert_id not in seen_ids:
             unique.append((start, end, alert_id))
             seen_ids.add(alert_id)

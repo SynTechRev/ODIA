@@ -164,7 +164,7 @@ def _build_router(config_path: str | None = None):  # -> APIRouter
             return CorrectionResponse(correction_id=corr.correction_id, stored=True)
         except Exception as e:
             logger.exception("Correction submission failed")
-            raise HTTPException(status_code=500, detail=str(e))
+            raise HTTPException(status_code=500, detail=str(e)) from e
 
     @router.get("/corrections/stats")
     async def correction_stats() -> dict:

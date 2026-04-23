@@ -121,10 +121,10 @@ def _read_yaml_or_json(path: Path) -> dict:
     if suffix in (".yaml", ".yml"):
         try:
             import yaml  # type: ignore
-        except ImportError:
+        except ImportError as err:
             raise ImportError(
                 "YAML config requires PyYAML. Install with: pip install pyyaml"
-            )
+            ) from err
         return yaml.safe_load(text) or {}
     return json.loads(text) if text.strip() else {}
 
