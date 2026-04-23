@@ -280,6 +280,14 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
     except Exception as e:
         logger.warning(f"CPRA routes not available: {e}")
 
+    try:
+        from .routes.field import register_field_routes
+
+        register_field_routes(app)
+        logger.info("Field-verification routes registered")
+    except Exception as e:
+        logger.warning(f"Field routes not available: {e}")
+
 
 def _load_jurisdiction_config_at_startup() -> Any:
     """Attempt to load jurisdiction config from config/; return None on failure."""

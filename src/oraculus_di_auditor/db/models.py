@@ -494,6 +494,56 @@ class CPRARequest(Base):  # type: ignore
         )
 
 
+class FieldObservation(Base):  # type: ignore
+    """v2.7.1 C4 — operator-submitted field verification of a surveillance
+    deployment.
+
+    Rows here are submitted from the field (mobile browser, Obsidian
+    dataview, or a dedicated CivicSignal app) when an operator physically
+    verifies — or fails to verify — a Flock ALPR / BWC / drone deployment
+    that was supposed to exist per vendor contracts or press releases.
+
+    The KEY analytical signal is `exclusion_zone`: when True, the
+    observation asserts the vendor has placed a device inside a zone
+    their contract forbids (parks near schools, exempted residential
+    streets, outside jurisdiction boundaries). Those rows get promoted
+    into the MAS report's "Field-Verified Placement" section verbatim
+    as evidence.
+
+    Schema alignment: the verification_type enum matches the DeFlock
+    cheatsheet (photo with vantage, pass-by confirmation, cross-ref
+    against the deflock.me community map). Lat/lng are stored as
+    plain floats — 6 decimal places is ~11cm, more precision than any
+    GPS receiver actually delivers, so Float is sufficient.
+    """
+
+    __tablename__ = "field_observations"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    jurisdiction_id = Column(String(100), nullable=False, index=True)
+    observed_at = Column(
+        DateTime, default=lambda: datetime.now(UTC), nullable=False, index=True
+    )
+    lat = Column(Float, nullable=False)
+    lng = Column(Float, nullable=False)
+    verification_type = Column(
+        String(32), nullable=False, index=True
+    )  # photo, pass_by, deflock_cross_ref
+    notes = Column(Text, nullable=True)
+    exclusion_zone = Column(
+        Boolean, nullable=False, default=False, index=True
+    )
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    def __repr__(self) -> str:
+        return (
+            f"<FieldObservation(id={self.id}, "
+            f"jurisdiction_id='{self.jurisdiction_id}', "
+            f"type='{self.verification_type}', "
+            f"exclusion={self.exclusion_zone})>"
+        )
+
+
 class WebhookAuditLog(Base):  # type: ignore
     """v2.7.1 — litigation-grade audit trail for every n8n webhook call.
 
@@ -548,4 +598,5 @@ __all__ = [
     "SeenHash",
     "WebhookAuditLog",
     "CPRARequest",
+    "FieldObservation",
 ]
