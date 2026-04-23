@@ -305,7 +305,13 @@ def compute_text_hash(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def ingest_document(file_path: str | Path, **metadata) -> dict[str, Any]:
+def ingest_document(
+    file_path: str | Path,
+    *,
+    force_reanalyze: bool = False,
+    jurisdiction_id: str | None = None,
+    **metadata,
+) -> dict[str, Any]:
     """Ingest a document file and extract text and metadata.
 
     This is the main entry point for document ingestion.
@@ -313,6 +319,13 @@ def ingest_document(file_path: str | Path, **metadata) -> dict[str, Any]:
 
     Args:
         file_path: Path to document file
+        force_reanalyze: When True, skip the SeenHash dedup check so
+            the document is treated as fresh even if it was ingested
+            before. The existing SeenHash row is left untouched.
+            Used when the operator clicks "Re-run audit" in the UI.
+        jurisdiction_id: Optional jurisdiction slug, stored on the new
+            SeenHash row so later RAIAService queries can filter by
+            jurisdiction without reconstructing provenance.
         **metadata: Additional metadata fields to include
 
     Returns:
@@ -329,6 +342,8 @@ def ingest_document(file_path: str | Path, **metadata) -> dict[str, Any]:
                 "ingestion_timestamp": str,  # ISO 8601
                 "char_count": int,
                 "segment_count": int,
+                "already_seen": bool,
+                "first_seen_at": str | None,
                 **metadata  # Any additional metadata passed
             }
         }
@@ -336,6 +351,18 @@ def ingest_document(file_path: str | Path, **metadata) -> dict[str, Any]:
     Raises:
         FileNotFoundError: If file doesn't exist
         ValueError: If file format is not supported
+
+    Notes:
+        Text extraction still runs even when ``already_seen`` is True —
+        the caller decides whether to short-circuit (skip analysis)
+        or re-process. That keeps this entry point cheap and
+        backwards-compatible; all existing tests pass ``already_seen``
+        through unchanged. The expected pattern at the call site is::
+
+            doc = ingest_document(path, jurisdiction_id="woodlake")
+            if doc["metadata"]["already_seen"]:
+                return _load_cached_analysis(doc["metadata"]["hash"])
+            findings = analyze_document(doc)
     """
     file_path = Path(file_path)
     if not file_path.exists():
@@ -368,6 +395,23 @@ def ingest_document(file_path: str | Path, **metadata) -> dict[str, Any]:
     # Compute hash
     file_hash = compute_file_hash(file_path)
 
+    # Dedup check (best-effort) + best-effort write of the new SeenHash
+    # row for next time. Matches the routes/webhook.py pattern — DB
+    # failures never block ingestion.
+    already_seen = False
+    first_seen_at: str | None = None
+    if not force_reanalyze:
+        existing = check_seen_hash(file_hash)
+        if existing:
+            already_seen = True
+            first_seen_at = existing.get("first_seen_at")
+    if not already_seen:
+        record_seen_hash(
+            file_hash,
+            document_id=file_hash,
+            jurisdiction_id=jurisdiction_id,
+        )
+
     # Build metadata
     doc_metadata = {
         "source_path": str(file_path.absolute()),
@@ -378,6 +422,8 @@ def ingest_document(file_path: str | Path, **metadata) -> dict[str, Any]:
         "ingestion_timestamp": datetime.now(UTC).isoformat(),
         "char_count": len(text),
         "segment_count": len(segments),
+        "already_seen": already_seen,
+        "first_seen_at": first_seen_at,
         **metadata,
     }
 
@@ -388,21 +434,47 @@ def ingest_document(file_path: str | Path, **metadata) -> dict[str, Any]:
     }
 
 
-def ingest_text(text: str, **metadata) -> dict[str, Any]:
+def ingest_text(
+    text: str,
+    *,
+    force_reanalyze: bool = False,
+    jurisdiction_id: str | None = None,
+    **metadata,
+) -> dict[str, Any]:
     """Ingest raw text content (no file).
 
     Args:
         text: Text content to ingest
+        force_reanalyze: When True, skip the SeenHash dedup check.
+        jurisdiction_id: Optional jurisdiction slug recorded on the
+            new SeenHash row.
         **metadata: Additional metadata fields
 
     Returns:
-        Document dict similar to ingest_document but without file-based metadata
+        Document dict similar to ingest_document but without file-based
+        metadata. ``metadata["already_seen"]`` and
+        ``metadata["first_seen_at"]`` are always present.
     """
     # Segment text
     segments = segment_text(text)
 
     # Compute hash
     text_hash = compute_text_hash(text)
+
+    # Dedup check (best-effort)
+    already_seen = False
+    first_seen_at: str | None = None
+    if not force_reanalyze:
+        existing = check_seen_hash(text_hash)
+        if existing:
+            already_seen = True
+            first_seen_at = existing.get("first_seen_at")
+    if not already_seen:
+        record_seen_hash(
+            text_hash,
+            document_id=text_hash,
+            jurisdiction_id=jurisdiction_id,
+        )
 
     # Build metadata
     doc_metadata = {
@@ -412,6 +484,8 @@ def ingest_text(text: str, **metadata) -> dict[str, Any]:
         "ingestion_timestamp": datetime.now(UTC).isoformat(),
         "char_count": len(text),
         "segment_count": len(segments),
+        "already_seen": already_seen,
+        "first_seen_at": first_seen_at,
         **metadata,
     }
 
@@ -420,6 +494,85 @@ def ingest_text(text: str, **metadata) -> dict[str, Any]:
         "segments": segments,
         "metadata": doc_metadata,
     }
+
+
+# ---------------------------------------------------------------------------
+# SeenHash dedup helpers (D2)
+# ---------------------------------------------------------------------------
+
+# DB imports are lazy — the ingestion module must stay importable in
+# environments without SQLAlchemy (CLI --help, unit tests that mock
+# the DB, the bundled desktop app before init_db() runs).
+
+
+def check_seen_hash(sha256: str) -> dict[str, Any] | None:
+    """Return a dict with {sha256, first_seen_at, document_id, jurisdiction_id}
+    if this hash has been seen before, otherwise None.
+
+    Degrades silently when the DB layer is unavailable or the
+    SeenHash table doesn't exist yet — returns None (never-seen) so
+    ingestion still makes forward progress.
+    """
+    try:
+        from oraculus_di_auditor.db import models as db_models
+        from oraculus_di_auditor.db.session import get_db
+    except ImportError:
+        return None
+
+    if not hasattr(db_models, "SeenHash"):
+        return None
+
+    try:
+        with get_db() as session:
+            row = session.query(db_models.SeenHash).filter_by(sha256=sha256).first()
+            if row is None:
+                return None
+            return {
+                "sha256": row.sha256,
+                "first_seen_at": (
+                    row.first_seen_at.isoformat() if row.first_seen_at else None
+                ),
+                "document_id": row.document_id,
+                "jurisdiction_id": row.jurisdiction_id,
+            }
+    except Exception as exc:  # noqa: BLE001 — dedup is advisory
+        logger.warning("ingestion dedup check failed: %s", exc)
+        return None
+
+
+def record_seen_hash(
+    sha256: str,
+    document_id: str | None = None,
+    jurisdiction_id: str | None = None,
+) -> None:
+    """Insert a new SeenHash row. First-write-wins on duplicates.
+
+    The caller is expected to have already determined the row doesn't
+    exist (via ``check_seen_hash``); this function still catches
+    IntegrityError so a race between two concurrent ingests of the
+    same bytes doesn't raise.
+    """
+    try:
+        from oraculus_di_auditor.db import models as db_models
+        from oraculus_di_auditor.db.session import get_db
+    except ImportError:
+        return
+
+    if not hasattr(db_models, "SeenHash"):
+        return
+
+    try:
+        with get_db() as session:
+            session.add(
+                db_models.SeenHash(
+                    sha256=sha256,
+                    document_id=document_id,
+                    jurisdiction_id=jurisdiction_id,
+                )
+            )
+            session.commit()
+    except Exception as exc:  # noqa: BLE001 — dedup is advisory
+        logger.warning("ingestion seen_hash write failed: %s", exc)
 
 
 __all__ = [
@@ -432,4 +585,6 @@ __all__ = [
     "compute_text_hash",
     "ingest_document",
     "ingest_text",
+    "check_seen_hash",
+    "record_seen_hash",
 ]
