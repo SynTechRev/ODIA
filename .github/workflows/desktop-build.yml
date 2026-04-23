@@ -108,24 +108,47 @@ jobs:
           brew install tesseract poppler
 
       - name: Install OCR tooling (Windows)
-        # Mirrors release-desktop.yml: PyInstaller spec expects Tesseract at
-        # C:\Program Files\Tesseract-OCR and Poppler at
-        # C:\Program Files\poppler\Library\bin.
+        # Mirrors release-desktop.yml: chocolatey-with-retry + direct
+        # UB-Mannheim fallback for Tesseract, direct download for Poppler.
+        # See release-desktop.yml for the rationale (chronic 504s from
+        # community.chocolatey.org).
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
-          choco install tesseract --no-progress -y
+          $ErrorActionPreference = 'Continue'
+
+          $tessPath = "C:\Program Files\Tesseract-OCR\tesseract.exe"
+          $chocoOk = $false
+          for ($attempt = 1; $attempt -le 3 -and -not $chocoOk; $attempt++) {
+            Write-Host "chocolatey tesseract install attempt $attempt/3"
+            choco install tesseract --no-progress -y --no-color
+            if ($LASTEXITCODE -eq 0 -and (Test-Path $tessPath)) {
+              $chocoOk = $true
+              Write-Host "  choco succeeded on attempt $attempt"
+            } else {
+              Write-Host "  choco failed (exit $LASTEXITCODE); sleeping $($attempt * 20)s"
+              if ($attempt -lt 3) { Start-Sleep -Seconds ($attempt * 20) }
+            }
+          }
+          if (-not $chocoOk) {
+            Write-Host "chocolatey unavailable; falling back to direct UB-Mannheim installer"
+            $tessUrl = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.4.0.20240606.exe"
+            $tessExe = "$env:TEMP\tesseract-setup.exe"
+            Invoke-WebRequest -Uri $tessUrl -OutFile $tessExe -UseBasicParsing
+            Start-Process -FilePath $tessExe -ArgumentList "/S" -Wait -NoNewWindow
+          }
+          if (-not (Test-Path $tessPath)) {
+            throw "Tesseract install failed after chocolatey + direct fallback: tesseract.exe not found"
+          }
+
           $popplerUrl = "https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip"
           $popplerZip = "$env:TEMP\poppler.zip"
-          Invoke-WebRequest -Uri $popplerUrl -OutFile $popplerZip
+          Invoke-WebRequest -Uri $popplerUrl -OutFile $popplerZip -UseBasicParsing
           Expand-Archive -Path $popplerZip -DestinationPath "$env:TEMP\poppler_extract" -Force
           $inner = Get-ChildItem -Path "$env:TEMP\poppler_extract" -Directory | Select-Object -First 1
           if ($null -eq $inner) { throw "Poppler archive had unexpected layout" }
           New-Item -ItemType Directory -Path "C:\Program Files\poppler" -Force | Out-Null
           Copy-Item -Path "$($inner.FullName)\*" -Destination "C:\Program Files\poppler\" -Recurse -Force
-          if (-not (Test-Path "C:\Program Files\Tesseract-OCR\tesseract.exe")) {
-            throw "Tesseract install failed: tesseract.exe not found"
-          }
           if (-not (Test-Path "C:\Program Files\poppler\Library\bin\pdftoppm.exe")) {
             throw "Poppler install failed: pdftoppm.exe not found"
           }
