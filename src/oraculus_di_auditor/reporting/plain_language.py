@@ -161,8 +161,7 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
                 "legislative approval."
             ),
             "action": (
-                "Trace the timeline of authorization against the procurement "
-                "record."
+                "Trace the timeline of authorization against the procurement " "record."
             ),
         },
     },
@@ -341,8 +340,7 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
                 "validity is uncertain."
             ),
             "action": (
-                "Request the fully executed version from the responsible "
-                "department."
+                "Request the fully executed version from the responsible " "department."
             ),
         },
     },
@@ -754,8 +752,7 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
         # it up via the partial-match branch.
         "vendor-detected": {
             "summary": (
-                "A surveillance vendor was identified in the "
-                "document text by name."
+                "A surveillance vendor was identified in the " "document text by name."
             ),
             "impact": (
                 "Vendor identification establishes the footprint for "
@@ -792,8 +789,7 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
         },
         "facial-recognition-reference": {
             "summary": (
-                "Facial-recognition technology is referenced in this "
-                "document."
+                "Facial-recognition technology is referenced in this " "document."
             ),
             "impact": (
                 "Facial recognition in law-enforcement use is "
@@ -910,8 +906,7 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
                 "the document has not been altered."
             ),
             "action": (
-                "Request a certified copy directly from the official "
-                "records system."
+                "Request a certified copy directly from the official " "records system."
             ),
         },
         "unappropriated_spending": {
@@ -970,8 +965,7 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
         },
         "unlimited_authority": {
             "summary": (
-                "An official was granted authority to act with no "
-                "stated limits."
+                "An official was granted authority to act with no " "stated limits."
             ),
             "impact": (
                 "Unconstrained delegations can lead to actions that "
@@ -1069,8 +1063,7 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
         # Legacy underscore-form aliases
         "missing_final_action": {
             "summary": (
-                "This legislative record is missing its final action "
-                "or vote record."
+                "This legislative record is missing its final action " "or vote record."
             ),
             "impact": (
                 "Without a recorded vote, it's unclear whether this "
@@ -1097,16 +1090,14 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
         },
         "blank_required_field": {
             "summary": (
-                "A required field in this official document was left "
-                "blank."
+                "A required field in this official document was left " "blank."
             ),
             "impact": (
                 "Incomplete official records undermine accountability "
                 "and may indicate documentation errors."
             ),
             "action": (
-                "Request a corrected record from the responsible "
-                "department."
+                "Request a corrected record from the responsible " "department."
             ),
         },
     },
@@ -1252,8 +1243,7 @@ def translate_finding(finding: dict[str, Any]) -> dict[str, Any]:
             f"with {severity} severity."
         )
         result["plain_impact"] = (
-            "This finding requires professional review to assess its "
-            "significance."
+            "This finding requires professional review to assess its " "significance."
         )
         result["plain_action"] = (
             "Consult the full technical finding details and consider "

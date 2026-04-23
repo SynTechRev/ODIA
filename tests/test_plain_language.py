@@ -317,9 +317,9 @@ class TestCanonicalFindingIDsHaveSpecificTranslations:
             "details": {},
         }
         result = translate_finding(finding)
-        assert "anomaly was detected" not in result["plain_summary"].lower(), (
-            f"{finding_id} fell through to the generic fallback"
-        )
+        assert (
+            "anomaly was detected" not in result["plain_summary"].lower()
+        ), f"{finding_id} fell through to the generic fallback"
         assert len(result["plain_summary"]) > 20
 
 
