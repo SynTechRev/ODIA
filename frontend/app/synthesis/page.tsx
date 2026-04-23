@@ -8,9 +8,11 @@
  *   - Top finding IDs by cross-document prevalence
  *   - Vendor aggregation (findings with `vendor` in details)
  *   - Statute aggregation (findings with `statute` in details)
- *   - Markdown export
+ *   - Markdown + DOCX exports
  *
- * Purely client-side. No backend endpoint required.
+ * Purely client-side. No backend endpoint required. The `docx` library is
+ * imported dynamically inside the export handler so it doesn't inflate
+ * the initial page bundle for users who never export.
  */
 
 import React, { useCallback, useMemo } from 'react';
@@ -55,6 +57,15 @@ interface StatuteGroup {
 
 function triggerMarkdownDownload(content: string, filename: string): void {
   const blob = new Blob([content], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function triggerBlobDownload(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -253,6 +264,209 @@ export default function SynthesisPage() {
     );
   }, [aggregates, entries]);
 
+  const handleExportDocx = useCallback(async () => {
+    const {
+      severity,
+      uniqueDocCount,
+      totalFindings,
+      byFinding,
+      byVendor,
+      byStatute,
+    } = aggregates;
+    const now = new Date().toISOString();
+
+    // Dynamic import so the ~400KB docx bundle only loads when the user
+    // clicks Export — not on every Synthesis page view.
+    const {
+      Document,
+      Packer,
+      Paragraph,
+      HeadingLevel,
+      TextRun,
+      Table,
+      TableRow,
+      TableCell,
+      WidthType,
+      AlignmentType,
+    } = await import('docx');
+
+    const heading = (text: string, level: (typeof HeadingLevel)[keyof typeof HeadingLevel]) =>
+      new Paragraph({ text, heading: level, spacing: { before: 240, after: 120 } });
+
+    const para = (text: string, bold = false) =>
+      new Paragraph({
+        children: [new TextRun({ text, bold })],
+        spacing: { after: 80 },
+      });
+
+    const cell = (text: string, opts: { bold?: boolean; width?: number } = {}) =>
+      new TableCell({
+        width: opts.width
+          ? { size: opts.width, type: WidthType.PERCENTAGE }
+          : undefined,
+        children: [
+          new Paragraph({
+            children: [new TextRun({ text, bold: opts.bold })],
+          }),
+        ],
+      });
+
+    const headerRow = (labels: string[]) =>
+      new TableRow({
+        tableHeader: true,
+        children: labels.map((l) => cell(l, { bold: true })),
+      });
+
+    const dataRow = (values: string[]) =>
+      new TableRow({ children: values.map((v) => cell(v)) });
+
+    const table = (rows: TableRow[]) =>
+      new Table({
+        rows,
+        width: { size: 100, type: WidthType.PERCENTAGE },
+      });
+
+    const children: Paragraph[] | (Paragraph | Table)[] = [];
+
+    children.push(
+      new Paragraph({
+        alignment: AlignmentType.LEFT,
+        heading: HeadingLevel.TITLE,
+        children: [new TextRun({ text: 'O.D.I.A. Master Audit Synthesis' })],
+      }),
+      para(`Generated ${now.slice(0, 19).replace('T', ' ')} UTC`),
+    );
+
+    children.push(heading('Scope', HeadingLevel.HEADING_1));
+    children.push(para(`Audits analyzed: ${entries.length}`));
+    children.push(para(`Unique documents (by SHA-256): ${uniqueDocCount}`));
+    children.push(para(`Total findings: ${totalFindings}`));
+
+    children.push(heading('Severity distribution', HeadingLevel.HEADING_1));
+    children.push(
+      table([
+        headerRow(['Severity', 'Count']),
+        dataRow(['Critical', String(severity.critical)]),
+        dataRow(['High', String(severity.high)]),
+        dataRow(['Medium', String(severity.medium)]),
+        dataRow(['Low', String(severity.low)]),
+      ]),
+    );
+
+    children.push(
+      heading(
+        'Top findings by severity and cross-document prevalence',
+        HeadingLevel.HEADING_1,
+      ),
+    );
+    if (byFinding.length === 0) {
+      children.push(para('No findings.'));
+    } else {
+      children.push(
+        table([
+          headerRow([
+            'Finding ID',
+            'Detector',
+            'Severity',
+            'Docs',
+            'Occurrences',
+            'Issue',
+          ]),
+          ...byFinding
+            .slice(0, 25)
+            .map((f) =>
+              dataRow([
+                f.id,
+                f.layer,
+                f.severity,
+                String(f.document_ids.size),
+                String(f.count),
+                f.issue,
+              ]),
+            ),
+        ]),
+      );
+    }
+
+    if (byVendor.length > 0) {
+      children.push(heading('Vendor aggregation', HeadingLevel.HEADING_1));
+      children.push(
+        table([
+          headerRow([
+            'Vendor',
+            'Findings',
+            'Documents',
+            'Critical',
+            'High',
+            'Medium',
+            'Low',
+          ]),
+          ...byVendor.map((v) =>
+            dataRow([
+              v.vendor,
+              String(v.count),
+              String(v.document_ids.size),
+              String(v.severities.critical),
+              String(v.severities.high),
+              String(v.severities.medium),
+              String(v.severities.low),
+            ]),
+          ),
+        ]),
+      );
+    }
+
+    if (byStatute.length > 0) {
+      children.push(heading('Statute aggregation', HeadingLevel.HEADING_1));
+      children.push(
+        table([
+          headerRow(['Statute', 'Findings', 'Documents']),
+          ...byStatute.map((s) =>
+            dataRow([
+              s.statute,
+              String(s.count),
+              String(s.document_ids.size),
+            ]),
+          ),
+        ]),
+      );
+    }
+
+    children.push(heading('Audit history', HeadingLevel.HEADING_1));
+    children.push(
+      table([
+        headerRow(['Generated', 'Job ID', 'Document(s)', 'Findings']),
+        ...entries.map((e) => {
+          const first =
+            e.results.document_manifest?.[0]?.filename ?? 'Audit';
+          const more =
+            e.results.document_count > 1
+              ? ` +${e.results.document_count - 1} more`
+              : '';
+          return dataRow([
+            e.results.generated_at.slice(0, 16).replace('T', ' '),
+            e.job_id.slice(0, 8),
+            first + more,
+            String(e.results.finding_count),
+          ]);
+        }),
+      ]),
+    );
+
+    const doc = new Document({
+      creator: 'O.D.I.A.',
+      title: 'Master Audit Synthesis',
+      description: 'Cross-audit findings synthesis report',
+      sections: [{ children }],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    triggerBlobDownload(
+      blob,
+      `odia_master_audit_synthesis_${now.slice(0, 10)}.docx`,
+    );
+  }, [aggregates, entries]);
+
   if (entries.length === 0) {
     return (
       <DashboardLayout>
@@ -291,9 +505,14 @@ export default function SynthesisPage() {
               · {totalFindings} findings
             </p>
           </div>
-          <Button variant="primary" onClick={handleExportMarkdown}>
-            ↓ Markdown
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="secondary" onClick={handleExportMarkdown}>
+              ↓ Markdown
+            </Button>
+            <Button variant="primary" onClick={handleExportDocx}>
+              ↓ DOCX
+            </Button>
+          </div>
         </div>
 
         {/* Severity totals */}

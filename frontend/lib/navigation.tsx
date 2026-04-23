@@ -71,7 +71,7 @@ function getAppRootURL(): string {
   let pathname = url.pathname.replace(/[^/]*$/, ''); // strip filename
 
   // Strip one first-level route segment if present
-  const routePattern = /\/(upload|ingest|analysis|documents|results|anomalies|orchestrator|settings)\/$/;
+  const routePattern = /\/(upload|ingest|analysis|documents|results|anomalies|synthesis|orchestrator|settings)\/$/;
   const m = pathname.match(routePattern);
   if (m) {
     pathname = pathname.slice(0, -(m[1].length + 1));

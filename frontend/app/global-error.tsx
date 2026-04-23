@@ -77,7 +77,7 @@ export default function GlobalError({
                 // file:// apps need a hard path to the bundled index.html
                 const loc = window.location.href;
                 if (loc.startsWith('file://')) {
-                  const root = loc.replace(/[^/]*$/, '').replace(/\/(upload|ingest|analysis|documents|results|anomalies|orchestrator|settings)\/$/, '/');
+                  const root = loc.replace(/[^/]*$/, '').replace(/\/(upload|ingest|analysis|documents|results|anomalies|synthesis|orchestrator|settings)\/$/, '/');
                   window.location.href = root + 'index.html';
                 } else {
                   window.location.href = '/';
