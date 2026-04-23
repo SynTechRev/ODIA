@@ -459,20 +459,20 @@ class OrchestratorService:
 # the SVG viewBox="0 0 800 400" coordinate system the handoff specifies
 # so the frontend only has to render, not compute layout.
 _TASK_GRAPH_NODES: list[dict[str, Any]] = [
-    {"id": "ingest",    "label": "Ingestion",  "x": 80,  "y": 200, "phase": "intake"},
-    {"id": "analysis",  "label": "Analysis",   "x": 220, "y": 120, "phase": "compute"},
-    {"id": "anomaly",   "label": "Anomaly",    "x": 380, "y": 120, "phase": "compute"},
-    {"id": "synthesis", "label": "Synthesis",  "x": 540, "y": 200, "phase": "compute"},
-    {"id": "database",  "label": "Database",   "x": 680, "y": 120, "phase": "persist"},
-    {"id": "interface", "label": "Interface",  "x": 680, "y": 280, "phase": "emit"},
+    {"id": "ingest", "label": "Ingestion", "x": 80, "y": 200, "phase": "intake"},
+    {"id": "analysis", "label": "Analysis", "x": 220, "y": 120, "phase": "compute"},
+    {"id": "anomaly", "label": "Anomaly", "x": 380, "y": 120, "phase": "compute"},
+    {"id": "synthesis", "label": "Synthesis", "x": 540, "y": 200, "phase": "compute"},
+    {"id": "database", "label": "Database", "x": 680, "y": 120, "phase": "persist"},
+    {"id": "interface", "label": "Interface", "x": 680, "y": 280, "phase": "emit"},
 ]
 _TASK_GRAPH_EDGES: list[dict[str, str]] = [
-    {"source": "ingest",    "target": "analysis"},
-    {"source": "analysis",  "target": "anomaly"},
-    {"source": "anomaly",   "target": "synthesis"},
+    {"source": "ingest", "target": "analysis"},
+    {"source": "analysis", "target": "anomaly"},
+    {"source": "anomaly", "target": "synthesis"},
     {"source": "synthesis", "target": "database"},
     {"source": "synthesis", "target": "interface"},
-    {"source": "database",  "target": "interface"},
+    {"source": "database", "target": "interface"},
 ]
 
 
@@ -485,12 +485,8 @@ def _execution_rows_to_timeline(rows: list[Any]) -> list[dict[str, Any]]:
                 "job_id": row.job_id,
                 "job_type": row.job_type,
                 "status": row.status,
-                "created_at": (
-                    row.created_at.isoformat() if row.created_at else None
-                ),
-                "started_at": (
-                    row.started_at.isoformat() if row.started_at else None
-                ),
+                "created_at": (row.created_at.isoformat() if row.created_at else None),
+                "started_at": (row.started_at.isoformat() if row.started_at else None),
                 "completed_at": (
                     row.completed_at.isoformat() if row.completed_at else None
                 ),
@@ -637,9 +633,7 @@ def register_orchestrator_routes(app: Any) -> None:
                     )
                     status["tasks_queued"] = (
                         session.query(db_models.MeshExecutionJob)
-                        .filter(
-                            db_models.MeshExecutionJob.status.in_(active_statuses)
-                        )
+                        .filter(db_models.MeshExecutionJob.status.in_(active_statuses))
                         .count()
                     )
                     cutoff = _dt.now(_UTC) - _td(hours=24)
