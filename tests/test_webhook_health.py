@@ -12,15 +12,12 @@ call create_app(), drive TestClient.
 
 from __future__ import annotations
 
-import importlib
-
 import pytest
 
 pytest.importorskip("fastapi")
 pytest.importorskip("httpx")  # FastAPI TestClient needs httpx
 
 from fastapi.testclient import TestClient  # noqa: E402
-
 
 # ---------------------------------------------------------------------------
 # Helpers

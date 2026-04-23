@@ -113,7 +113,9 @@ def test_webhook_audit_log_filter_by_workflow_id(session):
     # Seed two workflows
     for _ in range(3):
         session.add(
-            WebhookAuditLog(endpoint="ingest-and-analyze", workflow_id="WF-001", status=200)
+            WebhookAuditLog(
+                endpoint="ingest-and-analyze", workflow_id="WF-001", status=200
+            )
         )
     session.add(
         WebhookAuditLog(endpoint="batch-ingest", workflow_id="WF-002", status=202)

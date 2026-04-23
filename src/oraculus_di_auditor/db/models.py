@@ -438,9 +438,7 @@ class SeenHash(Base):  # type: ignore
     __tablename__ = "seen_hashes"
 
     sha256 = Column(String(64), primary_key=True)
-    first_seen_at = Column(
-        DateTime, default=lambda: datetime.now(UTC), nullable=False
-    )
+    first_seen_at = Column(DateTime, default=lambda: datetime.now(UTC), nullable=False)
     document_id = Column(String(255), nullable=True, index=True)
     jurisdiction_id = Column(String(100), nullable=True, index=True)
 

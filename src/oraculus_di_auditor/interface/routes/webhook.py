@@ -113,6 +113,7 @@ _TIER2_MODULES = (
 # Token verification
 # ---------------------------------------------------------------------------
 
+
 def _verify_token(presented: str | None) -> bool:
     """Constant-time comparison of the webhook token.
 
@@ -133,6 +134,7 @@ def _token_configured() -> bool:
 # ---------------------------------------------------------------------------
 # Tier-1 executor — the canonical analysis entry point
 # ---------------------------------------------------------------------------
+
 
 def _run_tier1_pipeline(
     file_bytes: bytes,
@@ -186,9 +188,7 @@ def _run_tier1_pipeline(
         normalized["jurisdiction_id"] = jurisdiction_id
 
     findings = analyze_document(normalized)
-    score = compute_recursive_scalar_score(
-        normalized, findings.get("anomalies", [])
-    )
+    score = compute_recursive_scalar_score(normalized, findings.get("anomalies", []))
 
     return {
         "document": {
@@ -212,8 +212,8 @@ def _dedup_check(sha256: str) -> bool:
     """
     try:
         # Drift patch: v2.7.0 contextmanager is get_db, not get_session.
-        from oraculus_di_auditor.db.session import get_db as get_session
         from oraculus_di_auditor.db import models as db_models
+        from oraculus_di_auditor.db.session import get_db as get_session
     except ImportError:
         return False
 
@@ -240,8 +240,8 @@ def _record_webhook_call(
     """Best-effort write to WebhookAuditLog. Never raises."""
     try:
         # Drift patch: v2.7.0 contextmanager is get_db, not get_session.
-        from oraculus_di_auditor.db.session import get_db as get_session
         from oraculus_di_auditor.db import models as db_models
+        from oraculus_di_auditor.db.session import get_db as get_session
     except ImportError:
         return
 
@@ -267,6 +267,7 @@ def _record_webhook_call(
 # Route registrar — drops into existing interface/api.py pattern
 # ---------------------------------------------------------------------------
 
+
 def register_webhook_routes(app: Any) -> None:
     """Attach the n8n webhook router to a FastAPI application.
 
@@ -275,9 +276,7 @@ def register_webhook_routes(app: Any) -> None:
     API composition without restructuring api.py.
     """
     if not _FASTAPI_AVAILABLE:
-        logger.warning(
-            "FastAPI not installed — webhook routes will not be registered."
-        )
+        logger.warning("FastAPI not installed — webhook routes will not be registered.")
         return
 
     if not _token_configured():
@@ -464,9 +463,11 @@ def register_webhook_routes(app: Any) -> None:
 # Internal helpers (module-level so tests can patch them)
 # ---------------------------------------------------------------------------
 
+
 def _check_tier_imports(modules: tuple[str, ...]) -> bool:
     """True iff every module in the tuple is importable."""
     import importlib
+
     for mod in modules:
         try:
             importlib.import_module(mod)
