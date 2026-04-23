@@ -134,6 +134,24 @@ export const OrchestratorIcon: React.FC<IconProps> = (p) => (
   </IconBase>
 );
 
+// v2.7.1 — Automation / n8n workflow nav icon.
+//
+// Three-node directed-graph motif: source (top-left) → branch (top-right) →
+// sink (bottom). Distinct from OrchestratorIcon (symmetric 4-node square)
+// so "n8n automation" reads differently from "multi-agent orchestration"
+// at 16px sidebar scale. Nodes are filled dots for contrast; edges are
+// 1.5px strokes matching the IconBase stroke system.
+export const AutomationIcon: React.FC<IconProps> = (p) => (
+  <IconBase {...p}>
+    <circle cx="5" cy="6" r="2" fill="currentColor" stroke="none" />
+    <circle cx="19" cy="6" r="2" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="19" r="2" fill="currentColor" stroke="none" />
+    <path d="M7 6h10" />
+    <path d="M6.5 8 L11 17" />
+    <path d="M17.5 8 L13 17" />
+  </IconBase>
+);
+
 export const SettingsIcon: React.FC<IconProps> = (p) => (
   <IconBase {...p}>
     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />

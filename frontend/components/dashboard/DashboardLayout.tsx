@@ -21,6 +21,7 @@ import {
   AnomaliesIcon,
   SynthesisIcon,
   OrchestratorIcon,
+  AutomationIcon,
   SettingsIcon,
   OctopusMarkIcon,
   ChevronLeftIcon,
@@ -56,6 +57,7 @@ const sidebarNav: NavItem[] = [
   { name: 'Synthesis',     href: '/synthesis',     Icon: SynthesisIcon,    group: 'Evidence' },
 
   { name: 'Orchestrator',  href: '/orchestrator',  Icon: OrchestratorIcon, group: 'System' },
+  { name: 'Automation',    href: '/automation',    Icon: AutomationIcon,   group: 'System' },
   { name: 'Settings',      href: '/settings',      Icon: SettingsIcon,     group: 'System' },
 ];
 
