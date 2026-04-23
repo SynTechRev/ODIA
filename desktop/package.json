@@ -1,6 +1,6 @@
 {
   "name": "odia-desktop",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "description": "O.D.I.A. Desktop — Local document analysis for legal and government documents",
   "main": "src/main.js",
   "author": "Synthetic Technology Revolution <syntechrev@gmail.com>",
