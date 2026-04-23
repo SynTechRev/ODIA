@@ -133,6 +133,48 @@ Phase-by-phase engine reference: [docs/PHASES.md](docs/PHASES.md)
 
 ---
 
+## Automation (n8n)
+
+O.D.I.A. ships with a token-gated webhook surface for driving automated
+ingestion, analysis, and cross-jurisdiction synthesis from
+[n8n](https://n8n.io/) workflows (see
+`docs/ENHANCEMENT_PLAN_v2_7_1.docx` for the full Track A architecture
+and reference workflow bundle).
+
+**One-command local stack** — brings up the backend, Postgres, and n8n
+with a shared volume for scraper-dropped documents:
+
+```bash
+cp .env.example .env
+# edit .env, set ODIA_WEBHOOK_TOKEN / N8N_ENCRYPTION_KEY / POSTGRES_PASSWORD
+#   python -c "import secrets; print(secrets.token_urlsafe(32))"
+
+docker compose -f docker-compose.yml -f docker-compose.n8n.yml up -d
+```
+
+Then:
+
+- n8n editor → http://localhost:5678 (basic-auth from `.env`)
+- Backend webhook health → `curl -H "X-ODIA-Webhook-Token: $ODIA_WEBHOOK_TOKEN" http://localhost:8000/api/v1/webhook/health`
+- Reference workflows → `data/n8n-workflows/bundle.json` (import via
+  n8n UI; activate per-jurisdiction after review — **all ship
+  INACTIVE** by design)
+
+**Webhook endpoints** are exposed at `/api/v1/webhook/*` when
+`ODIA_WEBHOOK_TOKEN` is set. If the env var is unset, the route surface
+refuses to register and logs an error — misconfigured deployments fail
+loud rather than silently exposing an open pipeline.
+
+| Method | Path | Used by |
+|---|---|---|
+| `GET` | `/api/v1/webhook/health` | n8n liveness probe (no token required) |
+| `POST` | `/api/v1/webhook/ingest-and-analyze` | WF-001 CivicPlus scraper (single doc) |
+| `POST` | `/api/v1/webhook/batch-ingest` | WF-002 nightly batch |
+| `GET` | `/api/v1/webhook/status/{job_id}` | Batch-job status polling |
+| `POST` | `/api/v1/webhook/synthesize` | Cross-jurisdiction R.A.I.A. synthesis |
+
+---
+
 ## Audit Triage Pipeline
 
 For manual audit workflows with chain-of-custody tracking:

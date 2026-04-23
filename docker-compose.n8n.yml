@@ -1,0 +1,144 @@
+version: "3.9"
+
+# ==========================================================================
+# O.D.I.A. + n8n orchestration compose
+# --------------------------------------------------------------------------
+# Extends the base docker-compose.yml with an n8n automation service and a
+# Postgres instance backing both n8n's execution history and an optional
+# O.D.I.A. provenance chain.
+#
+# Usage
+# -----
+#   docker compose -f docker-compose.yml -f docker-compose.n8n.yml up -d
+#
+# Environment (.env alongside this file)
+# --------------------------------------
+#   ODIA_WEBHOOK_TOKEN        Shared secret the backend validates on every
+#                             webhook call. Generate with:
+#                               python -c "import secrets; print(secrets.token_urlsafe(32))"
+#   N8N_ENCRYPTION_KEY        Random 32-byte key n8n uses to encrypt stored
+#                             credentials at rest. Set once, never rotate
+#                             without re-entering every credential.
+#   N8N_HOST                  Hostname n8n listens on (default: localhost)
+#   N8N_BASIC_AUTH_USER       Username for n8n UI (default: admin)
+#   N8N_BASIC_AUTH_PASSWORD   Password for n8n UI (set something strong)
+#   POSTGRES_PASSWORD         Postgres root password
+#
+# Ports
+# -----
+#   5678   n8n editor UI + REST API
+#   5432   Postgres (bind to localhost only in production)
+#
+# Data volumes
+# ------------
+#   n8n-data       workflow definitions, credentials, execution logs
+#   postgres-data  Postgres cluster files
+#   odia-inbox     shared volume the CivicPlus scraper writes to and the
+#                  backend reads from. Mounting this into both containers
+#                  is simpler and faster than round-tripping file bytes
+#                  through HTTP — n8n posts the path, backend reads the file.
+# ==========================================================================
+
+services:
+  # --------------------------------------------------------------------
+  # Postgres — shared by n8n + O.D.I.A. provenance extension (optional)
+  # --------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: odia-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: odia
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-in-.env}
+      POSTGRES_DB: n8n
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/postgres-init:/docker-entrypoint-initdb.d:ro
+    ports:
+      # Bind to localhost only — n8n + backend reach it over the internal
+      # docker network. Do not expose 5432 on 0.0.0.0 in production.
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odia -d n8n"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --------------------------------------------------------------------
+  # n8n — workflow automation engine
+  # --------------------------------------------------------------------
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: odia-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      # ---- Database (share Postgres with O.D.I.A. provenance) ---------
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: odia
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-change-me-in-.env}
+
+      # ---- Security ---------------------------------------------------
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+
+      # ---- Host + URL -------------------------------------------------
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: ${WEBHOOK_URL:-http://localhost:5678/}
+
+      # ---- Execution policy ------------------------------------------
+      # Save only failed or error executions to DB — for a civic audit
+      # pipeline you want the full history regardless, so keep "all".
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS: "true"
+      # 90 days is enough to cover the average CPRA response window +
+      # writ petition drafting cycle without the DB ballooning.
+      EXECUTIONS_DATA_MAX_AGE: 2160
+
+      # ---- Backend communication -------------------------------------
+      # This is the URL n8n's HTTP Request nodes hit when calling
+      # O.D.I.A. The "backend" hostname resolves over the docker network.
+      ODIA_BASE_URL: http://backend:8000
+      ODIA_WEBHOOK_TOKEN: ${ODIA_WEBHOOK_TOKEN}
+
+      # ---- Timezone (so CRON triggers fire when you expect) ----------
+      GENERIC_TIMEZONE: ${TZ:-America/Los_Angeles}
+      TZ: ${TZ:-America/Los_Angeles}
+
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - odia-inbox:/inbox:ro       # read documents the scraper drops here
+      - ./data/n8n-workflows:/home/node/workflows:ro   # seed workflows
+    depends_on:
+      postgres:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+
+  # --------------------------------------------------------------------
+  # Backend (override) — pick up the webhook token from env
+  # --------------------------------------------------------------------
+  backend:
+    environment:
+      ODIA_WEBHOOK_TOKEN: ${ODIA_WEBHOOK_TOKEN}
+      # Postgres-backed provenance (optional; falls back to SQLite if absent)
+      ODIA_DB_URL: postgresql+psycopg://odia:${POSTGRES_PASSWORD:-change-me-in-.env}@postgres:5432/odia
+    volumes:
+      - odia-inbox:/inbox:rw
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  n8n-data:
+  postgres-data:
+  odia-inbox:
