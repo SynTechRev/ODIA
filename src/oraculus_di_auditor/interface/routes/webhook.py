@@ -246,8 +246,8 @@ def _record_seen_hash(
     succeeded.
     """
     try:
-        from oraculus_di_auditor.db.session import get_db as get_session
         from oraculus_di_auditor.db import models as db_models
+        from oraculus_di_auditor.db.session import get_db as get_session
     except ImportError:
         return
 
