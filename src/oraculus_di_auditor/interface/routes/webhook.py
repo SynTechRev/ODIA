@@ -58,6 +58,36 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
+# FastAPI imports must be module-level, NOT function-scoped:
+# `from __future__ import annotations` turns every type hint into a lazy
+# string; FastAPI resolves them via `typing.get_type_hints()` against
+# the function's module-globals at route-registration time. When
+# `Request`, `UploadFile`, etc. are imported inside `register_webhook_routes`,
+# the name never reaches module globals, FastAPI fails to resolve the
+# annotation, and treats the parameter as a plain query arg (observable
+# as 422 "field required" on /health, which has no query surface).
+# Match the pattern established by upload.py: try-import at module scope
+# and let the registrar re-check `_FASTAPI_AVAILABLE` at call time.
+try:
+    from fastapi import (
+        APIRouter,
+        File,
+        Form,
+        HTTPException,
+        Request,
+        UploadFile,
+    )
+
+    _FASTAPI_AVAILABLE = True
+except ImportError:
+    _FASTAPI_AVAILABLE = False
+    APIRouter = None  # type: ignore
+    File = None  # type: ignore
+    Form = None  # type: ignore
+    HTTPException = None  # type: ignore
+    Request = None  # type: ignore
+    UploadFile = None  # type: ignore
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -244,9 +274,7 @@ def register_webhook_routes(app: Any) -> None:
     interface/routes/upload.py so this file slots into the existing
     API composition without restructuring api.py.
     """
-    try:
-        from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
-    except ImportError:
+    if not _FASTAPI_AVAILABLE:
         logger.warning(
             "FastAPI not installed — webhook routes will not be registered."
         )
