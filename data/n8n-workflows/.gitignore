@@ -1,0 +1,13 @@
+# Anything in this directory except the reference bundle + the readme
+# is operator state (credentials exports, per-jurisdiction activations,
+# execution dumps). Keep it local.
+credentials/
+credentials.json
+*.credentials.json
+# Per-jurisdiction copies made from bundle.json stay local — the main
+# bundle is the source of truth; jurisdiction-specific tweaks are
+# applied in the n8n UI after activation.
+WF-*-*.json
+# Execution history exports
+executions/
+executions.json
