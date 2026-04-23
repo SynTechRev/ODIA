@@ -273,3 +273,161 @@ def test_ingest_still_returns_200_when_persistence_fails(client, monkeypatch):
         )
     assert resp.status_code == 200
     assert resp.json()["status"] == "ok"
+
+
+# ---------------------------------------------------------------------------
+# 5. C5.3 — /webhook/synthesize delegates to RAIAService
+# ---------------------------------------------------------------------------
+
+
+def _ingest(client, jurisdiction: str) -> None:
+    """Helper: post the fixture bytes under a given jurisdiction."""
+    with FIXTURE.open("rb") as f:
+        resp = client.post(
+            "/api/v1/webhook/ingest-and-analyze",
+            headers={"X-ODIA-Webhook-Token": TOKEN},
+            files={"file": ("sample_audit_doc.txt", f, "text/plain")},
+            data={"jurisdiction_id": jurisdiction},
+        )
+    assert resp.status_code == 200, resp.text
+
+
+def test_synthesize_rejects_missing_token(client):
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        json={"jurisdictions": ["woodlake"]},
+    )
+    assert resp.status_code == 401
+
+
+def test_synthesize_rejects_empty_jurisdictions(client):
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+        json={"jurisdictions": []},
+    )
+    assert resp.status_code == 400
+
+
+def test_synthesize_end_to_end_after_ingests(client):
+    """Ingest one doc per jurisdiction → /synthesize returns a result
+    dict with per-jurisdiction summaries + the rendered markdown."""
+    # Same fixture bytes under different jurisdictions; dedup runs
+    # per-SHA, so we need different bytes per jurisdiction to land
+    # two distinct documents. Easiest: lightly perturb the file via
+    # an in-memory byte stream with a jurisdiction-tag suffix.
+    for jid in ("woodlake", "lindsay"):
+        with FIXTURE.open("rb") as f:
+            data = f.read() + f"\n# jurisdiction={jid}\n".encode()
+        resp = client.post(
+            "/api/v1/webhook/ingest-and-analyze",
+            headers={"X-ODIA-Webhook-Token": TOKEN},
+            files={"file": ("sample_audit_doc.txt", data, "text/plain")},
+            data={"jurisdiction_id": jid},
+        )
+        assert resp.status_code == 200, resp.text
+
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+        json={
+            "jurisdictions": ["woodlake", "lindsay"],
+            "include_tier3": False,
+            "render_markdown": True,
+        },
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["status"] == "ok"
+    assert len(body["synthesis_id"]) == 16  # 8 bytes hex
+    assert body["include_tier3"] is False
+
+    result = body["result"]
+    assert result["synthesis_id"] == body["synthesis_id"]
+    assert len(result["jurisdictions"]) == 2
+    jids = {j["jurisdiction_id"] for j in result["jurisdictions"]}
+    assert jids == {"woodlake", "lindsay"}
+
+    # Markdown should have been rendered via the Jinja2 template
+    md = body["markdown"]
+    assert md is not None
+    assert "R.A.I.A." in md
+    assert "woodlake" in md
+    assert "lindsay" in md
+
+
+def test_synthesize_result_available_via_status_endpoint(client):
+    """After /synthesize, /status/{synthesis_id} returns the stored result."""
+    _ingest(client, "woodlake")
+
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+        json={"jurisdictions": ["woodlake"], "render_markdown": False},
+    )
+    assert resp.status_code == 200
+    synthesis_id = resp.json()["synthesis_id"]
+
+    status = client.get(
+        f"/api/v1/webhook/status/{synthesis_id}",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+    )
+    assert status.status_code == 200
+    state = status.json()
+    assert state["status"] == "completed"
+    assert state["type"] == "raia_synthesis"
+    assert state["result"]["synthesis_id"] == synthesis_id
+
+
+def test_synthesize_missing_jurisdictions_surface_in_result(client):
+    """Requested jurisdictions with zero persisted data land in
+    `missing_jurisdictions` rather than causing the synthesis to fail."""
+    _ingest(client, "woodlake")
+
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+        json={
+            "jurisdictions": ["woodlake", "ghost_town"],
+            "render_markdown": False,
+        },
+    )
+    assert resp.status_code == 200
+    result = resp.json()["result"]
+    assert "ghost_town" in result["missing_jurisdictions"]
+
+
+def test_synthesize_render_markdown_opt_out(client):
+    """render_markdown=False → no markdown field in the response."""
+    _ingest(client, "woodlake")
+
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+        json={
+            "jurisdictions": ["woodlake"],
+            "render_markdown": False,
+        },
+    )
+    assert resp.status_code == 200
+    assert "markdown" not in resp.json()
+
+
+def test_synthesize_500_when_service_raises(client, monkeypatch):
+    """If the RAIAService wrapper raises, the route returns 500 — the
+    request body is malformed or the DB is unavailable. No partial
+    200s that would mask a real problem."""
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    def _boom(**_kw):
+        raise RuntimeError("simulated synthesis failure")
+
+    monkeypatch.setattr(webhook_mod, "_run_raia_synthesis", _boom)
+
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+        json={"jurisdictions": ["woodlake"]},
+    )
+    assert resp.status_code == 500
+    assert "simulated synthesis failure" in resp.text

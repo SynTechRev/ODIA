@@ -553,11 +553,27 @@ def register_webhook_routes(app: Any) -> None:
     # ---- RAIA synthesis trigger -------------------------------------------
     @router.post("/api/v1/webhook/synthesize")
     async def webhook_synthesize(request: Request) -> dict[str, Any]:
-        """Trigger a cross-jurisdictional R.A.I.A. synthesis run."""
+        """Trigger a cross-jurisdictional R.A.I.A. synthesis run.
+
+        Body:
+          {
+            "jurisdictions": ["a", "b", "c"],
+            "include_tier3": false,
+            "render_markdown": true
+          }
+
+        Runs synchronously — the synthesis is DB-query-bound (no
+        model inference), so latency is bounded and a queue hop would
+        just add a polling round-trip for n8n. The serialised result
+        is *also* stored in ``_BATCH_JOBS[synthesis_id]`` so the
+        existing ``GET /status/{job_id}`` endpoint can re-serve it
+        without re-running the synthesis.
+        """
         _require_token(request)
         payload = await request.json()
         jurisdictions = payload.get("jurisdictions", [])
         include_tier3 = bool(payload.get("include_tier3", False))
+        want_markdown = bool(payload.get("render_markdown", True))
 
         if not jurisdictions:
             raise HTTPException(
@@ -565,21 +581,51 @@ def register_webhook_routes(app: Any) -> None:
             )
 
         synthesis_id = secrets.token_hex(8)
-        _enqueue_synthesis_job(synthesis_id, jurisdictions, include_tier3)
+
+        try:
+            result_dict, markdown = _run_raia_synthesis(
+                jurisdictions=jurisdictions,
+                include_tier3=include_tier3,
+                render_markdown_flag=want_markdown,
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.exception("webhook synthesize failed")
+            _record_webhook_call(
+                endpoint="synthesize",
+                workflow_id=request.headers.get(N8N_WORKFLOW_HEADER),
+                execution_id=request.headers.get(N8N_EXECUTION_HEADER),
+                status=500,
+                source_ip=_client_ip(request),
+            )
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        # Override the synthesis_id on the inner result so it matches
+        # the one n8n was handed — RAIAService generates its own, but
+        # callers expect the returned synthesis_id to be the handle.
+        result_dict["synthesis_id"] = synthesis_id
+
+        # Park the full result under _BATCH_JOBS so /status/{job_id}
+        # can re-serve it. Strip _jobs-style internal keys from the
+        # response (they'd bloat the webhook payload).
+        _store_synthesis_result(synthesis_id, result_dict, markdown)
 
         _record_webhook_call(
             endpoint="synthesize",
             workflow_id=request.headers.get(N8N_WORKFLOW_HEADER),
             execution_id=request.headers.get(N8N_EXECUTION_HEADER),
-            status=202,
+            status=200,
             source_ip=_client_ip(request),
         )
-        return {
-            "status": "accepted",
+        response: dict[str, Any] = {
+            "status": "ok",
             "synthesis_id": synthesis_id,
             "jurisdictions": jurisdictions,
             "include_tier3": include_tier3,
+            "result": result_dict,
         }
+        if markdown is not None:
+            response["markdown"] = markdown
+        return response
 
     # ----- Local helpers ---------------------------------------------------
     def _require_token(request: Request) -> None:
@@ -651,21 +697,40 @@ def _get_batch_job_state(job_id: str) -> dict[str, Any] | None:
     return {k: v for k, v in state.items() if not k.startswith("_")}
 
 
-def _enqueue_synthesis_job(
-    synthesis_id: str,
+def _run_raia_synthesis(
+    *,
     jurisdictions: list[str],
     include_tier3: bool,
-) -> None:
-    """Register a synthesis job.
+    render_markdown_flag: bool,
+) -> tuple[dict[str, Any], str | None]:
+    """Invoke ``RAIAService.synthesize()`` and optionally render markdown.
 
-    Synthesis runs the RAIAService (recommended by the v2.5.1 analysis)
-    across the requested jurisdiction set and emits a DOCX that n8n WF-010
-    uploads to the shared drive.
+    Returns ``(result_dict, markdown_or_none)``. Kept as a module-level
+    function so tests can patch it without touching the route closure.
+    """
+    from oraculus_di_auditor.raia import RAIAService, render_markdown_template
+
+    svc = RAIAService()
+    result = svc.synthesize(jurisdictions, include_tier3=include_tier3)
+    md = render_markdown_template(result) if render_markdown_flag else None
+    return result.to_dict(), md
+
+
+def _store_synthesis_result(
+    synthesis_id: str,
+    result_dict: dict[str, Any],
+    markdown: str | None,
+) -> None:
+    """Park a completed synthesis under ``_BATCH_JOBS`` for later polling.
+
+    The ``/status/{job_id}`` endpoint strips keys prefixed with ``_``
+    before returning, so we pack the raw result under ``result`` and
+    (optionally) the rendered markdown under ``markdown``.
     """
     _BATCH_JOBS[synthesis_id] = {
         "job_id": synthesis_id,
-        "status": "queued",
+        "status": "completed",
         "type": "raia_synthesis",
-        "jurisdictions": jurisdictions,
-        "include_tier3": include_tier3,
+        "result": result_dict,
+        "markdown": markdown,
     }

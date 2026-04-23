@@ -24,7 +24,11 @@ from oraculus_di_auditor.raia.schemas import (
     JurisdictionSummary,
     RAIAResult,
 )
-from oraculus_di_auditor.raia.synthesis_report import render_markdown, write_markdown
+from oraculus_di_auditor.raia.synthesis_report import (
+    render_markdown,
+    render_markdown_template,
+    write_markdown,
+)
 
 __all__ = [
     "RAIAService",
@@ -34,5 +38,6 @@ __all__ = [
     "AnomalyRow",
     "detect_patterns",
     "render_markdown",
+    "render_markdown_template",
     "write_markdown",
 ]

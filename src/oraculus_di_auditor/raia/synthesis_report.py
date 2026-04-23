@@ -1,23 +1,88 @@
 """Render a ``RAIAResult`` to Markdown / DOCX for WF-010 distribution.
 
-C5.2 lands a pure-Python markdown renderer (no Jinja2 dependency for
-the default path) so callers can get a human-readable report without a
-templates/ file. C5.3 swaps the primary path to a Jinja2 template at
-``templates/raia_synthesis_report.md`` and wires the webhook
-``/synthesize`` endpoint to produce and return the rendered output.
+Two rendering paths:
 
-The DOCX path is deliberately not implemented here yet — the v2.5.x
-DOCX export pipeline already lives in ``reporting/format_converters``;
-C5.3 reuses that via the template_engine rather than re-implementing.
+  1. ``render_markdown_template(result, template_dir)`` — uses Jinja2
+     with ``templates/raia_synthesis_report.md``. Primary path for the
+     webhook ``/synthesize`` endpoint.
+  2. ``render_markdown(result)`` — pure-Python fallback that does not
+     require Jinja2 or a templates/ directory. Used when the template
+     cannot be loaded (missing dir, missing file) so synthesis never
+     becomes unavailable due to a packaging issue.
+
+The DOCX path is deliberately not implemented here — the v2.5.x DOCX
+export pipeline lives in ``reporting/format_converters``; follow-on
+work will pipe the rendered markdown through ``convert_to_docx()``.
 """
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from oraculus_di_auditor.raia.schemas import RAIAResult
+
+logger = logging.getLogger(__name__)
+
+# Default template directory lookup — walks up from this file to the
+# repo root and appends /templates. Works for both editable installs
+# and wheel-installed copies as long as the repo layout is preserved.
+_DEFAULT_TEMPLATE_DIR = (
+    Path(__file__).resolve().parents[3] / "templates"
+)
+_DEFAULT_TEMPLATE_NAME = "raia_synthesis_report.md"
+
+
+def render_markdown_template(
+    result: RAIAResult,
+    template_dir: Path | str | None = None,
+    template_name: str = _DEFAULT_TEMPLATE_NAME,
+) -> str:
+    """Render via Jinja2 + ``templates/raia_synthesis_report.md``.
+
+    Falls through to ``render_markdown`` (the pure-Python path) on
+    any template-resolution failure so callers always get content
+    back. Logs a warning so operators can investigate. Missing
+    Jinja2 is *not* treated as an error — synthesis still works
+    without the templating dependency.
+    """
+    try:
+        import jinja2
+    except ImportError:
+        logger.warning(
+            "RAIA render: Jinja2 not installed — using pure-Python renderer."
+        )
+        return render_markdown(result)
+
+    tpl_dir = Path(template_dir) if template_dir else _DEFAULT_TEMPLATE_DIR
+    tpl_path = tpl_dir / template_name
+    if not tpl_path.is_file():
+        logger.warning(
+            "RAIA render: template %s not found — using pure-Python renderer.",
+            tpl_path,
+        )
+        return render_markdown(result)
+
+    try:
+        env = jinja2.Environment(
+            loader=jinja2.FileSystemLoader(str(tpl_dir)),
+            autoescape=False,
+            trim_blocks=True,
+            lstrip_blocks=True,
+            undefined=jinja2.StrictUndefined,
+        )
+        template = env.get_template(template_name)
+        # Template references `result.*` — pass the RAIAResult itself
+        # so attribute access works in Jinja.
+        return template.render(result=result)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning(
+            "RAIA render: Jinja2 render failed (%s) — using pure-Python renderer.",
+            exc,
+        )
+        return render_markdown(result)
 
 
 def render_markdown(result: RAIAResult) -> str:
@@ -120,4 +185,4 @@ def write_markdown(result: RAIAResult, path: Path | str) -> Path:
     return out
 
 
-__all__ = ["render_markdown", "write_markdown"]
+__all__ = ["render_markdown", "render_markdown_template", "write_markdown"]
