@@ -28,7 +28,7 @@ import {
   DocumentsIcon,
   AnomaliesIcon,
   OrchestratorIcon,
-  StrategyMarkIcon,
+  OctopusMarkIcon,
   CheckCircleIcon,
 } from '@/components/base/Icons';
 import { useAnalysisStore } from '@/lib/stores/analysis';
@@ -57,12 +57,7 @@ export default function Home() {
         {/* 1 · Hero                                                         */}
         {/* =============================================================== */}
         <section
-          className="
-            relative overflow-hidden rounded-md text-white odia-targets
-            bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800
-            ring-1 ring-amber-500/30
-            shadow-[0_0_24px_-6px_rgba(245,158,11,0.35),0_1px_0_rgba(255,255,255,0.04)_inset]
-          "
+          className="relative overflow-hidden text-white hud-panel hud-panel-accent hud-brackets hud-scanlines"
         >
           {/* Decorative grid pattern */}
           <div
@@ -80,9 +75,9 @@ export default function Home() {
             aria-hidden="true"
           />
           <div className="relative p-8 md:p-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-500/10 text-amber-300 text-xs font-medium ring-1 ring-amber-500/40 mb-4 shadow-[0_0_8px_-2px_rgba(245,158,11,0.5)]">
-              <StrategyMarkIcon size={12} />
-              Oraculus Decimus Intellect Analyst · v2.6.0
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-300 text-[11px] font-medium ring-1 ring-amber-500/50 mb-4 uppercase tracking-[0.2em]">
+              <OctopusMarkIcon size={12} />
+              O.D.I.A. · v2.7.0
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
               Civic accountability,
@@ -197,7 +192,7 @@ export default function Home() {
               body="11 ACLU mandate checks mapped to detector findings with automated scorecard generation for oversight review."
             />
             <Feature
-              icon={<StrategyMarkIcon size={18} />}
+              icon={<OctopusMarkIcon size={18} />}
               title="Full Provenance Tracking"
               body="SHA-256 hashing, contract lineage reconstruction, and cryptographic chain-of-custody for every analysed document."
             />

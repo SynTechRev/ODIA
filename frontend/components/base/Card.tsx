@@ -22,16 +22,16 @@ export interface CardProps {
   dense?: boolean;
 }
 
-// v2.6 — `bordered` and `elevated` pick up the futuristic panel chrome
-// (hairline amber border + ambient glow on hover) via the `.odia-panel`
-// utility defined in globals.css. The base slate border is kept as a
-// fallback so anything rendering without the stylesheet loaded still
-// looks intentional.
+// v2.7 — HUD chrome. All variants render as JARVIS-style tactical panels:
+// chamfered corners, hairline amber edge, subtle inner shadow for depth.
+// `default` is bare (no panel chrome) for containers that stack inside
+// another hud-panel. The body background is slate-950 in the dark-only
+// theme, so text is inherited from :root --foreground.
 const variantClasses: Record<NonNullable<CardProps['variant']>, string> = {
-  default:  'bg-white',
-  bordered: 'bg-white border border-slate-200 odia-panel',
-  elevated: 'bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-900/5 odia-panel',
-  muted:    'bg-slate-50 border border-slate-200',
+  default:  '',
+  bordered: 'hud-panel',
+  elevated: 'hud-panel hud-brackets',
+  muted:    'hud-panel hud-panel-dense',
 };
 
 export function Card({
@@ -48,7 +48,7 @@ export function Card({
   return (
     <article
       className={`
-        rounded-md ${dense ? 'p-4' : 'p-6'}
+        ${dense ? 'p-4' : 'p-6'}
         ${variantClasses[variant]}
         ${className}
       `}
@@ -57,18 +57,18 @@ export function Card({
         <div className="flex items-start justify-between mb-4 gap-3">
           <div className="flex items-start gap-3 min-w-0">
             {icon && (
-              <div className="flex-shrink-0 w-9 h-9 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center mt-0.5">
+              <div className="flex-shrink-0 w-9 h-9 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/40 flex items-center justify-center mt-0.5">
                 {icon}
               </div>
             )}
             <div className="min-w-0">
               {title && (
-                <h3 className="text-base font-semibold text-slate-900 leading-snug truncate">
+                <h3 className="text-sm font-semibold text-slate-100 leading-snug truncate uppercase tracking-wider">
                   {title}
                 </h3>
               )}
               {subtitle && (
-                <p className="text-xs text-slate-500 mt-0.5 truncate">
+                <p className="text-[11px] text-slate-500 mt-0.5 truncate hud-label">
                   {subtitle}
                 </p>
               )}

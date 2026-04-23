@@ -22,7 +22,7 @@ import {
   SynthesisIcon,
   OrchestratorIcon,
   SettingsIcon,
-  OdiaMarkIcon,
+  OctopusMarkIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   type IconProps,
@@ -148,17 +148,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Desktop sidebar                                                     */}
       {/* ================================================================== */}
       <aside
-        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-slate-950 text-slate-100 border-r border-slate-800 z-40 odia-rail-right"
+        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-slate-950 text-slate-100 z-40 hud-rail-right hud-scanlines"
         aria-label="Primary navigation"
       >
         {/* Brand */}
-        <div className="flex items-center gap-3 h-16 px-5 bg-slate-900 border-b border-slate-800 flex-shrink-0 odia-rail-bottom">
-          <div className="flex items-center justify-center w-9 h-9 rounded-sm bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/50 flex-shrink-0 shadow-[0_0_12px_-2px_rgba(245,158,11,0.4)]">
-            <OdiaMarkIcon size={20} />
+        <div className="flex items-center gap-3 h-16 px-5 bg-[#030712] flex-shrink-0 hud-rail-bottom">
+          <div className="flex items-center justify-center w-9 h-9 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/60 flex-shrink-0 shadow-[inset_0_0_8px_rgba(245,158,11,0.15)]">
+            <OctopusMarkIcon size={20} />
           </div>
           <div className="leading-tight min-w-0">
-            <div className="text-sm font-bold tracking-wide text-white">O.D.I.A.</div>
-            <div className="text-[10px] uppercase tracking-wide text-slate-400 truncate">
+            <div className="text-sm font-bold tracking-[0.2em] text-amber-400">O.D.I.A.</div>
+            <div className="text-[9px] uppercase tracking-[0.25em] text-slate-500 truncate mt-0.5">
               Forensic Audit Platform
             </div>
           </div>
@@ -231,8 +231,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 {backendState === 'checking'     && 'Connecting…'}
               </span>
             </div>
-            <span className="text-[10px] text-slate-500 group-hover:text-slate-300">
-              v2.6.0
+            <span className="text-[10px] text-slate-500 group-hover:text-amber-400 hud-num">
+              v2.7.0
             </span>
           </button>
         </div>
@@ -243,7 +243,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* ================================================================== */}
       <main className={`md:pl-64 ${offline ? 'pt-10' : ''}`}>
         {/* Desktop top bar */}
-        <header className="hidden md:flex sticky top-0 z-30 h-14 bg-slate-900 border-b border-slate-700/60 items-center justify-between px-6 shadow-[0_1px_0_rgba(255,255,255,0.04),0_4px_16px_rgba(0,0,0,0.24)] odia-rail-bottom">
+        <header className="hidden md:flex sticky top-0 z-30 h-14 bg-[#030712] items-center justify-between px-6 hud-rail-bottom hud-scanlines">
           <div className="flex items-center gap-2.5">
             {/* Back / forward — only shown in Electron where hard-nav builds real history */}
             {isFileProtocol() && (
@@ -267,15 +267,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             )}
             {current?.Icon && (
-              <span className="flex items-center justify-center w-7 h-7 rounded bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20 flex-shrink-0">
+              <span className="flex items-center justify-center w-7 h-7 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/40 flex-shrink-0">
                 <current.Icon size={15} />
               </span>
             )}
             <div className="flex flex-col leading-none">
-              <h2 className="text-sm font-semibold text-white tracking-wide">
+              <h2 className="text-sm font-semibold text-slate-100 tracking-[0.15em] uppercase">
                 {currentName}
               </h2>
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">
+              <span className="text-[9px] text-slate-500 uppercase tracking-[0.25em] mt-1">
                 Forensic Audit Platform
               </span>
             </div>
@@ -311,12 +311,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Mobile top bar */}
-        <header className="md:hidden sticky top-0 z-30 bg-slate-950 text-white border-b border-slate-800">
+        <header className="md:hidden sticky top-0 z-30 bg-[#030712] text-white hud-rail-bottom">
           <div className="px-4 py-3 flex items-center gap-2">
-            <div className="flex items-center justify-center w-7 h-7 rounded bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/30">
-              <OdiaMarkIcon size={16} />
+            <div className="flex items-center justify-center w-7 h-7 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/50">
+              <OctopusMarkIcon size={16} />
             </div>
-            <h2 className="text-base font-semibold">{currentName}</h2>
+            <h2 className="text-base font-semibold tracking-wider uppercase">{currentName}</h2>
           </div>
         </header>
 

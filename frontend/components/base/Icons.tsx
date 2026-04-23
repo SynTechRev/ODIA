@@ -228,44 +228,54 @@ export const MapPinIcon: React.FC<IconProps> = (p) => (
 );
 
 // ---------------------------------------------------------------------------
-// O.D.I.A. logo mark — chess knight silhouette layered over a radar sweep.
+// O.D.I.A. logo mark — Oraculus Octopus with headphones (outline).
 //
-// The mark has to read at three scales without redesign:
-//   - 16px (sidebar footer pill, window title bar on Electron)
-//   - 20px (sidebar heading, big Card accents)
+// The mark must read at three scales without redesign:
+//   - 16px  (sidebar footer pill, window title bar)
+//   - 20px  (sidebar header, Card accents)
 //   - 32px+ (About dialog, loading splash)
 //
-// Construction:
-//   - Three concentric radar rings (4/8/11 radius) at reduced opacity so
-//     they fall back into the background and the knight stays foreground.
-//   - A short sweep beam from center to NE quadrant, representing an
-//     active radar pulse.
-//   - Knight silhouette simplified to a single stroked path — legible at
-//     16px. Tracing a traditional profile: base, chest, chin, mane, nose,
-//     crown, back-of-head, back, tail.
+// Brand-matched to the SynTechRev octopus used as the desktop app icon
+// (the circular purple emblem in desktop/resources/icon.png). Drawn as
+// a pure stroked outline so the sidebar's `currentColor` can tint it
+// amber at any size without rasterizing. Construction:
+//
+//   - Headphone band — arc above the head
+//   - Two ear cups — circles at head-temples
+//   - Dome/mantle — rounded bulb enclosing face
+//   - Eyes — two small filled dots on the face
+//   - Four tentacles — symmetric pairs flowing to bottom of viewBox
 // ---------------------------------------------------------------------------
 
-export const StrategyMarkIcon: React.FC<IconProps> = (p) => (
+export const OctopusMarkIcon: React.FC<IconProps> = (p) => (
   <IconBase {...p}>
-    {/* Radar rings — pushed behind via low opacity */}
-    <circle cx="12" cy="12" r="11" opacity="0.28" />
-    <circle cx="12" cy="12" r="8" opacity="0.22" />
-    <circle cx="12" cy="12" r="4" opacity="0.18" />
-    {/* Radar sweep beam, center to upper-right */}
-    <path d="M12 12 L20 6" opacity="0.55" />
-    {/* Chess knight silhouette */}
-    <path
-      d="M8.5 19 L15.5 19 L15.5 17.2 C15.5 15 17 13.6 17 11 C17 9 16 6.6 13.4 5 L13.9 3 L11.8 3.9 L10 3.4 L10.3 5.4 C9 6.3 8 7.6 7.2 9.2 L6 9.8 L7 11 L7.6 10.6 C7.5 11 7.4 11.4 7.4 11.8 L7.4 13 L8.5 14 L8.5 19 Z"
-      fill="currentColor"
-      strokeLinejoin="round"
-    />
-    {/* Knight's eye dot (filled for contrast at small sizes) */}
-    <circle cx="11.2" cy="8.2" r="0.5" fill="currentColor" stroke="none" />
+    {/* Headphones band, arcing over the head */}
+    <path d="M5.5 11 C 5.5 5.5, 18.5 5.5, 18.5 11" />
+    {/* Left ear cup */}
+    <circle cx="5.3" cy="11.2" r="1.5" />
+    {/* Right ear cup */}
+    <circle cx="18.7" cy="11.2" r="1.5" />
+    {/* Octopus head / mantle dome */}
+    <path d="M7 13 C 7 8, 17 8, 17 13 L 17 14.2 L 7 14.2 Z" />
+    {/* Eyes — filled dots for contrast at 16px */}
+    <circle cx="10.2" cy="11.6" r="0.65" fill="currentColor" stroke="none" />
+    <circle cx="13.8" cy="11.6" r="0.65" fill="currentColor" stroke="none" />
+    {/* Tentacles — 4 flowing curves, symmetric pair from head base */}
+    <path d="M8.2 14.2 C 7 16, 6.2 18, 7.8 20" />
+    <path d="M10.7 14.2 C 10.4 17, 9.6 19.5, 11 21.6" />
+    <path d="M13.3 14.2 C 13.6 17, 14.4 19.5, 13 21.6" />
+    <path d="M15.8 14.2 C 17 16, 17.8 18, 16.2 20" />
   </IconBase>
 );
 
 /**
- * @deprecated shield-era name retained as an alias so existing imports keep
- * compiling. New code should import `StrategyMarkIcon`.
+ * @deprecated v2.6 name retained as an alias so existing imports keep
+ * compiling. New code should import `OctopusMarkIcon`.
  */
-export const OdiaMarkIcon = StrategyMarkIcon;
+export const StrategyMarkIcon = OctopusMarkIcon;
+
+/**
+ * @deprecated shield-era name retained as an alias so existing imports keep
+ * compiling. New code should import `OctopusMarkIcon`.
+ */
+export const OdiaMarkIcon = OctopusMarkIcon;

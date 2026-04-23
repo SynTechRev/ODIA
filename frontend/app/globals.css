@@ -1,61 +1,74 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   O.D.I.A. design tokens
+   O.D.I.A. v2.7 — HUD design system
    --------------------------------------------------------------------------
-   The app is a forensic accountability tool — it should feel like a
-   professional investigative workstation, not a generic SaaS dashboard.
-   Palette:
+   Forensic accountability workstation styled as a JARVIS / Wayne-Enterprise
+   tactical display. Force dark mode app-wide; the professional aesthetic
+   depends on deep slate-950 chrome + hairline amber edges + cyan data
+   accents. No light-mode variant — if light theming ever ships, it will
+   be a separately-opted theme, not an automatic prefers-color-scheme swap.
 
-     • slate-950 → slate-700   — chrome (sidebar, header, code)
-     • amber-500 / amber-600   — brand accent + primary actions
-     • red-500  → red-700      — critical / high severity findings
-     • orange-500              — medium severity
-     • yellow-500              — low severity
-     • emerald-500             — healthy / connected
+   Palette:
+     • slate-950 / 900 / 800      — chrome (background, panels, rails)
+     • amber-500 (#f59e0b)         — primary accent + chrome edge hairline
+     • cyan-400  (#22d3ee)         — secondary accent for numeric readouts
+     • slate-200 / 300             — body text
+     • slate-400 / 500             — labels, muted chrome
+     • red-500 / orange-500 / yellow-500 / blue-500 — severity scale
    ========================================================================== */
 
 :root {
-  /* Base surface */
-  --background: #ffffff;
-  --foreground: #0f172a;          /* slate-900 */
-  --surface: #ffffff;
-  --surface-muted: #f8fafc;       /* slate-50 */
-  --border: #e2e8f0;              /* slate-200 */
-  --border-strong: #cbd5e1;       /* slate-300 */
+  /* Base surface — dark HUD default */
+  --background: #020617;          /* slate-950 */
+  --foreground: #e2e8f0;          /* slate-200 */
+  --surface: #0a1222;             /* between slate-950 and 900 */
+  --surface-elevated: #0f172a;    /* slate-900 */
+  --surface-muted: #1e293b;       /* slate-800 */
+  --border: #334155;              /* slate-700 */
+  --border-strong: #475569;       /* slate-600 */
 
-  /* Brand + accents */
-  --accent: #d97706;              /* amber-600 */
-  --accent-hover: #b45309;        /* amber-700 */
-  --accent-foreground: #ffffff;
+  /* Chrome */
+  --chrome: #030712;              /* almost-black for sidebar/header */
+  --chrome-elevated: #0f172a;     /* slate-900 */
+  --chrome-foreground: #f8fafc;
+  --chrome-muted: #64748b;        /* slate-500 */
 
-  /* Chrome (sidebar, headers) */
-  --chrome: #0f172a;              /* slate-900 */
-  --chrome-elevated: #1e293b;     /* slate-800 */
-  --chrome-foreground: #f1f5f9;   /* slate-100 */
-  --chrome-muted: #94a3b8;        /* slate-400 */
+  /* HUD accents */
+  --hud-primary: #f59e0b;         /* amber-500 — brand hairline + heads */
+  --hud-primary-bright: #fbbf24;  /* amber-400 — focus/hover intensify */
+  --hud-secondary: #22d3ee;       /* cyan-400 — numeric readouts */
+  --hud-secondary-dim: #0891b2;   /* cyan-600 — muted data */
 
-  /* Severity scale — use consistently for findings, alerts, badges */
-  --severity-critical: #b91c1c;   /* red-700 */
-  --severity-high: #dc2626;       /* red-600 */
-  --severity-medium: #ea580c;     /* orange-600 */
-  --severity-low: #ca8a04;        /* yellow-600 */
-  --severity-info: #2563eb;       /* blue-600 */
+  /* Severity scale */
+  --severity-critical: #ef4444;   /* red-500 */
+  --severity-high: #f97316;       /* orange-500 */
+  --severity-medium: #eab308;     /* yellow-500 */
+  --severity-low: #3b82f6;        /* blue-500 */
+  --severity-info: #06b6d4;       /* cyan-500 */
 
   /* Status */
-  --status-healthy: #059669;      /* emerald-600 */
-  --status-warn: #d97706;         /* amber-600 */
-  --status-error: #dc2626;        /* red-600 */
+  --status-healthy: #10b981;      /* emerald-500 */
+  --status-warn: #f59e0b;
+  --status-error: #ef4444;
+
+  /* HUD geometry tokens */
+  --hud-edge: rgba(245, 158, 11, 0.35);      /* amber edge hairline */
+  --hud-edge-strong: rgba(245, 158, 11, 0.7);
+  --hud-edge-muted: rgba(148, 163, 184, 0.2); /* slate fallback */
+  --hud-chamfer: 10px;             /* clip-path corner cut size */
 }
 
+/* Tailwind theme mapping — lets the rest of the codebase keep using
+   its existing color utility names. */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
   --color-border: var(--border);
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
+  --color-accent: var(--hud-primary);
+  --color-accent-hover: var(--hud-primary-bright);
   --color-chrome: var(--chrome);
   --color-chrome-elevated: var(--chrome-elevated);
 
@@ -63,22 +76,6 @@
     Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #020617;        /* slate-950 */
-    --foreground: #e2e8f0;        /* slate-200 */
-    --surface: #0f172a;           /* slate-900 */
-    --surface-muted: #1e293b;     /* slate-800 */
-    --border: #334155;            /* slate-700 */
-    --border-strong: #475569;     /* slate-600 */
-
-    --chrome: #000000;
-    --chrome-elevated: #0f172a;
-    --chrome-foreground: #f8fafc;
-    --chrome-muted: #64748b;
-  }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -97,6 +94,12 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Subtle grid pattern — ~2% opacity — only hints at underlying
+     chrome without becoming a distraction on content pages. */
+  background-image:
+    linear-gradient(rgba(245, 158, 11, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 code,
@@ -105,14 +108,14 @@ pre {
   font-family: var(--font-mono);
 }
 
-/* Focus ring — consistent across all interactive elements */
+/* Focus ring — sharp amber rather than rounded. Matches HUD edge language. */
 *:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 1.5px solid var(--hud-primary-bright);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
-/* Scrollbar — subtle, matches chrome */
+/* Scrollbar — slim slate with amber thumb on hover */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -121,19 +124,19 @@ pre {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 0;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(245, 158, 11, 0.6);
   background-clip: padding-box;
   border: 2px solid transparent;
 }
 
 /* ---------------------------------------------------------------------- */
-/* Utility keyframes used by components                                   */
+/* Keyframes                                                               */
 /* ---------------------------------------------------------------------- */
 
 @keyframes odia-pulse {
@@ -146,115 +149,205 @@ pre {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes odia-radar-sweep {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+@keyframes hud-bracket-pulse {
+  0%, 100% { opacity: 0.8; }
+  50%      { opacity: 0.4; }
 }
 
-.animate-odia-pulse  { animation: odia-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-.animate-odia-fade   { animation: odia-fade-in 180ms ease-out both; }
-.animate-odia-radar  { animation: odia-radar-sweep 6s linear infinite; }
+.animate-odia-pulse { animation: odia-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.animate-odia-fade  { animation: odia-fade-in 180ms ease-out both; }
 
 /* ---------------------------------------------------------------------- */
-/* v2.6 futuristic pass — panel outlining + accent glow                   */
+/* HUD panel system — JARVIS/Wayne-Enterprise tactical chrome              */
 /* ------------------------------------------------------------------------
-   Opinionated utilities that let individual components opt into the
-   stronger "strategic intelligence workstation" look without refactoring
-   their markup. Use sparingly — every element that glows weakens every
-   other glow. Intended targets: Card chrome, sidebar + header rails,
-   severity summary tiles, primary export/upload CTAs.
+   `.hud-panel`       — base panel with chamfered corners + dark surface
+                        + thin amber edge + subtle inner depth shadow
+   `.hud-panel-dense` — tighter chamfer for small tiles
+   `.hud-panel-accent`— emphasised with brighter amber edge (hero, CTAs)
+   `.hud-brackets`    — L-shaped corner brackets (JARVIS viewport marks)
+   `.hud-rail-right`  — sidebar right-edge HUD hairline
+   `.hud-rail-bottom` — header bottom-edge HUD hairline
+   `.hud-scanlines`   — very subtle horizontal scanlines overlay
+   `.hud-num`         — mono tabular numerics for readouts
+   `.hud-label`       — uppercase tracking-widest tiny label
    ---------------------------------------------------------------------- */
 
-:root {
-  /* Outlined-panel borders — crisp 1.5px hairlines. Light + dark variants
-     so the same utility class works on both themes without mode guards. */
-  --odia-outline: rgba(217, 119, 6, 0.55);      /* amber-600, 55% */
-  --odia-outline-strong: rgba(245, 158, 11, 0.9); /* amber-500, 90% */
-  --odia-outline-muted: rgba(148, 163, 184, 0.30); /* slate-400, 30% */
-
-  /* Ambient glow layered under outlined panels. Low alpha so stacking
-     doesn't turn the UI into a Christmas tree. */
-  --odia-glow-amber: 0 0 0 1px rgba(217, 119, 6, 0.35),
-                     0 0 12px -2px rgba(245, 158, 11, 0.25);
-  --odia-glow-purple: 0 0 0 1px rgba(139, 92, 246, 0.35),
-                      0 0 12px -2px rgba(168, 85, 247, 0.25);
-  --odia-glow-chrome: 0 0 0 1px rgba(100, 116, 139, 0.35),
-                      0 1px 0 0 rgba(148, 163, 184, 0.08) inset;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --odia-outline: rgba(245, 158, 11, 0.65);      /* amber-500 stronger on dark */
-    --odia-outline-muted: rgba(100, 116, 139, 0.35);
-  }
-}
-
-/* Page-level outlined panel: use on full-width page containers so every
-   route gets the same strategic-intel border framing. */
-.odia-page-frame {
+.hud-panel {
   position: relative;
-  border: 1px solid var(--odia-outline-muted);
-  border-radius: 0.25rem;    /* sharp — half of rounded-md */
-  box-shadow: var(--odia-glow-chrome);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.96));
+  border: 1px solid var(--hud-edge);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 158, 11, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  /* Chamfered corners — top-left + bottom-right get cut, leaves top-right
+     and bottom-left pointed for directional tension. Feels designed. */
+  clip-path: polygon(
+    var(--hud-chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--hud-chamfer)),
+    calc(100% - var(--hud-chamfer)) 100%,
+    0 100%,
+    0 var(--hud-chamfer)
+  );
+  color: var(--foreground);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
-/* Card / tile panel — the main workhorse. Opt-in so the existing
-   components.Card stays source-compatible; adding this class upgrades
-   its chrome without changing internals. */
-.odia-panel {
-  border: 1px solid var(--odia-outline-muted);
-  border-radius: 0.25rem;
-  box-shadow: var(--odia-glow-chrome);
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-}
-.odia-panel:hover {
-  border-color: var(--odia-outline);
-  box-shadow: var(--odia-glow-amber);
+.hud-panel:hover {
+  border-color: var(--hud-edge-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 158, 11, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(245, 158, 11, 0.15),
+    0 8px 24px -12px rgba(0, 0, 0, 0.7);
 }
 
-/* Primary accent panel — used for hero CTAs, severity summary, active
-   audit banner. Stronger amber ring and a subtle outer aura. */
-.odia-panel-accent {
-  border: 1.5px solid var(--odia-outline);
-  border-radius: 0.25rem;
-  box-shadow: var(--odia-glow-amber);
+.hud-panel-dense {
+  --hud-chamfer: 6px;
 }
 
-/* Sidebar / header chrome rails — hairline amber accent at the edge that
-   faces the main content (right edge of sidebar, bottom edge of header). */
-.odia-rail-right {
-  border-right: 1px solid rgba(245, 158, 11, 0.20);
-  box-shadow: 1px 0 0 0 rgba(245, 158, 11, 0.08);
-}
-.odia-rail-bottom {
-  border-bottom: 1px solid rgba(245, 158, 11, 0.20);
-  box-shadow: 0 1px 0 0 rgba(245, 158, 11, 0.08);
+.hud-panel-accent {
+  border: 1px solid var(--hud-edge-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 158, 11, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(245, 158, 11, 0.12),
+    0 12px 32px -14px rgba(0, 0, 0, 0.7);
 }
 
-/* Corner tick-marks — four small L-shaped corners drawn via the container
-   pseudo-elements. Adds the "targeting viewport" feel without full
-   borders; pair with .odia-panel for extra flair on hero areas only. */
-.odia-targets {
+/* Corner brackets — L-shapes at the TL + BR corners. Pair with
+   .hud-panel so the clip-path chamfer and the bracket corners align. */
+.hud-brackets {
   position: relative;
 }
-.odia-targets::before,
-.odia-targets::after {
+.hud-brackets::before,
+.hud-brackets::after {
   content: "";
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--odia-outline);
+  width: 16px;
+  height: 16px;
+  border-color: var(--hud-edge-strong);
+  border-style: solid;
   pointer-events: none;
+  animation: hud-bracket-pulse 3.5s ease-in-out infinite;
 }
-.odia-targets::before {
-  top: -1px;
-  left: -1px;
-  border-right: none;
-  border-bottom: none;
+.hud-brackets::before {
+  top: 0;
+  left: 0;
+  border-width: 1.5px 0 0 1.5px;
 }
-.odia-targets::after {
-  bottom: -1px;
-  right: -1px;
-  border-left: none;
-  border-top: none;
+.hud-brackets::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1.5px 1.5px 0;
+  animation-delay: 1.75s;
+}
+
+/* Chrome rails — sidebar + header edges that face the content area */
+.hud-rail-right {
+  box-shadow:
+    inset -1px 0 0 var(--hud-edge),
+    1px 0 12px -4px rgba(245, 158, 11, 0.15);
+}
+.hud-rail-bottom {
+  box-shadow:
+    inset 0 -1px 0 var(--hud-edge),
+    0 1px 12px -4px rgba(245, 158, 11, 0.15);
+}
+
+/* Scanlines — apply to chrome areas (headers, sidebar) for tactical feel */
+.hud-scanlines {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(245, 158, 11, 0.02) 2px,
+      rgba(245, 158, 11, 0.02) 3px
+    );
+}
+
+/* Numeric readout — mono + tabular + slight letter-spacing */
+.hud-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Uppercase HUD label */
+.hud-label {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--chrome-muted);
+}
+
+/* Cyan data text — for numeric stats, severity counts, etc. */
+.hud-cyan {
+  color: var(--hud-secondary);
+}
+
+/* Amber accent text — for primary headings, callouts */
+.hud-amber {
+  color: var(--hud-primary);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Dark-theme readability overrides                                        */
+/* ------------------------------------------------------------------------
+   The v2.6 Cards assumed a light-background page; now that the body is
+   slate-950 we need to force readable contrast on any component using
+   `bg-white text-slate-900` style Tailwind utilities. These selectors
+   are intentionally loud — they trump component-level Tailwind classes
+   that would otherwise paint white-on-amber-on-slate-950 unreadable.
+   ---------------------------------------------------------------------- */
+
+/* Cards and card-like surfaces that were bg-white in light mode */
+.bg-white,
+.bg-slate-50 {
+  background-color: var(--surface) !important;
+  color: var(--foreground);
+}
+
+/* Dense grey card backgrounds become deeper dark */
+.bg-slate-100 {
+  background-color: var(--surface-muted) !important;
+  color: var(--foreground);
+}
+
+/* Body text / placeholder colors that assumed light backgrounds */
+.text-gray-900,
+.text-slate-900 {
+  color: var(--foreground) !important;
+}
+.text-gray-700,
+.text-slate-700 {
+  color: #cbd5e1 !important;  /* slate-300 */
+}
+.text-gray-600,
+.text-slate-600,
+.text-gray-500,
+.text-slate-500 {
+  color: #94a3b8 !important;  /* slate-400 */
+}
+.text-gray-400,
+.text-slate-400 {
+  color: #64748b !important;  /* slate-500 */
+}
+
+/* Borders defaulting to slate-200 become darker slate-700 */
+.border-slate-200,
+.border-gray-200,
+.border-slate-100,
+.border-gray-100 {
+  border-color: #334155 !important;  /* slate-700 */
+}
+
+/* Hover states on white cards */
+.hover\:bg-gray-50:hover,
+.hover\:bg-slate-50:hover {
+  background-color: rgba(245, 158, 11, 0.04) !important;
 }
