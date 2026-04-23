@@ -260,6 +260,18 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
     except Exception as e:
         logger.warning(f"Workspace routes not available: {e}")
 
+    try:
+        from .routes.webhook import register_webhook_routes
+
+        # register_webhook_routes self-guards on ODIA_WEBHOOK_TOKEN — if
+        # the env var is unset it logs an error and refuses to register
+        # the /api/v1/webhook/* surface. Failing loud on missing token
+        # beats silently exposing an unauthenticated n8n pipeline.
+        register_webhook_routes(app)
+        logger.info("n8n webhook routes registration attempted")
+    except Exception as e:
+        logger.warning(f"Webhook routes not available: {e}")
+
 
 def _load_jurisdiction_config_at_startup() -> Any:
     """Attempt to load jurisdiction config from config/; return None on failure."""
