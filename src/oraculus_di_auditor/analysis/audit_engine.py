@@ -35,6 +35,7 @@ from .cross_reference import detect_cross_jurisdiction_refs
 from .fiscal import detect_fiscal_anomalies
 from .governance_gap import detect_governance_gap_anomalies
 from .grant_compliance import detect_grant_compliance_anomalies
+from .ingestion_integrity import detect_ingestion_integrity_anomalies
 from .procurement_timeline import detect_procurement_timeline_anomalies
 from .scalar_core import compute_recursive_scalar_score
 from .scope_expansion import detect_scope_expansion_anomalies
@@ -53,6 +54,12 @@ def analyze_document(doc: dict[str, Any]) -> dict[str, Any]:
         Aggregate result with anomaly count, recursive scalar score, and items.
     """
     anomalies: list[dict[str, Any]] = []
+
+    # Ingestion-integrity runs first — a fail-loud HIGH-severity finding
+    # when a large PDF came out of extraction with near-empty text, so
+    # the audit report surfaces the gap rather than silently
+    # understating the real finding count.
+    anomalies.extend(detect_ingestion_integrity_anomalies(doc))
 
     # Detectors should be side-effect-free and tolerant to missing fields.
     anomalies.extend(detect_fiscal_anomalies(doc))

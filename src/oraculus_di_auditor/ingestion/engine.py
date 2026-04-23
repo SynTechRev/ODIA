@@ -53,7 +53,13 @@ except ImportError:
 # and the OCR fallback is attempted. Scanned PDFs typically return a few
 # stray characters from image metadata; 100 non-whitespace chars is the
 # point where a real text layer is almost certainly present.
-_OCR_MIN_TEXT_LENGTH = 100
+# v2.7.3 D3: raised from 100 → 500 to match
+# ``analysis.ingestion_integrity._MIN_EXTRACTED_CHARS``. A Flock-size
+# PDF (1 MB) that comes out of pypdf with <500 chars of text-layer
+# content is near-certainly scanned or malformed; trigger OCR rather
+# than letting the downstream detectors starve.
+_OCR_MIN_TEXT_LENGTH = 500
+_LARGE_FILE_BYTES = 100 * 1024  # threshold for logging fail-loud warnings
 
 
 class HTMLTextExtractor(HTMLParser):  # type: ignore
@@ -126,11 +132,28 @@ def extract_text_from_pdf(file_path: str | Path) -> str:
         try:
             ocr_text = _ocr_pdf_fallback(file_path)
             if len(ocr_text.strip()) > len(text.strip()):
-                return ocr_text
+                text = ocr_text
         except ImportError as exc:
             logger.info("OCR fallback unavailable for %s: %s", file_path, exc)
         except Exception as exc:  # noqa: BLE001 - never propagate OCR errors
             logger.warning("OCR fallback failed for %s: %s", file_path, exc)
+
+    # Fail-loud: a large PDF that's still under threshold after OCR is
+    # almost certainly an extraction bug. Emit a WARNING so operators
+    # see it in the log; the downstream ``ingestion_integrity``
+    # detector will convert this into an audit finding.
+    try:
+        size = file_path.stat().st_size
+    except OSError:
+        size = 0
+    if size >= _LARGE_FILE_BYTES and len(text.strip()) < _OCR_MIN_TEXT_LENGTH:
+        logger.warning(
+            "PDF extraction produced only %d chars from %d-byte file %s — "
+            "downstream detectors will flag this via ingestion:extraction-failure",
+            len(text.strip()),
+            size,
+            file_path,
+        )
 
     return text
 
