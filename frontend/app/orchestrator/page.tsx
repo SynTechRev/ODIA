@@ -100,11 +100,19 @@ const POLL_STATUS_MS = 10000;
 // Page
 // ---------------------------------------------------------------------------
 
+// v2.7.3 V4: tri-state for the executions panel. The pre-V4 version
+// conflated "initial page load, fetch hasn't completed" with "fetch
+// failed / endpoint unreachable" by using a single boolean. Users saw
+// "Backend /executions endpoint unreachable" for the first 8s of
+// every page load even on a healthy backend.
+type ExecutionsState = 'loading' | 'available' | 'unavailable';
+
 export default function OrchestratorPage() {
   const [graph, setGraph] = useState<TaskGraph>(FALLBACK_GRAPH);
   const [graphAvailable, setGraphAvailable] = useState(false);
   const [executions, setExecutions] = useState<ExecutionRow[]>([]);
-  const [executionsAvailable, setExecutionsAvailable] = useState(false);
+  const [executionsState, setExecutionsState] =
+    useState<ExecutionsState>('loading');
   const [status, setStatus] = useState<OrchestratorStatus>({
     agents_online: 6,
     tasks_queued: 0,
@@ -145,10 +153,10 @@ export default function OrchestratorPage() {
         const data = await res.json();
         if (!cancelled) {
           setExecutions(data?.items || []);
-          setExecutionsAvailable(!!data?.available);
+          setExecutionsState(data?.available ? 'available' : 'unavailable');
         }
       } catch {
-        if (!cancelled) setExecutionsAvailable(false);
+        if (!cancelled) setExecutionsState('unavailable');
       }
     };
     load();
@@ -255,18 +263,28 @@ export default function OrchestratorPage() {
             </div>
             <span
               className={`hud-sev ${
-                executionsAvailable ? 'hud-sev-healthy' : 'hud-sev-info'
+                executionsState === 'available'
+                  ? 'hud-sev-healthy'
+                  : executionsState === 'loading'
+                    ? 'hud-sev-info animate-odia-breath'
+                    : 'hud-sev-medium'
               }`}
             >
-              {executionsAvailable ? 'live' : 'unavailable'}
+              {executionsState === 'available'
+                ? 'live'
+                : executionsState === 'loading'
+                  ? 'checking'
+                  : 'unavailable'}
             </span>
           </div>
           {executions.length === 0 ? (
             <div className="hud-panel hud-panel-dense p-6 text-center">
               <p className="hud-subtext">
-                {executionsAvailable
+                {executionsState === 'available'
                   ? 'No mesh execution jobs yet.'
-                  : 'Backend /executions endpoint unreachable.'}
+                  : executionsState === 'loading'
+                    ? 'Checking /executions…'
+                    : 'Backend /executions endpoint unreachable.'}
               </p>
             </div>
           ) : (

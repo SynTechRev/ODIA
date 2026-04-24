@@ -290,22 +290,29 @@ export default function AutomationPage() {
               Every execution is recorded in the provenance chain.
             </p>
 
+            {/* v2.7.3 V5: the four hero tiles describe the *webhook
+                surface* — the n8n integration layer — not the core
+                Tier 1 detector pipeline (which always runs). When
+                ODIA_WEBHOOK_TOKEN isn't configured, /api/v1/webhook/
+                health 404s and these tiles report "Not configured"
+                (amber) rather than the alarming red "OFFLINE" that
+                previously suggested Tier 1 detectors were broken. */}
             <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
               <HealthTile
-                label="Tier 1"
-                ok={health.tier1_ready}
+                label="Tier 1 webhook"
+                state={webhookTileState(health, 'tier1')}
               />
               <HealthTile
-                label="Tier 2"
-                ok={health.tier2_ready}
+                label="Tier 2 webhook"
+                state={webhookTileState(health, 'tier2')}
               />
               <HealthTile
-                label="Webhook Token"
-                ok={health.webhook_token_configured}
+                label="Webhook token"
+                state={webhookTileState(health, 'token')}
               />
               <HealthTile
-                label="Active Workflows"
-                ok={activeCount > 0}
+                label="Active workflows"
+                state={activeCount > 0 ? 'ready' : 'not_configured'}
                 valueOverride={`${activeCount} / ${workflows.length}`}
               />
             </div>
@@ -436,20 +443,50 @@ export default function AutomationPage() {
 // Sub-components
 // ---------------------------------------------------------------------------
 
+type HealthTileState = 'ready' | 'offline' | 'not_configured';
+
+/**
+ * v2.7.3 V5 — tri-state tile. 'offline' (red) means the n8n webhook
+ * surface returned an error. 'not_configured' (amber) means it
+ * returned 404 because ODIA_WEBHOOK_TOKEN is unset — expected on a
+ * fresh install without n8n. 'ready' (cyan) is the happy path.
+ */
+function webhookTileState(
+  health: WebhookHealth,
+  which: 'tier1' | 'tier2' | 'token',
+): HealthTileState {
+  if (health.status === 'unavailable') return 'not_configured';
+  if (which === 'tier1') return health.tier1_ready ? 'ready' : 'offline';
+  if (which === 'tier2') return health.tier2_ready ? 'ready' : 'offline';
+  return health.webhook_token_configured ? 'ready' : 'not_configured';
+}
+
 function HealthTile({
   label,
-  ok,
+  state,
   valueOverride,
 }: {
   label: string;
-  ok: boolean;
+  state: HealthTileState;
   valueOverride?: string;
 }) {
+  const toneClass =
+    state === 'ready'
+      ? 'hud-cyan-bright'
+      : state === 'offline'
+        ? 'text-rose-400'
+        : 'text-amber-400';
+  const defaultText =
+    state === 'ready'
+      ? 'READY'
+      : state === 'offline'
+        ? 'OFFLINE'
+        : 'NOT CONFIGURED';
   return (
     <div className="hud-panel-inset px-4 py-3">
       <div className="hud-metric-label">{label}</div>
-      <div className={`hud-metric mt-1 ${ok ? 'hud-cyan-bright' : 'text-rose-400'}`}>
-        {valueOverride ?? (ok ? 'READY' : 'OFFLINE')}
+      <div className={`hud-metric mt-1 ${toneClass}`}>
+        {valueOverride ?? defaultText}
       </div>
     </div>
   );

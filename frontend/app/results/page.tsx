@@ -472,27 +472,39 @@ function ResultsPageInner() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Severity summary banner */}
+        {/* v2.7.3 V3: severity summary banner — HUD primitives match
+            the Dashboard's SeverityTile (D6). The pre-v2.7.3 version
+            rendered pale bg-red-50/orange-50/yellow-50/blue-50 on
+            slate-950 which was effectively invisible. */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {(
             [
-              { key: 'critical', label: 'Critical', color: 'text-red-600', bg: 'bg-red-50' },
-              { key: 'high', label: 'High', color: 'text-orange-600', bg: 'bg-orange-50' },
-              { key: 'medium', label: 'Medium', color: 'text-yellow-600', bg: 'bg-yellow-50' },
-              { key: 'low', label: 'Low', color: 'text-blue-600', bg: 'bg-blue-50' },
+              { key: 'critical', label: 'Critical', tone: 'text-rose-400', dot: 'bg-rose-500' },
+              { key: 'high', label: 'High', tone: 'text-orange-400', dot: 'bg-orange-500' },
+              { key: 'medium', label: 'Medium', tone: 'text-yellow-400', dot: 'bg-yellow-500' },
+              { key: 'low', label: 'Low', tone: 'text-blue-400', dot: 'bg-blue-500' },
             ] as const
-          ).map(({ key, label, color, bg }) => (
-            <button
-              key={key}
-              onClick={() => setFilterSeverity(filterSeverity === key ? 'all' : key)}
-              className={`rounded-lg p-4 text-center border-2 transition-colors ${
-                filterSeverity === key ? 'border-current' : 'border-transparent'
-              } ${bg}`}
-            >
-              <div className={`text-3xl font-bold ${color}`}>{sev[key]}</div>
-              <div className={`text-sm font-medium ${color}`}>{label}</div>
-            </button>
-          ))}
+          ).map(({ key, label, tone, dot }) => {
+            const active = filterSeverity === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setFilterSeverity(active ? 'all' : key)}
+                className={`
+                  hud-panel hud-panel-inset p-4 text-center transition-colors
+                  ${active ? 'ring-2 ring-current' : ''}
+                `}
+              >
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <span className={`w-2 h-2 rounded-full ${dot}`} />
+                  <span className="hud-metric-label">{label}</span>
+                </div>
+                <div className={`hud-metric tabular-nums ${tone}`}>
+                  {sev[key]}
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         {/* Meta + export */}
