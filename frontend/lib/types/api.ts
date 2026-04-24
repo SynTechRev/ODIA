@@ -28,6 +28,12 @@ export interface Anomaly {
 export interface HealthResponse {
   status: 'healthy' | 'unhealthy';
   version: string;
+  /**
+   * ODIA release version (e.g. ``"2.7.3"``) — added in v2.7.3 so the
+   * DashboardLayout sidebar pill reads the live value instead of a
+   * hardcoded literal. Optional because older backends don't emit it.
+   */
+  odia_version?: string;
 }
 
 // ---------------------------------------------------------------------------

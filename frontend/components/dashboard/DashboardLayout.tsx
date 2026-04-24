@@ -77,16 +77,32 @@ function isActive(href: string, pathname: string): boolean {
 
 type BackendState = 'checking' | 'connected' | 'disconnected';
 
-function useBackendStatus(): { state: BackendState; retry: () => void } {
+// v2.7.3 V2: fallback when /api/v1/health doesn't return odia_version
+// (older backends) or when the check hasn't completed yet. Updated on
+// every release.
+const ODIA_VERSION_FALLBACK = 'v2.7.3';
+
+function useBackendStatus(): {
+  state: BackendState;
+  version: string;
+  retry: () => void;
+} {
   const [state, setState] = useState<BackendState>('checking');
+  const [version, setVersion] = useState<string>(ODIA_VERSION_FALLBACK);
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     const check = async () => {
       try {
-        await getAPIClient().health();
-        if (!cancelled) setState('connected');
+        const health = await getAPIClient().health();
+        if (cancelled) return;
+        setState('connected');
+        if (health.odia_version) {
+          const raw = health.odia_version.trim();
+          // Preserve leading 'v' when present, otherwise prepend it.
+          setVersion(raw.startsWith('v') ? raw : `v${raw}`);
+        }
       } catch {
         if (!cancelled) setState('disconnected');
       }
@@ -99,14 +115,14 @@ function useBackendStatus(): { state: BackendState; retry: () => void } {
     };
   }, [tick]);
 
-  return { state, retry: () => setTick((t) => t + 1) };
+  return { state, version, retry: () => setTick((t) => t + 1) };
 }
 
 // ---------------------------------------------------------------------------
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
-  const { state: backendState, retry } = useBackendStatus();
+  const { state: backendState, version: backendVersion, retry } = useBackendStatus();
   const [offline, setOffline] = useState(false);
 
   // Service-worker OFFLINE broadcast (web/PWA only — no-op in Electron)
@@ -234,7 +250,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </span>
             </div>
             <span className="text-[10px] text-slate-500 group-hover:text-amber-400 hud-num">
-              v2.7.1
+              {backendVersion}
             </span>
           </button>
         </div>

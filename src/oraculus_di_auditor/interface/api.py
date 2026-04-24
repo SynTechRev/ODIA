@@ -27,6 +27,28 @@ from typing import Any
 API_VERSION = "1.0.0"
 logger = logging.getLogger(__name__)
 
+
+def _resolve_odia_version() -> str:
+    """Return the installed ODIA release version.
+
+    Reads the version declared in ``pyproject.toml`` via
+    ``importlib.metadata``; falls back to ``ODIA_VERSION`` env var
+    (set by installers) or to the compiled-in default. Used by
+    ``/api/v1/health`` so the frontend pill can render the live
+    version instead of a hardcoded literal.
+    """
+    try:
+        from importlib.metadata import PackageNotFoundError, version
+    except ImportError:
+        return os.environ.get("ODIA_VERSION", "2.7.3")
+    try:
+        return version("odia")
+    except PackageNotFoundError:
+        return os.environ.get("ODIA_VERSION", "2.7.3")
+
+
+ODIA_VERSION = _resolve_odia_version()
+
 # Try to import FastAPI dependencies
 try:
     from pydantic import BaseModel, Field
@@ -133,6 +155,16 @@ def create_app() -> Any:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # v2.7.3 V1 — bootstrap the DB schema before routes register.
+    # Without this, every code path that calls `get_db()` silently
+    # degrades to "DB not initialised" and returns empty results:
+    # SeenHash dedup (D2), Document/Analysis/Anomaly persistence
+    # (C5.1), RAIAService reads (C5), and the Orchestrator
+    # /executions endpoint (D4) all depend on this. init_db() is
+    # idempotent — ``Base.metadata.create_all`` skips tables that
+    # already exist, so it's safe on every subsequent boot too.
+    _init_database_at_startup()
 
     # Register routes
     _register_routes(app)
@@ -301,6 +333,38 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
         logger.warning(f"Automation routes not available: {e}")
 
 
+def _init_database_at_startup() -> None:
+    """Best-effort DB schema bootstrap at app start (v2.7.3 V1).
+
+    ``oraculus_di_auditor.db.session.init_db()`` creates every table
+    declared in ``db/models.py`` via
+    ``Base.metadata.create_all(bind=_engine)``. Idempotent — existing
+    tables are skipped — so it's safe on every boot including
+    subsequent installer launches. We catch failures rather than
+    letting them crash startup: the backend can still serve
+    non-DB-backed endpoints (``/analyze``, ``/detectors``,
+    ``/orchestrator/task-graph``) even if DB wiring is busted, so
+    failing open here preserves UX for the detector paths. Endpoints
+    that do need the DB handle their own ``get_db()`` exceptions.
+    """
+    try:
+        from oraculus_di_auditor.db.session import init_db
+    except ImportError:
+        logger.warning(
+            "DB layer not available (SQLAlchemy missing) — continuing without "
+            "Document/Analysis/Anomaly persistence."
+        )
+        return
+    try:
+        init_db()
+        logger.info("Database schema bootstrapped at startup (idempotent).")
+    except Exception as exc:  # noqa: BLE001 - never crash app startup
+        logger.warning(
+            "init_db() failed at startup — DB-backed endpoints will degrade: %s",
+            exc,
+        )
+
+
 def _load_jurisdiction_config_at_startup() -> Any:
     """Attempt to load jurisdiction config from config/; return None on failure."""
     try:
@@ -391,8 +455,18 @@ def _register_routes(app: Any) -> None:
 
     @app.get("/api/v1/health")
     async def health_check() -> dict[str, str]:
-        """Health check endpoint."""
-        return {"status": "healthy", "version": API_VERSION}
+        """Health check endpoint.
+
+        ``version`` stays set to the API schema version (1.0.0) for
+        back-compat with existing clients. v2.7.3 adds ``odia_version``
+        so the DashboardLayout sidebar pill can render the live release
+        tag without a hardcoded literal.
+        """
+        return {
+            "status": "healthy",
+            "version": API_VERSION,
+            "odia_version": ODIA_VERSION,
+        }
 
     @app.post("/analyze")
     async def analyze(request: AnalyzeRequest) -> dict[str, Any]:
