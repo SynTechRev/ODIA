@@ -484,11 +484,14 @@ class CPRARequest(Base):  # type: ignore
     )
 
     def __repr__(self) -> str:
+        deadline_iso = (
+            self.statutory_deadline.isoformat() if self.statutory_deadline else None
+        )
         return (
             f"<CPRARequest(id={self.id}, "
             f"jurisdiction_id='{self.jurisdiction_id}', "
             f"status='{self.status}', "
-            f"deadline={self.statutory_deadline.isoformat() if self.statutory_deadline else None})>"
+            f"deadline={deadline_iso})>"
         )
 
 

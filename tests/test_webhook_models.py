@@ -31,7 +31,7 @@ def session():
     """In-memory SQLite session seeded with the full ODIA schema."""
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(bind=engine)
-    SessionFactory = sessionmaker(bind=engine)
+    SessionFactory = sessionmaker(bind=engine)  # noqa: N806
     session = SessionFactory()
     try:
         yield session

@@ -33,7 +33,9 @@ def _write_jurisdiction(dir_path: Path, name: str, state: str = "CA") -> None:
                 "state": state,
                 "country": "US",
                 "meeting_type": "City Council Regular Meeting",
-                "legistar_base_url": f"https://{name.lower().replace(' ', '-')}.legistar.com",
+                "legistar_base_url": (
+                    f"https://{name.lower().replace(' ', '-')}.legistar.com"
+                ),
             }
         ),
         encoding="utf-8",

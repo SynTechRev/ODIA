@@ -178,9 +178,12 @@ class RAIAService:
         jurisdiction_id: str,
     ) -> JurisdictionSummary:
         """Query Document → Analysis → Anomaly for one jurisdiction."""
-        Document = db_models.Document
-        Analysis = db_models.Analysis
-        Anomaly = db_models.Anomaly
+        # PascalCase to mirror the SQLAlchemy class names they alias —
+        # keeps the query call sites readable (Document.document_id,
+        # Analysis.document_id, etc.).
+        Document = db_models.Document  # noqa: N806
+        Analysis = db_models.Analysis  # noqa: N806
+        Anomaly = db_models.Anomaly  # noqa: N806
 
         doc_ids = [
             row[0]
