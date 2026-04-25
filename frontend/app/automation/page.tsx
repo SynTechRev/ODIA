@@ -262,6 +262,23 @@ export default function AutomationPage() {
   const n8nHealth = useN8nHealth();
   const events = useExecutionLog();
   const [workflows] = useState<WorkflowSummary[]>(WORKFLOW_ROSTER);
+  // v2.7.4 W1 — last manual-trigger result, rendered inline above the panel.
+  const [triggerNotice, setTriggerNotice] = useState<TriggerNotification | null>(null);
+  const [triggerBusy, setTriggerBusy] = useState<string | null>(null);
+
+  const handleTrigger = async (
+    label: string,
+    fn: () => Promise<TriggerNotification>,
+  ) => {
+    setTriggerBusy(label);
+    setTriggerNotice(null);
+    try {
+      const note = await fn();
+      setTriggerNotice(note);
+    } finally {
+      setTriggerBusy(null);
+    }
+  };
 
   const activeCount = useMemo(
     () => workflows.filter((w) => w.active).length,
@@ -415,21 +432,33 @@ export default function AutomationPage() {
         {/* 4 · Manual triggers                                              */}
         {/* =============================================================== */}
         <Card title="Manual Triggers" variant="bordered">
+          {triggerNotice && (
+            <TriggerNoticeBanner notice={triggerNotice} onDismiss={() => setTriggerNotice(null)} />
+          )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <TriggerTile
               title="Run RAIA Synthesis"
-              subtitle="Cross-jurisdictional R.A.I.A. pass across all completed jurisdictions."
-              onClick={() => runWorkflow('wf-010')}
+              subtitle="Cross-jurisdictional R.A.I.A. pass across all configured jurisdictions."
+              busy={triggerBusy === 'RAIA'}
+              onClick={() =>
+                handleTrigger('RAIA', triggerRaiaSynthesis)
+              }
             />
             <TriggerTile
               title="Check CPRA Deadlines"
-              subtitle="Query requests closing within 72h and email the digest."
-              onClick={() => runWorkflow('wf-005')}
+              subtitle="Query CPRA requests closing within 72h."
+              busy={triggerBusy === 'CPRA'}
+              onClick={() =>
+                handleTrigger('CPRA', triggerCpraDeadlines)
+              }
             />
             <TriggerTile
               title="Export Provenance Chain"
-              subtitle="Generate litigation-grade chain-of-custody DOCX."
-              onClick={() => runWorkflow('wf-014')}
+              subtitle="Generate litigation-grade chain-of-custody DOCX (requires n8n)."
+              busy={triggerBusy === 'PROV'}
+              onClick={() =>
+                handleTrigger('PROV', triggerProvenanceExport)
+              }
             />
           </div>
         </Card>
@@ -548,15 +577,22 @@ function TriggerTile({
   title,
   subtitle,
   onClick,
+  busy = false,
 }: {
   title: string;
   subtitle: string;
   onClick: () => void;
+  busy?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
-      className="hud-panel hud-panel-flow hud-panel-dense p-4 text-left transition-transform hover:-translate-y-[1px]"
+      disabled={busy}
+      className={`
+        hud-panel hud-panel-flow hud-panel-dense p-4 text-left
+        transition-transform hover:-translate-y-[1px]
+        disabled:opacity-60 disabled:cursor-wait disabled:translate-y-0
+      `}
     >
       <div className="font-display text-sm font-semibold text-slate-100 mb-1">
         {title}
@@ -564,10 +600,63 @@ function TriggerTile({
       <div className="text-xs text-slate-400 leading-relaxed">
         {subtitle}
       </div>
-      <div className="mt-3 hud-label-accent hud-flow">
-        EXECUTE →
+      <div
+        className={`mt-3 hud-label-accent hud-flow ${
+          busy ? 'animate-odia-breath' : ''
+        }`}
+      >
+        {busy ? 'EXECUTING…' : 'EXECUTE →'}
       </div>
     </button>
+  );
+}
+
+/**
+ * v2.7.4 W1 — inline notification rendered above the Manual Triggers
+ * grid after a button has been clicked. We keep this in-page rather
+ * than introducing a global toast library; the surface is small,
+ * dismissible, and reads at the same scan-line as the buttons it
+ * describes.
+ */
+function TriggerNoticeBanner({
+  notice,
+  onDismiss,
+}: {
+  notice: TriggerNotification;
+  onDismiss: () => void;
+}) {
+  const toneClass =
+    notice.level === 'success'
+      ? 'hud-sev-healthy'
+      : notice.level === 'warn'
+        ? 'hud-sev-medium'
+        : notice.level === 'error'
+          ? 'hud-sev-critical'
+          : 'hud-sev-info';
+  return (
+    <div className="hud-panel hud-panel-dense p-3 mb-3 flex items-start gap-3">
+      <span className={`hud-sev ${toneClass} mt-0.5 shrink-0`}>
+        {notice.level}
+      </span>
+      <div className="flex-1 min-w-0">
+        <div className="font-display text-sm font-semibold text-slate-100">
+          {notice.title}
+        </div>
+        {notice.detail && (
+          <div className="text-xs text-slate-400 mt-1 leading-relaxed break-words">
+            {notice.detail}
+          </div>
+        )}
+      </div>
+      <button
+        type="button"
+        className="hud-label text-xs px-2 py-1 hover:text-amber-300 shrink-0"
+        onClick={onDismiss}
+        aria-label="Dismiss notification"
+      >
+        dismiss
+      </button>
+    </div>
   );
 }
 
@@ -687,5 +776,131 @@ async function runWorkflow(id: string) {
     );
   } catch {
     /* surface as a toast in the real build */
+  }
+}
+
+// ---------------------------------------------------------------------------
+// v2.7.4 W1 — Manual Trigger handlers
+//
+// Each button in the "Manual Triggers" panel invokes one of these. They
+// hit ODIA-native endpoints under /api/v1/triggers/* (added in v2.7.4)
+// rather than the n8n proxy, so the buttons work even when the n8n
+// container is offline (the default for fresh installs).
+// ---------------------------------------------------------------------------
+
+export type TriggerLevel = 'info' | 'success' | 'warn' | 'error';
+
+export interface TriggerNotification {
+  level: TriggerLevel;
+  title: string;
+  detail?: string;
+}
+
+async function triggerCpraDeadlines(): Promise<TriggerNotification> {
+  try {
+    const r = await fetch(
+      `${getAPIClient().baseURL}/api/v1/triggers/cpra-deadlines/72h`,
+      { cache: 'no-store' },
+    );
+    if (!r.ok) {
+      return {
+        level: 'error',
+        title: 'CPRA deadlines',
+        detail: `HTTP ${r.status}`,
+      };
+    }
+    const body = await r.json();
+    const count = body?.count ?? 0;
+    return {
+      level: count > 0 ? 'warn' : 'success',
+      title: `CPRA deadlines (72h): ${count} request(s)`,
+      detail:
+        count === 0
+          ? 'No requests in the next 72 hours.'
+          : (body.items as { jurisdiction_id: string; statutory_deadline: string }[])
+              .slice(0, 3)
+              .map((it) => `${it.jurisdiction_id} · ${it.statutory_deadline}`)
+              .join(' / '),
+    };
+  } catch (err) {
+    return {
+      level: 'error',
+      title: 'CPRA deadlines',
+      detail: 'Network error — backend unreachable.',
+    };
+  }
+}
+
+async function triggerRaiaSynthesis(): Promise<TriggerNotification> {
+  try {
+    const r = await fetch(
+      `${getAPIClient().baseURL}/api/v1/triggers/raia-synthesize-all`,
+      { method: 'POST', cache: 'no-store' },
+    );
+    if (!r.ok) {
+      return {
+        level: 'error',
+        title: 'RAIA synthesis',
+        detail: `HTTP ${r.status}`,
+      };
+    }
+    const body = await r.json();
+    if (body?.status === 'no_jurisdictions') {
+      return {
+        level: 'warn',
+        title: 'RAIA synthesis: no jurisdictions',
+        detail: body.message,
+      };
+    }
+    const result = body?.result;
+    const jurisdictionCount = result?.jurisdictions?.length ?? 0;
+    const patternCount = result?.patterns?.length ?? 0;
+    return {
+      level: 'success',
+      title: `RAIA synthesis: ${jurisdictionCount} jurisdiction(s), ${patternCount} pattern(s)`,
+      detail: `Synthesis ID: ${result?.synthesis_id ?? '(none)'}`,
+    };
+  } catch (err) {
+    return {
+      level: 'error',
+      title: 'RAIA synthesis',
+      detail: 'Network error — backend unreachable.',
+    };
+  }
+}
+
+async function triggerProvenanceExport(): Promise<TriggerNotification> {
+  try {
+    const r = await fetch(
+      `${getAPIClient().baseURL}/api/v1/triggers/provenance-chain-export`,
+      { method: 'POST', cache: 'no-store' },
+    );
+    if (r.status === 501) {
+      const body = await r.json().catch(() => ({}));
+      return {
+        level: 'warn',
+        title: 'Provenance Chain Export: not available',
+        detail: body?.detail ?? 'Requires the n8n container (workflow WF-014).',
+      };
+    }
+    if (!r.ok) {
+      return {
+        level: 'error',
+        title: 'Provenance Chain Export',
+        detail: `HTTP ${r.status}`,
+      };
+    }
+    const body = await r.json();
+    return {
+      level: 'success',
+      title: 'Provenance Chain Export: triggered',
+      detail: JSON.stringify(body),
+    };
+  } catch (err) {
+    return {
+      level: 'error',
+      title: 'Provenance Chain Export',
+      detail: 'Network error — backend unreachable.',
+    };
   }
 }

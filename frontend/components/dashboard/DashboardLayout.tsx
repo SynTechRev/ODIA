@@ -48,7 +48,9 @@ const sidebarNav: NavItem[] = [
   { name: 'Dashboard',     href: '/',              Icon: DashboardIcon,    group: 'Overview' },
 
   { name: 'Upload',        href: '/upload',        Icon: UploadIcon,       group: 'Workflow' },
-  { name: 'Ingest',        href: '/ingest',        Icon: IngestIcon,       group: 'Workflow' },
+  // Ingest removed in v2.7.4 W2 — Upload is the canonical document-intake
+  // surface (drag-drop + multi-file + run-audit). The /ingest route now
+  // redirects to /upload to preserve any external bookmarks.
   { name: 'Analysis',      href: '/analysis',      Icon: AnalysisIcon,     group: 'Workflow' },
 
   { name: 'Documents',     href: '/documents',     Icon: DocumentsIcon,    group: 'Evidence' },

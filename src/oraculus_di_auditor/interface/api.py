@@ -332,6 +332,17 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
     except Exception as e:
         logger.warning(f"Automation routes not available: {e}")
 
+    try:
+        from .routes.triggers import register_trigger_routes
+
+        # v2.7.4 W1 — Manual-trigger endpoints under /api/v1/triggers/*
+        # so the Automation page's "Manual Triggers" panel works without
+        # ODIA_WEBHOOK_TOKEN or n8n online.
+        register_trigger_routes(app)
+        logger.info("Manual-trigger routes registered")
+    except Exception as e:
+        logger.warning(f"Trigger routes not available: {e}")
+
 
 def _init_database_at_startup() -> None:
     """Best-effort DB schema bootstrap at app start (v2.7.3 V1).
