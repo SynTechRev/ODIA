@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odia"
-version = "2.7.4"
+version = "2.7.5"
 description = "O.D.I.A. — Oraculus Decimus Intellect Analyst: civic accountability intelligence platform for forensic analysis of legal and government documents"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -111,6 +111,7 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "src/oraculus_di_auditor/interface/routes/cpra.py" = ["C901"]
 "src/oraculus_di_auditor/interface/routes/field.py" = ["C901"]
 "src/oraculus_di_auditor/interface/routes/orchestrator.py" = ["C901"]
+"src/oraculus_di_auditor/interface/routes/triggers.py" = ["C901"]
 "src/oraculus_di_auditor/interface/routes/webhook.py" = ["B008", "C901"]
 "scripts/phase12_example.py" = ["E501"]
 "scripts/phase17_example.py" = ["C901"]
