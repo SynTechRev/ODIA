@@ -54,14 +54,40 @@ export default function Home() {
     <DashboardLayout>
       <div className="max-w-7xl mx-auto space-y-6">
         {/* =============================================================== */}
-        {/* 1 · Hero                                                         */}
+        {/* 1 · Hero — v2.7.4 W4 POC: purple / platinum / black / white     */}
         {/* =============================================================== */}
+        {/* Three layered surfaces produce the "shiny" effect:               */}
+        {/*   a) base panel — near-black with a subtle violet inner glow     */}
+        {/*   b) platinum top edge — animated zinc gradient ribbon at the    */}
+        {/*      top of the panel (the "shine" line)                         */}
+        {/*   c) violet bloom — large blurred lamp in the upper-right corner */}
         <section
-          className="relative overflow-hidden text-white hud-panel hud-panel-accent hud-brackets hud-scanlines"
+          className="
+            relative overflow-hidden text-white
+            rounded-2xl
+            border border-zinc-800
+            shadow-[0_0_60px_-20px_rgba(124,58,237,0.45)]
+            bg-gradient-to-br from-black via-slate-950 to-black
+          "
         >
+          {/* Platinum top-edge ribbon — a thin animated gradient line */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-200/80 to-transparent"
+          />
+          {/* Violet bloom in the upper-right */}
+          <div
+            aria-hidden="true"
+            className="absolute -top-32 -right-20 w-96 h-96 rounded-full bg-violet-600/30 blur-3xl pointer-events-none"
+          />
+          {/* Faint platinum bloom in the lower-left for depth */}
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-zinc-200/[0.04] blur-3xl pointer-events-none"
+          />
           {/* Decorative grid pattern */}
           <div
-            className="absolute inset-0 opacity-[0.06] pointer-events-none"
+            className="absolute inset-0 opacity-[0.05] pointer-events-none"
             aria-hidden="true"
             style={{
               backgroundImage:
@@ -69,52 +95,89 @@ export default function Home() {
               backgroundSize: '24px 24px',
             }}
           />
-          {/* Accent glow */}
-          <div
-            className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-amber-500/20 blur-3xl pointer-events-none"
-            aria-hidden="true"
-          />
+
           <div className="relative p-8 md:p-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-300 text-[11px] font-medium ring-1 ring-amber-500/50 mb-4 uppercase tracking-[0.2em]">
+            {/* Brand badge — violet ring + platinum text */}
+            <div
+              className="
+                inline-flex items-center gap-2 px-3 py-1 mb-4
+                bg-violet-500/10 text-zinc-100
+                text-[11px] font-medium uppercase tracking-[0.22em]
+                ring-1 ring-violet-400/60
+                shadow-[0_0_20px_-6px_rgba(167,139,250,0.6)]
+              "
+            >
               <OctopusMarkIcon size={12} />
-              O.D.I.A. · v2.7.1
+              <span className="bg-gradient-to-r from-zinc-200 via-white to-zinc-300 bg-clip-text text-transparent">
+                O.D.I.A. · v2.7.5
+              </span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+
+            <h1
+              className="
+                text-3xl md:text-4xl font-bold tracking-tight mb-3
+                bg-gradient-to-br from-white via-zinc-100 to-zinc-300
+                bg-clip-text text-transparent
+                drop-shadow-[0_0_28px_rgba(124,58,237,0.35)]
+              "
+            >
               Civic accountability,
               <br className="hidden md:block" />
               at forensic resolution.
             </h1>
-            <p className="text-slate-300 max-w-2xl mb-6 text-sm md:text-base leading-relaxed">
+
+            <p className="text-zinc-300 max-w-2xl mb-6 text-sm md:text-base leading-relaxed">
               Ingest legal and government documents. Surface fiscal anomalies,
               constitutional concerns, surveillance outsourcing, and procurement
               irregularities — all locally, all private, all auditable.
             </p>
+
             <div className="flex flex-wrap items-center gap-3">
+              {/* Primary CTA — violet body, platinum highlight ring */}
               <Button
                 variant="accent"
                 size="lg"
                 onClick={() => nav('/upload')}
                 icon={<UploadIcon size={16} />}
+                className="
+                  !bg-gradient-to-br !from-violet-500 !via-violet-600 !to-violet-700
+                  !text-white !border-0
+                  shadow-[0_0_24px_-6px_rgba(167,139,250,0.7),inset_0_1px_0_rgba(255,255,255,0.25)]
+                  hover:shadow-[0_0_32px_-4px_rgba(167,139,250,0.85),inset_0_1px_0_rgba(255,255,255,0.35)]
+                  ring-1 ring-zinc-200/30
+                "
               >
                 Upload Document
               </Button>
+              {/* Secondary CTA — platinum outline */}
               <Button
                 variant="ghost"
                 size="lg"
                 onClick={() => nav('/analysis')}
-                className="text-white hover:bg-white/10 border border-white/20"
                 icon={<AnalysisIcon size={16} />}
+                className="
+                  !text-zinc-100 hover:!bg-white/[0.06]
+                  border border-zinc-300/30 hover:border-zinc-200/60
+                  shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]
+                "
               >
                 View Analyses
               </Button>
             </div>
-            <div className="mt-6 flex flex-wrap gap-4 text-xs text-slate-400">
+
+            <div className="mt-6 flex flex-wrap gap-4 text-xs text-zinc-400">
               <InlineFeature label="100% local processing" />
               <InlineFeature label="SHA-256 provenance" />
               <InlineFeature label="8-detector pipeline" />
               <InlineFeature label="No outbound network" />
             </div>
           </div>
+
+          {/* Platinum bottom-edge ribbon — mirrors the top */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-200/40 to-transparent"
+          />
         </section>
 
         {/* =============================================================== */}
@@ -151,7 +214,7 @@ export default function Home() {
         <Card title="Quick Actions" variant="bordered">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <ActionTile
-              onClick={() => nav('/ingest')}
+              onClick={() => nav('/upload')}
               icon={<IngestIcon size={22} />}
               title="Ingest Document"
               subtitle="Upload and analyse new documents"

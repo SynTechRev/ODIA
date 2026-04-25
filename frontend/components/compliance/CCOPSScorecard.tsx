@@ -78,11 +78,20 @@ const MANDATE_DEFINITIONS = [
   },
 ];
 
-const STATUS_STYLES: Record<string, { bg: string; text: string; icon: string; label: string }> = {
-  pass:    { bg: 'bg-green-50',  text: 'text-green-700',  icon: '✓', label: 'No issues' },
-  fail:    { bg: 'bg-red-50',    text: 'text-red-700',    icon: '✗', label: 'Findings' },
-  warn:    { bg: 'bg-yellow-50', text: 'text-yellow-700', icon: '!', label: 'Warnings' },
-  unknown: { bg: 'bg-gray-50',   text: 'text-gray-500',   icon: '?', label: 'No data' },
+// v2.7.4 W3: HUD primitive tones for the four mandate states.
+// Replaces the pre-W3 light-theme bg-green-50 / bg-red-50 / etc. that
+// rendered as pale pastels on slate-950. Each entry maps to:
+//   - tone:    text colour for the title + status icon ring
+//   - sevPill: hud-sev-* class for the right-side state pill
+//   - icon:    glyph rendered in the circle on the left
+const STATUS_STYLES: Record<
+  string,
+  { tone: string; sevPill: string; icon: string; label: string }
+> = {
+  pass:    { tone: 'text-emerald-400', sevPill: 'hud-sev-healthy',  icon: '✓', label: 'No issues' },
+  fail:    { tone: 'text-rose-400',    sevPill: 'hud-sev-critical', icon: '✗', label: 'Findings' },
+  warn:    { tone: 'text-yellow-400',  sevPill: 'hud-sev-medium',   icon: '!', label: 'Warnings' },
+  unknown: { tone: 'text-zinc-500',    sevPill: 'hud-sev-info',     icon: '?', label: 'No data' },
 };
 
 export function buildCCOPSMandates(findings: AuditFinding[]): CCOPSMandate[] {
@@ -125,30 +134,19 @@ export function CCOPSScorecard({ findings }: CCOPSScorecardProps) {
   const failed = mandates.filter((m) => m.status === 'fail').length;
   const warned = mandates.filter((m) => m.status === 'warn').length;
 
+  const noData = mandates.filter((m) => m.status === 'unknown').length;
+
   return (
     <div className="space-y-4">
-      {/* Summary row */}
-      <div className="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-lg">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-green-600">{passed}</div>
-          <div className="text-xs text-gray-500">No issues</div>
-        </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-yellow-600">{warned}</div>
-          <div className="text-xs text-gray-500">Warnings</div>
-        </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-red-600">{failed}</div>
-          <div className="text-xs text-gray-500">Findings</div>
-        </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-gray-400">
-            {mandates.filter((m) => m.status === 'unknown').length}
-          </div>
-          <div className="text-xs text-gray-500">No data</div>
-        </div>
+      {/* v2.7.4 W3: summary row uses HUD primitive panel + counter
+          tones matching the scorecard mandate tiles. */}
+      <div className="hud-panel hud-panel-inset p-4 flex flex-wrap gap-6">
+        <ScorecardCounter value={passed} label="No issues" tone="text-emerald-400" />
+        <ScorecardCounter value={warned} label="Warnings" tone="text-yellow-400" />
+        <ScorecardCounter value={failed} label="Findings" tone="text-rose-400" />
+        <ScorecardCounter value={noData} label="No data" tone="text-zinc-500" />
         <div className="ml-auto flex items-center">
-          <p className="text-xs text-gray-400">11 ACLU CCOPS mandates</p>
+          <p className="hud-metric-label">11 ACLU CCOPS mandates</p>
         </div>
       </div>
 
@@ -159,23 +157,40 @@ export function CCOPSScorecard({ findings }: CCOPSScorecardProps) {
           return (
             <div
               key={mandate.id}
-              className={`rounded-lg border border-gray-100 p-3 ${styles.bg}`}
+              className="hud-panel hud-panel-dense p-3"
             >
               <div className="flex items-start gap-3">
                 <span
-                  className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${styles.bg} ${styles.text} border border-current`}
+                  className={`
+                    flex-shrink-0 w-6 h-6 rounded-full flex items-center
+                    justify-center text-sm font-bold border ${styles.tone}
+                    border-current bg-slate-900/60
+                  `}
                   aria-label={styles.label}
                 >
                   {styles.icon}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-semibold ${styles.text}`}>{mandate.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{mandate.description}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className={`text-sm font-semibold ${styles.tone}`}>
+                      {mandate.title}
+                    </p>
+                    <span className={`hud-sev ${styles.sevPill}`}>
+                      {styles.label.toLowerCase()}
+                    </span>
+                  </div>
+                  <p className="hud-subtext text-xs mt-1">{mandate.description}</p>
                   {mandate.evidence.length > 0 && (
-                    <ul className="mt-1 space-y-0.5">
+                    <ul className="mt-2 space-y-0.5">
                       {mandate.evidence.map((e, i) => (
-                        <li key={i} className="text-xs text-gray-600 flex gap-1">
-                          <span aria-hidden="true">›</span> {e}
+                        <li
+                          key={i}
+                          className="text-xs text-slate-400 flex gap-1.5"
+                        >
+                          <span aria-hidden="true" className="text-slate-600">
+                            ›
+                          </span>
+                          <span className="break-words">{e}</span>
                         </li>
                       ))}
                     </ul>
@@ -186,6 +201,23 @@ export function CCOPSScorecard({ findings }: CCOPSScorecardProps) {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function ScorecardCounter({
+  value,
+  label,
+  tone,
+}: {
+  value: number;
+  label: string;
+  tone: string;
+}) {
+  return (
+    <div className="text-center">
+      <div className={`hud-metric tabular-nums ${tone}`}>{value}</div>
+      <div className="hud-metric-label">{label}</div>
     </div>
   );
 }
