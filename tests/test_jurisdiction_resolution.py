@@ -20,7 +20,6 @@ pytest.importorskip("sqlalchemy")
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-
 # ---------------------------------------------------------------------------
 # default_multi_jurisdiction_root() resolution chain
 # ---------------------------------------------------------------------------

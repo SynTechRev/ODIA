@@ -102,9 +102,7 @@ def _run_retrieval(job_id: str, request: _RetrievalRequest) -> None:
                 register_uploaded_path,
             )
         except ImportError as exc:
-            logger.warning(
-                "Cannot register Legistar files into upload store: %s", exc
-            )
+            logger.warning("Cannot register Legistar files into upload store: %s", exc)
             register_uploaded_path = None  # type: ignore[assignment]
 
         if register_uploaded_path is not None:
@@ -120,12 +118,8 @@ def _run_retrieval(job_id: str, request: _RetrievalRequest) -> None:
                     )
                     registered.append(meta)
                 except Exception as exc:  # noqa: BLE001
-                    logger.warning(
-                        "Registration of %s failed: %s", local.name, exc
-                    )
-                    registration_errors.append(
-                        {"path": str(local), "error": str(exc)}
-                    )
+                    logger.warning("Registration of %s failed: %s", local.name, exc)
+                    registration_errors.append({"path": str(local), "error": str(exc)})
 
         manifest["registered_count"] = len(registered)
         manifest["registration_errors"] = registration_errors

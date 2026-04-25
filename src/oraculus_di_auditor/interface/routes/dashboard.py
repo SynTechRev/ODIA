@@ -86,8 +86,12 @@ def register_dashboard_routes(app: Any) -> None:
 
         try:
             with get_db() as session:
-                analyses = session.query(func.count(db_models.Analysis.id)).scalar() or 0
-                documents = session.query(func.count(db_models.Document.id)).scalar() or 0
+                analyses = (
+                    session.query(func.count(db_models.Analysis.id)).scalar() or 0
+                )
+                documents = (
+                    session.query(func.count(db_models.Document.id)).scalar() or 0
+                )
                 findings = session.query(func.count(db_models.Anomaly.id)).scalar() or 0
 
                 severity_rows = (
