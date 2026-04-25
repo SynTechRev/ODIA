@@ -328,6 +328,52 @@ export class APIClient {
     const { data } = await this.http.get(`/api/v1/retrieve/status/${jobId}`);
     return data;
   }
+
+  // -------------------------------------------------------------------------
+  // Dashboard summary (v2.7.6 X1)
+  // -------------------------------------------------------------------------
+
+  /** GET /api/v1/dashboard/summary */
+  async getDashboardSummary(): Promise<DashboardSummary> {
+    const { data } = await this.http.get<DashboardSummary>(
+      '/api/v1/dashboard/summary',
+    );
+    return data;
+  }
+
+  /** POST /api/v1/dashboard/seed-jurisdictions (v2.7.6 X2) */
+  async seedJurisdictions(force = false): Promise<SeedJurisdictionsResult> {
+    const { data } = await this.http.post<SeedJurisdictionsResult>(
+      '/api/v1/dashboard/seed-jurisdictions',
+      null,
+      { params: { force } },
+    );
+    return data;
+  }
+}
+
+export interface SeedJurisdictionsResult {
+  status: 'ok' | 'no_bundle';
+  message?: string;
+  copied: string[];
+  skipped: string[];
+  target: string | null;
+  force?: boolean;
+}
+
+export interface DashboardSummary {
+  available: boolean;
+  analyses: number;
+  documents: number;
+  findings: number;
+  by_severity: {
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+  };
+  avg_severity_score: number;
+  last_audit_at: string | null;
 }
 
 // ---------------------------------------------------------------------------

@@ -460,6 +460,14 @@ export default function AutomationPage() {
                 handleTrigger('PROV', triggerProvenanceExport)
               }
             />
+            <TriggerTile
+              title="Seed Example Jurisdictions"
+              subtitle="Copy bundled example_city_a/b/c into the user-writable config dir so RAIA Synthesis has something to run against."
+              busy={triggerBusy === 'SEED'}
+              onClick={() =>
+                handleTrigger('SEED', triggerSeedJurisdictions)
+              }
+            />
           </div>
         </Card>
 
@@ -864,6 +872,44 @@ async function triggerRaiaSynthesis(): Promise<TriggerNotification> {
     return {
       level: 'error',
       title: 'RAIA synthesis',
+      detail: 'Network error — backend unreachable.',
+    };
+  }
+}
+
+async function triggerSeedJurisdictions(): Promise<TriggerNotification> {
+  // v2.7.6 X2 — copy bundled example jurisdictions into the user-writable
+  // dir so the RAIA Synthesis trigger has something to load. Idempotent;
+  // skips entries already present in the target.
+  try {
+    const result = await getAPIClient().seedJurisdictions(false);
+    if (result.status === 'no_bundle') {
+      return {
+        level: 'error',
+        title: 'Seed jurisdictions: no bundle found',
+        detail: result.message ?? 'Reinstall the desktop app.',
+      };
+    }
+    const copied = result.copied.length;
+    const skipped = result.skipped.length;
+    if (copied === 0 && skipped > 0) {
+      return {
+        level: 'success',
+        title: `Already seeded: ${skipped} jurisdiction(s)`,
+        detail: result.target ? `Target: ${result.target}` : '',
+      };
+    }
+    return {
+      level: 'success',
+      title: `Seeded ${copied} jurisdiction(s)${skipped ? ` · ${skipped} already present` : ''}`,
+      detail: result.target
+        ? `Target: ${result.target}. RAIA Synthesis can now run.`
+        : 'RAIA Synthesis can now run.',
+    };
+  } catch {
+    return {
+      level: 'error',
+      title: 'Seed jurisdictions',
       detail: 'Network error — backend unreachable.',
     };
   }

@@ -54,129 +54,176 @@ export default function Home() {
     <DashboardLayout>
       <div className="max-w-7xl mx-auto space-y-6">
         {/* =============================================================== */}
-        {/* 1 · Hero — v2.7.4 W4 POC: purple / platinum / black / white     */}
+        {/* 1 · Hero — v2.7.6 X5 POC: gemstone (smoke / gold / emerald)     */}
         {/* =============================================================== */}
-        {/* Three layered surfaces produce the "shiny" effect:               */}
-        {/*   a) base panel — near-black with a subtle violet inner glow     */}
-        {/*   b) platinum top edge — animated zinc gradient ribbon at the    */}
-        {/*      top of the panel (the "shine" line)                         */}
-        {/*   c) violet bloom — large blurred lamp in the upper-right corner */}
+        {/* Cut-gemstone aesthetic, replacing the v2.7.5 W4 purple POC:     */}
+        {/*   a) smoke base — vertical gradient near-black → smoke-900       */}
+        {/*      → smoke-800 (the polished obsidian body)                    */}
+        {/*   b) gold hairline border + brighter inner stroke (the "cut      */}
+        {/*      edge" of the gem — antique gold, not chrome)                */}
+        {/*   c) emerald bloom upper-right (the gem facet catching light)    */}
+        {/*   d) gold-vein gradient text + emerald CTA + gold-outline CTA   */}
         <section
           className="
-            relative overflow-hidden text-white
+            relative overflow-hidden
             rounded-2xl
-            border border-zinc-800
-            shadow-[0_0_60px_-20px_rgba(124,58,237,0.45)]
-            bg-gradient-to-br from-black via-slate-950 to-black
           "
+          style={{
+            background:
+              'linear-gradient(160deg, var(--smoke-950) 0%, var(--smoke-900) 45%, var(--smoke-800) 75%, var(--smoke-900) 100%)',
+            boxShadow:
+              '0 0 0 1px var(--gem-edge-gold), 0 0 0 2px rgba(0,0,0,0.45) inset, 0 0 60px -16px var(--gem-edge-emerald)',
+          }}
         >
-          {/* Platinum top-edge ribbon — a thin animated gradient line */}
+          {/* Inner gold stroke — the second cut of the gem edge */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-200/80 to-transparent"
+            className="absolute inset-[2px] rounded-[14px] pointer-events-none"
+            style={{ boxShadow: 'inset 0 0 0 1px rgba(232, 201, 113, 0.18)' }}
           />
-          {/* Violet bloom in the upper-right */}
+          {/* Top gold hairline ribbon — animated catch-light */}
           <div
             aria-hidden="true"
-            className="absolute -top-32 -right-20 w-96 h-96 rounded-full bg-violet-600/30 blur-3xl pointer-events-none"
+            className="absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent 0%, var(--gold-400) 30%, var(--gold-300) 50%, var(--gold-400) 70%, transparent 100%)',
+            }}
           />
-          {/* Faint platinum bloom in the lower-left for depth */}
+          {/* Emerald bloom upper-right — gem facet */}
           <div
             aria-hidden="true"
-            className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-zinc-200/[0.04] blur-3xl pointer-events-none"
+            className="absolute -top-32 -right-20 w-96 h-96 rounded-full pointer-events-none blur-3xl"
+            style={{ background: 'rgba(16, 185, 129, 0.22)' }}
           />
-          {/* Decorative grid pattern */}
+          {/* Gold bloom lower-left — antique vein depth */}
           <div
-            className="absolute inset-0 opacity-[0.05] pointer-events-none"
             aria-hidden="true"
+            className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full pointer-events-none blur-3xl"
+            style={{ background: 'rgba(212, 175, 55, 0.10)' }}
+          />
+          {/* Faceted grid pattern — subtle gemstone facet hint */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 opacity-[0.04] pointer-events-none"
             style={{
               backgroundImage:
-                'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
+                'linear-gradient(rgba(232,201,113,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(232,201,113,0.6) 1px, transparent 1px)',
+              backgroundSize: '28px 28px',
             }}
           />
 
           <div className="relative p-8 md:p-10">
-            {/* Brand badge — violet ring + platinum text */}
+            {/* Brand badge — gold ring, smoke fill, emerald accent dot */}
             <div
               className="
                 inline-flex items-center gap-2 px-3 py-1 mb-4
-                bg-violet-500/10 text-zinc-100
                 text-[11px] font-medium uppercase tracking-[0.22em]
-                ring-1 ring-violet-400/60
-                shadow-[0_0_20px_-6px_rgba(167,139,250,0.6)]
               "
+              style={{
+                color: 'var(--smoke-100)',
+                background: 'rgba(20, 20, 26, 0.6)',
+                boxShadow:
+                  '0 0 0 1px var(--gem-edge-gold), 0 0 18px -6px rgba(212, 175, 55, 0.55)',
+              }}
             >
               <OctopusMarkIcon size={12} />
-              <span className="bg-gradient-to-r from-zinc-200 via-white to-zinc-300 bg-clip-text text-transparent">
-                O.D.I.A. · v2.7.5
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(90deg, var(--gold-300), var(--smoke-100), var(--gold-400))',
+                }}
+              >
+                O.D.I.A. · v2.7.6
               </span>
+              <span
+                aria-hidden="true"
+                className="w-1.5 h-1.5 rounded-full"
+                style={{
+                  background: 'var(--emerald-300)',
+                  boxShadow: '0 0 6px var(--emerald-500)',
+                }}
+              />
             </div>
 
+            {/* Heading — gold-vein gradient text */}
             <h1
-              className="
-                text-3xl md:text-4xl font-bold tracking-tight mb-3
-                bg-gradient-to-br from-white via-zinc-100 to-zinc-300
-                bg-clip-text text-transparent
-                drop-shadow-[0_0_28px_rgba(124,58,237,0.35)]
-              "
+              className="text-3xl md:text-4xl font-bold tracking-tight mb-3 bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  'linear-gradient(135deg, var(--smoke-100) 0%, var(--gold-300) 50%, var(--smoke-200) 100%)',
+                filter: 'drop-shadow(0 0 28px rgba(212, 175, 55, 0.18))',
+              }}
             >
               Civic accountability,
               <br className="hidden md:block" />
               at forensic resolution.
             </h1>
 
-            <p className="text-zinc-300 max-w-2xl mb-6 text-sm md:text-base leading-relaxed">
+            <p
+              className="max-w-2xl mb-6 text-sm md:text-base leading-relaxed"
+              style={{ color: 'var(--smoke-300)' }}
+            >
               Ingest legal and government documents. Surface fiscal anomalies,
               constitutional concerns, surveillance outsourcing, and procurement
               irregularities — all locally, all private, all auditable.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
-              {/* Primary CTA — violet body, platinum highlight ring */}
+              {/* Primary CTA — emerald body, gold inner highlight ring */}
               <Button
                 variant="accent"
                 size="lg"
                 onClick={() => nav('/upload')}
                 icon={<UploadIcon size={16} />}
-                className="
-                  !bg-gradient-to-br !from-violet-500 !via-violet-600 !to-violet-700
-                  !text-white !border-0
-                  shadow-[0_0_24px_-6px_rgba(167,139,250,0.7),inset_0_1px_0_rgba(255,255,255,0.25)]
-                  hover:shadow-[0_0_32px_-4px_rgba(167,139,250,0.85),inset_0_1px_0_rgba(255,255,255,0.35)]
-                  ring-1 ring-zinc-200/30
-                "
+                className="!text-white !border-0"
+                style={{
+                  background:
+                    'linear-gradient(135deg, var(--emerald-500) 0%, var(--emerald-700) 100%)',
+                  boxShadow:
+                    '0 0 24px -6px rgba(16, 185, 129, 0.55), inset 0 1px 0 rgba(232, 201, 113, 0.35)',
+                }}
               >
                 Upload Document
               </Button>
-              {/* Secondary CTA — platinum outline */}
+              {/* Secondary CTA — gold-outline platinum text */}
               <Button
                 variant="ghost"
                 size="lg"
                 onClick={() => nav('/analysis')}
                 icon={<AnalysisIcon size={16} />}
-                className="
-                  !text-zinc-100 hover:!bg-white/[0.06]
-                  border border-zinc-300/30 hover:border-zinc-200/60
-                  shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]
-                "
+                className="hover:!bg-white/[0.04]"
+                style={{
+                  color: 'var(--smoke-100)',
+                  border: '1px solid var(--gem-edge-gold)',
+                  boxShadow: 'inset 0 1px 0 rgba(232, 201, 113, 0.10)',
+                }}
               >
                 View Analyses
               </Button>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-4 text-xs text-zinc-400">
+            <div
+              className="mt-6 flex flex-wrap gap-4 text-xs"
+              style={{ color: 'var(--smoke-300)' }}
+            >
               <InlineFeature label="100% local processing" />
               <InlineFeature label="SHA-256 provenance" />
-              <InlineFeature label="8-detector pipeline" />
+              <InlineFeature label="9-detector pipeline" />
               <InlineFeature label="No outbound network" />
             </div>
           </div>
 
-          {/* Platinum bottom-edge ribbon — mirrors the top */}
+          {/* Bottom gold hairline ribbon — mirror of the top cut */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-200/40 to-transparent"
+            className="absolute inset-x-0 bottom-0 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent 0%, var(--gold-500) 30%, var(--gold-400) 50%, var(--gold-500) 70%, transparent 100%)',
+              opacity: 0.6,
+            }}
           />
         </section>
 
@@ -273,7 +320,10 @@ export default function Home() {
 function InlineFeature({ label }: { label: string }) {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <span className="w-1 h-1 rounded-full bg-amber-400" />
+      <span
+        className="w-1 h-1 rounded-full"
+        style={{ background: 'var(--gold-400)' }}
+      />
       {label}
     </span>
   );

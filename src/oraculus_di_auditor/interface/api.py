@@ -40,11 +40,11 @@ def _resolve_odia_version() -> str:
     try:
         from importlib.metadata import PackageNotFoundError, version
     except ImportError:
-        return os.environ.get("ODIA_VERSION", "2.7.5")
+        return os.environ.get("ODIA_VERSION", "2.7.6")
     try:
         return version("odia")
     except PackageNotFoundError:
-        return os.environ.get("ODIA_VERSION", "2.7.5")
+        return os.environ.get("ODIA_VERSION", "2.7.6")
 
 
 ODIA_VERSION = _resolve_odia_version()
@@ -342,6 +342,17 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
         logger.info("Manual-trigger routes registered")
     except Exception as e:
         logger.warning(f"Trigger routes not available: {e}")
+
+    try:
+        from .routes.dashboard import register_dashboard_routes
+
+        # v2.7.6 X1 — Dashboard summary endpoint backing the Analysis
+        # Summary card on the home page (was previously reading from a
+        # Zustand store that production audits never wrote to).
+        register_dashboard_routes(app)
+        logger.info("Dashboard summary route registered")
+    except Exception as e:
+        logger.warning(f"Dashboard routes not available: {e}")
 
 
 def _init_database_at_startup() -> None:

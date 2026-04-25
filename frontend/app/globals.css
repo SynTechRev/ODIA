@@ -86,6 +86,48 @@
   --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.22);
   --glow-violet: 0 0 24px rgba(167, 139, 250, 0.30);
   --glow-critical: 0 0 24px rgba(244, 63, 94, 0.40);
+
+  /* v2.7.6 X5 — Gemstone palette (POC)
+     ----------------------------------------------------------------------
+     Direction shift away from the W4 purple/platinum POC: a cut-gemstone
+     aesthetic. Smoke is the chrome spine (deep grayscale gradient from
+     near-black to platinum), gold is the vein/cut-edge accent (matte
+     antique, not chrome), and emerald/jade is the gem-facet accent
+     (healthy/active states). Tokens are additive — existing HUD tokens
+     remain so non-hero surfaces don't break until the v2.7.7 propagation
+     sweep is approved.
+
+     Smoke spine:
+       --smoke-950 .. --smoke-200      grayscale gradient
+     Gold vein (matte antique):
+       --gold-300/400/500/600          edge hairlines, accents, value text
+     Emerald / jade gem facets:
+       --emerald-300/500/700           healthy / active state
+       --jade-800                      deep inset panel base
+  */
+  --smoke-950: #0a0a0c;
+  --smoke-900: #14141a;
+  --smoke-800: #1f1f28;
+  --smoke-700: #2a2a35;
+  --smoke-300: #cbcbd1;
+  --smoke-200: #e6e6ea;
+  --smoke-100: #f4f4f6;
+
+  --gold-300: #e8c971;            /* highlight */
+  --gold-400: #d4af37;            /* primary gold */
+  --gold-500: #b8941f;            /* mid-tone */
+  --gold-600: #8b6914;            /* deep antique */
+
+  --emerald-300: #6ee7b7;
+  --emerald-500: #10b981;
+  --emerald-700: #047857;
+  --jade-800: #064e3b;            /* gem-facet inset */
+
+  --gem-edge-gold: rgba(212, 175, 55, 0.55);
+  --gem-edge-gold-bright: rgba(232, 201, 113, 0.85);
+  --gem-edge-emerald: rgba(16, 185, 129, 0.45);
+  --glow-gold: 0 0 28px rgba(212, 175, 55, 0.30);
+  --glow-emerald: 0 0 28px rgba(16, 185, 129, 0.35);
 }
 
 /* Tailwind theme mapping — lets the rest of the codebase keep using

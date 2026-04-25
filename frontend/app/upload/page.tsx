@@ -198,12 +198,23 @@ function LegistarPanel({ onFilesRetrieved }: { onFilesRetrieved: () => void }) {
           )}
 
           {manifest && (
-            <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
-              Retrieved {String(manifest.downloaded_count ?? 0)} document{manifest.downloaded_count !== 1 ? 's' : ''} from {String(manifest.matter_count ?? 0)} matters.
-              {Number(manifest.failed_count) > 0 && (
-                <span className="ml-1 text-yellow-700"> ({String(manifest.failed_count)} failed)</span>
-              )}
-              {' '}Documents added to upload list.
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800 space-y-1">
+              <div>
+                <strong>{String(manifest.matter_count ?? 0)}</strong> matters scanned ·{' '}
+                <strong>{String(manifest.attachment_count ?? 0)}</strong> attachments found ·{' '}
+                <strong>{String(manifest.downloaded_count ?? 0)}</strong> downloaded
+                {Number(manifest.failed_count) > 0 && (
+                  <span className="text-yellow-700"> · {String(manifest.failed_count)} failed</span>
+                )}
+              </div>
+              <div className="text-green-700">
+                <strong>{String(manifest.registered_count ?? 0)}</strong> document{manifest.registered_count !== 1 ? 's' : ''} added to upload list.
+                {Number(manifest.downloaded_count) > 0 && Number(manifest.registered_count ?? 0) === 0 && (
+                  <span className="ml-1 text-yellow-700">
+                    Files were downloaded but not registered — check the backend log for permission errors on the staging dir.
+                  </span>
+                )}
+              </div>
             </div>
           )}
 

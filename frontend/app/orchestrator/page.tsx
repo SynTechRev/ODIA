@@ -278,14 +278,21 @@ export default function OrchestratorPage() {
             </span>
           </div>
           {executions.length === 0 ? (
-            <div className="hud-panel hud-panel-dense p-6 text-center">
+            <div className="hud-panel hud-panel-dense p-6 text-center space-y-2">
               <p className="hud-subtext">
                 {executionsState === 'available'
-                  ? 'No mesh execution jobs yet.'
+                  ? 'No mesh execution jobs recorded yet.'
                   : executionsState === 'loading'
                     ? 'Checking /executions…'
                     : 'Backend /executions endpoint unreachable.'}
               </p>
+              {executionsState === 'available' && (
+                <p className="hud-subtext text-xs max-w-2xl mx-auto">
+                  Mesh jobs are written by the audit pipeline (Upload →
+                  Run Audit) and the n8n orchestrator workflow (WF-007).
+                  Run an audit to see jobs land here in real time.
+                </p>
+              )}
             </div>
           ) : (
             <div className="space-y-2">

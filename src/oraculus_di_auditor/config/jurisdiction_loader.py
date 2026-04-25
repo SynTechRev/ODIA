@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import sys
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -190,11 +192,105 @@ def clear_config_cache() -> None:
 
 # ---------------------------------------------------------------------------
 # v2.7.1 — Multi-jurisdiction auto-loader
+# v2.7.6 X2 — frozen-aware path resolution for desktop installs
 # ---------------------------------------------------------------------------
 
 
+def _user_data_root() -> Path:
+    """Cross-platform per-user writable data dir for ODIA.
+
+    Avoids a hard dependency on appdirs/platformdirs by replicating the
+    standard XDG / Win32 / macOS conventions inline:
+
+        Windows:  %APPDATA%\\ODIA
+        macOS:    ~/Library/Application Support/ODIA
+        Linux:    $XDG_DATA_HOME/odia  or  ~/.local/share/odia
+
+    The directory is NOT created here — callers that need to write
+    invoke ``mkdir(parents=True, exist_ok=True)`` themselves.
+    """
+    if sys.platform.startswith("win"):
+        base = os.environ.get("APPDATA") or str(Path.home() / "AppData" / "Roaming")
+        return Path(base) / "ODIA"
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "ODIA"
+    xdg = os.environ.get("XDG_DATA_HOME")
+    if xdg:
+        return Path(xdg) / "odia"
+    return Path.home() / ".local" / "share" / "odia"
+
+
+def user_multi_jurisdiction_root() -> Path:
+    """Per-user writable jurisdictions directory.
+
+    This is where the Seed button (``POST /api/v1/dashboard/seed-
+    jurisdictions``) copies the bundled examples on first run. Users
+    can also drop hand-edited jurisdiction subdirectories here without
+    touching the read-only bundle.
+    """
+    return _user_data_root() / "config" / "multi_jurisdiction"
+
+
+def bundled_multi_jurisdiction_root() -> Path | None:
+    """Read-only seed dir bundled with the desktop installer.
+
+    Returns the in-bundle path under PyInstaller (``sys._MEIPASS``),
+    or the repo path during dev. Returns ``None`` when neither exists
+    (e.g. a wheel install with no bundled examples).
+    """
+    # Frozen path — PyInstaller sets sys._MEIPASS to the extracted
+    # bundle root. The spec file's `datas` entry copies `config/` →
+    # `config/`, so the multi_jurisdiction dir lives at <meipass>/
+    # config/multi_jurisdiction.
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        bundled = Path(meipass) / "config" / "multi_jurisdiction"
+        if bundled.exists():
+            return bundled
+
+    # Repo-dev path — this file lives at
+    # src/oraculus_di_auditor/config/jurisdiction_loader.py, so the
+    # repo root is parents[3].
+    repo_root_candidate = Path(__file__).resolve().parents[3]
+    repo_dir = repo_root_candidate / "config" / "multi_jurisdiction"
+    if repo_dir.exists():
+        return repo_dir
+
+    return None
+
+
+def default_multi_jurisdiction_root() -> Path:
+    """Resolution chain used when ``discover_jurisdictions()`` is called
+    without an explicit ``root_dir``.
+
+    Priority (first match wins):
+        1. ``$ODIA_JURISDICTIONS_DIR`` environment override
+        2. User-writable seed dir (set up by the Seed button)
+        3. PyInstaller bundle (read-only seed)
+        4. Repo dev directory
+        5. CWD ``config/multi_jurisdiction`` (legacy fallback)
+
+    The returned path is NOT guaranteed to exist; the caller must
+    handle ``Path.exists()`` returning False (which yields an empty
+    registry, not an exception).
+    """
+    env_override = os.environ.get("ODIA_JURISDICTIONS_DIR")
+    if env_override:
+        return Path(env_override)
+
+    user_root = user_multi_jurisdiction_root()
+    if user_root.exists():
+        return user_root
+
+    bundled = bundled_multi_jurisdiction_root()
+    if bundled is not None:
+        return bundled
+
+    return Path("config/multi_jurisdiction")
+
+
 def discover_jurisdictions(
-    root_dir: Path | str = "config/multi_jurisdiction",
+    root_dir: Path | str | None = None,
 ) -> dict[str, JurisdictionConfig]:
     """Scan *root_dir* for per-jurisdiction subdirectories and load them all.
 
@@ -205,9 +301,11 @@ def discover_jurisdictions(
 
     Args:
         root_dir: Parent directory that holds per-jurisdiction subdirs.
-                  Defaults to ``"config/multi_jurisdiction"`` (relative to
-                  CWD) — that's where docker-compose's backend volume is
-                  wired and where the example_city_a/b/c seed lives.
+                  When ``None`` (the default), resolves via
+                  :func:`default_multi_jurisdiction_root` — which checks
+                  ``$ODIA_JURISDICTIONS_DIR`` → user-writable seed dir
+                  → PyInstaller bundle → repo dev dir → CWD fallback.
+                  Pass an explicit Path to bypass the resolution chain.
 
     Returns:
         Mapping of ``subdirectory_name → JurisdictionConfig``. The
@@ -224,6 +322,8 @@ def discover_jurisdictions(
         production deployment.
     """
     out: dict[str, JurisdictionConfig] = {}
+    if root_dir is None:
+        root_dir = default_multi_jurisdiction_root()
     root = Path(root_dir)
     if not root.exists() or not root.is_dir():
         logger.info(

@@ -73,6 +73,76 @@ def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def register_uploaded_path(
+    path: Path,
+    *,
+    source: str | None = None,
+    move: bool = True,
+) -> dict[str, Any]:
+    """Register a file that already exists on disk into the upload store.
+
+    Used by the Legistar retrieval flow (v2.7.6 X3) so that documents
+    pulled from a city's Legistar portal land in the same ``_FILES``
+    table as drag-and-drop uploads — and therefore appear in the Upload
+    page's "files ready" list and are eligible for ``POST /audit/run``.
+
+    Parameters
+    ----------
+    path:
+        Existing file. Its name (with a fresh ``file_id`` prefix) is
+        used as the destination filename inside ``_UPLOAD_DIR``.
+    source:
+        Optional free-form source identifier (e.g. the Legistar URL)
+        recorded in the metadata for downstream provenance.
+    move:
+        When True (default) the file is moved into ``_UPLOAD_DIR``;
+        when False it is copied. Move is the right default for
+        Legistar staging dirs since the staging copy serves no
+        further purpose after registration.
+
+    Returns
+    -------
+    The same metadata dict the standard ``POST /upload`` route returns,
+    so the frontend's ``listUploadedFiles()`` poll picks it up
+    transparently.
+    """
+    if not path.exists() or not path.is_file():
+        raise FileNotFoundError(f"Cannot register missing file: {path}")
+
+    ext = path.suffix.lower()
+    if ext not in _ALLOWED_EXTENSIONS and ext not in _ALLOWED_IMAGE_EXTENSIONS:
+        raise ValueError(
+            f"Unsupported file type '{ext}' — Legistar retrieval should "
+            "filter document types upstream."
+        )
+
+    file_id = str(uuid.uuid4())[:8]
+    safe_name = path.name
+    dest = _UPLOAD_DIR / f"{file_id}_{safe_name}"
+
+    if move:
+        path.rename(dest)
+    else:
+        dest.write_bytes(path.read_bytes())
+
+    content = dest.read_bytes()
+    meta: dict[str, Any] = {
+        "file_id": file_id,
+        "name": safe_name,
+        "size": len(content),
+        "sha256": _sha256_bytes(content),
+        "format": ext.lstrip("."),
+        "path": str(dest),
+        "uploaded_at": datetime.now(UTC).isoformat(),
+    }
+    if source:
+        meta["source"] = source
+
+    with _STORE_LOCK:
+        _FILES[file_id] = meta
+    return meta
+
+
 def ingest_uploaded_file(path: Path) -> dict[str, Any]:
     """Read an uploaded file and return a minimal document dict for analysis.
 
@@ -248,6 +318,84 @@ def _build_markdown_report(results: dict[str, Any]) -> str:
 # ---------------------------------------------------------------------------
 
 
+_MESH_AGENT_PIPELINE = (
+    "ingestion",
+    "analysis",
+    "anomaly",
+    "synthesis",
+    "database",
+    "interface",
+)
+
+
+def _record_mesh_job(job_id: str, file_count: int, status: str, **extras: Any) -> None:
+    """Best-effort write of a MeshExecutionJob row for an audit run
+    (v2.7.6 X4).
+
+    The Orchestrator page's "Recent Mesh Jobs" panel reads from this
+    table. Pre-X4 it stayed empty even after dozens of audits, because
+    only the legacy n8n-coordinated path wrote to it. Recording the
+    audit pipeline here makes the panel the single "what did ODIA
+    just do?" surface for the desktop install. Failure to write is
+    swallowed — the audit itself is the source of truth and must not
+    be derailed by an observability side-effect.
+    """
+    try:
+        from sqlalchemy.exc import IntegrityError
+
+        from oraculus_di_auditor.db import models as db_models
+        from oraculus_di_auditor.db.session import get_db
+    except ImportError:
+        return
+
+    try:
+        with get_db() as session:
+            existing = (
+                session.query(db_models.MeshExecutionJob)
+                .filter(db_models.MeshExecutionJob.job_id == job_id)
+                .one_or_none()
+            )
+            now = datetime.now(UTC).replace(tzinfo=None)
+            if existing is None:
+                row = db_models.MeshExecutionJob(
+                    job_id=job_id,
+                    job_type="audit",
+                    status=status,
+                    agent_count=len(_MESH_AGENT_PIPELINE),
+                    task_count=file_count,
+                    gcn_validated=False,
+                    governor_approved=False,
+                    started_at=now if status != "queued" else None,
+                    completed_at=now if status in ("completed", "failed") else None,
+                    metadata_json=json.dumps(
+                        {
+                            "pipeline": list(_MESH_AGENT_PIPELINE),
+                            "source": "upload.audit_run",
+                            **extras,
+                        }
+                    ),
+                )
+                session.add(row)
+            else:
+                existing.status = status
+                if status in ("completed", "failed"):
+                    existing.completed_at = now
+                if extras:
+                    try:
+                        meta = json.loads(existing.metadata_json or "{}")
+                    except Exception:
+                        meta = {}
+                    meta.update(extras)
+                    existing.metadata_json = json.dumps(meta)
+            session.commit()
+    except IntegrityError:
+        # Race condition — another worker beat us to the insert. Safe
+        # to ignore; the row exists either way.
+        return
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Failed to record MeshExecutionJob for %s: %s", job_id, exc)
+
+
 def _execute_audit_job(
     job_id: str, file_ids: list[str], config_overrides: dict[str, Any]
 ) -> None:
@@ -258,6 +406,7 @@ def _execute_audit_job(
             _JOBS[job_id].update(patch)
 
     _update({"status": "running"})
+    _record_mesh_job(job_id, len(file_ids), "executing")
     all_findings: list[dict[str, Any]] = []
     doc_manifests: list[dict[str, Any]] = []
     docs_processed = 0
@@ -339,10 +488,19 @@ def _execute_audit_job(
                 },
             }
         )
+        _record_mesh_job(
+            job_id,
+            len(file_ids),
+            "completed",
+            documents=docs_processed,
+            findings=len(all_findings),
+            severity_summary=severity_counts,
+        )
 
     except Exception as exc:
         logger.error("Audit job %s failed: %s", job_id, exc, exc_info=True)
         _update({"status": "error", "error": str(exc)})
+        _record_mesh_job(job_id, len(file_ids), "failed", error=str(exc))
 
 
 # ---------------------------------------------------------------------------
