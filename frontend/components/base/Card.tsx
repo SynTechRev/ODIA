@@ -57,18 +57,26 @@ export function Card({
         <div className="flex items-start justify-between mb-4 gap-3">
           <div className="flex items-start gap-3 min-w-0">
             {icon && (
-              <div className="flex-shrink-0 w-9 h-9 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/40 flex items-center justify-center mt-0.5">
+              <div
+                className="flex-shrink-0 w-9 h-9 flex items-center justify-center mt-0.5 gem-edge"
+                style={{
+                  background: 'rgba(216, 177, 60, 0.10)',
+                  color: 'var(--gold-300)',
+                }}
+              >
                 {icon}
               </div>
             )}
             <div className="min-w-0">
               {title && (
-                <h3 className="text-sm font-semibold text-slate-100 leading-snug truncate uppercase tracking-wider">
+                <h3 className="text-sm font-semibold leading-snug truncate uppercase tracking-wider"
+                    style={{ color: 'var(--smoke-100)' }}>
                   {title}
                 </h3>
               )}
               {subtitle && (
-                <p className="text-[11px] text-slate-500 mt-0.5 truncate hud-label">
+                <p className="text-[11px] mt-0.5 truncate hud-label"
+                   style={{ color: 'var(--smoke-500)' }}>
                   {subtitle}
                 </p>
               )}
@@ -81,7 +89,7 @@ export function Card({
           )}
         </div>
       )}
-      <div className="text-slate-700 text-sm">{children}</div>
+      <div className="text-sm" style={{ color: 'var(--smoke-200)' }}>{children}</div>
     </article>
   );
 }

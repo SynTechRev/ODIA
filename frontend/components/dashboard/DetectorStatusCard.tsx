@@ -67,8 +67,20 @@ export function DetectorStatusCard() {
       }
       actions={
         detectors.length > 0 && (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium ring-1 ring-inset ring-emerald-600/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          <span
+            className="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium gem-edge"
+            style={{
+              color: 'var(--neon-emerald)',
+              background: 'rgba(31, 232, 143, 0.10)',
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{
+                background: 'var(--neon-emerald)',
+                boxShadow: '0 0 6px var(--neon-emerald)',
+              }}
+            />
             Online
           </span>
         )
@@ -79,47 +91,67 @@ export function DetectorStatusCard() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-8 rounded bg-slate-100 animate-odia-pulse"
+              className="h-8 animate-odia-pulse"
+              style={{ background: 'rgba(216, 177, 60, 0.08)' }}
             />
           ))}
         </div>
       )}
 
       {error && !loading && (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3">
+        <div className="p-3 gem-edge" style={{ background: 'rgba(244, 63, 94, 0.08)' }}>
           <div className="flex items-start gap-2">
-            <AlertCircleIcon size={16} className="text-red-600 mt-0.5" />
+            <AlertCircleIcon size={16} style={{ color: 'var(--severity-critical)' }} className="mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-red-900">
+              <p className="text-sm font-medium" style={{ color: 'var(--severity-critical)' }}>
                 Cannot load detectors
               </p>
-              <p className="text-xs text-red-700 mt-1">{error}</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--smoke-200)' }}>
+                {error}
+              </p>
             </div>
           </div>
         </div>
       )}
 
       {!loading && !error && detectors.length === 0 && (
-        <div className="text-center py-6 text-sm text-slate-500">
+        <div className="text-center py-6 text-sm" style={{ color: 'var(--smoke-500)' }}>
           No detectors are currently registered.
         </div>
       )}
 
       {!loading && !error && detectors.length > 0 && (
-        <ul className="divide-y divide-slate-100 -my-2 max-h-72 overflow-y-auto pr-1">
+        <ul
+          className="-my-2 max-h-72 overflow-y-auto pr-1"
+          style={{ borderTop: '1px solid var(--gem-edge-gold)' }}
+        >
           {detectors.map((d) => (
             <li
               key={d.name}
               className="flex items-center justify-between gap-3 py-2.5"
+              style={{ borderBottom: '1px solid rgba(216, 177, 60, 0.18)' }}
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" />
-                <span className="text-sm font-medium text-slate-800 truncate">
+                <span
+                  className="w-2 h-2 rounded-full flex-shrink-0"
+                  style={{
+                    background: 'var(--neon-emerald)',
+                    boxShadow: '0 0 6px var(--neon-emerald)',
+                  }}
+                />
+                <span
+                  className="text-sm font-medium truncate"
+                  style={{ color: 'var(--smoke-100)' }}
+                >
                   {humanise(d.name)}
                 </span>
               </div>
               <span
-                className="text-xs font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded flex-shrink-0"
+                className="text-xs font-mono px-2 py-0.5 flex-shrink-0 gem-edge"
+                style={{
+                  color: 'var(--gold-200)',
+                  background: 'rgba(216, 177, 60, 0.08)',
+                }}
                 title={d.anomaly_types.join(', ')}
               >
                 {d.anomaly_types.length}{' '}

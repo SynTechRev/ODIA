@@ -1,14 +1,18 @@
 /**
  * Button — base reusable button with variants.
  *
+ * v2.7.7 Y2 — `accent` is now the gemstone primary CTA: emerald gradient
+ * body with gold inner highlight ring + crystallized facet clip-path.
+ * `outline` and `ghost` carry gold-edge dual-stroke on hover so secondary
+ * actions still read as part of the gem palette.
+ *
  * Variants:
- *   primary    — blue (default; kept on bg-blue-600 so existing snapshot
- *                tests in components/base/__tests__ remain green)
- *   accent     — amber (brand primary for ODIA — use for top-level CTAs)
- *   secondary  — slate (subdued, dense UIs)
- *   danger     — red   (destructive actions)
- *   outline    — transparent with slate ring
- *   ghost      — transparent, hover-tinted
+ *   primary    — blue (default; kept for existing snapshot tests)
+ *   accent     — gem CTA: emerald + gold dual-edge (top-level CTAs)
+ *   secondary  — smoke fill, gold-outline
+ *   danger     — rose (destructive)
+ *   outline    — transparent + gold-edge hairline
+ *   ghost      — transparent, emerald-glow on hover
  */
 
 import React from 'react';
@@ -32,16 +36,38 @@ export interface ButtonProps
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary:
     'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus:ring-blue-500 shadow-sm',
-  accent:
-    'bg-amber-600 text-white hover:bg-amber-700 active:bg-amber-800 focus:ring-amber-500 shadow-sm',
-  secondary:
-    'bg-slate-700 text-white hover:bg-slate-800 active:bg-slate-900 focus:ring-slate-500 shadow-sm',
+  // v2.7.7 — gem CTA: emerald body + gold inner ring + neon-emerald glow.
+  // Composed as plain Tailwind utilities pointing at the gemstone tokens
+  // so the bg/inset shadows compose with caller-supplied className overrides.
+  accent: [
+    'text-[#03240e] font-semibold tracking-[0.02em]',
+    'bg-[linear-gradient(135deg,var(--neon-emerald)_0%,var(--emerald-500)_60%,var(--emerald-700)_100%)]',
+    'shadow-[inset_0_1px_0_rgba(245,220,154,0.55),inset_0_0_0_1px_rgba(216,177,60,0.40),0_0_24px_-6px_var(--neon-emerald)]',
+    'hover:shadow-[inset_0_1px_0_rgba(245,220,154,0.75),inset_0_0_0_1px_rgba(245,220,154,0.55),0_0_36px_-4px_var(--neon-emerald)]',
+    'focus:ring-2 focus:ring-[var(--gold-300)] focus:ring-offset-0',
+  ].join(' '),
+  secondary: [
+    'text-[var(--smoke-100)] bg-[rgba(14,14,20,0.85)]',
+    'border border-[var(--gem-edge-gold)]',
+    'shadow-[inset_0_1px_0_rgba(245,220,154,0.10)]',
+    'hover:text-[var(--neon-emerald)] hover:border-[var(--gem-edge-gold-bright)]',
+    'hover:shadow-[inset_0_1px_0_rgba(245,220,154,0.20),0_0_18px_-6px_var(--neon-emerald)]',
+    'focus:ring-2 focus:ring-[var(--gold-300)] focus:ring-offset-0',
+  ].join(' '),
   danger:
-    'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus:ring-red-500 shadow-sm',
-  outline:
-    'bg-transparent text-slate-700 border border-slate-300 hover:bg-slate-50 hover:border-slate-400 focus:ring-slate-400',
-  ghost:
-    'bg-transparent text-slate-700 hover:bg-slate-100 focus:ring-slate-400',
+    'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 focus:ring-rose-500 shadow-sm',
+  outline: [
+    'bg-transparent text-[var(--smoke-100)]',
+    'border border-[var(--gem-edge-gold)]',
+    'hover:text-[var(--neon-emerald)] hover:border-[var(--gem-edge-gold-bright)]',
+    'hover:shadow-[0_0_18px_-6px_var(--neon-emerald)]',
+    'focus:ring-2 focus:ring-[var(--gold-300)] focus:ring-offset-0',
+  ].join(' '),
+  ghost: [
+    'bg-transparent text-[var(--smoke-200)]',
+    'hover:text-[var(--neon-emerald)] hover:bg-[rgba(31,232,143,0.08)]',
+    'focus:ring-2 focus:ring-[var(--emerald-400)] focus:ring-offset-0',
+  ].join(' '),
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {

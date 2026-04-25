@@ -82,7 +82,7 @@ type BackendState = 'checking' | 'connected' | 'disconnected';
 // v2.7.3 V2: fallback when /api/v1/health doesn't return odia_version
 // (older backends) or when the check hasn't completed yet. Updated on
 // every release.
-const ODIA_VERSION_FALLBACK = 'v2.7.6';
+const ODIA_VERSION_FALLBACK = 'v2.7.7';
 
 function useBackendStatus(): {
   state: BackendState;
@@ -150,10 +150,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const groupOrder = ['Overview', 'Workflow', 'Evidence', 'System'];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen text-[var(--smoke-100)]" style={{ background: 'var(--background)' }}>
       {/* ---- Offline banner -------------------------------------------- */}
       {offline && (
-        <div className="fixed top-0 inset-x-0 z-50 bg-amber-500 text-slate-900 text-sm text-center py-2 px-4 shadow-md">
+        <div
+          className="fixed top-0 inset-x-0 z-50 text-sm text-center py-2 px-4"
+          style={{
+            background: 'linear-gradient(90deg, var(--gold-500), var(--gold-300), var(--gold-500))',
+            color: '#1a1404',
+            boxShadow: '0 2px 12px -2px rgba(216, 177, 60, 0.45)',
+          }}
+        >
           <span className="font-medium">You are offline.</span> Cached pages are available.
           <button
             className="ml-3 underline hover:no-underline"
@@ -168,17 +175,43 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Desktop sidebar                                                     */}
       {/* ================================================================== */}
       <aside
-        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-slate-950 text-slate-100 z-40 hud-rail-right hud-scanlines"
+        className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col z-40 hud-rail-right hud-scanlines"
+        style={{
+          background:
+            'linear-gradient(180deg, var(--smoke-950) 0%, var(--smoke-900) 60%, var(--smoke-950) 100%)',
+          color: 'var(--smoke-100)',
+        }}
         aria-label="Primary navigation"
       >
-        {/* Brand */}
-        <div className="flex items-center gap-3 h-16 px-5 bg-[#030712] flex-shrink-0 hud-rail-bottom">
-          <div className="flex items-center justify-center w-9 h-9 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/60 flex-shrink-0 shadow-[inset_0_0_8px_rgba(245,158,11,0.15)]">
+        {/* Brand — gold-edged gem badge + gradient wordmark */}
+        <div
+          className="flex items-center gap-3 h-16 px-5 flex-shrink-0 hud-rail-bottom"
+          style={{ background: 'rgba(7, 7, 10, 0.85)' }}
+        >
+          <div
+            className="flex items-center justify-center w-9 h-9 flex-shrink-0 gem-edge"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(216, 177, 60, 0.18) 0%, rgba(31, 232, 143, 0.12) 100%)',
+              color: 'var(--gold-200)',
+            }}
+          >
             <OctopusMarkIcon size={20} />
           </div>
           <div className="leading-tight min-w-0">
-            <div className="text-sm font-bold tracking-[0.2em] text-amber-400">O.D.I.A.</div>
-            <div className="text-[9px] uppercase tracking-[0.25em] text-slate-500 truncate mt-0.5">
+            <div
+              className="text-sm font-bold tracking-[0.2em] bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  'linear-gradient(90deg, var(--gold-200), var(--neon-emerald), var(--gold-300))',
+              }}
+            >
+              O.D.I.A.
+            </div>
+            <div
+              className="text-[9px] uppercase tracking-[0.25em] truncate mt-0.5"
+              style={{ color: 'var(--smoke-500)' }}
+            >
               Forensic Audit Platform
             </div>
           </div>
@@ -190,7 +223,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             .filter((g) => groups[g])
             .map((group) => (
               <div key={group} className="mb-5 last:mb-0">
-                <div className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                <div
+                  className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest"
+                  style={{ color: 'var(--gold-400)' }}
+                >
                   {group}
                 </div>
                 <ul className="space-y-0.5">
@@ -200,24 +236,38 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       <li key={name}>
                         <AppLink
                           href={href}
-                          className={`
-                            group relative flex items-center gap-3 px-3 py-2 rounded-md
-                            text-sm font-medium transition-colors
-                            ${active
-                              ? 'bg-slate-800 text-white'
-                              : 'text-slate-300 hover:bg-slate-900 hover:text-white'}
-                          `}
+                          className="group relative flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                          style={{
+                            background: active
+                              ? 'linear-gradient(90deg, rgba(31, 232, 143, 0.10), rgba(216, 177, 60, 0.08))'
+                              : 'transparent',
+                            color: active ? 'var(--neon-emerald)' : 'var(--smoke-300)',
+                            boxShadow: active
+                              ? 'inset 0 0 0 1px rgba(216, 177, 60, 0.30), 0 0 18px -8px var(--neon-emerald)'
+                              : 'none',
+                          }}
                           aria-current={active ? 'page' : undefined}
                         >
-                          {/* Active indicator bar */}
+                          {/* Active indicator bar — gold left edge */}
                           <span
-                            className={`
-                              absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r
-                              ${active ? 'bg-amber-500' : 'bg-transparent group-hover:bg-slate-700'}
-                            `}
+                            className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-r"
+                            style={{
+                              background: active
+                                ? 'linear-gradient(180deg, var(--gold-200), var(--neon-emerald), var(--gold-200))'
+                                : 'transparent',
+                              boxShadow: active ? '0 0 8px var(--neon-emerald)' : 'none',
+                            }}
                             aria-hidden="true"
                           />
-                          <Icon size={18} className={active ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200'} />
+                          <Icon
+                            size={18}
+                            className="transition-colors"
+                            style={{
+                              color: active
+                                ? 'var(--neon-emerald)'
+                                : 'var(--smoke-500)',
+                            }}
+                          />
                           <span>{name}</span>
                         </AppLink>
                       </li>
@@ -228,30 +278,47 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             ))}
         </nav>
 
-        {/* Backend status pill + version */}
-        <div className="px-4 py-3 border-t border-slate-800 flex-shrink-0">
+        {/* Backend status pill + version — gem-edged */}
+        <div className="px-4 py-3 flex-shrink-0" style={{ borderTop: '1px solid var(--gem-edge-gold)' }}>
           <button
             onClick={retry}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md bg-slate-900 hover:bg-slate-800 transition-colors text-left group"
+            className="w-full flex items-center justify-between gap-2 px-3 py-2 transition-all text-left group gem-edge"
+            style={{ background: 'rgba(14, 14, 20, 0.85)' }}
             title="Click to re-check backend connection"
           >
             <div className="flex items-center gap-2 min-w-0">
               <span
-                className={`
-                  inline-block w-2 h-2 rounded-full flex-shrink-0
-                  ${backendState === 'connected'   ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : ''}
-                  ${backendState === 'disconnected' ? 'bg-red-500' : ''}
-                  ${backendState === 'checking'     ? 'bg-amber-400 animate-odia-pulse' : ''}
-                `}
+                className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+                style={{
+                  background:
+                    backendState === 'connected'
+                      ? 'var(--neon-emerald)'
+                      : backendState === 'disconnected'
+                        ? 'var(--severity-critical)'
+                        : 'var(--gold-400)',
+                  boxShadow:
+                    backendState === 'connected'
+                      ? '0 0 10px var(--neon-emerald)'
+                      : backendState === 'disconnected'
+                        ? '0 0 8px var(--severity-critical)'
+                        : '0 0 6px var(--gold-400)',
+                  animation: backendState === 'checking' ? 'odia-pulse 1.4s ease-in-out infinite' : 'none',
+                }}
                 aria-hidden="true"
               />
-              <span className="text-xs font-medium text-slate-200 truncate">
+              <span
+                className="text-xs font-medium truncate"
+                style={{ color: 'var(--smoke-100)' }}
+              >
                 {backendState === 'connected'    && 'Backend online'}
                 {backendState === 'disconnected' && 'Backend offline'}
                 {backendState === 'checking'     && 'Connecting…'}
               </span>
             </div>
-            <span className="text-[10px] text-slate-500 group-hover:text-amber-400 hud-num">
+            <span
+              className="text-[10px] hud-num group-hover:text-[var(--neon-emerald)] transition-colors"
+              style={{ color: 'var(--gold-300)' }}
+            >
               {backendVersion}
             </span>
           </button>
@@ -263,14 +330,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* ================================================================== */}
       <main className={`md:pl-64 ${offline ? 'pt-10' : ''}`}>
         {/* Desktop top bar */}
-        <header className="hidden md:flex sticky top-0 z-30 h-14 bg-[#030712] items-center justify-between px-6 hud-rail-bottom hud-scanlines">
+        <header
+          className="hidden md:flex sticky top-0 z-30 h-14 items-center justify-between px-6 hud-rail-bottom hud-scanlines"
+          style={{ background: 'rgba(7, 7, 10, 0.92)', backdropFilter: 'blur(8px)' }}
+        >
           <div className="flex items-center gap-2.5">
             {/* Back / forward — only shown in Electron where hard-nav builds real history */}
             {isFileProtocol() && (
               <div className="flex items-center gap-0.5 mr-0.5">
                 <button
                   onClick={() => window.history.back()}
-                  className="p-1.5 rounded text-slate-500 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+                  className="p-1.5 rounded transition-colors"
+                  style={{ color: 'var(--smoke-500)' }}
                   title="Go back"
                   aria-label="Go back"
                 >
@@ -278,7 +349,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </button>
                 <button
                   onClick={() => window.history.forward()}
-                  className="p-1.5 rounded text-slate-500 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+                  className="p-1.5 rounded transition-colors"
+                  style={{ color: 'var(--smoke-500)' }}
                   title="Go forward"
                   aria-label="Go forward"
                 >
@@ -287,15 +359,30 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             )}
             {current?.Icon && (
-              <span className="flex items-center justify-center w-7 h-7 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/40 flex-shrink-0">
+              <span
+                className="flex items-center justify-center w-7 h-7 flex-shrink-0 gem-edge"
+                style={{
+                  background: 'rgba(31, 232, 143, 0.12)',
+                  color: 'var(--neon-emerald)',
+                }}
+              >
                 <current.Icon size={15} />
               </span>
             )}
             <div className="flex flex-col leading-none">
-              <h2 className="text-sm font-semibold text-slate-100 tracking-[0.15em] uppercase">
+              <h2
+                className="text-sm font-semibold tracking-[0.15em] uppercase bg-clip-text text-transparent"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(90deg, var(--smoke-100), var(--gold-200), var(--neon-emerald))',
+                }}
+              >
                 {currentName}
               </h2>
-              <span className="text-[9px] text-slate-500 uppercase tracking-[0.25em] mt-1">
+              <span
+                className="text-[9px] uppercase tracking-[0.25em] mt-1"
+                style={{ color: 'var(--gold-500)' }}
+              >
                 Forensic Audit Platform
               </span>
             </div>
@@ -303,24 +390,35 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center gap-3">
             <button
               onClick={retry}
-              className={`
-                flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium
-                border transition-colors cursor-pointer
-                ${backendState === 'connected'
-                  ? 'bg-emerald-950/60 border-emerald-700/40 text-emerald-400 hover:bg-emerald-900/60'
-                  : backendState === 'disconnected'
-                  ? 'bg-red-950/60 border-red-700/40 text-red-400 hover:bg-red-900/60'
-                  : 'bg-amber-950/40 border-amber-700/30 text-amber-400'}
-              `}
+              className="flex items-center gap-1.5 px-3 py-1 text-[11px] font-medium transition-all cursor-pointer gem-edge"
+              style={{
+                background: 'rgba(14, 14, 20, 0.85)',
+                color:
+                  backendState === 'connected'
+                    ? 'var(--neon-emerald)'
+                    : backendState === 'disconnected'
+                      ? 'var(--severity-critical)'
+                      : 'var(--gold-300)',
+              }}
               title="Click to re-check backend connection"
             >
               <span
-                className={`
-                  inline-block w-1.5 h-1.5 rounded-full flex-shrink-0
-                  ${backendState === 'connected'    ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]' : ''}
-                  ${backendState === 'disconnected' ? 'bg-red-400' : ''}
-                  ${backendState === 'checking'     ? 'bg-amber-400 animate-odia-pulse' : ''}
-                `}
+                className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
+                style={{
+                  background:
+                    backendState === 'connected'
+                      ? 'var(--neon-emerald)'
+                      : backendState === 'disconnected'
+                        ? 'var(--severity-critical)'
+                        : 'var(--gold-400)',
+                  boxShadow:
+                    backendState === 'connected'
+                      ? '0 0 10px var(--neon-emerald)'
+                      : backendState === 'disconnected'
+                        ? '0 0 6px var(--severity-critical)'
+                        : '0 0 6px var(--gold-400)',
+                  animation: backendState === 'checking' ? 'odia-pulse 1.4s ease-in-out infinite' : 'none',
+                }}
                 aria-hidden="true"
               />
               {backendState === 'connected'    && 'System Online'}
@@ -331,12 +429,29 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Mobile top bar */}
-        <header className="md:hidden sticky top-0 z-30 bg-[#030712] text-white hud-rail-bottom">
+        <header
+          className="md:hidden sticky top-0 z-30 hud-rail-bottom"
+          style={{ background: 'rgba(7, 7, 10, 0.92)' }}
+        >
           <div className="px-4 py-3 flex items-center gap-2">
-            <div className="flex items-center justify-center w-7 h-7 bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/50">
+            <div
+              className="flex items-center justify-center w-7 h-7 gem-edge"
+              style={{
+                background: 'rgba(216, 177, 60, 0.12)',
+                color: 'var(--gold-200)',
+              }}
+            >
               <OctopusMarkIcon size={16} />
             </div>
-            <h2 className="text-base font-semibold tracking-wider uppercase">{currentName}</h2>
+            <h2
+              className="text-base font-semibold tracking-wider uppercase bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  'linear-gradient(90deg, var(--smoke-100), var(--neon-emerald), var(--gold-200))',
+              }}
+            >
+              {currentName}
+            </h2>
           </div>
         </header>
 
@@ -350,7 +465,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Mobile bottom tab bar                                              */}
       {/* ================================================================== */}
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-40 shadow-[0_-2px_12px_rgba(15,23,42,0.08)]"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40"
+        style={{
+          background: 'rgba(7, 7, 10, 0.96)',
+          borderTop: '1px solid var(--gem-edge-gold)',
+          boxShadow:
+            '0 -2px 16px rgba(31, 232, 143, 0.18), inset 0 1px 0 rgba(216, 177, 60, 0.20)',
+        }}
         role="navigation"
         aria-label="Primary navigation"
       >
@@ -361,11 +482,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <AppLink
                 key={name}
                 href={href}
-                className={`
-                  flex-1 flex flex-col items-center justify-center py-2.5 gap-1
-                  text-[10px] font-medium transition-colors
-                  ${active ? 'text-amber-600' : 'text-slate-500 hover:text-slate-700'}
-                `}
+                className="flex-1 flex flex-col items-center justify-center py-2.5 gap-1 text-[10px] font-medium transition-colors"
+                style={{
+                  color: active ? 'var(--neon-emerald)' : 'var(--smoke-500)',
+                  textShadow: active ? '0 0 8px var(--neon-emerald)' : 'none',
+                }}
                 aria-current={active ? 'page' : undefined}
               >
                 <Icon size={20} />

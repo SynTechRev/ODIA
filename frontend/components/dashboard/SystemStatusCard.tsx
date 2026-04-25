@@ -4,6 +4,9 @@
  * Hits GET /api/v1/health every 30 s.  When the backend is unreachable
  * (common in Electron if the Python subprocess crashed), shows a clear
  * actionable error state instead of spinning "Checking..." forever.
+ *
+ * v2.7.7 Y5 — pastel light-theme color chains replaced with gemstone
+ * tokens; healthy state uses neon-emerald, error uses severity-critical.
  */
 
 'use client';
@@ -75,60 +78,85 @@ export function SystemStatusCard() {
       }
     >
       <div className="space-y-4">
-        {/* Status row */}
-        <div className="flex items-center justify-between">
-          <span className="text-slate-600">Backend</span>
+        <Row label="Backend">
           {phase === 'loading' && !health && (
-            <span className="inline-flex items-center gap-1.5 text-slate-500">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-odia-pulse" />
+            <span className="inline-flex items-center gap-1.5" style={{ color: 'var(--smoke-500)' }}>
+              <span
+                className="w-2 h-2 rounded-full animate-odia-pulse"
+                style={{ background: 'var(--gold-400)' }}
+              />
               <span className="text-sm">Checking…</span>
             </span>
           )}
           {isHealthy && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium ring-1 ring-inset ring-emerald-600/20">
+            <span
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium gem-edge"
+              style={{
+                color: 'var(--neon-emerald)',
+                background: 'rgba(31, 232, 143, 0.10)',
+              }}
+            >
               <CheckCircleIcon size={12} />
               Healthy
             </span>
           )}
           {phase === 'error' && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-medium ring-1 ring-inset ring-red-600/20">
+            <span
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium gem-edge"
+              style={{
+                color: 'var(--severity-critical)',
+                background: 'rgba(244, 63, 94, 0.10)',
+              }}
+            >
               <AlertCircleIcon size={12} />
               Unreachable
             </span>
           )}
-        </div>
+        </Row>
 
-        {/* Version + endpoint */}
         {health && (
           <>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-600">API Version</span>
-              <span className="font-mono text-xs text-slate-800 bg-slate-100 px-2 py-0.5 rounded">
+            <Row label="API Version">
+              <span
+                className="font-mono text-xs px-2 py-0.5 gem-edge"
+                style={{
+                  color: 'var(--gold-200)',
+                  background: 'rgba(216, 177, 60, 0.10)',
+                }}
+              >
                 {health.version}
               </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-600">Endpoint</span>
-              <span className="font-mono text-xs text-slate-800 truncate max-w-[220px]">
+            </Row>
+            <Row label="Endpoint">
+              <span
+                className="font-mono text-xs truncate max-w-[220px]"
+                style={{ color: 'var(--smoke-300)' }}
+              >
                 {getAPIClient().baseURL}
               </span>
-            </div>
+            </Row>
           </>
         )}
 
-        {/* Error detail */}
         {phase === 'error' && (
-          <div className="rounded-md border border-red-200 bg-red-50 p-3">
+          <div
+            className="p-3 gem-edge"
+            style={{ background: 'rgba(244, 63, 94, 0.08)' }}
+          >
             <div className="flex items-start gap-2">
-              <AlertCircleIcon size={16} className="text-red-600 flex-shrink-0 mt-0.5" />
+              <AlertCircleIcon
+                size={16}
+                className="flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--severity-critical)' }}
+              />
               <div className="min-w-0">
-                <p className="text-sm font-medium text-red-900">
+                <p className="text-sm font-medium" style={{ color: 'var(--severity-critical)' }}>
                   Cannot reach backend
                 </p>
-                <p className="text-xs text-red-700 mt-1 break-words">
+                <p className="text-xs mt-1 break-words" style={{ color: 'var(--smoke-200)' }}>
                   {error}
                 </p>
-                <p className="text-xs text-red-700 mt-2">
+                <p className="text-xs mt-2" style={{ color: 'var(--smoke-300)' }}>
                   The Python analysis engine may have failed to start. Try
                   restarting O.D.I.A., or check the application logs.
                 </p>
@@ -137,13 +165,27 @@ export function SystemStatusCard() {
           </div>
         )}
 
-        {/* Last checked */}
         {checkedAt && (
-          <div className="pt-3 border-t border-slate-100 text-xs text-slate-500">
+          <div
+            className="pt-3 text-xs"
+            style={{
+              borderTop: '1px solid var(--gem-edge-gold)',
+              color: 'var(--smoke-500)',
+            }}
+          >
             Last checked {checkedAt.toLocaleTimeString()}
           </div>
         )}
       </div>
     </Card>
+  );
+}
+
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span style={{ color: 'var(--smoke-300)' }}>{label}</span>
+      {children}
+    </div>
   );
 }

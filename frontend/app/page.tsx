@@ -2,17 +2,22 @@
  * Dashboard — main landing view.
  *
  * Sections:
- *   1. Hero — brand statement + primary CTAs
- *   2. Severity strip (conditional — only when analyses exist)
+ *   1. Hero — gem-cut crystallized panel + dual gold/neon-emerald edges
+ *   2. Severity strip (live; backed by /api/v1/dashboard/summary)
  *   3. System Status × Analysis Summary cards
  *   4. Jurisdiction × Detectors cards
  *   5. Quick Actions tiles
  *   6. Platform Capabilities (static copy)
+ *
+ * v2.7.7 Y4 — severity strip now polls the dashboard-summary endpoint
+ * instead of reading the dead Zustand store. Hero rewritten to use the
+ * .gem-panel-faceted utility (extra mid-side cuts so the silhouette
+ * reads as cut quartz). All tiles + features use the gemstone palette.
  */
 
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppNavigate } from '@/lib/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { SystemStatusCard } from '@/components/dashboard/SystemStatusCard';
@@ -31,100 +36,88 @@ import {
   OctopusMarkIcon,
   CheckCircleIcon,
 } from '@/components/base/Icons';
-import { useAnalysisStore } from '@/lib/stores/analysis';
+import { getAPIClient, type DashboardSummary } from '@/lib/api/client';
+
+const POLL_MS = 30_000;
+
+const EMPTY_SUMMARY: DashboardSummary = {
+  available: false,
+  analyses: 0,
+  documents: 0,
+  findings: 0,
+  by_severity: { critical: 0, high: 0, medium: 0, low: 0 },
+  avg_severity_score: 0,
+  last_audit_at: null,
+};
+
+function useDashboardSummary(): DashboardSummary {
+  const [summary, setSummary] = useState<DashboardSummary>(EMPTY_SUMMARY);
+  useEffect(() => {
+    let cancelled = false;
+    const client = getAPIClient();
+    const load = async () => {
+      try {
+        const data = await client.getDashboardSummary();
+        if (!cancelled) setSummary(data);
+      } catch {
+        /* keep empty */
+      }
+    };
+    load();
+    const id = setInterval(load, POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+  return summary;
+}
 
 export default function Home() {
   const nav = useAppNavigate();
-  const detailedAnalyses = useAnalysisStore((state) => state.detailedAnalyses);
-
-  const severityTotals = Object.values(detailedAnalyses).reduce(
-    (acc, a) => {
-      acc.critical += a.summary.by_severity.critical;
-      acc.high     += a.summary.by_severity.high;
-      acc.medium   += a.summary.by_severity.medium;
-      acc.low      += a.summary.by_severity.low;
-      return acc;
-    },
-    { critical: 0, high: 0, medium: 0, low: 0 },
-  );
-
-  const hasAnomalyData = Object.keys(detailedAnalyses).length > 0;
+  const summary = useDashboardSummary();
+  const sev = summary.by_severity;
+  const hasAnomalyData =
+    sev.critical + sev.high + sev.medium + sev.low > 0;
 
   return (
     <DashboardLayout>
       <div className="max-w-7xl mx-auto space-y-6">
         {/* =============================================================== */}
-        {/* 1 · Hero — v2.7.6 X5 POC: gemstone (smoke / gold / emerald)     */}
+        {/* 1 · Hero — v2.7.7 Y4: crystallized gem-panel-faceted             */}
         {/* =============================================================== */}
-        {/* Cut-gemstone aesthetic, replacing the v2.7.5 W4 purple POC:     */}
-        {/*   a) smoke base — vertical gradient near-black → smoke-900       */}
-        {/*      → smoke-800 (the polished obsidian body)                    */}
-        {/*   b) gold hairline border + brighter inner stroke (the "cut      */}
-        {/*      edge" of the gem — antique gold, not chrome)                */}
-        {/*   c) emerald bloom upper-right (the gem facet catching light)    */}
-        {/*   d) gold-vein gradient text + emerald CTA + gold-outline CTA   */}
-        <section
-          className="
-            relative overflow-hidden
-            rounded-2xl
-          "
-          style={{
-            background:
-              'linear-gradient(160deg, var(--smoke-950) 0%, var(--smoke-900) 45%, var(--smoke-800) 75%, var(--smoke-900) 100%)',
-            boxShadow:
-              '0 0 0 1px var(--gem-edge-gold), 0 0 0 2px rgba(0,0,0,0.45) inset, 0 0 60px -16px var(--gem-edge-emerald)',
-          }}
-        >
-          {/* Inner gold stroke — the second cut of the gem edge */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-[2px] rounded-[14px] pointer-events-none"
-            style={{ boxShadow: 'inset 0 0 0 1px rgba(232, 201, 113, 0.18)' }}
-          />
-          {/* Top gold hairline ribbon — animated catch-light */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-px"
-            style={{
-              background:
-                'linear-gradient(90deg, transparent 0%, var(--gold-400) 30%, var(--gold-300) 50%, var(--gold-400) 70%, transparent 100%)',
-            }}
-          />
-          {/* Emerald bloom upper-right — gem facet */}
+        <section className="gem-panel gem-panel-faceted relative overflow-hidden">
+          <div className="gem-ribbon-top" aria-hidden="true" />
+          {/* Emerald bloom upper-right — gem facet catching light */}
           <div
             aria-hidden="true"
             className="absolute -top-32 -right-20 w-96 h-96 rounded-full pointer-events-none blur-3xl"
-            style={{ background: 'rgba(16, 185, 129, 0.22)' }}
+            style={{ background: 'rgba(0, 255, 157, 0.18)' }}
           />
           {/* Gold bloom lower-left — antique vein depth */}
           <div
             aria-hidden="true"
             className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full pointer-events-none blur-3xl"
-            style={{ background: 'rgba(212, 175, 55, 0.10)' }}
+            style={{ background: 'rgba(216, 177, 60, 0.12)' }}
           />
-          {/* Faceted grid pattern — subtle gemstone facet hint */}
+          {/* Crystalline diamond-grid hint */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            className="absolute inset-0 opacity-[0.06] pointer-events-none"
             style={{
               backgroundImage:
-                'linear-gradient(rgba(232,201,113,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(232,201,113,0.6) 1px, transparent 1px)',
-              backgroundSize: '28px 28px',
+                'linear-gradient(45deg, var(--gold-300) 1px, transparent 1px), linear-gradient(-45deg, var(--neon-emerald) 1px, transparent 1px)',
+              backgroundSize: '32px 32px, 32px 32px',
             }}
           />
 
           <div className="relative p-8 md:p-10">
-            {/* Brand badge — gold ring, smoke fill, emerald accent dot */}
+            {/* Brand badge — gem-edged, dual gold/emerald */}
             <div
-              className="
-                inline-flex items-center gap-2 px-3 py-1 mb-4
-                text-[11px] font-medium uppercase tracking-[0.22em]
-              "
+              className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-[11px] font-medium uppercase tracking-[0.22em] gem-edge"
               style={{
                 color: 'var(--smoke-100)',
-                background: 'rgba(20, 20, 26, 0.6)',
-                boxShadow:
-                  '0 0 0 1px var(--gem-edge-gold), 0 0 18px -6px rgba(212, 175, 55, 0.55)',
+                background: 'rgba(14, 14, 20, 0.7)',
               }}
             >
               <OctopusMarkIcon size={12} />
@@ -132,28 +125,28 @@ export default function Home() {
                 className="bg-clip-text text-transparent"
                 style={{
                   backgroundImage:
-                    'linear-gradient(90deg, var(--gold-300), var(--smoke-100), var(--gold-400))',
+                    'linear-gradient(90deg, var(--gold-200), var(--neon-emerald), var(--gold-300))',
                 }}
               >
-                O.D.I.A. · v2.7.6
+                O.D.I.A. · v2.7.7
               </span>
               <span
                 aria-hidden="true"
-                className="w-1.5 h-1.5 rounded-full"
+                className="w-1.5 h-1.5 rounded-full animate-gem-breath"
                 style={{
-                  background: 'var(--emerald-300)',
-                  boxShadow: '0 0 6px var(--emerald-500)',
+                  background: 'var(--neon-emerald)',
+                  boxShadow: '0 0 8px var(--neon-emerald)',
                 }}
               />
             </div>
 
-            {/* Heading — gold-vein gradient text */}
+            {/* Heading — gold-vein → neon-emerald gradient */}
             <h1
               className="text-3xl md:text-4xl font-bold tracking-tight mb-3 bg-clip-text text-transparent"
               style={{
                 backgroundImage:
-                  'linear-gradient(135deg, var(--smoke-100) 0%, var(--gold-300) 50%, var(--smoke-200) 100%)',
-                filter: 'drop-shadow(0 0 28px rgba(212, 175, 55, 0.18))',
+                  'linear-gradient(135deg, var(--smoke-100) 0%, var(--gold-200) 35%, var(--neon-emerald) 70%, var(--smoke-100) 100%)',
+                filter: 'drop-shadow(0 0 28px rgba(0, 255, 157, 0.20))',
               }}
             >
               Civic accountability,
@@ -171,34 +164,19 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
-              {/* Primary CTA — emerald body, gold inner highlight ring */}
               <Button
                 variant="accent"
                 size="lg"
                 onClick={() => nav('/upload')}
                 icon={<UploadIcon size={16} />}
-                className="!text-white !border-0"
-                style={{
-                  background:
-                    'linear-gradient(135deg, var(--emerald-500) 0%, var(--emerald-700) 100%)',
-                  boxShadow:
-                    '0 0 24px -6px rgba(16, 185, 129, 0.55), inset 0 1px 0 rgba(232, 201, 113, 0.35)',
-                }}
               >
                 Upload Document
               </Button>
-              {/* Secondary CTA — gold-outline platinum text */}
               <Button
-                variant="ghost"
+                variant="outline"
                 size="lg"
                 onClick={() => nav('/analysis')}
                 icon={<AnalysisIcon size={16} />}
-                className="hover:!bg-white/[0.04]"
-                style={{
-                  color: 'var(--smoke-100)',
-                  border: '1px solid var(--gem-edge-gold)',
-                  boxShadow: 'inset 0 1px 0 rgba(232, 201, 113, 0.10)',
-                }}
               >
                 View Analyses
               </Button>
@@ -215,27 +193,18 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Bottom gold hairline ribbon — mirror of the top cut */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 h-px"
-            style={{
-              background:
-                'linear-gradient(90deg, transparent 0%, var(--gold-500) 30%, var(--gold-400) 50%, var(--gold-500) 70%, transparent 100%)',
-              opacity: 0.6,
-            }}
-          />
+          <div className="gem-ribbon-bottom" aria-hidden="true" />
         </section>
 
         {/* =============================================================== */}
-        {/* 2 · Severity strip (conditional)                                 */}
+        {/* 2 · Severity strip — live, backed by /api/v1/dashboard/summary  */}
         {/* =============================================================== */}
         {hasAnomalyData && (
           <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <SeverityTile label="Critical" count={severityTotals.critical} tone="critical" />
-            <SeverityTile label="High"     count={severityTotals.high}     tone="high" />
-            <SeverityTile label="Medium"   count={severityTotals.medium}   tone="medium" />
-            <SeverityTile label="Low"      count={severityTotals.low}      tone="low" />
+            <SeverityTile label="Critical" count={sev.critical} tone="critical" />
+            <SeverityTile label="High"     count={sev.high}     tone="high" />
+            <SeverityTile label="Medium"   count={sev.medium}   tone="medium" />
+            <SeverityTile label="Low"      count={sev.low}      tone="low" />
           </section>
         )}
 
@@ -288,8 +257,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Feature
               icon={<AnalysisIcon size={18} />}
-              title="8-Detector Analysis Engine"
-              body="Fiscal, constitutional, surveillance, procurement, signature, scope, governance, and administrative integrity detection — all executed locally."
+              title="9-Detector Analysis Engine"
+              body="Fiscal, constitutional, surveillance, procurement, signature, scope, governance, administrative, and grant-compliance integrity detection — all executed locally."
             />
             <Feature
               icon={<OrchestratorIcon size={18} />}
@@ -322,7 +291,10 @@ function InlineFeature({ label }: { label: string }) {
     <span className="inline-flex items-center gap-1.5">
       <span
         className="w-1 h-1 rounded-full"
-        style={{ background: 'var(--gold-400)' }}
+        style={{
+          background: 'var(--neon-emerald)',
+          boxShadow: '0 0 4px var(--neon-emerald)',
+        }}
       />
       {label}
     </span>
@@ -338,29 +310,33 @@ function SeverityTile({
   count: number;
   tone: 'critical' | 'high' | 'medium' | 'low';
 }) {
-  // v2.7.3 D6: replaced bg-white + ring-red-* + text-red-700 chain
-  // (pale-pastel on slate-950, unreadable per post-v2.7.2 screenshots)
-  // with the HUD primitive stack shared across Automation and
-  // Orchestrator pages.
-  const toneClassMap: Record<typeof tone, string> = {
-    critical: 'text-rose-400',
-    high: 'text-orange-400',
-    medium: 'text-yellow-400',
-    low: 'text-blue-400',
+  // v2.7.7 Y4 — gem-cut tile, gold-edged with severity-color crystal accent.
+  const toneStyle: Record<typeof tone, { color: string; ring: string }> = {
+    critical: { color: 'var(--severity-critical)', ring: 'rgba(244, 63, 94, 0.45)' },
+    high:     { color: 'var(--severity-high)',     ring: 'rgba(249, 115, 22, 0.40)' },
+    medium:   { color: 'var(--gold-300)',          ring: 'rgba(236, 200, 112, 0.50)' },
+    low:      { color: 'var(--neon-emerald)',      ring: 'rgba(0, 255, 157, 0.50)' },
   };
-  const dotClassMap: Record<typeof tone, string> = {
-    critical: 'bg-rose-500',
-    high: 'bg-orange-500',
-    medium: 'bg-yellow-500',
-    low: 'bg-blue-500',
-  };
+  const t = toneStyle[tone];
   return (
-    <div className="hud-panel hud-panel-inset p-4">
+    <div
+      className="gem-panel gem-panel-dense p-4 transition-all"
+      style={{
+        boxShadow:
+          `0 0 0 1px var(--gem-edge-gold), inset 0 0 0 1px ${t.ring}, 0 0 24px -10px ${t.ring}`,
+      }}
+    >
       <div className="flex items-center gap-2 mb-2">
-        <span className={`w-2 h-2 rounded-full ${dotClassMap[tone]}`} />
+        <span
+          className="w-2 h-2 rounded-full"
+          style={{ background: t.color, boxShadow: `0 0 8px ${t.color}` }}
+        />
         <span className="hud-metric-label">{label}</span>
       </div>
-      <div className={`hud-metric tabular-nums ${toneClassMap[tone]}`}>
+      <div
+        className="hud-metric tabular-nums"
+        style={{ color: t.color }}
+      >
         {count}
       </div>
     </div>
@@ -381,23 +357,32 @@ function ActionTile({
   return (
     <button
       onClick={onClick}
-      className="
-        group text-left p-4 rounded-lg
-        border border-slate-200 bg-white
-        hover:border-amber-400 hover:shadow-md hover:shadow-amber-500/5
-        transition-all duration-150
-        focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2
-      "
+      className="group text-left p-4 transition-all gem-edge focus:outline-none"
+      style={{
+        background: 'rgba(14, 14, 20, 0.65)',
+      }}
     >
       <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 w-10 h-10 rounded-md bg-slate-100 text-slate-600 group-hover:bg-amber-50 group-hover:text-amber-600 flex items-center justify-center transition-colors">
+        <div
+          className="flex-shrink-0 w-10 h-10 flex items-center justify-center transition-all gem-edge"
+          style={{
+            background: 'rgba(216, 177, 60, 0.10)',
+            color: 'var(--gold-300)',
+          }}
+        >
           {icon}
         </div>
         <div className="min-w-0">
-          <div className="font-semibold text-slate-900 text-sm mb-0.5">
+          <div
+            className="font-semibold text-sm mb-0.5 transition-colors group-hover:text-[var(--neon-emerald)]"
+            style={{ color: 'var(--smoke-100)' }}
+          >
             {title}
           </div>
-          <div className="text-xs text-slate-500 leading-relaxed">
+          <div
+            className="text-xs leading-relaxed"
+            style={{ color: 'var(--smoke-500)' }}
+          >
             {subtitle}
           </div>
         </div>
@@ -417,12 +402,28 @@ function Feature({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="flex-shrink-0 w-9 h-9 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center ring-1 ring-amber-200">
+      <div
+        className="flex-shrink-0 w-9 h-9 flex items-center justify-center gem-edge"
+        style={{
+          background: 'rgba(31, 232, 143, 0.10)',
+          color: 'var(--neon-emerald)',
+        }}
+      >
         {icon}
       </div>
       <div className="min-w-0">
-        <h4 className="font-semibold text-slate-900 text-sm mb-1">{title}</h4>
-        <p className="text-xs text-slate-600 leading-relaxed">{body}</p>
+        <h4
+          className="font-semibold text-sm mb-1"
+          style={{ color: 'var(--smoke-100)' }}
+        >
+          {title}
+        </h4>
+        <p
+          className="text-xs leading-relaxed"
+          style={{ color: 'var(--smoke-300)' }}
+        >
+          {body}
+        </p>
       </div>
     </div>
   );

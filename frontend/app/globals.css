@@ -87,47 +87,91 @@
   --glow-violet: 0 0 24px rgba(167, 139, 250, 0.30);
   --glow-critical: 0 0 24px rgba(244, 63, 94, 0.40);
 
-  /* v2.7.6 X5 — Gemstone palette (POC)
+  /* v2.7.7 Y1 — Gemstone palette (full propagation)
      ----------------------------------------------------------------------
-     Direction shift away from the W4 purple/platinum POC: a cut-gemstone
-     aesthetic. Smoke is the chrome spine (deep grayscale gradient from
-     near-black to platinum), gold is the vein/cut-edge accent (matte
-     antique, not chrome), and emerald/jade is the gem-facet accent
-     (healthy/active states). Tokens are additive — existing HUD tokens
-     remain so non-hero surfaces don't break until the v2.7.7 propagation
-     sweep is approved.
+     Approved direction from v2.7.6 X5 POC, with revisions per user:
+       • greens push toward neon — saturated, vivid, glowing
+       • outlining is dual: matte gold + neon emerald
+       • surfaces have crystallized facet edges (clip-path geometry)
 
-     Smoke spine:
-       --smoke-950 .. --smoke-200      grayscale gradient
-     Gold vein (matte antique):
-       --gold-300/400/500/600          edge hairlines, accents, value text
-     Emerald / jade gem facets:
-       --emerald-300/500/700           healthy / active state
-       --jade-800                      deep inset panel base
+     Smoke spine — grayscale chrome (black → platinum):
+       --smoke-950 .. --smoke-100
+     Gold vein — antique matte cut-edge accent:
+       --gold-200..600
+     Neon emerald — gem-facet glow + healthy/active state:
+       --emerald-300/400/500/600/700, --neon-emerald, --jade-800
+     Edge & glow tokens consumed by .gem-* utilities and the redirected
+     hud-* family.
   */
-  --smoke-950: #0a0a0c;
-  --smoke-900: #14141a;
-  --smoke-800: #1f1f28;
-  --smoke-700: #2a2a35;
+  --smoke-950: #07070a;
+  --smoke-900: #0e0e14;
+  --smoke-800: #18181f;
+  --smoke-700: #25252f;
+  --smoke-600: #34343f;
+  --smoke-500: #5a5a66;
   --smoke-300: #cbcbd1;
   --smoke-200: #e6e6ea;
   --smoke-100: #f4f4f6;
 
-  --gold-300: #e8c971;            /* highlight */
-  --gold-400: #d4af37;            /* primary gold */
+  /* Gold — bumped slightly brighter for the dual-edge cuts */
+  --gold-200: #f5dc9a;            /* highest catch-light */
+  --gold-300: #ecc870;            /* highlight */
+  --gold-400: #d8b13c;            /* primary gold */
   --gold-500: #b8941f;            /* mid-tone */
   --gold-600: #8b6914;            /* deep antique */
 
-  --emerald-300: #6ee7b7;
-  --emerald-500: #10b981;
-  --emerald-700: #047857;
-  --jade-800: #064e3b;            /* gem-facet inset */
+  /* Emerald — pushed toward neon. Brightest tone is --neon-emerald,
+     used for the dual-edge inner stroke + active-state glows. */
+  --emerald-200: #b9ffe1;         /* near-white mint highlight */
+  --emerald-300: #5cf5b0;         /* vibrant mint */
+  --emerald-400: #1fe88f;         /* core vibrant emerald */
+  --emerald-500: #0fd47a;         /* primary value text */
+  --emerald-600: #07b863;
+  --emerald-700: #058a4a;
+  --neon-emerald: #00ff9d;        /* neon — for glows + dot pulses */
+  --jade-800: #053826;            /* deep gem-facet inset */
+  --jade-900: #04221a;            /* deepest inset, behind crystallized panels */
 
-  --gem-edge-gold: rgba(212, 175, 55, 0.55);
-  --gem-edge-gold-bright: rgba(232, 201, 113, 0.85);
-  --gem-edge-emerald: rgba(16, 185, 129, 0.45);
-  --glow-gold: 0 0 28px rgba(212, 175, 55, 0.30);
-  --glow-emerald: 0 0 28px rgba(16, 185, 129, 0.35);
+  /* Edge tokens — dual-edge composition uses gold OUTER + emerald INNER */
+  --gem-edge-gold: rgba(216, 177, 60, 0.65);
+  --gem-edge-gold-bright: rgba(245, 220, 154, 0.95);
+  --gem-edge-emerald: rgba(31, 232, 143, 0.55);
+  --gem-edge-emerald-bright: rgba(0, 255, 157, 0.85);
+
+  /* Glow tokens — neon emerald is brighter than the v2.7.6 X5 emerald */
+  --glow-gold: 0 0 28px rgba(216, 177, 60, 0.32);
+  --glow-gold-strong: 0 0 38px rgba(245, 220, 154, 0.55);
+  --glow-emerald: 0 0 28px rgba(31, 232, 143, 0.45);
+  --glow-emerald-neon: 0 0 36px rgba(0, 255, 157, 0.55);
+
+  /* Crystallized facet — chamfer step cut for the gem-* utility family.
+     Larger than --hud-chamfer so the geometry reads as deliberately
+     faceted rather than incidentally rounded. */
+  --gem-facet: 14px;
+  --gem-facet-sm: 8px;
+}
+
+/* v2.7.7 Y1 — Token redirects so the existing .hud-* family picks up
+   the gemstone palette without per-component edits. The hud-cyan /
+   status-healthy / amber-edge channels all redirect to gold + emerald.
+   Violet (.hud-flow) remains unchanged — it is the n8n workflow channel
+   and stays distinct so workflow state doesn't blend with audit data. */
+:root {
+  /* Amber → gold */
+  --hud-primary: var(--gold-400);
+  --hud-primary-bright: var(--gold-200);
+  --hud-primary-dim: var(--gold-600);
+  /* Cyan → neon emerald (data channel) */
+  --hud-secondary: var(--emerald-500);
+  --hud-secondary-bright: var(--neon-emerald);
+  --hud-secondary-dim: var(--emerald-700);
+  /* Edges — gold outer + emerald data */
+  --hud-edge: var(--gem-edge-gold);
+  --hud-edge-strong: var(--gem-edge-gold-bright);
+  --hud-edge-data: var(--gem-edge-emerald);
+  /* Status healthy → neon emerald */
+  --status-healthy: var(--neon-emerald);
+  --status-warn: var(--gold-400);
 }
 
 /* Tailwind theme mapping — lets the rest of the codebase keep using
@@ -167,18 +211,24 @@ body {
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(31, 232, 143, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 100%, rgba(216, 177, 60, 0.05) 0%, transparent 55%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Subtle grid pattern — ~2% opacity — only hints at underlying
-     chrome without becoming a distraction on content pages. */
+  /* v2.7.7 — diamond-grid hint, gold + neon-emerald hairlines at very
+     low opacity. Reads as crystalline lattice rather than the prior
+     orthogonal amber grid. */
   background-image:
-    linear-gradient(rgba(245, 158, 11, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245, 158, 11, 0.015) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(45deg, rgba(216, 177, 60, 0.018) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(31, 232, 143, 0.014) 1px, transparent 1px),
+    radial-gradient(ellipse at 18% 0%, rgba(31, 232, 143, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 100%, rgba(216, 177, 60, 0.05) 0%, transparent 55%);
+  background-size: 36px 36px, 36px 36px, auto, auto;
 }
 
 code,
@@ -187,11 +237,12 @@ pre {
   font-family: var(--font-mono);
 }
 
-/* Focus ring — sharp amber rather than rounded. Matches HUD edge language. */
+/* Focus ring — sharp gold rather than rounded. Matches gem-edge language. */
 *:focus-visible {
-  outline: 1.5px solid var(--hud-primary-bright);
+  outline: 1.5px solid var(--gold-200);
   outline-offset: 2px;
   border-radius: 2px;
+  box-shadow: 0 0 0 3px rgba(31, 232, 143, 0.25);
 }
 
 /* Scrollbar — slim slate with amber thumb on hover */
@@ -209,20 +260,20 @@ pre {
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.6);
+  background: rgba(216, 177, 60, 0.65);
   background-clip: padding-box;
   border: 2px solid transparent;
 }
 
-/* v2.7.1 — Text selection. Amber on slate so copy-paste on dark
-   panels doesn't wash out against the default browser blue. */
+/* v2.7.7 — Text selection. Neon emerald on smoke for the gemstone
+   palette (was amber on slate). High contrast, on-brand. */
 ::selection {
-  background: rgba(245, 158, 11, 0.35);
-  color: var(--foreground);
+  background: rgba(31, 232, 143, 0.40);
+  color: var(--smoke-100);
 }
 ::-moz-selection {
-  background: rgba(245, 158, 11, 0.35);
-  color: var(--foreground);
+  background: rgba(31, 232, 143, 0.40);
+  color: var(--smoke-100);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -268,10 +319,12 @@ pre {
 
 /* v2.7.1 — breath. Slow glow cycle for "live" indicators (a running
    workflow, an active backend connection). Subtle; never paired with
-   odia-pulse on the same element. */
+   odia-pulse on the same element.
+   v2.7.7 — recoloured to gold so the breath aligns with the gemstone
+   palette; emerald-breath lives separately as .animate-gem-breath. */
 @keyframes odia-glow-breath {
-  0%, 100% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.22); }
-  50%      { box-shadow: 0 0 26px rgba(245, 158, 11, 0.55); }
+  0%, 100% { box-shadow: 0 0 12px rgba(216, 177, 60, 0.25); }
+  50%      { box-shadow: 0 0 26px rgba(245, 220, 154, 0.60); }
 }
 
 .animate-odia-pulse  { animation: odia-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
@@ -316,12 +369,15 @@ pre {
 
 .hud-panel {
   position: relative;
+  /* v2.7.7 — smoke-spine gradient (was slate). Reads as polished
+     obsidian under the gem-edge hairlines. */
   background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.96));
+    linear-gradient(180deg, rgba(14, 14, 20, 0.94), rgba(7, 7, 10, 0.96));
   border: 1px solid var(--hud-edge);
   box-shadow:
-    inset 0 1px 0 rgba(245, 158, 11, 0.08),
+    inset 0 1px 0 rgba(245, 220, 154, 0.10),
     inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(31, 232, 143, 0.08),
     0 8px 24px -12px rgba(0, 0, 0, 0.6);
   /* Chamfered corners — top-left + bottom-right get cut, leaves top-right
      and bottom-left pointed for directional tension. Feels designed. */
@@ -340,9 +396,10 @@ pre {
 .hud-panel:hover {
   border-color: var(--hud-edge-strong);
   box-shadow:
-    inset 0 1px 0 rgba(245, 158, 11, 0.15),
+    inset 0 1px 0 rgba(245, 220, 154, 0.18),
     inset 0 -1px 0 rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(245, 158, 11, 0.15),
+    inset 0 0 0 1px rgba(0, 255, 157, 0.18),
+    0 0 0 1px rgba(216, 177, 60, 0.20),
     0 8px 24px -12px rgba(0, 0, 0, 0.7);
 }
 
@@ -353,28 +410,33 @@ pre {
 .hud-panel-accent {
   border: 1px solid var(--hud-edge-strong);
   box-shadow:
-    inset 0 1px 0 rgba(245, 158, 11, 0.22),
+    inset 0 1px 0 rgba(245, 220, 154, 0.26),
     inset 0 -1px 0 rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(245, 158, 11, 0.12),
+    inset 0 0 0 1px rgba(31, 232, 143, 0.20),
+    0 0 0 1px rgba(216, 177, 60, 0.18),
     0 12px 32px -14px rgba(0, 0, 0, 0.7);
 }
 
-/* v2.7.1 — Data panel (cyan edge).
-   For analysis / findings surfaces where numeric readouts live. Cyan
-   is the JARVIS data channel; reserve it for panels whose primary
-   content is numbers, charts, or detector output. */
+/* v2.7.1 → v2.7.7 — Data panel (neon-emerald edge, was cyan).
+   For analysis / findings surfaces where numeric readouts live. The
+   gem-data channel emits the brightest neon-emerald glow on hover —
+   reserve it for panels whose primary content is numbers / charts /
+   detector output, otherwise the entire interface starts glowing. */
 .hud-panel-data {
   border-color: var(--hud-edge-data);
   box-shadow:
-    inset 0 1px 0 rgba(34, 211, 238, 0.10),
+    inset 0 1px 0 rgba(31, 232, 143, 0.14),
     inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(216, 177, 60, 0.12),
     0 8px 24px -12px rgba(0, 0, 0, 0.6);
 }
 .hud-panel-data:hover {
-  border-color: rgba(34, 211, 238, 0.7);
+  border-color: var(--gem-edge-emerald-bright);
   box-shadow:
-    inset 0 1px 0 rgba(34, 211, 238, 0.18),
-    0 0 0 1px rgba(34, 211, 238, 0.18),
+    inset 0 1px 0 rgba(0, 255, 157, 0.22),
+    inset 0 0 0 1px rgba(216, 177, 60, 0.20),
+    0 0 0 1px rgba(31, 232, 143, 0.30),
+    var(--glow-emerald),
     0 8px 24px -12px rgba(0, 0, 0, 0.7);
 }
 
@@ -486,27 +548,38 @@ pre {
   animation-delay: 1.75s;
 }
 
-/* Chrome rails — sidebar + header edges that face the content area */
+/* Chrome rails — sidebar + header edges that face the content area
+   v2.7.7 — gold rail + faint emerald inner glow (was amber + amber). */
 .hud-rail-right {
   box-shadow:
     inset -1px 0 0 var(--hud-edge),
-    1px 0 12px -4px rgba(245, 158, 11, 0.15);
+    -1px 0 0 0 rgba(31, 232, 143, 0.18),
+    1px 0 16px -4px rgba(216, 177, 60, 0.22);
 }
 .hud-rail-bottom {
   box-shadow:
     inset 0 -1px 0 var(--hud-edge),
-    0 1px 12px -4px rgba(245, 158, 11, 0.15);
+    0 -1px 0 0 rgba(31, 232, 143, 0.18),
+    0 1px 16px -4px rgba(216, 177, 60, 0.22);
 }
 
-/* Scanlines — apply to chrome areas (headers, sidebar) for tactical feel */
+/* Scanlines — apply to chrome areas (headers, sidebar) for tactical feel
+   v2.7.7 — alternating gold + faint emerald lines for the gem feel. */
 .hud-scanlines {
   background-image:
     repeating-linear-gradient(
       0deg,
       transparent,
       transparent 2px,
-      rgba(245, 158, 11, 0.02) 2px,
-      rgba(245, 158, 11, 0.02) 3px
+      rgba(216, 177, 60, 0.025) 2px,
+      rgba(216, 177, 60, 0.025) 3px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 5px,
+      rgba(31, 232, 143, 0.018) 5px,
+      rgba(31, 232, 143, 0.018) 6px
     );
 }
 
@@ -559,38 +632,47 @@ pre {
   color: var(--foreground);
 }
 
-/* Body text / placeholder colors that assumed light backgrounds */
+/* Body text / placeholder colors that assumed light backgrounds.
+   v2.7.7 — recoloured from slate to smoke so the entire light-theme
+   leakage on legacy Sprint D/F pages reads as gemstone chrome. */
 .text-gray-900,
 .text-slate-900 {
-  color: var(--foreground) !important;
+  color: var(--smoke-100) !important;
+}
+.text-gray-800,
+.text-slate-800 {
+  color: var(--smoke-100) !important;
 }
 .text-gray-700,
 .text-slate-700 {
-  color: #cbd5e1 !important;  /* slate-300 */
+  color: var(--smoke-200) !important;
 }
 .text-gray-600,
 .text-slate-600,
 .text-gray-500,
 .text-slate-500 {
-  color: #94a3b8 !important;  /* slate-400 */
+  color: var(--smoke-300) !important;
 }
 .text-gray-400,
 .text-slate-400 {
-  color: #64748b !important;  /* slate-500 */
+  color: var(--smoke-500) !important;
 }
 
-/* Borders defaulting to slate-200 become darker slate-700 */
+/* Borders defaulting to slate-200/gray-300 become gold-edged.
+   v2.7.7 — was a plain slate-700; gold gives form fields the gem feel. */
 .border-slate-200,
 .border-gray-200,
 .border-slate-100,
-.border-gray-100 {
-  border-color: #334155 !important;  /* slate-700 */
+.border-gray-100,
+.border-slate-300,
+.border-gray-300 {
+  border-color: var(--gem-edge-gold) !important;
 }
 
-/* Hover states on white cards */
+/* Hover states on white cards — v2.7.7 gold tint */
 .hover\:bg-gray-50:hover,
 .hover\:bg-slate-50:hover {
-  background-color: rgba(245, 158, 11, 0.04) !important;
+  background-color: rgba(216, 177, 60, 0.06) !important;
 }
 
 /* v2.7.1 — Severity tile contrast fixes.
@@ -608,6 +690,117 @@ pre {
 .text-red-600    { color: var(--severity-high) !important; }
 .text-orange-600 { color: var(--severity-high) !important; }
 .text-yellow-700 { color: var(--severity-medium) !important; }
+
+/* v2.7.7 Y5 — Tailwind blue/amber → gemstone remaps for legacy
+   Sprint D/F surfaces (Settings, Results, Upload LegistarPanel) that
+   still ship with bg-blue-600 buttons + text-blue-700 labels +
+   bg-amber-50 panels. Rather than refactor each page inline (high
+   diff risk for a cosmetic pass), we redirect the most common
+   utilities to the gem palette. The mapping:
+       blue (CTA) → emerald gradient
+       amber/yellow (chrome accent) → gold
+       gray (form chrome) → smoke + gold edges
+*/
+.bg-blue-600,
+.bg-blue-700,
+.bg-blue-500 {
+  background:
+    linear-gradient(135deg,
+      var(--neon-emerald) 0%,
+      var(--emerald-500) 60%,
+      var(--emerald-700) 100%) !important;
+  color: #03240e !important;
+  box-shadow:
+    inset 0 1px 0 rgba(245, 220, 154, 0.55),
+    inset 0 0 0 1px rgba(216, 177, 60, 0.40),
+    0 0 18px -6px var(--neon-emerald) !important;
+}
+.hover\:bg-blue-700:hover,
+.hover\:bg-blue-800:hover {
+  filter: brightness(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 220, 154, 0.75),
+    inset 0 0 0 1px rgba(245, 220, 154, 0.55),
+    0 0 28px -4px var(--neon-emerald) !important;
+}
+.text-blue-700, .text-blue-800,
+.hover\:text-blue-700:hover,
+.hover\:text-blue-800:hover {
+  color: var(--neon-emerald) !important;
+}
+.text-blue-600,
+.text-blue-400,
+.text-blue-500 { color: var(--emerald-400) !important; }
+.bg-blue-50, .bg-blue-100 {
+  background-color: rgba(31, 232, 143, 0.08) !important;
+}
+.border-blue-100, .border-blue-200, .border-blue-600 {
+  border-color: var(--gem-edge-emerald) !important;
+}
+
+/* Amber legacy → gold */
+.bg-amber-50, .bg-amber-100 {
+  background-color: rgba(216, 177, 60, 0.10) !important;
+}
+.text-amber-400, .text-amber-500, .text-amber-600,
+.text-amber-700, .text-amber-800 {
+  color: var(--gold-300) !important;
+}
+.border-amber-200, .border-amber-300, .border-amber-400 {
+  border-color: var(--gem-edge-gold) !important;
+}
+.ring-amber-200, .ring-amber-300, .ring-amber-400, .ring-amber-500 {
+  --tw-ring-color: var(--gem-edge-gold) !important;
+}
+
+/* Emerald legacy stays emerald (now bumped to neon) */
+.text-emerald-400, .text-emerald-500, .text-emerald-600,
+.text-emerald-700 {
+  color: var(--neon-emerald) !important;
+}
+.bg-emerald-50, .bg-emerald-100 {
+  background-color: rgba(31, 232, 143, 0.10) !important;
+}
+.bg-emerald-500 { background-color: var(--neon-emerald) !important; }
+
+/* Cyan legacy → neon emerald (cyan was the JARVIS data channel,
+   now redirected via --hud-secondary; stragglers using text-cyan-X
+   directly need an explicit override for the same outcome). */
+.text-cyan-100, .text-cyan-200, .text-cyan-300,
+.text-cyan-400, .text-cyan-500 {
+  color: var(--neon-emerald) !important;
+}
+.text-cyan-500\/40 { color: rgba(31, 232, 143, 0.40) !important; }
+.text-cyan-500\/70 { color: rgba(31, 232, 143, 0.70) !important; }
+.bg-cyan-500\/10, .bg-cyan-500\/20 {
+  background-color: rgba(31, 232, 143, 0.10) !important;
+}
+
+/* Hover state remap for text-amber-300/400 used inline */
+.hover\:text-amber-300:hover {
+  color: var(--neon-emerald) !important;
+}
+
+/* Form fields — bg-white in dark theme is unreadable; recolor */
+.bg-white {
+  background-color: rgba(14, 14, 20, 0.85) !important;
+}
+input.bg-white, select.bg-white, textarea.bg-white,
+input[type="text"], input[type="email"], input[type="password"],
+input[type="date"], input[type="search"], textarea, select {
+  background-color: rgba(14, 14, 20, 0.65) !important;
+  color: var(--smoke-100) !important;
+  border-color: var(--gem-edge-gold) !important;
+}
+input::placeholder, textarea::placeholder {
+  color: var(--smoke-500) !important;
+}
+
+/* Focus ring on form fields → emerald (was blue) */
+.focus\:ring-blue-500:focus,
+.focus\:ring-blue-600:focus {
+  --tw-ring-color: var(--neon-emerald) !important;
+}
 
 /* ---------------------------------------------------------------------- */
 /* v2.7.1 — Extended HUD primitives                                       */
@@ -786,9 +979,10 @@ pre {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--hud-primary);
-  background: rgba(245, 158, 11, 0.08);
+  color: var(--gold-300);
+  background: rgba(216, 177, 60, 0.08);
   border: 1px solid var(--hud-edge-strong);
+  box-shadow: inset 0 0 0 1px rgba(31, 232, 143, 0.12);
   clip-path: polygon(
     6px 0, 100% 0, 100% calc(100% - 6px),
     calc(100% - 6px) 100%, 0 100%, 0 6px
@@ -797,12 +991,14 @@ pre {
   transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 .hud-btn:hover {
-  background: rgba(245, 158, 11, 0.18);
-  color: var(--hud-primary-bright);
-  box-shadow: var(--glow-amber);
+  background: rgba(216, 177, 60, 0.18);
+  color: var(--neon-emerald);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 255, 157, 0.40),
+    var(--glow-gold);
 }
 .hud-btn:active {
-  background: rgba(245, 158, 11, 0.28);
+  background: rgba(216, 177, 60, 0.28);
 }
 .hud-btn-ghost {
   background: transparent;
@@ -849,6 +1045,311 @@ pre {
 }
 .hud-table tbody tr:hover td {
   background: rgba(245, 158, 11, 0.04);
+}
+
+/* ---------------------------------------------------------------------- */
+/* v2.7.7 Y1 — Crystallized gemstone primitives                           */
+/* ------------------------------------------------------------------------
+   Gem-panel family: a higher-impact alternative to .hud-panel for surfaces
+   that deserve the cut-quartz treatment (the Dashboard hero, severity
+   tiles, primary CTAs). The geometry is multi-faceted — six clip-path
+   cuts instead of the standard chamfer's four — so corners read as
+   deliberately "cut" rather than rounded. The dual-edge composition
+   (matte gold outer, neon-emerald inner) is what gives the impression
+   of looking at a gem from above: gold setting around an emerald table.
+
+   .gem-panel              — base crystallized panel
+   .gem-panel-faceted      — adds extra side-cuts for the most pronounced
+                             quartz silhouette; use sparingly (hero, key
+                             metric tiles)
+   .gem-panel-emerald      — emerald-dominant variant (inner stroke wins)
+   .gem-edge               — drop-in dual edge for non-panel elements
+   .gem-edge-active        — hover/active intensifier (neon glow up)
+   .gem-glow-emerald       — utility neon-emerald drop-shadow text/icon
+   .gem-glow-gold          — utility gold drop-shadow text/icon
+   .gem-cta-primary        — emerald gradient CTA with gold inner ring
+   .gem-cta-secondary      — gold-outline CTA, smoke fill
+*/
+
+.gem-panel {
+  position: relative;
+  background:
+    linear-gradient(160deg,
+      var(--smoke-950) 0%,
+      var(--smoke-900) 45%,
+      var(--smoke-800) 78%,
+      var(--smoke-900) 100%);
+  /* Dual edge — gold outer, emerald inner (the "gem in a gold setting") */
+  box-shadow:
+    0 0 0 1px var(--gem-edge-gold),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 2px rgba(31, 232, 143, 0.18),
+    0 0 60px -18px rgba(31, 232, 143, 0.35);
+  /* Crystallized facet geometry — six cuts for the quartz silhouette */
+  clip-path: polygon(
+    var(--gem-facet) 0,
+    calc(100% - var(--gem-facet)) 0,
+    100% var(--gem-facet),
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    var(--gem-facet) 100%,
+    0 calc(100% - var(--gem-facet)),
+    0 var(--gem-facet)
+  );
+  color: var(--smoke-100);
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+
+.gem-panel:hover {
+  box-shadow:
+    0 0 0 1px var(--gem-edge-gold-bright),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 2px rgba(0, 255, 157, 0.30),
+    0 0 80px -16px rgba(0, 255, 157, 0.45);
+}
+
+.gem-panel-faceted {
+  /* Adds two extra mid-side cuts for a more pronounced gem outline */
+  clip-path: polygon(
+    var(--gem-facet) 0,
+    calc(100% - var(--gem-facet)) 0,
+    100% var(--gem-facet),
+    100% 32%,
+    calc(100% - 4px) 50%,
+    100% 68%,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    var(--gem-facet) 100%,
+    0 calc(100% - var(--gem-facet)),
+    0 68%,
+    4px 50%,
+    0 32%,
+    0 var(--gem-facet)
+  );
+}
+
+.gem-panel-emerald {
+  /* Emerald-dominant variant — the inner stroke wins, gold becomes
+     the secondary cue. Use for "active / live" panels (e.g. a workflow
+     mid-run, an audit job actively executing). */
+  background:
+    linear-gradient(160deg,
+      var(--jade-900) 0%,
+      var(--smoke-900) 50%,
+      var(--jade-900) 100%);
+  box-shadow:
+    0 0 0 1px var(--gem-edge-emerald-bright),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 2px rgba(216, 177, 60, 0.30),
+    0 0 60px -14px rgba(0, 255, 157, 0.55);
+}
+
+.gem-panel-dense {
+  --gem-facet: var(--gem-facet-sm);
+}
+
+/* Drop-in dual-edge for elements that aren't panels (badges, chips). */
+.gem-edge {
+  box-shadow:
+    0 0 0 1px var(--gem-edge-gold),
+    inset 0 0 0 1px rgba(31, 232, 143, 0.30);
+  transition: box-shadow 200ms ease;
+}
+.gem-edge-active,
+.gem-edge:hover {
+  box-shadow:
+    0 0 0 1px var(--gem-edge-gold-bright),
+    inset 0 0 0 1px rgba(0, 255, 157, 0.50),
+    var(--glow-emerald);
+}
+
+/* Crystallized hairline ribbons — composable with any panel */
+.gem-ribbon-top,
+.gem-ribbon-bottom {
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  pointer-events: none;
+}
+.gem-ribbon-top {
+  top: 0;
+  background: linear-gradient(90deg,
+    transparent 0%, var(--gold-400) 28%,
+    var(--neon-emerald) 50%, var(--gold-400) 72%,
+    transparent 100%);
+  opacity: 0.85;
+}
+.gem-ribbon-bottom {
+  bottom: 0;
+  background: linear-gradient(90deg,
+    transparent 0%, var(--gold-500) 28%,
+    var(--emerald-500) 50%, var(--gold-500) 72%,
+    transparent 100%);
+  opacity: 0.55;
+}
+
+/* Glow utilities */
+.gem-glow-emerald {
+  filter: drop-shadow(0 0 8px var(--neon-emerald))
+          drop-shadow(0 0 18px rgba(0, 255, 157, 0.45));
+}
+.gem-glow-gold {
+  filter: drop-shadow(0 0 6px var(--gold-300))
+          drop-shadow(0 0 14px rgba(245, 220, 154, 0.35));
+}
+
+/* Gem CTAs — emerald primary, gold-outline secondary. Compose via
+   className on existing <Button> or use as standalone. */
+.gem-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #03240e;
+  background:
+    linear-gradient(135deg,
+      var(--neon-emerald) 0%,
+      var(--emerald-500) 60%,
+      var(--emerald-700) 100%);
+  border: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(245, 220, 154, 0.55),
+    inset 0 0 0 1px rgba(216, 177, 60, 0.40),
+    0 0 24px -6px var(--neon-emerald);
+  clip-path: polygon(
+    var(--gem-facet-sm) 0, calc(100% - var(--gem-facet-sm)) 0,
+    100% 50%,
+    calc(100% - var(--gem-facet-sm)) 100%, var(--gem-facet-sm) 100%,
+    0 50%
+  );
+  transition: box-shadow 180ms ease, transform 100ms ease;
+  cursor: pointer;
+}
+.gem-cta-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(245, 220, 154, 0.75),
+    inset 0 0 0 1px rgba(245, 220, 154, 0.55),
+    0 0 36px -4px var(--neon-emerald);
+}
+.gem-cta-primary:active {
+  transform: translateY(1px);
+}
+
+.gem-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--smoke-100);
+  background: rgba(14, 14, 20, 0.85);
+  border: 1px solid var(--gem-edge-gold);
+  box-shadow: inset 0 1px 0 rgba(245, 220, 154, 0.10);
+  clip-path: polygon(
+    var(--gem-facet-sm) 0, calc(100% - var(--gem-facet-sm)) 0,
+    100% var(--gem-facet-sm), 100% calc(100% - var(--gem-facet-sm)),
+    calc(100% - var(--gem-facet-sm)) 100%, var(--gem-facet-sm) 100%,
+    0 calc(100% - var(--gem-facet-sm)), 0 var(--gem-facet-sm)
+  );
+  transition: box-shadow 180ms ease, color 180ms ease;
+  cursor: pointer;
+}
+.gem-cta-secondary:hover {
+  color: var(--neon-emerald);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 220, 154, 0.20),
+    0 0 0 1px var(--gem-edge-gold-bright),
+    var(--glow-emerald);
+}
+
+/* Severity pill recolor — neon-emerald replaces sky for "low/info" so
+   the entire pill family reads as gem-cut (gold = high/critical, emerald
+   = healthy/low/info). Critical/high stay rose/orange for at-a-glance
+   audit semantics — losing red here would break finding readability. */
+.gem-sev {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  background: rgba(7, 7, 10, 0.6);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+  clip-path: polygon(
+    4px 0, calc(100% - 4px) 0,
+    100% 50%,
+    calc(100% - 4px) 100%, 4px 100%,
+    0 50%
+  );
+}
+.gem-sev::before {
+  content: "";
+  width: 5px; height: 5px;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+.gem-sev-critical { color: var(--severity-critical); }
+.gem-sev-high     { color: var(--severity-high); }
+.gem-sev-medium   { color: var(--gold-300); }
+.gem-sev-low      { color: var(--emerald-400); }
+.gem-sev-info     { color: var(--emerald-300); }
+.gem-sev-healthy  { color: var(--neon-emerald); }
+
+/* Quartz facet background pattern — for body / hero secondary backgrounds.
+   Subtle diamond-grid that hints at gemstone geometry without competing
+   with content. Apply as a className on a panel; the pseudo-element sits
+   at z-index 0 so panel content (z-index 1) layers above it cleanly. */
+.gem-quartz-bg {
+  position: relative;
+  isolation: isolate;
+}
+.gem-quartz-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(45deg, rgba(216, 177, 60, 0.08) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(31, 232, 143, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px, 32px 32px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+.gem-quartz-bg > * { position: relative; z-index: 1; }
+
+/* Neon-emerald breathing animation for "live" indicators */
+@keyframes gem-emerald-breath {
+  0%, 100% { box-shadow: 0 0 12px rgba(31, 232, 143, 0.30); }
+  50%      { box-shadow: 0 0 28px rgba(0, 255, 157, 0.65); }
+}
+.animate-gem-breath {
+  animation: gem-emerald-breath 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gem-breath { animation: none; }
+}
+
+/* Print-mode override for gem-* utilities (mirrors hud-* rules below) */
+@media print {
+  .gem-panel, .gem-panel-emerald, .gem-panel-dense,
+  .gem-cta-primary, .gem-cta-secondary, .gem-sev {
+    background: #ffffff !important;
+    color: #0a0a0a !important;
+    border: 1px solid #333 !important;
+    box-shadow: none !important;
+    clip-path: none !important;
+    filter: none !important;
+  }
+  .gem-ribbon-top, .gem-ribbon-bottom { display: none !important; }
 }
 
 /* ---------------------------------------------------------------------- */
