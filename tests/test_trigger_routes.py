@@ -113,9 +113,7 @@ def test_raia_synthesize_all_no_jurisdictions(client, tmp_path, monkeypatch):
     assert body["result"] is None
 
 
-def test_raia_synthesize_all_with_jurisdictions(
-    client, tmp_path, monkeypatch
-):
+def test_raia_synthesize_all_with_jurisdictions(client, tmp_path, monkeypatch):
     """When a jurisdiction directory exists, the trigger runs
     RAIAService end-to-end and returns the result + markdown.
 
@@ -149,9 +147,7 @@ def test_raia_synthesize_all_with_jurisdictions(
     def _stub_discover(root_dir=None):
         return real_discover(root_dir=juris_root)
 
-    monkeypatch.setattr(
-        jurisdiction_loader, "discover_jurisdictions", _stub_discover
-    )
+    monkeypatch.setattr(jurisdiction_loader, "discover_jurisdictions", _stub_discover)
 
     resp = client.post("/api/v1/triggers/raia-synthesize-all")
     assert resp.status_code == 200

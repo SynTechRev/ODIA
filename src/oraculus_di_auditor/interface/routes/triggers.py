@@ -53,9 +53,7 @@ _VALID_CPRA_WINDOWS = ("72h", "7d", "30d")
 def register_trigger_routes(app: Any) -> None:
     """Attach manual-trigger routes to a FastAPI app."""
     if not _FASTAPI_AVAILABLE:
-        logger.warning(
-            "FastAPI not installed — trigger routes will not be registered."
-        )
+        logger.warning("FastAPI not installed — trigger routes will not be registered.")
         return
 
     router = APIRouter(tags=["triggers"])
@@ -186,9 +184,7 @@ def register_trigger_routes(app: Any) -> None:
                 detail=f"RAIA synthesis failed: {exc}",
             ) from exc
 
-        markdown = (
-            render_markdown_template(result) if render_markdown else None
-        )
+        markdown = render_markdown_template(result) if render_markdown else None
         return {
             "status": "ok",
             "jurisdictions": jurisdictions,
