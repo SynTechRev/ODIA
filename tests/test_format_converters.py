@@ -247,8 +247,33 @@ def test_markdown_to_pdf_returns_none_when_no_converter():
             assert result is None
 
 
-def test_markdown_to_docx_returns_none_when_no_pandoc():
+def test_markdown_to_docx_returns_none_when_no_pandoc_and_no_python_docx(
+    monkeypatch,
+):
+    """v2.7.10 — DOCX export now has a python-docx fallback for the
+    desktop bundle. The conversion only returns None when BOTH pandoc
+    and python-docx are unavailable. This test pins that two-tier
+    behaviour by hiding both backends.
+
+    The targeted ``test_docx_export_fallback.py`` covers the happy
+    fallback path (pandoc absent, python-docx present → valid DOCX
+    written)."""
+    import builtins
+    import sys
+
+    # Hide pandoc from PATH lookup.
     with patch("shutil.which", return_value=None):
+        # Also hide the docx module from import resolution so the
+        # fallback can't fire either.
+        monkeypatch.delitem(sys.modules, "docx", raising=False)
+        real_import = builtins.__import__
+
+        def _blocked_import(name, *args, **kwargs):
+            if name == "docx" or name.startswith("docx."):
+                raise ImportError("blocked for test")
+            return real_import(name, *args, **kwargs)
+
+        monkeypatch.setattr(builtins, "__import__", _blocked_import)
         with tempfile.TemporaryDirectory() as tmpdir:
             result = markdown_to_docx(_SAMPLE_MD, Path(tmpdir) / "out.docx")
             assert result is None

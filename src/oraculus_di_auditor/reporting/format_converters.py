@@ -237,8 +237,8 @@ def _markdown_to_docx_pythondocx(markdown_text: str, output_path: Path) -> Path 
     normal.font.name = "Calibri"
     normal.font.size = Pt(11)
 
-    HEADING_COLOR = RGBColor(0x1F, 0x29, 0x37)  # near-black slate
-    GOLD_ACCENT = RGBColor(0x8B, 0x69, 0x14)  # antique gold
+    heading_color = RGBColor(0x1F, 0x29, 0x37)  # near-black slate
+    gold_accent = RGBColor(0x8B, 0x69, 0x14)  # antique gold
 
     in_code_block = False
     code_buffer: list[str] = []
@@ -304,17 +304,17 @@ def _markdown_to_docx_pythondocx(markdown_text: str, output_path: Path) -> Path 
         if line.startswith("# "):
             h = doc.add_heading(line[2:].strip(), level=0)
             for r in h.runs:
-                r.font.color.rgb = GOLD_ACCENT
+                r.font.color.rgb = gold_accent
             continue
         if line.startswith("## "):
             h = doc.add_heading(line[3:].strip(), level=1)
             for r in h.runs:
-                r.font.color.rgb = HEADING_COLOR
+                r.font.color.rgb = heading_color
             continue
         if line.startswith("### "):
             h = doc.add_heading(line[4:].strip(), level=2)
             for r in h.runs:
-                r.font.color.rgb = HEADING_COLOR
+                r.font.color.rgb = heading_color
             continue
 
         # Bullet
