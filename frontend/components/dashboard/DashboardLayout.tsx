@@ -23,7 +23,7 @@ import {
   OrchestratorIcon,
   AutomationIcon,
   SettingsIcon,
-  OctopusMarkIcon,
+  OraculusMarkIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   type IconProps,
@@ -82,7 +82,7 @@ type BackendState = 'checking' | 'connected' | 'disconnected';
 // v2.7.3 V2: fallback when /api/v1/health doesn't return odia_version
 // (older backends) or when the check hasn't completed yet. Updated on
 // every release.
-const ODIA_VERSION_FALLBACK = 'v2.7.10';
+const ODIA_VERSION_FALLBACK = 'v2.8.0';
 
 function useBackendStatus(): {
   state: BackendState;
@@ -196,7 +196,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               color: 'var(--gold-200)',
             }}
           >
-            <OctopusMarkIcon size={20} />
+            <OraculusMarkIcon size={20} />
           </div>
           <div className="leading-tight min-w-0">
             <div
@@ -441,7 +441,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 color: 'var(--gold-200)',
               }}
             >
-              <OctopusMarkIcon size={16} />
+              <OraculusMarkIcon size={16} />
             </div>
             <h2
               className="text-base font-semibold tracking-wider uppercase bg-clip-text text-transparent"

@@ -1,0 +1,284 @@
+{
+  "smoke": {
+    "smoke_950": {
+      "hex": "#050505",
+      "source": "malachite_flux",
+      "desc": "deepest void \u2014 body bg",
+      "L": 0.0196078431372549
+    },
+    "smoke_900": {
+      "hex": "#080c08",
+      "source": "malachite_flux",
+      "desc": "app shell, panels",
+      "L": 0.0392156862745098
+    },
+    "smoke_850": {
+      "hex": "#0c1113",
+      "source": "emerald_marble_quartz",
+      "desc": "card surfaces",
+      "L": 0.060784313725490195
+    },
+    "smoke_800": {
+      "hex": "#12160f",
+      "source": "malachite_flux",
+      "desc": "sidebar, raised cards",
+      "L": 0.07254901960784313
+    },
+    "smoke_750": {
+      "hex": "#1a1817",
+      "source": "gold_swirl_source",
+      "desc": "hover surfaces",
+      "L": 0.09607843137254901
+    },
+    "smoke_700": {
+      "hex": "#221f20",
+      "source": "gold_swirl_source",
+      "desc": "borders, dividers",
+      "L": 0.12745098039215685
+    },
+    "smoke_600": {
+      "hex": "#2d2d2c",
+      "source": "marble_veins",
+      "desc": "subtle dividers",
+      "L": 0.17450980392156862
+    },
+    "smoke_500": {
+      "hex": "#494742",
+      "source": "marble_veins_synth",
+      "desc": "muted text bg",
+      "L": 0.27254901960784317
+    },
+    "smoke_400": {
+      "hex": "#7c8180",
+      "source": "marble_veins",
+      "desc": "inactive labels",
+      "L": 0.49607843137254903
+    },
+    "smoke_300": {
+      "hex": "#a4a8a9",
+      "source": "marble_veins",
+      "desc": "body text",
+      "L": 0.6529411764705882
+    },
+    "smoke_200": {
+      "hex": "#bebeb8",
+      "source": "marble_veins",
+      "desc": "emphasized text",
+      "L": 0.7333333333333334
+    },
+    "smoke_100": {
+      "hex": "#cdcdc7",
+      "source": "marble_veins",
+      "desc": "high-contrast text",
+      "L": 0.7921568627450981
+    },
+    "smoke_50": {
+      "hex": "#e1d7c6",
+      "source": "gold_swirl_source",
+      "desc": "highest contrast (warm white)",
+      "L": 0.8294117647058823
+    }
+  },
+  "gold": {
+    "gold_900": {
+      "hex": "#3a2e1f",
+      "source": "gold_swirl_source_synth",
+      "desc": "deepest gold shadow",
+      "L": 0.17450980392156862
+    },
+    "gold_800": {
+      "hex": "#4e4033",
+      "source": "gold_swirl_source",
+      "desc": "inset gold edge",
+      "L": 0.2529411764705882
+    },
+    "gold_700": {
+      "hex": "#685339",
+      "source": "marble_veins",
+      "desc": "shadow gold",
+      "L": 0.3156862745098039
+    },
+    "gold_600": {
+      "hex": "#8e704b",
+      "source": "gold_swirl_source",
+      "desc": "mid-tone gold",
+      "L": 0.4254901960784314
+    },
+    "gold_500": {
+      "hex": "#997545",
+      "source": "gold_swirl_source",
+      "desc": "PRIMARY brand gold",
+      "L": 0.43529411764705883
+    },
+    "gold_400": {
+      "hex": "#b59162",
+      "source": "marble_veins",
+      "desc": "highlight",
+      "L": 0.5470588235294118
+    },
+    "gold_300": {
+      "hex": "#b89664",
+      "source": "gold_swirl_source",
+      "desc": "soft highlight",
+      "L": 0.5568627450980392
+    },
+    "gold_200": {
+      "hex": "#bfae94",
+      "source": "gold_swirl_source",
+      "desc": "catch-light",
+      "L": 0.6647058823529413
+    },
+    "gold_100": {
+      "hex": "#ded2be",
+      "source": "gold_swirl_source",
+      "desc": "highest catch-light",
+      "L": 0.807843137254902
+    },
+    "gold_50": {
+      "hex": "#eae1cf",
+      "source": "gold_swirl_source",
+      "desc": "gold-tinted white (paint highlight)",
+      "L": 0.8647058823529412
+    }
+  },
+  "emerald": {
+    "emerald_950": {
+      "hex": "#050504",
+      "source": "malachite_flux",
+      "desc": "deepest emerald-black",
+      "L": 0.01764705882352941
+    },
+    "emerald_900": {
+      "hex": "#080f0a",
+      "source": "malachite_flux",
+      "desc": "near-black emerald",
+      "L": 0.045098039215686274
+    },
+    "emerald_850": {
+      "hex": "#0a1e13",
+      "source": "malachite_flux",
+      "desc": "shadow emerald",
+      "L": 0.0784313725490196
+    },
+    "emerald_800": {
+      "hex": "#0b291a",
+      "source": "malachite_flux",
+      "desc": "deep malachite",
+      "L": 0.10196078431372549
+    },
+    "emerald_700": {
+      "hex": "#0d392c",
+      "source": "emerald_marble_quartz",
+      "desc": "PRIMARY deep emerald",
+      "L": 0.13725490196078433
+    },
+    "emerald_600": {
+      "hex": "#0e4028",
+      "source": "malachite_flux",
+      "desc": "mid emerald",
+      "L": 0.15294117647058825
+    },
+    "emerald_500": {
+      "hex": "#0f6546",
+      "source": "emerald_marble_quartz",
+      "desc": "PRIMARY emerald (vibrant body)",
+      "L": 0.22745098039215686
+    },
+    "emerald_400": {
+      "hex": "#1c835f",
+      "source": "marble_veins",
+      "desc": "mid-light emerald",
+      "L": 0.31176470588235294
+    },
+    "emerald_300": {
+      "hex": "#3f6a46",
+      "source": "malachite_flux_synth",
+      "desc": "desaturated mid",
+      "L": 0.3313725490196079
+    },
+    "emerald_200": {
+      "hex": "#5fa17f",
+      "source": "emerald_marble_quartz",
+      "desc": "soft emerald highlight",
+      "L": 0.5019607843137255
+    },
+    "emerald_100": {
+      "hex": "#6e9e8f",
+      "source": "marble_veins",
+      "desc": "mineral pale emerald",
+      "L": 0.5254901960784314
+    }
+  },
+  "signal_emerald": {
+    "signal_400": {
+      "hex": "#1fe88f",
+      "source": "preserved",
+      "desc": "live signal",
+      "L": 0.5156862745098039
+    },
+    "signal_500": {
+      "hex": "#0fd47a",
+      "source": "preserved",
+      "desc": "healthy status",
+      "L": 0.4450980392156863
+    },
+    "signal_neon": {
+      "hex": "#00ff9d",
+      "source": "preserved",
+      "desc": "glow \u2014 tab active",
+      "L": 0.5
+    }
+  },
+  "severity": {
+    "critical": {
+      "hex": "#f43f5e",
+      "source": "preserved",
+      "desc": "CRITICAL",
+      "L": 0.6019607843137256
+    },
+    "high": {
+      "hex": "#f97316",
+      "source": "preserved",
+      "desc": "HIGH",
+      "L": 0.5313725490196078
+    },
+    "medium": {
+      "hex": "#eab308",
+      "source": "preserved",
+      "desc": "MEDIUM",
+      "L": 0.4745098039215686
+    },
+    "low": {
+      "hex": "#3b82f6",
+      "source": "preserved",
+      "desc": "LOW",
+      "L": 0.5980392156862745
+    },
+    "info": {
+      "hex": "#06b6d4",
+      "source": "preserved",
+      "desc": "INFO",
+      "L": 0.4274509803921569
+    }
+  },
+  "flow": {
+    "flow_400": {
+      "hex": "#a78bfa",
+      "source": "preserved",
+      "desc": "automation/n8n layer",
+      "L": 0.7627450980392156
+    },
+    "flow_300": {
+      "hex": "#c4b5fd",
+      "source": "preserved",
+      "desc": "flow bright",
+      "L": 0.8509803921568628
+    },
+    "flow_500": {
+      "hex": "#7c3aed",
+      "source": "preserved",
+      "desc": "flow dim",
+      "L": 0.5784313725490197
+    }
+  }
+}

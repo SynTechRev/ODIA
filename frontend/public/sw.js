@@ -8,10 +8,14 @@
  *  - A broadcast message is sent to open tabs when going offline.
  */
 
-// v2.7.9 — bumped to v3 because SHELL_PATHS gained the intro asset.
-// Old caches are evicted by the activate handler so returning users get
-// the new entry pre-cached on first launch under the new SW.
-const CACHE_NAME = 'odia-shell-v3';
+// v2.8.0 — bumped to v4 for the mineral-palette refresh: globals.css is
+// substantially rewritten and the texture WebPs in /public/textures/ are
+// new static assets. Texture files are NOT pre-cached (16 files × ~30KB
+// would balloon the install payload) — they fall through to the existing
+// cache-first static-asset handler at line 102, getting cached on first
+// request and served from cache thereafter, which is exactly the
+// stale-while-revalidate behaviour the handoff calls for.
+const CACHE_NAME = 'odia-shell-v4';
 
 // App shell paths to pre-cache
 const SHELL_PATHS = [

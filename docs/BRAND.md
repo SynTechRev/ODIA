@@ -1,188 +1,194 @@
-# O.D.I.A. — Brand Reference
+# O.D.I.A. — Brand Reference (v2.8.0)
 
-> **Locked at v2.7.9.** Subsequent palette changes require explicit
-> review against this document. New surfaces (mobile, store listings,
-> social cards, evidence-packet covers) consult this file first.
+> **Locked at v2.8.0.** The visual identity is now anchored, literally,
+> to the photographic reference imagery in `docs/brand/reference/`.
+> Every color in the smoke / gold / emerald ramps is a measured pixel
+> from one of four photos. Subsequent palette changes require explicit
+> review against this document AND the source images.
 
 ---
 
 ## 1. Identity in one paragraph
 
 O.D.I.A. — *Oraculus Decimus Intellect Analyst* — is a forensic
-civic-accountability platform. The visual identity is **precision
-instrument meets archaic codex**: dark stone (smoke), antique gold,
-and neon emerald, rendered with the layered depth of polished mineral.
-Surfaces are slate-deep with hairline gold edging and gem-facet
-clip-paths; readouts use monospaced numerals; severity tones flash
-through saturated rose / orange / yellow / blue. The mark is a single
-gold paint-swirl — a brushstroke caught mid-rotation — set on smoke.
+civic-accountability platform. The visual identity is **mineral
+photography meets precision instrument**: the warm tan-gold and deep
+malachite of polished cut stone, layered with hairline gold edging,
+gem-facet clip-paths, and precise monospaced numerals. The mark is a
+single gold paint-swirl — a brushstroke caught mid-rotation — set on
+a near-black mineral ground. Surfaces feel *cut*, not drawn.
 
 Three things must be true of every surface:
+
 1. **Dark by default.** No light theme. Evidentiary work is done in
    dim rooms, late at night, on devices that should not glare.
 2. **Numerals are mono.** Findings, dollar amounts, hash digests,
    timestamps — every quantitative readout is JetBrains Mono, tabular.
-3. **Gold is the chrome, emerald is the signal, rose is the alarm.**
-   These three roles never swap. Gold = "ODIA". Emerald = "live /
-   healthy". Rose = "critical".
+3. **Gold is the chrome, mineral emerald is the deep field, signal
+   neon is the alarm-tier alive indicator.** These three roles never
+   swap. Gold = "ODIA". Mineral emerald = "deep state, healthy". Signal
+   neon = "live, running". Rose = "critical".
 
 ---
 
-## 2. Palette
+## 2. Palette — anchored to reference photography
 
 The complete palette lives in `frontend/app/globals.css` as CSS custom
-properties. This section is the **explanatory reference** — token
-descriptions, intent, and where each token gets used. Code authors
-import the tokens; they don't redefine them.
+properties. Every value below is a real measured pixel from one of
+the reference images, with the source noted.
 
-### 2.1 Smoke spine — chrome surfaces
+### 2.1 Smoke spine — chrome surfaces (warm-leaning grayscale)
 
-The grayscale spine of the design system. Every panel, card, modal,
-and chrome surface lives somewhere on this scale.
+| Token | Hex | L\* | Source image | Use |
+|---|---|---|---|---|
+| `--smoke-50`  | `#e1d7c6` | 0.829 | gold_swirl_source     | warm white — highest contrast |
+| `--smoke-100` | `#cdcdc7` | 0.792 | marble_veins          | high-contrast text |
+| `--smoke-200` | `#bebeb8` | 0.733 | marble_veins          | emphasized text |
+| `--smoke-300` | `#a4a8a9` | 0.653 | marble_veins          | body text |
+| `--smoke-400` | `#7c8180` | 0.496 | marble_veins          | inactive labels |
+| `--smoke-500` | `#494742` | 0.273 | marble_veins (synth)  | muted dividers |
+| `--smoke-600` | `#2d2d2c` | 0.175 | marble_veins          | subtle dividers |
+| `--smoke-700` | `#221f20` | 0.127 | gold_swirl_source     | borders |
+| `--smoke-750` | `#1a1817` | 0.096 | gold_swirl_source     | hover surfaces |
+| `--smoke-800` | `#12160f` | 0.073 | malachite_flux        | raised cards |
+| `--smoke-850` | `#0c1113` | 0.061 | emerald_marble_quartz | card surfaces |
+| `--smoke-900` | `#080c08` | 0.039 | malachite_flux        | app shell |
+| `--smoke-950` | `#050505` | 0.020 | malachite_flux        | body bg |
 
-| Token | Hex | Use |
-|---|---|---|
-| `--smoke-950` | `#07070a` | Body background. The deepest stone. |
-| `--smoke-900` | `#0e0e14` | Hero panels, app shell. |
-| `--smoke-800` | `#18181f` | Card surfaces, sidebar background. |
-| `--smoke-700` | `#25252f` | Hover states, secondary buttons. |
-| `--smoke-600` | `#34343f` | Borders, dividers (subtle). |
-| `--smoke-500` | `#5a5a66` | Muted body text, inactive labels. |
-| `--smoke-300` | `#cbcbd1` | Body text, primary readout text. |
-| `--smoke-200` | `#e6e6ea` | Headings, emphasized text. |
-| `--smoke-100` | `#f4f4f6` | Highest-contrast text on darkest bg. |
+### 2.2 Gold — antique tan-gold (NOT saturated yellow)
 
-**Rule:** Surfaces step from `950` (background) up through `900` (panel)
-to `800` (inset card). Never skip more than one step within a single
-component.
+The PRIMARY gold (`--gold-500` `#997545`) is sampled from the actual
+mid-stroke of the painted swirl in `reference_5_gold-swirl-icon-source.png`.
+This is the literal color of the brushstroke.
 
-### 2.2 Gold vein — accent and chrome edging
-
-The brand colour. Gold is the warm catch-light on every chrome edge,
-the active border on focus, and the colour of the `O.D.I.A.` wordmark.
-
-| Token | Hex | Use |
-|---|---|---|
-| `--gold-200` | `#f5dc9a` | Highest catch-light — active focus rings, hover edges. |
-| `--gold-300` | `#ecc870` | Highlight — wordmark, brand glyph fill. |
-| `--gold-400` | `#d8b13c` | Primary gold — `ODIA` lettermark. |
-| `--gold-500` | `#b8941f` | Mid-tone — bracket pulses, hairline rules. |
-| `--gold-600` | `#8a6f3e` | Shadow gold — inset edges, deep facets. |
-
-**Rule:** Gold is reserved for chrome, identity, and accent. Never use
-gold for body text or for severity indication.
-
-### 2.3 Neon emerald — signal and live state
-
-The cool counterweight to gold. Emerald means "live", "healthy", "active",
-"connected". Used sparingly so it stays meaningful.
-
-| Token | Hex | Use |
-|---|---|---|
-| `--emerald-300` | `#34d399` | Healthy status, "System Online" indicator. |
-| `--emerald-400` | `#10b981` | Active workflow nodes, running indicators. |
-| `--emerald-500` | `#059669` | Mid-tone, secondary live states. |
-| `--neon-emerald` | `#1fe88f` | The hot signal — primary live glow, mobile tab-bar active state. Use with `text-shadow: 0 0 8px var(--neon-emerald)`. |
-| `--jade-800` | `#065f46` | Deep emerald edging on inset panels. |
-
-**Rule:** Emerald glows. Always pair with `text-shadow` or `box-shadow`
-when used at signal strength (`--neon-emerald`). When used as a static
-status pill, no glow.
-
-### 2.4 Severity scale — alarm tones
-
-Reserved exclusively for finding severity. Each tone has one job.
-
-| Token | Hex | Severity | Tailwind alias |
+| Token | Hex | L\* | Use |
 |---|---|---|---|
-| `--severity-critical` | `#f43f5e` | CRITICAL | rose-500 |
-| `--severity-high` | `#f97316` | HIGH | orange-500 |
-| `--severity-medium` | `#eab308` | MEDIUM | yellow-500 |
-| `--severity-low` | `#3b82f6` | LOW | blue-500 |
-| `--severity-info` | `#06b6d4` | INFO | cyan-500 |
+| `--gold-50`  | `#eae1cf` | 0.865 | paint highlight (catch-light) |
+| `--gold-100` | `#ded2be` | 0.808 | catch-light |
+| `--gold-200` | `#bfae94` | 0.665 | soft highlight |
+| `--gold-300` | `#b89664` | 0.557 | highlight |
+| `--gold-400` | `#b59162` | 0.547 | bright primary |
+| `--gold-500` | `#997545` | 0.435 | **PRIMARY brand gold** |
+| `--gold-600` | `#8e704b` | 0.425 | mid-tone |
+| `--gold-700` | `#685339` | 0.316 | shadow gold |
+| `--gold-800` | `#4e4033` | 0.253 | inset edge |
+| `--gold-900` | `#3a2e1f` | 0.175 | deepest gold shadow |
 
-**Rule:** Critical is rose, not red. The rose-orange split keeps
-CRITICAL distinct from HIGH on a stacked tile row — a problem that
-caused real defects in the v2.7.2 audit.
+### 2.3 Emerald — mineral malachite (NOT digital neon)
 
-### 2.5 Automation channel — violet
+The PRIMARY emerald (`--emerald-500` `#0f6546`) is sampled from
+`reference_2_emerald-marble-quartz.jpg`. This is real polished
+malachite green, not a saturated digital green.
 
-Distinct colour for the n8n workflow / automation surfaces, so they
-read as a different layer from the audit data (cyan) and chrome (gold).
+| Token | Hex | L\* | Source | Use |
+|---|---|---|---|---|
+| `--emerald-100` | `#6e9e8f` | 0.525 | marble_veins          | mineral pale |
+| `--emerald-200` | `#5fa17f` | 0.502 | emerald_marble_quartz | soft highlight |
+| `--emerald-300` | `#3f6a46` | 0.331 | malachite_flux (synth) | desaturated mid |
+| `--emerald-400` | `#1c835f` | 0.312 | marble_veins          | mid-light |
+| `--emerald-500` | `#0f6546` | 0.227 | emerald_marble_quartz | **PRIMARY emerald** |
+| `--emerald-600` | `#0e4028` | 0.153 | malachite_flux        | mid |
+| `--emerald-700` | `#0d392c` | 0.137 | emerald_marble_quartz | deep panel bg |
+| `--emerald-800` | `#0b291a` | 0.102 | malachite_flux        | deep malachite |
+| `--emerald-850` | `#0a1e13` | 0.078 | malachite_flux        | shadow |
+| `--emerald-900` | `#080f0a` | 0.045 | malachite_flux        | near-black |
+| `--emerald-950` | `#050504` | 0.018 | malachite_flux        | deepest |
+
+### 2.4 Signal — digital neon (live-state ONLY)
+
+These are NOT mineral-derived. They sit alongside the mineral palette
+and provide the "this is a UI signal, not chrome" cue. **Reserved
+exclusively for live-state UI** — running workflow, healthy backend,
+active mobile bottom-nav tab. Never use for chrome, panels, or body
+text.
 
 | Token | Hex | Use |
 |---|---|---|
-| `--hud-flow` | `#a78bfa` | Workflow nodes, automation panel edges. |
-| `--hud-flow-bright` | `#c4b5fd` | Active workflow, focused automation. |
-| `--hud-flow-dim` | `#7c3aed` | Inactive workflows, deep edges. |
+| `--signal-300`  | `#5cf5b0` | mint highlight |
+| `--signal-400`  | `#1fe88f` | core signal — live workflow |
+| `--signal-500`  | `#0fd47a` | healthy status |
+| `--signal-neon` | `#00ff9d` | glow — bottom tab active, live pulse |
+
+### 2.5 Severity — semantic-locked
+
+| Token | Hex | Severity |
+|---|---|---|
+| `--severity-critical` | `#f43f5e` | CRITICAL |
+| `--severity-high`     | `#f97316` | HIGH |
+| `--severity-medium`   | `#eab308` | MEDIUM |
+| `--severity-low`      | `#3b82f6` | LOW |
+| `--severity-info`     | `#06b6d4` | INFO |
+
+### 2.6 Flow — automation channel (preserved)
+
+| Token | Hex | Use |
+|---|---|---|
+| `--flow-300` | `#c4b5fd` | bright |
+| `--flow-400` | `#a78bfa` | primary — n8n workflows |
+| `--flow-500` | `#7c3aed` | dim |
 
 ---
 
-## 3. Reference imagery
+## 3. Texture system
 
-Five vetted reference images live in `docs/brand/reference/`. Each one
-captures a different facet of the visual identity. Designers consulting
-this file should match the *texture and mood* of the references, not
-copy them.
+Four reference textures are exposed as CSS variables. Each ships in
+four pre-dimmed WebP variants under `frontend/public/textures/`.
 
-### 3.1 `reference_1_marble-veins.jpg`
-**Smoke + gold + emerald tri-pole.** Black marble streaked with
-gold leaf, transitioning to rough cut emerald crystal. This is the
-**core composition** — three layers with gold serving as the seam
-between dark stone and saturated emerald. Translates to the design
-system as: chrome (smoke) → accent edging (gold) → signal (emerald).
+| Variable | File pattern | When to use |
+|---|---|---|
+| `--texture-marble`           | `texture-marble-{bg,hero,tile,mobile}.webp` | hero panels with mineral character |
+| `--texture-malachite`        | `texture-malachite-{bg,hero,tile,mobile}.webp` | splash, dashboard hero |
+| `--texture-malachite-flux`   | `texture-malachite-flux-{bg,hero,tile,mobile}.webp` | active states, intro outro |
+| `--texture-gold-flux`        | `texture-gold-flux-{bg,hero,tile,mobile}.webp` | evidence packet covers, MAS report covers |
 
-### 3.2 `reference_2_emerald-marble-quartz.jpg`
-**Primary emerald + gold marble flow.** Polished malachite-green marble
-with gold veining and white quartz inclusions. The reference for any
-surface that needs to feel **deep and polished** — splash screens,
-hero panels, the app icon background. Note the gold is *thin and
-veined*, never bulky.
+### 3.1 Texture utility classes
 
-### 3.3 `reference_3_emerald-malachite-flux.jpg`
-**Saturated malachite swirl.** Higher saturation than 3.2; the
-reference for **active states** — hovered panels, running workflows,
-the live execution console. The gold here is denser and more
-ornamental. Use sparingly.
+Defined in `globals.css`. Layer reference photography under chrome
+geometry. Use sparingly — texture-heavy surfaces are the EXCEPTION.
 
-### 3.4 `reference_4_alcohol-ink-triptych.jpg`
-**Smoke + gold layered alcohol ink (triptych).** Three panels of gold
-flowing through smoke and pearl. The reference for **mobile splash
-screens, app store hero shots, and large empty states** where the
-canvas needs visual weight without competing with content.
+- `.gem-hero-marble` — marble texture under smoke + gold edge
+- `.gem-hero-malachite` — malachite under emerald edge
+- `.gem-hero-malachite-flux` — saturated malachite under signal edge
+- `.gem-hero-gold-flux` — gold-swirl painting under gold edge
+- `.gem-splash` — fullscreen splash variant, no clip-path
 
-### 3.5 `reference_5_gold-swirl-icon-source.png`
-**Direct icon source artwork.** A single gold paint swirl — thick
-crescent inner curve, lighter wisps, splatter dots — on a smoke
-background with white paint counterpoint. This is the **literal
-source for the OraculusMark icon**. Geometry, weight distribution,
-and splatter pattern in `oraculus-mark.svg` derive from this image.
+Each class auto-swaps to the `-mobile` WebP variant under
+`@media (max-width: 768px)`.
+
+### 3.2 When to apply textures
+
+| Surface | Class | Rationale |
+|---|---|---|
+| Splash screen | `.gem-splash` | First impression — full mineral ground |
+| Dashboard hero panel | `.gem-hero-malachite` | Primary work surface — deep field |
+| Evidence packet cover | `.gem-hero-gold-flux` | Output deliverable — gold ground |
+| Synthesis page hero | `.gem-hero-marble` | Cross-jurisdictional tri-pole |
+| Settings page hero | `.gem-hero-marble` | Calm, neutral |
+| Body content panels | (no texture) | Texture would distract from data |
+| Result rows | (no texture) | High information density |
+| Forms / inputs | (no texture) | Functional, not ornamental |
 
 ---
 
 ## 4. The Oraculus mark
 
-### 4.1 Geometry
+### 4.1 Color anchoring (v2.8.0)
 
-A single gold swirl — a thick crescent inner curve that rotates
-through ~270° and tapers as it approaches the centre. Surrounded by:
-- one mid-weight wisp at slightly larger radius
-- one faint outer wisp at the bounding edge
-- 8 gold paint-splatter dots at golden-ratio offsets
-- 3 white paint-splatter counterpoints
+The mark SVG (`frontend/public/icons/oraculus-mark.svg`) was rebuilt
+at v2.8.0 with every gradient stop sampled from the source painting:
 
-### 4.2 Component vs. asset
+| SVG role | Hex | Provenance |
+|---|---|---|
+| catch_light | `#eae1cf` | painting catch-light (gold_swirl_source) |
+| soft_high   | `#ded2be` | raised brushstroke face |
+| catch_warm  | `#cdc1b0` | warm catch-light on stroke side |
+| mid_light   | `#b89664` | mid-stroke value |
+| primary     | `#997545` | PRIMARY brand gold (anchor) |
+| mid_dark    | `#8e704b` | mid-stroke shadow |
+| deep        | `#4e4033` | inset shadow |
+| void        | `#221f1f` | stroke base |
 
-Two implementations, same geometry:
-
-- **`OraculusMarkIcon.tsx`** — outline-only React component, used
-  in-app at 16–24px (sidebar, tab bar, header glyph). Strokes only,
-  inherits `currentColor` for theming.
-- **`oraculus-mark.svg`** — rich rendered version with gradients,
-  filters, and the dark-stone background. Used for application icons
-  (Electron window, PWA manifest, Capacitor splash) at 192–1024px.
-
-### 4.3 Sizing
+### 4.2 Sizing
 
 | Context | Size | Variant |
 |---|---|---|
@@ -192,26 +198,26 @@ Two implementations, same geometry:
 | Settings page section header | 32px | Component (outline) |
 | PWA manifest icon | 192/512px | SVG (rich) |
 | Electron window icon | 1024px | SVG → PNG (rich) |
-| iOS app icon | 1024px | SVG → PNG (rich, no rounded corners — iOS adds them) |
+| iOS app icon | 1024px | SVG → PNG (rich, iOS adds rounded corners) |
 | Android adaptive icon (maskable) | 512px | SVG (rich), centered in inner 80% |
 | Splash screen hero | 256–512px | SVG (rich) |
 
-### 4.4 Don't
+### 4.3 Don't
 
-- Don't recolour the mark. The gradient is integral.
+- Don't recolour the mark. The gradient stops are anchored to the
+  painting.
 - Don't omit the splatter dots — they're the identity.
-- Don't rotate. The swirl reads at 0° rotation as drawn.
+- Don't rotate. The swirl reads at 0° rotation.
 - Don't use the mark as a divider, bullet, or decorative repeat.
-  It's a brand glyph, not a graphic motif.
-- Don't outline it on a light background. The mark is dark-mode native.
-  If you must use it on light, render the white-paint variant (TBD —
-  not yet drawn; surface the ask before improvising).
+- Don't outline it on a light background. The mark is dark-mode
+  native. If light-mode use is ever needed, surface the ask before
+  improvising.
 
 ---
 
 ## 5. Typography
 
-The type stack is locked at v2.7.1 and remains correct.
+Unchanged at v2.8.0. The type stack is locked.
 
 | Family | Use | Weight |
 |---|---|---|
@@ -229,9 +235,7 @@ Mono exclusively.
 
 ---
 
-## 6. Motion
-
-Motion conventions are locked at v2.7.1. Reference for completeness:
+## 6. Motion (unchanged at v2.8.0)
 
 - **`odia-pulse`** — 2s slow opacity pulse. "Heartbeat" indicators.
 - **`odia-fade`** — 180ms fade-in on mount. Page transitions.
@@ -245,29 +249,23 @@ All respect `prefers-reduced-motion: reduce`.
 
 ---
 
-## 7. The intro sequence
+## 7. The intro sequence (v2.8.0 — plays every launch)
 
 The Oraculus intro (`frontend/public/intro/index.html`) is a
-~25-second cinematic boot animation that plays on first launch. Five
-phases:
+~25-second cinematic boot animation that plays on **every** app
+launch (changed from "first launch only" at v2.8.0 per user
+direction).
 
-1. **Phase 0 — Deep grid.** Hex mesh, data rings, drifting embers.
-   Sets the "precision instrument" tone.
-2. **Phase 1 — Boot text.** Share Tech Mono telemetry lines stream in.
-   `> initiating Oraculus`, `> loading detectors`, etc.
-3. **Phase 2 — ODIA glyph assembly.** Letters flicker in, lock to gold.
-4. **Phase 3 — Equation row + code block.** The recursive scalar
-   formula renders, supporting code lines type out.
-5. **Phase 4 — Parchment glow.** Background shifts to parchment;
-   smoke layer attenuates.
-6. **Phase 5 — Declaration.** "We the People" inscribed in Pinyon
-   Script + IM Fell English SC, with gold rules opening above and
-   below. Brand tag fades in. Progress bar fills to 100%.
+Per-session deduplication: once dismissed within a session, it does
+NOT replay on page navigation. Dismissal is tracked in
+`sessionStorage` under `odia.intro.dismissed.session` and
+clears when the tab/window closes.
 
-The intro asset is **never modified** without bumping
-`INTRO_VERSION` in `frontend/lib/stores/intro.ts`. Version-bumping
-forces the intro to play once more for returning users so they see
-the new version.
+Force-replay: Settings → "Show on next launch" writes a one-shot
+flag to `localStorage` (`odia.intro.forceReplay`) which IntroGate
+reads-and-clears on next mount.
+
+Reduced-motion users opt out entirely.
 
 ---
 
@@ -277,8 +275,7 @@ the new version.
 
 Every chrome panel uses a `clip-path: polygon(...)` that cuts the
 top-left and bottom-right corners. Default `--hud-chamfer: 10px`.
-Dense panels use 6px. This is the gemstone-facet language — surfaces
-look cut, not rounded.
+Dense panels: 6px. Hero panels with textures use `--gem-facet: 14px`.
 
 ### 8.2 Brackets
 
@@ -288,16 +285,18 @@ bottom-right, 16×16px, with a 3.5s opacity pulse offset between them.
 
 ### 8.3 Hairline edging
 
-All chrome surfaces have a `1px solid` edge in `--gold-500` at 35%
-opacity (`--hud-edge`). Active states bump to 70% (`--hud-edge-strong`).
-Critical states use rose at 55% (`--hud-edge-critical`).
+All chrome surfaces have a `1px solid` edge in the gold-400 family
+at 85% opacity (`--edge-gold`) — bumped at v2.8.0 from 80% to ensure
+the gold reads decisively on the new mineral backgrounds. Active
+states bump to gold-100 at near-opaque (`--edge-gold-bright`).
+Critical states use rose at 65% (`--edge-critical`).
 
 ### 8.4 Glow halos
 
-Used sparingly, only on accent / hover / active states. Five named
-glows: `--glow-amber`, `--glow-amber-strong`, `--glow-cyan`,
-`--glow-violet`, `--glow-critical`. Apply as `box-shadow:
-var(--glow-*);`.
+Used sparingly, only on accent / hover / active states. Six named
+glows: `--glow-gold`, `--glow-gold-strong`, `--glow-emerald`,
+`--glow-signal`, `--glow-signal-neon`, `--glow-flow`,
+`--glow-critical`. Apply as `box-shadow: var(--glow-*);`.
 
 ---
 
@@ -311,11 +310,19 @@ var(--glow-*);`.
 - No serif body text. Serif is reserved for the intro.
 - No analytics / telemetry SDKs. The audit-tool privacy story forbids
   third-party trackers on any surface.
-- No ad-network glyphs. Even reference imagery from stock libraries
-  must be vetted for licence; the bundled references are placeholders
-  pending final licensed artwork.
+- No texture under data-heavy panels. Texture is the EXCEPTION,
+  reserved for hero / splash / cover surfaces.
+- No saturated yellow gold. The brand gold is `#997545` (warm tan-
+  gold, sampled from the source painting). Saturation breaks the
+  mineral identity.
+- No digital neon emerald in chrome. The mineral emerald is
+  `#0f6546` (real malachite). Digital neon is `--signal-*`,
+  reserved for live-state indication only.
 
 ---
 
 **This document is normative.** When in doubt, the design system in
 `globals.css` is the implementation; this document is the reasoning.
+The reference imagery in `docs/brand/reference/` is the source of
+truth for color decisions — every measured value above came from
+those photos.

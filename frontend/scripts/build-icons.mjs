@@ -43,10 +43,15 @@ import sharp from 'sharp';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '../..');
 
-const SRC = path.join(
-  repoRoot,
-  'docs/brand/reference/reference_5_gold-swirl-icon-source.png',
-);
+// v2.8.0 — source switched from the reference PNG to the rebuilt SVG
+// (`frontend/public/icons/oraculus-mark.svg`). Every gradient stop in the
+// SVG is a measured color from `reference_5_gold-swirl-icon-source.png`;
+// rasterizing from the SVG gives crisper edges at icon resolution while
+// keeping the painted-impasto color anchoring intact. sharp's libvips
+// SVG renderer preserves gradients faithfully. The reference PNG remains
+// at docs/brand/reference/ as the color authority for future palette
+// audits but is no longer consumed at build time.
+const SRC = path.join(repoRoot, 'frontend/public/icons/oraculus-mark.svg');
 const ICONS_DIR = path.join(repoRoot, 'frontend/public/icons');
 const DESKTOP_DIR = path.join(repoRoot, 'desktop/resources');
 
@@ -93,11 +98,18 @@ const targets = [
   },
 ];
 
+// v2.8.0 — when rasterising from SVG, sharp's libvips renderer needs an
+// explicit density to know how many DPI to render at. The SVG viewBox is
+// 512 units so 384 DPI gives a ~2730-px native render that downsamples
+// smoothly to even the 1024 desktop master. Without this it defaults to
+// 72 DPI and edges read as pixelated at large sizes.
+const sharpInput = (filePath) => sharp(filePath, { density: 384 });
+
 for (const { out, size, padding, label } of targets) {
   if (padding > 0) {
     const inner = Math.round(size * (1 - 2 * padding));
     const margin = Math.round((size - inner) / 2);
-    const innerBuffer = await sharp(SRC)
+    const innerBuffer = await sharpInput(SRC)
       .resize(inner, inner, { fit: 'contain', background: SMOKE_950, kernel: 'lanczos3' })
       .png()
       .toBuffer();
@@ -108,7 +120,7 @@ for (const { out, size, padding, label } of targets) {
       .png({ compressionLevel: 9 })
       .toFile(out);
   } else {
-    await sharp(SRC)
+    await sharpInput(SRC)
       .resize(size, size, { fit: 'contain', background: SMOKE_950, kernel: 'lanczos3' })
       .png({ compressionLevel: 9 })
       .toFile(out);

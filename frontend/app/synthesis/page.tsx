@@ -524,26 +524,31 @@ export default function SynthesisPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-1">
-              Master Audit Synthesis
-            </h2>
-            <p className="text-gray-600 text-sm">
-              {entries.length} audit{entries.length === 1 ? '' : 's'} ·{' '}
-              {uniqueDocCount} unique document{uniqueDocCount === 1 ? '' : 's'}{' '}
-              · {totalFindings} findings
-            </p>
+        {/* v2.8.0 C3 — Synthesis hero gets the marble texture: marble's   */}
+        {/* smoke + gold + emerald tri-pole maps thematically to cross-    */}
+        {/* jurisdictional synthesis (per BRAND.md §3.2).                   */}
+        <section className="gem-panel gem-hero-marble relative overflow-hidden p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3 relative z-10">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-1">
+                Master Audit Synthesis
+              </h2>
+              <p className="text-gray-600 text-sm">
+                {entries.length} audit{entries.length === 1 ? '' : 's'} ·{' '}
+                {uniqueDocCount} unique document{uniqueDocCount === 1 ? '' : 's'}{' '}
+                · {totalFindings} findings
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="secondary" onClick={handleExportMarkdown}>
+                ↓ Markdown
+              </Button>
+              <Button variant="primary" onClick={handleExportDocx}>
+                ↓ DOCX
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={handleExportMarkdown}>
-              ↓ Markdown
-            </Button>
-            <Button variant="primary" onClick={handleExportDocx}>
-              ↓ DOCX
-            </Button>
-          </div>
-        </div>
+        </section>
 
         {/* Severity totals */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

@@ -33,7 +33,7 @@ import {
   DocumentsIcon,
   AnomaliesIcon,
   OrchestratorIcon,
-  OctopusMarkIcon,
+  OraculusMarkIcon,
   CheckCircleIcon,
 } from '@/components/base/Icons';
 import { getAPIClient, type DashboardSummary } from '@/lib/api/client';
@@ -84,9 +84,15 @@ export default function Home() {
     <DashboardLayout>
       <div className="max-w-7xl mx-auto space-y-6">
         {/* =============================================================== */}
-        {/* 1 · Hero — v2.7.7 Y4: crystallized gem-panel-faceted             */}
+        {/* 1 · Hero — v2.8.0 C1: malachite texture + crystallized facets   */}
         {/* =============================================================== */}
-        <section className="gem-panel gem-panel-faceted relative overflow-hidden">
+        {/* The dashboard hero is the platform's primary work surface; per  */}
+        {/* BRAND.md §3.2 it gets the malachite texture so it reads as      */}
+        {/* polished mineral. Existing gem-panel-faceted geometry stays —   */}
+        {/* the texture composes underneath via the gem-hero-malachite      */}
+        {/* background-image layer + gradient overlay (preserves text       */}
+        {/* contrast).                                                       */}
+        <section className="gem-panel gem-panel-faceted gem-hero-malachite relative overflow-hidden">
           <div className="gem-ribbon-top" aria-hidden="true" />
           {/* Emerald bloom upper-right — gem facet catching light */}
           <div
@@ -120,7 +126,7 @@ export default function Home() {
                 background: 'rgba(14, 14, 20, 0.7)',
               }}
             >
-              <OctopusMarkIcon size={12} />
+              <OraculusMarkIcon size={12} />
               <span
                 className="bg-clip-text text-transparent"
                 style={{
@@ -128,7 +134,7 @@ export default function Home() {
                     'linear-gradient(90deg, var(--gold-200), var(--neon-emerald), var(--gold-300))',
                 }}
               >
-                O.D.I.A. · v2.7.10
+                O.D.I.A. · v2.8.0
               </span>
               <span
                 aria-hidden="true"
@@ -271,7 +277,7 @@ export default function Home() {
               body="11 ACLU mandate checks mapped to detector findings with automated scorecard generation for oversight review."
             />
             <Feature
-              icon={<OctopusMarkIcon size={18} />}
+              icon={<OraculusMarkIcon size={18} />}
               title="Full Provenance Tracking"
               body="SHA-256 hashing, contract lineage reconstruction, and cryptographic chain-of-custody for every analysed document."
             />

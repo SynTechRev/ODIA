@@ -1,372 +1,388 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   O.D.I.A. v2.7 — HUD design system
+   O.D.I.A. v2.8.0 — Mineral design system
    --------------------------------------------------------------------------
-   Forensic accountability workstation styled as a JARVIS / Wayne-Enterprise
-   tactical display. Force dark mode app-wide; the professional aesthetic
-   depends on deep slate-950 chrome + hairline amber edges + cyan data
-   accents. No light-mode variant — if light theming ever ships, it will
-   be a separately-opted theme, not an automatic prefers-color-scheme swap.
+   The visual identity is now anchored, literally, to the photographic
+   reference imagery the user vetted (`docs/brand/reference/`).
 
-   Palette:
-     • slate-950 / 900 / 800      — chrome (background, panels, rails)
-     • amber-500 (#f59e0b)         — primary accent + chrome edge hairline
-     • cyan-400  (#22d3ee)         — secondary accent for numeric readouts
-     • slate-200 / 300             — body text
-     • slate-400 / 500             — labels, muted chrome
-     • red-500 / orange-500 / yellow-500 / blue-500 — severity scale
+   Every smoke / gold / emerald token is a real measured pixel from one
+   of four images:
+
+     • marble_veins (1.jpg)            — smoke + gold + emerald tri-pole
+     • emerald_marble_quartz (2.jpg)   — primary deep emerald + quartz seam
+     • malachite_flux (4.jpg)          — saturated malachite + gold flux
+     • gold_swirl_source (6.png)       — the icon source painting
+
+   Each ramp (smoke / gold / emerald) is strictly monotonic by L* so
+   color-depth comparisons across the palette are predictable.
+
+   The mineral palette replaces the v2.7.7 "neon gemstone" palette
+   (vivid digital greens, saturated yellows). The mineral palette is
+   warmer, more desaturated, and reads as actual stone rather than
+   illuminated glass. The previous neon emeralds are retained but
+   demoted to a `--signal-*` namespace reserved exclusively for live-
+   state indication (running workflows, healthy backend, active tab
+   in the mobile bottom nav).
+
+   Backward compatibility
+   ----------------------
+   Every legacy token name from v2.7.0 through v2.7.10 is preserved as
+   an alias. `--gold-400`, `--smoke-900`, `--neon-emerald`, `--hud-edge`,
+   etc. all still resolve. The aliases at the bottom of the :root block
+   point at the new mineral values so existing components shift to the
+   new palette without per-component edits.
+
+   Texture system (new)
+   --------------------
+   Four reference textures are exposed as CSS background-image URLs:
+     • --texture-marble        — for hero panels (smoke + gold streaks)
+     • --texture-malachite     — for splash + dashboard hero
+     • --texture-malachite-flux — for active-state surfaces
+     • --texture-gold-flux     — for evidence packet covers
+
+   Each ships in four pre-dimmed variants (hero / bg / tile / mobile)
+   under /public/textures/. The default --texture-* references the
+   "-bg" variant; surface utilities like .gem-hero-marble pick the
+   "-hero" variant for higher-impact contexts.
    ========================================================================== */
 
 :root {
-  /* Base surface — dark HUD default */
-  --background: #020617;          /* slate-950 */
-  --background-deep: #01040d;     /* v2.7.1 — below slate-950 for vignette */
-  --foreground: #e2e8f0;          /* slate-200 */
-  --surface: #0a1222;             /* between slate-950 and 900 */
-  --surface-elevated: #0f172a;    /* slate-900 */
-  --surface-muted: #1e293b;       /* slate-800 */
-  --surface-hi: #243144;          /* v2.7.1 — slate-750, one step above muted */
-  --border: #334155;              /* slate-700 */
-  --border-strong: #475569;       /* slate-600 */
 
-  /* Chrome */
-  --chrome: #030712;              /* almost-black for sidebar/header */
-  --chrome-elevated: #0f172a;     /* slate-900 */
-  --chrome-foreground: #f8fafc;
-  --chrome-muted: #64748b;        /* slate-500 */
+  /* ------------------------------------------------------------------ */
+  /* SMOKE — chrome surfaces (warm-leaning grayscale)                    */
+  /* All measured from marble_veins, emerald_marble_quartz, gold_swirl_  */
+  /* source. Strictly monotonic by L*: smoke_50 (0.829) → smoke_950      */
+  /* (0.020).                                                            */
+  /* ------------------------------------------------------------------ */
+  --smoke-50:  #e1d7c6;  /* L*=0.829  warm white      (gold_swirl)      */
+  --smoke-100: #cdcdc7;  /* L*=0.792  high-contrast   (marble_veins)    */
+  --smoke-200: #bebeb8;  /* L*=0.733  emphasized text (marble_veins)    */
+  --smoke-300: #a4a8a9;  /* L*=0.653  body text       (marble_veins)    */
+  --smoke-400: #7c8180;  /* L*=0.496  inactive labels (marble_veins)    */
+  --smoke-500: #494742;  /* L*=0.273  muted dividers  (marble_veins)    */
+  --smoke-600: #2d2d2c;  /* L*=0.175  subtle dividers (marble_veins)    */
+  --smoke-700: #221f20;  /* L*=0.127  borders         (gold_swirl)      */
+  --smoke-750: #1a1817;  /* L*=0.096  hover surfaces  (gold_swirl)      */
+  --smoke-800: #12160f;  /* L*=0.073  raised cards    (malachite_flux)  */
+  --smoke-850: #0c1113;  /* L*=0.061  card surfaces   (emerald_marble)  */
+  --smoke-900: #080c08;  /* L*=0.039  app shell       (malachite_flux)  */
+  --smoke-950: #050505;  /* L*=0.020  body bg         (malachite_flux)  */
 
-  /* HUD accents */
-  --hud-primary: #f59e0b;         /* amber-500 — brand hairline + heads */
-  --hud-primary-bright: #fbbf24;  /* amber-400 — focus/hover intensify */
-  --hud-primary-dim: #b45309;     /* v2.7.1 — amber-700 */
-  --hud-secondary: #22d3ee;       /* cyan-400 — numeric readouts */
-  --hud-secondary-bright: #67e8f9;/* v2.7.1 — cyan-300 */
-  --hud-secondary-dim: #0891b2;   /* cyan-600 — muted data */
+  /* ------------------------------------------------------------------ */
+  /* GOLD — antique tan-gold, measured from gold_swirl_source painting  */
+  /* The PRIMARY value (--gold-500 #997545) is the actual mid-stroke     */
+  /* color of the painted swirl. NOT a saturated yellow.                 */
+  /* ------------------------------------------------------------------ */
+  --gold-50:  #eae1cf;  /* L*=0.865  paint highlight (gold_swirl)       */
+  --gold-100: #ded2be;  /* L*=0.808  catch-light                         */
+  --gold-200: #bfae94;  /* L*=0.665  soft highlight                      */
+  --gold-300: #b89664;  /* L*=0.557  highlight                           */
+  --gold-400: #b59162;  /* L*=0.547  bright primary                      */
+  --gold-500: #997545;  /* L*=0.435  PRIMARY — brand anchor              */
+  --gold-600: #8e704b;  /* L*=0.425  mid-tone                            */
+  --gold-700: #685339;  /* L*=0.316  shadow gold                         */
+  --gold-800: #4e4033;  /* L*=0.253  inset edge                          */
+  --gold-900: #3a2e1f;  /* L*=0.175  deepest gold shadow                 */
 
-  /* v2.7.1 — Automation / workflow layer
-     Violet channel, distinct from audit data (cyan) so n8n surfaces
-     don't blend with findings. Used by .hud-panel-flow, .hud-flow-node,
-     .hud-btn-flow, and the /automation route. */
-  --hud-flow: #a78bfa;            /* violet-400 */
-  --hud-flow-bright: #c4b5fd;     /* violet-300 */
-  --hud-flow-dim: #7c3aed;        /* violet-600 */
+  /* ------------------------------------------------------------------ */
+  /* EMERALD — mineral emerald, measured from malachite + emerald_marble */
+  /* The PRIMARY value (--emerald-500 #0f6546) is real malachite green.  */
+  /* NOT a digital neon. Vibrant but desaturated, photo-anchored.        */
+  /* ------------------------------------------------------------------ */
+  --emerald-100: #6e9e8f;  /* L*=0.525  mineral pale                    */
+  --emerald-200: #5fa17f;  /* L*=0.502  soft highlight                  */
+  --emerald-300: #3f6a46;  /* L*=0.331  desaturated mid                 */
+  --emerald-400: #1c835f;  /* L*=0.312  mid-light                       */
+  --emerald-500: #0f6546;  /* L*=0.227  PRIMARY — vibrant body          */
+  --emerald-600: #0e4028;  /* L*=0.153  mid                             */
+  --emerald-700: #0d392c;  /* L*=0.137  deep panel bg                   */
+  --emerald-800: #0b291a;  /* L*=0.102  deep malachite                  */
+  --emerald-850: #0a1e13;  /* L*=0.078  shadow                          */
+  --emerald-900: #080f0a;  /* L*=0.045  near-black                      */
+  --emerald-950: #050504;  /* L*=0.018  deepest emerald-black           */
 
-  /* Severity scale
-     v2.7.1 — Critical bumped red-500 → rose-500 so it reads distinctly
-     from High (orange-500); the prior red/orange pairing blended on
-     stacked severity summary tiles. Hue shift is small; semantic
-     contrast at a glance is the win. */
-  --severity-critical: #f43f5e;   /* rose-500 (was red-500) */
-  --severity-high: #f97316;       /* orange-500 */
-  --severity-medium: #eab308;     /* yellow-500 */
-  --severity-low: #3b82f6;        /* blue-500 */
-  --severity-info: #06b6d4;       /* cyan-500 */
+  /* ------------------------------------------------------------------ */
+  /* SIGNAL — the digital neon emeralds, RESERVED for live-state UI     */
+  /* indicators (running workflow, healthy backend, active mobile tab).  */
+  /* Never use for chrome, panels, or body text — that's emerald-*.      */
+  /* ------------------------------------------------------------------ */
+  --signal-300: #5cf5b0;  /* mint highlight                              */
+  --signal-400: #1fe88f;  /* core signal                                 */
+  --signal-500: #0fd47a;  /* primary value text                          */
+  --signal-neon: #00ff9d; /* glow — bottom tab active, live pulse        */
 
-  /* Status */
-  --status-healthy: #34d399;      /* v2.7.1 — emerald-400 (was emerald-500) */
-  --status-warn: #f59e0b;
-  --status-error: #f43f5e;        /* match new severity-critical */
-  --status-idle: #64748b;         /* v2.7.1 — slate-500 for paused/queued */
+  /* ------------------------------------------------------------------ */
+  /* SEVERITY — finding severity scale, semantic-locked                 */
+  /* ------------------------------------------------------------------ */
+  --severity-critical: #f43f5e;  /* rose-500 (distinct from high)       */
+  --severity-high:     #f97316;  /* orange-500                          */
+  --severity-medium:   #eab308;  /* yellow-500                          */
+  --severity-low:      #3b82f6;  /* blue-500                            */
+  --severity-info:     #06b6d4;  /* cyan-500                            */
 
-  /* HUD geometry tokens */
-  --hud-edge: rgba(245, 158, 11, 0.35);      /* amber edge hairline */
-  --hud-edge-strong: rgba(245, 158, 11, 0.7);
-  --hud-edge-data: rgba(34, 211, 238, 0.35);  /* v2.7.1 — cyan panel edge */
-  --hud-edge-flow: rgba(167, 139, 250, 0.40); /* v2.7.1 — violet panel edge */
-  --hud-edge-critical: rgba(244, 63, 94, 0.55); /* v2.7.1 — rose panel edge */
-  --hud-edge-muted: rgba(148, 163, 184, 0.2); /* slate fallback */
-  --hud-chamfer: 10px;             /* clip-path corner cut size */
+  /* ------------------------------------------------------------------ */
+  /* FLOW — automation / n8n channel (preserved from v2.7.1)            */
+  /* Distinct violet so workflow state never blends with audit data.    */
+  /* ------------------------------------------------------------------ */
+  --flow-300: #c4b5fd;  /* violet-300 — bright */
+  --flow-400: #a78bfa;  /* violet-400 — primary */
+  --flow-500: #7c3aed;  /* violet-600 — dim */
 
-  /* v2.7.1 — Named glow system
-     Ambient panel halos used sparingly on accent / hover states. Consumed
-     via `box-shadow: var(--glow-*);` or layered alongside chamfer shadows. */
-  --glow-amber: 0 0 20px rgba(245, 158, 11, 0.25);
-  --glow-amber-strong: 0 0 32px rgba(245, 158, 11, 0.45);
-  --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.22);
-  --glow-violet: 0 0 24px rgba(167, 139, 250, 0.30);
-  --glow-critical: 0 0 24px rgba(244, 63, 94, 0.40);
+  /* ------------------------------------------------------------------ */
+  /* STATUS                                                              */
+  /* ------------------------------------------------------------------ */
+  --status-healthy: var(--signal-400);
+  --status-warn:    var(--gold-400);
+  --status-error:   var(--severity-critical);
+  --status-idle:    var(--smoke-400);
 
-  /* v2.7.7 Y1 — Gemstone palette (full propagation)
-     ----------------------------------------------------------------------
-     Approved direction from v2.7.6 X5 POC, with revisions per user:
-       • greens push toward neon — saturated, vivid, glowing
-       • outlining is dual: matte gold + neon emerald
-       • surfaces have crystallized facet edges (clip-path geometry)
+  /* ------------------------------------------------------------------ */
+  /* EDGES — chrome hairlines, dual-edge gold-outer / emerald-inner     */
+  /* Bumped for v2.8.0 from v2.7.10's already-bumped values to ensure   */
+  /* the gold reads on the darker mineral backgrounds.                  */
+  /* ------------------------------------------------------------------ */
+  --edge-gold:           rgba(181, 145, 98, 0.85);     /* gold-400 @85% */
+  --edge-gold-bright:    rgba(222, 210, 190, 1.00);    /* gold-100      */
+  --edge-gold-faint:     rgba(104, 83, 57, 0.45);      /* gold-700      */
+  --edge-emerald:        rgba(15, 101, 70, 0.75);      /* emerald-500   */
+  --edge-emerald-bright: rgba(31, 232, 143, 0.90);     /* signal-400    */
+  --edge-flow:           rgba(167, 139, 250, 0.60);
+  --edge-critical:       rgba(244, 63, 94, 0.65);
+  --edge-muted:          rgba(124, 129, 128, 0.30);    /* smoke-400     */
 
-     Smoke spine — grayscale chrome (black → platinum):
-       --smoke-950 .. --smoke-100
-     Gold vein — antique matte cut-edge accent:
-       --gold-200..600
-     Neon emerald — gem-facet glow + healthy/active state:
-       --emerald-300/400/500/600/700, --neon-emerald, --jade-800
-     Edge & glow tokens consumed by .gem-* utilities and the redirected
-     hud-* family.
-  */
-  --smoke-950: #07070a;
-  --smoke-900: #0e0e14;
-  --smoke-800: #18181f;
-  --smoke-700: #25252f;
-  --smoke-600: #34343f;
-  --smoke-500: #5a5a66;
-  --smoke-300: #cbcbd1;
-  --smoke-200: #e6e6ea;
-  --smoke-100: #f4f4f6;
-
-  /* Gold — bumped slightly brighter for the dual-edge cuts */
-  --gold-200: #f5dc9a;            /* highest catch-light */
-  --gold-300: #ecc870;            /* highlight */
-  --gold-400: #d8b13c;            /* primary gold */
-  --gold-500: #b8941f;            /* mid-tone */
-  --gold-600: #8b6914;            /* deep antique */
-
-  /* Emerald — pushed toward neon. Brightest tone is --neon-emerald,
-     used for the dual-edge inner stroke + active-state glows. */
-  --emerald-200: #b9ffe1;         /* near-white mint highlight */
-  --emerald-300: #5cf5b0;         /* vibrant mint */
-  --emerald-400: #1fe88f;         /* core vibrant emerald */
-  --emerald-500: #0fd47a;         /* primary value text */
-  --emerald-600: #07b863;
-  --emerald-700: #058a4a;
-  --neon-emerald: #00ff9d;        /* neon — for glows + dot pulses */
-  --jade-800: #053826;            /* deep gem-facet inset */
-  --jade-900: #04221a;            /* deepest inset, behind crystallized panels */
-
-  /* Edge tokens — dual-edge composition uses gold OUTER + emerald INNER */
-  --gem-edge-gold: rgba(216, 177, 60, 0.65);
-  --gem-edge-gold-bright: rgba(245, 220, 154, 0.95);
-  --gem-edge-emerald: rgba(31, 232, 143, 0.55);
-  --gem-edge-emerald-bright: rgba(0, 255, 157, 0.85);
-
-  /* Glow tokens — neon emerald is brighter than the v2.7.6 X5 emerald */
-  --glow-gold: 0 0 28px rgba(216, 177, 60, 0.32);
-  --glow-gold-strong: 0 0 38px rgba(245, 220, 154, 0.55);
-  --glow-emerald: 0 0 28px rgba(31, 232, 143, 0.45);
-  --glow-emerald-neon: 0 0 36px rgba(0, 255, 157, 0.55);
-
-  /* Crystallized facet — chamfer step cut for the gem-* utility family.
-     Larger than --hud-chamfer so the geometry reads as deliberately
-     faceted rather than incidentally rounded. */
-  --gem-facet: 14px;
+  /* Crystallized facet sizing */
+  --gem-facet:    14px;
   --gem-facet-sm: 8px;
+  --hud-chamfer:  10px;
+
+  /* ------------------------------------------------------------------ */
+  /* GLOWS — for box-shadow halos on accent / hover states              */
+  /* ------------------------------------------------------------------ */
+  --glow-gold:           0 0 32px rgba(181, 145, 98, 0.45);
+  --glow-gold-strong:    0 0 44px rgba(222, 210, 190, 0.65);
+  --glow-emerald:        0 0 32px rgba(15, 101, 70, 0.45);
+  --glow-signal:         0 0 36px rgba(31, 232, 143, 0.55);
+  --glow-signal-neon:    0 0 40px rgba(0, 255, 157, 0.65);
+  --glow-flow:           0 0 28px rgba(167, 139, 250, 0.45);
+  --glow-critical:       0 0 28px rgba(244, 63, 94, 0.55);
+
+  /* ------------------------------------------------------------------ */
+  /* TEXTURES — reference imagery as background-image                   */
+  /* All four ship in /public/textures/ as WebP at multiple variants.   */
+  /* The default tokens point at the dimmed -bg variant; the .gem-hero  */
+  /* utilities pick the brighter -hero variant per surface.             */
+  /* ------------------------------------------------------------------ */
+  --texture-marble:           url('/textures/texture-marble-bg.webp');
+  --texture-malachite:        url('/textures/texture-malachite-bg.webp');
+  --texture-malachite-flux:   url('/textures/texture-malachite-flux-bg.webp');
+  --texture-gold-flux:        url('/textures/texture-gold-flux-bg.webp');
+
+  --texture-marble-hero:       url('/textures/texture-marble-hero.webp');
+  --texture-malachite-hero:    url('/textures/texture-malachite-hero.webp');
+  --texture-malachite-flux-hero: url('/textures/texture-malachite-flux-hero.webp');
+  --texture-gold-flux-hero:    url('/textures/texture-gold-flux-hero.webp');
+
+  --texture-marble-tile:       url('/textures/texture-marble-tile.webp');
+  --texture-malachite-tile:    url('/textures/texture-malachite-tile.webp');
+  --texture-gold-flux-tile:    url('/textures/texture-gold-flux-tile.webp');
+
+  /* ------------------------------------------------------------------ */
+  /* SEMANTIC SHORTCUTS — the rest of the codebase reads these          */
+  /* ------------------------------------------------------------------ */
+  --background:       var(--smoke-950);
+  --background-deep:  #030302;
+  --foreground:       var(--smoke-200);
+  --surface:          var(--smoke-850);
+  --surface-elevated: var(--smoke-800);
+  --surface-muted:    var(--smoke-700);
+  --border:           var(--smoke-600);
 }
 
-/* v2.7.7 Y1 — Token redirects so the existing .hud-* family picks up
-   the gemstone palette without per-component edits. The hud-cyan /
-   status-healthy / amber-edge channels all redirect to gold + emerald.
-   Violet (.hud-flow) remains unchanged — it is the n8n workflow channel
-   and stays distinct so workflow state doesn't blend with audit data. */
+/* ----------------------------------------------------------------------
+   BACKWARD COMPATIBILITY ALIASES
+   ----------------------------------------------------------------------
+   Every token name used by the codebase from v2.7.0 → v2.7.10 is
+   preserved here. They redirect to the new mineral palette so existing
+   components shift palette without per-component edits.
+
+   Keep this block intact unless removing a deprecated token across the
+   whole codebase in the same commit.
+   ---------------------------------------------------------------------- */
 :root {
-  /* Amber → gold */
-  --hud-primary: var(--gold-400);
+  /* v2.7.7 neon emerald → demoted to signal channel */
+  --neon-emerald:   var(--signal-neon);
+
+  /* v2.7.7 jade → mapped to deep emerald */
+  --jade-800:       var(--emerald-800);
+  --jade-900:       var(--emerald-900);
+
+  /* v2.7.7 gem-edge → renamed to edge-* */
+  --gem-edge-gold:           var(--edge-gold);
+  --gem-edge-gold-bright:    var(--edge-gold-bright);
+  --gem-edge-emerald:        var(--edge-emerald);
+  --gem-edge-emerald-bright: var(--edge-emerald-bright);
+
+  /* v2.7.0 HUD primary/secondary — repointed to mineral */
+  --hud-primary:        var(--gold-500);   /* was amber-500 */
   --hud-primary-bright: var(--gold-200);
-  --hud-primary-dim: var(--gold-600);
-  /* Cyan → neon emerald (data channel) */
-  --hud-secondary: var(--emerald-500);
-  --hud-secondary-bright: var(--neon-emerald);
-  --hud-secondary-dim: var(--emerald-700);
-  /* Edges — gold outer + emerald data */
-  --hud-edge: var(--gem-edge-gold);
-  --hud-edge-strong: var(--gem-edge-gold-bright);
-  --hud-edge-data: var(--gem-edge-emerald);
-  /* Status healthy → neon emerald */
-  --status-healthy: var(--neon-emerald);
-  --status-warn: var(--gold-400);
+  --hud-primary-dim:    var(--gold-700);
+  --hud-secondary:      var(--emerald-500);
+  --hud-secondary-bright: var(--signal-400);
+  --hud-secondary-dim:  var(--emerald-700);
+
+  /* v2.7.1 HUD edges */
+  --hud-edge:          var(--edge-gold);
+  --hud-edge-strong:   var(--edge-gold-bright);
+  --hud-edge-data:     var(--edge-emerald);
+  --hud-edge-flow:     var(--edge-flow);
+  --hud-edge-critical: var(--edge-critical);
+  --hud-edge-muted:    var(--edge-muted);
+
+  /* v2.7.1 flow */
+  --hud-flow:        var(--flow-400);
+  --hud-flow-bright: var(--flow-300);
+  --hud-flow-dim:    var(--flow-500);
+
+  /* v2.7.1 amber/cyan glow names → gold/signal redirects */
+  --glow-amber:        var(--glow-gold);
+  --glow-amber-strong: var(--glow-gold-strong);
+  --glow-cyan:         var(--glow-emerald);
+  --glow-violet:       var(--glow-flow);
+
+  /* v2.6 emerald-* survivors that aren't already in the new ramp */
+  --emerald-450:  var(--emerald-400);
 }
 
-/* v2.7.10 — bumped gold + emerald edge presence per user feedback
-   ("not seeing enough gold"). Pre-v2.7.10 the edge tokens topped out at
-   55% / 45% opacity, which read as hairlines on a dark body. Bumped to
-   80% / 70% so panel borders read as decisive cuts, not whispers. The
-   *-bright variants stay near-opaque for hover/active states. */
-:root {
-  --gem-edge-gold:           rgba(216, 177, 60, 0.80);
-  --gem-edge-gold-bright:    rgba(245, 220, 154, 0.95);
-  --gem-edge-emerald:        rgba(31, 232, 143, 0.70);
-  --gem-edge-emerald-bright: rgba(0,  255, 157, 0.90);
-  --glow-gold:               0 0 32px rgba(216, 177, 60, 0.45);
-  --glow-gold-strong:        0 0 44px rgba(245, 220, 154, 0.65);
-  --glow-emerald:            0 0 32px rgba(31, 232, 143, 0.55);
-  --glow-emerald-neon:       0 0 40px rgba(0,  255, 157, 0.65);
-}
-
-/* Tailwind theme mapping — lets the rest of the codebase keep using
-   its existing color utility names. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
-  --color-border: var(--border);
-  --color-accent: var(--hud-primary);
-  --color-accent-hover: var(--hud-primary-bright);
-  --color-chrome: var(--chrome);
-  --color-chrome-elevated: var(--chrome-elevated);
-
-  /* v2.7.1 — Three-tier typography stack.
-     Fonts ship with system-stack fallbacks so the Electron desktop app
-     renders correctly under file:// without any network font fetches.
-     If self-hosted custom fonts are later added, point at their local
-     assets; DO NOT add `@import url('fonts.googleapis.com/...')` —
-     Electron file:// blocks remote font loads. */
-  --font-display: "Space Grotesk", "Inter", system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono",
-    Menlo, Consolas, "Liberation Mono", monospace;
+  --color-background:       var(--background);
+  --color-foreground:       var(--foreground);
+  --color-surface:          var(--surface);
+  --color-surface-muted:    var(--surface-muted);
+  --color-border:           var(--border);
+  --color-accent:           var(--gold-500);
+  --color-accent-hover:     var(--gold-200);
 }
 
-/* ---------------------------------------------------------------------- */
-/* Base element styles                                                     */
-/* ---------------------------------------------------------------------- */
+/* ======================================================================
+   BASE LAYER
+   ====================================================================== */
 
-html,
-body {
-  min-height: 100vh;
-}
+html, body { min-height: 100vh; }
 
 body {
-  /* v2.7.10 — transitional smoke → jade-tinted core → smoke depth pass.
-     The pre-v2.7.10 body was a flat near-black with two faint corner
-     blooms; sign-off review described it as "kind of dark". The new
-     stack:
-       1. linear sweep top→bottom: smoke-950 → smoke-900 with a faint
-          jade-900 mid-band so the chrome reads as polished mineral
-          with a green undertone, not flat coal.
-       2. four corner blooms (gold top-left, emerald top-right, gold
-          bottom-right, emerald bottom-left) bumped from 5% → 11% so
-          the chrome has visible warmth at the edges without going
-          full chrome-glare.
-       3. diamond-grid hairlines bumped from 1.4–1.8% → 2.4–2.8% so
-          the crystalline lattice reads in the mid-tone areas where
-          the corner blooms don't reach. */
-  background:
-    radial-gradient(ellipse at 12%  -8%,  rgba(216, 177, 60, 0.11)  0%, transparent 48%),
-    radial-gradient(ellipse at 88%  -4%,  rgba(31,  232, 143, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse at 92% 102%,  rgba(216, 177, 60, 0.11)  0%, transparent 50%),
-    radial-gradient(ellipse at 8%  100%,  rgba(31,  232, 143, 0.09) 0%, transparent 50%),
-    linear-gradient(180deg,
-      var(--smoke-950) 0%,
-      #0c1011 35%,
-      #0d1310 55%,
-      var(--smoke-900) 100%);
+  background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Diamond-grid hairlines at higher opacity for visible crystalline
-     lattice across the page. */
+
+  /* Layered background:
+     1. Subtle marble texture at very low opacity (mineral character)
+     2. Radial vignette (dark centre-to-edges)
+     3. Faint gold-700 grid (48px) — precision-instrument feel
+     4. Hairline smoke sub-grid (12px)
+     The texture and grids stay below ~3% opacity so text wins. */
   background-image:
-    linear-gradient(45deg,  rgba(216, 177, 60, 0.028) 1px, transparent 1px),
-    linear-gradient(-45deg, rgba(31,  232, 143, 0.024) 1px, transparent 1px),
-    radial-gradient(ellipse at 12%  -8%,  rgba(216, 177, 60, 0.11)  0%, transparent 48%),
-    radial-gradient(ellipse at 88%  -4%,  rgba(31,  232, 143, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse at 92% 102%,  rgba(216, 177, 60, 0.11)  0%, transparent 50%),
-    radial-gradient(ellipse at 8%  100%,  rgba(31,  232, 143, 0.09) 0%, transparent 50%),
-    linear-gradient(180deg,
-      var(--smoke-950) 0%,
-      #0c1011 35%,
-      #0d1310 55%,
-      var(--smoke-900) 100%);
-  background-size: 36px 36px, 36px 36px, auto, auto, auto, auto, auto;
+    var(--texture-marble),
+    radial-gradient(
+      ellipse 120% 80% at 50% 0%,
+      rgba(181, 145, 98, 0.05) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 100% 100% at 50% 100%,
+      rgba(15, 101, 70, 0.03) 0%,
+      transparent 65%
+    ),
+    linear-gradient(rgba(181, 145, 98, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(181, 145, 98, 0.018) 1px, transparent 1px),
+    linear-gradient(rgba(124, 129, 128, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 129, 128, 0.012) 1px, transparent 1px);
+  background-size:
+    cover,         /* marble texture covers full viewport */
+    auto, auto,    /* gradients */
+    48px 48px, 48px 48px,
+    12px 12px, 12px 12px;
+  background-position:
+    center,
+    auto, auto,
+    auto, auto, auto, auto;
+  background-attachment: fixed;
 }
 
-code,
-kbd,
-pre {
-  font-family: var(--font-mono);
+h1, h2, h3, h4 {
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.01em;
 }
 
-/* Focus ring — sharp gold rather than rounded. Matches gem-edge language. */
+code, kbd, pre, .hud-num, .hud-mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono',
+               Menlo, Consolas, monospace;
+}
+
+/* Focus ring — gold-500 sharp square */
 *:focus-visible {
   outline: 1.5px solid var(--gold-200);
   outline-offset: 2px;
   border-radius: 2px;
-  box-shadow: 0 0 0 3px rgba(31, 232, 143, 0.25);
 }
 
-/* Scrollbar — slim slate with amber thumb on hover */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
+  background: rgba(124, 129, 128, 0.25);
   border-radius: 0;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(216, 177, 60, 0.65);
+  background: var(--gold-500);
   background-clip: padding-box;
   border: 2px solid transparent;
 }
 
-/* v2.7.7 — Text selection. Neon emerald on smoke for the gemstone
-   palette (was amber on slate). High contrast, on-brand. */
 ::selection {
-  background: rgba(31, 232, 143, 0.40);
-  color: var(--smoke-100);
-}
-::-moz-selection {
-  background: rgba(31, 232, 143, 0.40);
-  color: var(--smoke-100);
+  background: rgba(153, 117, 69, 0.45);
+  color: var(--smoke-50);
 }
 
-/* ---------------------------------------------------------------------- */
-/* Keyframes + motion system                                              */
-/* ---------------------------------------------------------------------- */
+/* ======================================================================
+   MOTION SYSTEM
+   ====================================================================== */
 
 @keyframes odia-pulse {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0.4; }
 }
-
 @keyframes odia-fade-in {
   from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes hud-bracket-pulse {
-  0%, 100% { opacity: 0.8; }
+  0%, 100% { opacity: 0.85; }
   50%      { opacity: 0.4; }
 }
-
-/* v2.7.1 — sheen sweep. Diagonal gradient that slides across a surface
-   once; used on .hud-divider and one-shot load-complete affordances. */
 @keyframes odia-sheen {
-  from { background-position: -200% 0; }
-  to   { background-position:  200% 0; }
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
-
-/* v2.7.1 — scan line. Narrow horizontal line that descends through a
-   panel; behind .hud-terminal and the Automation live-console. */
 @keyframes odia-scan {
-  from { transform: translateY(-100%); }
-  to   { transform: translateY(100%); }
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(100%); opacity: 0; }
 }
-
-/* v2.7.1 — readout tick. Rapid fade used when a numeric value updates.
-   Attach via .animate-odia-tick once per re-render. */
 @keyframes odia-readout-tick {
-  0%   { opacity: 0.4; transform: translateY(-2px); }
-  60%  { opacity: 1;   transform: translateY(0); }
-  100% { opacity: 1;   transform: translateY(0); }
+  0%   { color: var(--gold-200); }
+  100% { color: currentColor; }
 }
-
-/* v2.7.1 — breath. Slow glow cycle for "live" indicators (a running
-   workflow, an active backend connection). Subtle; never paired with
-   odia-pulse on the same element.
-   v2.7.7 — recoloured to gold so the breath aligns with the gemstone
-   palette; emerald-breath lives separately as .animate-gem-breath. */
 @keyframes odia-glow-breath {
-  0%, 100% { box-shadow: 0 0 12px rgba(216, 177, 60, 0.25); }
-  50%      { box-shadow: 0 0 26px rgba(245, 220, 154, 0.60); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(31, 232, 143, 0.40); }
+  50%      { box-shadow: 0 0 0 6px rgba(31, 232, 143, 0); }
 }
 
 .animate-odia-pulse  { animation: odia-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
@@ -376,59 +392,28 @@ pre {
 .animate-odia-tick   { animation: odia-readout-tick 600ms ease-out; }
 .animate-odia-breath { animation: odia-glow-breath 2s ease-in-out infinite; }
 
-/* Respect users who've asked for less motion. Sheen / scan / breath
-   are decorative; bracket pulse + fade-in are close to imperceptible
-   and kept but shortened. */
 @media (prefers-reduced-motion: reduce) {
   .animate-odia-pulse,
   .animate-odia-sheen,
   .animate-odia-scan,
-  .animate-odia-tick,
-  .animate-odia-breath {
-    animation: none;
-  }
+  .animate-odia-breath,
   .hud-brackets::before,
-  .hud-brackets::after {
-    animation: none;
-    opacity: 0.7;
-  }
+  .hud-brackets::after { animation: none !important; }
 }
 
-/* ---------------------------------------------------------------------- */
-/* HUD panel system — JARVIS/Wayne-Enterprise tactical chrome              */
-/* ------------------------------------------------------------------------
-   `.hud-panel`       — base panel with chamfered corners + dark surface
-                        + thin amber edge + subtle inner depth shadow
-   `.hud-panel-dense` — tighter chamfer for small tiles
-   `.hud-panel-accent`— emphasised with brighter amber edge (hero, CTAs)
-   `.hud-brackets`    — L-shaped corner brackets (JARVIS viewport marks)
-   `.hud-rail-right`  — sidebar right-edge HUD hairline
-   `.hud-rail-bottom` — header bottom-edge HUD hairline
-   `.hud-scanlines`   — very subtle horizontal scanlines overlay
-   `.hud-num`         — mono tabular numerics for readouts
-   `.hud-label`       — uppercase tracking-widest tiny label
-   ---------------------------------------------------------------------- */
+/* ======================================================================
+   PANEL LIBRARY — base hud-panel + variants
+   ====================================================================== */
 
 .hud-panel {
   position: relative;
-  /* v2.7.10 — panel surface lifted off pure black with a faint jade
-     undertone so the gold edge has something to catch against. The
-     v2.7.7 stack sat on near-black and the gold border read as a
-     hairline rather than a setting. */
   background:
-    linear-gradient(180deg,
-      rgba(20, 22, 26, 0.96) 0%,
-      rgba(14, 18, 18, 0.97) 60%,
-      rgba(10, 12, 14, 0.98) 100%);
-  border: 1px solid var(--hud-edge);
+    linear-gradient(180deg, rgba(18, 22, 15, 0.92), rgba(8, 12, 8, 0.96));
+  border: 1px solid var(--edge-gold);
   box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.20),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.50),
-    inset 0 0 0 1px rgba(31, 232, 143, 0.16),
-    0 0 24px -10px rgba(216, 177, 60, 0.20),
-    0 8px 24px -12px rgba(0, 0, 0, 0.6);
-  /* Chamfered corners — top-left + bottom-right get cut, leaves top-right
-     and bottom-left pointed for directional tension. Feels designed. */
+    inset 0 1px 0 rgba(181, 145, 98, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 8px 24px -12px rgba(0, 0, 0, 0.65);
   clip-path: polygon(
     var(--hud-chamfer) 0,
     100% 0,
@@ -438,298 +423,573 @@ pre {
     0 var(--hud-chamfer)
   );
   color: var(--foreground);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  transition: border-color 200ms ease, box-shadow 200ms ease,
+              transform 200ms ease;
 }
 
 .hud-panel:hover {
-  border-color: var(--hud-edge-strong);
+  border-color: var(--edge-gold-bright);
   box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.32),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(0, 255, 157, 0.30),
-    0 0 0 1px rgba(216, 177, 60, 0.40),
-    0 0 32px -8px rgba(216, 177, 60, 0.30),
+    inset 0 1px 0 rgba(181, 145, 98, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(181, 145, 98, 0.20),
     0 8px 24px -12px rgba(0, 0, 0, 0.7);
 }
 
-.hud-panel-dense {
-  --hud-chamfer: 6px;
-}
+.hud-panel-dense { --hud-chamfer: 6px; }
 
 .hud-panel-accent {
-  border: 1px solid var(--hud-edge-strong);
+  border: 1px solid var(--edge-gold-bright);
   box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.26),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(31, 232, 143, 0.20),
-    0 0 0 1px rgba(216, 177, 60, 0.18),
-    0 12px 32px -14px rgba(0, 0, 0, 0.7);
+    inset 0 1px 0 rgba(181, 145, 98, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(181, 145, 98, 0.18),
+    0 12px 32px -14px rgba(0, 0, 0, 0.7),
+    var(--glow-gold);
 }
 
-/* v2.7.1 → v2.7.7 — Data panel (neon-emerald edge, was cyan).
-   For analysis / findings surfaces where numeric readouts live. The
-   gem-data channel emits the brightest neon-emerald glow on hover —
-   reserve it for panels whose primary content is numbers / charts /
-   detector output, otherwise the entire interface starts glowing. */
 .hud-panel-data {
-  border-color: var(--hud-edge-data);
+  border-color: var(--edge-emerald);
   box-shadow:
-    inset 0 1px 0 rgba(31, 232, 143, 0.14),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(216, 177, 60, 0.12),
-    0 8px 24px -12px rgba(0, 0, 0, 0.6);
+    inset 0 1px 0 rgba(15, 101, 70, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 8px 24px -12px rgba(0, 0, 0, 0.65);
 }
 .hud-panel-data:hover {
-  border-color: var(--gem-edge-emerald-bright);
+  border-color: var(--edge-emerald-bright);
   box-shadow:
-    inset 0 1px 0 rgba(0, 255, 157, 0.22),
-    inset 0 0 0 1px rgba(216, 177, 60, 0.20),
-    0 0 0 1px rgba(31, 232, 143, 0.30),
-    var(--glow-emerald),
-    0 8px 24px -12px rgba(0, 0, 0, 0.7);
+    inset 0 1px 0 rgba(15, 101, 70, 0.22),
+    0 0 0 1px rgba(31, 232, 143, 0.22),
+    var(--glow-emerald);
 }
 
-/* v2.7.1 — Flow panel (violet edge).
-   Reserved for automation / n8n surfaces. The violet cue distinguishes
-   workflow state (a node running, an execution succeeded) from audit
-   content (amber / cyan). Panel variant MUST be composed with .hud-panel,
-   not applied standalone. */
 .hud-panel-flow {
-  border-color: var(--hud-edge-flow);
+  border-color: var(--edge-flow);
   box-shadow:
-    inset 0 1px 0 rgba(167, 139, 250, 0.12),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
-    0 8px 24px -12px rgba(0, 0, 0, 0.6);
+    inset 0 1px 0 rgba(167, 139, 250, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 8px 24px -12px rgba(0, 0, 0, 0.65);
 }
 .hud-panel-flow:hover {
-  border-color: rgba(167, 139, 250, 0.75);
+  border-color: rgba(167, 139, 250, 0.80);
   box-shadow:
-    inset 0 1px 0 rgba(167, 139, 250, 0.22),
-    0 0 0 1px rgba(167, 139, 250, 0.22),
-    var(--glow-violet);
+    inset 0 1px 0 rgba(167, 139, 250, 0.18),
+    0 0 0 1px rgba(167, 139, 250, 0.25),
+    var(--glow-flow);
 }
 
-/* v2.7.1 — Critical panel (rose edge).
-   For dossier views of CRITICAL-severity findings. The rose glow is
-   louder than other variants because a CRITICAL surface is supposed to
-   demand attention; do not use this variant for ambient chrome. */
 .hud-panel-critical {
-  border-color: var(--hud-edge-critical);
+  border-color: var(--edge-critical);
+  background: linear-gradient(180deg, rgba(40, 10, 18, 0.78), rgba(8, 12, 8, 0.96));
   box-shadow:
-    inset 0 1px 0 rgba(244, 63, 94, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(244, 63, 94, 0.20),
+    inset 0 1px 0 rgba(244, 63, 94, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.65),
     var(--glow-critical);
 }
 
-/* v2.7.1 — Inset panel.
-   Flat, pressed-in look. Use INSIDE another .hud-panel to set off a
-   sub-section (a metadata strip, a manifest table) without stacking
-   two outlined panels. No chamfer, no glow, just a recessed surface. */
 .hud-panel-inset {
-  position: relative;
-  background: rgba(1, 4, 13, 0.55);
-  border: 1px solid rgba(51, 65, 85, 0.4);
-  box-shadow:
-    inset 0 1px 0 rgba(0, 0, 0, 0.4),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
-  color: var(--foreground);
+  background: rgba(5, 5, 5, 0.6);
+  border: 1px solid rgba(45, 45, 44, 0.7);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
+  clip-path: polygon(
+    6px 0, 100% 0, 100% calc(100% - 6px),
+    calc(100% - 6px) 100%, 0 100%, 0 6px
+  );
 }
 
-/* v2.7.1 — Terminal panel.
-   Near-black background + cyan hairline + monospace children. Intended
-   for the Automation page's live-console widget and any place raw log
-   output needs to read as an actual terminal rather than a UI element.
-   A ::before scanline animates behind the content for the "live" feel. */
 .hud-terminal {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(180deg, #000 0%, #02060f 100%);
-  border: 1px solid var(--hud-edge-data);
-  color: var(--hud-secondary-bright);
-  font-family: var(--font-mono);
+  background: linear-gradient(180deg, #000000, #050b08);
+  border: 1px solid var(--edge-emerald);
+  color: var(--signal-400);
+  font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   line-height: 1.55;
-  box-shadow:
-    inset 0 0 0 1px rgba(34, 211, 238, 0.08),
-    var(--glow-cyan);
+  padding: 12px 14px;
+  clip-path: polygon(
+    6px 0, 100% 0, 100% calc(100% - 6px),
+    calc(100% - 6px) 100%, 0 100%, 0 6px
+  );
+  position: relative;
+  overflow: hidden;
 }
 .hud-terminal::before {
   content: "";
   position: absolute;
-  inset: 0;
+  left: 0; right: 0; top: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(31, 232, 143, 0.6),
+    transparent);
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(34, 211, 238, 0.045) 50%,
-    transparent 100%
-  );
-  height: 24px;
   animation: odia-scan 2.4s linear infinite;
 }
 
-/* Corner brackets — L-shapes at the TL + BR corners. Pair with
-   .hud-panel so the clip-path chamfer and the bracket corners align. */
-.hud-brackets {
+/* ======================================================================
+   GEM-* UTILITY FAMILY (v2.8.0 — texture-backed surfaces)
+   --------------------------------------------------------------------
+   These classes layer reference photography under the chrome geometry.
+   Use sparingly — texture-heavy surfaces should be the EXCEPTION
+   (hero panels, splash, evidence covers), not the default.
+   ====================================================================== */
+
+.gem-hero-marble {
+  background:
+    linear-gradient(180deg, rgba(8, 12, 8, 0.50), rgba(8, 12, 8, 0.85)),
+    var(--texture-marble-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-gold-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 210, 190, 0.18),
+    var(--glow-gold);
+  clip-path: polygon(
+    var(--gem-facet) 0,
+    100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%,
+    0 var(--gem-facet)
+  );
   position: relative;
 }
+
+.gem-hero-malachite {
+  background:
+    linear-gradient(180deg, rgba(11, 41, 26, 0.55), rgba(8, 15, 10, 0.88)),
+    var(--texture-malachite-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-emerald-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(95, 161, 127, 0.20),
+    var(--glow-emerald);
+  clip-path: polygon(
+    var(--gem-facet) 0,
+    100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%,
+    0 var(--gem-facet)
+  );
+}
+
+.gem-hero-malachite-flux {
+  background:
+    linear-gradient(180deg, rgba(11, 41, 26, 0.60), rgba(5, 5, 4, 0.92)),
+    var(--texture-malachite-flux-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-emerald-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(31, 232, 143, 0.22),
+    var(--glow-signal);
+  clip-path: polygon(
+    var(--gem-facet) 0,
+    100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%,
+    0 var(--gem-facet)
+  );
+}
+
+.gem-hero-gold-flux {
+  background:
+    linear-gradient(180deg, rgba(34, 31, 32, 0.45), rgba(8, 12, 8, 0.88)),
+    var(--texture-gold-flux-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-gold-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 210, 190, 0.25),
+    var(--glow-gold-strong);
+  clip-path: polygon(
+    var(--gem-facet) 0,
+    100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%,
+    0 var(--gem-facet)
+  );
+}
+
+/* Splash variant — fullscreen, no clip-path */
+.gem-splash {
+  background:
+    linear-gradient(180deg, rgba(8, 12, 8, 0.60), rgba(5, 5, 4, 0.95)),
+    var(--texture-malachite-flux-hero);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Mobile texture override — uses smaller WebPs to save bandwidth */
+@media (max-width: 768px) {
+  .gem-hero-marble {
+    background-image:
+      linear-gradient(180deg, rgba(8, 12, 8, 0.50), rgba(8, 12, 8, 0.88)),
+      url('/textures/texture-marble-mobile.webp');
+  }
+  .gem-hero-malachite {
+    background-image:
+      linear-gradient(180deg, rgba(11, 41, 26, 0.55), rgba(8, 15, 10, 0.90)),
+      url('/textures/texture-malachite-mobile.webp');
+  }
+  .gem-hero-malachite-flux,
+  .gem-splash {
+    background-image:
+      linear-gradient(180deg, rgba(11, 41, 26, 0.60), rgba(5, 5, 4, 0.93)),
+      url('/textures/texture-malachite-flux-mobile.webp');
+  }
+  .gem-hero-gold-flux {
+    background-image:
+      linear-gradient(180deg, rgba(34, 31, 32, 0.45), rgba(8, 12, 8, 0.90)),
+      url('/textures/texture-gold-flux-mobile.webp');
+  }
+}
+
+/* ======================================================================
+   BRACKETS, RAILS, HAIRLINES
+   ====================================================================== */
+
+.hud-brackets { position: relative; }
 .hud-brackets::before,
 .hud-brackets::after {
   content: "";
   position: absolute;
   width: 16px;
   height: 16px;
-  border-color: var(--hud-edge-strong);
+  border-color: var(--edge-gold-bright);
   border-style: solid;
   pointer-events: none;
   animation: hud-bracket-pulse 3.5s ease-in-out infinite;
 }
 .hud-brackets::before {
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   border-width: 1.5px 0 0 1.5px;
 }
 .hud-brackets::after {
-  bottom: 0;
-  right: 0;
+  bottom: 0; right: 0;
   border-width: 0 1.5px 1.5px 0;
   animation-delay: 1.75s;
 }
 
-/* Chrome rails — sidebar + header edges that face the content area
-   v2.7.7 — gold rail + faint emerald inner glow (was amber + amber). */
 .hud-rail-right {
   box-shadow:
-    inset -1px 0 0 var(--hud-edge),
-    -1px 0 0 0 rgba(31, 232, 143, 0.18),
-    1px 0 16px -4px rgba(216, 177, 60, 0.22);
+    inset -1px 0 0 var(--edge-gold),
+    1px 0 12px -4px rgba(181, 145, 98, 0.20);
 }
 .hud-rail-bottom {
   box-shadow:
-    inset 0 -1px 0 var(--hud-edge),
-    0 -1px 0 0 rgba(31, 232, 143, 0.18),
-    0 1px 16px -4px rgba(216, 177, 60, 0.22);
+    inset 0 -1px 0 var(--edge-gold),
+    0 1px 12px -4px rgba(181, 145, 98, 0.20);
 }
 
-/* Scanlines — apply to chrome areas (headers, sidebar) for tactical feel
-   v2.7.7 — alternating gold + faint emerald lines for the gem feel. */
+.hud-divider {
+  height: 1px;
+  border: 0;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(181, 145, 98, 0.60),
+    rgba(15, 101, 70, 0.40),
+    rgba(181, 145, 98, 0.60),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: odia-sheen 8s ease-in-out infinite;
+}
+
+.hud-hairline {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--edge-gold),
+    transparent
+  );
+}
+
 .hud-scanlines {
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(216, 177, 60, 0.025) 2px,
-      rgba(216, 177, 60, 0.025) 3px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 5px,
-      rgba(31, 232, 143, 0.018) 5px,
-      rgba(31, 232, 143, 0.018) 6px
-    );
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(181, 145, 98, 0.02) 2px,
+    rgba(181, 145, 98, 0.02) 3px
+  );
 }
 
-/* Numeric readout — mono + tabular + slight letter-spacing */
+/* ======================================================================
+   READOUTS + LABELS
+   ====================================================================== */
+
 .hud-num {
-  font-family: var(--font-mono);
+  font-family: 'JetBrains Mono', monospace;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
 
-/* Uppercase HUD label */
 .hud-label {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 10px;
   font-weight: 600;
-  color: var(--chrome-muted);
+  color: var(--smoke-400);
 }
 
-/* Cyan data text — for numeric stats, severity counts, etc. */
-.hud-cyan {
-  color: var(--hud-secondary);
+.hud-label-accent {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-300);
 }
 
-/* Amber accent text — for primary headings, callouts */
-.hud-amber {
-  color: var(--hud-primary);
+.hud-metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.hud-metric-xl {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.hud-metric-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--smoke-400);
+  margin-bottom: 4px;
+}
+.hud-metric-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 500;
 }
 
-/* ---------------------------------------------------------------------- */
-/* Dark-theme readability overrides                                        */
-/* ------------------------------------------------------------------------
-   The v2.6 Cards assumed a light-background page; now that the body is
-   slate-950 we need to force readable contrast on any component using
-   `bg-white text-slate-900` style Tailwind utilities. These selectors
-   are intentionally loud — they trump component-level Tailwind classes
-   that would otherwise paint white-on-amber-on-slate-950 unreadable.
-   ---------------------------------------------------------------------- */
+.hud-cyan        { color: var(--emerald-500); }
+.hud-cyan-bright { color: var(--signal-400); }
+.hud-amber       { color: var(--gold-500); }
+.hud-amber-bright{ color: var(--gold-200); }
+.hud-gold        { color: var(--gold-500); }
+.hud-gold-bright { color: var(--gold-200); }
+.hud-emerald     { color: var(--emerald-500); }
+.hud-signal      { color: var(--signal-400); }
+.hud-flow        { color: var(--flow-400); }
 
-/* Cards and card-like surfaces that were bg-white in light mode */
+/* ======================================================================
+   SEVERITY PILLS
+   ====================================================================== */
+
+.hud-sev {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.3);
+}
+.hud-sev::before {
+  content: "";
+  width: 5px; height: 5px;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+.hud-sev-critical { color: var(--severity-critical); }
+.hud-sev-high     { color: var(--severity-high); }
+.hud-sev-medium   { color: var(--severity-medium); }
+.hud-sev-low      { color: var(--severity-low); }
+.hud-sev-info     { color: var(--severity-info); }
+.hud-sev-healthy  { color: var(--signal-400); }
+
+/* ======================================================================
+   FLOW NODE PRIMITIVES (n8n workflow visualisation)
+   ====================================================================== */
+
+.hud-flow-node {
+  position: relative;
+  padding: 10px 14px;
+  background:
+    linear-gradient(180deg, rgba(18, 22, 15, 0.92), rgba(8, 12, 8, 0.95));
+  border: 1px solid var(--edge-flow);
+  color: var(--foreground);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  min-width: 160px;
+  clip-path: polygon(
+    6px 0, 100% 0, 100% calc(100% - 6px),
+    calc(100% - 6px) 100%, 0 100%, 0 6px
+  );
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+.hud-flow-node.is-running {
+  border-color: var(--flow-300);
+  box-shadow: var(--glow-flow);
+  animation: odia-glow-breath 2s ease-in-out infinite;
+}
+.hud-flow-node.is-success {
+  border-color: var(--signal-400);
+  box-shadow: 0 0 16px rgba(31, 232, 143, 0.30);
+}
+.hud-flow-node.is-error {
+  border-color: var(--severity-critical);
+  box-shadow: var(--glow-critical);
+}
+
+.hud-flow-edge {
+  stroke: var(--flow-400);
+  stroke-width: 1.25;
+  fill: none;
+  stroke-dasharray: 4 4;
+  opacity: 0.65;
+}
+.hud-flow-edge.is-active {
+  stroke: var(--flow-300);
+  opacity: 1;
+  stroke-dasharray: none;
+}
+
+/* ======================================================================
+   BUTTONS
+   ====================================================================== */
+
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  min-height: 44px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  background: rgba(18, 22, 15, 0.7);
+  border: 1px solid var(--edge-gold);
+  clip-path: polygon(
+    6px 0, 100% 0, 100% calc(100% - 6px),
+    calc(100% - 6px) 100%, 0 100%, 0 6px
+  );
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease,
+              color 180ms ease, box-shadow 180ms ease;
+}
+.hud-btn:hover {
+  background: rgba(153, 117, 69, 0.15);
+  border-color: var(--edge-gold-bright);
+  color: var(--gold-100);
+  box-shadow: var(--glow-gold);
+}
+.hud-btn:active {
+  background: rgba(153, 117, 69, 0.25);
+  transform: translateY(1px);
+}
+.hud-btn-ghost {
+  background: transparent;
+  border-color: rgba(124, 129, 128, 0.30);
+}
+.hud-btn-flow {
+  border-color: var(--edge-flow);
+  color: var(--flow-400);
+}
+.hud-btn-flow:hover {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: var(--flow-300);
+  color: var(--flow-300);
+  box-shadow: var(--glow-flow);
+}
+.hud-btn-emerald {
+  border-color: var(--edge-emerald);
+  color: var(--emerald-500);
+}
+.hud-btn-emerald:hover {
+  background: rgba(15, 101, 70, 0.18);
+  border-color: var(--edge-emerald-bright);
+  color: var(--signal-400);
+  box-shadow: var(--glow-emerald);
+}
+
+/* ======================================================================
+   TABLES
+   ====================================================================== */
+
+.hud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.hud-table thead th {
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gold-400);
+  padding: 10px 12px;
+  background: rgba(153, 117, 69, 0.06);
+  border-bottom: 1px solid var(--edge-gold);
+}
+.hud-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(45, 45, 44, 0.6);
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+.hud-table tbody tr:hover td {
+  background: rgba(153, 117, 69, 0.06);
+}
+
+/* ======================================================================
+   LEGACY DARK-THEME OVERRIDES
+   ----------------------------------------------------------------------
+   v2.6 components assumed light backgrounds. Keep the overrides so
+   any unmigrated component still renders correctly on smoke-950.
+   ====================================================================== */
+
 .bg-white,
 .bg-slate-50 {
-  background-color: var(--surface) !important;
+  background-color: var(--smoke-850) !important;
   color: var(--foreground);
 }
-
-/* Dense grey card backgrounds become deeper dark */
 .bg-slate-100 {
-  background-color: var(--surface-muted) !important;
+  background-color: var(--smoke-700) !important;
   color: var(--foreground);
 }
 
-/* Body text / placeholder colors that assumed light backgrounds.
-   v2.7.7 — recoloured from slate to smoke so the entire light-theme
-   leakage on legacy Sprint D/F pages reads as gemstone chrome. */
-.text-gray-900,
-.text-slate-900 {
-  color: var(--smoke-100) !important;
-}
-.text-gray-800,
-.text-slate-800 {
-  color: var(--smoke-100) !important;
-}
-.text-gray-700,
-.text-slate-700 {
-  color: var(--smoke-200) !important;
-}
-.text-gray-600,
-.text-slate-600,
-.text-gray-500,
-.text-slate-500 {
-  color: var(--smoke-300) !important;
-}
-.text-gray-400,
-.text-slate-400 {
-  color: var(--smoke-500) !important;
-}
+.text-gray-900, .text-slate-900 { color: var(--foreground) !important; }
+.text-gray-700, .text-slate-700 { color: var(--smoke-200) !important; }
+.text-gray-600, .text-slate-600,
+.text-gray-500, .text-slate-500 { color: var(--smoke-300) !important; }
+.text-gray-400, .text-slate-400 { color: var(--smoke-400) !important; }
 
-/* Borders defaulting to slate-200/gray-300 become gold-edged.
-   v2.7.7 — was a plain slate-700; gold gives form fields the gem feel. */
-.border-slate-200,
-.border-gray-200,
-.border-slate-100,
-.border-gray-100,
-.border-slate-300,
-.border-gray-300 {
-  border-color: var(--gem-edge-gold) !important;
-}
+.border-slate-200, .border-gray-200,
+.border-slate-100, .border-gray-100 { border-color: var(--smoke-600) !important; }
 
-/* Hover states on white cards — v2.7.7 gold tint */
 .hover\:bg-gray-50:hover,
 .hover\:bg-slate-50:hover {
-  background-color: rgba(216, 177, 60, 0.06) !important;
+  background-color: rgba(153, 117, 69, 0.06) !important;
 }
 
-/* v2.7.1 — Severity tile contrast fixes.
-   The hero landing page + several dashboards use ring-red-200 /
-   text-red-700 style Tailwind utilities on severity summary tiles.
-   Under the forced-dark theme those utilities are unreadable; remap
-   them to the severity-* CSS variables so the tiles read correctly
-   without refactoring every page. */
 .ring-red-200    { --tw-ring-color: rgba(244, 63, 94, 0.30) !important; }
 .ring-red-100    { --tw-ring-color: rgba(244, 63, 94, 0.20) !important; }
 .ring-orange-100 { --tw-ring-color: rgba(249, 115, 22, 0.20) !important; }
@@ -740,701 +1000,14 @@ pre {
 .text-orange-600 { color: var(--severity-high) !important; }
 .text-yellow-700 { color: var(--severity-medium) !important; }
 
-/* v2.7.7 Y5 — Tailwind blue/amber → gemstone remaps for legacy
-   Sprint D/F surfaces (Settings, Results, Upload LegistarPanel) that
-   still ship with bg-blue-600 buttons + text-blue-700 labels +
-   bg-amber-50 panels. Rather than refactor each page inline (high
-   diff risk for a cosmetic pass), we redirect the most common
-   utilities to the gem palette. The mapping:
-       blue (CTA) → emerald gradient
-       amber/yellow (chrome accent) → gold
-       gray (form chrome) → smoke + gold edges
-*/
-.bg-blue-600,
-.bg-blue-700,
-.bg-blue-500 {
-  background:
-    linear-gradient(135deg,
-      var(--neon-emerald) 0%,
-      var(--emerald-500) 60%,
-      var(--emerald-700) 100%) !important;
-  color: #03240e !important;
-  box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.55),
-    inset 0 0 0 1px rgba(216, 177, 60, 0.40),
-    0 0 18px -6px var(--neon-emerald) !important;
-}
-.hover\:bg-blue-700:hover,
-.hover\:bg-blue-800:hover {
-  filter: brightness(1.08);
-  box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.75),
-    inset 0 0 0 1px rgba(245, 220, 154, 0.55),
-    0 0 28px -4px var(--neon-emerald) !important;
-}
-.text-blue-700, .text-blue-800,
-.hover\:text-blue-700:hover,
-.hover\:text-blue-800:hover {
-  color: var(--neon-emerald) !important;
-}
-.text-blue-600,
-.text-blue-400,
-.text-blue-500 { color: var(--emerald-400) !important; }
-.bg-blue-50, .bg-blue-100 {
-  background-color: rgba(31, 232, 143, 0.08) !important;
-}
-.border-blue-100, .border-blue-200, .border-blue-600 {
-  border-color: var(--gem-edge-emerald) !important;
-}
+/* ======================================================================
+   PRINT MODE
+   ====================================================================== */
 
-/* Amber legacy → gold */
-.bg-amber-50, .bg-amber-100 {
-  background-color: rgba(216, 177, 60, 0.10) !important;
-}
-.text-amber-400, .text-amber-500, .text-amber-600,
-.text-amber-700, .text-amber-800 {
-  color: var(--gold-300) !important;
-}
-.border-amber-200, .border-amber-300, .border-amber-400 {
-  border-color: var(--gem-edge-gold) !important;
-}
-.ring-amber-200, .ring-amber-300, .ring-amber-400, .ring-amber-500 {
-  --tw-ring-color: var(--gem-edge-gold) !important;
-}
-
-/* Emerald legacy stays emerald (now bumped to neon) */
-.text-emerald-400, .text-emerald-500, .text-emerald-600,
-.text-emerald-700 {
-  color: var(--neon-emerald) !important;
-}
-.bg-emerald-50, .bg-emerald-100 {
-  background-color: rgba(31, 232, 143, 0.10) !important;
-}
-.bg-emerald-500 { background-color: var(--neon-emerald) !important; }
-
-/* Cyan legacy → neon emerald (cyan was the JARVIS data channel,
-   now redirected via --hud-secondary; stragglers using text-cyan-X
-   directly need an explicit override for the same outcome). */
-.text-cyan-100, .text-cyan-200, .text-cyan-300,
-.text-cyan-400, .text-cyan-500 {
-  color: var(--neon-emerald) !important;
-}
-.text-cyan-500\/40 { color: rgba(31, 232, 143, 0.40) !important; }
-.text-cyan-500\/70 { color: rgba(31, 232, 143, 0.70) !important; }
-.bg-cyan-500\/10, .bg-cyan-500\/20 {
-  background-color: rgba(31, 232, 143, 0.10) !important;
-}
-
-/* Hover state remap for text-amber-300/400 used inline */
-.hover\:text-amber-300:hover {
-  color: var(--neon-emerald) !important;
-}
-
-/* Form fields — bg-white in dark theme is unreadable; recolor */
-.bg-white {
-  background-color: rgba(14, 14, 20, 0.85) !important;
-}
-input.bg-white, select.bg-white, textarea.bg-white,
-input[type="text"], input[type="email"], input[type="password"],
-input[type="date"], input[type="search"], textarea, select {
-  background-color: rgba(14, 14, 20, 0.65) !important;
-  color: var(--smoke-100) !important;
-  border-color: var(--gem-edge-gold) !important;
-}
-input::placeholder, textarea::placeholder {
-  color: var(--smoke-500) !important;
-}
-
-/* Focus ring on form fields → emerald (was blue) */
-.focus\:ring-blue-500:focus,
-.focus\:ring-blue-600:focus {
-  --tw-ring-color: var(--neon-emerald) !important;
-}
-
-/* ---------------------------------------------------------------------- */
-/* v2.7.1 — Extended HUD primitives                                       */
-/* ------------------------------------------------------------------------
-   Layered additions on top of the v2.7 HUD. Everything below this line
-   is net-new for v2.7.1:
-
-     - Accent text variants  (.hud-*-bright, .hud-flow)
-     - Severity pills        (.hud-sev, .hud-sev-{critical,high,...})
-     - Metric readouts       (.hud-metric, -xl, -label, -delta)
-     - Workflow viz          (.hud-flow-node + state modifiers,
-                              .hud-flow-edge)
-     - Dividers              (.hud-divider, .hud-hairline)
-     - HUD buttons           (.hud-btn, -ghost, -flow)
-     - HUD tables            (.hud-table)
-     - Print mode            (flatten HUD for browser PDF export)
-   ---------------------------------------------------------------------- */
-
-/* Extended accent text colors */
-.hud-cyan-bright  { color: var(--hud-secondary-bright); }
-.hud-amber-bright { color: var(--hud-primary-bright); }
-.hud-flow         { color: var(--hud-flow); }
-
-/* ---- Severity pills ----------------------------------------------------
-   Square-cornered, mono-type pills with a glowing dot. Drop-in replacement
-   for the ad-hoc `<span className="bg-red-100 text-red-800 px-2 py-0.5">`
-   severity badges scattered across Results / Anomalies / Synthesis.
-   Compose as: <span className="hud-sev hud-sev-critical">CRITICAL</span>. */
-.hud-sev {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 8px;
-  font-size: 10px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  border: 1px solid currentColor;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.3);
-}
-.hud-sev::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  background: currentColor;
-  border-radius: 50%;
-  box-shadow: 0 0 6px currentColor;
-}
-.hud-sev-critical { color: var(--severity-critical); }
-.hud-sev-high     { color: var(--severity-high); }
-.hud-sev-medium   { color: var(--severity-medium); }
-.hud-sev-low      { color: var(--severity-low); }
-.hud-sev-info     { color: var(--severity-info); }
-.hud-sev-healthy  { color: var(--status-healthy); }
-
-/* ---- Metric readouts ---------------------------------------------------
-   Big-number dashboard tiles. Pair with .hud-panel + .hud-panel-data for
-   the Findings-by-severity style tiles on /analysis and /synthesis. */
-.hud-metric {
-  font-family: var(--font-mono);
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  font-variant-numeric: tabular-nums;
-  color: var(--foreground);
-}
-.hud-metric-xl {
-  font-size: 44px;
-  letter-spacing: -0.02em;
-}
-.hud-metric-label {
-  display: block;
-  margin-top: 6px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--chrome-muted);
-}
-.hud-metric-delta {
-  display: inline-block;
-  margin-left: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--hud-secondary);
-}
-
-/* ---- Workflow visualisation -------------------------------------------
-   Node + edge primitives for the /automation page. State modifiers live
-   on the node itself (is-idle, is-running, is-success, is-error) so a
-   parent component can update classNames on state transition without
-   re-rendering the graph layout. */
-.hud-flow-node {
-  position: relative;
-  padding: 10px 14px;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.95));
-  border: 1px solid var(--hud-edge-flow);
-  color: var(--foreground);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  min-width: 160px;
-  clip-path: polygon(
-    6px 0, 100% 0, 100% calc(100% - 6px),
-    calc(100% - 6px) 100%, 0 100%, 0 6px
-  );
-  transition: box-shadow 200ms ease, border-color 200ms ease;
-}
-.hud-flow-node.is-running {
-  border-color: var(--hud-flow-bright);
-  box-shadow: var(--glow-violet);
-  animation: odia-glow-breath 2s ease-in-out infinite;
-}
-.hud-flow-node.is-success {
-  border-color: var(--status-healthy);
-  box-shadow: 0 0 18px rgba(52, 211, 153, 0.30);
-}
-.hud-flow-node.is-error {
-  border-color: var(--severity-critical);
-  box-shadow: var(--glow-critical);
-}
-
-.hud-flow-edge {
-  stroke: var(--hud-flow-dim);
-  stroke-width: 1.5px;
-  fill: none;
-  opacity: 0.6;
-  transition: stroke 200ms ease, opacity 200ms ease;
-}
-.hud-flow-edge.is-active {
-  stroke: var(--hud-flow-bright);
-  opacity: 1;
-  filter: drop-shadow(0 0 4px var(--hud-flow));
-}
-
-/* ---- Dividers ----------------------------------------------------------
-   .hud-divider gets an animated gradient sheen — use sparingly as a
-   section break in the hero / landing. .hud-hairline is the static
-   version for stacking metric rows inside a panel. */
-.hud-divider {
-  position: relative;
-  height: 1px;
-  margin: 16px 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--hud-edge-strong),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: odia-sheen 6s ease-in-out infinite;
-}
-.hud-hairline {
-  height: 1px;
-  margin: 8px 0;
-  background: var(--hud-edge-muted);
-}
-
-/* ---- HUD-styled buttons -----------------------------------------------
-   Complement the existing <Button> component. Use .hud-btn when the
-   button lives inside a .hud-panel and should visually match (same
-   chamfer, same amber hairline). Do not replace <Button variant="primary">
-   globally — the existing component carries accessibility state. */
-.hud-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold-300);
-  background: rgba(216, 177, 60, 0.08);
-  border: 1px solid var(--hud-edge-strong);
-  box-shadow: inset 0 0 0 1px rgba(31, 232, 143, 0.12);
-  clip-path: polygon(
-    6px 0, 100% 0, 100% calc(100% - 6px),
-    calc(100% - 6px) 100%, 0 100%, 0 6px
-  );
-  cursor: pointer;
-  transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
-}
-.hud-btn:hover {
-  background: rgba(216, 177, 60, 0.18);
-  color: var(--neon-emerald);
-  box-shadow:
-    inset 0 0 0 1px rgba(0, 255, 157, 0.40),
-    var(--glow-gold);
-}
-.hud-btn:active {
-  background: rgba(216, 177, 60, 0.28);
-}
-.hud-btn-ghost {
-  background: transparent;
-  border-color: var(--hud-edge-muted);
-  color: var(--foreground);
-}
-.hud-btn-flow {
-  color: var(--hud-flow-bright);
-  background: rgba(167, 139, 250, 0.08);
-  border-color: var(--hud-edge-flow);
-}
-.hud-btn-flow:hover {
-  background: rgba(167, 139, 250, 0.20);
-  box-shadow: var(--glow-violet);
-}
-
-/* ---- HUD tables --------------------------------------------------------
-   Dark-theme data table with amber heads + cyan numerics. Scope to
-   direct children so nested tables inside Jinja reports don't inherit
-   the dark chrome. */
-.hud-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--font-sans);
-  font-size: 12.5px;
-}
-.hud-table thead th {
-  padding: 10px 12px;
-  text-align: left;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--hud-primary);
-  border-bottom: 1px solid var(--hud-edge);
-  background: rgba(245, 158, 11, 0.04);
-}
-.hud-table tbody td {
-  padding: 9px 12px;
-  color: var(--foreground);
-  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-  font-variant-numeric: tabular-nums;
-}
-.hud-table tbody tr:hover td {
-  background: rgba(245, 158, 11, 0.04);
-}
-
-/* ---------------------------------------------------------------------- */
-/* v2.7.7 Y1 — Crystallized gemstone primitives                           */
-/* ------------------------------------------------------------------------
-   Gem-panel family: a higher-impact alternative to .hud-panel for surfaces
-   that deserve the cut-quartz treatment (the Dashboard hero, severity
-   tiles, primary CTAs). The geometry is multi-faceted — six clip-path
-   cuts instead of the standard chamfer's four — so corners read as
-   deliberately "cut" rather than rounded. The dual-edge composition
-   (matte gold outer, neon-emerald inner) is what gives the impression
-   of looking at a gem from above: gold setting around an emerald table.
-
-   .gem-panel              — base crystallized panel
-   .gem-panel-faceted      — adds extra side-cuts for the most pronounced
-                             quartz silhouette; use sparingly (hero, key
-                             metric tiles)
-   .gem-panel-emerald      — emerald-dominant variant (inner stroke wins)
-   .gem-edge               — drop-in dual edge for non-panel elements
-   .gem-edge-active        — hover/active intensifier (neon glow up)
-   .gem-glow-emerald       — utility neon-emerald drop-shadow text/icon
-   .gem-glow-gold          — utility gold drop-shadow text/icon
-   .gem-cta-primary        — emerald gradient CTA with gold inner ring
-   .gem-cta-secondary      — gold-outline CTA, smoke fill
-*/
-
-.gem-panel {
-  position: relative;
-  /* v2.7.10 — surface lifted to give the gold edge somewhere to catch.
-     Three-stop gradient (smoke-spine → faint jade core → smoke-spine)
-     adds depth without breaking the dark-mode chrome. */
-  background:
-    linear-gradient(160deg,
-      var(--smoke-900) 0%,
-      #131816 32%,
-      #14201b 55%,
-      #131816 78%,
-      var(--smoke-900) 100%);
-  /* Dual edge — gold outer (bumped to 80% opacity for visible setting),
-     emerald inner stroke (bumped to 32%), gold glow halo. */
-  box-shadow:
-    0 0 0 1.5px var(--gem-edge-gold),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 2px rgba(31, 232, 143, 0.32),
-    inset 0 1px 0 rgba(245, 220, 154, 0.18),
-    0 0 60px -18px rgba(216, 177, 60, 0.45),
-    0 0 80px -28px rgba(31, 232, 143, 0.45);
-  /* Crystallized facet geometry — six cuts for the quartz silhouette */
-  clip-path: polygon(
-    var(--gem-facet) 0,
-    calc(100% - var(--gem-facet)) 0,
-    100% var(--gem-facet),
-    100% calc(100% - var(--gem-facet)),
-    calc(100% - var(--gem-facet)) 100%,
-    var(--gem-facet) 100%,
-    0 calc(100% - var(--gem-facet)),
-    0 var(--gem-facet)
-  );
-  color: var(--smoke-100);
-  transition: box-shadow 220ms ease, transform 220ms ease;
-}
-
-.gem-panel:hover {
-  box-shadow:
-    0 0 0 1.5px var(--gem-edge-gold-bright),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 2px rgba(0, 255, 157, 0.55),
-    inset 0 1px 0 rgba(245, 220, 154, 0.30),
-    0 0 60px -10px rgba(245, 220, 154, 0.55),
-    0 0 100px -16px rgba(0, 255, 157, 0.55);
-}
-
-.gem-panel-faceted {
-  /* Adds two extra mid-side cuts for a more pronounced gem outline */
-  clip-path: polygon(
-    var(--gem-facet) 0,
-    calc(100% - var(--gem-facet)) 0,
-    100% var(--gem-facet),
-    100% 32%,
-    calc(100% - 4px) 50%,
-    100% 68%,
-    100% calc(100% - var(--gem-facet)),
-    calc(100% - var(--gem-facet)) 100%,
-    var(--gem-facet) 100%,
-    0 calc(100% - var(--gem-facet)),
-    0 68%,
-    4px 50%,
-    0 32%,
-    0 var(--gem-facet)
-  );
-}
-
-.gem-panel-emerald {
-  /* Emerald-dominant variant — the inner stroke wins, gold becomes
-     the secondary cue. Use for "active / live" panels (e.g. a workflow
-     mid-run, an audit job actively executing). */
-  background:
-    linear-gradient(160deg,
-      var(--jade-900) 0%,
-      var(--smoke-900) 50%,
-      var(--jade-900) 100%);
-  box-shadow:
-    0 0 0 1px var(--gem-edge-emerald-bright),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 2px rgba(216, 177, 60, 0.30),
-    0 0 60px -14px rgba(0, 255, 157, 0.55);
-}
-
-.gem-panel-dense {
-  --gem-facet: var(--gem-facet-sm);
-}
-
-/* Drop-in dual-edge for elements that aren't panels (badges, chips). */
-.gem-edge {
-  box-shadow:
-    0 0 0 1px var(--gem-edge-gold),
-    inset 0 0 0 1px rgba(31, 232, 143, 0.30);
-  transition: box-shadow 200ms ease;
-}
-.gem-edge-active,
-.gem-edge:hover {
-  box-shadow:
-    0 0 0 1px var(--gem-edge-gold-bright),
-    inset 0 0 0 1px rgba(0, 255, 157, 0.50),
-    var(--glow-emerald);
-}
-
-/* Crystallized hairline ribbons — composable with any panel */
-.gem-ribbon-top,
-.gem-ribbon-bottom {
-  position: absolute;
-  inset-inline: 0;
-  height: 1px;
-  pointer-events: none;
-}
-.gem-ribbon-top {
-  top: 0;
-  height: 1.5px;
-  background: linear-gradient(90deg,
-    transparent 0%, var(--gold-300) 22%,
-    var(--gold-200) 38%, var(--neon-emerald) 50%,
-    var(--gold-200) 62%, var(--gold-300) 78%,
-    transparent 100%);
-  opacity: 1;
-  box-shadow: 0 0 12px rgba(245, 220, 154, 0.55);
-}
-.gem-ribbon-bottom {
-  bottom: 0;
-  background: linear-gradient(90deg,
-    transparent 0%, var(--gold-400) 22%,
-    var(--gold-300) 38%, var(--emerald-400) 50%,
-    var(--gold-300) 62%, var(--gold-400) 78%,
-    transparent 100%);
-  opacity: 0.85;
-  box-shadow: 0 0 8px rgba(216, 177, 60, 0.40);
-}
-
-/* Glow utilities */
-.gem-glow-emerald {
-  filter: drop-shadow(0 0 8px var(--neon-emerald))
-          drop-shadow(0 0 18px rgba(0, 255, 157, 0.45));
-}
-.gem-glow-gold {
-  filter: drop-shadow(0 0 6px var(--gold-300))
-          drop-shadow(0 0 14px rgba(245, 220, 154, 0.35));
-}
-
-/* Gem CTAs — emerald primary, gold-outline secondary. Compose via
-   className on existing <Button> or use as standalone. */
-.gem-cta-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: #03240e;
-  background:
-    linear-gradient(135deg,
-      var(--neon-emerald) 0%,
-      var(--emerald-500) 60%,
-      var(--emerald-700) 100%);
-  border: 0;
-  /* v2.7.10 — bumped gold inner ring 40% → 70% so the emerald CTA
-     reads as "set in gold" rather than just emerald with a faint hint. */
-  box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.85),
-    inset 0 0 0 1.5px rgba(245, 220, 154, 0.70),
-    0 0 32px -6px var(--neon-emerald),
-    0 0 24px -10px rgba(216, 177, 60, 0.55);
-  clip-path: polygon(
-    var(--gem-facet-sm) 0, calc(100% - var(--gem-facet-sm)) 0,
-    100% 50%,
-    calc(100% - var(--gem-facet-sm)) 100%, var(--gem-facet-sm) 100%,
-    0 50%
-  );
-  transition: box-shadow 180ms ease, transform 100ms ease;
-  cursor: pointer;
-}
-.gem-cta-primary:hover {
-  box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.95),
-    inset 0 0 0 2px rgba(245, 220, 154, 0.85),
-    0 0 44px -4px var(--neon-emerald),
-    0 0 32px -8px rgba(245, 220, 154, 0.65);
-}
-.gem-cta-primary:active {
-  transform: translateY(1px);
-}
-
-.gem-cta-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--smoke-100);
-  background: rgba(14, 14, 20, 0.85);
-  border: 1px solid var(--gem-edge-gold);
-  box-shadow: inset 0 1px 0 rgba(245, 220, 154, 0.10);
-  clip-path: polygon(
-    var(--gem-facet-sm) 0, calc(100% - var(--gem-facet-sm)) 0,
-    100% var(--gem-facet-sm), 100% calc(100% - var(--gem-facet-sm)),
-    calc(100% - var(--gem-facet-sm)) 100%, var(--gem-facet-sm) 100%,
-    0 calc(100% - var(--gem-facet-sm)), 0 var(--gem-facet-sm)
-  );
-  transition: box-shadow 180ms ease, color 180ms ease;
-  cursor: pointer;
-}
-.gem-cta-secondary:hover {
-  color: var(--neon-emerald);
-  box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.20),
-    0 0 0 1px var(--gem-edge-gold-bright),
-    var(--glow-emerald);
-}
-
-/* Severity pill recolor — neon-emerald replaces sky for "low/info" so
-   the entire pill family reads as gem-cut (gold = high/critical, emerald
-   = healthy/low/info). Critical/high stay rose/orange for at-a-glance
-   audit semantics — losing red here would break finding readability. */
-.gem-sev {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 10px;
-  font-size: 10px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.20em;
-  text-transform: uppercase;
-  border: 1px solid currentColor;
-  background: rgba(7, 7, 10, 0.6);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
-  clip-path: polygon(
-    4px 0, calc(100% - 4px) 0,
-    100% 50%,
-    calc(100% - 4px) 100%, 4px 100%,
-    0 50%
-  );
-}
-.gem-sev::before {
-  content: "";
-  width: 5px; height: 5px;
-  background: currentColor;
-  border-radius: 50%;
-  box-shadow: 0 0 8px currentColor;
-}
-.gem-sev-critical { color: var(--severity-critical); }
-.gem-sev-high     { color: var(--severity-high); }
-.gem-sev-medium   { color: var(--gold-300); }
-.gem-sev-low      { color: var(--emerald-400); }
-.gem-sev-info     { color: var(--emerald-300); }
-.gem-sev-healthy  { color: var(--neon-emerald); }
-
-/* Quartz facet background pattern — for body / hero secondary backgrounds.
-   Subtle diamond-grid that hints at gemstone geometry without competing
-   with content. Apply as a className on a panel; the pseudo-element sits
-   at z-index 0 so panel content (z-index 1) layers above it cleanly. */
-.gem-quartz-bg {
-  position: relative;
-  isolation: isolate;
-}
-.gem-quartz-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image:
-    linear-gradient(45deg, rgba(216, 177, 60, 0.08) 1px, transparent 1px),
-    linear-gradient(-45deg, rgba(31, 232, 143, 0.06) 1px, transparent 1px);
-  background-size: 32px 32px, 32px 32px;
-  pointer-events: none;
-  opacity: 0.6;
-}
-.gem-quartz-bg > * { position: relative; z-index: 1; }
-
-/* Neon-emerald breathing animation for "live" indicators */
-@keyframes gem-emerald-breath {
-  0%, 100% { box-shadow: 0 0 12px rgba(31, 232, 143, 0.30); }
-  50%      { box-shadow: 0 0 28px rgba(0, 255, 157, 0.65); }
-}
-.animate-gem-breath {
-  animation: gem-emerald-breath 2.4s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-gem-breath { animation: none; }
-}
-
-/* Print-mode override for gem-* utilities (mirrors hud-* rules below) */
 @media print {
-  .gem-panel, .gem-panel-emerald, .gem-panel-dense,
-  .gem-cta-primary, .gem-cta-secondary, .gem-sev {
-    background: #ffffff !important;
-    color: #0a0a0a !important;
-    border: 1px solid #333 !important;
-    box-shadow: none !important;
-    clip-path: none !important;
-    filter: none !important;
-  }
-  .gem-ribbon-top, .gem-ribbon-bottom { display: none !important; }
-}
-
-/* ---------------------------------------------------------------------- */
-/* v2.7.1 — Print mode                                                    */
-/* ------------------------------------------------------------------------
-   Flatten HUD chrome to clean B&W so in-browser "Save as PDF" on the
-   Synthesis or Results pages produces a litigation-grade document,
-   not a screenshot of a dark glowing dashboard. Applies ONLY to print
-   media — screen rendering is untouched. */
-@media print {
-  :root {
-    --background: #ffffff;
-    --foreground: #0a0a0a;
-    --surface: #ffffff;
-  }
   body {
     background: #ffffff !important;
-    color: #0a0a0a !important;
+    color: #000000 !important;
     background-image: none !important;
   }
   .hud-panel,
@@ -1443,41 +1016,29 @@ input::placeholder, textarea::placeholder {
   .hud-panel-flow,
   .hud-panel-critical,
   .hud-panel-inset,
-  .hud-terminal {
+  .hud-terminal,
+  .gem-hero-marble,
+  .gem-hero-malachite,
+  .gem-hero-malachite-flux,
+  .gem-hero-gold-flux,
+  .gem-splash {
     background: #ffffff !important;
-    color: #0a0a0a !important;
-    border: 1px solid #333 !important;
+    background-image: none !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
     box-shadow: none !important;
     clip-path: none !important;
   }
   .hud-brackets::before,
-  .hud-brackets::after {
-    display: none !important;
-  }
-  .hud-rail-right,
-  .hud-rail-bottom,
-  .hud-scanlines {
-    box-shadow: none !important;
-    background-image: none !important;
-  }
-  .hud-sev,
-  .hud-btn,
-  .hud-btn-ghost,
-  .hud-btn-flow {
+  .hud-brackets::after,
+  .hud-divider,
+  .hud-scanlines { display: none !important; }
+  .hud-amber, .hud-cyan, .hud-flow, .hud-gold, .hud-emerald, .hud-signal,
+  .hud-amber-bright, .hud-cyan-bright, .hud-gold-bright { color: #000000 !important; }
+  .hud-sev {
     background: #ffffff !important;
-    border: 1px solid #333 !important;
-    color: #0a0a0a !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
   }
-  .hud-divider {
-    background: #333 !important;
-    animation: none !important;
-  }
-  .animate-odia-pulse,
-  .animate-odia-fade,
-  .animate-odia-sheen,
-  .animate-odia-scan,
-  .animate-odia-tick,
-  .animate-odia-breath {
-    animation: none !important;
-  }
+  a { color: #000000 !important; text-decoration: underline; }
 }

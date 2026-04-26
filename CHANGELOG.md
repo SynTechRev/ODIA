@@ -1,5 +1,202 @@
 # Changelog
 
+## [2.8.0] - 2026-04-26 — Mineral Calibration
+
+### Changed
+- **Palette** — every smoke / gold / emerald token recalibrated to colors literally measured from the reference photography in `docs/brand/reference/`. Primary brand gold shifts from `#d8b13c` (saturated yellow) to `#997545` (mineral tan-gold); primary emerald shifts from `#1fe88f` (digital neon) to `#0f6546` (real malachite). The neon emeralds are preserved under a new `--signal-*` namespace reserved for live-state UI only (running workflow, healthy backend, active mobile tab).
+- **Intro** — plays on every app launch (was: first launch only). Per-session dedup via `sessionStorage` means navigating between pages within a session does not replay it. Settings replay button now writes a one-shot `localStorage` flag for cross-session force-replay.
+- **Oraculus mark SVG** — rebuilt with measured colors from the source painting. Every gradient stop is a real pixel sampled from `reference_5_gold-swirl-icon-source.png`.
+- **`OctopusMarkIcon` → `OraculusMarkIcon`** — call sites in `app/page.tsx` and `components/dashboard/DashboardLayout.tsx` migrated to the canonical name. The deprecated alias re-export stays in `components/base/Icons.tsx` so any third-party import keeps working.
+- **Service worker** — cache key `odia-shell-v3` → `odia-shell-v4` to evict v2.7.x caches on the new mineral palette.
+
+### Added
+- **Texture system** — four reference photos exposed as CSS variables (`--texture-marble`, `--texture-malachite`, `--texture-malachite-flux`, `--texture-gold-flux`), each in four pre-dimmed WebP variants (bg, hero, tile, mobile). Total ~530 KB across 16 files at `frontend/public/textures/`.
+- **Gem-hero utility classes** — `.gem-hero-marble`, `.gem-hero-malachite`, `.gem-hero-malachite-flux`, `.gem-hero-gold-flux`, `.gem-splash`. Hero/splash/cover surfaces only — body content panels stay flat per BRAND.md §3.2.
+- **Dashboard hero gets `.gem-hero-malachite`** (C1) and **Synthesis hero gets `.gem-hero-marble`** (C3) — texture composes underneath the existing chamfer + bracket geometry.
+- **`docs/brand/measured_palette.json`** — machine-readable palette reference with L\* values + source-image anchoring for every token.
+
+### Fixed
+- **CHANGELOG** — reconstructed continuity from v2.1.1 forward (all v2.2 through v2.7.10 entries reconstructed from git tag history + memory artifacts).
+
+---
+
+## [2.7.10] - 2026-04-26 — Sign-off Pass on v2.7.9 Install
+
+### Fixed
+- **Intro black-screen bug** — `<iframe src="/intro/index.html">` resolved to filesystem root under Electron `file://` (became `file:///intro/index.html` — doesn't exist). New `publicAssetURL()` helper in `frontend/lib/navigation.tsx` anchors against the runtime app root via `getAppRootURL()`. IntroFrame computes the iframe src via this helper at mount.
+- **Application icon** — swapped from procedural SVG approximation (read as a stylized "C/E" curve) to a pixel-faithful raster of `docs/brand/reference/reference_5_gold-swirl-icon-source.png` via `sharp` lanczos3 upscale. Maskable variant gets 12% inner padding so Android adaptive-icon mask doesn't crop the artwork.
+- **DOCX export now works on the desktop install** — was pandoc-only since Sprint 6 (silently disabled in PyInstaller bundle). Added `python-docx` fallback in `format_converters.markdown_to_docx` handling the audit-report Markdown subset directly. `python-docx` added to runtime deps + PyInstaller spec hiddenimports.
+
+### Changed
+- **Contrast + gold pass** — body bg switched from flat near-black to a 4-stop linear gradient (smoke-950 → #0c1011 → #0d1310 → smoke-900) with a faint jade undertone. Edge tokens bumped: `--gem-edge-gold` 55%→80%, `--gem-edge-emerald` 45%→70%. `.hud-panel` and `.gem-panel` lifted off pure black with jade undertone, dual gold + emerald halo on hover.
+
+### Added
+- **3 DOCX-fallback regression tests** in `tests/test_docx_export_fallback.py`.
+
+---
+
+## [2.7.9] - 2026-04-25 — Brand Refresh & Cinematic Intro
+
+### Added
+- **`docs/BRAND.md`** — 323-line visual identity reference document. Palette tokens, glyph geometry, typography stack, motion conventions, surface treatments, do/don't list. Locked at v2.7.9.
+- **`OraculusMarkIcon`** — gold paint-swirl React component replacing the v2.6-era `OctopusMarkIcon` (headphones-and-tentacles silhouette). Three deprecated aliases (`OctopusMarkIcon`, `StrategyMarkIcon`, `OdiaMarkIcon`) repointed to the new component so every existing call site keeps compiling.
+- **Cinematic Oraculus intro** — 25-second self-contained HTML+CSS+JS boot animation at `frontend/public/intro/index.html`. Five phases: deep grid → boot text → glyph assembly → equation/code → declaration. Plays on first launch (changed to every launch in v2.8.0).
+- **`IntroGate` + `IntroFrame` + intro Zustand store** — orchestration. SSR-safe, respects `prefers-reduced-motion`, autofocused Skip button at 3s, Escape exits, 30s fallback timer.
+- **Settings → Presentation card** with "Show on next launch" replay button.
+- **`scripts/build-icons.mjs`** — sharp-based PNG rasterizer (no pandoc/rsvg-convert needed). `electron-builder` auto-derives `.ico` + `.icns` from the master `icon.png`.
+- **5 vetted reference images** in `docs/brand/reference/`.
+
+### Changed
+- **`manifest.json` + `layout.tsx` theme color** → `#07070A` (`--smoke-950`); `appleWebApp.statusBarStyle` → `"black-translucent"`.
+- **Service worker** cache `odia-shell-v1` → `odia-shell-v3`.
+
+---
+
+## [2.7.7] – [2.7.8] - 2026-04-25 — Gemstone Propagation + AppLink Hotfix
+
+### Added
+- **Gemstone palette propagation** (Y1–Y5) — vibrant neon emerald + matte gold dual-edge tokens propagated platform-wide. Crystallized facet panel utility (`.gem-panel-faceted` — 12-vertex quartz silhouette via clip-path). Sidebar, topbar, mobile bottom-tab bar, base components, every Dashboard card restyled. Severity strip on Dashboard rewired to the live `/api/v1/dashboard/summary` endpoint.
+
+### Fixed
+- **v2.7.8** — `<AppLink>` and SVG `IconProps` interfaces now declare `style?: React.CSSProperties` so the gem-palette inline-style approach used in DashboardLayout passes the Next.js typecheck. v2.7.7's tag failed CI at the typecheck step; v2.7.8 supersedes it.
+
+---
+
+## [2.7.6] - 2026-04-25 — X1–X5 Functional Pass
+
+### Added
+- **`/api/v1/dashboard/summary`** endpoint backing the Analysis Summary card on the home page (was previously reading from a Zustand store that production audits never wrote to).
+- **Frozen-aware jurisdiction discovery** + `POST /api/v1/dashboard/seed-jurisdictions` endpoint + "Seed Example Jurisdictions" trigger so RAIA Synthesis works on a fresh desktop install.
+- **Legistar retrieval bridges into the upload-staging store** — downloads now appear in the Upload page's "files ready" table.
+- **Audit pipeline records `MeshExecutionJob` rows** so the Orchestrator timeline reflects actual work.
+- **Initial gemstone hero POC** on `frontend/app/page.tsx` (replaced the v2.7.5 W4 purple/platinum POC).
+
+---
+
+## [2.7.5] - 2026-04-25 — Manual Triggers Wired
+
+### Added
+- **ODIA-native `/api/v1/triggers/*` route family** bypasses the n8n token gate so the Manual Triggers panel works out of the box.
+- **CCOPS Compliance scorecard** on HUD primitives.
+
+### Changed
+- **Ingest tab consolidated into Upload** (legacy redirect preserved at `/ingest`).
+
+---
+
+## [2.7.4] - 2026-04-24 — Quality Polish
+
+### Fixed
+- **Database initialization at startup** — closes silent-degrade gap where `get_db()` raised "DB not initialised".
+- **Dynamic version pill** on the sidebar (was hardcoded literal).
+- **Tri-state UX on Orchestrator executions** — distinguishes "loading" from "unavailable".
+- **Three-state automation tile** (`READY` / `OFFLINE` / `NOT CONFIGURED`).
+
+---
+
+## [2.7.3] - 2026-04-23 — Audit-Fix Sprint (D1–D8)
+
+### Added
+- **MAS narrative templates** — plain-language audit-report narrative with statute citations.
+- **Orchestrator page** — full task graph + execution timeline + agent status panels.
+- **Electron window icon** — desktop title-bar icon now uses the bundled SVG/PNG.
+- **`/api/v1/automation/*`** n8n proxy + n8n editor health gate on the Automation page.
+
+### Fixed
+- **General-path SeenHash deduplication** — desktop audits now skip duplicates on the SHA-256 hash, matching the n8n webhook flow.
+- **Fail-loud PDF extraction** — silent text-extraction failures now emit `ingestion:extraction-failure` HIGH-severity findings.
+- **Tile contrast** — severity tiles redrawn to HUD primitives (was unreadable on dark theme).
+
+---
+
+## [2.7.2] - 2026-04-23 — Desktop Build Stabilization
+
+### Fixed
+- **PyInstaller cold-start** — uvicorn switched to `create_app` factory pattern (was bare `app` object); main.js startup timeout 30s → 60s.
+- **n8n integration** — desktop builds now ship the `automation`/`cpra`/`field`/`webhook`/`triggers` route modules in PyInstaller hiddenimports.
+
+---
+
+## [2.7.1] - 2026-04-23 — HUD Design System Upgrade
+
+### Added
+- **Design token system** — `globals.css` rewritten with full token hierarchy. `slate-950 / amber-500 / cyan-400` palette. Five panel variants (`hud-panel`, `-data`, `-flow`, `-critical`, `-inset`). Severity pills, metric readouts, workflow nodes, dividers, HUD buttons, HUD tables. Print mode flattens to litigation-grade B&W.
+- **Violet automation channel** — workflow state distinct from audit data.
+- **Motion system** — `odia-pulse`, `odia-fade`, `odia-sheen`, `odia-scan`, `odia-tick`, `odia-breath`, `hud-bracket-pulse`. All respect `prefers-reduced-motion: reduce`.
+
+---
+
+## [2.7.0] - 2026-04-23 — n8n Integration
+
+### Added
+- **Token-gated webhook surface** — 5 endpoints under `/api/v1/webhook/*` (ingest-and-analyze, batch-ingest, status, synthesize, health). Token validated against `ODIA_WEBHOOK_TOKEN` via constant-time comparison. Refuses to register if the env var is unset.
+- **`docker-compose.n8n.yml`** — one-command stack for backend + Postgres + n8n with shared inbox volume.
+- **DB models** — `SeenHash`, `WebhookAuditLog`, `CPRARequest`, `FieldObservation`.
+- **RAIA service package** — Recursion Analysis Investigative Audit cross-jurisdictional pattern detection.
+- **CPRA + field-verification routes** — `/api/v1/cpra/deadlines-within/{72h,7d,30d}`, field observations under `/api/v1/field/*`.
+- **Automation page** — first-class n8n workflow + execution viewer.
+
+---
+
+## [2.5.x] – [2.6.x] - 2026-04-22 to 2026-04-23 — Architectural Tier Boundary + Octopus Mark Era
+
+### Added
+- **Three-tier architecture analysis** — Tier 1 forensic, Tier 2 extended, Tier 3 recursive synthesis boundary documented.
+- **Jurisdiction auto-loader** (`config.jurisdiction_loader.discover_jurisdictions`) — scans `config/multi_jurisdiction/` for per-jurisdiction subdirectories.
+- **Octopus mark** introduced as the v2.6 brand glyph (later replaced at v2.7.9 with the Oraculus gold-swirl).
+- **Synthesis page** — cross-audit aggregation report, DOCX export.
+- **Platform-aware OCR fallback** — Tesseract bundled on Windows; macOS/Linux use system-installed binaries via PATH.
+
+### Fixed
+- **Fiscal regex** — appropriation-trail detector tightened to reduce false positives on routine encumbrance language.
+
+---
+
+## [2.4.0] - 2026-04-22 — 4-Platform Installer Release
+
+### Added
+- **OCR-bundled Windows installer** — Tesseract + Poppler binaries shipped inside the PyInstaller bundle so scanned PDFs work out of the box.
+- **macOS arm64 + x64 installers** built on separate runners.
+- **Linux AppImage** with libfuse2 dependency documented.
+
+---
+
+## [2.3.0] - 2026-04-21 — Detector Pipeline Expansion
+
+### Added
+- **Vendor catalogue + grant-compliance detector** — JAG/COPS anti-supplanting, vendor-statutory-trigger mapping (Flock/Axon/Lexipol), 9th detector added to the audit pipeline.
+- **Governance gap detector** rewritten with 7 distinct finding IDs (capability-without-council-approval, data-retention-gap, lexipol-boilerplate, consent-calendar-placement, sole-source-without-justification, auto-renewal-clause, transparency-portal-absence).
+- **Surveillance detector** rewritten with vendor-specific statutory gap detection (ALPR/SB524, ALPR Privacy Act, BWC/CJIS, facial recognition, drone/AB481, AI report writing).
+
+---
+
+## [2.2.x] - 2026-04-18 — Detector Refinement
+
+### Fixed
+- **`_flatten_findings`** — was reading `result["findings"]` but `analyze_document` returns `result["anomalies"]` (caused 0 findings since v2.0).
+- **Upload error messages** — show actual FastAPI `detail` / HTTP status instead of generic "Check that the server is running".
+- **CI workflow hardening** — graceful npm fallback when `package-lock.json` absent.
+
+### Added
+- **8-detector analysis pipeline** restored and wired through `audit_engine.analyze_document`.
+- **React error boundaries** (`frontend/app/error.tsx`, `global-error.tsx`).
+
+---
+
+## [2.1.x] - 2026-04-16 to 2026-04-17 — UI Patch Set + CI Heredoc Fix
+
+### Fixed
+- **CI hang on indented PYEOF** — extracted inline Python heredoc to standalone `scripts/fix_electron_paths.py`.
+- **Electron `routeToFileURL` subpage navigation** — base URL now strips known route segments before computing root.
+- **PyInstaller hiddenimports** — 21 modules added (route modules, auth stack, SQLAlchemy SQLite dialect, sklearn C extensions).
+
+### Added
+- **`OctopusMarkIcon` etc.** — self-contained inline SVG icon set (critical for Electron file:// rendering).
+- **Dashboard cards** — `SystemStatusCard`, `AnalysisSummaryCard`, `DetectorStatusCard`, `JurisdictionCard`.
+- **`navigation.tsx`** — `useAppNavigate`, `AppLink`, `isFileProtocol`, `routeToFileURL` Electron file:// helpers.
+
+---
+
 ## [2.1.1] - 2026-04-13 — Desktop App Icons & macOS Multi-Arch Build Fix
 
 Patch release fixing desktop application packaging and CI workflows introduced in v2.1.

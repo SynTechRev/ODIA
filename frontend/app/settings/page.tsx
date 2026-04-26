@@ -362,7 +362,7 @@ export default function SettingsPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Package:</span>
-              <span className="font-mono text-gray-900">odia 2.7.9</span>
+              <span className="font-mono text-gray-900">odia 2.8.0</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Frontend:</span>
@@ -404,9 +404,9 @@ function PresentationCard() {
             Show intro sequence
           </div>
           <div className="text-xs mt-1" style={{ color: 'var(--smoke-400)' }}>
-            The Oraculus introduction plays automatically on first launch.
-            Click <strong>Show on next launch</strong> to see it again the
-            next time the app starts.
+            The Oraculus introduction plays at the start of every app
+            launch. Click <strong>Show on next launch</strong> to force a
+            replay even if you dismissed it during the current session.
           </div>
         </div>
         <button
@@ -414,7 +414,7 @@ function PresentationCard() {
           className="hud-btn flex-shrink-0"
           aria-label={
             confirmed
-              ? 'Intro replay scheduled for next launch'
+              ? 'Intro replay forced for next launch'
               : 'Show intro sequence on next launch'
           }
         >
