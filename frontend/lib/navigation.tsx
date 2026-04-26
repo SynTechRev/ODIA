@@ -147,7 +147,12 @@ type AppLinkProps = Omit<LinkProps, 'href'> & {
   href: string;
   children: React.ReactNode;
   className?: string;
+  /** v2.7.7 — forwarded to the underlying <Link>/<a>; required by the
+   *  gem-palette inline-style approach used in DashboardLayout. */
+  style?: React.CSSProperties;
+  title?: string;
   'aria-current'?: React.AriaAttributes['aria-current'];
+  'aria-label'?: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 

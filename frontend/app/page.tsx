@@ -128,7 +128,7 @@ export default function Home() {
                     'linear-gradient(90deg, var(--gold-200), var(--neon-emerald), var(--gold-300))',
                 }}
               >
-                O.D.I.A. · v2.7.7
+                O.D.I.A. · v2.7.8
               </span>
               <span
                 aria-hidden="true"

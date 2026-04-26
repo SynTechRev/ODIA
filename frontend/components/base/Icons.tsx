@@ -19,6 +19,8 @@ export interface IconProps {
   size?: number;
   className?: string;
   strokeWidth?: number;
+  /** v2.7.7 — inline style forwarded to the SVG (gem-palette tokens). */
+  style?: React.CSSProperties;
   'aria-hidden'?: boolean;
   'aria-label'?: string;
 }
@@ -27,6 +29,7 @@ const IconBase: React.FC<IconProps & { children: React.ReactNode }> = ({
   size = 20,
   className = '',
   strokeWidth = 2,
+  style,
   'aria-hidden': ariaHidden = true,
   'aria-label': ariaLabel,
   children,
@@ -42,6 +45,7 @@ const IconBase: React.FC<IconProps & { children: React.ReactNode }> = ({
     strokeLinecap="round"
     strokeLinejoin="round"
     className={className}
+    style={style}
     aria-hidden={ariaLabel ? undefined : ariaHidden}
     aria-label={ariaLabel}
     role={ariaLabel ? 'img' : undefined}
