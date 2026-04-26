@@ -21,7 +21,8 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { publicAssetURL } from '@/lib/navigation';
 
 interface IntroFrameProps {
   onComplete: () => void;
@@ -32,6 +33,13 @@ export function IntroFrame({ onComplete }: IntroFrameProps) {
   const [showSkip, setShowSkip] = useState(false);
   const completedRef = useRef(false);
   const skipButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  // v2.7.10 — resolve the iframe src at runtime. Under Electron file://
+  // the leading-slash form `/intro/index.html` resolves to the
+  // FILESYSTEM ROOT, which doesn't exist (this was the v2.7.9 black-
+  // screen bug). publicAssetURL() rewrites it to a concrete file://
+  // URL anchored at the app root.
+  const iframeSrc = useMemo(() => publicAssetURL('/intro/index.html'), []);
 
   // Show skip button after 3 seconds.
   useEffect(() => {
@@ -107,7 +115,7 @@ export function IntroFrame({ onComplete }: IntroFrameProps) {
       }}
     >
       <iframe
-        src="/intro/index.html"
+        src={iframeSrc}
         title="O.D.I.A. introduction"
         style={{
           width: '100%',

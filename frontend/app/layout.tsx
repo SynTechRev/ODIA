@@ -37,15 +37,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/*
-          v2.7.9 B5 — prefetch the intro asset so the IntroFrame iframe
-          has it ready the moment IntroGate decides to render. No visible
-          loading gap on first paint. Cheap for returning users (the SW
-          will already have it cached as part of the v3 shell).
-        */}
-        <link rel="prefetch" href="/intro/index.html" as="document" />
-      </head>
+      {/*
+        v2.7.10 — removed the v2.7.9 server-rendered <link rel="prefetch"
+        href="/intro/index.html">. Under Electron file:// the leading-slash
+        form resolves to the filesystem root and silently fails; under
+        Electron the asset is loaded from local disk anyway so prefetch
+        gives nothing. IntroFrame computes the correct path at runtime.
+      */}
       <body className="antialiased">
         <ServiceWorkerRegistration />
         <IntroGate>{children}</IntroGate>

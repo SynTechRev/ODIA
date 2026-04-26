@@ -203,6 +203,11 @@ a = Analysis(
         "PIL.ImageFont",
         # Bundled-binaries runtime shim.
         "oraculus_di_auditor.bundled_binaries",
+        # v2.7.10 — python-docx fallback for DOCX export so the desktop
+        # install can produce Word documents without bundling pandoc.
+        "docx",
+        "docx.oxml",
+        "docx.shared",
         # ODIA AI subsystem (odia_ai package at repo root) - imported
         # lazily inside create_app()'s guarded try/except, so the
         # analyser will not see it without explicit hints.

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odia"
-version = "2.7.9"
+version = "2.7.10"
 description = "O.D.I.A. — Oraculus Decimus Intellect Analyst: civic accountability intelligence platform for forensic analysis of legal and government documents"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -26,6 +26,7 @@ dependencies = [
     "python-dateutil>=2.8.0",
     "passlib[bcrypt]>=1.7.4",
     "python-jose[cryptography]>=3.3.0",
+    "python-docx>=1.1.0",
 ]
 authors = [
     {name = "Synthetic Technology Revolution", email = "syntechrev@gmail.com"}

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -158,41 +159,187 @@ def markdown_to_docx(
     markdown_text: str,
     output_path: Path | str,
 ) -> Path | None:
-    """Convert Markdown to DOCX via pandoc.
+    """Convert Markdown to DOCX.
+
+    Two-tier strategy (v2.7.10):
+      1. **Pandoc** when available — gold standard. Preserves the full
+         CommonMark feature set including nested tables, footnotes, and
+         the heading hierarchy that the audit-report templates emit.
+      2. **python-docx fallback** when pandoc is absent — bundled in the
+         PyInstaller desktop install so end-users never see "DOCX export
+         not available". Handles the audit-report subset: ``# / ## / ###``
+         headings, ``**bold**`` runs, ``_italic_`` runs, fenced code
+         blocks, ``-`` bullets, and ``---`` horizontal rules. Tables are
+         rendered as plain paragraphs (the templates use them rarely).
 
     Args:
         markdown_text: Markdown source string.
         output_path: Destination ``.docx`` file path.
 
     Returns:
-        Resolved Path of the written file on success, ``None`` if pandoc is
-        not available.
+        Resolved Path of the written file on success, ``None`` if neither
+        backend is available.
     """
-    if not shutil.which("pandoc"):
-        logger.warning("pandoc not found. Install pandoc to enable DOCX export.")
-        return None
-
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
+
+    # --- Tier 1: pandoc -----------------------------------------------
+    if shutil.which("pandoc"):
+        try:
+            subprocess.run(
+                [
+                    "pandoc",
+                    "--from=markdown",
+                    "--to=docx",
+                    f"--output={out}",
+                ],
+                input=markdown_text,
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=True,
+            )
+            logger.info("DOCX written via pandoc: %s", out)
+            return out.resolve()
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+            logger.warning("pandoc DOCX conversion failed (%s); falling back", exc)
+
+    # --- Tier 2: python-docx ------------------------------------------
     try:
-        subprocess.run(
-            [
-                "pandoc",
-                "--from=markdown",
-                "--to=docx",
-                f"--output={out}",
-            ],
-            input=markdown_text,
-            capture_output=True,
-            text=True,
-            timeout=60,
-            check=True,
+        return _markdown_to_docx_pythondocx(markdown_text, out)
+    except ImportError:
+        logger.warning(
+            "Neither pandoc nor python-docx is available — DOCX export disabled. "
+            "Install pandoc or `pip install python-docx`."
         )
-        logger.info("DOCX written via pandoc: %s", out)
-        return out.resolve()
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-        logger.warning("pandoc DOCX conversion failed: %s", exc)
         return None
+
+
+def _markdown_to_docx_pythondocx(
+    markdown_text: str, output_path: Path
+) -> Path | None:
+    """python-docx Markdown→DOCX fallback for the desktop bundle.
+
+    Recognises the audit-report Markdown dialect emitted by the Jinja2
+    templates plus the per-finding sheets. NOT a full CommonMark parser
+    — by design. Adding a full parser would balloon the dependency
+    surface; this targeted converter is ~120 lines and ships with every
+    PyInstaller build.
+    """
+    from docx import Document
+    from docx.shared import Pt, RGBColor
+
+    doc = Document()
+
+    # Document-wide style: 11pt body, dark-stone heading colour to match
+    # the gemstone palette when viewed in Word's default light theme
+    # (the body still reads cleanly on dark backgrounds in Reading Mode).
+    styles = doc.styles
+    normal = styles["Normal"]
+    normal.font.name = "Calibri"
+    normal.font.size = Pt(11)
+
+    HEADING_COLOR = RGBColor(0x1F, 0x29, 0x37)  # near-black slate
+    GOLD_ACCENT = RGBColor(0x8B, 0x69, 0x14)    # antique gold
+
+    in_code_block = False
+    code_buffer: list[str] = []
+
+    def flush_code() -> None:
+        if code_buffer:
+            p = doc.add_paragraph()
+            run = p.add_run("\n".join(code_buffer))
+            run.font.name = "Consolas"
+            run.font.size = Pt(9)
+            code_buffer.clear()
+
+    def add_inline(paragraph, text: str) -> None:
+        """Render bold/italic/code spans inside a paragraph.
+
+        Tokenises on **…**, _…_, *…*, and `…` then emits a Run per span.
+        Order matters — bold (**) before italic (* and _) so a literal
+        `**word**` doesn't collapse to `*word*`.
+        """
+        # Pattern: ``code`` | **bold** | __bold__ | *italic* | _italic_
+        token_re = re.compile(
+            r"(`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_)"
+        )
+        for part in token_re.split(text):
+            if not part:
+                continue
+            if part.startswith("`") and part.endswith("`"):
+                run = paragraph.add_run(part[1:-1])
+                run.font.name = "Consolas"
+                run.font.size = Pt(10)
+            elif (part.startswith("**") and part.endswith("**")) or (
+                part.startswith("__") and part.endswith("__")
+            ):
+                run = paragraph.add_run(part[2:-2])
+                run.bold = True
+            elif (part.startswith("*") and part.endswith("*")) or (
+                part.startswith("_") and part.endswith("_")
+            ):
+                run = paragraph.add_run(part[1:-1])
+                run.italic = True
+            else:
+                paragraph.add_run(part)
+
+    for raw_line in markdown_text.splitlines():
+        line = raw_line.rstrip()
+
+        # Fenced code blocks
+        if line.startswith("```"):
+            if in_code_block:
+                flush_code()
+                in_code_block = False
+            else:
+                in_code_block = True
+            continue
+        if in_code_block:
+            code_buffer.append(line)
+            continue
+
+        # Horizontal rule
+        if line.strip() in ("---", "***", "___"):
+            doc.add_paragraph("─" * 60)
+            continue
+
+        # Headings
+        if line.startswith("# "):
+            h = doc.add_heading(line[2:].strip(), level=0)
+            for r in h.runs:
+                r.font.color.rgb = GOLD_ACCENT
+            continue
+        if line.startswith("## "):
+            h = doc.add_heading(line[3:].strip(), level=1)
+            for r in h.runs:
+                r.font.color.rgb = HEADING_COLOR
+            continue
+        if line.startswith("### "):
+            h = doc.add_heading(line[4:].strip(), level=2)
+            for r in h.runs:
+                r.font.color.rgb = HEADING_COLOR
+            continue
+
+        # Bullet
+        if line.startswith("- ") or line.startswith("* "):
+            p = doc.add_paragraph(style="List Bullet")
+            add_inline(p, line[2:].strip())
+            continue
+
+        # Blank line
+        if not line.strip():
+            doc.add_paragraph()
+            continue
+
+        # Default paragraph
+        p = doc.add_paragraph()
+        add_inline(p, line)
+
+    flush_code()
+    doc.save(str(output_path))
+    logger.info("DOCX written via python-docx fallback: %s", output_path)
+    return output_path.resolve()
 
 
 def get_available_formats() -> list[str]:
@@ -218,8 +365,11 @@ def get_available_formats() -> list[str]:
     if has_pandoc or has_weasyprint or has_wkhtmltopdf:
         formats.append("pdf")
 
-    # DOCX requires pandoc.
-    if has_pandoc:
+    # DOCX: pandoc preferred, python-docx fallback (v2.7.10 — bundled
+    # in the desktop installer so DOCX export works without external
+    # tooling).
+    has_python_docx = _can_import("docx")
+    if has_pandoc or has_python_docx:
         formats.append("docx")
 
     return sorted(formats)

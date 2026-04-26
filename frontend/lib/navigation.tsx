@@ -81,6 +81,35 @@ function getAppRootURL(): string {
 }
 
 /**
+ * v2.7.10 — Resolve a `public/` asset path (e.g. `/intro/index.html`,
+ * `/icons/icon-192.png`) to a URL the browser can actually fetch in
+ * the current environment.
+ *
+ *   In a browser / Docker (http(s)):
+ *     /intro/index.html  →  /intro/index.html        (unchanged)
+ *
+ *   In Electron (file://):
+ *     /intro/index.html  →  file:///C:/.../frontend/intro/index.html
+ *
+ *   The leading-slash bug it solves: under file://, the browser treats
+ *   `src="/intro/index.html"` as the FILESYSTEM ROOT
+ *   (`file:///intro/index.html`), which doesn't exist — every iframe /
+ *   image / link to a public asset 404s and renders a black screen.
+ *   This helper anchors against the actual app root computed from
+ *   `window.location` instead.
+ */
+export function publicAssetURL(path: string): string {
+  // SSR safety + non-file:// short-circuit — the leading slash is fine
+  // when an HTTP origin is doing the resolving.
+  if (typeof window === 'undefined' || !isFileProtocol()) {
+    return path;
+  }
+  const root = getAppRootURL();           // file:///C:/.../frontend/
+  const rel = path.replace(/^\/+/, '');   // strip leading slashes
+  return root + rel;
+}
+
+/**
  * Given a route path like `/upload`, return the absolute `file://` URL
  * to the corresponding `index.html` always relative to the app root —
  * not to the currently loaded page.

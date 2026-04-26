@@ -82,7 +82,7 @@ type BackendState = 'checking' | 'connected' | 'disconnected';
 // v2.7.3 V2: fallback when /api/v1/health doesn't return odia_version
 // (older backends) or when the check hasn't completed yet. Updated on
 // every release.
-const ODIA_VERSION_FALLBACK = 'v2.7.9';
+const ODIA_VERSION_FALLBACK = 'v2.7.10';
 
 function useBackendStatus(): {
   state: BackendState;

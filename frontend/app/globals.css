@@ -174,6 +174,22 @@
   --status-warn: var(--gold-400);
 }
 
+/* v2.7.10 — bumped gold + emerald edge presence per user feedback
+   ("not seeing enough gold"). Pre-v2.7.10 the edge tokens topped out at
+   55% / 45% opacity, which read as hairlines on a dark body. Bumped to
+   80% / 70% so panel borders read as decisive cuts, not whispers. The
+   *-bright variants stay near-opaque for hover/active states. */
+:root {
+  --gem-edge-gold:           rgba(216, 177, 60, 0.80);
+  --gem-edge-gold-bright:    rgba(245, 220, 154, 0.95);
+  --gem-edge-emerald:        rgba(31, 232, 143, 0.70);
+  --gem-edge-emerald-bright: rgba(0,  255, 157, 0.90);
+  --glow-gold:               0 0 32px rgba(216, 177, 60, 0.45);
+  --glow-gold-strong:        0 0 44px rgba(245, 220, 154, 0.65);
+  --glow-emerald:            0 0 32px rgba(31, 232, 143, 0.55);
+  --glow-emerald-neon:       0 0 40px rgba(0,  255, 157, 0.65);
+}
+
 /* Tailwind theme mapping — lets the rest of the codebase keep using
    its existing color utility names. */
 @theme inline {
@@ -211,24 +227,50 @@ body {
 }
 
 body {
+  /* v2.7.10 — transitional smoke → jade-tinted core → smoke depth pass.
+     The pre-v2.7.10 body was a flat near-black with two faint corner
+     blooms; sign-off review described it as "kind of dark". The new
+     stack:
+       1. linear sweep top→bottom: smoke-950 → smoke-900 with a faint
+          jade-900 mid-band so the chrome reads as polished mineral
+          with a green undertone, not flat coal.
+       2. four corner blooms (gold top-left, emerald top-right, gold
+          bottom-right, emerald bottom-left) bumped from 5% → 11% so
+          the chrome has visible warmth at the edges without going
+          full chrome-glare.
+       3. diamond-grid hairlines bumped from 1.4–1.8% → 2.4–2.8% so
+          the crystalline lattice reads in the mid-tone areas where
+          the corner blooms don't reach. */
   background:
-    radial-gradient(ellipse at 18% 0%, rgba(31, 232, 143, 0.05) 0%, transparent 55%),
-    radial-gradient(ellipse at 82% 100%, rgba(216, 177, 60, 0.05) 0%, transparent 55%),
-    var(--background);
+    radial-gradient(ellipse at 12%  -8%,  rgba(216, 177, 60, 0.11)  0%, transparent 48%),
+    radial-gradient(ellipse at 88%  -4%,  rgba(31,  232, 143, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 92% 102%,  rgba(216, 177, 60, 0.11)  0%, transparent 50%),
+    radial-gradient(ellipse at 8%  100%,  rgba(31,  232, 143, 0.09) 0%, transparent 50%),
+    linear-gradient(180deg,
+      var(--smoke-950) 0%,
+      #0c1011 35%,
+      #0d1310 55%,
+      var(--smoke-900) 100%);
   color: var(--foreground);
   font-family: var(--font-sans);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* v2.7.7 — diamond-grid hint, gold + neon-emerald hairlines at very
-     low opacity. Reads as crystalline lattice rather than the prior
-     orthogonal amber grid. */
+  /* Diamond-grid hairlines at higher opacity for visible crystalline
+     lattice across the page. */
   background-image:
-    linear-gradient(45deg, rgba(216, 177, 60, 0.018) 1px, transparent 1px),
-    linear-gradient(-45deg, rgba(31, 232, 143, 0.014) 1px, transparent 1px),
-    radial-gradient(ellipse at 18% 0%, rgba(31, 232, 143, 0.05) 0%, transparent 55%),
-    radial-gradient(ellipse at 82% 100%, rgba(216, 177, 60, 0.05) 0%, transparent 55%);
-  background-size: 36px 36px, 36px 36px, auto, auto;
+    linear-gradient(45deg,  rgba(216, 177, 60, 0.028) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(31,  232, 143, 0.024) 1px, transparent 1px),
+    radial-gradient(ellipse at 12%  -8%,  rgba(216, 177, 60, 0.11)  0%, transparent 48%),
+    radial-gradient(ellipse at 88%  -4%,  rgba(31,  232, 143, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 92% 102%,  rgba(216, 177, 60, 0.11)  0%, transparent 50%),
+    radial-gradient(ellipse at 8%  100%,  rgba(31,  232, 143, 0.09) 0%, transparent 50%),
+    linear-gradient(180deg,
+      var(--smoke-950) 0%,
+      #0c1011 35%,
+      #0d1310 55%,
+      var(--smoke-900) 100%);
+  background-size: 36px 36px, 36px 36px, auto, auto, auto, auto, auto;
 }
 
 code,
@@ -369,15 +411,21 @@ pre {
 
 .hud-panel {
   position: relative;
-  /* v2.7.7 — smoke-spine gradient (was slate). Reads as polished
-     obsidian under the gem-edge hairlines. */
+  /* v2.7.10 — panel surface lifted off pure black with a faint jade
+     undertone so the gold edge has something to catch against. The
+     v2.7.7 stack sat on near-black and the gold border read as a
+     hairline rather than a setting. */
   background:
-    linear-gradient(180deg, rgba(14, 14, 20, 0.94), rgba(7, 7, 10, 0.96));
+    linear-gradient(180deg,
+      rgba(20, 22, 26, 0.96) 0%,
+      rgba(14, 18, 18, 0.97) 60%,
+      rgba(10, 12, 14, 0.98) 100%);
   border: 1px solid var(--hud-edge);
   box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.10),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(31, 232, 143, 0.08),
+    inset 0 1px 0 rgba(245, 220, 154, 0.20),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.50),
+    inset 0 0 0 1px rgba(31, 232, 143, 0.16),
+    0 0 24px -10px rgba(216, 177, 60, 0.20),
     0 8px 24px -12px rgba(0, 0, 0, 0.6);
   /* Chamfered corners — top-left + bottom-right get cut, leaves top-right
      and bottom-left pointed for directional tension. Feels designed. */
@@ -396,10 +444,11 @@ pre {
 .hud-panel:hover {
   border-color: var(--hud-edge-strong);
   box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.18),
+    inset 0 1px 0 rgba(245, 220, 154, 0.32),
     inset 0 -1px 0 rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(0, 255, 157, 0.18),
-    0 0 0 1px rgba(216, 177, 60, 0.20),
+    inset 0 0 0 1px rgba(0, 255, 157, 0.30),
+    0 0 0 1px rgba(216, 177, 60, 0.40),
+    0 0 32px -8px rgba(216, 177, 60, 0.30),
     0 8px 24px -12px rgba(0, 0, 0, 0.7);
 }
 
@@ -1073,18 +1122,25 @@ input::placeholder, textarea::placeholder {
 
 .gem-panel {
   position: relative;
+  /* v2.7.10 — surface lifted to give the gold edge somewhere to catch.
+     Three-stop gradient (smoke-spine → faint jade core → smoke-spine)
+     adds depth without breaking the dark-mode chrome. */
   background:
     linear-gradient(160deg,
-      var(--smoke-950) 0%,
-      var(--smoke-900) 45%,
-      var(--smoke-800) 78%,
+      var(--smoke-900) 0%,
+      #131816 32%,
+      #14201b 55%,
+      #131816 78%,
       var(--smoke-900) 100%);
-  /* Dual edge — gold outer, emerald inner (the "gem in a gold setting") */
+  /* Dual edge — gold outer (bumped to 80% opacity for visible setting),
+     emerald inner stroke (bumped to 32%), gold glow halo. */
   box-shadow:
-    0 0 0 1px var(--gem-edge-gold),
+    0 0 0 1.5px var(--gem-edge-gold),
     inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 2px rgba(31, 232, 143, 0.18),
-    0 0 60px -18px rgba(31, 232, 143, 0.35);
+    inset 0 0 0 2px rgba(31, 232, 143, 0.32),
+    inset 0 1px 0 rgba(245, 220, 154, 0.18),
+    0 0 60px -18px rgba(216, 177, 60, 0.45),
+    0 0 80px -28px rgba(31, 232, 143, 0.45);
   /* Crystallized facet geometry — six cuts for the quartz silhouette */
   clip-path: polygon(
     var(--gem-facet) 0,
@@ -1102,10 +1158,12 @@ input::placeholder, textarea::placeholder {
 
 .gem-panel:hover {
   box-shadow:
-    0 0 0 1px var(--gem-edge-gold-bright),
+    0 0 0 1.5px var(--gem-edge-gold-bright),
     inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 2px rgba(0, 255, 157, 0.30),
-    0 0 80px -16px rgba(0, 255, 157, 0.45);
+    inset 0 0 0 2px rgba(0, 255, 157, 0.55),
+    inset 0 1px 0 rgba(245, 220, 154, 0.30),
+    0 0 60px -10px rgba(245, 220, 154, 0.55),
+    0 0 100px -16px rgba(0, 255, 157, 0.55);
 }
 
 .gem-panel-faceted {
@@ -1173,19 +1231,24 @@ input::placeholder, textarea::placeholder {
 }
 .gem-ribbon-top {
   top: 0;
+  height: 1.5px;
   background: linear-gradient(90deg,
-    transparent 0%, var(--gold-400) 28%,
-    var(--neon-emerald) 50%, var(--gold-400) 72%,
+    transparent 0%, var(--gold-300) 22%,
+    var(--gold-200) 38%, var(--neon-emerald) 50%,
+    var(--gold-200) 62%, var(--gold-300) 78%,
     transparent 100%);
-  opacity: 0.85;
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(245, 220, 154, 0.55);
 }
 .gem-ribbon-bottom {
   bottom: 0;
   background: linear-gradient(90deg,
-    transparent 0%, var(--gold-500) 28%,
-    var(--emerald-500) 50%, var(--gold-500) 72%,
+    transparent 0%, var(--gold-400) 22%,
+    var(--gold-300) 38%, var(--emerald-400) 50%,
+    var(--gold-300) 62%, var(--gold-400) 78%,
     transparent 100%);
-  opacity: 0.55;
+  opacity: 0.85;
+  box-shadow: 0 0 8px rgba(216, 177, 60, 0.40);
 }
 
 /* Glow utilities */
@@ -1214,10 +1277,13 @@ input::placeholder, textarea::placeholder {
       var(--emerald-500) 60%,
       var(--emerald-700) 100%);
   border: 0;
+  /* v2.7.10 — bumped gold inner ring 40% → 70% so the emerald CTA
+     reads as "set in gold" rather than just emerald with a faint hint. */
   box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.55),
-    inset 0 0 0 1px rgba(216, 177, 60, 0.40),
-    0 0 24px -6px var(--neon-emerald);
+    inset 0 1px 0 rgba(245, 220, 154, 0.85),
+    inset 0 0 0 1.5px rgba(245, 220, 154, 0.70),
+    0 0 32px -6px var(--neon-emerald),
+    0 0 24px -10px rgba(216, 177, 60, 0.55);
   clip-path: polygon(
     var(--gem-facet-sm) 0, calc(100% - var(--gem-facet-sm)) 0,
     100% 50%,
@@ -1229,9 +1295,10 @@ input::placeholder, textarea::placeholder {
 }
 .gem-cta-primary:hover {
   box-shadow:
-    inset 0 1px 0 rgba(245, 220, 154, 0.75),
-    inset 0 0 0 1px rgba(245, 220, 154, 0.55),
-    0 0 36px -4px var(--neon-emerald);
+    inset 0 1px 0 rgba(245, 220, 154, 0.95),
+    inset 0 0 0 2px rgba(245, 220, 154, 0.85),
+    0 0 44px -4px var(--neon-emerald),
+    0 0 32px -8px rgba(245, 220, 154, 0.65);
 }
 .gem-cta-primary:active {
   transform: translateY(1px);
