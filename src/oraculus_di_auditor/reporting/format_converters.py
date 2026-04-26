@@ -215,9 +215,7 @@ def markdown_to_docx(
         return None
 
 
-def _markdown_to_docx_pythondocx(
-    markdown_text: str, output_path: Path
-) -> Path | None:
+def _markdown_to_docx_pythondocx(markdown_text: str, output_path: Path) -> Path | None:
     """python-docx Markdown→DOCX fallback for the desktop bundle.
 
     Recognises the audit-report Markdown dialect emitted by the Jinja2
@@ -240,7 +238,7 @@ def _markdown_to_docx_pythondocx(
     normal.font.size = Pt(11)
 
     HEADING_COLOR = RGBColor(0x1F, 0x29, 0x37)  # near-black slate
-    GOLD_ACCENT = RGBColor(0x8B, 0x69, 0x14)    # antique gold
+    GOLD_ACCENT = RGBColor(0x8B, 0x69, 0x14)  # antique gold
 
     in_code_block = False
     code_buffer: list[str] = []
@@ -261,9 +259,7 @@ def _markdown_to_docx_pythondocx(
         `**word**` doesn't collapse to `*word*`.
         """
         # Pattern: ``code`` | **bold** | __bold__ | *italic* | _italic_
-        token_re = re.compile(
-            r"(`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_)"
-        )
+        token_re = re.compile(r"(`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_)")
         for part in token_re.split(text):
             if not part:
                 continue

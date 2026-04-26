@@ -66,7 +66,7 @@ def test_markdown_to_docx_pythondocx_writes_valid_docx(monkeypatch, tmp_path):
         "_Statute_: 34 U.S.C. § 10152(a)(1)(G)\n"
         "\n"
         "```\n"
-        "{ \"sev\": \"critical\" }\n"
+        '{ "sev": "critical" }\n'
         "```\n"
     )
     out = tmp_path / "test.docx"
