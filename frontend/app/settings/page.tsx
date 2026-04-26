@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { useUISettingsStore } from '@/lib/stores/ui-settings';
+import { useIntroStore } from '@/lib/stores/intro';
 import { getAPIClient } from '@/lib/api/client';
 
 // ---------------------------------------------------------------------------
@@ -350,6 +351,9 @@ export default function SettingsPage() {
           </div>
         </Card>
 
+        {/* v2.7.9 B4 — Intro replay control */}
+        <PresentationCard />
+
         {/* Authentication */}
         <AuthSection />
 
@@ -358,11 +362,11 @@ export default function SettingsPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Package:</span>
-              <span className="font-mono text-gray-900">odia 2.1.0</span>
+              <span className="font-mono text-gray-900">odia 2.7.9</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Frontend:</span>
-              <span className="font-mono text-gray-900">Next.js 14</span>
+              <span className="font-mono text-gray-900">Next.js 15</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Backend API:</span>
@@ -374,5 +378,49 @@ export default function SettingsPage() {
         </Card>
       </div>
     </DashboardLayout>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// v2.7.9 B4 — Presentation card: replay the Oraculus intro on next launch
+// ---------------------------------------------------------------------------
+function PresentationCard() {
+  const replay = useIntroStore((s) => s.replay);
+  const [confirmed, setConfirmed] = useState(false);
+
+  function handleClick() {
+    replay();
+    setConfirmed(true);
+    // Reset the confirmation chip after a few seconds so the button
+    // returns to its idle label and can be clicked again.
+    setTimeout(() => setConfirmed(false), 2400);
+  }
+
+  return (
+    <Card title="Presentation" variant="bordered">
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="text-sm font-medium" style={{ color: 'var(--smoke-100)' }}>
+            Show intro sequence
+          </div>
+          <div className="text-xs mt-1" style={{ color: 'var(--smoke-400)' }}>
+            The Oraculus introduction plays automatically on first launch.
+            Click <strong>Show on next launch</strong> to see it again the
+            next time the app starts.
+          </div>
+        </div>
+        <button
+          onClick={handleClick}
+          className="hud-btn flex-shrink-0"
+          aria-label={
+            confirmed
+              ? 'Intro replay scheduled for next launch'
+              : 'Show intro sequence on next launch'
+          }
+        >
+          {confirmed ? 'Scheduled ✓' : 'Show on next launch'}
+        </button>
+      </div>
+    </Card>
   );
 }

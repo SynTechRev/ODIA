@@ -329,7 +329,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "2.7.8"),
+                engine_version=os.environ.get("ODIA_VERSION", "2.7.9"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -424,7 +424,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": True,
-            "odia_version": os.environ.get("ODIA_VERSION", "2.7.8"),
+            "odia_version": os.environ.get("ODIA_VERSION", "2.7.9"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------

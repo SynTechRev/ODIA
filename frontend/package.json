@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:icons": "node scripts/build-icons.mjs"
   },
   "dependencies": {
     "@types/d3": "^7.4.3",

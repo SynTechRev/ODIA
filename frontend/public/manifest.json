@@ -4,8 +4,8 @@
   "description": "Civic accountability intelligence platform",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1A3652",
+  "background_color": "#07070A",
+  "theme_color": "#07070A",
   "orientation": "any",
   "categories": ["government", "productivity"],
   "icons": [

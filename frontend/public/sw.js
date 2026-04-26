@@ -8,7 +8,10 @@
  *  - A broadcast message is sent to open tabs when going offline.
  */
 
-const CACHE_NAME = 'odia-shell-v1';
+// v2.7.9 — bumped to v3 because SHELL_PATHS gained the intro asset.
+// Old caches are evicted by the activate handler so returning users get
+// the new entry pre-cached on first launch under the new SW.
+const CACHE_NAME = 'odia-shell-v3';
 
 // App shell paths to pre-cache
 const SHELL_PATHS = [
@@ -18,6 +21,9 @@ const SHELL_PATHS = [
   '/documents',
   '/settings',
   '/manifest.json',
+  // v2.7.9 — Oraculus intro sequence. Cached so the gemstone boot
+  // animation plays even on first launch under flaky connectivity.
+  '/intro/index.html',
 ];
 
 // ---------------------------------------------------------------------------

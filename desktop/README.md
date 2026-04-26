@@ -135,6 +135,38 @@ npm run build:linux                # Linux (x64)
 
 Installers are output to `desktop/dist/`.
 
+### Regenerating the application icons (v2.7.9 onward)
+
+The Electron window icon, taskbar / dock icon, and PWA manifest icons
+are all rasterized from a single source SVG at
+`frontend/public/icons/oraculus-mark.svg`. Whenever that file changes,
+regenerate the PNGs with:
+
+```bash
+cd frontend
+npm run build:icons
+```
+
+This produces:
+- `frontend/public/icons/icon-192.png` — PWA standard
+- `frontend/public/icons/icon-512.png` — PWA standard
+- `frontend/public/icons/icon-maskable-512.png` — PWA Android adaptive
+- `desktop/resources/icon.png` — 1024×1024 master raster
+
+The Windows `.ico` and macOS `.icns` containers are NOT committed —
+`electron-builder` derives them at build time from
+`desktop/resources/icon.png`. The `desktop/package.json` `build.win.icon`
+and `build.mac.icon` keys both point at this PNG.
+
+The rasterizer uses `sharp` (already installed as a transitive dep of
+`next`), so no extra tooling is required. The legacy
+`scripts/build-icons.sh` shell wrapper exists for users who prefer
+`rsvg-convert + ImageMagick`, but the Node script is the reference
+implementation.
+
+See [docs/BRAND.md](../docs/BRAND.md) for icon geometry, sizing rules,
+and the source artwork.
+
 ## Architecture
 
 ```

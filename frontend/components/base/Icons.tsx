@@ -15,44 +15,14 @@
 
 import React from 'react';
 
-export interface IconProps {
-  size?: number;
-  className?: string;
-  strokeWidth?: number;
-  /** v2.7.7 — inline style forwarded to the SVG (gem-palette tokens). */
-  style?: React.CSSProperties;
-  'aria-hidden'?: boolean;
-  'aria-label'?: string;
-}
-
-const IconBase: React.FC<IconProps & { children: React.ReactNode }> = ({
-  size = 20,
-  className = '',
-  strokeWidth = 2,
-  style,
-  'aria-hidden': ariaHidden = true,
-  'aria-label': ariaLabel,
-  children,
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={strokeWidth}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    style={style}
-    aria-hidden={ariaLabel ? undefined : ariaHidden}
-    aria-label={ariaLabel}
-    role={ariaLabel ? 'img' : undefined}
-  >
-    {children}
-  </svg>
-);
+// v2.7.9 — IconProps + IconBase extracted to ./icons/ so per-icon
+// component files (OraculusMarkIcon and future glyphs) can compose
+// against them without importing the entire barrel. Re-exported here
+// so existing call sites (`import { IconProps } from './Icons'`) keep
+// compiling without change.
+import { IconBase } from './icons/IconBase';
+export type { IconProps } from './icons/IconProps';
+import type { IconProps } from './icons/IconProps';
 
 // ---------------------------------------------------------------------------
 // Navigation icons
@@ -250,54 +220,35 @@ export const MapPinIcon: React.FC<IconProps> = (p) => (
 );
 
 // ---------------------------------------------------------------------------
-// O.D.I.A. logo mark — Oraculus Octopus with headphones (outline).
+// O.D.I.A. brand mark — the Oraculus gold swirl.
 //
-// The mark must read at three scales without redesign:
-//   - 16px  (sidebar footer pill, window title bar)
-//   - 20px  (sidebar header, Card accents)
-//   - 32px+ (About dialog, loading splash)
+// v2.7.9 — replaces the v2.6-era OctopusMarkIcon (headphones-and-tentacles
+// silhouette) with the gemstone-aligned Oraculus mark: a single gold
+// paint-swirl on smoke. The new component lives in ./icons/ alongside
+// the IconBase and IconProps shims; this file re-exports it under three
+// historical names so every existing call site keeps compiling unchanged
+// and renders the new mark.
 //
-// Brand-matched to the SynTechRev octopus used as the desktop app icon
-// (the circular purple emblem in desktop/resources/icon.png). Drawn as
-// a pure stroked outline so the sidebar's `currentColor` can tint it
-// amber at any size without rasterizing. Construction:
-//
-//   - Headphone band — arc above the head
-//   - Two ear cups — circles at head-temples
-//   - Dome/mantle — rounded bulb enclosing face
-//   - Eyes — two small filled dots on the face
-//   - Four tentacles — symmetric pairs flowing to bottom of viewBox
+// Geometry, weight distribution, and splatter pattern documented in
+// docs/BRAND.md §4 + the source artwork at
+// docs/brand/reference/reference_5_gold-swirl-icon-source.png.
 // ---------------------------------------------------------------------------
 
-export const OctopusMarkIcon: React.FC<IconProps> = (p) => (
-  <IconBase {...p}>
-    {/* Headphones band, arcing over the head */}
-    <path d="M5.5 11 C 5.5 5.5, 18.5 5.5, 18.5 11" />
-    {/* Left ear cup */}
-    <circle cx="5.3" cy="11.2" r="1.5" />
-    {/* Right ear cup */}
-    <circle cx="18.7" cy="11.2" r="1.5" />
-    {/* Octopus head / mantle dome */}
-    <path d="M7 13 C 7 8, 17 8, 17 13 L 17 14.2 L 7 14.2 Z" />
-    {/* Eyes — filled dots for contrast at 16px */}
-    <circle cx="10.2" cy="11.6" r="0.65" fill="currentColor" stroke="none" />
-    <circle cx="13.8" cy="11.6" r="0.65" fill="currentColor" stroke="none" />
-    {/* Tentacles — 4 flowing curves, symmetric pair from head base */}
-    <path d="M8.2 14.2 C 7 16, 6.2 18, 7.8 20" />
-    <path d="M10.7 14.2 C 10.4 17, 9.6 19.5, 11 21.6" />
-    <path d="M13.3 14.2 C 13.6 17, 14.4 19.5, 13 21.6" />
-    <path d="M15.8 14.2 C 17 16, 17.8 18, 16.2 20" />
-  </IconBase>
-);
+export { OraculusMarkIcon } from './icons/OraculusMarkIcon';
 
 /**
- * @deprecated v2.6 name retained as an alias so existing imports keep
- * compiling. New code should import `OctopusMarkIcon`.
+ * @deprecated v2.6 octopus-era name. Repoints to the v2.7.9 Oraculus
+ * mark so existing imports keep compiling. New code imports
+ * `OraculusMarkIcon` directly.
  */
-export const StrategyMarkIcon = OctopusMarkIcon;
+export { OraculusMarkIcon as OctopusMarkIcon } from './icons/OraculusMarkIcon';
 
 /**
- * @deprecated shield-era name retained as an alias so existing imports keep
- * compiling. New code should import `OctopusMarkIcon`.
+ * @deprecated v2.5 strategy-era name retained as an alias.
  */
-export const OdiaMarkIcon = OctopusMarkIcon;
+export { OraculusMarkIcon as StrategyMarkIcon } from './icons/OraculusMarkIcon';
+
+/**
+ * @deprecated v2.4 ODIA-era shield name retained as an alias.
+ */
+export { OraculusMarkIcon as OdiaMarkIcon } from './icons/OraculusMarkIcon';

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Oraculus Mark — application icon source SVG
+  ==========================================
+
+  This is the "rich" rendered version of the Oraculus mark, used for
+  application icons (Electron window, macOS dock, Windows taskbar, iOS
+  home screen, Android launcher, PWA manifest). The companion React
+  component `OraculusMarkIcon.tsx` is a simplified outline-only variant
+  used for in-app sidebar / tab-bar rendering.
+
+  Rasterise to PNG at:
+    192×192 → frontend/public/icons/icon-192.png   (PWA standard)
+    512×512 → frontend/public/icons/icon-512.png   (PWA HD + Android)
+    512×512 → frontend/public/icons/icon-maskable-512.png  (mask-safe — see <maskable-zone> note)
+    1024×1024 → desktop/resources/icon.png (Linux, macOS source)
+    Multi-size .ico → desktop/resources/icon.ico (Windows)
+    Multi-size .icns → desktop/resources/icon.icns (macOS)
+
+  Recommended rasteriser: librsvg (rsvg-convert) or Inkscape CLI.
+  Example: rsvg-convert -w 512 -h 512 oraculus-mark.svg > icon-512.png
+
+  Background:
+  The icon ships with an opaque dark-stone background so it reads on any
+  launcher surface (including light-themed iOS / Android launchers that
+  would otherwise show the mark floating in space). The background is
+  the smoke-950 token (#07070a) with a subtle radial that lifts the centre.
+
+  Maskable zone:
+  For the maskable variant, the mark is centered inside the inner 80%
+  safe zone (Android adaptive icons clip up to 20% of the bounding box).
+  Re-export the same SVG to icon-maskable-512.png — geometry already
+  respects the safe zone.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 512 512"
+     width="512" height="512">
+
+  <defs>
+
+    <!-- Background — smoke-950 with a soft centre lift -->
+    <radialGradient id="bgGrad" cx="50%" cy="44%" r="65%">
+      <stop offset="0%"   stop-color="#12121a"/>
+      <stop offset="60%"  stop-color="#0a0a10"/>
+      <stop offset="100%" stop-color="#07070a"/>
+    </radialGradient>
+
+    <!--
+      Primary gold gradient — heavy crescent. The reference artwork has
+      strong directional lighting from the upper-left (catch-light at
+      gold-200) falling off to gold-700 at the trailing edge of the
+      brushstroke. We mimic that with a 35°-ish linear gradient.
+    -->
+    <linearGradient id="goldHeavy" x1="20%" y1="15%" x2="80%" y2="85%">
+      <stop offset="0%"   stop-color="#f5dc9a"/>  <!-- gold-200 catch-light -->
+      <stop offset="35%"  stop-color="#ecc870"/>  <!-- gold-300 highlight -->
+      <stop offset="65%"  stop-color="#d8b13c"/>  <!-- gold-400 primary -->
+      <stop offset="100%" stop-color="#8a6f1a"/>  <!-- gold-700 shadow edge -->
+    </linearGradient>
+
+    <!-- Mid wisp gradient — same hue, lower brightness, tighter range -->
+    <linearGradient id="goldMid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#ecc870" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#b8941f" stop-opacity="0.4"/>
+    </linearGradient>
+
+    <!-- White paint wisp — the cool counterpoint in the reference image -->
+    <linearGradient id="whiteWisp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#f4f4f6" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#cbcbd1" stop-opacity="0.1"/>
+    </linearGradient>
+
+    <!-- Soft blur for the outermost wisp halo -->
+    <filter id="softBlur" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+
+    <!-- Subtle inner glow on the heavy crescent edge -->
+    <filter id="goldGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+  </defs>
+
+  <!-- ============================================================ -->
+  <!-- Layer 1 — opaque dark-stone background                        -->
+  <!-- ============================================================ -->
+  <rect x="0" y="0" width="512" height="512" rx="96" ry="96" fill="url(#bgGrad)"/>
+
+  <!--
+    Faint hex-mesh underlay — calls back to the intro animation's
+    hexagonal grid. Scaled and positioned so it doesn't dominate the
+    composition; mostly invisible at small sizes, structural at large.
+  -->
+  <g opacity="0.06">
+    <defs>
+      <pattern id="hexUnderlay" x="0" y="0" width="56" height="48.5"
+               patternUnits="userSpaceOnUse">
+        <path d="M14 0 L42 0 L56 24.25 L42 48.5 L14 48.5 L0 24.25 Z"
+              fill="none" stroke="#d8b13c" stroke-width="0.6"/>
+      </pattern>
+    </defs>
+    <rect x="48" y="48" width="416" height="416" fill="url(#hexUnderlay)"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Layer 2 — outer white-paint wisp halo                         -->
+  <!-- ============================================================ -->
+  <!--
+    A faint outermost arc echoing the white spiral in the reference.
+    Blurred, low opacity, broken arc. Sits behind the gold so the gold
+    catches the light cleanly.
+  -->
+  <g filter="url(#softBlur)" opacity="0.5">
+    <path d="M 110 290
+             A 200 200 0 0 1 256 80
+             A 200 200 0 0 1 410 200"
+          stroke="url(#whiteWisp)"
+          stroke-width="14"
+          stroke-linecap="round"
+          fill="none"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Layer 3 — mid wisp (gold, second-degree arc)                  -->
+  <!-- ============================================================ -->
+  <path d="M 420 200
+           A 180 180 0 0 0 200 90"
+        stroke="url(#goldMid)"
+        stroke-width="6"
+        stroke-linecap="round"
+        fill="none"/>
+
+  <!-- ============================================================ -->
+  <!-- Layer 4 — primary gold crescent (the heart of the mark)       -->
+  <!-- ============================================================ -->
+  <!--
+    The thick gold spiral. Coordinates are tuned to centre the visual
+    mass slightly above geometric centre (perceived centre is higher
+    when the eye reads top-down). Single open path, ~270° rotation,
+    tapering inward.
+  -->
+  <path d="M 380 130
+           A 175 175 0 1 0 256 432
+           A 130 130 0 1 1 256 172
+           A 86 86 0 1 0 302 290"
+        stroke="url(#goldHeavy)"
+        stroke-width="50"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        filter="url(#goldGlow)"/>
+
+  <!-- ============================================================ -->
+  <!-- Layer 5 — gold paint splatter dots                             -->
+  <!-- ============================================================ -->
+  <!--
+    Eight off-axis specks. Variable radii and opacities to simulate
+    real splatter. Positioned at golden-ratio-ish offsets from the
+    composition centre.
+  -->
+  <g fill="#ecc870">
+    <circle cx="430" cy="320" r="6"  opacity="0.85"/>
+    <circle cx="80"  cy="200" r="5"  opacity="0.75"/>
+    <circle cx="350" cy="440" r="4"  opacity="0.7"/>
+    <circle cx="140" cy="80"  r="4"  opacity="0.65"/>
+    <circle cx="460" cy="440" r="3"  opacity="0.6"/>
+    <circle cx="60"  cy="360" r="3"  opacity="0.55"/>
+    <circle cx="120" cy="440" r="2"  opacity="0.5"/>
+    <circle cx="450" cy="80"  r="2"  opacity="0.5"/>
+  </g>
+
+  <!-- White paint specks (counterpoint to the gold splatter) -->
+  <g fill="#f4f4f6">
+    <circle cx="200" cy="450" r="3"  opacity="0.4"/>
+    <circle cx="395" cy="100" r="2"  opacity="0.35"/>
+    <circle cx="100" cy="280" r="2"  opacity="0.3"/>
+  </g>
+
+</svg>
