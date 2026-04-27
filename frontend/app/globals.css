@@ -533,15 +533,21 @@ code, kbd, pre, .hud-num, .hud-mono {
    (hero panels, splash, evidence covers), not the default.
    ====================================================================== */
 
+/* v2.8.1 Fix #1 — overlay opacities reduced from 0.50–0.95 to 0.30–0.72
+   so the underlying texture (marble veining, malachite striations, gold
+   flux) actually reads through. v2.8.0 launched too dark; the user's
+   review screenshot showed a flat tinted panel. The new range still
+   meets 4.5:1 contrast for emphasized body text against the composite. */
+
 .gem-hero-marble {
   background:
-    linear-gradient(180deg, rgba(8, 12, 8, 0.50), rgba(8, 12, 8, 0.85)),
+    linear-gradient(180deg, rgba(8, 12, 8, 0.30), rgba(8, 12, 8, 0.65)),
     var(--texture-marble-hero);
   background-size: cover;
   background-position: center;
   border: 1px solid var(--edge-gold-bright);
   box-shadow:
-    inset 0 1px 0 rgba(222, 210, 190, 0.18),
+    inset 0 1px 0 rgba(222, 210, 190, 0.22),
     var(--glow-gold);
   clip-path: polygon(
     var(--gem-facet) 0,
@@ -556,13 +562,17 @@ code, kbd, pre, .hud-num, .hud-mono {
 
 .gem-hero-malachite {
   background:
-    linear-gradient(180deg, rgba(11, 41, 26, 0.55), rgba(8, 15, 10, 0.88)),
+    /* Top-to-bottom darkening, much lighter than v2.8.0 — texture
+       detail (white quartz veining + gold-flux seams) needs to be
+       visible. Bottom edge stays darker (0.62) so body text below
+       maintains contrast. */
+    linear-gradient(180deg, rgba(11, 41, 26, 0.32), rgba(8, 15, 10, 0.62)),
     var(--texture-malachite-hero);
   background-size: cover;
   background-position: center;
   border: 1px solid var(--edge-emerald-bright);
   box-shadow:
-    inset 0 1px 0 rgba(95, 161, 127, 0.20),
+    inset 0 1px 0 rgba(95, 161, 127, 0.22),
     var(--glow-emerald);
   clip-path: polygon(
     var(--gem-facet) 0,
@@ -576,7 +586,7 @@ code, kbd, pre, .hud-num, .hud-mono {
 
 .gem-hero-malachite-flux {
   background:
-    linear-gradient(180deg, rgba(11, 41, 26, 0.60), rgba(5, 5, 4, 0.92)),
+    linear-gradient(180deg, rgba(11, 41, 26, 0.35), rgba(5, 5, 4, 0.68)),
     var(--texture-malachite-flux-hero);
   background-size: cover;
   background-position: center;
@@ -596,13 +606,13 @@ code, kbd, pre, .hud-num, .hud-mono {
 
 .gem-hero-gold-flux {
   background:
-    linear-gradient(180deg, rgba(34, 31, 32, 0.45), rgba(8, 12, 8, 0.88)),
+    linear-gradient(180deg, rgba(34, 31, 32, 0.28), rgba(8, 12, 8, 0.60)),
     var(--texture-gold-flux-hero);
   background-size: cover;
   background-position: center;
   border: 1px solid var(--edge-gold-bright);
   box-shadow:
-    inset 0 1px 0 rgba(222, 210, 190, 0.25),
+    inset 0 1px 0 rgba(222, 210, 190, 0.28),
     var(--glow-gold-strong);
   clip-path: polygon(
     var(--gem-facet) 0,
@@ -617,34 +627,36 @@ code, kbd, pre, .hud-num, .hud-mono {
 /* Splash variant — fullscreen, no clip-path */
 .gem-splash {
   background:
-    linear-gradient(180deg, rgba(8, 12, 8, 0.60), rgba(5, 5, 4, 0.95)),
+    linear-gradient(180deg, rgba(8, 12, 8, 0.40), rgba(5, 5, 4, 0.72)),
     var(--texture-malachite-flux-hero);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
 }
 
-/* Mobile texture override — uses smaller WebPs to save bandwidth */
+/* Mobile texture override — uses smaller WebPs to save bandwidth.
+   v2.8.1 — same opacity reductions as desktop, slightly darker bottom
+   stops to compensate for smaller-resolution texture detail. */
 @media (max-width: 768px) {
   .gem-hero-marble {
     background-image:
-      linear-gradient(180deg, rgba(8, 12, 8, 0.50), rgba(8, 12, 8, 0.88)),
+      linear-gradient(180deg, rgba(8, 12, 8, 0.30), rgba(8, 12, 8, 0.68)),
       url('/textures/texture-marble-mobile.webp');
   }
   .gem-hero-malachite {
     background-image:
-      linear-gradient(180deg, rgba(11, 41, 26, 0.55), rgba(8, 15, 10, 0.90)),
+      linear-gradient(180deg, rgba(11, 41, 26, 0.35), rgba(8, 15, 10, 0.70)),
       url('/textures/texture-malachite-mobile.webp');
   }
   .gem-hero-malachite-flux,
   .gem-splash {
     background-image:
-      linear-gradient(180deg, rgba(11, 41, 26, 0.60), rgba(5, 5, 4, 0.93)),
+      linear-gradient(180deg, rgba(11, 41, 26, 0.40), rgba(5, 5, 4, 0.73)),
       url('/textures/texture-malachite-flux-mobile.webp');
   }
   .gem-hero-gold-flux {
     background-image:
-      linear-gradient(180deg, rgba(34, 31, 32, 0.45), rgba(8, 12, 8, 0.90)),
+      linear-gradient(180deg, rgba(34, 31, 32, 0.30), rgba(8, 12, 8, 0.65)),
       url('/textures/texture-gold-flux-mobile.webp');
   }
 }

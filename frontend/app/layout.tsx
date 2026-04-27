@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
+import { TextureResolver } from "@/components/TextureResolver";
 import { IntroGate } from "@/components/intro/IntroGate";
 
 export const metadata: Metadata = {
@@ -46,6 +47,14 @@ export default function RootLayout({
       */}
       <body className="antialiased">
         <ServiceWorkerRegistration />
+        {/*
+          v2.8.1 Fix #2 — TextureResolver runs BEFORE IntroGate so the
+          texture CSS variables get rewritten to file:// URLs (under
+          Electron) before the dashboard renders. Pure side-effect; no
+          DOM. Uses useLayoutEffect so the override fires before browser
+          paint — no flicker.
+        */}
+        <TextureResolver />
         <IntroGate>{children}</IntroGate>
       </body>
     </html>

@@ -704,9 +704,16 @@ html, body {
   border-radius:2px;
   cursor:pointer;
   letter-spacing:0.18em;
-  transition:color 0.3s,border-color 0.3s, background 0.3s;
+  transition:color 0.3s,border-color 0.3s, background 0.3s, opacity 0.5s;
   z-index:20;
   text-transform:uppercase;
+  /* v2.8.1 Fix #3 — hidden until #seq.completed is set at end of run() */
+  opacity: 0;
+  pointer-events: none;
+}
+#seq.completed #replay {
+  opacity: 1;
+  pointer-events: auto;
 }
 #replay:hover {
   color:var(--gold);
@@ -1171,16 +1178,34 @@ async function run() {
   $('brand-tag').classList.add('visible');
   prog(100);
 
-  // v2.7.9 B3 — embedded mode handshake. Hold the final declaration
-  // frame for 1.4s, then notify the parent frame the intro is done so
-  // <IntroFrame> can fade out into the dashboard. Standalone mode (the
-  // intro served at /intro/index.html in a normal tab) is a no-op here
-  // because window.parent === window.
-  await sleep(1400);
+  // v2.8.1 Fix #4 — Hold the final declaration frame longer (was 1.4s,
+  // bumped to 2.4s) so users actually see "We the People" + brand tag
+  // before the dashboard fade-in starts. The wordmark and code phases
+  // dwell ~3s and ~4s respectively; 1.4s on the final phase felt
+  // disproportionately short.
+  await sleep(2400);
+
+  // v2.8.1 Fix #3 — reveal the replay pill now that the intro is
+  // genuinely complete. Standalone-mode users can replay from here;
+  // embedded users will be transitioned out by the parent frame.
+  $('seq').classList.add('completed');
+
+  // v2.7.9 B3 — embedded mode handshake.
   if (window.parent && window.parent !== window) {
     window.parent.postMessage('intro:complete', '*');
   }
 }
+
+// v2.8.1 Fix #4 — minimum-duration guard. Track the moment the intro
+// started. Any click-to-dismiss before the guard expires is absorbed
+// (returns immediately). After 4 seconds, clicks behave as before
+// (postMessage in embedded mode, run() in standalone mode). The parent
+// IntroFrame's Skip button (upper-right corner overlay) is unaffected
+// — it has its own 3-second appearance delay and clicking it still
+// dismisses immediately. This guard only protects against accidental
+// in-iframe clicks during the early phases.
+const __INTRO_START = Date.now();
+const __DISMISS_GUARD_MS = 4000;
 
 $('replay').addEventListener('click', e => { e.stopPropagation(); run(); });
 
@@ -1190,6 +1215,8 @@ $('replay').addEventListener('click', e => { e.stopPropagation(); run(); });
 // browser tab restarts the animation (existing behaviour).
 $('seq').addEventListener('click', e => {
   if (e.target.id === 'replay') return;
+  // v2.8.1 Fix #4 — absorb clicks during the guard window.
+  if (Date.now() - __INTRO_START < __DISMISS_GUARD_MS) return;
   if (window.parent && window.parent !== window) {
     window.parent.postMessage('intro:complete', '*');
   } else {

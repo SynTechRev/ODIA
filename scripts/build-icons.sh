@@ -1,100 +1,94 @@
 #!/usr/bin/env bash
-# ============================================================================
-# build-icons.sh — Rasterize the Oraculus mark SVG into all icon sizes.
 #
-# Run this whenever frontend/public/icons/oraculus-mark.svg changes so
-# the rasterized PWA + Electron icon variants stay in sync with the
-# source artwork.
+# build-icons.sh — regenerate the application raster icon set from the
+# Oraculus mark SVG.
 #
-# Requirements
-# ------------
-#   • rsvg-convert (librsvg2-bin) — preserves SVG gradients faithfully;
-#     ImageMagick's SVG renderer drops them, so do NOT substitute.
-#       Ubuntu / Debian : sudo apt install librsvg2-bin imagemagick
-#       macOS           : brew install librsvg imagemagick
-#       Windows         : install via WSL2 + apt, or Chocolatey:
-#                          choco install rsvg-convert imagemagick
+# Usage:
+#   ./scripts/build-icons.sh           # regenerate PNGs + .ico
+#   ./scripts/build-icons.sh macos     # additionally build .icns (macOS only)
 #
-#   • ImageMagick (`convert`) — for the multi-size Windows .ico bundle.
+# Dependencies:
+#   - rsvg-convert (librsvg2-bin on Linux, librsvg via Homebrew on macOS)
+#   - convert (ImageMagick)
+#   - iconutil (macOS only, for .icns)
 #
-#   • iconutil (macOS only) — for the .icns Apple icon container. The
-#     script silently skips .icns generation on non-Darwin hosts; run
-#     this script on a Mac at least once per release to refresh
-#     desktop/resources/icon.icns and commit the result.
-#
-# Outputs (paths relative to repo root)
-# -------------------------------------
-#   frontend/public/icons/icon-192.png            PWA standard
-#   frontend/public/icons/icon-512.png            PWA standard
-#   frontend/public/icons/icon-maskable-512.png   PWA Android adaptive
-#   desktop/resources/icon.png                    1024px master raster
-#   desktop/resources/icon.ico                    multi-size Windows
-#   desktop/resources/icon.icns                   multi-size macOS (Mac only)
-#
-# Usage
-# -----
-#   ./scripts/build-icons.sh
-# ============================================================================
+# Outputs:
+#   frontend/public/icons/icon-192.png
+#   frontend/public/icons/icon-512.png
+#   frontend/public/icons/icon-maskable-512.png
+#   desktop/resources/icon.png         (1024x1024)
+#   desktop/resources/icon.ico         (multi-size Windows icon)
+#   desktop/resources/icon.icns        (macOS only)
 
 set -euo pipefail
 
-# Resolve repo root regardless of where the script is invoked from.
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SRC="$REPO_ROOT/frontend/public/icons/oraculus-mark.svg"
-ICONS="$REPO_ROOT/frontend/public/icons"
-DESKTOP="$REPO_ROOT/desktop/resources"
+SRC="frontend/public/icons/oraculus-mark.svg"
+PUB="frontend/public/icons"
+DESK="desktop/resources"
 
-if [[ ! -f "$SRC" ]]; then
-  echo "ERROR: source SVG not found at $SRC" >&2
-  exit 1
-fi
-
+# --- preflight ---------------------------------------------------------------
 if ! command -v rsvg-convert >/dev/null 2>&1; then
-  echo "ERROR: rsvg-convert is required (do NOT substitute ImageMagick" >&2
-  echo "       — its SVG renderer drops gradients). Install:" >&2
-  echo "         apt install librsvg2-bin   (Linux)" >&2
-  echo "         brew install librsvg       (macOS)" >&2
+  echo "ERROR: rsvg-convert not found. Install with:"
+  echo "  Ubuntu/Debian:  sudo apt install librsvg2-bin"
+  echo "  macOS:          brew install librsvg"
+  echo "  Windows:        choco install rsvg-convert"
   exit 1
 fi
 
-mkdir -p "$ICONS" "$DESKTOP"
-
-echo "[icons] PWA standard 192/512..."
-rsvg-convert -w 192  -h 192  "$SRC" -o "$ICONS/icon-192.png"
-rsvg-convert -w 512  -h 512  "$SRC" -o "$ICONS/icon-512.png"
-rsvg-convert -w 512  -h 512  "$SRC" -o "$ICONS/icon-maskable-512.png"
-
-echo "[icons] Desktop master 1024..."
-rsvg-convert -w 1024 -h 1024 "$SRC" -o "$DESKTOP/icon.png"
-
-# Windows .ico — multi-size resource
-if command -v convert >/dev/null 2>&1; then
-  echo "[icons] Windows .ico (multi-size)..."
-  convert "$ICONS/icon-512.png" \
-    -define icon:auto-resize=16,32,48,64,128,256 \
-    "$DESKTOP/icon.ico"
-else
-  echo "[icons] WARN: ImageMagick 'convert' not found; skipping .ico" >&2
-  echo "             Install ImageMagick to regenerate desktop/resources/icon.ico" >&2
+if ! command -v convert >/dev/null 2>&1; then
+  echo "ERROR: ImageMagick 'convert' not found. Install with:"
+  echo "  Ubuntu/Debian:  sudo apt install imagemagick"
+  echo "  macOS:          brew install imagemagick"
+  exit 1
 fi
 
-# macOS .icns — multi-size Apple icon container, requires iconutil
-if [[ "$(uname)" == "Darwin" ]]; then
-  echo "[icons] macOS .icns (multi-size, requires iconutil)..."
-  ICONSET="$(mktemp -d)/icon.iconset"
+if [ ! -f "$SRC" ]; then
+  echo "ERROR: source SVG missing at $SRC"
+  exit 1
+fi
+
+mkdir -p "$PUB" "$DESK"
+
+# --- PNG raster set ----------------------------------------------------------
+echo "Rendering PNG raster set..."
+rsvg-convert -w 192  -h 192  "$SRC" -o "$PUB/icon-192.png"
+rsvg-convert -w 512  -h 512  "$SRC" -o "$PUB/icon-512.png"
+cp "$PUB/icon-512.png" "$PUB/icon-maskable-512.png"
+rsvg-convert -w 1024 -h 1024 "$SRC" -o "$DESK/icon.png"
+echo "  $PUB/icon-192.png             $(du -h $PUB/icon-192.png | cut -f1)"
+echo "  $PUB/icon-512.png             $(du -h $PUB/icon-512.png | cut -f1)"
+echo "  $PUB/icon-maskable-512.png    $(du -h $PUB/icon-maskable-512.png | cut -f1)"
+echo "  $DESK/icon.png (1024)         $(du -h $DESK/icon.png | cut -f1)"
+
+# --- Windows .ico ------------------------------------------------------------
+echo "Building Windows .ico (multi-size)..."
+convert "$DESK/icon.png" \
+  -define icon:auto-resize=16,32,48,64,128,256 \
+  "$DESK/icon.ico"
+echo "  $DESK/icon.ico                $(du -h $DESK/icon.ico | cut -f1)"
+
+# --- macOS .icns (optional) --------------------------------------------------
+if [[ "${1:-}" == "macos" ]]; then
+  if [[ "$(uname)" != "Darwin" ]]; then
+    echo "WARNING: 'macos' option requested but not running on macOS. Skipping .icns."
+    exit 0
+  fi
+  if ! command -v iconutil >/dev/null 2>&1; then
+    echo "ERROR: iconutil not found (this is macOS-only)."
+    exit 1
+  fi
+
+  echo "Building macOS .icns..."
+  ICONSET=$(mktemp -d)/icon.iconset
   mkdir -p "$ICONSET"
   for s in 16 32 64 128 256 512 1024; do
     rsvg-convert -w $s -h $s "$SRC" -o "$ICONSET/icon_${s}x${s}.png"
-    d=$((s * 2))
+    d=$((s*2))
     rsvg-convert -w $d -h $d "$SRC" -o "$ICONSET/icon_${s}x${s}@2x.png"
   done
-  iconutil -c icns "$ICONSET" -o "$DESKTOP/icon.icns"
-else
-  echo "[icons] Skipping .icns (requires macOS iconutil)." >&2
-  echo "             Run this script on a Mac to refresh desktop/resources/icon.icns" >&2
+  iconutil -c icns "$ICONSET" -o "$DESK/icon.icns"
+  rm -rf "$ICONSET"
+  echo "  $DESK/icon.icns               $(du -h $DESK/icon.icns | cut -f1)"
 fi
 
-echo "[icons] Done. Generated:"
-file "$ICONS"/icon-192.png "$ICONS"/icon-512.png "$ICONS"/icon-maskable-512.png "$DESKTOP"/icon.png 2>/dev/null || true
-[[ -f "$DESKTOP/icon.ico" ]]  && file "$DESKTOP/icon.ico"
-[[ -f "$DESKTOP/icon.icns" ]] && file "$DESKTOP/icon.icns"
+echo "Done."

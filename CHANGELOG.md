@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.8.1] - 2026-04-26 — Mineral Calibration Bug-Fix Patch
+
+Five surgical fixes addressing user-flagged bugs in the v2.8.0 install.
+
+### Fixed
+- **Texture overlay too dark** (Fix #1) — `.gem-hero-*` overlay opacities reduced from 0.50–0.95 to 0.30–0.72 so the underlying marble veining / malachite striations / gold flux from the reference photos actually read through. Previous opacities drowned the texture so the hero panels showed flat tinted rectangles. New range still meets 4.5:1 text contrast on the composite.
+- **Textures don't load under Electron file://** (Fix #2, **CRITICAL**) — CSS `url('/textures/...')` resolved to filesystem root under `file://` (same bug class as the v2.7.10 IntroFrame fix). New `TextureResolver` client component uses `useLayoutEffect` to overwrite the `--texture-*` CSS variables with `publicAssetURL()`-resolved absolute URLs before browser paint. Mounted in `app/layout.tsx` between `ServiceWorkerRegistration` and `IntroGate`. Mobile breakpoint substitutes `-mobile.webp` variants. SSR-safe (short-circuits when `typeof window === 'undefined'`).
+- **Intro replay button visible from start** (Fix #3) — `#replay` button now ships with `opacity: 0` and `pointer-events: none`. Reveals only after the run() function adds `.completed` class to `#seq` (post brand-tag fade-in).
+- **Intro click-dismiss too eager** (Fix #4) — added 4-second minimum-duration guard on `$('seq').addEventListener('click', ...)`. Clicks before the guard expires are absorbed; clicks after dismiss as before. The parent IntroFrame's Skip button (3-second appearance delay, upper-right corner) is unaffected — it still dismisses immediately. Final-frame hold bumped from 1.4s → 2.4s so users see "We the People" + brand tag before the dashboard fade-in.
+
+### Added
+- **`scripts/build-icons.sh`** — rsvg-convert + ImageMagick reference rasterizer documented in handoff §6 Option B. The existing `frontend/scripts/build-icons.mjs` (sharp-based) remains the default — both produce equivalent SVG-fidelity output. Shell script is preserved for users who prefer rsvg-convert.
+- **`frontend/components/__tests__/TextureResolver.test.tsx`** — 4 smoke tests pinning the texture-variable rewrite behaviour.
+
+### Notes
+- **Fix #5 deferred — no new icon raster commit needed.** The v2.8.0 commit `D2` already regenerated the icons via sharp from the new measured-color SVG, and sharp's libvips renderer with `density: 384` produces SVG-fidelity output equivalent to rsvg-convert. The supplied PIL approximations in the v2.8.1 bundle are visibly worse than the already-committed sharp output, so they're skipped. The user's "still shows octopus" diagnostic likely came from a stale install of v2.7.x.
+
+---
+
 ## [2.8.0] - 2026-04-26 — Mineral Calibration
 
 ### Changed
