@@ -30,6 +30,7 @@ import {
 } from '@/components/base/Icons';
 import { isFileProtocol } from '@/lib/navigation';
 import { getAPIClient } from '@/lib/api/client';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 
 export interface DashboardLayoutProps {
   children: ReactNode;
@@ -82,7 +83,7 @@ type BackendState = 'checking' | 'connected' | 'disconnected';
 // v2.7.3 V2: fallback when /api/v1/health doesn't return odia_version
 // (older backends) or when the check hasn't completed yet. Updated on
 // every release.
-const ODIA_VERSION_FALLBACK = 'v2.8.1';
+const ODIA_VERSION_FALLBACK = 'v2.9.0';
 
 function useBackendStatus(): {
   state: BackendState;
@@ -482,7 +483,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <AppLink
                 key={name}
                 href={href}
-                className="flex-1 flex flex-col items-center justify-center py-2.5 gap-1 text-[10px] font-medium transition-colors"
+                className="flex-1 flex flex-col items-center justify-center min-h-[56px] py-2.5 gap-1 text-[10px] font-medium transition-colors"
                 style={{
                   color: active ? 'var(--neon-emerald)' : 'var(--smoke-500)',
                   textShadow: active ? '0 0 8px var(--neon-emerald)' : 'none',
@@ -496,6 +497,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           })}
         </div>
       </nav>
+
+      {/* PWA install prompt — mobile only, suppressed in standalone/Electron */}
+      <InstallPrompt />
     </div>
   );
 }

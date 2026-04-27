@@ -10,12 +10,13 @@
  * audit containing that document.
  */
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
+import { PullToRefresh } from '@/components/mobile/PullToRefresh';
 
 interface DocumentRow {
   sha256: string;
@@ -37,8 +38,15 @@ function formatBytes(n: number): string {
 export default function DocumentsPage() {
   const nav = useAppNavigate();
   const entries = useAuditHistoryStore((s) => s.entries);
+  // v2.9.0 B3 — bumping a refresh tick forces useMemo re-evaluation,
+  // gives the user visible feedback that the pull was honored even
+  // though the audit-history store is in-memory (no backend roundtrip).
+  const [, setRefreshTick] = useState(0);
+  const handleRefresh = useCallback(async () => {
+    setRefreshTick((n) => n + 1);
+  }, []);
 
-  const rows: DocumentRow[] = useMemo(() => {
+  const rows = useMemo(() => {
     const bySha = new Map<string, DocumentRow>();
     for (const entry of entries) {
       for (const doc of entry.results.document_manifest ?? []) {
@@ -97,6 +105,7 @@ export default function DocumentsPage() {
 
   return (
     <DashboardLayout>
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-4">
         <div>
           <h2 className="text-xl font-semibold text-gray-900 mb-1">Documents</h2>
@@ -138,6 +147,7 @@ export default function DocumentsPage() {
           ))}
         </div>
       </div>
+      </PullToRefresh>
     </DashboardLayout>
   );
 }

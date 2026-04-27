@@ -20,6 +20,7 @@ import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { TemporalTimeline } from '@/components/timeline/TemporalTimeline';
 import { CCOPSScorecard } from '@/components/compliance/CCOPSScorecard';
+import { PullToRefresh } from '@/components/mobile/PullToRefresh';
 import { getAPIClient } from '@/lib/api/client';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import type { AuditFinding, AuditResults, TimelineEvent } from '@/lib/types/api';
@@ -259,6 +260,25 @@ function ResultsPageInner() {
   const addAuditToHistory = useAuditHistoryStore((s) => s.addAudit);
   const getAuditFromHistory = useAuditHistoryStore((s) => s.getAudit);
 
+  // v2.9.0 B3 — extracted fetch so PullToRefresh can re-invoke it.
+  // Pull-to-refresh BYPASSES the cache (the user is asking for fresh
+  // data). Mount-time fetch keeps the cache-first behaviour.
+  const fetchFromBackend = useCallback(async () => {
+    if (!jobId) return;
+    try {
+      const response = await client.getAuditResults(jobId);
+      if (response.results) {
+        setResults(response.results);
+        setError(null);
+        addAuditToHistory(jobId, response.results);
+      } else {
+        setError(`Job is not complete yet (status: ${response.status}). Please wait and refresh.`);
+      }
+    } catch {
+      setError('Failed to load audit results. Check that the server is running.');
+    }
+  }, [jobId, client, addAuditToHistory]);
+
   // Fetch results on mount — cache-first, then backend fallback.
   // When no jobId is present we render a history list view instead of an error.
   useEffect(() => {
@@ -274,23 +294,10 @@ function ResultsPageInner() {
       return;
     }
 
-    const fetchResults = async () => {
-      try {
-        const response = await client.getAuditResults(jobId);
-        if (response.results) {
-          setResults(response.results);
-          addAuditToHistory(jobId, response.results);
-        } else {
-          setError(`Job is not complete yet (status: ${response.status}). Please wait and refresh.`);
-        }
-      } catch {
-        setError('Failed to load audit results. Check that the server is running.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResults();
+    (async () => {
+      await fetchFromBackend();
+      setLoading(false);
+    })();
   }, [jobId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Download handlers
@@ -471,6 +478,7 @@ function ResultsPageInner() {
 
   return (
     <DashboardLayout>
+      <PullToRefresh onRefresh={fetchFromBackend}>
       <div className="space-y-6">
         {/* v2.7.3 V3: severity summary banner — HUD primitives match
             the Dashboard's SeverityTile (D6). The pre-v2.7.3 version
@@ -685,6 +693,7 @@ function ResultsPageInner() {
           </div>
         )}
       </div>
+      </PullToRefresh>
     </DashboardLayout>
   );
 }

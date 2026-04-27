@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.9.0] - 2026-04-27 — Mobile-First PWA Polish
+
+The platform's first dedicated mobile pass. Tracks A (documentation) and B (PWA polish) ship; Track C (Capacitor native wrapper) is deferred pending Apple Developer Program / Google Play Console account decisions. Web/PWA installs work on iOS Safari and Android Chrome today.
+
+### Added
+- **`docs/MOBILE.md`** — comprehensive PWA platform guide. Platform-support matrix (iOS Safari ≥16.4, Android Chrome ≥110, desktop Chromium), install instructions for both flavors, service-worker behavior, troubleshooting, and a deferred-work reference for the Capacitor native track.
+- **README — Mobile (PWA) section** — points users at `docs/MOBILE.md` and summarises which surfaces are mobile-optimized vs. desktop-first.
+- **`PullToRefresh` component** (`frontend/components/mobile/PullToRefresh.tsx`) — touch-driven pull-to-refresh wrapper with damped pull curve, threshold arming, and `--signal-neon` spinner glow. Active only on `<md:` viewports (desktop has its own polling). Wired into `/documents`, `/anomalies`, and `/results`.
+- **`InstallPrompt` component** (`frontend/components/pwa/InstallPrompt.tsx`) — mobile-only install banner. Captures Android `beforeinstallprompt` for one-tap install, falls back to an iOS Safari "Tap Share → Add to Home Screen" hint. Auto-suppresses in standalone mode, under file:// (Electron), and for 14 days after dismissal. Mounted in `DashboardLayout` above the bottom tab bar.
+- **Upload page mobile card layout** — file table replaced with a stacked card list on `<md:`. Each card surfaces filename, format pill, size, truncated SHA, and a full-width Remove button at the 44 px touch-target minimum. The desktop table is preserved verbatim at `md+`.
+
+### Changed
+- **`Button` size scale formalized as touch-target policy** — `xs (32 px)`, `sm (40 px)`, `md (44 px)`, `lg (52 px)` minimum heights. `md` is the iOS HIG / Material Design default (44 pt / 48 dp). Documented inline at `frontend/components/base/Button.tsx`.
+- **Mobile bottom tab bar `min-h-[56px]`** — gives every tab the full Material Design tap surface.
+- **Service worker — split caching** (`frontend/public/sw.js`): app shell pre-cached in `odia-shell-v5` (bumped from `odia-shell-v4`); new `odia-static-v1` runtime cache holds `/_next/static/*`, `/icons/*`, `/textures/*` under a stale-while-revalidate strategy. `/api/*` (including `/api/uploads/*`) is still never cached. Splitting the caches keeps the shell small and lets us evict the two independently.
+
+### Fixed
+- **`/documents` page broken `useMemo` opener** — the row-aggregation memo was missing its `const rows = useMemo(() => {` declaration after the v2.9.0 B3 edit, leaving floating code and an undefined `rows` reference. Restored.
+
+### Notes
+- **Capacitor native track deferred** — full handoff staged in `C:\Users\yahua\Downloads\v2.8.1_Updates\CLAUDE_CODE_HANDOFF_v2_9_0_mobile.md` for when Apple Developer Program ($99/yr) and Google Play Console ($25 one-time) accounts are decided. The PWA covers the install path until then.
+
+---
+
 ## [2.8.1] - 2026-04-26 — Mineral Calibration Bug-Fix Patch
 
 Five surgical fixes addressing user-flagged bugs in the v2.8.0 install.

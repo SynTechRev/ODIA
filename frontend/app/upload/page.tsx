@@ -597,13 +597,64 @@ export default function UploadPage() {
           </Card>
         )}
 
-        {/* Uploaded file list */}
+        {/* Uploaded file list — v2.9.0 B1: dual-layout. <md: card stack
+            with min-h-[44px] touch targets; md+: compact table preserved. */}
         {uploadedFiles.length > 0 && (
           <Card
             title={`${uploadedFiles.length} file${uploadedFiles.length !== 1 ? 's' : ''} ready`}
             variant="bordered"
           >
-            <div className="overflow-x-auto">
+            {/* Mobile (<md:) — card stack */}
+            <ul className="md:hidden space-y-2">
+              {uploadedFiles.map((f) => (
+                <li
+                  key={f.file_id}
+                  className="hud-panel hud-panel-inset p-3 space-y-2"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <span
+                      className="font-medium text-sm break-all min-w-0 flex-1"
+                      style={{ color: 'var(--smoke-100)' }}
+                    >
+                      {f.name}
+                    </span>
+                    <span
+                      className="px-2 py-0.5 rounded text-[10px] uppercase font-mono flex-shrink-0"
+                      style={{
+                        background: 'rgba(216, 177, 60, 0.10)',
+                        color: 'var(--gold-200)',
+                      }}
+                    >
+                      {f.format}
+                    </span>
+                  </div>
+                  <div
+                    className="flex items-center justify-between text-xs gap-2"
+                    style={{ color: 'var(--smoke-400)' }}
+                  >
+                    <span>{formatBytes(f.size)}</span>
+                    <span className="font-mono truncate">
+                      {f.sha256.slice(0, 12)}…
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => removeFile(f.file_id)}
+                    disabled={isRunning}
+                    className="w-full min-h-[44px] flex items-center justify-center text-sm font-medium rounded transition-colors disabled:opacity-40"
+                    style={{
+                      color: 'var(--severity-critical)',
+                      border: '1px solid rgba(244, 63, 94, 0.30)',
+                      background: 'rgba(244, 63, 94, 0.06)',
+                    }}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {/* Desktop (md+) — original table preserved */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-200 text-left text-gray-500">

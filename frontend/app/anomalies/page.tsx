@@ -8,12 +8,13 @@
  * filters. Replaces the legacy per-doc /analyze/detailed view.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
+import { PullToRefresh } from '@/components/mobile/PullToRefresh';
 import type { AuditFinding } from '@/lib/types/api';
 
 type Severity = 'critical' | 'high' | 'medium' | 'low';
@@ -45,6 +46,11 @@ export default function AnomaliesPage() {
   const [filterSeverity, setFilterSeverity] = useState<SeverityFilter>('all');
   const [filterDetector, setFilterDetector] = useState<string>('all');
   const [filterDocument, setFilterDocument] = useState<string>('all');
+  // v2.9.0 B3 — pull-to-refresh tick (forces useMemo re-evaluation).
+  const [, setRefreshTick] = useState(0);
+  const handleRefresh = useCallback(async () => {
+    setRefreshTick((n) => n + 1);
+  }, []);
 
   // Flatten findings across every audit, enriched with job_id + generated_at.
   const allFindings: EnrichedFinding[] = useMemo(() => {
@@ -121,6 +127,7 @@ export default function AnomaliesPage() {
 
   return (
     <DashboardLayout>
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6">
         {/* Severity summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -235,6 +242,7 @@ export default function AnomaliesPage() {
           </div>
         ))}
       </div>
+      </PullToRefresh>
     </DashboardLayout>
   );
 }

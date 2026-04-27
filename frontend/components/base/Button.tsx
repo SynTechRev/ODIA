@@ -13,6 +13,26 @@
  *   danger     — rose (destructive)
  *   outline    — transparent + gold-edge hairline
  *   ghost      — transparent, emerald-glow on hover
+ *
+ * v2.9.0 B2 — Touch-target policy
+ * -------------------------------
+ * Interactive buttons MUST be at least 44px tall on mobile (iOS HIG;
+ * Material Design wants 48dp). The size scale enforces this:
+ *
+ *   xs → min-h-[32px]   decorative use only (status pills, chips,
+ *                        non-tappable role="button")
+ *   sm → min-h-[40px]   desktop-only secondary actions; do NOT use on
+ *                        surfaces that render below the md: breakpoint
+ *   md → min-h-[44px]   mobile-safe default. Use this everywhere unless
+ *                        you have a specific reason not to.
+ *   lg → min-h-[52px]   primary CTA on mobile hero panels (pull-quote
+ *                        hero, splash, evidence-cover overlay)
+ *
+ * Non-Button interactive elements (raw <button>, <a> with onClick, etc.)
+ * should also hit min-h-[44px] when they appear on mobile-rendered
+ * surfaces. The mobile bottom-tab bar in DashboardLayout, the upload
+ * Remove buttons (B1), and the install prompt (B5) each manage their
+ * own touch target via the matching min-h class.
  */
 
 import React from 'react';
@@ -26,7 +46,7 @@ export interface ButtonProps
     | 'danger'
     | 'outline'
     | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   loading?: boolean;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
@@ -71,9 +91,12 @@ const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {
-  sm: 'px-3 py-1.5 text-sm gap-1.5',
-  md: 'px-4 py-2 text-sm gap-2',
-  lg: 'px-6 py-3 text-base gap-2.5',
+  // v2.9.0 B2 — explicit min-heights enforce mobile touch-target rules
+  // (iOS HIG: 44pt; Material Design: 48dp). xs is decorative-only.
+  xs: 'min-h-[32px] px-2.5 py-1 text-xs gap-1',
+  sm: 'min-h-[40px] px-3 py-1.5 text-sm gap-1.5',
+  md: 'min-h-[44px] px-4 py-2 text-sm gap-2',
+  lg: 'min-h-[52px] px-6 py-3 text-base gap-2.5',
 };
 
 export function Button({

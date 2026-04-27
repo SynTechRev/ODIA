@@ -67,6 +67,29 @@ python scripts/run_audit.py --source data/demo/ --output reports/demo/
 Open `reports/demo/audit_report.md` to see 10 synthetic documents analyzed
 across the nine-detector pipeline. Full walkthrough: [QUICKSTART.md](QUICKSTART.md)
 
+### Mobile (PWA — v2.9.0)
+
+Open your O.D.I.A. instance in **Safari (iOS)** or **Chrome / Edge / Samsung
+Internet (Android)** and add to home screen — installs as a fullscreen app
+with the gold-swirl icon, offline shell, and native-feel pull-to-refresh on
+long-list pages. No App Store, no Play Store, no review cycle.
+
+| Platform | Distribution | Install path |
+|---|---|---|
+| **iOS** | Safari | Share → Add to Home Screen |
+| **Android** | Chrome / Edge / Samsung Internet | "Install" prompt in-app, or three-dot menu → Install app |
+| **Desktop** | Chromium-based browsers | Install icon in URL bar |
+
+The PWA inherits everything the desktop frontend ships: gemstone palette,
+texture system, Manual Triggers panel, RAIA synthesis, evidence packet
+export. Mobile-specific: card-layout file table, 44px touch targets,
+pull-to-refresh on Documents/Results/Anomalies.
+
+Native iOS + Android (Capacitor / App Store / Play Store) are deferred
+to v2.9.1+ pending Apple Developer + Google Play Console accounts.
+
+Full walkthrough: [docs/MOBILE.md](docs/MOBILE.md)
+
 ---
 
 ## Quick Start (for developers)
