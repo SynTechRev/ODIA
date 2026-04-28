@@ -35,6 +35,29 @@ def _build(
     }
 
 
+def _collect_match_excerpts(
+    text: str, patterns: tuple[str, ...], max_excerpts: int = 3, window: int = 30
+) -> list[str]:
+    """Collect short text excerpts around regex matches for evidence anchors.
+
+    v2.9.3 B.1 — extracted from detect_grant_compliance_anomalies so the
+    main detector function stays under McCabe complexity 10. Returns up
+    to ``max_excerpts`` distinct trimmed excerpts of ±``window`` chars
+    around each match.
+    """
+    excerpts: list[str] = []
+    for pat in patterns:
+        for m in re.finditer(pat, text, flags=re.IGNORECASE):
+            start = max(0, m.start() - window)
+            end = min(len(text), m.end() + window)
+            excerpt = text[start:end].replace("\n", " ").strip()
+            if excerpt not in excerpts:
+                excerpts.append(excerpt)
+            if len(excerpts) >= max_excerpts:
+                return excerpts
+    return excerpts
+
+
 def detect_grant_compliance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
     if not isinstance(doc, dict):
@@ -105,18 +128,6 @@ def detect_grant_compliance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any
         # rendered with "(no structured details recorded)" and no JSON
         # block. Surface the COPS-trigger phrases that fired plus the
         # itemisation markers we looked for and didn't find.
-        cops_match_excerpts: list[str] = []
-        for pat in STATUTE_BY_KEY["cops"].patterns:
-            for m in re.finditer(pat, text, flags=re.IGNORECASE):
-                start = max(0, m.start() - 30)
-                end = min(len(text), m.end() + 30)
-                excerpt = text[start:end].replace("\n", " ").strip()
-                if excerpt not in cops_match_excerpts:
-                    cops_match_excerpts.append(excerpt)
-                if len(cops_match_excerpts) >= 3:
-                    break
-            if len(cops_match_excerpts) >= 3:
-                break
         findings.append(
             _build(
                 "grant:cops-without-itemisation",
@@ -127,7 +138,9 @@ def detect_grant_compliance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any
                 "medium",
                 grant_program="COPS Hiring Program",
                 statute=STATUTE_BY_KEY["cops"].citation,
-                trigger_excerpts=cops_match_excerpts,
+                trigger_excerpts=_collect_match_excerpts(
+                    text, STATUTE_BY_KEY["cops"].patterns
+                ),
                 itemisation_markers_searched=list(cops_itemisation_markers),
                 itemisation_markers_found=False,
                 anti_supplant_referenced=has_antisupplanting,
