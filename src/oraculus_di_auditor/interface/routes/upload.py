@@ -185,26 +185,47 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
         except Exception:
             text = path.read_text(encoding="utf-8", errors="replace")
 
-    elif ext == ".pdf":
-        # Delegate to ingestion.engine.extract_text_from_pdf so scanned PDFs
-        # fall through to the Tesseract+Poppler OCR path. A bare pypdf call
-        # here returns empty strings for image-only PDFs and leaves the
-        # text-content detectors with nothing to analyze.
+    text_extraction: dict[str, Any] | None = None
+    if ext == ".pdf":
+        # Delegate to ingestion.engine.extract_text_from_pdf_with_metadata
+        # so scanned PDFs fall through to the Tesseract+Poppler OCR path
+        # AND we record which extraction path actually fired (v2.9.3 A.3).
         try:
-            from oraculus_di_auditor.ingestion.engine import extract_text_from_pdf
+            from oraculus_di_auditor.ingestion.engine import (
+                extract_text_from_pdf_with_metadata,
+            )
 
-            text = extract_text_from_pdf(path)
+            result = extract_text_from_pdf_with_metadata(path)
+            text = result.text
+            text_extraction = {
+                "method": result.method,
+                "char_count": result.char_count,
+                "ocr_used": result.method == "tesseract_ocr",
+            }
         except ImportError:
             text = f"[PDF: {path.name} — install pypdf to extract text]"
+            text_extraction = {
+                "method": "pypdf_unavailable",
+                "char_count": 0,
+                "ocr_used": False,
+            }
         except Exception as exc:
             text = f"[PDF: {path.name} — extraction error: {exc}]"
+            text_extraction = {
+                "method": "failed",
+                "char_count": 0,
+                "ocr_used": False,
+            }
 
-    return {
+    out: dict[str, Any] = {
         "document_id": path.stem,
         "raw_text": text,
         "title": path.name,
         "source": str(path),
     }
+    if text_extraction is not None:
+        out["text_extraction"] = text_extraction
+    return out
 
 
 def _ocr_image(path: Path) -> tuple[str, str]:
@@ -412,12 +433,18 @@ def _execute_audit_job(
     docs_processed = 0
 
     try:
-        from oraculus_di_auditor.analysis import analyze_document
+        from oraculus_di_auditor.analysis import (
+            analyze_document,
+            find_blank_required_fields,
+        )
 
         with _STORE_LOCK:
             files_snapshot = [_FILES[fid] for fid in file_ids if fid in _FILES]
 
         total = len(files_snapshot)
+        # v2.9.3 D.2 — accumulate per-document blank-field state for the
+        # corpus-scope rollup finding emitted after the per-document loop.
+        blank_field_rollup: list[dict[str, Any]] = []
 
         for i, file_meta in enumerate(files_snapshot):
             _update(
@@ -438,14 +465,63 @@ def _execute_audit_job(
             all_findings.extend(findings)
             docs_processed += 1
 
-            doc_manifests.append(
+            manifest_entry: dict[str, Any] = {
+                "document_id": doc["document_id"],
+                "filename": file_meta["name"],
+                "sha256": file_meta["sha256"],
+                "size": file_meta["size"],
+                "format": file_meta["format"],
+                "finding_count": len(findings),
+            }
+            # v2.9.3 A.3 — surface OCR fallback status when available so
+            # the evidence packet's executive summary can flag silent-
+            # failure scans (PDFs where pypdf returned <500 chars and OCR
+            # libs were absent).
+            if doc.get("text_extraction"):
+                manifest_entry["text_extraction"] = doc["text_extraction"]
+            doc_manifests.append(manifest_entry)
+
+            # v2.9.3 D.2 — accumulate blank-field state for the corpus
+            # rollup; per-doc emission is gated off by default.
+            blank = find_blank_required_fields(doc)
+            if blank:
+                blank_field_rollup.append(
+                    {
+                        "document_id": doc["document_id"],
+                        "filename": file_meta["name"],
+                        "missing": blank,
+                    }
+                )
+
+        # v2.9.3 D.2 — single corpus-scope finding replacing the
+        # per-document echoes that fired on 100% of corpora pre-2.9.3.
+        # Severity stays MEDIUM because a corpus-wide pattern of
+        # incomplete metadata is still a real records-management gap;
+        # the difference is the count: 1 corpus finding instead of N.
+        if blank_field_rollup:
+            all_findings.append(
                 {
-                    "document_id": doc["document_id"],
-                    "filename": file_meta["name"],
-                    "sha256": file_meta["sha256"],
-                    "size": file_meta["size"],
-                    "format": file_meta["format"],
-                    "finding_count": len(findings),
+                    "id": "admin:blank-required-fields-corpus",
+                    "issue": (
+                        f"Required metadata fields blank on "
+                        f"{len(blank_field_rollup)} of "
+                        f"{len(files_snapshot)} document(s)"
+                    ),
+                    "severity": "medium",
+                    "layer": "administrative",
+                    "scope": "corpus",
+                    "document_id": "_corpus_",
+                    "details": {
+                        "total_affected": len(blank_field_rollup),
+                        "total_documents": len(files_snapshot),
+                        "affected_documents": blank_field_rollup,
+                        "required_fields": [
+                            "status",
+                            "vote_result",
+                            "meeting_date",
+                            "agenda_number",
+                        ],
+                    },
                 }
             )
 

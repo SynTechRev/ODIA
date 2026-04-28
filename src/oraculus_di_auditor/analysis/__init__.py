@@ -4,7 +4,10 @@ Provides cross-reference auditing and a multi-detector audit engine spanning
 fiscal, constitutional, and surveillance layers.
 """
 
-from .administrative_integrity import detect_administrative_anomalies
+from .administrative_integrity import (
+    detect_administrative_anomalies,
+    find_blank_required_fields,
+)
 from .audit_engine import analyze_document
 from .constitutional import detect_constitutional_anomalies
 from .cross_reference import cross_reference_audit, detect_cross_jurisdiction_refs
@@ -22,6 +25,7 @@ __all__ = [
     "detect_cross_jurisdiction_refs",
     "detect_fiscal_anomalies",
     "detect_administrative_anomalies",
+    "find_blank_required_fields",
     "detect_constitutional_anomalies",
     "detect_governance_gap_anomalies",
     "detect_procurement_timeline_anomalies",

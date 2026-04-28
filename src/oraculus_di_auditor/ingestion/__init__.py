@@ -6,12 +6,14 @@ segmentation, and metadata generation (Phase 4 & Phase 7).
 """
 
 from .engine import (
+    TextExtractionResult,
     compute_file_hash,
     compute_text_hash,
     extract_text_from_file,
     extract_text_from_html,
     extract_text_from_html_file,
     extract_text_from_pdf,
+    extract_text_from_pdf_with_metadata,
     ingest_document,
     ingest_text,
     segment_text,
@@ -26,10 +28,12 @@ __all__ = [
     "ingest_document",
     "ingest_text",
     "extract_text_from_pdf",
+    "extract_text_from_pdf_with_metadata",
     "extract_text_from_html",
     "extract_text_from_html_file",
     "extract_text_from_file",
     "segment_text",
     "compute_file_hash",
     "compute_text_hash",
+    "TextExtractionResult",
 ]

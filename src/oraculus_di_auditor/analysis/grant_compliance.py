@@ -16,6 +16,7 @@ references appear without the corresponding compliance language.
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from .text_utils import extract_text_content
@@ -98,6 +99,24 @@ def detect_grant_compliance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any
     )
     text_lower = text.lower()
     if has_cops and not any(m in text_lower for m in cops_itemisation_markers):
+        # v2.9.3 B.1 — populate the evidence dict so the rendered finding
+        # sheet carries Technical Evidence JSON. The pre-2.9.3 emission
+        # passed an empty details dict, leaving 10/10 sheets in Run-12
+        # rendered with "(no structured details recorded)" and no JSON
+        # block. Surface the COPS-trigger phrases that fired plus the
+        # itemisation markers we looked for and didn't find.
+        cops_match_excerpts: list[str] = []
+        for pat in STATUTE_BY_KEY["cops"].patterns:
+            for m in re.finditer(pat, text, flags=re.IGNORECASE):
+                start = max(0, m.start() - 30)
+                end = min(len(text), m.end() + 30)
+                excerpt = text[start:end].replace("\n", " ").strip()
+                if excerpt not in cops_match_excerpts:
+                    cops_match_excerpts.append(excerpt)
+                if len(cops_match_excerpts) >= 3:
+                    break
+            if len(cops_match_excerpts) >= 3:
+                break
         findings.append(
             _build(
                 "grant:cops-without-itemisation",
@@ -106,6 +125,12 @@ def detect_grant_compliance_anomalies(doc: dict[str, Any]) -> list[dict[str, Any
                     "hiring and technology expenditures must be separated"
                 ),
                 "medium",
+                grant_program="COPS Hiring Program",
+                statute=STATUTE_BY_KEY["cops"].citation,
+                trigger_excerpts=cops_match_excerpts,
+                itemisation_markers_searched=list(cops_itemisation_markers),
+                itemisation_markers_found=False,
+                anti_supplant_referenced=has_antisupplanting,
             )
         )
 

@@ -47,22 +47,27 @@ interface FindingGroup {
   issue: string;
   layer: string;
   severity: string;
-  document_ids: Set<string>;
+  document_ids: Set<string>; // distinct AuditFinding.document_id values
+  unique_shas: Set<string>;  // v2.9.3 C.1 — distinct SHA-256s (deduped)
   job_ids: Set<string>;
-  count: number;
+  count: number;             // raw emission count across all audits
 }
 
 interface VendorGroup {
   vendor: string;
-  count: number;
-  severities: Record<Severity, number>;
-  document_ids: Set<string>;
+  count: number;                              // vendor-tagged finding count
+  severities: Record<Severity, number>;       // severity histogram of vendor-tagged findings
+  document_ids: Set<string>;                  // doc_ids carrying this vendor
+  unique_shas: Set<string>;                   // v2.9.3 C.2 — SHAs carrying this vendor
+  related_count: number;                      // v2.9.3 C.2 — total findings on those docs
+  related_severities: Record<Severity, number>; // v2.9.3 C.2 — full severity histogram
 }
 
 interface StatuteGroup {
   statute: string;
   count: number;
   document_ids: Set<string>;
+  unique_shas: Set<string>;
 }
 
 function pctOf(part: number, whole: number): string {
@@ -100,12 +105,40 @@ export default function SynthesisPage() {
     const byVendor = new Map<string, VendorGroup>();
     const byStatute = new Map<string, StatuteGroup>();
 
+    // v2.9.3 C.1 — `document_id` on AuditFinding is the per-audit
+    // document handle, not the SHA-256. Building a job-scoped doc_id →
+    // sha256 map lets the aggregations report unique-SHA counts that
+    // don't double-count the same bytes uploaded under different
+    // filenames. Without this, the MAS top-findings table reports
+    // "50 docs / 50 occurrences" because doc_id IS the per-upload
+    // handle (the run-12 silent-failure motivating example).
+    const docIdToSha = new Map<string, string>(); // key: `${job_id}::${document_id}`
+    // v2.9.3 C.2 — also build a vendor-per-document index so the vendor
+    // aggregation can produce a related-findings severity histogram
+    // (covering ALL findings on docs where the vendor was detected,
+    // not just the LOW-severity vendor-detected:* emissions).
+    const docVendors = new Map<string, Set<string>>(); // key: `${job_id}::${document_id}`
+
     for (const entry of entries) {
       for (const doc of entry.results.document_manifest ?? []) {
         uniqueDocs.add(doc.sha256);
+        docIdToSha.set(`${entry.job_id}::${doc.document_id}`, doc.sha256);
       }
+      // First pass: index vendors by document so the second pass can
+      // attribute every finding on a vendor-tagged document.
+      for (const f of entry.results.findings ?? []) {
+        const vendor = (f.details as Record<string, unknown>)?.vendor;
+        if (typeof vendor === 'string' && vendor.length > 0) {
+          const k = `${entry.job_id}::${f.document_id}`;
+          if (!docVendors.has(k)) docVendors.set(k, new Set<string>());
+          docVendors.get(k)!.add(vendor);
+        }
+      }
+
       for (const f of entry.results.findings ?? []) {
         if (f.severity in severity) severity[f.severity as Severity] += 1;
+        const docKey = `${entry.job_id}::${f.document_id}`;
+        const sha = docIdToSha.get(docKey) ?? f.document_id;
 
         // Group by finding id
         const fg = byFindingId.get(f.id);
@@ -116,36 +149,56 @@ export default function SynthesisPage() {
             layer: f.layer,
             severity: f.severity,
             document_ids: new Set([f.document_id]),
+            unique_shas: new Set([sha]),
             job_ids: new Set([entry.job_id]),
             count: 1,
           });
         } else {
           fg.document_ids.add(f.document_id);
+          fg.unique_shas.add(sha);
           fg.job_ids.add(entry.job_id);
           fg.count += 1;
         }
 
-        // Group by vendor (surveillance detector)
+        // Group by vendor (surveillance detector — vendor-tagged emissions)
         const vendor = (f.details as Record<string, unknown>)?.vendor;
         if (typeof vendor === 'string' && vendor.length > 0) {
-          const vg = byVendor.get(vendor);
+          let vg = byVendor.get(vendor);
           if (!vg) {
-            const init: VendorGroup = {
+            vg = {
               vendor,
-              count: 1,
+              count: 0,
               severities: { critical: 0, high: 0, medium: 0, low: 0 },
-              document_ids: new Set([f.document_id]),
+              document_ids: new Set<string>(),
+              unique_shas: new Set<string>(),
+              related_count: 0,
+              related_severities: { critical: 0, high: 0, medium: 0, low: 0 },
             };
-            if (f.severity in init.severities) {
-              init.severities[f.severity as Severity] = 1;
+            byVendor.set(vendor, vg);
+          }
+          vg.count += 1;
+          if (f.severity in vg.severities) {
+            vg.severities[f.severity as Severity] += 1;
+          }
+          vg.document_ids.add(f.document_id);
+          vg.unique_shas.add(sha);
+        }
+
+        // v2.9.3 C.2 — related-findings tally: every finding on a
+        // vendor-tagged document, regardless of which detector emitted
+        // it, contributes to the vendor's related-severity histogram.
+        // This is what answers "Axon-related risk profile" (mixed
+        // severities) instead of "vendor-detection emissions" (all LOW).
+        const vendorsOnDoc = docVendors.get(docKey);
+        if (vendorsOnDoc) {
+          for (const vName of vendorsOnDoc) {
+            const vg = byVendor.get(vName);
+            if (vg) {
+              vg.related_count += 1;
+              if (f.severity in vg.related_severities) {
+                vg.related_severities[f.severity as Severity] += 1;
+              }
             }
-            byVendor.set(vendor, init);
-          } else {
-            vg.count += 1;
-            if (f.severity in vg.severities) {
-              vg.severities[f.severity as Severity] += 1;
-            }
-            vg.document_ids.add(f.document_id);
           }
         }
 
@@ -158,10 +211,12 @@ export default function SynthesisPage() {
               statute,
               count: 1,
               document_ids: new Set([f.document_id]),
+              unique_shas: new Set([sha]),
             });
           } else {
             sg.count += 1;
             sg.document_ids.add(f.document_id);
+            sg.unique_shas.add(sha);
           }
         }
       }
@@ -171,7 +226,7 @@ export default function SynthesisPage() {
       const sevDiff =
         (SEV_ORDER[a.severity] ?? 99) - (SEV_ORDER[b.severity] ?? 99);
       if (sevDiff !== 0) return sevDiff;
-      return b.document_ids.size - a.document_ids.size;
+      return b.unique_shas.size - a.unique_shas.size;
     });
 
     const byVendorArr = [...byVendor.values()].sort((a, b) => b.count - a.count);
@@ -219,25 +274,41 @@ export default function SynthesisPage() {
     if (byFinding.length === 0) {
       lines.push(`_No findings._`);
     } else {
-      lines.push(`| Finding ID | Detector | Severity | Docs | Occurrences | Issue |`);
+      // v2.9.3 C.1 — "Unique SHAs" replaces "Docs" so duplicate uploads
+      // of the same bytes don't inflate the prevalence count. "Total
+      // Emissions" replaces the ambiguous "Occurrences".
+      lines.push(`| Finding ID | Detector | Severity | Unique SHAs | Total Emissions | Issue |`);
       lines.push(`|-----------|---------|----------|-----:|-----:|-------|`);
       for (const f of byFinding.slice(0, 25)) {
         const issueEscaped = f.issue.replace(/\|/g, '\\|');
         lines.push(
-          `| \`${f.id}\` | ${f.layer} | ${f.severity} | ${f.document_ids.size} | ${f.count} | ${issueEscaped} |`,
+          `| \`${f.id}\` | ${f.layer} | ${f.severity} | ${f.unique_shas.size} | ${f.count} | ${issueEscaped} |`,
         );
       }
     }
     lines.push('');
 
     if (byVendor.length > 0) {
+      // v2.9.3 C.2 — split detection emissions from related-findings
+      // severity histogram. The pre-2.9.3 column reported the severity
+      // of `vendor-detected:*` emissions only (uniformly LOW, which is
+      // misleading). "Related findings C/H/M/L" reflects every finding
+      // on documents where the vendor was detected, regardless of which
+      // detector emitted it — that's the column that answers "what's
+      // this vendor's actual risk surface?"
       lines.push(`## Vendor aggregation`);
       lines.push('');
-      lines.push(`| Vendor | Findings | Documents | Critical | High | Medium | Low |`);
-      lines.push(`|--------|---------:|----------:|---------:|-----:|-------:|----:|`);
+      lines.push(
+        `| Vendor | Detections | Unique SHAs | Related Findings | C/H/M/L (related) |`,
+      );
+      lines.push(
+        `|--------|-----------:|------------:|-----------------:|-------------------|`,
+      );
       for (const v of byVendor) {
+        const sev = v.related_severities;
+        const breakdown = `${sev.critical}/${sev.high}/${sev.medium}/${sev.low}`;
         lines.push(
-          `| ${v.vendor} | ${v.count} | ${v.document_ids.size} | ${v.severities.critical} | ${v.severities.high} | ${v.severities.medium} | ${v.severities.low} |`,
+          `| ${v.vendor} | ${v.count} | ${v.unique_shas.size} | ${v.related_count} | ${breakdown} |`,
         );
       }
       lines.push('');
@@ -393,8 +464,8 @@ export default function SynthesisPage() {
               'Finding ID',
               'Detector',
               'Severity',
-              'Docs',
-              'Occurrences',
+              'Unique SHAs',
+              'Total Emissions',
               'Issue',
             ]),
             ...byFinding
@@ -404,7 +475,7 @@ export default function SynthesisPage() {
                   f.id,
                   f.layer,
                   f.severity,
-                  String(f.document_ids.size),
+                  String(f.unique_shas.size),
                   String(f.count),
                   f.issue,
                 ]),
@@ -422,8 +493,9 @@ export default function SynthesisPage() {
           [
             headerRow([
               'Vendor',
-              'Findings',
-              'Documents',
+              'Detections',
+              'Unique SHAs',
+              'Related',
               'Critical',
               'High',
               'Medium',
@@ -433,15 +505,16 @@ export default function SynthesisPage() {
               dataRow([
                 v.vendor,
                 String(v.count),
-                String(v.document_ids.size),
-                String(v.severities.critical),
-                String(v.severities.high),
-                String(v.severities.medium),
-                String(v.severities.low),
+                String(v.unique_shas.size),
+                String(v.related_count),
+                String(v.related_severities.critical),
+                String(v.related_severities.high),
+                String(v.related_severities.medium),
+                String(v.related_severities.low),
               ]),
             ),
           ],
-          [2760, 1100, 1100, 1100, 1100, 1100, 1100], // 7 cols, Vendor widest
+          [2400, 900, 900, 900, 900, 900, 900, 900], // 8 cols, Vendor widest
         ),
       );
     }
@@ -613,11 +686,11 @@ export default function SynthesisPage() {
                   </div>
                   <div className="text-right text-xs text-gray-600 flex-shrink-0">
                     <div>
-                      <span className="font-semibold">{f.document_ids.size}</span>{' '}
-                      doc{f.document_ids.size === 1 ? '' : 's'}
+                      <span className="font-semibold">{f.unique_shas.size}</span>{' '}
+                      SHA{f.unique_shas.size === 1 ? '' : 's'}
                     </div>
                     <div>
-                      <span className="font-semibold">{f.count}</span> occurrence
+                      <span className="font-semibold">{f.count}</span> emission
                       {f.count === 1 ? '' : 's'}
                     </div>
                   </div>
@@ -644,15 +717,27 @@ export default function SynthesisPage() {
                 {byVendor.map((v) => (
                   <div
                     key={v.vendor}
-                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 gap-3"
                   >
-                    <div className="font-medium text-gray-900">{v.vendor}</div>
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="text-gray-500">
-                        {v.document_ids.size} doc{v.document_ids.size === 1 ? '' : 's'}
-                      </span>
-                      <span className="text-gray-500">· {v.count} findings</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-gray-900">{v.vendor}</div>
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        {v.unique_shas.size} SHA{v.unique_shas.size === 1 ? '' : 's'} ·{' '}
+                        {v.count} detection{v.count === 1 ? '' : 's'}
+                      </div>
                     </div>
+                    {/* v2.9.3 C.2 — related-findings severity histogram */}
+                    {v.related_count > 0 && (
+                      <div className="text-xs text-gray-600 flex-shrink-0 text-right">
+                        <div className="font-mono">
+                          {v.related_severities.critical}/
+                          {v.related_severities.high}/
+                          {v.related_severities.medium}/
+                          {v.related_severities.low}
+                        </div>
+                        <div className="text-[10px] text-gray-400">C/H/M/L related</div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -8,10 +8,39 @@ in the provenance chain regardless of the underlying action's validity.
 
 from __future__ import annotations
 
+import os
 import re
 from typing import Any
 
 from .text_utils import extract_text_content
+
+
+def _per_doc_blank_fields_enabled() -> bool:
+    """Return True iff per-document `admin:blank-required-fields` should fire.
+
+    v2.9.3 D.2 — fires on 100% of corpus documents because every PDF
+    lacks one or more of the legacy CivicPlus fields (status,
+    vote_result, meeting_date, agenda_number). Default is now OFF; the
+    audit pipeline emits a single corpus-scope rollup finding instead.
+    Operators who want the per-document echoes can opt back in via:
+
+        ODIA_PER_DOC_BLANK_FIELDS=1
+    """
+    flag = os.environ.get("ODIA_PER_DOC_BLANK_FIELDS", "")
+    return flag.lower() in ("1", "true", "yes", "on")
+
+
+def find_blank_required_fields(doc: dict[str, Any]) -> list[str]:
+    """Return the list of required metadata fields blank on this document.
+
+    v2.9.3 D.2 — exported so the audit pipeline can produce a single
+    corpus-scope rollup finding without duplicating the per-document
+    detection logic.
+    """
+    if not isinstance(doc, dict):
+        return []
+    blank = [f for f in REQUIRED_METADATA_FIELDS if _is_blank(doc.get(f))]
+    return [f for f in blank if f != "final_action"]
 
 # Required metadata fields that must be present and non-empty
 REQUIRED_METADATA_FIELDS = [
@@ -112,7 +141,7 @@ def detect_administrative_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]
         f for f in blank_fields if f != "final_action"
     ]
 
-    if blank_fields_excluding_final_action:
+    if blank_fields_excluding_final_action and _per_doc_blank_fields_enabled():
         anomalies.append(
             {
                 "id": "admin:blank-required-fields",

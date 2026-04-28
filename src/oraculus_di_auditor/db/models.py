@@ -441,11 +441,18 @@ class SeenHash(Base):  # type: ignore
     first_seen_at = Column(DateTime, default=lambda: datetime.now(UTC), nullable=False)
     document_id = Column(String(255), nullable=True, index=True)
     jurisdiction_id = Column(String(100), nullable=True, index=True)
+    # v2.9.3 Track A.2 — extraction provenance. Nullable for backward
+    # compatibility with rows written before the columns existed; the
+    # session-bootstrap helper ALTER-TABLE-ADDs the columns on existing
+    # SQLite databases via _migrate_seen_hash_extraction_columns().
+    text_extraction_method = Column(String(32), nullable=True)
+    text_char_count = Column(Integer, nullable=True)
 
     def __repr__(self) -> str:
         return (
             f"<SeenHash(sha256='{self.sha256[:16]}...', "
-            f"jurisdiction_id='{self.jurisdiction_id}')>"
+            f"jurisdiction_id='{self.jurisdiction_id}', "
+            f"extraction='{self.text_extraction_method}')>"
         )
 
 

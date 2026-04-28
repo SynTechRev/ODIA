@@ -137,8 +137,13 @@ def test_whitespace_final_action_treated_as_blank():
 # ---------------------------------------------------------------------------
 
 
-def test_blank_required_fields_flagged():
-    """Missing status and vote_result → medium severity."""
+def test_blank_required_fields_flagged(monkeypatch):
+    """Missing status and vote_result → medium severity.
+
+    v2.9.3 D.2 — per-document emission is opt-in. Tests that exercise
+    the per-document detector path explicitly enable it.
+    """
+    monkeypatch.setenv("ODIA_PER_DOC_BLANK_FIELDS", "1")
     doc = _doc(
         "Item tabled.",
         final_action="Tabled",
@@ -152,7 +157,8 @@ def test_blank_required_fields_flagged():
     assert finding["layer"] == "administrative"
 
 
-def test_blank_fields_details_list_missing_fields():
+def test_blank_fields_details_list_missing_fields(monkeypatch):
+    monkeypatch.setenv("ODIA_PER_DOC_BLANK_FIELDS", "1")
     doc = _doc(
         "Item tabled.",
         final_action="Tabled",
@@ -169,9 +175,10 @@ def test_blank_fields_details_list_missing_fields():
     assert finding["details"]["field_count"] == 3
 
 
-def test_final_action_not_double_reported_in_blank_fields():
+def test_final_action_not_double_reported_in_blank_fields(monkeypatch):
     """When final_action triggers missing-final-action, it must not also
     appear in blank-required-fields details."""
+    monkeypatch.setenv("ODIA_PER_DOC_BLANK_FIELDS", "1")
     doc = _doc(
         "Resolution was approved.",
         status="Closed",
@@ -188,7 +195,8 @@ def test_final_action_not_double_reported_in_blank_fields():
         assert "final_action" not in blank_finding["details"]["blank_fields"]
 
 
-def test_empty_string_fields_treated_as_blank():
+def test_empty_string_fields_treated_as_blank(monkeypatch):
+    monkeypatch.setenv("ODIA_PER_DOC_BLANK_FIELDS", "1")
     doc = _doc(
         "Passed unanimously.",
         final_action="Passed",
@@ -204,6 +212,35 @@ def test_empty_string_fields_treated_as_blank():
     )
     assert "status" in finding["details"]["blank_fields"]
     assert "vote_result" in finding["details"]["blank_fields"]
+
+
+def test_blank_fields_gated_off_by_default():
+    """v2.9.3 D.2 — per-document emission silenced unless opted in."""
+    doc = _doc(
+        "Item tabled.",
+        final_action="Tabled",
+        meeting_date="2024-03-15",
+    )
+    anomalies = detect_administrative_anomalies(doc)
+    assert not any(a["id"] == "admin:blank-required-fields" for a in anomalies)
+
+
+def test_find_blank_required_fields_helper():
+    """v2.9.3 D.2 — extracted helper for the corpus-scope rollup."""
+    from oraculus_di_auditor.analysis.administrative_integrity import (
+        find_blank_required_fields,
+    )
+
+    doc = _doc(
+        "Item tabled.",
+        final_action="Tabled",
+        meeting_date="2024-03-15",
+    )
+    blank = find_blank_required_fields(doc)
+    assert "status" in blank
+    assert "vote_result" in blank
+    assert "agenda_number" in blank
+    assert "final_action" not in blank  # excluded — handled separately
 
 
 # ---------------------------------------------------------------------------
@@ -309,8 +346,9 @@ def test_retroactive_and_misfiling_both_fire():
     assert "admin:potential-misfiling" in ids
 
 
-def test_missing_final_action_and_blank_fields_together():
+def test_missing_final_action_and_blank_fields_together(monkeypatch):
     """Blank final_action with approval text AND other blank fields → two findings."""
+    monkeypatch.setenv("ODIA_PER_DOC_BLANK_FIELDS", "1")
     doc = _doc("Resolution approved by council.")
     # No metadata at all → final_action blank + all other fields blank
     ids = _ids(doc)

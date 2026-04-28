@@ -10,9 +10,32 @@ import hashlib
 import logging
 import os
 import re
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+
+@dataclass(frozen=True)
+class TextExtractionResult:
+    """Structured result from PDF text extraction (v2.9.3 Track A.1).
+
+    Carries enough metadata for ingest_document() / run_audit to persist
+    *which* extraction path actually produced the text, so silent-failure
+    PDFs (image-only scans where pypdf returns near-empty content and
+    OCR was unavailable) become visible in the evidence packet rather
+    than being indistinguishable from real text-only documents.
+
+    method values:
+        ``"pypdf"``           — pypdf text-layer succeeded above threshold
+        ``"tesseract_ocr"``   — pypdf returned <500 chars, OCR fallback ran
+        ``"ocr_unavailable"`` — pypdf returned <500 chars, OCR libs absent
+        ``"failed"``          — both paths errored / returned empty
+    """
+
+    text: str
+    method: str
+    char_count: int
 
 logger = logging.getLogger(__name__)
 
@@ -84,22 +107,23 @@ class HTMLTextExtractor(HTMLParser):  # type: ignore
         return " ".join(self.text_parts)
 
 
-def extract_text_from_pdf(file_path: str | Path) -> str:
-    """Extract text from PDF file.
+def extract_text_from_pdf_with_metadata(
+    file_path: str | Path,
+) -> TextExtractionResult:
+    """Extract text from PDF and report which path produced it (v2.9.3).
 
-    First attempts pypdf's native text-layer extraction. When that
-    yields fewer than ``_OCR_MIN_TEXT_LENGTH`` non-whitespace characters
-    the document is assumed to be scanned / image-only and the OCR
-    fallback is invoked (``pdf2image`` + ``pytesseract``). If OCR
-    libraries or binaries are unavailable the pypdf result (possibly
-    empty) is returned without raising, so callers see graceful
-    degradation rather than a hard failure on scanned documents.
+    Same logic as :func:`extract_text_from_pdf` but returns a structured
+    :class:`TextExtractionResult` so callers can persist the extraction
+    method on the document record. The string-only function delegates
+    to this one.
 
     Args:
         file_path: Path to PDF file.
 
     Returns:
-        Extracted text content, best-effort across the two strategies.
+        ``TextExtractionResult(text, method, char_count)`` where ``method``
+        is one of ``"pypdf"``, ``"tesseract_ocr"``, ``"ocr_unavailable"``,
+        or ``"failed"``.
 
     Raises:
         ImportError: If pypdf itself is not installed.
@@ -116,6 +140,7 @@ def extract_text_from_pdf(file_path: str | Path) -> str:
 
     # Text-layer extraction via pypdf.
     text = ""
+    method = "pypdf"
     try:
         reader = PdfReader(str(file_path))
         text_parts = [page.extract_text() or "" for page in reader.pages]
@@ -123,20 +148,27 @@ def extract_text_from_pdf(file_path: str | Path) -> str:
     except Exception as exc:  # noqa: BLE001 - fall through to OCR
         logger.warning("pypdf text-layer extraction failed for %s: %s", file_path, exc)
 
+    pypdf_chars = len(text.strip())
+
     # If the text layer is near-empty the PDF is likely scanned. Attempt
     # OCR via pdf2image + pytesseract. Requires Tesseract + Poppler
     # binaries, which bundled_binaries.configure_bundled_binaries() wires
     # up under the PyInstaller desktop bundle; otherwise they must be on
     # the system PATH.
-    if len(text.strip()) < _OCR_MIN_TEXT_LENGTH:
+    if pypdf_chars < _OCR_MIN_TEXT_LENGTH:
         try:
             ocr_text = _ocr_pdf_fallback(file_path)
-            if len(ocr_text.strip()) > len(text.strip()):
+            if len(ocr_text.strip()) > pypdf_chars:
                 text = ocr_text
+                method = "tesseract_ocr"
         except ImportError as exc:
             logger.info("OCR fallback unavailable for %s: %s", file_path, exc)
+            method = "ocr_unavailable"
         except Exception as exc:  # noqa: BLE001 - never propagate OCR errors
             logger.warning("OCR fallback failed for %s: %s", file_path, exc)
+            method = "failed"
+
+    char_count = len(text.strip())
 
     # Fail-loud: a large PDF that's still under threshold after OCR is
     # almost certainly an extraction bug. Emit a WARNING so operators
@@ -146,16 +178,37 @@ def extract_text_from_pdf(file_path: str | Path) -> str:
         size = file_path.stat().st_size
     except OSError:
         size = 0
-    if size >= _LARGE_FILE_BYTES and len(text.strip()) < _OCR_MIN_TEXT_LENGTH:
+    if size >= _LARGE_FILE_BYTES and char_count < _OCR_MIN_TEXT_LENGTH:
         logger.warning(
             "PDF extraction produced only %d chars from %d-byte file %s — "
             "downstream detectors will flag this via ingestion:extraction-failure",
-            len(text.strip()),
+            char_count,
             size,
             file_path,
         )
 
-    return text
+    return TextExtractionResult(text=text, method=method, char_count=char_count)
+
+
+def extract_text_from_pdf(file_path: str | Path) -> str:
+    """Extract text from PDF file.
+
+    Backwards-compatible thin wrapper over
+    :func:`extract_text_from_pdf_with_metadata`. Returns just the text;
+    new callers that need the extraction method should use
+    ``extract_text_from_pdf_with_metadata`` directly.
+
+    Args:
+        file_path: Path to PDF file.
+
+    Returns:
+        Extracted text content, best-effort across pypdf + OCR fallback.
+
+    Raises:
+        ImportError: If pypdf itself is not installed.
+        FileNotFoundError: If ``file_path`` does not exist.
+    """
+    return extract_text_from_pdf_with_metadata(file_path).text
 
 
 def _ocr_pdf_fallback(file_path: Path) -> str:
@@ -394,9 +447,14 @@ def ingest_document(
     # Detect format from extension
     ext = file_path.suffix.lower()
 
-    # Extract text based on format
+    # Extract text based on format. PDFs additionally report which
+    # extraction path produced the text (pypdf vs OCR fallback) so the
+    # audit trail surfaces silent-failure scans (v2.9.3 Track A.2).
+    text_extraction_method: str | None = None
     if ext == ".pdf":
-        text = extract_text_from_pdf(file_path)
+        result = extract_text_from_pdf_with_metadata(file_path)
+        text = result.text
+        text_extraction_method = result.method
         format_name = "pdf"
     elif ext in [".html", ".htm"]:
         text = extract_text_from_html_file(file_path)
@@ -414,6 +472,7 @@ def ingest_document(
 
     # Segment text
     segments = segment_text(text)
+    text_char_count = len(text.strip())
 
     # Compute hash
     file_hash = compute_file_hash(file_path)
@@ -433,9 +492,13 @@ def ingest_document(
             file_hash,
             document_id=file_hash,
             jurisdiction_id=jurisdiction_id,
+            text_extraction_method=text_extraction_method,
+            text_char_count=text_char_count if format_name == "pdf" else None,
         )
 
-    # Build metadata
+    # Build metadata. text_extraction is PDF-only — other formats don't
+    # have an analogous "extraction method" concept (HTML/TXT are read
+    # directly), so the field is omitted rather than set to None.
     doc_metadata = {
         "source_path": str(file_path.absolute()),
         "file_name": file_path.name,
@@ -449,6 +512,12 @@ def ingest_document(
         "first_seen_at": first_seen_at,
         **metadata,
     }
+    if text_extraction_method is not None:
+        doc_metadata["text_extraction"] = {
+            "method": text_extraction_method,
+            "char_count": text_char_count,
+            "ocr_used": text_extraction_method == "tesseract_ocr",
+        }
 
     return {
         "text": text,
@@ -567,6 +636,8 @@ def record_seen_hash(
     sha256: str,
     document_id: str | None = None,
     jurisdiction_id: str | None = None,
+    text_extraction_method: str | None = None,
+    text_char_count: int | None = None,
 ) -> None:
     """Insert a new SeenHash row. First-write-wins on duplicates.
 
@@ -574,6 +645,11 @@ def record_seen_hash(
     exist (via ``check_seen_hash``); this function still catches
     IntegrityError so a race between two concurrent ingests of the
     same bytes doesn't raise.
+
+    v2.9.3 Track A.2 — accept ``text_extraction_method`` and
+    ``text_char_count`` so the audit trail shows which documents went
+    through OCR. Both are optional / nullable to keep callers that
+    don't compute them (legacy ingestion paths) backward-compatible.
     """
     try:
         from oraculus_di_auditor.db import models as db_models
@@ -584,22 +660,37 @@ def record_seen_hash(
     if not hasattr(db_models, "SeenHash"):
         return
 
+    # Build kwargs conditionally so call sites pinned at the older
+    # SeenHash schema (no extraction columns) don't fail with
+    # "TypeError: unexpected keyword argument" on import-time pickled
+    # references. The runtime ALTER TABLE in init_db() ensures the
+    # columns exist when these fields land on a real DB.
+    kwargs: dict[str, Any] = {
+        "sha256": sha256,
+        "document_id": document_id,
+        "jurisdiction_id": jurisdiction_id,
+    }
+    if text_extraction_method is not None and hasattr(
+        db_models.SeenHash, "text_extraction_method"
+    ):
+        kwargs["text_extraction_method"] = text_extraction_method
+    if text_char_count is not None and hasattr(
+        db_models.SeenHash, "text_char_count"
+    ):
+        kwargs["text_char_count"] = text_char_count
+
     try:
         with get_db() as session:
-            session.add(
-                db_models.SeenHash(
-                    sha256=sha256,
-                    document_id=document_id,
-                    jurisdiction_id=jurisdiction_id,
-                )
-            )
+            session.add(db_models.SeenHash(**kwargs))
             session.commit()
     except Exception as exc:  # noqa: BLE001 — dedup is advisory
         logger.warning("ingestion seen_hash write failed: %s", exc)
 
 
 __all__ = [
+    "TextExtractionResult",
     "extract_text_from_pdf",
+    "extract_text_from_pdf_with_metadata",
     "extract_text_from_html",
     "extract_text_from_html_file",
     "extract_text_from_file",

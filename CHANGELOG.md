@@ -1,5 +1,49 @@
 # Changelog
 
+## [2.9.3] - 2026-04-28 — Detector Calibration Sweep + OCR Coverage
+
+The Run-12 evidence packet (70 Visalia documents, 415 findings) revealed a P0 silent-failure mode: 8 of 38 unique SHAs (the actual Flock contracts, the Axon staff report, the JAG allocations PDF) emitted ONLY noise-floor findings because their text-extraction returned near-empty content and the audit pipeline did not flag the gap. v2.9.3 ships five tracks addressing that, plus a detector-completeness fix, MAS aggregation correctness, noise-floor suppression, and vendor-registry expansion.
+
+### Added — Track A · OCR coverage (P0)
+- **`scripts/diagnose_text_extraction.py`** — one-shot diagnostic. Run against any PDF corpus to identify silent-failure candidates (documents where pypdf returns < 500 chars and OCR fallback is needed). Supports `--use-ocr` to exercise the full pipeline + `--threshold` override.
+- **`TextExtractionResult` dataclass + `extract_text_from_pdf_with_metadata()`** in `oraculus_di_auditor.ingestion.engine` — sibling of the existing `extract_text_from_pdf()` that returns the extraction `method` (`pypdf` / `tesseract_ocr` / `ocr_unavailable` / `failed`) + `char_count` alongside the text. Old function kept as a backwards-compatible wrapper.
+- **`SeenHash.text_extraction_method` + `SeenHash.text_char_count`** columns persist the extraction provenance per document. New idempotent `_migrate_seen_hash_extraction_columns()` runs at `init_db()` to ALTER TABLE-ADD the columns on existing SQLite installs (no Alembic in this codebase).
+- **Evidence packet manifest carries `text_extraction` block per document**: `{method, char_count, ocr_used}`. The executive summary now renders a corpus-level WARNING when documents required OCR — and an even louder warning when OCR was *needed* but unavailable (the silent-failure mode from Run-12).
+
+### Fixed — Track B · Detector emission completeness (P0)
+- **`grant:cops-without-itemisation` populates its evidence dict** (`grant_compliance.py`). The pre-2.9.3 emission passed `details={}`, leaving 10/10 sheets in Run-12 rendered with "(no structured details recorded)" and no Technical Evidence JSON block. Now emits `grant_program`, `statute` citation, `trigger_excerpts`, `itemisation_markers_searched`, `anti_supplant_referenced`.
+- **Renderer-level invariant**: `evidence_packet._build_finding_sheet` now WARNs when a finding emits with empty `details`, so this regression cannot recur silently for any future detector.
+
+### Changed — Track C · MAS aggregation correctness (P0)
+- **Synthesis page top-findings table** — `Docs / Occurrences` columns replaced with `Unique SHAs / Total Emissions`. The pre-2.9.3 columns were ambiguous and duplicate uploads of the same SHA inflated both equally, producing nonsense like "50 docs / 50 occurrences". Now uses the `document_id → sha256` map from each audit's `document_manifest` to dedupe.
+- **Synthesis page vendor table** — split detection-emission count from related-findings severity histogram. Pre-2.9.3 the severity histogram showed only `vendor-detected:*` emissions (uniformly LOW because that finding ID IS LOW), giving the misleading impression that Axon-related risk is uniformly LOW. Now `Detections` (vendor-tagged emissions) and `Related` (all findings on docs where the vendor was detected) are distinct, and the C/H/M/L histogram covers the related set.
+- Both Markdown and DOCX exports updated; on-page rendering updated to surface unique-SHA counts and the related-severity strip.
+
+### Changed — Track D · Noise-floor suppression (P1)
+- **`fiscal:missing-provenance-hash` gated behind `ODIA_INCLUDE_PIPELINE_CHECKS=1`**. Fired on 100% of Run-11 + Run-12 corpora because it measures pipeline state, not document content. Default behaviour: silent. Diagnostic operators can opt in.
+- **`admin:blank-required-fields` rolled up to corpus scope**. Per-document emission gated behind `ODIA_PER_DOC_BLANK_FIELDS=1`; default emission is now a single corpus-level `admin:blank-required-fields-corpus` finding with `scope: "corpus"` listing every affected document. Run-12 produced 70 echoes for one underlying observation; v2.9.3 produces 1 finding with the full per-document detail nested in `evidence.affected_documents`.
+- **Tests for both detectors** updated to opt-in via `monkeypatch.setenv()`; new tests pin the default-OFF behaviour.
+
+### Added — Track E · Detector coverage + vendor expansion (P1)
+- **`scripts/detector_coverage.py`** — empirical coverage diagnostic. Exercises every detector against a stress corpus and reports detector module / finding ID / severity / details-populated / plain-language-template / statute citation per emitted finding. Answers "what does ODIA actually look for?" without a 9-module refactor. Verified output: 21 distinct finding IDs across 7 detector modules, all with populated `details` post-2.9.3.
+- **Vendor catalogue expanded**: added `Verkada` (video / cloud surveillance, governance gates required) and `T-Mobile` (telecom backhaul). Pre-2.9.3 catalogue already covered Lexipol, Spartan Camera, ABH Fox Solutions, SmartWater CSI, Nexanet, Security Lines US, BCS Consulting, QPCS LLC — handoff list of 9 was based on a stale view; only these 2 were genuinely missing.
+
+### Added — Documentation
+- **`docs/EVIDENCE_PACKET_RUN12_EVALUATION.md`** — the run-12 quality audit that motivated v2.9.3. Documents the silent-failure observation, the detector emission gap, the MAS aggregation issues, and the noise-floor patterns.
+
+### Engineering
+- 229 backend tests pass on touched modules (`test_fiscal_detector` + `test_administrative_integrity` + `test_audit_engine` + `test_evidence_packet` + `test_ingestion_engine` + `test_plain_language` + `test_upload_routes` + `test_audit_records_mesh_job` + `test_audit_workflow_integration` + `test_orchestrator_dashboard`).
+- `npx tsc --noEmit` clean across all production sources.
+- `next build` passes for all 15 routes; Synthesis bundle ↑ 6.01kB → 6.33kB (new aggregation logic).
+
+### Out of scope (deferred)
+- Near-duplicate detection above SHA layer (the 4-byte Measure N variant) → v2.9.4.
+- Image-extraction from PDFs (signature stamps, table images) → v2.10.0.
+- Multi-language OCR (`tesseract-ocr-spa`) → activated when first Spanish corpus arrives.
+- Cumulative-state R.A.I.A. recursion → separate analysis phase, not a code change.
+
+---
+
 ## [2.9.2] - 2026-04-27 — Hero Pattern Convergence
 
 The user named three pages (Dashboard, Anomalies, Orchestrator) as the design target and asked every other page to match. v2.9.2 ships the unification: a single shared `HeroMetricTile` component, the four-element canonical hero structure (bracket-label / heading / subtext / metric grid) on every surface, and tonal coherence across the navigation.

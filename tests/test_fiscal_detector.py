@@ -15,18 +15,29 @@ def _base_doc() -> dict:
     }
 
 
-def test_fiscal_anomalies_when_provenance_missing():
+def test_fiscal_anomalies_when_provenance_missing(monkeypatch):
+    # v2.9.3 D.1 — pipeline-state checks are gated off by default. Tests
+    # that exercise the provenance-hash detector must opt in.
+    monkeypatch.setenv("ODIA_INCLUDE_PIPELINE_CHECKS", "1")
     doc = _base_doc()
     # No provenance at all
     anomalies = detect_fiscal_anomalies(doc)
     assert any(a["id"] == "fiscal:missing-provenance-hash" for a in anomalies)
 
 
-def test_fiscal_anomalies_when_hash_missing_in_provenance():
+def test_fiscal_anomalies_when_hash_missing_in_provenance(monkeypatch):
+    monkeypatch.setenv("ODIA_INCLUDE_PIPELINE_CHECKS", "1")
     doc = _base_doc()
     doc["provenance"] = {"source": "unit", "verified_on": datetime.now(UTC).isoformat()}
     anomalies = detect_fiscal_anomalies(doc)
     assert any(a["id"] == "fiscal:missing-provenance-hash" for a in anomalies)
+
+
+def test_fiscal_provenance_hash_gated_off_by_default():
+    """v2.9.3 D.1 — without the env var, the noise-floor finding is silent."""
+    doc = _base_doc()
+    anomalies = detect_fiscal_anomalies(doc)
+    assert not any(a["id"] == "fiscal:missing-provenance-hash" for a in anomalies)
 
 
 def test_fiscal_no_anomalies_when_hash_present():

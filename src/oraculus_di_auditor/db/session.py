@@ -67,6 +67,60 @@ def init_db(database_url: str | None = None) -> None:
     # Create all tables
     Base.metadata.create_all(bind=_engine)
 
+    # v2.9.3 Track A.2 — additive idempotent column migration. SQLAlchemy's
+    # create_all() skips tables that already exist, which means new
+    # columns added to existing models never reach a previously-created
+    # database. Running ALTER TABLE ADD COLUMN here keeps long-lived
+    # SQLite installs in sync with the model. Postgres + other backends
+    # fall through silently — production installs use proper migrations
+    # there; only the single-user SQLite path needs this autoamigration.
+    if url.startswith("sqlite"):
+        _migrate_seen_hash_extraction_columns()
+
+
+def _migrate_seen_hash_extraction_columns() -> None:
+    """Add `text_extraction_method` and `text_char_count` to seen_hashes if absent.
+
+    Idempotent and SQLite-only. Uses ``PRAGMA table_info`` to discover
+    existing columns, then issues ``ALTER TABLE`` for the missing ones.
+    Failures are logged but never raised so DB introspection trouble
+    can't block startup.
+    """
+    if _engine is None:
+        return
+    try:
+        from sqlalchemy import text as _sql_text
+
+        with _engine.begin() as conn:
+            cols_result = conn.execute(_sql_text("PRAGMA table_info('seen_hashes')"))
+            existing = {row[1] for row in cols_result}  # row[1] = column name
+            if not existing:
+                # Table doesn't exist yet — create_all handled (or skipped)
+                # it; nothing to migrate.
+                return
+            if "text_extraction_method" not in existing:
+                conn.execute(
+                    _sql_text(
+                        "ALTER TABLE seen_hashes ADD COLUMN "
+                        "text_extraction_method VARCHAR(32)"
+                    )
+                )
+            if "text_char_count" not in existing:
+                conn.execute(
+                    _sql_text(
+                        "ALTER TABLE seen_hashes ADD COLUMN "
+                        "text_char_count INTEGER"
+                    )
+                )
+    except Exception:  # noqa: BLE001 — schema migration is advisory
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "seen_hashes column migration skipped (likely fresh DB or "
+            "non-SQLite backend)",
+            exc_info=True,
+        )
+
 
 @contextmanager
 def get_db() -> Generator[Session, None, None]:

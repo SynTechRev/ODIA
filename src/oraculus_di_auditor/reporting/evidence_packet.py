@@ -16,9 +16,12 @@ from __future__ import annotations
 
 import io
 import json
+import logging
 import zipfile
 from datetime import UTC, datetime
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -113,10 +116,30 @@ def _build_executive_summary(results: dict[str, Any]) -> str:
     generated = results.get("generated_at", datetime.now(UTC).isoformat())
     sev = results.get("severity_summary", {})
     findings = results.get("findings", [])
+    manifest = results.get("document_manifest", []) or []
 
     # Top 3 critical/high findings
     top_findings = [f for f in findings if f.get("severity") in ("critical", "high")][
         :3
+    ]
+
+    # v2.9.3 A.3 — surface OCR fallback usage. Documents where the
+    # extractor fell back to OCR (or where OCR was needed but the libs
+    # were absent — the silent-failure mode from Run-12) get listed so
+    # the operator can spot-check OCR quality. Without this note, scans
+    # are indistinguishable from real text-only PDFs in the report.
+    ocr_used_docs = [
+        m for m in manifest
+        if isinstance(m, dict)
+        and isinstance(m.get("text_extraction"), dict)
+        and m["text_extraction"].get("method") == "tesseract_ocr"
+    ]
+    ocr_unavailable_docs = [
+        m for m in manifest
+        if isinstance(m, dict)
+        and isinstance(m.get("text_extraction"), dict)
+        and m["text_extraction"].get("method")
+        in ("ocr_unavailable", "failed", "pypdf_unavailable")
     ]
 
     lines = [
@@ -126,6 +149,38 @@ def _build_executive_summary(results: dict[str, Any]) -> str:
         f"**Documents Reviewed**: {doc_count}  ",
         f"**Anomalies Detected**: {finding_count}  ",
         "",
+    ]
+
+    if ocr_unavailable_docs:
+        lines += [
+            f"> **WARNING — silent extraction failure on "
+            f"{len(ocr_unavailable_docs)} document(s).** The text-layer "
+            "extractor returned near-empty content and OCR fallback was "
+            "unavailable (Tesseract / Poppler not installed). Findings "
+            "on the documents below are likely incomplete:",
+            "",
+        ]
+        for m in ocr_unavailable_docs:
+            lines.append(f"> - `{m.get('filename', m.get('document_id', '?'))}`")
+        lines += [
+            "",
+            "> Resolution: install `pytesseract` + `pdf2image` and ensure "
+            "the Tesseract + Poppler binaries are on PATH, then re-audit.",
+            "",
+        ]
+    elif ocr_used_docs:
+        lines += [
+            f"> **Note**: {len(ocr_used_docs)} of {len(manifest)} "
+            "documents required OCR fallback for text extraction. "
+            "Findings on these documents may be incomplete if OCR "
+            "quality was poor — spot-check before relying on them:",
+            "",
+        ]
+        for m in ocr_used_docs:
+            lines.append(f"> - `{m.get('filename', m.get('document_id', '?'))}`")
+        lines.append("")
+
+    lines += [
         "## Key Statistics",
         "",
         "| Severity | Count |",
@@ -251,6 +306,20 @@ def _build_finding_sheet(index: int, finding: dict[str, Any]) -> str:
     layer = finding.get("layer", "unknown")
     doc_id = finding.get("document_id", "unknown")
     issue = finding.get("issue", "Unknown issue")
+
+    # v2.9.3 B.2 — defensive invariant: every detector emission post-2.9.3
+    # is expected to populate `details`. An empty dict here means a
+    # detector path is silently dropping evidence — log a WARN so the
+    # regression that hit `grant:cops-without-itemisation` (10/10 sheets
+    # rendered with no Technical Evidence JSON) cannot recur silently.
+    if not finding.get("details"):
+        logger.warning(
+            "Finding %s on %s emitted with empty `details` — Technical "
+            "Evidence JSON block will be omitted. Detector path should "
+            "populate details to satisfy v2.9.3 sheet-completeness invariant.",
+            finding.get("id", "<no-id>"),
+            doc_id,
+        )
 
     lines = [
         f"# Finding F-{index:03d}",

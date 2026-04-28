@@ -9,10 +9,27 @@ recursive scalar patterning for budgetary references and lineage mapping.
 
 from __future__ import annotations
 
+import os
 import re
 from typing import Any
 
 from .text_utils import extract_text_content
+
+
+def _include_pipeline_checks() -> bool:
+    """Return True iff pipeline-state checks should emit findings.
+
+    v2.9.3 D.1 — `fiscal:missing-provenance-hash` is a pipeline-state
+    check (it asks "did the audit pipeline record a provenance hash on
+    this document object?", not "is something wrong with the document?")
+    and fired on 100% of corpus documents in Run-11 + Run-12 (140 of
+    537 cumulative findings = 26% pure noise floor). Default is now
+    OFF; operators running diagnostics can opt in via:
+
+        ODIA_INCLUDE_PIPELINE_CHECKS=1
+    """
+    flag = os.environ.get("ODIA_INCLUDE_PIPELINE_CHECKS", "")
+    return flag.lower() in ("1", "true", "yes", "on")
 
 # Fiscal keywords indicating appropriation or budget references
 APPROPRIATION_KEYWORDS = [
@@ -54,18 +71,21 @@ def detect_fiscal_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
     if not isinstance(doc, dict):
         return anomalies
 
-    # Check 1: Provenance integrity
-    prov = doc.get("provenance", {})
-    if not isinstance(prov, dict) or not prov.get("hash"):
-        anomalies.append(
-            {
-                "id": "fiscal:missing-provenance-hash",
-                "issue": "Provenance hash missing; integrity trail incomplete",
-                "severity": "low",
-                "layer": "fiscal",
-                "details": {"provenance_present": bool(prov)},
-            }
-        )
+    # Check 1: Provenance integrity (v2.9.3 D.1: gated behind
+    # ODIA_INCLUDE_PIPELINE_CHECKS — fires on 100% of corpora because it
+    # measures pipeline state, not document content).
+    if _include_pipeline_checks():
+        prov = doc.get("provenance", {})
+        if not isinstance(prov, dict) or not prov.get("hash"):
+            anomalies.append(
+                {
+                    "id": "fiscal:missing-provenance-hash",
+                    "issue": "Provenance hash missing; integrity trail incomplete",
+                    "severity": "low",
+                    "layer": "fiscal",
+                    "details": {"provenance_present": bool(prov)},
+                }
+            )
 
     # Check 2: Appropriation trail - detect fiscal amounts without
     # appropriation reference

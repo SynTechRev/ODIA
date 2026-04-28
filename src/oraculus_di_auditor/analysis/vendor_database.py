@@ -145,6 +145,27 @@ VENDOR_CATALOGUE: tuple[VendorSignature, ...] = (
         category="other",
         patterns=(r"\bqpcs\b(?:\s+llc)?",),
     ),
+    # v2.9.3 E.2 — Verkada is a video-surveillance vendor MARS tracks
+    # but Run-12 didn't surface (Visalia hasn't deployed it). Adding
+    # it here so the detector fires correctly on jurisdictions that
+    # have, and so its absence in Visalia is auditable rather than a
+    # blind spot.
+    VendorSignature(
+        name="Verkada",
+        category="other",  # video / cloud surveillance
+        patterns=(r"\bverkada\b",),
+        governance_required=("retention_policy", "council_approval"),
+    ),
+    # v2.9.3 E.2 — T-Mobile turns up in Tulare County procurement records
+    # as the cellular backhaul provider for ALPR + BWC deployments. Not
+    # itself a surveillance product, but its presence on a procurement
+    # contract names the carrier responsible for video upload, which
+    # matters for retention-policy and CJIS-data-routing review.
+    VendorSignature(
+        name="T-Mobile",
+        category="other",  # telecom backhaul
+        patterns=(r"\bt-?mobile\b",),
+    ),
 )
 
 
