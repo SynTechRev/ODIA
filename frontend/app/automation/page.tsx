@@ -292,7 +292,8 @@ export default function AutomationPage() {
         {/* =============================================================== */}
         {/* 1 · Hero + health strip                                          */}
         {/* =============================================================== */}
-        <section className="hud-panel hud-panel-flow hud-brackets p-6 md:p-8 relative overflow-hidden">
+        {/* v2.9.1 — wrap in gold-flux mineral hero with violet edge accent */}
+        <section className="page-hero-automation hud-brackets p-6 md:p-8 relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-violet-500/15 blur-3xl pointer-events-none" aria-hidden />
           <div className="relative">
             <div className="hud-label-accent mb-3 hud-flow">

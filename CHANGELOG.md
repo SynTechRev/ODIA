@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.9.1] - 2026-04-27 — Mineral Polish + Maturity Pass
+
+Five tracks of finish work on top of v2.9.0. Track A fixes the intro's premature exit, Track B propagates mineral textures across every page, Track C completes the light-theme leak sweep, Track D finally swaps the legacy octopus desktop icon, Track E lands the maturity roadmap.
+
+### Fixed
+- **Intro played past final frame** (Track A) — `IntroFrame.tsx` fallback timeout bumped 30s → 35s. The intro `run()` function takes ~31.4 seconds end-to-end (3 phases + 7.6s typeCode + 2.4s final hold + postMessage); the previous 30s fallback fired BEFORE the intro's postMessage, cutting off the "We the People" + brand-tag phase. 35s gives ~4s cushion past genuine completion so postMessage always wins under normal conditions; the fallback only fires if the intro JS errors mid-sequence.
+- **Desktop icon still showed legacy octopus** (Track D, **CRITICAL**) — `desktop/resources/icon.png` was 2,757,125 bytes at v2.8.1, **identical to v2.7.10**. Despite the v2.7.10 / v2.8.0 / v2.8.1 release notes claiming the icon had been updated, the file on disk had never actually been replaced. Fixed by copying the v2.8.2 raster bundle (1,299,046-byte composite of the gold-swirl source painting in a circular frame with gold ring) into `desktop/resources/icon.png` + new `icon.ico` for Windows multi-size, plus three PWA rasters (192/512/maskable-512). Windows title bar finally renders the brand mark.
+
+### Added
+- **Per-page mineral hero textures** (Track B) — eight new `.page-hero-*` utility classes wired into Upload, Results, Anomalies, Documents, Analysis, Settings, Orchestrator, Automation. Each page reads as a distinct location in the same mineral-photographic visual world: Upload + Settings + Automation get gold-flux, Results gets emerald malachite, Anomalies + Orchestrator get malachite-flux (active surfaces), Documents + Analysis get marble.
+- **Comprehensive light-theme override sweep** in `globals.css` — every `bg-{color}-50/100`, `text-{color}-700/800`, `border-{color}-200/300` Tailwind class now resolves to mineral-palette CSS vars at runtime. Form inputs (select / input / textarea) get mineral styling. Severity stripe primitive (`.severity-stripe.s-{level}`) for finding cards.
+- **Two new secondary surface classes** — `.gem-card-marble`, `.gem-card-malachite` for body-level cards (more dimmed than hero variants).
+- **`docs/MATURITY_REPORT.md`** (Track E) — 289-line project status document covering the six dimensions of "outstanding performance" (visual identity, forensic depth, operational reliability, data governance, distribution, community), what's complete, and a 90-day sprint roadmap from v2.9.x to v2.10.0.
+
+### Changed
+- **Results page severity table** — emoji icons (🔴🟠🟡🔵) removed per `BRAND.md` §9 (no emoji in chrome). Replaced with `hud-sev hud-sev-{level}` pill primitives + `severity-stripe` left-edge accents on finding cards.
+- **Anomalies page severity filter tiles** — pastel `bg-red-50/orange-50/yellow-50/blue-50` rectangles replaced with `hud-panel hud-panel-inset` cards + colored dot + glow shadow when active. Matches the Dashboard's SeverityTile pattern.
+- **Settings — Theme dropdown removed** — the app is dark-only per `BRAND.md` §9; the "Light / Dark / System" options were misleading and the user confirmed the setting didn't actually work. Replaced with a read-only "Mineral (locked at v2.8.0)" indicator.
+- **Settings — auth buttons** — `bg-blue-600 text-white` and `border-gray-300 text-gray-700` replaced with `hud-btn hud-btn-emerald` / `hud-btn hud-btn-ghost`.
+- **Upload page drag-drop zone** — pale gray rectangle replaced with `hud-panel hud-panel-inset` + emerald glow when armed.
+- **Upload "From Gallery" / "Use Camera" buttons** — light gray border buttons replaced with `hud-btn hud-btn-ghost` at 44 px touch-target minimum.
+
+---
+
 ## [2.9.0] - 2026-04-27 — Mobile-First PWA Polish
 
 The platform's first dedicated mobile pass. Tracks A (documentation) and B (PWA polish) ship; Track C (Capacitor native wrapper) is deferred pending Apple Developer Program / Google Play Console account decisions. Web/PWA installs work on iOS Safari and Android Chrome today.

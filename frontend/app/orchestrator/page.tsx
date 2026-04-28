@@ -189,8 +189,8 @@ export default function OrchestratorPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* ===== Hero ===== */}
-        <section className="hud-panel hud-panel-data hud-brackets p-6 md:p-8 relative overflow-hidden">
+        {/* ===== Hero ===== v2.9.1 — wrap in malachite-flux mineral hero */}
+        <section className="page-hero-orchestrator hud-brackets p-6 md:p-8 relative overflow-hidden">
           <div className="relative z-10">
             <div className="hud-label-accent mb-3 hud-cyan-bright">
               <span>[ PHASE 5 ORCHESTRATOR ]</span>

@@ -483,13 +483,17 @@ export default function UploadPage() {
   return (
     <DashboardLayout>
       <div className="max-w-4xl space-y-6">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">Upload Documents</h2>
-          <p className="text-gray-600 text-sm">
-            Drop legislative documents here, then click <strong>Run Audit</strong> to analyze them.
-            Supports PDF, JSON, TXT, and XML.
+        {/* v2.9.1 — page hero with gold-flux mineral texture */}
+        <section className="page-hero-upload p-6 mb-6 hud-brackets relative">
+          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
+            Upload Documents
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
+            Drop legislative documents here, then click{' '}
+            <strong style={{ color: 'var(--gold-200)' }}>Run Audit</strong> to analyze them.
+            Supports PDF, JSON, TXT, and XML. Multiple files OK.
           </p>
-        </div>
+        </section>
 
         {/* Legistar retrieval */}
         <LegistarPanel
@@ -512,21 +516,22 @@ export default function UploadPage() {
           onDrop={onDrop}
           onClick={() => fileInputRef.current?.click()}
           onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
-          className={`
-            border-2 border-dashed rounded-xl p-12 text-center cursor-pointer
-            transition-colors duration-200 select-none
-            ${isDragging
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50'
-            }
-          `}
+          className="hud-panel hud-panel-inset border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors duration-200 select-none"
+          style={{
+            borderColor: isDragging ? 'var(--signal-400)' : 'var(--smoke-500)',
+            background: isDragging
+              ? 'linear-gradient(180deg, rgba(15,101,70,0.18), rgba(8,15,10,0.78))'
+              : 'rgba(8, 12, 8, 0.55)',
+          }}
         >
           <div className="text-5xl mb-3">{isDragging ? '📂' : '📄'}</div>
-          <p className="text-lg font-medium text-gray-700 mb-1">
+          <p className="text-lg font-medium mb-1" style={{ color: 'var(--smoke-100)' }}>
             {isDragging ? 'Drop files to upload' : 'Drag & drop files here'}
           </p>
-          <p className="text-sm text-gray-500">or click to choose files</p>
-          <p className="text-xs text-gray-400 mt-2">PDF · JSON · TXT · XML · multiple files OK</p>
+          <p className="text-sm" style={{ color: 'var(--smoke-300)' }}>or click to choose files</p>
+          <p className="text-xs mt-2" style={{ color: 'var(--smoke-400)' }}>
+            PDF · JSON · TXT · XML · multiple files OK
+          </p>
         </div>
 
         <input
@@ -562,7 +567,7 @@ export default function UploadPage() {
             type="button"
             onClick={() => imageInputRef.current?.click()}
             disabled={isUploading || isRunning}
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+            className="hud-btn hud-btn-ghost flex-1 justify-center min-h-[44px]"
           >
             <span aria-hidden="true">🖼️</span> From Gallery
           </button>
@@ -570,7 +575,7 @@ export default function UploadPage() {
             type="button"
             onClick={() => cameraInputRef.current?.click()}
             disabled={isUploading || isRunning}
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+            className="hud-btn hud-btn-ghost flex-1 justify-center min-h-[44px]"
           >
             <span aria-hidden="true">📷</span> Use Camera
           </button>

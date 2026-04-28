@@ -107,19 +107,22 @@ export default function DocumentsPage() {
     <DashboardLayout>
       <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">Documents</h2>
-          <p className="text-gray-600 text-sm">
+        {/* v2.9.1 — page hero with marble mineral texture */}
+        <section className="page-hero-documents p-6 mb-6 hud-brackets">
+          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
+            Documents
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
             Unique documents across all local audits ({rows.length} total). Click
             a row to open the most recent audit containing that document.
           </p>
-        </div>
+        </section>
         <div className="space-y-2">
           {rows.map((r) => (
             <AppLink
               key={r.sha256}
               href={`/results?job_id=${r.latest_job_id}`}
-              className="block bg-white rounded-lg border border-gray-200 hover:border-blue-400 transition-colors p-4"
+              className="block hud-panel hud-panel-dense p-4 transition-colors"
             >
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">

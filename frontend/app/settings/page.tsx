@@ -188,7 +188,7 @@ function AuthSection() {
               <div>
                 <p className="text-sm font-semibold text-gray-900">{currentUser.name}</p>
                 <p className="text-xs text-gray-500">{currentUser.email}</p>
-                <span className="mt-1 inline-block px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-medium capitalize">
+                <span className="hud-sev hud-sev-info mt-1 capitalize">
                   {currentUser.role}
                 </span>
               </div>
@@ -208,17 +208,13 @@ function AuthSection() {
             <div className="flex gap-2">
               <button
                 onClick={() => { setView('login'); setError(null); }}
-                className={`flex-1 py-2 text-sm rounded-lg border transition-colors ${
-                  view === 'login' ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`hud-btn ${view === 'login' ? 'hud-btn-emerald' : 'hud-btn-ghost'} flex-1 justify-center`}
               >
                 Log In
               </button>
               <button
                 onClick={() => { setView('register'); setError(null); }}
-                className={`flex-1 py-2 text-sm rounded-lg border transition-colors ${
-                  view === 'register' ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`hud-btn ${view === 'register' ? 'hud-btn-emerald' : 'hud-btn-ghost'} flex-1 justify-center`}
               >
                 {authEnabled ? 'Register' : 'Enable Auth'}
               </button>
@@ -271,8 +267,7 @@ function AuthSection() {
 // ---------------------------------------------------------------------------
 
 export default function SettingsPage() {
-  const theme = useUISettingsStore((state) => state.theme);
-  const setTheme = useUISettingsStore((state) => state.setTheme);
+  // v2.9.1 C1 — Theme dropdown removed; store fields kept for ui-settings shape compat.
   const compactMode = useUISettingsStore((state) => state.compact_mode);
   const setCompactMode = useUISettingsStore((state) => state.setCompactMode);
   const showConfidenceScores = useUISettingsStore((state) => state.show_confidence_scores);
@@ -285,21 +280,38 @@ export default function SettingsPage() {
   return (
     <DashboardLayout>
       <div className="max-w-4xl space-y-6">
+        {/* v2.9.1 — page hero with gold-flux mineral texture */}
+        <section className="page-hero-settings p-6 mb-6 hud-brackets">
+          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
+            Settings
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
+            UI preferences, authentication, and system information.
+          </p>
+        </section>
+
         {/* Appearance Settings */}
         <Card title="Appearance" variant="bordered">
           <div className="space-y-5">
+            {/* v2.9.1 C1 — Theme dropdown removed; the app is dark-only per BRAND.md §9. */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Theme</label>
-              <select
-                value={theme}
-                onChange={(e) => setTheme(e.target.value as Parameters<typeof setTheme>[0])}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-              </select>
-              <p className="mt-1 text-sm text-gray-500">Choose your preferred color theme</p>
+              <div className="hud-metric-label mb-2">Theme</div>
+              <div className="flex items-center gap-2 hud-panel hud-panel-inset px-3 py-2.5">
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    background: 'var(--gold-500)',
+                    boxShadow: '0 0 6px var(--gold-500)',
+                  }}
+                />
+                <span className="text-sm" style={{ color: 'var(--smoke-100)' }}>
+                  Mineral (locked at v2.8.0)
+                </span>
+              </div>
+              <p className="mt-1 text-sm" style={{ color: 'var(--smoke-400)' }}>
+                O.D.I.A. ships with a single locked theme. Customisation lives in
+                the brand reference at <code>docs/BRAND.md</code>.
+              </p>
             </div>
 
             <Toggle
@@ -362,7 +374,7 @@ export default function SettingsPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Package:</span>
-              <span className="font-mono text-gray-900">odia 2.9.0</span>
+              <span className="font-mono text-gray-900">odia 2.9.1</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Frontend:</span>

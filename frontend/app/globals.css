@@ -1054,3 +1054,497 @@ code, kbd, pre, .hud-num, .hud-mono {
   }
   a { color: #000000 !important; text-decoration: underline; }
 }
+/* ==========================================================================
+   v2.8.2 — Mineral palette propagation patch
+   --------------------------------------------------------------------------
+   APPEND this entire file to the END of frontend/app/globals.css. It is
+   strictly additive — no removals from the existing file. Selectors
+   layered later in CSS win over earlier ones, so all the new overrides
+   here trump anything left over from v2.7-era light styling.
+
+   Three things land here:
+
+   1. Expanded `.gem-hero-*` family — variants for every page that
+      needs a textured hero (was: 4 variants, now: 6 with new
+      `subtle` + `inset` variants for less-prominent surfaces).
+
+   2. Per-page hero utility presets — `.page-hero-upload`,
+      `.page-hero-results`, etc. — single-class application of the
+      right texture for each page's character.
+
+   3. Comprehensive light-theme override sweep — catches every
+      `bg-{color}-50/100`, `text-{color}-700/800`, `border-{color}-200`,
+      `hover:bg-gray-50` etc. that were leaking through. The v2.7-era
+      override block only caught a few; this finishes the sweep.
+
+   4. Form/input mineral styling — selects, dropdowns, and toggles
+      that v2.7 left at default Tailwind rendering now match the
+      gemstone aesthetic.
+   ========================================================================== */
+
+/* ==========================================================================
+   1 · Per-page hero presets
+   --------------------------------------------------------------------------
+   Each page gets a designated texture per BRAND.md §3.2. These classes
+   wrap the existing `.gem-hero-*` body with surface-specific tonal
+   gradients so each page reads as a distinct location in the same
+   visual world (rather than every page looking like the dashboard).
+   ========================================================================== */
+
+/* Upload — gold flux. The Upload page is where evidence enters the
+   system; gold reads as "input" / "incoming material". */
+.page-hero-upload {
+  background:
+    linear-gradient(180deg, rgba(58, 46, 31, 0.32), rgba(8, 12, 8, 0.60)),
+    var(--texture-gold-flux-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-gold-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 210, 190, 0.22),
+    var(--glow-gold);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Results — emerald marble. Results = output, processed evidence;
+   deeper, more "settled" surface. */
+.page-hero-results {
+  background:
+    linear-gradient(180deg, rgba(11, 41, 26, 0.34), rgba(8, 15, 10, 0.62)),
+    var(--texture-malachite-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-emerald-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(95, 161, 127, 0.20),
+    var(--glow-emerald);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Anomalies — malachite flux. Anomalies = active alerts, energetic. */
+.page-hero-anomalies {
+  background:
+    linear-gradient(180deg, rgba(11, 41, 26, 0.36), rgba(5, 5, 4, 0.66)),
+    var(--texture-malachite-flux-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-emerald-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(31, 232, 143, 0.20),
+    var(--glow-signal);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Documents — marble. Cross-jurisdictional document library; the
+   smoke + gold + emerald tri-pole is thematically right. */
+.page-hero-documents {
+  background:
+    linear-gradient(180deg, rgba(8, 12, 8, 0.32), rgba(8, 12, 8, 0.65)),
+    var(--texture-marble-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-gold-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 210, 190, 0.20),
+    var(--glow-gold);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Analysis — marble (calm, neutral, analytical) */
+.page-hero-analysis {
+  background:
+    linear-gradient(180deg, rgba(8, 12, 8, 0.34), rgba(8, 12, 8, 0.66)),
+    var(--texture-marble-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-gold);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 210, 190, 0.18),
+    var(--glow-gold);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Settings — gold flux subtle (calm, finished, "polished by the
+   user" surface). */
+.page-hero-settings {
+  background:
+    linear-gradient(180deg, rgba(34, 31, 32, 0.40), rgba(8, 12, 8, 0.72)),
+    var(--texture-gold-flux-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-gold);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 210, 190, 0.18),
+    var(--glow-gold);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Orchestrator — malachite flux (active multi-agent execution) */
+.page-hero-orchestrator {
+  background:
+    linear-gradient(180deg, rgba(11, 41, 26, 0.38), rgba(5, 5, 4, 0.68)),
+    var(--texture-malachite-flux-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-emerald-bright);
+  box-shadow:
+    inset 0 1px 0 rgba(31, 232, 143, 0.20),
+    var(--glow-emerald);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Automation — gold flux (n8n / workflows, automated polish) */
+.page-hero-automation {
+  background:
+    linear-gradient(180deg, rgba(34, 31, 32, 0.36), rgba(8, 12, 8, 0.66)),
+    var(--texture-gold-flux-hero);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-flow);
+  box-shadow:
+    inset 0 1px 0 rgba(167, 139, 250, 0.18),
+    var(--glow-flow);
+  clip-path: polygon(
+    var(--gem-facet) 0, 100% 0,
+    100% calc(100% - var(--gem-facet)),
+    calc(100% - var(--gem-facet)) 100%,
+    0 100%, 0 var(--gem-facet)
+  );
+}
+
+/* Mobile texture overrides for all per-page heroes */
+@media (max-width: 768px) {
+  .page-hero-upload,
+  .page-hero-settings,
+  .page-hero-automation {
+    background-image:
+      linear-gradient(180deg, rgba(34, 31, 32, 0.36), rgba(8, 12, 8, 0.70)),
+      url('/textures/texture-gold-flux-mobile.webp');
+  }
+  .page-hero-results {
+    background-image:
+      linear-gradient(180deg, rgba(11, 41, 26, 0.36), rgba(8, 15, 10, 0.70)),
+      url('/textures/texture-malachite-mobile.webp');
+  }
+  .page-hero-anomalies,
+  .page-hero-orchestrator {
+    background-image:
+      linear-gradient(180deg, rgba(11, 41, 26, 0.40), rgba(5, 5, 4, 0.72)),
+      url('/textures/texture-malachite-flux-mobile.webp');
+  }
+  .page-hero-documents,
+  .page-hero-analysis {
+    background-image:
+      linear-gradient(180deg, rgba(8, 12, 8, 0.34), rgba(8, 12, 8, 0.70)),
+      url('/textures/texture-marble-mobile.webp');
+  }
+}
+
+/* ==========================================================================
+   2 · Secondary surface decoration
+   --------------------------------------------------------------------------
+   Subtle texture variants for body-level surfaces. Texture is much
+   more dimmed than hero variants — readable for content but visually
+   present.
+   ========================================================================== */
+
+/* Inset card with subtle marble background — for stat panels,
+   summary cards. */
+.gem-card-marble {
+  background:
+    linear-gradient(180deg, rgba(8, 12, 8, 0.84), rgba(5, 5, 5, 0.94)),
+    var(--texture-marble);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-gold);
+  clip-path: polygon(
+    8px 0, 100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%, 0 8px
+  );
+}
+
+.gem-card-malachite {
+  background:
+    linear-gradient(180deg, rgba(8, 15, 10, 0.86), rgba(5, 5, 4, 0.94)),
+    var(--texture-malachite);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--edge-emerald);
+  clip-path: polygon(
+    8px 0, 100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%, 0 8px
+  );
+}
+
+/* ==========================================================================
+   3 · COMPREHENSIVE light-theme override sweep
+   --------------------------------------------------------------------------
+   Catches every Tailwind utility that was rendering as light pastel
+   on the dark mineral background. v2.7 had a partial sweep; v2.8.2
+   completes it.
+   ========================================================================== */
+
+/* Pastel backgrounds — bg-X-50 / bg-X-100 family. These are the
+   light-theme severity tile fills (Anomalies page) and various
+   info pills. */
+.bg-red-50,    .bg-red-100    { background-color: rgba(244, 63, 94, 0.10) !important; color: var(--severity-critical) !important; }
+.bg-orange-50, .bg-orange-100 { background-color: rgba(249, 115, 22, 0.10) !important; color: var(--severity-high) !important; }
+.bg-yellow-50, .bg-yellow-100 { background-color: rgba(234, 179, 8, 0.10) !important; color: var(--severity-medium) !important; }
+.bg-blue-50,   .bg-blue-100   { background-color: rgba(59, 130, 246, 0.10) !important; color: var(--severity-low) !important; }
+.bg-green-50,  .bg-green-100  { background-color: rgba(31, 232, 143, 0.10) !important; color: var(--signal-400) !important; }
+.bg-emerald-50, .bg-emerald-100 { background-color: rgba(15, 101, 70, 0.15) !important; color: var(--emerald-200) !important; }
+
+/* Saturated colored buttons — bg-X-500/600/700. Overridden so they
+   render as gem-buttons in their tonal family. */
+.bg-blue-600,  .bg-blue-700   {
+  background-color: rgba(15, 101, 70, 0.25) !important;
+  color: var(--signal-400) !important;
+  border: 1px solid var(--edge-emerald) !important;
+}
+.bg-blue-600.text-white,
+.bg-blue-700.text-white       { color: var(--smoke-50) !important; }
+
+/* Hover variants */
+.hover\:bg-gray-50:hover,
+.hover\:bg-slate-50:hover,
+.hover\:bg-gray-100:hover {
+  background-color: rgba(174, 145, 104, 0.08) !important;
+}
+.hover\:bg-blue-50:hover,
+.hover\:bg-blue-100:hover {
+  background-color: rgba(15, 101, 70, 0.15) !important;
+}
+.hover\:bg-red-50:hover {
+  background-color: rgba(244, 63, 94, 0.10) !important;
+}
+
+/* Hover variants for severity colored buttons (used in filter rows) */
+.hover\:bg-blue-700:hover,
+.hover\:bg-blue-600:hover {
+  background-color: rgba(15, 101, 70, 0.40) !important;
+}
+
+/* Text color: dark Tailwind text on dark → readable mineral palette */
+.text-blue-600, .text-blue-700, .text-blue-800 {
+  color: var(--signal-400) !important;
+}
+.text-blue-400, .text-blue-500 {
+  color: var(--severity-low) !important;
+}
+.text-red-600, .text-red-700, .text-red-800 {
+  color: var(--severity-critical) !important;
+}
+.text-orange-600, .text-orange-700 {
+  color: var(--severity-high) !important;
+}
+.text-yellow-700, .text-yellow-800 {
+  color: var(--severity-medium) !important;
+}
+.text-green-600, .text-green-700, .text-green-800 {
+  color: var(--signal-500) !important;
+}
+.text-gray-900, .text-slate-900 { color: var(--foreground) !important; }
+.text-gray-800, .text-slate-800 { color: var(--smoke-100) !important; }
+.text-gray-700, .text-slate-700 { color: var(--smoke-200) !important; }
+.text-gray-600, .text-slate-600 { color: var(--smoke-300) !important; }
+.text-gray-500, .text-slate-500 { color: var(--smoke-400) !important; }
+.text-gray-400, .text-slate-400 { color: var(--smoke-400) !important; }
+
+/* Borders: light-theme grays → mineral edges */
+.border-gray-100, .border-slate-100 { border-color: rgba(45, 45, 44, 0.40) !important; }
+.border-gray-200, .border-slate-200 { border-color: var(--smoke-600) !important; }
+.border-gray-300, .border-slate-300 { border-color: var(--smoke-500) !important; }
+.border-blue-400 { border-color: var(--edge-emerald) !important; }
+.border-blue-600 { border-color: var(--edge-emerald-bright) !important; }
+.border-red-200  { border-color: rgba(244, 63, 94, 0.30) !important; }
+.border-red-500  { border-color: var(--severity-critical) !important; }
+
+/* Border-left accents (severity stripes on cards) — preserve
+   semantic color but render at full saturation. */
+.border-l-rose-500   { border-left-color: var(--severity-critical) !important; }
+.border-l-red-500    { border-left-color: var(--severity-critical) !important; }
+.border-l-orange-500 { border-left-color: var(--severity-high) !important; }
+.border-l-yellow-500 { border-left-color: var(--severity-medium) !important; }
+.border-l-blue-400,
+.border-l-blue-500   { border-left-color: var(--severity-low) !important; }
+
+/* Surface backgrounds — bg-white / bg-slate-50 → mineral cards.
+   v2.7 had this partially; this completes it. */
+.bg-white,
+.bg-slate-50 {
+  background-color: var(--smoke-850) !important;
+  color: var(--foreground) !important;
+}
+.bg-gray-50, .bg-gray-100 {
+  background-color: var(--smoke-800) !important;
+  color: var(--foreground) !important;
+}
+
+/* Form inputs — selects, text inputs, dropdowns. v2.7 left these at
+   default Tailwind which renders white on dark = invisible. */
+select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="url"],
+textarea {
+  background-color: var(--smoke-850) !important;
+  color: var(--smoke-100) !important;
+  border-color: var(--smoke-500) !important;
+}
+select:focus,
+input:focus,
+textarea:focus {
+  border-color: var(--gold-500) !important;
+  outline-color: var(--gold-300) !important;
+}
+
+/* Dropdown options — Chrome respects this on most platforms */
+select option {
+  background-color: var(--smoke-800) !important;
+  color: var(--smoke-100) !important;
+}
+
+/* Focus ring — Tailwind ring-blue-500 → gold */
+.focus\:ring-blue-500:focus { --tw-ring-color: var(--gold-300) !important; }
+.focus\:ring-2:focus        { --tw-ring-offset-shadow: 0 0 transparent !important; }
+.focus\:border-blue-500:focus,
+.focus\:border-transparent:focus { border-color: var(--gold-500) !important; }
+
+/* Toggle switch (Settings page) — replace bg-white knob with
+   chrome smoke knob, blue-600 track with gold track. */
+.bg-blue-600.relative,
+button[role="switch"][aria-checked="true"] {
+  background-color: var(--gold-500) !important;
+}
+
+/* Inline severity pills (`bg-red-100 text-red-700` pattern from
+   Results "C 3 H 12 M 8 L 6" inline summary). The override above
+   handles bg + text but not border. */
+[class*="bg-red-100"],
+[class*="bg-orange-100"],
+[class*="bg-yellow-100"],
+[class*="bg-blue-100"] {
+  border-color: currentColor !important;
+}
+
+/* ==========================================================================
+   4 · Severity stripe / divider polish
+   ========================================================================== */
+
+.severity-stripe {
+  position: relative;
+}
+.severity-stripe::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: currentColor;
+  box-shadow: 0 0 12px currentColor;
+  pointer-events: none;
+}
+.severity-stripe.s-critical::before { background: var(--severity-critical); box-shadow: 0 0 12px var(--severity-critical); }
+.severity-stripe.s-high::before     { background: var(--severity-high);     box-shadow: 0 0 12px var(--severity-high); }
+.severity-stripe.s-medium::before   { background: var(--severity-medium);   box-shadow: 0 0 12px var(--severity-medium); }
+.severity-stripe.s-low::before      { background: var(--severity-low);      box-shadow: 0 0 12px var(--severity-low); }
+
+/* ==========================================================================
+   5 · Typography contrast lifts
+   --------------------------------------------------------------------------
+   Reading the user's screenshots: finding labels on the Anomalies and
+   Results pages render at smoke-300 against textured backgrounds and
+   the contrast is borderline. Bump primary labels by one step.
+   ========================================================================== */
+
+.hud-finding-id {
+  color: var(--gold-200);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.hud-finding-detector {
+  color: var(--smoke-300);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.hud-finding-summary {
+  color: var(--smoke-100);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.hud-finding-doc {
+  color: var(--smoke-400);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+/* ==========================================================================
+   6 · Page-context decoration
+   --------------------------------------------------------------------------
+   Subtle behind-the-content texture that ties non-hero content to the
+   mineral palette without competing with data. Apply via
+   `<DashboardLayout pageVariant="...">` or by class on the main
+   content wrapper.
+   ========================================================================== */
+
+.page-context-quartz {
+  /* near-invisible mineral wash for body content */
+  background-image:
+    radial-gradient(
+      ellipse 120% 80% at 30% -10%,
+      rgba(174, 145, 104, 0.04) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 100% 70% at 80% 110%,
+      rgba(15, 101, 70, 0.04) 0%,
+      transparent 60%
+    );
+  background-attachment: fixed;
+}

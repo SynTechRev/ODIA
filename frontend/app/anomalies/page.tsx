@@ -25,18 +25,12 @@ interface EnrichedFinding extends AuditFinding {
   generated_at: string;
 }
 
+// v2.9.1 — HUD severity primitives (no pastel pills, severity-stripe handles edge)
 const SEV_BADGE: Record<Severity, string> = {
-  critical: 'bg-red-100 text-red-800',
-  high: 'bg-orange-100 text-orange-800',
-  medium: 'bg-yellow-100 text-yellow-800',
-  low: 'bg-blue-100 text-blue-700',
-};
-
-const SEV_BORDER: Record<Severity, string> = {
-  critical: 'border-l-red-500',
-  high: 'border-l-orange-500',
-  medium: 'border-l-yellow-500',
-  low: 'border-l-blue-400',
+  critical: 'hud-sev hud-sev-critical',
+  high: 'hud-sev hud-sev-high',
+  medium: 'hud-sev hud-sev-medium',
+  low: 'hud-sev hud-sev-low',
 };
 
 export default function AnomaliesPage() {
@@ -129,31 +123,50 @@ export default function AnomaliesPage() {
     <DashboardLayout>
       <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6">
-        {/* Severity summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {(['critical', 'high', 'medium', 'low'] as const).map((k) => (
-            <button
-              key={k}
-              onClick={() =>
-                setFilterSeverity(filterSeverity === k ? 'all' : k)
-              }
-              className={`rounded-lg p-4 text-center border-2 transition-colors ${
-                filterSeverity === k ? 'border-current' : 'border-transparent'
-              } ${
-                k === 'critical'
-                  ? 'bg-red-50 text-red-600'
-                  : k === 'high'
-                  ? 'bg-orange-50 text-orange-600'
-                  : k === 'medium'
-                  ? 'bg-yellow-50 text-yellow-600'
-                  : 'bg-blue-50 text-blue-600'
-              }`}
-            >
-              <div className="text-3xl font-bold">{totals[k]}</div>
-              <div className="text-sm font-medium capitalize">{k}</div>
-            </button>
-          ))}
-        </div>
+        {/* v2.9.1 — page hero with malachite-flux mineral texture */}
+        <section className="page-hero-anomalies p-6 mb-6 hud-brackets">
+          <h1 className="text-2xl font-semibold mb-4" style={{ color: 'var(--smoke-50)' }}>
+            Anomalies
+          </h1>
+          {/* Severity summary — HUD primitives, semantic colors */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {(['critical', 'high', 'medium', 'low'] as const).map((k) => {
+              const colorVar = `var(--severity-${k})`;
+              const active = filterSeverity === k;
+              return (
+                <button
+                  key={k}
+                  onClick={() =>
+                    setFilterSeverity(active ? 'all' : k)
+                  }
+                  className="hud-panel hud-panel-inset p-4 text-center transition-all"
+                  style={{
+                    boxShadow: active
+                      ? `0 0 0 1.5px ${colorVar}, inset 0 0 0 1px ${colorVar}, 0 0 32px -8px ${colorVar}`
+                      : undefined,
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{
+                        background: colorVar,
+                        boxShadow: `0 0 8px ${colorVar}`,
+                      }}
+                    />
+                    <span className="hud-metric-label capitalize">{k}</span>
+                  </div>
+                  <div
+                    className="hud-metric tabular-nums"
+                    style={{ color: colorVar }}
+                  >
+                    {totals[k]}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
         {/* Filters */}
         <Card variant="bordered">
@@ -212,26 +225,19 @@ export default function AnomaliesPage() {
                 <AppLink
                   key={`${f.job_id}-${f.id}-${i}`}
                   href={`/results?job_id=${f.job_id}`}
-                  className={`block bg-white rounded-lg border border-gray-200 border-l-4 ${
-                    SEV_BORDER[f.severity as Severity] ?? 'border-l-gray-300'
-                  } hover:border-r-blue-400 transition-colors p-3`}
+                  className={`block hud-panel hud-panel-dense severity-stripe s-${f.severity} relative pl-5 transition-colors p-3`}
                 >
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span
-                      className={`px-2 py-0.5 rounded text-xs font-semibold uppercase ${
-                        SEV_BADGE[f.severity as Severity] ??
-                        'bg-gray-100 text-gray-700'
-                      }`}
+                      className={`${SEV_BADGE[f.severity as Severity] ?? 'hud-sev'} uppercase`}
                     >
                       {f.severity}
                     </span>
-                    <span className="text-xs font-mono text-gray-500">
-                      {f.id}
-                    </span>
-                    <span className="text-xs text-gray-500 truncate max-w-xs">
+                    <span className="hud-finding-id">{f.id}</span>
+                    <span className="hud-finding-doc truncate max-w-xs">
                       {f.document_id}
                     </span>
-                    <span className="text-xs text-gray-400 ml-auto">
+                    <span className="text-xs ml-auto" style={{ color: 'var(--smoke-400)' }}>
                       {f.generated_at.slice(0, 10)}
                     </span>
                   </div>

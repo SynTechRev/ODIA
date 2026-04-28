@@ -29,21 +29,18 @@ import type { AuditFinding, AuditResults, TimelineEvent } from '@/lib/types/api'
 // Helpers
 // ---------------------------------------------------------------------------
 
-const SEVERITY_STYLES: Record<string, { badge: string; border: string; icon: string }> = {
-  critical: { badge: 'bg-red-100 text-red-800', border: 'border-l-red-500', icon: '🔴' },
-  high:     { badge: 'bg-orange-100 text-orange-800', border: 'border-l-orange-500', icon: '🟠' },
-  medium:   { badge: 'bg-yellow-100 text-yellow-800', border: 'border-l-yellow-500', icon: '🟡' },
-  low:      { badge: 'bg-blue-100 text-blue-700', border: 'border-l-blue-400', icon: '🔵' },
+// v2.9.1 — HUD severity primitives (no emoji per BRAND.md §9; severity-stripe for left edge)
+const SEVERITY_STYLES: Record<string, { badge: string; border: string }> = {
+  critical: { badge: 'hud-sev hud-sev-critical', border: 'severity-stripe s-critical' },
+  high:     { badge: 'hud-sev hud-sev-high',     border: 'severity-stripe s-high' },
+  medium:   { badge: 'hud-sev hud-sev-medium',   border: 'severity-stripe s-medium' },
+  low:      { badge: 'hud-sev hud-sev-low',      border: 'severity-stripe s-low' },
 };
 
 function SeverityBadge({ severity }: { severity: string }) {
-  const styles = SEVERITY_STYLES[severity] ?? {
-    badge: 'bg-gray-100 text-gray-700',
-    border: '',
-    icon: '⚪',
-  };
+  const styles = SEVERITY_STYLES[severity] ?? { badge: 'hud-sev', border: '' };
   return (
-    <span className={`px-2 py-0.5 rounded text-xs font-semibold uppercase ${styles.badge}`}>
+    <span className={`${styles.badge} uppercase`}>
       {severity}
     </span>
   );
@@ -59,7 +56,7 @@ function FindingCard({ finding, index }: { finding: AuditFinding; index: number 
 
   return (
     <div
-      className={`bg-white rounded-lg border border-gray-200 border-l-4 ${styles.border} shadow-sm`}
+      className={`hud-panel hud-panel-dense ${styles.border} relative pl-5`}
     >
       {/* Card header */}
       <div className="p-4">
@@ -96,7 +93,13 @@ function FindingCard({ finding, index }: { finding: AuditFinding; index: number 
 
       {/* Expandable detail */}
       {expanded && (
-        <div className="border-t border-gray-100 px-4 pb-4 pt-3 space-y-3 bg-gray-50 rounded-b-lg">
+        <div
+          className="border-t px-4 pb-4 pt-3 space-y-3"
+          style={{
+            borderColor: 'rgba(45, 45, 44, 0.6)',
+            background: 'rgba(5, 5, 5, 0.5)',
+          }}
+        >
           {finding.plain_impact && (
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
@@ -118,7 +121,7 @@ function FindingCard({ finding, index }: { finding: AuditFinding; index: number 
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                 Technical evidence
               </p>
-              <pre className="text-xs bg-white border border-gray-200 rounded p-3 overflow-auto max-h-40 text-gray-600">
+              <pre className="text-xs hud-terminal max-h-40 overflow-auto">
                 {JSON.stringify(finding.details, null, 2)}
               </pre>
             </div>
@@ -397,7 +400,7 @@ function ResultsPageInner() {
                 <AppLink
                   key={entry.job_id}
                   href={`/results?job_id=${entry.job_id}`}
-                  className="block bg-white rounded-lg border border-gray-200 hover:border-blue-400 transition-colors p-4"
+                  className="block hud-panel hud-panel-dense p-4 transition-colors"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0 flex-1">
@@ -414,16 +417,16 @@ function ResultsPageInner() {
                     </div>
                     <div className="flex gap-1 text-xs flex-shrink-0">
                       {sev.critical > 0 && (
-                        <span className="px-2 py-0.5 rounded bg-red-100 text-red-700">C {sev.critical}</span>
+                        <span className="hud-sev hud-sev-critical">C {sev.critical}</span>
                       )}
                       {sev.high > 0 && (
-                        <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-700">H {sev.high}</span>
+                        <span className="hud-sev hud-sev-high">H {sev.high}</span>
                       )}
                       {sev.medium > 0 && (
-                        <span className="px-2 py-0.5 rounded bg-yellow-100 text-yellow-700">M {sev.medium}</span>
+                        <span className="hud-sev hud-sev-medium">M {sev.medium}</span>
                       )}
                       {sev.low > 0 && (
-                        <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-700">L {sev.low}</span>
+                        <span className="hud-sev hud-sev-low">L {sev.low}</span>
                       )}
                     </div>
                   </div>
@@ -480,6 +483,23 @@ function ResultsPageInner() {
     <DashboardLayout>
       <PullToRefresh onRefresh={fetchFromBackend}>
       <div className="space-y-6">
+        {/* v2.9.1 — page hero with malachite mineral texture */}
+        <section className="page-hero-results p-6 mb-6 hud-brackets">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
+              Audit Results
+            </h1>
+            <div className="text-sm" style={{ color: 'var(--smoke-300)' }}>
+              <span className="font-medium" style={{ color: 'var(--smoke-100)' }}>
+                {results.document_count}
+              </span>{' '}
+              docs ·{' '}
+              <span className="font-medium" style={{ color: 'var(--smoke-100)' }}>
+                {results.finding_count}
+              </span>{' '}
+              findings · {results.generated_at?.slice(0, 10)}
+            </div>
+          </div>
         {/* v2.7.3 V3: severity summary banner — HUD primitives match
             the Dashboard's SeverityTile (D6). The pre-v2.7.3 version
             rendered pale bg-red-50/orange-50/yellow-50/blue-50 on
@@ -514,16 +534,13 @@ function ResultsPageInner() {
             );
           })}
         </div>
+        </section>
 
-        {/* Meta + export */}
+        {/* Export controls (meta moved into the hero) */}
         <Card variant="bordered">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="text-sm text-gray-600">
-              <span className="font-medium text-gray-900">{results.document_count}</span> documents
-              &nbsp;·&nbsp;
-              <span className="font-medium text-gray-900">{results.finding_count}</span> total findings
-              &nbsp;·&nbsp;
-              {results.generated_at?.slice(0, 10)}
+          <div className="flex flex-wrap items-center justify-end gap-4">
+            <div className="text-xs" style={{ color: 'var(--smoke-400)' }}>
+              Export this audit:
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -647,7 +664,8 @@ function ResultsPageInner() {
                 {(filterSeverity !== 'all' || filterDetector !== 'all' || filterDocument !== 'all') && (
                   <button
                     onClick={() => { setFilterSeverity('all'); setFilterDetector('all'); setFilterDocument('all'); }}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="text-sm transition-colors"
+                    style={{ color: 'var(--signal-400)' }}
                   >
                     Clear filters
                   </button>
@@ -688,7 +706,7 @@ function ResultsPageInner() {
         )}
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+          <div className="hud-panel hud-panel-critical p-3 text-sm">
             {error}
           </div>
         )}

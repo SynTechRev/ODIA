@@ -115,13 +115,16 @@ export default function AnalysisPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">Analysis</h2>
-          <p className="text-gray-600 text-sm">
+        {/* v2.9.1 — page hero with marble mineral texture */}
+        <section className="page-hero-analysis p-6 mb-6 hud-brackets">
+          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
+            Analysis
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
             Aggregate statistics across {entries.length} audit
             {entries.length === 1 ? '' : 's'} · {totalFindings} total findings
           </p>
-        </div>
+        </section>
 
         {/* Severity distribution */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
