@@ -108,8 +108,7 @@ def _migrate_seen_hash_extraction_columns() -> None:
             if "text_char_count" not in existing:
                 conn.execute(
                     _sql_text(
-                        "ALTER TABLE seen_hashes ADD COLUMN "
-                        "text_char_count INTEGER"
+                        "ALTER TABLE seen_hashes ADD COLUMN " "text_char_count INTEGER"
                     )
                 )
     except Exception:  # noqa: BLE001 — schema migration is advisory

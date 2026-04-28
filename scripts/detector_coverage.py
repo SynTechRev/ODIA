@@ -227,9 +227,9 @@ def _print_human(rows: list[dict[str, Any]]) -> None:
         detectors_seen.add(r["detector"])
         details_flag = "yes" if r["has_details"] else "EMPTY"
         plain_flag = (
-            "yes" if r.get("plain_template") is True
-            else "no" if r.get("plain_template") is False
-            else "?"
+            "yes"
+            if r.get("plain_template") is True
+            else "no" if r.get("plain_template") is False else "?"
         )
         statute = r.get("statute") or "—"
         print(

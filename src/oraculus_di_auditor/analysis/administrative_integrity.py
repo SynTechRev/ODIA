@@ -42,6 +42,7 @@ def find_blank_required_fields(doc: dict[str, Any]) -> list[str]:
     blank = [f for f in REQUIRED_METADATA_FIELDS if _is_blank(doc.get(f))]
     return [f for f in blank if f != "final_action"]
 
+
 # Required metadata fields that must be present and non-empty
 REQUIRED_METADATA_FIELDS = [
     "final_action",

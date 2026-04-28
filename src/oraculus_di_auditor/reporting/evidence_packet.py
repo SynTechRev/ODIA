@@ -129,13 +129,15 @@ def _build_executive_summary(results: dict[str, Any]) -> str:
     # the operator can spot-check OCR quality. Without this note, scans
     # are indistinguishable from real text-only PDFs in the report.
     ocr_used_docs = [
-        m for m in manifest
+        m
+        for m in manifest
         if isinstance(m, dict)
         and isinstance(m.get("text_extraction"), dict)
         and m["text_extraction"].get("method") == "tesseract_ocr"
     ]
     ocr_unavailable_docs = [
-        m for m in manifest
+        m
+        for m in manifest
         if isinstance(m, dict)
         and isinstance(m.get("text_extraction"), dict)
         and m["text_extraction"].get("method")

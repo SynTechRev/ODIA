@@ -37,6 +37,7 @@ class TextExtractionResult:
     method: str
     char_count: int
 
+
 logger = logging.getLogger(__name__)
 
 # Optional dependencies
@@ -674,9 +675,7 @@ def record_seen_hash(
         db_models.SeenHash, "text_extraction_method"
     ):
         kwargs["text_extraction_method"] = text_extraction_method
-    if text_char_count is not None and hasattr(
-        db_models.SeenHash, "text_char_count"
-    ):
+    if text_char_count is not None and hasattr(db_models.SeenHash, "text_char_count"):
         kwargs["text_char_count"] = text_char_count
 
     try:

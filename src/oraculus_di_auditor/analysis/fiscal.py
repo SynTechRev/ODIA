@@ -31,6 +31,7 @@ def _include_pipeline_checks() -> bool:
     flag = os.environ.get("ODIA_INCLUDE_PIPELINE_CHECKS", "")
     return flag.lower() in ("1", "true", "yes", "on")
 
+
 # Fiscal keywords indicating appropriation or budget references
 APPROPRIATION_KEYWORDS = [
     "appropriation",
