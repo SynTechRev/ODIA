@@ -298,6 +298,42 @@ glows: `--glow-gold`, `--glow-gold-strong`, `--glow-emerald`,
 `--glow-signal`, `--glow-signal-neon`, `--glow-flow`,
 `--glow-critical`. Apply as `box-shadow: var(--glow-*);`.
 
+### 8.5 Page hero pattern (canonical, v2.9.2)
+
+Every page wraps its top-of-content area in a four-element hero:
+
+1. **Bracket label** — `<div class="hud-label-accent hud-{tone}">[
+   CATEGORY · CONTEXT ]</div>`. Cyan-bright for live / runtime
+   surfaces (Orchestrator, Anomalies, Results, Dashboard); amber for
+   static / library / config surfaces (Documents, Synthesis,
+   Analysis, Settings, Upload); flow for Automation.
+2. **Heading** — `<h1 class="hud-heading text-2xl md:text-3xl">`.
+3. **Subtext** — `<p class="hud-subtext mt-3 max-w-3xl">`. One
+   paragraph, max 3xl width.
+4. **Metric tile grid** — `<HeroMetricTile>` instances, 2/3/4 across
+   depending on count.
+
+The hero `<section>` carries the page-specific texture class
+(`page-hero-anomalies`, `page-hero-synthesis`, `page-hero-marble`,
+etc.) plus `hud-brackets p-6 md:p-8 relative overflow-hidden`.
+
+Reference implementations: Orchestrator (most explicit), Anomalies
+(simplest interactive grid), Dashboard (most decorated, layers
+gem-panel-faceted + gradient blooms ON TOP of the canonical
+structure).
+
+Pages that don't need metric tiles (Settings) keep elements 1-3
+only. Pages that already have rich custom decoration (Dashboard's
+faceted hero, Synthesis cover blocks) keep their decorative layer
+ON TOP of the canonical structure rather than replacing it.
+
+`HeroMetricTile` lives at `frontend/components/hero/HeroMetricTile.tsx`
+and accepts: `label`, `value`, `sublabel?`, `tone?`,
+`active?`, `onClick?`, `icon?`. Tones: `critical / high / medium /
+low / info / gold / emerald / signal / flow / neutral`. Each tone
+resolves to a CSS custom property; if the palette tokens shift,
+the component picks up the change automatically.
+
 ---
 
 ## 9. Don't list (consolidated)

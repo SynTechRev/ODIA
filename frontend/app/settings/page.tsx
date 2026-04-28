@@ -280,14 +280,21 @@ export default function SettingsPage() {
   return (
     <DashboardLayout>
       <div className="max-w-4xl space-y-6">
-        {/* v2.9.1 — page hero with gold-flux mineral texture */}
-        <section className="page-hero-settings p-6 mb-6 hud-brackets">
-          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
-            Settings
-          </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
-            UI preferences, authentication, and system information.
-          </p>
+        {/* v2.9.2 — canonical hero pattern (no metric tiles — config page) */}
+        <section className="page-hero-settings hud-brackets p-6 md:p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-amber mb-3">
+              [ APPLICATION CONFIG · USER SCOPE ]
+            </div>
+            <h1 className="hud-heading text-2xl md:text-3xl">
+              Settings
+            </h1>
+            <p className="hud-subtext mt-3 max-w-3xl">
+              Application appearance, analysis display, intro behaviour, and
+              authentication preferences. All settings are stored locally;
+              nothing is transmitted off-device.
+            </p>
+          </div>
         </section>
 
         {/* Appearance Settings */}
@@ -374,7 +381,7 @@ export default function SettingsPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Package:</span>
-              <span className="font-mono text-gray-900">odia 2.9.1</span>
+              <span className="font-mono text-gray-900">odia 2.9.2</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Frontend:</span>

@@ -16,6 +16,8 @@ import axios from 'axios';
 import { useAppNavigate } from '@/lib/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
+import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
+import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import { getAPIClient } from '@/lib/api/client';
 import type { AuditStatus, FileMetadata } from '@/lib/types/api';
 
@@ -274,6 +276,14 @@ export default function UploadPage() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
+  // v2.9.2 — surface prior-audit depth as motivating context in the hero.
+  const auditEntries = useAuditHistoryStore((s) => s.entries);
+  const priorAuditCount = auditEntries.length;
+  const priorFindingCount = auditEntries.reduce(
+    (acc, e) => acc + (e.results?.finding_count ?? 0),
+    0,
+  );
+
   const [uploadedFiles, setUploadedFiles] = useState<FileMetadata[]>([]);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [isUploading, setIsUploading] = useState(false);
@@ -483,16 +493,40 @@ export default function UploadPage() {
   return (
     <DashboardLayout>
       <div className="max-w-4xl space-y-6">
-        {/* v2.9.1 — page hero with gold-flux mineral texture */}
-        <section className="page-hero-upload p-6 mb-6 hud-brackets relative">
-          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
-            Upload Documents
-          </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
-            Drop legislative documents here, then click{' '}
-            <strong style={{ color: 'var(--gold-200)' }}>Run Audit</strong> to analyze them.
-            Supports PDF, JSON, TXT, and XML. Multiple files OK.
-          </p>
+        {/* v2.9.2 — canonical hero pattern with gold-flux texture */}
+        <section className="page-hero-upload hud-brackets p-6 md:p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-amber mb-3">
+              [ EVIDENCE INTAKE · LOCAL PROCESSING ]
+            </div>
+            <h1 className="hud-heading text-2xl md:text-3xl">
+              Upload Documents
+            </h1>
+            <p className="hud-subtext mt-3 max-w-3xl">
+              Drop legislative documents here, then click{' '}
+              <strong style={{ color: 'var(--gold-200)' }}>Run Audit</strong>{' '}
+              to analyse. Supports PDF, JSON, TXT, and XML. Multiple files OK.
+              All processing is local.
+            </p>
+
+            <div className="grid grid-cols-3 gap-4 mt-6 max-w-xl">
+              <HeroMetricTile
+                label="Audits run"
+                value={priorAuditCount}
+                tone="gold"
+              />
+              <HeroMetricTile
+                label="Findings emitted"
+                value={priorFindingCount}
+                tone="signal"
+              />
+              <HeroMetricTile
+                label="Detector modules"
+                value={9}
+                tone="emerald"
+              />
+            </div>
+          </div>
         </section>
 
         {/* Legistar retrieval */}

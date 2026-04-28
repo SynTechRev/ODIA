@@ -118,6 +118,11 @@ export default function Home() {
           />
 
           <div className="relative p-8 md:p-10">
+            {/* v2.9.2 C2 — canonical bracket-label tag (cyan-bright = live surface) */}
+            <div className="hud-label-accent hud-cyan-bright mb-3 relative z-10">
+              [ FORENSIC AUDIT PLATFORM · v2.9.2 · LOCAL ]
+            </div>
+
             {/* Brand badge — gem-edged, dual gold/emerald */}
             <div
               className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-[11px] font-medium uppercase tracking-[0.22em] gem-edge"
@@ -134,7 +139,7 @@ export default function Home() {
                     'linear-gradient(90deg, var(--gold-200), var(--neon-emerald), var(--gold-300))',
                 }}
               >
-                O.D.I.A. · v2.9.1
+                O.D.I.A. · v2.9.2
               </span>
               <span
                 aria-hidden="true"

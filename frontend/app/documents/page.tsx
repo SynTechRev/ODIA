@@ -14,6 +14,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
+import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import { PullToRefresh } from '@/components/mobile/PullToRefresh';
@@ -103,19 +104,45 @@ export default function DocumentsPage() {
     );
   }
 
+  const totalAudits = entries.length;
+  const totalFindings = rows.reduce((acc, r) => acc + r.total_findings, 0);
+
   return (
     <DashboardLayout>
       <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-4">
-        {/* v2.9.1 — page hero with marble mineral texture */}
-        <section className="page-hero-documents p-6 mb-6 hud-brackets">
-          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
-            Documents
-          </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
-            Unique documents across all local audits ({rows.length} total). Click
-            a row to open the most recent audit containing that document.
-          </p>
+        {/* v2.9.2 — canonical hero pattern with marble texture */}
+        <section className="page-hero-documents hud-brackets p-6 md:p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-amber mb-3">
+              [ EVIDENCE LIBRARY · CROSS-AUDIT ]
+            </div>
+            <h1 className="hud-heading text-2xl md:text-3xl">
+              Documents
+            </h1>
+            <p className="hud-subtext mt-3 max-w-3xl">
+              Unique documents across all local audits. Click a row to open the
+              most recent audit containing that document.
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 max-w-2xl">
+              <HeroMetricTile
+                label="Unique documents"
+                value={rows.length}
+                tone="gold"
+              />
+              <HeroMetricTile
+                label="Total audits"
+                value={totalAudits}
+                tone="emerald"
+              />
+              <HeroMetricTile
+                label="Findings emitted"
+                value={totalFindings}
+                tone="signal"
+              />
+            </div>
+          </div>
         </section>
         <div className="space-y-2">
           {rows.map((r) => (

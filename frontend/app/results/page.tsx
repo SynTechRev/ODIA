@@ -18,6 +18,7 @@ import { useSearchParams } from 'next/navigation';
 import { AppLink } from '@/lib/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
+import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { TemporalTimeline } from '@/components/timeline/TemporalTimeline';
 import { CCOPSScorecard } from '@/components/compliance/CCOPSScorecard';
 import { PullToRefresh } from '@/components/mobile/PullToRefresh';
@@ -483,57 +484,36 @@ function ResultsPageInner() {
     <DashboardLayout>
       <PullToRefresh onRefresh={fetchFromBackend}>
       <div className="space-y-6">
-        {/* v2.9.1 — page hero with malachite mineral texture */}
-        <section className="page-hero-results p-6 mb-6 hud-brackets">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
+        {/* v2.9.2 — canonical hero pattern (matches Anomalies/Orchestrator) */}
+        <section className="page-hero-results hud-brackets p-6 md:p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-cyan-bright mb-3">
+              [ AUDIT RESULTS · {jobId?.slice(0, 8)} ]
+            </div>
+            <h1 className="hud-heading text-2xl md:text-3xl">
               Audit Results
             </h1>
-            <div className="text-sm" style={{ color: 'var(--smoke-300)' }}>
-              <span className="font-medium" style={{ color: 'var(--smoke-100)' }}>
-                {results.document_count}
-              </span>{' '}
-              docs ·{' '}
-              <span className="font-medium" style={{ color: 'var(--smoke-100)' }}>
-                {results.finding_count}
-              </span>{' '}
-              findings · {results.generated_at?.slice(0, 10)}
+            <p className="hud-subtext mt-3 max-w-3xl">
+              {results.document_count} document{results.document_count === 1 ? '' : 's'} ·{' '}
+              {results.finding_count} finding{results.finding_count === 1 ? '' : 's'} ·{' '}
+              generated {results.generated_at?.slice(0, 10)}
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              {(['critical', 'high', 'medium', 'low'] as const).map((k) => (
+                <HeroMetricTile
+                  key={k}
+                  label={k}
+                  value={sev[k]}
+                  tone={k}
+                  active={filterSeverity === k}
+                  onClick={() =>
+                    setFilterSeverity(filterSeverity === k ? 'all' : k)
+                  }
+                />
+              ))}
             </div>
           </div>
-        {/* v2.7.3 V3: severity summary banner — HUD primitives match
-            the Dashboard's SeverityTile (D6). The pre-v2.7.3 version
-            rendered pale bg-red-50/orange-50/yellow-50/blue-50 on
-            slate-950 which was effectively invisible. */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {(
-            [
-              { key: 'critical', label: 'Critical', tone: 'text-rose-400', dot: 'bg-rose-500' },
-              { key: 'high', label: 'High', tone: 'text-orange-400', dot: 'bg-orange-500' },
-              { key: 'medium', label: 'Medium', tone: 'text-yellow-400', dot: 'bg-yellow-500' },
-              { key: 'low', label: 'Low', tone: 'text-blue-400', dot: 'bg-blue-500' },
-            ] as const
-          ).map(({ key, label, tone, dot }) => {
-            const active = filterSeverity === key;
-            return (
-              <button
-                key={key}
-                onClick={() => setFilterSeverity(active ? 'all' : key)}
-                className={`
-                  hud-panel hud-panel-inset p-4 text-center transition-colors
-                  ${active ? 'ring-2 ring-current' : ''}
-                `}
-              >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <span className={`w-2 h-2 rounded-full ${dot}`} />
-                  <span className="hud-metric-label">{label}</span>
-                </div>
-                <div className={`hud-metric tabular-nums ${tone}`}>
-                  {sev[key]}
-                </div>
-              </button>
-            );
-          })}
-        </div>
         </section>
 
         {/* Export controls (meta moved into the hero) */}

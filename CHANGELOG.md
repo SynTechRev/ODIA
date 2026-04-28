@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.9.2] - 2026-04-27 — Hero Pattern Convergence
+
+The user named three pages (Dashboard, Anomalies, Orchestrator) as the design target and asked every other page to match. v2.9.2 ships the unification: a single shared `HeroMetricTile` component, the four-element canonical hero structure (bracket-label / heading / subtext / metric grid) on every surface, and tonal coherence across the navigation.
+
+### Added
+- **`HeroMetricTile` component** (`frontend/components/hero/HeroMetricTile.tsx`) — the canonical metric tile for hero readouts. One component, ten tones (`critical/high/medium/low/info/gold/emerald/signal/flow/neutral`), optional active state with 3-layer glow ring, optional onClick that renders as a keyboard-accessible button. Replaces three previously-divergent implementations (Dashboard `SeverityTile`, Anomalies inline filter buttons, Orchestrator `OrchestratorMetric`).
+- **18 jest assertions** covering every tone, active/inactive states, button vs div rendering, sublabel handling, icon slot, and aria-pressed reflection.
+- **`page-hero-synthesis` CSS class** — marble texture for the Synthesis cross-jurisdictional aggregation surface (mobile fallback included in the `@media (max-width: 768px)` block).
+- **`docs/EVIDENCE_PACKET_RUN11_EVALUATION.md`** — quality audit of the run-11 evidence packet. 122 findings sampled across 7 detector modules; verdict is "factually correct, no detector regressions" with recommendations for v2.10.x calibration sprint.
+- **`docs/BRAND.md` §8.5** — documents the canonical four-element hero pattern with bracket-label tone discipline (cyan-bright = live; amber = static/library; flow = automation).
+
+### Changed
+- **Anomalies hero** — added `[ ANOMALY EXPLORER · CROSS-AUDIT ]` bracket label + canonical heading + subtext; severity tiles now use `HeroMetricTile` with `active` glow ring on filter selection (behaviour identical, implementation shared).
+- **Orchestrator hero** — three metrics migrated to `HeroMetricTile` with tonal colouring (`signal` for agents online, `emerald`/`neutral` for tasks queued, `gold` for completed/24h).
+- **Synthesis hero** — flat severity-number strip + bare gem-panel hero replaced with the canonical pattern (marble texture, amber bracket label, severity tiles inside the hero with sublabel percentages, export buttons moved into the hero).
+- **Documents hero** — added evidence-library bracket label + 3-tile metric grid (unique documents / total audits / findings emitted).
+- **Analysis hero** — added aggregate-analytics bracket label + severity tile grid with percentage sublabels. Severity-distribution bars now colour by severity CSS vars (was uniform light-blue); detector bars fade `gold-300` → `gold-500` → `smoke-500` by rank.
+- **Results hero** — flat severity strip with custom inline tones replaced with the canonical `HeroMetricTile` pattern. Bracket label includes the truncated job ID for context. Active-filter glow now matches Anomalies exactly.
+- **Automation hero** — four `HealthTile` instances migrated to a `WebhookMetric` wrapper that maps webhook tri-state to `HeroMetricTile` flow/critical/medium tones; active-workflows tile uses `signal` (live state) instead of amber (config state).
+- **Settings hero** — added `[ APPLICATION CONFIG · USER SCOPE ]` bracket label + canonical heading/subtext (no metric tiles — config page).
+- **Upload hero** — added evidence-intake bracket label + 3-tile context strip (audits run / findings emitted / detector modules) so users see audit-history depth before they intake new documents.
+- **Dashboard hero** — added `[ FORENSIC AUDIT PLATFORM · v2.9.2 · LOCAL ]` bracket label per BRAND.md §8.5; brand badge bumped to v2.9.2.
+
+### Engineering
+- **Zero type errors** in production code (`npx tsc --noEmit` clean across all `app/` + `components/` non-test sources).
+- **Next.js build** passes for all 15 routes; bundle deltas are minor (each metric-tile-using page picks up ~0.3 kB for the shared `HeroMetricTile` chunk).
+
+---
+
 ## [2.9.1] - 2026-04-27 — Mineral Polish + Maturity Pass
 
 Five tracks of finish work on top of v2.9.0. Track A fixes the intro's premature exit, Track B propagates mineral textures across every page, Track C completes the light-theme leak sweep, Track D finally swaps the legacy octopus desktop icon, Track E lands the maturity roadmap.

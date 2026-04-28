@@ -12,6 +12,7 @@ import React, { useMemo } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
+import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import type { AuditFinding } from '@/lib/types/api';
@@ -32,11 +33,13 @@ const SEV_BADGE: Record<Severity, string> = {
   low: 'bg-blue-100 text-blue-700',
 };
 
-const SEV_BAR: Record<Severity, string> = {
-  critical: 'bg-red-500',
-  high: 'bg-orange-500',
-  medium: 'bg-yellow-400',
-  low: 'bg-blue-400',
+// v2.9.2 B3 — bar fills now use the severity CSS vars (matches the
+// HeroMetricTile dot colors above the chart, instead of pastel Tailwind).
+const SEV_BAR_VAR: Record<Severity, string> = {
+  critical: 'var(--severity-critical)',
+  high: 'var(--severity-high)',
+  medium: 'var(--severity-medium)',
+  low: 'var(--severity-low)',
 };
 
 interface EnrichedFinding extends AuditFinding {
@@ -111,19 +114,56 @@ export default function AnalysisPage() {
 
   const totalFindings = allFindings.length;
   const maxDetector = byDetector[0]?.[1] ?? 1;
+  const detectorCount = byDetector.length;
+  const pct = (n: number, total: number): string =>
+    total > 0 ? `${Math.round((n / total) * 1000) / 10}%` : '0%';
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* v2.9.1 — page hero with marble mineral texture */}
-        <section className="page-hero-analysis p-6 mb-6 hud-brackets">
-          <h1 className="text-2xl font-semibold" style={{ color: 'var(--smoke-50)' }}>
-            Analysis
-          </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--smoke-300)' }}>
-            Aggregate statistics across {entries.length} audit
-            {entries.length === 1 ? '' : 's'} · {totalFindings} total findings
-          </p>
+        {/* v2.9.2 — canonical hero pattern with marble texture */}
+        <section className="page-hero-analysis hud-brackets p-6 md:p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-amber mb-3">
+              [ AGGREGATE ANALYTICS · ALL AUDITS ]
+            </div>
+            <h1 className="hud-heading text-2xl md:text-3xl">
+              Analysis
+            </h1>
+            <p className="hud-subtext mt-3 max-w-3xl">
+              Aggregate statistics across {entries.length} audit
+              {entries.length === 1 ? '' : 's'} · {totalFindings} total
+              finding{totalFindings === 1 ? '' : 's'} · {detectorCount}{' '}
+              detector module{detectorCount === 1 ? '' : 's'} active.
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              <HeroMetricTile
+                label="Critical"
+                value={totals.critical}
+                sublabel={pct(totals.critical, totalFindings)}
+                tone="critical"
+              />
+              <HeroMetricTile
+                label="High"
+                value={totals.high}
+                sublabel={pct(totals.high, totalFindings)}
+                tone="high"
+              />
+              <HeroMetricTile
+                label="Medium"
+                value={totals.medium}
+                sublabel={pct(totals.medium, totalFindings)}
+                tone="medium"
+              />
+              <HeroMetricTile
+                label="Low"
+                value={totals.low}
+                sublabel={pct(totals.low, totalFindings)}
+                tone="low"
+              />
+            </div>
+          </div>
         </section>
 
         {/* Severity distribution */}
@@ -131,7 +171,7 @@ export default function AnalysisPage() {
           <Card title="Severity distribution" variant="bordered">
             <div className="space-y-3">
               {(['critical', 'high', 'medium', 'low'] as const).map((k) => {
-                const pct = totalFindings > 0 ? (totals[k] / totalFindings) * 100 : 0;
+                const pctVal = totalFindings > 0 ? (totals[k] / totalFindings) * 100 : 0;
                 return (
                   <div key={k}>
                     <div className="flex items-center justify-between text-sm mb-1">
@@ -139,13 +179,17 @@ export default function AnalysisPage() {
                         {k}
                       </span>
                       <span className="text-gray-500">
-                        {totals[k]} ({pct.toFixed(0)}%)
+                        {totals[k]} ({pctVal.toFixed(0)}%)
                       </span>
                     </div>
                     <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full ${SEV_BAR[k]}`}
-                        style={{ width: `${pct}%` }}
+                        className="h-full"
+                        style={{
+                          width: `${pctVal}%`,
+                          background: SEV_BAR_VAR[k],
+                          boxShadow: `0 0 8px ${SEV_BAR_VAR[k]}`,
+                        }}
                       />
                     </div>
                   </div>
@@ -161,20 +205,41 @@ export default function AnalysisPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                {byDetector.map(([layer, count]) => (
-                  <div key={layer}>
-                    <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="font-mono text-gray-700">{layer}</span>
-                      <span className="text-gray-500">{count}</span>
+                {byDetector.map(([layer, count], i) => {
+                  // v2.9.2 B3 — top detector gets gold-300; the rest fade
+                  // toward smoke-500 by rank, so the tallest bar reads as
+                  // the most active and the noise floor falls back.
+                  const fade = byDetector.length > 1
+                    ? i / (byDetector.length - 1)
+                    : 0;
+                  const fill =
+                    fade < 0.34
+                      ? 'var(--gold-300)'
+                      : fade < 0.67
+                        ? 'var(--gold-500)'
+                        : 'var(--smoke-500)';
+                  return (
+                    <div key={layer}>
+                      <div className="flex items-center justify-between text-sm mb-1">
+                        <span className="font-mono text-gray-700">{layer}</span>
+                        <span className="text-gray-500">{count}</span>
+                      </div>
+                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full"
+                          style={{
+                            width: `${(count / maxDetector) * 100}%`,
+                            background: fill,
+                            boxShadow:
+                              fade < 0.34
+                                ? `0 0 8px ${fill}`
+                                : 'none',
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-slate-500"
-                        style={{ width: `${(count / maxDetector) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </Card>

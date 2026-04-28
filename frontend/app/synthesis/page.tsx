@@ -19,6 +19,7 @@ import React, { useCallback, useMemo } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
+import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import type { AuditFinding } from '@/lib/types/api';
@@ -62,6 +63,11 @@ interface StatuteGroup {
   statute: string;
   count: number;
   document_ids: Set<string>;
+}
+
+function pctOf(part: number, whole: number): string {
+  if (whole <= 0) return '0%';
+  return `${Math.round((part / whole) * 1000) / 10}%`;
 }
 
 function triggerMarkdownDownload(content: string, filename: string): void {
@@ -524,22 +530,23 @@ export default function SynthesisPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* v2.8.0 C3 — Synthesis hero gets the marble texture: marble's   */}
-        {/* smoke + gold + emerald tri-pole maps thematically to cross-    */}
-        {/* jurisdictional synthesis (per BRAND.md §3.2).                   */}
-        <section className="gem-panel gem-hero-marble relative overflow-hidden p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3 relative z-10">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-1">
-                Master Audit Synthesis
-              </h2>
-              <p className="text-gray-600 text-sm">
-                {entries.length} audit{entries.length === 1 ? '' : 's'} ·{' '}
-                {uniqueDocCount} unique document{uniqueDocCount === 1 ? '' : 's'}{' '}
-                · {totalFindings} findings
-              </p>
+        {/* v2.9.2 — canonical hero pattern with marble texture */}
+        <section className="page-hero-synthesis hud-brackets p-6 md:p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-amber mb-3">
+              [ MASTER AUDIT SYNTHESIS · CROSS-JURISDICTIONAL ]
             </div>
-            <div className="flex gap-2">
+            <h1 className="hud-heading text-2xl md:text-3xl">
+              Master Audit Synthesis
+            </h1>
+            <p className="hud-subtext mt-3 max-w-3xl">
+              {entries.length} audit{entries.length === 1 ? '' : 's'} ·{' '}
+              {uniqueDocCount} unique document{uniqueDocCount === 1 ? '' : 's'}{' '}
+              · {totalFindings} findings — cumulative across all local audit
+              history.
+            </p>
+
+            <div className="flex items-center gap-3 mt-6 flex-wrap">
               <Button variant="secondary" onClick={handleExportMarkdown}>
                 ↓ Markdown
               </Button>
@@ -547,44 +554,35 @@ export default function SynthesisPage() {
                 ↓ DOCX
               </Button>
             </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              <HeroMetricTile
+                label="Critical"
+                value={severity.critical}
+                sublabel={pctOf(severity.critical, totalFindings)}
+                tone="critical"
+              />
+              <HeroMetricTile
+                label="High"
+                value={severity.high}
+                sublabel={pctOf(severity.high, totalFindings)}
+                tone="high"
+              />
+              <HeroMetricTile
+                label="Medium"
+                value={severity.medium}
+                sublabel={pctOf(severity.medium, totalFindings)}
+                tone="medium"
+              />
+              <HeroMetricTile
+                label="Low"
+                value={severity.low}
+                sublabel={pctOf(severity.low, totalFindings)}
+                tone="low"
+              />
+            </div>
           </div>
         </section>
-
-        {/* Severity totals */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card variant="bordered">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-red-600">
-                {severity.critical}
-              </div>
-              <div className="text-sm text-gray-600">Critical</div>
-            </div>
-          </Card>
-          <Card variant="bordered">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600">
-                {severity.high}
-              </div>
-              <div className="text-sm text-gray-600">High</div>
-            </div>
-          </Card>
-          <Card variant="bordered">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-600">
-                {severity.medium}
-              </div>
-              <div className="text-sm text-gray-600">Medium</div>
-            </div>
-          </Card>
-          <Card variant="bordered">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">
-                {severity.low}
-              </div>
-              <div className="text-sm text-gray-600">Low</div>
-            </div>
-          </Card>
-        </div>
 
         {/* Top findings by prevalence */}
         <Card title="Top findings by cross-document prevalence" variant="bordered">

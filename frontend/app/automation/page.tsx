@@ -31,6 +31,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
+import { HeroMetricTile, type HeroMetricTone } from '@/components/hero/HeroMetricTile';
 import { getAPIClient } from '@/lib/api/client';
 
 // ---------------------------------------------------------------------------
@@ -292,46 +293,43 @@ export default function AutomationPage() {
         {/* =============================================================== */}
         {/* 1 · Hero + health strip                                          */}
         {/* =============================================================== */}
-        {/* v2.9.1 — wrap in gold-flux mineral hero with violet edge accent */}
+        {/* v2.9.2 — canonical hero pattern with gold-flux + violet flow accents */}
         <section className="page-hero-automation hud-brackets p-6 md:p-8 relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-violet-500/15 blur-3xl pointer-events-none" aria-hidden />
-          <div className="relative">
-            <div className="hud-label-accent mb-3 hud-flow">
-              AUTOMATION · n8n INTEGRATION
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-flow mb-3">
+              [ AUTOMATION · n8n INTEGRATION ]
             </div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
+            <h1 className="hud-heading text-2xl md:text-3xl">
               Orchestration at machine speed.
             </h1>
-            <p className="text-slate-300 max-w-2xl text-sm md:text-base leading-relaxed">
+            <p className="hud-subtext mt-3 max-w-3xl">
               n8n drives the audit pipeline — scraping, ingestion, severity routing,
               MAS generation, and R.A.I.A. synthesis — while O.D.I.A. does the analysis.
               Every execution is recorded in the provenance chain.
             </p>
 
-            {/* v2.7.3 V5: the four hero tiles describe the *webhook
-                surface* — the n8n integration layer — not the core
-                Tier 1 detector pipeline (which always runs). When
-                ODIA_WEBHOOK_TOKEN isn't configured, /api/v1/webhook/
-                health 404s and these tiles report "Not configured"
-                (amber) rather than the alarming red "OFFLINE" that
-                previously suggested Tier 1 detectors were broken. */}
-            <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
-              <HealthTile
+            {/* v2.9.2 — webhook health surfaced through the canonical
+                HeroMetricTile (flow tone for "configured", medium for
+                "not configured"). Active workflows reads in signal-green
+                so it pops as live state, not configuration state. */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              <WebhookMetric
                 label="Tier 1 webhook"
                 state={webhookTileState(health, 'tier1')}
               />
-              <HealthTile
+              <WebhookMetric
                 label="Tier 2 webhook"
                 state={webhookTileState(health, 'tier2')}
               />
-              <HealthTile
+              <WebhookMetric
                 label="Webhook token"
                 state={webhookTileState(health, 'token')}
               />
-              <HealthTile
+              <HeroMetricTile
                 label="Active workflows"
-                state={activeCount > 0 ? 'ready' : 'not_configured'}
-                valueOverride={`${activeCount} / ${workflows.length}`}
+                value={`${activeCount} / ${workflows.length}`}
+                tone="signal"
               />
             </div>
           </div>
@@ -499,35 +497,24 @@ function webhookTileState(
   return health.webhook_token_configured ? 'ready' : 'not_configured';
 }
 
-function HealthTile({
+/**
+ * v2.9.2 — webhook-state → HeroMetricTile mapper. Keeps the tri-state
+ * vocabulary (ready / offline / not_configured) but renders through
+ * the canonical tile so Automation reads as part of the same family
+ * as Anomalies, Results, etc.
+ */
+function WebhookMetric({
   label,
   state,
-  valueOverride,
 }: {
   label: string;
   state: HealthTileState;
-  valueOverride?: string;
 }) {
-  const toneClass =
-    state === 'ready'
-      ? 'hud-cyan-bright'
-      : state === 'offline'
-        ? 'text-rose-400'
-        : 'text-amber-400';
-  const defaultText =
-    state === 'ready'
-      ? 'READY'
-      : state === 'offline'
-        ? 'OFFLINE'
-        : 'NOT CONFIGURED';
-  return (
-    <div className="hud-panel-inset px-4 py-3">
-      <div className="hud-metric-label">{label}</div>
-      <div className={`hud-metric mt-1 ${toneClass}`}>
-        {valueOverride ?? defaultText}
-      </div>
-    </div>
-  );
+  const tone: HeroMetricTone =
+    state === 'ready' ? 'flow' : state === 'offline' ? 'critical' : 'medium';
+  const value =
+    state === 'ready' ? 'READY' : state === 'offline' ? 'OFFLINE' : 'NOT CONFIGURED';
+  return <HeroMetricTile label={label} value={value} tone={tone} />;
 }
 
 function WorkflowCard({ wf }: { wf: WorkflowSummary }) {

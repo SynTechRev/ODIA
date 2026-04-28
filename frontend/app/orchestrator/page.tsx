@@ -27,6 +27,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
+import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { getAPIClient } from '@/lib/api/client';
 
 // ---------------------------------------------------------------------------
@@ -205,17 +206,20 @@ export default function OrchestratorPage() {
               counters track live mesh execution jobs.
             </p>
             <div className="grid grid-cols-3 gap-4 mt-6 max-w-2xl">
-              <OrchestratorMetric
+              <HeroMetricTile
                 label="Agents online"
                 value={status.agents_online}
+                tone="signal"
               />
-              <OrchestratorMetric
+              <HeroMetricTile
                 label="Tasks queued"
                 value={status.tasks_queued}
+                tone={status.tasks_queued > 0 ? 'emerald' : 'neutral'}
               />
-              <OrchestratorMetric
+              <HeroMetricTile
                 label="Completed / 24h"
                 value={status.tasks_completed_today}
+                tone="gold"
               />
             </div>
           </div>
@@ -310,21 +314,6 @@ export default function OrchestratorPage() {
 // ---------------------------------------------------------------------------
 // Components
 // ---------------------------------------------------------------------------
-
-function OrchestratorMetric({
-  label,
-  value,
-}: {
-  label: string;
-  value: number;
-}) {
-  return (
-    <div className="hud-panel-inset px-4 py-3">
-      <div className="hud-metric-label">{label}</div>
-      <div className="hud-metric mt-1 hud-cyan-bright">{value}</div>
-    </div>
-  );
-}
 
 function StatusPill({ status }: { status: string }) {
   const norm = (status || '').toLowerCase();

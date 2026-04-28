@@ -12,6 +12,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
+import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
 import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import { PullToRefresh } from '@/components/mobile/PullToRefresh';
@@ -123,48 +124,33 @@ export default function AnomaliesPage() {
     <DashboardLayout>
       <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6">
-        {/* v2.9.1 — page hero with malachite-flux mineral texture */}
-        <section className="page-hero-anomalies p-6 mb-6 hud-brackets">
-          <h1 className="text-2xl font-semibold mb-4" style={{ color: 'var(--smoke-50)' }}>
-            Anomalies
-          </h1>
-          {/* Severity summary — HUD primitives, semantic colors */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {(['critical', 'high', 'medium', 'low'] as const).map((k) => {
-              const colorVar = `var(--severity-${k})`;
-              const active = filterSeverity === k;
-              return (
-                <button
+        {/* v2.9.2 — canonical hero pattern: bracket label + heading + subtext + metric tile grid */}
+        <section className="page-hero-anomalies hud-brackets p-6 md:p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="hud-label-accent hud-cyan-bright mb-3">
+              [ ANOMALY EXPLORER · CROSS-AUDIT ]
+            </div>
+            <h1 className="hud-heading text-2xl md:text-3xl">
+              Anomalies
+            </h1>
+            <p className="hud-subtext mt-3 max-w-3xl">
+              Detector findings grouped by layer across every audit in local
+              history. Click a severity tile to filter; click again to clear.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              {(['critical', 'high', 'medium', 'low'] as const).map((k) => (
+                <HeroMetricTile
                   key={k}
+                  label={k}
+                  value={totals[k]}
+                  tone={k}
+                  active={filterSeverity === k}
                   onClick={() =>
-                    setFilterSeverity(active ? 'all' : k)
+                    setFilterSeverity(filterSeverity === k ? 'all' : k)
                   }
-                  className="hud-panel hud-panel-inset p-4 text-center transition-all"
-                  style={{
-                    boxShadow: active
-                      ? `0 0 0 1.5px ${colorVar}, inset 0 0 0 1px ${colorVar}, 0 0 32px -8px ${colorVar}`
-                      : undefined,
-                  }}
-                >
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{
-                        background: colorVar,
-                        boxShadow: `0 0 8px ${colorVar}`,
-                      }}
-                    />
-                    <span className="hud-metric-label capitalize">{k}</span>
-                  </div>
-                  <div
-                    className="hud-metric tabular-nums"
-                    style={{ color: colorVar }}
-                  >
-                    {totals[k]}
-                  </div>
-                </button>
-              );
-            })}
+                />
+              ))}
+            </div>
           </div>
         </section>
 
