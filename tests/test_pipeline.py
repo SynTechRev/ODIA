@@ -107,8 +107,15 @@ def test_run_full_analysis_fiscal_anomaly():
     )
 
 
-def test_run_full_analysis_missing_provenance():
-    """Test pipeline detects missing provenance."""
+def test_run_full_analysis_missing_provenance(monkeypatch):
+    """Test pipeline detects missing provenance.
+
+    v2.9.3 D.1 — `fiscal:missing-provenance-hash` is gated behind
+    ODIA_INCLUDE_PIPELINE_CHECKS because it fired on 100% of corpora
+    (it measures pipeline state, not document content). The pipeline-
+    integration test that exercises this finding now opts in.
+    """
+    monkeypatch.setenv("ODIA_INCLUDE_PIPELINE_CHECKS", "1")
     result = run_full_analysis(
         document_text="Test content.",
         metadata={"title": "Test"},
