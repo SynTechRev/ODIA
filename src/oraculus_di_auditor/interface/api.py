@@ -40,11 +40,11 @@ def _resolve_odia_version() -> str:
     try:
         from importlib.metadata import PackageNotFoundError, version
     except ImportError:
-        return os.environ.get("ODIA_VERSION", "2.9.3")
+        return os.environ.get("ODIA_VERSION", "2.10.1")
     try:
         return version("odia")
     except PackageNotFoundError:
-        return os.environ.get("ODIA_VERSION", "2.9.3")
+        return os.environ.get("ODIA_VERSION", "2.10.1")
 
 
 ODIA_VERSION = _resolve_odia_version()
@@ -353,6 +353,18 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
         logger.info("Dashboard summary route registered")
     except Exception as e:
         logger.warning(f"Dashboard routes not available: {e}")
+
+    try:
+        from .routes.config_routes import register_config_routes
+
+        # v2.10.x — runtime-mutable config (currently: webhook token).
+        # Lets the Settings UI persist ODIA_WEBHOOK_TOKEN to a per-user
+        # file without requiring the env var to be pre-set, which is
+        # impossible on the Electron desktop install.
+        register_config_routes(app)
+        logger.info("Runtime-config routes registered")
+    except Exception as e:
+        logger.warning(f"Config routes not available: {e}")
 
 
 def _init_database_at_startup() -> None:

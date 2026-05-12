@@ -114,21 +114,63 @@ _TIER2_MODULES = (
 # ---------------------------------------------------------------------------
 
 
+def _user_token_path() -> Path:
+    """Per-user writable file backing the webhook token.
+
+    Lives next to the seeded jurisdictions under ``<user_data_root>/``
+    so the desktop installer's user-data directory holds all runtime
+    state in one place.  See
+    ``config.jurisdiction_loader._user_data_root`` for the platform-
+    specific path resolution.
+    """
+    from oraculus_di_auditor.config.jurisdiction_loader import _user_data_root
+
+    return _user_data_root() / "webhook_token"
+
+
+def _resolve_webhook_token() -> tuple[str | None, str | None]:
+    """Resolve the active webhook token + its source.
+
+    Order of precedence:
+        1. ``ODIA_WEBHOOK_TOKEN`` environment variable
+        2. ``<user_data_root>/webhook_token`` file (managed via the
+           Settings UI's "Automation Webhook" card)
+
+    Returns ``(token, source)`` where ``source`` is ``"env"``,
+    ``"file"``, or ``None`` if no token is configured anywhere.
+    """
+    env_value = os.environ.get(WEBHOOK_TOKEN_ENV, "").strip()
+    if env_value:
+        return env_value, "env"
+    try:
+        path = _user_token_path()
+        if path.exists():
+            value = path.read_text(encoding="utf-8").strip()
+            if value:
+                return value, "file"
+    except OSError:
+        # Disk read failure — fall through to "not configured" rather
+        # than crash route registration. The user can re-set the token
+        # via the Settings UI.
+        logger.warning("Failed to read webhook token file at %s", _user_token_path())
+    return None, None
+
+
 def _verify_token(presented: str | None) -> bool:
     """Constant-time comparison of the webhook token.
 
-    Returns False if no token is configured in env — the route registrar
-    refuses to register in that case, but this guard is kept as a second
-    line of defence.
+    Returns False if no token is configured anywhere (env or file)
+    or if the presented value is missing.
     """
-    expected = os.environ.get(WEBHOOK_TOKEN_ENV)
+    expected, _ = _resolve_webhook_token()
     if not expected or not presented:
         return False
     return hmac.compare_digest(expected.encode(), presented.encode())
 
 
 def _token_configured() -> bool:
-    return bool(os.environ.get(WEBHOOK_TOKEN_ENV, "").strip())
+    token, _ = _resolve_webhook_token()
+    return bool(token)
 
 
 # ---------------------------------------------------------------------------
@@ -329,7 +371,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "2.9.3"),
+                engine_version=os.environ.get("ODIA_VERSION", "2.10.1"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -402,14 +444,20 @@ def register_webhook_routes(app: Any) -> None:
         logger.warning("FastAPI not installed — webhook routes will not be registered.")
         return
 
+    # v2.10.x — register unconditionally. The per-endpoint `_require_token`
+    # check below is the real security wall. Registering the routes only
+    # when the env var was set at startup made the Settings-page token UI
+    # impossible (the routes wouldn't exist for `_require_token` to gate),
+    # and made every fresh install fail loud at /webhook/health with 404
+    # instead of the documented 401-on-bad-token contract.
     if not _token_configured():
-        logger.error(
-            "%s is not set in the environment. Webhook routes will NOT "
-            "register. Set this variable and restart the API to enable "
-            "n8n integration.",
+        logger.warning(
+            "%s is not set (env or %s). Webhook routes will register but "
+            "every authenticated endpoint will return 401 until a token "
+            "is configured via the Settings UI or environment.",
             WEBHOOK_TOKEN_ENV,
+            _user_token_path(),
         )
-        return
 
     router = APIRouter(tags=["webhook", "n8n"])
 
@@ -423,8 +471,8 @@ def register_webhook_routes(app: Any) -> None:
             "status": "healthy" if tier1_ok else "degraded",
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
-            "webhook_token_configured": True,
-            "odia_version": os.environ.get("ODIA_VERSION", "2.9.3"),
+            "webhook_token_configured": _token_configured(),
+            "odia_version": os.environ.get("ODIA_VERSION", "2.10.1"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------

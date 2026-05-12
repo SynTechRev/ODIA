@@ -1,16 +1,22 @@
 """Integration tests for the n8n webhook /health probe + token gate.
 
-Two paths to cover:
-  1. ODIA_WEBHOOK_TOKEN unset → register_webhook_routes refuses to
-     register; /api/v1/webhook/health returns 404.
-  2. ODIA_WEBHOOK_TOKEN set → routes register; health returns 200 with
-     `tier1_ready`, `tier2_ready`, `webhook_token_configured` keys.
+v2.10.x contract:
+  1. Routes register unconditionally so the Settings UI can manage the
+     token at runtime.  When no token is configured (env or per-user
+     file), /api/v1/webhook/health returns 200 with
+     ``webhook_token_configured: false`` and every authenticated
+     endpoint returns 401.
+  2. When a token is configured, /health reports it and the
+     authenticated endpoints accept matching credentials.
 
-The test pattern mirrors test_upload_routes.py: monkeypatch the env,
-call create_app(), drive TestClient.
+The file-fallback path is monkeypatched to a tmp_path so the tests
+don't see (or clobber) whatever the developer has stored in their real
+``%APPDATA%\\ODIA\\webhook_token``.
 """
 
 from __future__ import annotations
+
+from pathlib import Path
 
 import pytest
 
@@ -25,43 +31,74 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 
 def _fresh_app():
-    """Build a fresh FastAPI app. We re-import create_app each call to
-    pick up env var changes that the webhook registrar gates on at
-    import time (the env check runs inside register_webhook_routes, so
-    a plain re-call of create_app is sufficient — no module reload
-    needed)."""
+    """Build a fresh FastAPI app.  Route registration reads the token
+    state at call time, so a plain ``create_app()`` picks up monkey-
+    patched env / paths without needing a module reload."""
     from oraculus_di_auditor.interface.api import create_app
 
     return create_app()
 
 
+@pytest.fixture(autouse=True)
+def _isolate_token_file(monkeypatch, tmp_path):
+    """Redirect the per-user token file to a tmp path for every test
+    in this module so we never read or write the real user data dir."""
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    tmp_token = tmp_path / "webhook_token"
+    monkeypatch.setattr(
+        webhook_mod, "_user_token_path", lambda: tmp_token, raising=True
+    )
+    return tmp_token
+
+
 # ---------------------------------------------------------------------------
-# Token-absent path
+# Token-absent path  (v2.10.x — routes register anyway)
 # ---------------------------------------------------------------------------
 
 
-def test_health_returns_404_when_token_unset(monkeypatch):
-    """Without ODIA_WEBHOOK_TOKEN, the webhook surface must not register.
+def test_health_returns_200_when_token_unset(monkeypatch):
+    """v2.10.x — with no token configured anywhere, /health still
+    responds 200 but reports ``webhook_token_configured: false``.
 
-    The whole point of the guard is that a misconfigured deployment
-    fails loud rather than silently exposing an unauthenticated
-    pipeline. A 404 here is the observable signal that the guard fired.
+    Pre-v2.10.x this returned 404 because the route refused to
+    register.  The new behaviour lets the Settings UI manage the
+    token at runtime without a backend restart, and surfaces the
+    "not configured" state as a structured field instead of a 404.
     """
     monkeypatch.delenv("ODIA_WEBHOOK_TOKEN", raising=False)
     app = _fresh_app()
     client = TestClient(app)
 
     resp = client.get("/api/v1/webhook/health")
-    assert resp.status_code == 404
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["webhook_token_configured"] is False
 
-    # Also confirm no /api/v1/webhook/* route sneaked in through some
-    # other registration path.
-    webhook_paths = [
-        str(getattr(r, "path", ""))
-        for r in app.routes
-        if "/webhook/" in str(getattr(r, "path", ""))
-    ]
-    assert webhook_paths == []
+    # The protected endpoints must still 401 when no token is configured,
+    # so a misconfigured install can't be exploited even though /health
+    # responds 200 now.
+    protected = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": "anything"},
+        json={"jurisdictions": ["woodlake"]},
+    )
+    assert protected.status_code == 401
+
+
+def test_health_reflects_file_fallback_token(monkeypatch, _isolate_token_file):
+    """If no env var is set but the per-user file holds a token, the
+    resolver picks the file value and /health reports configured=true.
+    """
+    monkeypatch.delenv("ODIA_WEBHOOK_TOKEN", raising=False)
+    Path(_isolate_token_file).write_text("file-fallback-token", encoding="utf-8")
+
+    app = _fresh_app()
+    client = TestClient(app)
+
+    resp = client.get("/api/v1/webhook/health")
+    assert resp.status_code == 200
+    assert resp.json()["webhook_token_configured"] is True
 
 
 # ---------------------------------------------------------------------------
