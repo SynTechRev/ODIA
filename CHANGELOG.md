@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.10.1] - 2026-05-12 — Post-install UX patch (RAIA viewer + webhook token UI)
+
+Closes three gaps a fresh v2.10.0 desktop install surfaced for the first user. Scope is deliberately narrow — UX wiring and runtime-mutable config — and is independent of v2.10.0's deferred Track D / Track E / Track F items, which remain on the v2.10.x sub-cycle roadmap.
+
+### Fixed — RAIA Synthesis result viewer
+- Previously, clicking **Run RAIA Synthesis** on the Automation page produced a green success toast and silently dropped the rendered markdown report (`body.markdown` from `/api/v1/triggers/raia-synthesize-all`). Users had no way to see what RAIA actually found.
+- `frontend/app/automation/page.tsx`:
+  - `TriggerNotification` interface extended with optional `report?: RaiaReport` payload.
+  - `triggerRaiaSynthesis()` now captures the markdown and metadata, persists to `localStorage` under key `odia.lastRaiaReport` so the most recent report survives reloads.
+  - New `RaiaReportModal` component renders the markdown verbatim in a scrollable monospace `<pre>` with **copy** and **download .md** actions. Escape key + backdrop click close it.
+  - The success banner gains a "view report →" action whenever a notice carries a report.
+  - The "Run RAIA Synthesis" trigger tile gains a permanent **VIEW LAST REPORT →** footer link whenever a stored report exists.
+
+### Added — Runtime-mutable webhook token (Settings UI)
+- Pre-patch, `ODIA_WEBHOOK_TOKEN` could only be set as a process environment variable, which is impractical on the Electron desktop install where the host has no shell. The `register_webhook_routes` registration gate also REFUSED to register webhook routes when the env var was unset — so a Settings-page UI for the token was structurally impossible.
+- `src/oraculus_di_auditor/interface/routes/webhook.py`:
+  - New `_user_token_path()` returns `<user_data_root>/webhook_token` (uses `config.jurisdiction_loader._user_data_root()`).
+  - New `_resolve_webhook_token()` returns `(token, source)`, reading env first then file fallback. `_verify_token`, `_token_configured`, and the registration check all route through this resolver.
+  - **Registration gate softened**: webhook routes now register unconditionally. The per-request `_require_token` dependency remains the security wall. This makes the Settings-UI token effective without a backend restart.
+- `src/oraculus_di_auditor/interface/routes/config_routes.py` (new):
+  - `GET /api/v1/config/webhook-token` → `{configured, source: "env"|"file"|null, file_path, env_var}`. Never returns the token value.
+  - `POST /api/v1/config/webhook-token` → writes / clears the file, sets POSIX `0o600` perms where supported, surfaces env-shadows-file conflicts.
+- `src/oraculus_di_auditor/interface/api.py`: wires `register_config_routes` after the dashboard routes.
+- `frontend/lib/api/client.ts`: new `getWebhookTokenStatus()` + `setWebhookToken(value)` methods + `WebhookTokenStatus` / `WebhookTokenSetResult` interfaces.
+- `frontend/app/settings/page.tsx`: new `WebhookTokenCard` (status pill: `env var` / `on disk` / `not configured`; masked input with Show / Hide / 32-byte-hex Generate; Save / Clear; amber inline warning when env shadows the file).
+
+### Changed — Webhook contract on unconfigured installs (breaking for internal probes)
+- Pre-patch: `GET /api/v1/webhook/health` returned **404** when no token was configured (registration gate refused).
+- Post-patch: returns **200** with `webhook_token_configured: false`. Authenticated webhook endpoints still return 401 in that state.
+- Rationale: the 404-when-unset contract made the Settings UI structurally impossible and forced misconfigured installs to fail with an opaque 404 instead of a structured "not configured" boolean.
+- **Migration**: any external monitoring asserting on 404-when-unset should switch to checking `webhook_token_configured`. No external consumers known at release time; internal `test_webhook_health.py` updated to assert the new contract.
+
+### Fixed — Version strings that drifted at v2.10.0
+- `pyproject.toml` (was 2.9.3 — never bumped at v2.10.0).
+- `src/oraculus_di_auditor/interface/api.py` `_resolve_odia_version()` fallbacks (2x).
+- `src/oraculus_di_auditor/interface/routes/webhook.py` `ODIA_VERSION` defaults (2x).
+- `frontend/app/settings/page.tsx` hardcoded "odia 2.9.3" in the System Information card.
+- `desktop/package.json` (was 2.10.0 → 2.10.1 for the installer-naming match).
+
+### Tests
+- `tests/test_webhook_health.py`: rewritten for the v2.10.1 contract. New autouse `_isolate_token_file` fixture redirects `_user_token_path` to `tmp_path` so the suite never reads or writes the developer's real `%APPDATA%\ODIA\webhook_token`. Old "404 when unset" test became "200 with `webhook_token_configured: false`"; new test covers the file-fallback path.
+- `tests/test_config_routes.py` (new): 5 tests covering GET status (none / env), POST persist-and-activate without restart, POST empty-string clear, env-shadows-file conflict reporting.
+- **32/32 green** across the webhook + config-routes surface (test_webhook_health 7, test_webhook_ingest 16, test_webhook_models 4, test_config_routes 5). tsc clean on touched frontend files.
+
+### Operational notes
+- The bundled compose's `ODIA_BASE_URL=http://backend:8000` only works when the ODIA backend is the `backend` compose service. Desktop installs run the backend outside compose, so users running n8n alongside a desktop install **must** override to `ODIA_BASE_URL=http://host.docker.internal:8000` in their `.env`. This is now called out in the Automation page's offline-help block.
+
 ## [2.10.0] - 2026-05-12 — Cross-Entity Analysis Protocol V1.0
 
 Formalises two years of "accidental find" forensic work into deterministic architecture. Every document entering O.D.I.A. is now classifiable against the full Cross-Entity Registry, not just the jurisdiction under primary analysis. The protocol's governing principle — *"the audit that documents the machine that serves itself must operate across those same boundaries — systematically, not accidentally"* — operates at ingestion time, not at R.A.I.A. discovery time.
