@@ -18,6 +18,7 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from .constitutional import detect_constitutional_anomalies
+from .cross_entity import detect_cross_entity_anomalies
 from .fiscal import detect_fiscal_anomalies
 from .scalar_core import compute_recursive_scalar_score
 from .surveillance import detect_surveillance_anomalies
@@ -85,9 +86,17 @@ def run_full_analysis(
     fiscal_findings = detect_fiscal_anomalies(normalized_doc)
     constitutional_findings = detect_constitutional_anomalies(normalized_doc)
     surveillance_findings = detect_surveillance_anomalies(normalized_doc)
+    # D-13 only fires when metadata.primary_entity is set; documents
+    # not tagged for cross-entity analysis pass through with [].
+    cross_entity_findings = detect_cross_entity_anomalies(normalized_doc)
 
     # Combine all findings
-    all_anomalies = fiscal_findings + constitutional_findings + surveillance_findings
+    all_anomalies = (
+        fiscal_findings
+        + constitutional_findings
+        + surveillance_findings
+        + cross_entity_findings
+    )
 
     # Compute recursive scalar score (confidence-like, 1.0 = best)
     lattice_score = compute_recursive_scalar_score(normalized_doc, all_anomalies)
@@ -105,6 +114,7 @@ def run_full_analysis(
             "fiscal": fiscal_findings,
             "constitutional": constitutional_findings,
             "surveillance": surveillance_findings,
+            "cross_entity": cross_entity_findings,
         },
         "severity_score": severity_score,
         "lattice_score": lattice_score,
@@ -186,6 +196,11 @@ def _compute_severity_score(anomalies: list[dict[str, Any]]) -> float:
         "low": 0.1,
         "medium": 0.3,
         "high": 0.6,
+        # "critical" was introduced by D-13 (cross-entity detector) per
+        # Cross-Entity Analysis Protocol V1.0; weighted highest so a
+        # CRITICAL vendor-cross-contamination finding correctly dominates
+        # the document's overall severity score.
+        "critical": 1.0,
     }
 
     total_weight = sum(
@@ -235,7 +250,9 @@ def _extract_high_priority_flags(anomalies: list[dict[str, Any]]) -> list[str]:
     flags = []
 
     for anomaly in anomalies:
-        if anomaly.get("severity") == "high":
+        # Surface both "critical" and "high" as high-priority flags;
+        # critical was introduced by D-13 and dominates high.
+        if anomaly.get("severity") in ("critical", "high"):
             flag_id = anomaly.get("id", "unknown")
             issue = anomaly.get("issue", "High-severity anomaly detected")
             flags.append(f"{flag_id}: {issue}")
@@ -264,13 +281,15 @@ def _generate_summary(
             f"Confidence score: {lattice_score:.2f}"
         )
 
-    # Categorize by severity
-    by_severity = {"low": 0, "medium": 0, "high": 0}
+    # Categorize by severity ("critical" added by D-13 cross-entity).
+    by_severity = {"critical": 0, "low": 0, "medium": 0, "high": 0}
     for a in anomalies:
         severity = a.get("severity", "medium")
         by_severity[severity] = by_severity.get(severity, 0) + 1
 
     severity_parts = []
+    if by_severity["critical"] > 0:
+        severity_parts.append(f"{by_severity['critical']} critical")
     if by_severity["high"] > 0:
         severity_parts.append(f"{by_severity['high']} high")
     if by_severity["medium"] > 0:

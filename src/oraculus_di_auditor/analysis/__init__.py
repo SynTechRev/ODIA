@@ -10,6 +10,7 @@ from .administrative_integrity import (
 )
 from .audit_engine import analyze_document
 from .constitutional import detect_constitutional_anomalies
+from .cross_entity import detect_cross_entity_anomalies
 from .cross_reference import cross_reference_audit, detect_cross_jurisdiction_refs
 from .fiscal import detect_fiscal_anomalies
 from .governance_gap import detect_governance_gap_anomalies
@@ -22,15 +23,16 @@ from .surveillance import detect_surveillance_anomalies
 __all__ = [
     "analyze_document",
     "cross_reference_audit",
+    "detect_administrative_anomalies",
+    "detect_constitutional_anomalies",
+    "detect_cross_entity_anomalies",
     "detect_cross_jurisdiction_refs",
     "detect_fiscal_anomalies",
-    "detect_administrative_anomalies",
-    "find_blank_required_fields",
-    "detect_constitutional_anomalies",
     "detect_governance_gap_anomalies",
     "detect_procurement_timeline_anomalies",
     "detect_scope_expansion_anomalies",
     "detect_signature_anomalies",
     "detect_surveillance_anomalies",
+    "find_blank_required_fields",
     "run_full_analysis",
 ]
