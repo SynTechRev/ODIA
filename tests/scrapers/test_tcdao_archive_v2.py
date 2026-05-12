@@ -25,7 +25,6 @@ from oraculus_di_auditor.analysis.cross_entity import (  # noqa: E402
 )
 from oraculus_di_auditor.scrapers.tcdao_archive_v2 import (  # noqa: E402
     KNOWN_GAPS,
-    SPARSE_HISTORICAL_MONTHS,
     AbsenceRecord,
     CoverageClass,
     CoverageManifest,
@@ -33,7 +32,6 @@ from oraculus_di_auditor.scrapers.tcdao_archive_v2 import (  # noqa: E402
     emit_gap_absence_records,
     parse_archive_widget,
 )
-
 
 # ---------------------------------------------------------------------------
 # Known gap bands -- data sanity

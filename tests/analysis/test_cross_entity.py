@@ -99,9 +99,9 @@ def test_type_a_budget_fiscal_cross_reference() -> None:
         if f["details"]["target_entity"] == "E-011"
         and f["details"]["finding_type"] == "A"
     ]
-    assert type_a_to_tcdao, (
-        f"expected Type A finding for TCDAO; got {[f['details'] for f in findings]}"
-    )
+    assert (
+        type_a_to_tcdao
+    ), f"expected Type A finding for TCDAO; got {[f['details'] for f in findings]}"
     assert type_a_to_tcdao[0]["severity"] == "high"
 
 
@@ -294,8 +294,8 @@ def test_finding_output_shape_matches_analysis_contract() -> None:
             "xref_notation",
             "excerpts",
         ):
-            assert required_key in details, (
-                f"missing required detail key '{required_key}' in {details}"
-            )
+            assert (
+                required_key in details
+            ), f"missing required detail key '{required_key}' in {details}"
         assert details["finding_type"] in "ABCDEFG"
         assert details["xref_notation"].startswith("XREF-")

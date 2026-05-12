@@ -54,8 +54,7 @@ class EntityRegistry:
             import yaml  # type: ignore
         except ImportError as e:  # pragma: no cover - dev dep usually present
             raise ImportError(
-                "EntityRegistry requires PyYAML. "
-                "Install with: pip install pyyaml"
+                "EntityRegistry requires PyYAML. " "Install with: pip install pyyaml"
             ) from e
 
         text = self.path.read_text(encoding="utf-8")
@@ -97,16 +96,16 @@ class EntityRegistry:
         # Canonical name and every alias are indexed case-insensitively.
         for token in (entity.name, *entity.aliases):
             if token:
-                self._alias_to_entity_ids.setdefault(
-                    token.lower(), set()
-                ).add(entity.id)
+                self._alias_to_entity_ids.setdefault(token.lower(), set()).add(
+                    entity.id
+                )
 
     def _index_personnel_aliases(self, person: Personnel) -> None:
         for token in (person.name, *person.aliases):
             if token:
-                self._alias_to_personnel_ids.setdefault(
-                    token.lower(), set()
-                ).add(person.id)
+                self._alias_to_personnel_ids.setdefault(token.lower(), set()).add(
+                    person.id
+                )
 
     # ----------------------------- access -----------------------------------
 

@@ -17,7 +17,9 @@ from pathlib import Path
 
 import pytest
 
-bs4 = pytest.importorskip("bs4")  # noqa: F841  -- used transitively by the module under test
+bs4 = pytest.importorskip(
+    "bs4"
+)  # noqa: F841  -- used transitively by the module under test
 
 from oraculus_di_auditor.scrapers.tcdao_archive import (  # noqa: E402
     BASE_URL,
@@ -29,7 +31,6 @@ from oraculus_di_auditor.scrapers.tcdao_archive import (  # noqa: E402
     _parse_press_release,
     write_release,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures -- inline HTML snippets matching the WordPress theme.

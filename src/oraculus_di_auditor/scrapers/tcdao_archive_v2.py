@@ -29,14 +29,14 @@ Drop this module at `src/oraculus_di_auditor/scrapers/tcdao_archive_v2.py`
 or merge directly into the existing tcdao_archive.py per the integration
 guidance in CLAUDE_CODE_HANDOFF_v2_9_3.md §C1.
 """
+
 from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Iterator
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
@@ -55,10 +55,12 @@ logger = logging.getLogger("odia.scrapers.tcdao_archive_v2")
 # Known gap bands — from baseline diagnostic May 11, 2026
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class GapBand:
     """A continuous range of months where no press release records exist."""
-    band_id: str        # GAP-A | GAP-B | GAP-C
+
+    band_id: str  # GAP-A | GAP-B | GAP-C
     start_year: int
     start_month: int
     end_year: int
@@ -73,18 +75,21 @@ class GapBand:
 
 
 KNOWN_GAPS: tuple[GapBand, ...] = (
-    GapBand("GAP-A", 2006, 11, 2011,  2, 52),
-    GapBand("GAP-B", 2011,  4, 2015,  4, 49),
-    GapBand("GAP-C", 2015,  6, 2017, 12, 31),
+    GapBand("GAP-A", 2006, 11, 2011, 2, 52),
+    GapBand("GAP-B", 2011, 4, 2015, 4, 49),
+    GapBand("GAP-C", 2015, 6, 2017, 12, 31),
 )
 
 # Known sparse historical entries from the archive widget (Screenshot 629)
 # These survive INSIDE the gap bands and must be specifically targeted by
 # the discovery loop, because no yearly category page will list them.
 SPARSE_HISTORICAL_MONTHS: tuple[tuple[int, int], ...] = (
-    (2006,  3), (2006,  4), (2006,  5), (2006, 10),
-    (2011,  3),
-    (2015,  5),
+    (2006, 3),
+    (2006, 4),
+    (2006, 5),
+    (2006, 10),
+    (2011, 3),
+    (2015, 5),
 )
 
 # 2022 path-variant — the canonical category slug on the live site has a
@@ -100,10 +105,11 @@ CATEGORY_PATH_VARIANTS: tuple[str, ...] = (
 # Coverage classification
 # ---------------------------------------------------------------------------
 
+
 class CoverageClass:
-    CURRENT             = "CURRENT"             # in the continuous 2018-2026 band
-    SPARSE_HISTORICAL   = "SPARSE_HISTORICAL"   # surviving curated entry inside a gap
-    GAP_INFERRED        = "GAP_INFERRED"        # no records to ingest; absence-evidence
+    CURRENT = "CURRENT"  # in the continuous 2018-2026 band
+    SPARSE_HISTORICAL = "SPARSE_HISTORICAL"  # surviving curated entry inside a gap
+    GAP_INFERRED = "GAP_INFERRED"  # no records to ingest; absence-evidence
 
 
 def classify_coverage(year: int, month: int | None = None) -> str:
@@ -130,8 +136,8 @@ def classify_coverage(year: int, month: int | None = None) -> str:
     # Check known gap bands explicitly
     for gap in KNOWN_GAPS:
         start_ord = gap.start_year * 12 + gap.start_month
-        end_ord   = gap.end_year   * 12 + gap.end_month
-        this_ord  = year * 12 + month
+        end_ord = gap.end_year * 12 + gap.end_month
+        this_ord = year * 12 + month
         if start_ord <= this_ord <= end_ord:
             return CoverageClass.GAP_INFERRED
 
@@ -144,6 +150,7 @@ def classify_coverage(year: int, month: int | None = None) -> str:
 # ---------------------------------------------------------------------------
 # Monthly-archive discovery
 # ---------------------------------------------------------------------------
+
 
 def parse_archive_widget(html: str) -> list[tuple[int, int]]:
     """
@@ -192,7 +199,9 @@ def discover_via_monthly_archive(
     url = urljoin(BASE_URL, "/category/press-releases/")
     resp = session.get(url)
     if not resp:
-        logger.error("Could not fetch press-releases root page; falling back to known months.")
+        logger.error(
+            "Could not fetch press-releases root page; falling back to known months."
+        )
         return list(SPARSE_HISTORICAL_MONTHS)
 
     months = parse_archive_widget(resp.text)
@@ -256,6 +265,7 @@ def discover_press_release_urls_for_month(
 # 2022 path-variant handling
 # ---------------------------------------------------------------------------
 
+
 def discover_via_yearly_category(
     session: PoliteSession,
     year: int,
@@ -311,6 +321,7 @@ def _walk_paginated_archive(
 # Gap-band absence-records (synthetic documents)
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class AbsenceRecord:
     """
@@ -318,8 +329,9 @@ class AbsenceRecord:
     ingestion pipeline so the gap appears in TCDAO MAS as an alert
     rather than silent absence.
     """
+
     band_id: str
-    start_date: str         # ISO date string
+    start_date: str  # ISO date string
     end_date: str
     months_absent: int
     primary_entity: str = "E-011"
@@ -369,13 +381,15 @@ def emit_gap_absence_records() -> list[AbsenceRecord]:
     """Generate one AbsenceRecord per known gap band."""
     records: list[AbsenceRecord] = []
     for gap in KNOWN_GAPS:
-        records.append(AbsenceRecord(
-            band_id=gap.band_id,
-            start_date=f"{gap.start_year:04d}-{gap.start_month:02d}-01",
-            end_date=f"{gap.end_year:04d}-{gap.end_month:02d}-28",
-            months_absent=gap.months_absent,
-            doc_id=f"TCDAO-ABS-{gap.band_id}",
-        ))
+        records.append(
+            AbsenceRecord(
+                band_id=gap.band_id,
+                start_date=f"{gap.start_year:04d}-{gap.start_month:02d}-01",
+                end_date=f"{gap.end_year:04d}-{gap.end_month:02d}-28",
+                months_absent=gap.months_absent,
+                doc_id=f"TCDAO-ABS-{gap.band_id}",
+            )
+        )
     return records
 
 
@@ -383,12 +397,14 @@ def emit_gap_absence_records() -> list[AbsenceRecord]:
 # Manifest enhancement
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class CoverageManifest:
     """
     Extended manifest section recording the gap-pattern analysis. Merges
     with the existing ScrapeManifest's fields.
     """
+
     coverage_band_continuous: list[str] = field(default_factory=list)
     coverage_band_sparse_historical: list[str] = field(default_factory=list)
     inferred_gap_bands: list[dict] = field(default_factory=list)
@@ -404,7 +420,9 @@ class CoverageManifest:
     )
 
     @classmethod
-    def from_discovered_months(cls, months: list[tuple[int, int]]) -> "CoverageManifest":
+    def from_discovered_months(
+        cls, months: list[tuple[int, int]]
+    ) -> CoverageManifest:
         manifest = cls()
         for y, m in months:
             label = f"{y:04d}-{m:02d}"
@@ -416,18 +434,21 @@ class CoverageManifest:
         manifest.coverage_band_continuous.sort()
         manifest.coverage_band_sparse_historical.sort()
         for gap in KNOWN_GAPS:
-            manifest.inferred_gap_bands.append({
-                "band_id": gap.band_id,
-                "start": f"{gap.start_year:04d}-{gap.start_month:02d}",
-                "end":   f"{gap.end_year:04d}-{gap.end_month:02d}",
-                "months_absent": gap.months_absent,
-            })
+            manifest.inferred_gap_bands.append(
+                {
+                    "band_id": gap.band_id,
+                    "start": f"{gap.start_year:04d}-{gap.start_month:02d}",
+                    "end": f"{gap.end_year:04d}-{gap.end_month:02d}",
+                    "months_absent": gap.months_absent,
+                }
+            )
         return manifest
 
 
 # ---------------------------------------------------------------------------
 # Top-level run integration hook
 # ---------------------------------------------------------------------------
+
 
 def run_scrape_v2(
     out_dir: Path,
@@ -471,7 +492,10 @@ def run_scrape_v2(
                 all_releases.append(release)
                 logger.info(
                     "Scraped %d-%02d: %s (%d words)",
-                    year, month, release.title[:60], release.word_count,
+                    year,
+                    month,
+                    release.title[:60],
+                    release.word_count,
                 )
 
     # Step 3: emit absence records
@@ -484,7 +508,9 @@ def run_scrape_v2(
             (absence_dir / f"{rec.doc_id}.json").write_text(
                 __import__("json").dumps(payload, indent=2)
             )
-            logger.info("Emitted absence record: %s (%d months)", rec.band_id, rec.months_absent)
+            logger.info(
+                "Emitted absence record: %s (%d months)", rec.band_id, rec.months_absent
+            )
 
     # Step 4: write manifest
     manifest_path = out_dir / "coverage_manifest.json"

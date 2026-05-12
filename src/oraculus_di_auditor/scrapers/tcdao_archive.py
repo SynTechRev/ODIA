@@ -101,6 +101,7 @@ pipeline. D-13 will:
   - Emit XREF findings: TCDAO → originating agency for every named
     case, building a quantified prosecution-volume map
 """
+
 from __future__ import annotations
 
 import argparse
@@ -128,6 +129,7 @@ def _now_iso() -> str:
     """
     return dt.datetime.now(dt.UTC).isoformat()
 
+
 logger = logging.getLogger("odia.scrapers.tcdao_archive")
 
 BASE_URL = "https://tulareda.org"
@@ -144,14 +146,15 @@ TIMEOUT_SECONDS = 30
 # Data structures
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class PressRelease:
     url: str
     year: int
     title: str
-    publish_date: str           # ISO date string, best-effort parse
-    body_text: str              # plain-text normalized body
-    body_markdown: str = ""     # optional markdown rendering
+    publish_date: str  # ISO date string, best-effort parse
+    body_text: str  # plain-text normalized body
+    body_markdown: str = ""  # optional markdown rendering
     word_count: int = 0
     sha256: str = ""
     scraped_at: str = ""
@@ -162,6 +165,7 @@ class PressRelease:
 @dataclass
 class ScrapeManifest:
     """A persistent record of every scraped URL with hash and timestamps."""
+
     started_at: str
     completed_at: str | None = None
     years_scraped: list[int] = field(default_factory=list)
@@ -175,6 +179,7 @@ class ScrapeManifest:
 # ---------------------------------------------------------------------------
 # HTTP session with politeness
 # ---------------------------------------------------------------------------
+
 
 class PoliteSession:
     """
@@ -229,7 +234,7 @@ class PoliteSession:
                     return resp
 
                 if resp.status_code in (429, 503):
-                    backoff = min(2 ** attempts * 5, 60)
+                    backoff = min(2**attempts * 5, 60)
                     retry_after = resp.headers.get("Retry-After")
                     if retry_after:
                         try:
@@ -238,7 +243,10 @@ class PoliteSession:
                             pass
                     logger.warning(
                         "GET %s -> %d; backing off %ds (attempt %d)",
-                        url, resp.status_code, backoff, attempts + 1,
+                        url,
+                        resp.status_code,
+                        backoff,
+                        attempts + 1,
                     )
                     time.sleep(backoff)
                     attempts += 1
@@ -250,7 +258,7 @@ class PoliteSession:
 
             except requests.RequestException as e:
                 logger.warning("GET %s exception: %s; retrying.", url, e)
-                time.sleep(2 ** attempts)
+                time.sleep(2**attempts)
                 attempts += 1
 
         logger.error("GET %s failed after %d attempts.", url, attempts)
@@ -260,6 +268,7 @@ class PoliteSession:
 # ---------------------------------------------------------------------------
 # HTML parsing
 # ---------------------------------------------------------------------------
+
 
 def _parse_archive_page(html: str, base_url: str) -> list[str]:
     """
@@ -346,7 +355,9 @@ def _parse_press_release(html: str, url: str, year: int) -> PressRelease | None:
             body_text,
         )
         if m:
-            pub_date = f"{m.group(3)}-{_month_to_num(m.group(1)):02d}-{int(m.group(2)):02d}"
+            pub_date = (
+                f"{m.group(3)}-{_month_to_num(m.group(1)):02d}-{int(m.group(2)):02d}"
+            )
 
     # Inbound links and embedded images
     inbound_links = []
@@ -377,14 +388,25 @@ def _parse_press_release(html: str, url: str, year: int) -> PressRelease | None:
 
 def _month_to_num(name: str) -> int:
     return {
-        "January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
-        "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12,
+        "January": 1,
+        "February": 2,
+        "March": 3,
+        "April": 4,
+        "May": 5,
+        "June": 6,
+        "July": 7,
+        "August": 8,
+        "September": 9,
+        "October": 10,
+        "November": 11,
+        "December": 12,
     }.get(name, 1)
 
 
 # ---------------------------------------------------------------------------
 # Orchestration
 # ---------------------------------------------------------------------------
+
 
 def discover_press_release_urls(
     session: PoliteSession,
@@ -435,7 +457,9 @@ def write_release(release: PressRelease, out_dir: Path) -> Path:
     year_dir = out_dir / str(release.year)
     year_dir.mkdir(parents=True, exist_ok=True)
     # Slug from URL final path segment
-    slug = urlparse(release.url).path.rstrip("/").rsplit("/", 1)[-1] or release.sha256[:12]
+    slug = (
+        urlparse(release.url).path.rstrip("/").rsplit("/", 1)[-1] or release.sha256[:12]
+    )
     date_prefix = release.publish_date[:10] if release.publish_date else "undated"
     filename = year_dir / f"{date_prefix}_{slug}.txt"
     filename.write_text(
@@ -495,23 +519,25 @@ def run_scrape(
 
             release = scrape_press_release(session, url, year)
             if not release:
-                manifest.errors.append({"url": url, "year": year, "reason": "fetch_or_parse_failed"})
+                manifest.errors.append(
+                    {"url": url, "year": year, "reason": "fetch_or_parse_failed"}
+                )
                 continue
 
             try:
                 path = write_release(release, out_dir)
                 logger.info("Wrote %s (%d words)", path.name, release.word_count)
             except Exception as e:
-                manifest.errors.append({"url": url, "year": year, "reason": f"write_failed: {e}"})
+                manifest.errors.append(
+                    {"url": url, "year": year, "reason": f"write_failed: {e}"}
+                )
                 continue
 
             manifest.releases_scraped += 1
             manifest.releases.append(asdict(release))
 
     manifest.completed_at = _now_iso()
-    manifest_path.write_text(
-        json.dumps(asdict(manifest), indent=2), encoding="utf-8"
-    )
+    manifest_path.write_text(json.dumps(asdict(manifest), indent=2), encoding="utf-8")
     logger.info(
         "Scrape complete. %d releases scraped, %d skipped (dedup), %d errors.",
         manifest.releases_scraped,
@@ -527,8 +553,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--end-year", type=int, default=2026)
     parser.add_argument("--out", type=Path, default=Path("data/tcdao_archive"))
     parser.add_argument("--rate-limit", type=float, default=DEFAULT_RATE_LIMIT_SECONDS)
-    parser.add_argument("--refresh", action="store_true", help="Re-scrape regardless of dedup")
-    parser.add_argument("--dry-run", action="store_true", help="Discovery only; no per-post fetches")
+    parser.add_argument(
+        "--refresh", action="store_true", help="Re-scrape regardless of dedup"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Discovery only; no per-post fetches"
+    )
     parser.add_argument("--verbose", "-v", action="store_true")
     args = parser.parse_args(argv)
 

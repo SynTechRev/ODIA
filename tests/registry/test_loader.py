@@ -125,8 +125,15 @@ def test_vendor_presence_axon_full_footprint(registry: EntityRegistry) -> None:
     # Axon's confirmed presence list: all 9 Tier-1 city PDs + TCSO
     # (E-001 through E-009).
     assert set(axon.presence) == {
-        "E-001", "E-002", "E-003", "E-004",
-        "E-005", "E-006", "E-007", "E-008", "E-009",
+        "E-001",
+        "E-002",
+        "E-003",
+        "E-004",
+        "E-005",
+        "E-006",
+        "E-007",
+        "E-008",
+        "E-009",
     }
 
 
@@ -145,8 +152,7 @@ def test_non_standard_categories_present(registry: EntityRegistry) -> None:
     assert len(categories) == 11
     # The Farmersville Axon Fleet 3 CIP precedent should be in here.
     assert any(
-        "Planning Commission CIP" in c.category
-        and "Farmersville" in c.precedent
+        "Planning Commission CIP" in c.category and "Farmersville" in c.precedent
         for c in categories
     )
 

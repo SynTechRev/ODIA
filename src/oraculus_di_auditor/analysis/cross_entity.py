@@ -350,9 +350,7 @@ def _resolve_severity(
 
     # Type E elevation: governance action creates unmet obligation
     if finding_type == "E":
-        if re.search(
-            r"\b(?:obligation|required|must|shall)\b", excerpt, re.IGNORECASE
-        ):
+        if re.search(r"\b(?:obligation|required|must|shall)\b", excerpt, re.IGNORECASE):
             if re.search(
                 r"\b(?:absent|missing|gap|no\s*record|never)\b",
                 excerpt,
@@ -363,9 +361,7 @@ def _resolve_severity(
 
     # Type G elevation: data flow without disclosed governance
     if finding_type == "G":
-        if re.search(
-            r"\b(?:access|integration|interfaces?)\b", excerpt, re.IGNORECASE
-        ):
+        if re.search(r"\b(?:access|integration|interfaces?)\b", excerpt, re.IGNORECASE):
             if not re.search(
                 r"\b(?:approved|authorized|MOU|agreement|consent)\b",
                 excerpt,
@@ -453,7 +449,7 @@ def _build_finding(
         "issue": (
             f"Cross-entity reference: document tagged to {primary_entity} "
             f"references {target_entity_name} ({target_entity_id}) via "
-            f"alias \"{alias_matched}\" (Type {finding_type})."
+            f'alias "{alias_matched}" (Type {finding_type}).'
         ),
         "severity": severity,
         "layer": "cross_entity",
