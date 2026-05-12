@@ -420,9 +420,7 @@ class CoverageManifest:
     )
 
     @classmethod
-    def from_discovered_months(
-        cls, months: list[tuple[int, int]]
-    ) -> CoverageManifest:
+    def from_discovered_months(cls, months: list[tuple[int, int]]) -> CoverageManifest:
         manifest = cls()
         for y, m in months:
             label = f"{y:04d}-{m:02d}"
