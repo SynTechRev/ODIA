@@ -313,6 +313,53 @@ _SEVERITY_DEFAULT: dict[str, str] = {
 }
 
 
+def _elevate_a(primary_entity: str, excerpt: str, registry: EntityRegistry) -> str:
+    """Type A elevation: new vendor presence revealed via budget reference."""
+    for vendor in registry.tier3_entities():
+        if primary_entity in (vendor.presence or ()):
+            continue  # vendor already known at this jurisdiction
+        for alias in vendor.aliases:
+            if not alias:
+                continue
+            if re.search(rf"\b{re.escape(alias)}\b", excerpt, re.IGNORECASE):
+                return "critical"
+    return "high"
+
+
+def _elevate_b(excerpt_lower: str) -> str:
+    """Type B elevation: authority -> prosecution migration (Fahoum precedent)."""
+    if any(
+        term in excerpt_lower
+        for term in ("prosecution", "felony", "indictment", "charged")
+    ):
+        return "critical"
+    return "high"
+
+
+def _elevate_e(excerpt: str) -> str:
+    """Type E elevation: governance action creates an unmet obligation."""
+    if re.search(r"\b(?:obligation|required|must|shall)\b", excerpt, re.IGNORECASE):
+        if re.search(
+            r"\b(?:absent|missing|gap|no\s*record|never)\b",
+            excerpt,
+            re.IGNORECASE,
+        ):
+            return "critical"
+    return "high"
+
+
+def _elevate_g(excerpt: str) -> str:
+    """Type G elevation: data flow without disclosed governance."""
+    if re.search(r"\b(?:access|integration|interfaces?)\b", excerpt, re.IGNORECASE):
+        if not re.search(
+            r"\b(?:approved|authorized|MOU|agreement|consent)\b",
+            excerpt,
+            re.IGNORECASE,
+        ):
+            return "critical"
+    return "high"
+
+
 def _resolve_severity(
     finding_type: str,
     target_entity,  # registry.types.Entity
@@ -320,56 +367,24 @@ def _resolve_severity(
     excerpt: str,
     registry: EntityRegistry,
 ) -> str:
-    """Apply protocol section 4.3 severity rules; return lowercase string."""
-    excerpt_lower = excerpt.lower()
+    """Apply protocol section 4.3 severity rules; return lowercase string.
 
-    # Type A elevation: new vendor presence revealed via budget reference
+    Each per-type elevation lives in its own ``_elevate_*`` helper so this
+    dispatcher stays under the project's McCabe-10 ceiling. Type C is
+    always CRITICAL by definition (vendor cross-contamination has no
+    de-elevation path); other unsignalled types fall back to
+    ``_SEVERITY_DEFAULT``.
+    """
     if finding_type == "A":
-        for vendor in registry.tier3_entities():
-            if primary_entity in (vendor.presence or ()):
-                continue  # already known; not new
-            for alias in vendor.aliases:
-                if not alias:
-                    continue
-                if re.search(rf"\b{re.escape(alias)}\b", excerpt, re.IGNORECASE):
-                    return "critical"
-        return "high"
-
-    # Type B elevation: authority -> prosecution migration (Fahoum precedent)
+        return _elevate_a(primary_entity, excerpt, registry)
     if finding_type == "B":
-        if any(
-            term in excerpt_lower
-            for term in ("prosecution", "felony", "indictment", "charged")
-        ):
-            return "critical"
-        return "high"
-
-    # Type C is always CRITICAL by definition (vendor cross-contamination)
+        return _elevate_b(excerpt.lower())
     if finding_type == "C":
         return "critical"
-
-    # Type E elevation: governance action creates unmet obligation
     if finding_type == "E":
-        if re.search(r"\b(?:obligation|required|must|shall)\b", excerpt, re.IGNORECASE):
-            if re.search(
-                r"\b(?:absent|missing|gap|no\s*record|never)\b",
-                excerpt,
-                re.IGNORECASE,
-            ):
-                return "critical"
-        return "high"
-
-    # Type G elevation: data flow without disclosed governance
+        return _elevate_e(excerpt)
     if finding_type == "G":
-        if re.search(r"\b(?:access|integration|interfaces?)\b", excerpt, re.IGNORECASE):
-            if not re.search(
-                r"\b(?:approved|authorized|MOU|agreement|consent)\b",
-                excerpt,
-                re.IGNORECASE,
-            ):
-                return "critical"
-        return "high"
-
+        return _elevate_g(excerpt)
     return _SEVERITY_DEFAULT.get(finding_type, "medium")
 
 
@@ -517,45 +532,71 @@ def detect_cross_entity_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
         target = registry.entity_by_id(target_entity_id)
         if not target:
             continue
-
-        # Score every hit; the highest-confidence one becomes the
-        # representative for the aggregated finding.
-        best_type, best_confidence = _classify_hit(hits[0], primary_entity, target)
-        best_hit = hits[0]
-        for hit in hits[1:]:
-            ftype, conf = _classify_hit(hit, primary_entity, target)
-            if conf > best_confidence:
-                best_type, best_confidence, best_hit = ftype, conf, hit
-
-        confidence = best_confidence
-        if len(hits) >= 3:
-            confidence += 0.10  # repeated reference -> stronger signal
-        if re.search(r"\$[\d,]+", best_hit.excerpt):
-            confidence += 0.10
-        confidence = min(confidence, 1.0)
-
-        severity = _resolve_severity(
-            best_type, target, primary_entity, best_hit.excerpt, registry
-        )
-        if confidence < 0.40:
-            # Low-confidence demotion: keep the finding surfaced but
-            # at the lowest severity so the analyst can promote in
-            # RAIA review rather than ignoring.
-            severity = "low"
-
         findings.append(
-            _build_finding(
-                finding_type=best_type,
-                primary_entity=primary_entity,
+            _emit_finding_for_target(
                 target_entity_id=target_entity_id,
-                target_entity_name=target.name,
-                severity=severity,
-                confidence=confidence,
-                alias_matched=best_hit.alias_matched,
-                excerpts=[h.excerpt for h in hits[:3]],
-                occurrence_count=len(hits),
+                hits=hits,
+                target=target,
+                primary_entity=primary_entity,
+                registry=registry,
                 document_id=document_id,
             )
         )
 
     return findings
+
+
+def _emit_finding_for_target(
+    *,
+    target_entity_id: str,
+    hits: list[AliasHit],
+    target,  # registry.types.Entity
+    primary_entity: str,
+    registry: EntityRegistry,
+    document_id: str,
+) -> dict[str, Any]:
+    """Classify the aggregated hits for one (primary -> target) pair.
+
+    Picks the highest-confidence hit as the representative, applies the
+    confidence adjustments (repeated-mention bonus, dollar-amount-in-
+    excerpt bonus), resolves severity via the type-specific elevation
+    rules, demotes low-confidence findings to ``"low"``, and returns one
+    finding dict ready for emission.
+    """
+    # Score every hit; the highest-confidence one becomes the
+    # representative for the aggregated finding.
+    best_type, best_confidence = _classify_hit(hits[0], primary_entity, target)
+    best_hit = hits[0]
+    for hit in hits[1:]:
+        ftype, conf = _classify_hit(hit, primary_entity, target)
+        if conf > best_confidence:
+            best_type, best_confidence, best_hit = ftype, conf, hit
+
+    confidence = best_confidence
+    if len(hits) >= 3:
+        confidence += 0.10  # repeated reference -> stronger signal
+    if re.search(r"\$[\d,]+", best_hit.excerpt):
+        confidence += 0.10
+    confidence = min(confidence, 1.0)
+
+    severity = _resolve_severity(
+        best_type, target, primary_entity, best_hit.excerpt, registry
+    )
+    if confidence < 0.40:
+        # Low-confidence demotion: keep the finding surfaced but at the
+        # lowest severity so the analyst can promote in RAIA review
+        # rather than ignoring.
+        severity = "low"
+
+    return _build_finding(
+        finding_type=best_type,
+        primary_entity=primary_entity,
+        target_entity_id=target_entity_id,
+        target_entity_name=target.name,
+        severity=severity,
+        confidence=confidence,
+        alias_matched=best_hit.alias_matched,
+        excerpts=[h.excerpt for h in hits[:3]],
+        occurrence_count=len(hits),
+        document_id=document_id,
+    )

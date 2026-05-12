@@ -48,10 +48,14 @@ ARCHIVE_PAGE_HTML = """<!DOCTYPE html>
     <p>A $250,000 award...</p>
   </article>
   <article id="post-103">
-    <h2><a href="/2026/02/bureau-investigations-update/">Bureau of Investigations Update</a></h2>
+    <h2>
+      <a href="/2026/02/bureau-investigations-update/"
+        >Bureau of Investigations Update</a>
+    </h2>
   </article>
   <nav class="pagination">
-    <a class="next page-numbers" href="/category/press-releases/2026-press-releases/page/2/">Next</a>
+    <a class="next page-numbers"
+       href="/category/press-releases/2026-press-releases/page/2/">Next</a>
   </nav>
 </body></html>
 """

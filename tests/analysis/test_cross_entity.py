@@ -265,7 +265,12 @@ def test_low_confidence_findings_demoted_to_low_severity() -> None:
 
 
 def test_finding_output_shape_matches_analysis_contract() -> None:
-    """Every emitted finding must match the {id, issue, severity, layer, details} shape."""
+    """Every emitted finding matches the standard analysis-package shape.
+
+    Required keys: id, issue, severity, layer, details. Plus the
+    cross-entity-specific detail anchors required for downstream XREF
+    register persistence.
+    """
     doc = _doc(
         "E-011",
         (
