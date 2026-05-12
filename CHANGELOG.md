@@ -1,5 +1,67 @@
 # Changelog
 
+## [2.10.0] - 2026-05-12 — Cross-Entity Analysis Protocol V1.0
+
+Formalises two years of "accidental find" forensic work into deterministic architecture. Every document entering O.D.I.A. is now classifiable against the full Cross-Entity Registry, not just the jurisdiction under primary analysis. The protocol's governing principle — *"the audit that documents the machine that serves itself must operate across those same boundaries — systematically, not accidentally"* — operates at ingestion time, not at R.A.I.A. discovery time.
+
+This is a scoped first slice of the protocol: registry foundation, D-13 detector with seven finding types (A–G), TCDAO press-release archive scraper (yearly + monthly-archive-widget discovery + 2022 path-variant handling + gap-band absence-record emission). The 14 entity-specific sub-detectors (Track D), XREF register persistence (Track E), and frontend XREF page (Track F) defer to v2.10.1+.
+
+### Added — Track A · Cross-Entity Registry foundation
+- **`src/oraculus_di_auditor/registry/` package** — canonical Sunshine Dragnet entity catalogue per Cross-Entity Analysis Protocol V1.0 (May 2026).
+  - `entities.yml`: 12 Tier-1 primary jurisdictions (VPD/PPD/TPD/LDPS/FPD/WPD/DPD/EPD/TCSO/TCPD/TCDAO/DMV) + 8 Tier-2 governance bodies (BOS/Grand Jury/Courts/Public Defender/CAO/CCP/VEDC) + 10 Tier-3 vendors (Axon/Flock/Motorola/Lexipol/BCS/BRINC/NEC/Tyler/BI Inc/Loops Marketing) + 6 Tier-4 external intelligence sources + 13 personnel + 7 finding-type rules + 11 "Leave No Stone Unturned" non-standard record categories.
+  - `loader.py` (`EntityRegistry`): typed accessors for tier-filtered iteration, alias index (case-insensitive), sub-detector activation lookup, finding-type severity defaults, non-standard category sweep precedents.
+  - `types.py`: frozen `@dataclass` definitions (`Entity`, `Personnel`, `PersonnelHistoryEntry`, `FindingType`, `NonStandardCategory`).
+  - 21 tests in `tests/registry/test_loader.py` covering tier counts, personnel records, Axon's 9-jurisdiction presence footprint, Fahoum personnel-migration precedent (E-001 → E-011), dataclass immutability.
+
+### Added — Track B · D-13 Cross-Entity Detector
+- **`src/oraculus_di_auditor/analysis/cross_entity.py`** — function-style detector matching the project's `(doc) -> list[dict]` contract. Sweeps every document against the full registry; emits one finding per `(primary, target)` pair, classified into one of seven types:
+  - **A** Budget/Fiscal cross-reference (HIGH; CRITICAL on new vendor presence)
+  - **B** Personnel migration (HIGH; CRITICAL on procurement-authority-to-prosecution-subject migration — the Fahoum precedent)
+  - **C** Vendor cross-contamination (always CRITICAL — Farmersville/Woodlake/Visalia Axon Outpost precedents)
+  - **D** Operational intersection (HIGH; default for unsignalled hits)
+  - **E** Governance chain (HIGH; CRITICAL when governance action creates an unmet obligation)
+  - **F** Grant/Funding pipeline (HIGH)
+  - **G** Data/Evidence pipeline (HIGH; CRITICAL on undisclosed access)
+- Confidence scoring with multi-signal co-occurrence bonus, dollar-amount-in-excerpt boost, repeated-mention reinforcement, and < 0.40 demotion-to-low-severity floor for analyst review.
+- Registry + alias-pattern caches are module-level lazy singletons; first call hydrates, subsequent calls reuse (one YAML load per process).
+- 11 fixture tests in `tests/analysis/test_cross_entity.py` covering activation gates, self-reference suppression, all five protocol-precedent finding types, low-confidence demotion, and the output-shape contract.
+- D-13 wired into `analysis/pipeline.run_full_analysis` alongside the existing detectors; `"cross_entity"` joins the findings dict. The pipeline's severity-weights map gains `"critical": 1.0` so CRITICAL findings correctly dominate aggregate severity; flag extraction and summary lines updated to surface critical alongside high.
+
+### Added — Track C · TCDAO press-release archive scraper
+- **`src/oraculus_di_auditor/scrapers/tcdao_archive.py`** — v1 scraper for tulareda.org press release category archives. Polite by design: `robots.txt`-aware, identifying User-Agent (`O.D.I.A.-Forensic-Audit-Scraper/1.0`), default 2-second rate limit, exponential backoff on 429/503, `Retry-After` honoured, manifest-driven dedup, dry-run mode for discovery-only previews.
+- Yearly category archive discovery 2020–2026, paginated walk, WordPress-standard HTML parsing (title / publish date / body / inbound links / embedded images / SHA-256).
+- CLI: `python -m oraculus_di_auditor.scrapers.tcdao_archive --start-year 2020 --end-year 2026 --out data/tcdao_archive`.
+- 11 parser tests in `tests/scrapers/test_tcdao_archive.py`.
+
+### Added — Track D · v2 gap-band absence-record emission
+- **`src/oraculus_di_auditor/scrapers/tcdao_archive_v2.py`** — extends v1 with three enhancements from the May 11, 2026 baseline diagnostic:
+  - **Monthly-archive-dropdown discovery** (`parse_archive_widget`): the WordPress sidebar widget is the authoritative surviving-months index. Recovers sparse historical entries (2006-03, 2006-04, 2006-05, 2006-10, 2011-03, 2015-05) that no yearly category page lists.
+  - **Gap-band detection + synthetic absence records** (`KNOWN_GAPS`, `classify_coverage`, `AbsenceRecord`, `emit_gap_absence_records`): three known multi-year gaps (GAP-A 2006-11→2011-02 / GAP-B 2011-04→2015-04 / GAP-C 2015-06→2017-12) materialise as `primary_entity=E-011` documents at finding ID `archival:coverage-gap`. The absence-record text deliberately includes governance vocabulary so D-13 round-trips it as a **Type E governance-chain cross-reference to BOS (E-020) regarding records-retention obligation** — locked by an integration test.
+  - **2022 path-variant handling**: the canonical category slug was renamed and now requires the doubled `2022-press-releases-press-releases/` form; discovery tries both before falling back to monthly enumeration.
+- 21 tests in `tests/scrapers/test_tcdao_archive_v2.py` including the C1+D1+B1+B2 end-to-end integration test.
+
+### Added — Dependencies
+- `beautifulsoup4>=4.12.0` (runtime). Used by the TCDAO scrapers; tests gracefully skip via `pytest.importorskip("bs4")` on minimal dev installs.
+
+### Changed
+- `analysis/pipeline.py`: pipeline `findings` dict now includes `"cross_entity"`; `severity_weights` includes `"critical": 1.0`; flag extractor and summary line surface critical alongside high. Existing detector behaviour unchanged.
+- `analysis/__init__.py`: exports `detect_cross_entity_anomalies` alongside the existing detector exports.
+
+### Fixed
+- Function-style adaptation of the supplied D-13 corrected a Type B (Personnel Migration) classification bug in the upstream protocol bundle: `is_personnel` was derived from `target_entity_id.startswith("P-")` after personnel hits had been re-keyed under entity targets (E-NNN / V-NNN), so the test always returned False and Type B never fired. Now carried as a `kind` field on `AliasHit` and read at classify time.
+
+### Notes for the v2.10.x sub-cycle
+- Track A2 (PersonnelRegistry mutable extension via SQLAlchemy)
+- Track A3 (Document schema additions: `primary_entity`, `secondary_entities`, `vendors_detected`, `personnel_detected`, `xref_notes`, `confidence_status` columns + migration)
+- Track A4 (`CrossEntityReference` model + XrefRegister service)
+- Track D1–D3 (14 entity-specific sub-detectors for TCPD/TCDAO/DMV)
+- Track E2/E3 (Targeted R.A.I.A. + Entity-Opening R.A.I.A.)
+- Track F1–F3 (Evidence packet XREF integration, frontend XREF/Personnel pages)
+- Track C3 (IngestionBridge wiring scraped press releases into the standard pipeline)
+- The two n8n workflows WF-015 (TCDAO archive monthly refresh) and WF-016 (Targeted R.A.I.A. daily trigger) defer to v2.10.x.
+
+---
+
 ## [2.9.3] - 2026-04-28 — Detector Calibration Sweep + OCR Coverage
 
 The Run-12 evidence packet (70 Visalia documents, 415 findings) revealed a P0 silent-failure mode: 8 of 38 unique SHAs (the actual Flock contracts, the Axon staff report, the JAG allocations PDF) emitted ONLY noise-floor findings because their text-extraction returned near-empty content and the audit pipeline did not flag the gap. v2.9.3 ships five tracks addressing that, plus a detector-completeness fix, MAS aggregation correctness, noise-floor suppression, and vendor-registry expansion.
