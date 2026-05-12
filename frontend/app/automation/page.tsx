@@ -266,6 +266,15 @@ export default function AutomationPage() {
   // v2.7.4 W1 — last manual-trigger result, rendered inline above the panel.
   const [triggerNotice, setTriggerNotice] = useState<TriggerNotification | null>(null);
   const [triggerBusy, setTriggerBusy] = useState<string | null>(null);
+  // v2.10.x — keep the most recent RAIA report viewable across sessions.
+  // Hydrated from localStorage on mount; updated whenever Run RAIA Synthesis
+  // succeeds. Opening the modal pulls from this state.
+  const [lastRaiaReport, setLastRaiaReport] = useState<RaiaReport | null>(null);
+  const [raiaModalOpen, setRaiaModalOpen] = useState(false);
+
+  useEffect(() => {
+    setLastRaiaReport(loadLastRaiaReport());
+  }, []);
 
   const handleTrigger = async (
     label: string,
@@ -276,6 +285,9 @@ export default function AutomationPage() {
     try {
       const note = await fn();
       setTriggerNotice(note);
+      if (note.report) {
+        setLastRaiaReport(note.report);
+      }
     } finally {
       setTriggerBusy(null);
     }
@@ -432,7 +444,15 @@ export default function AutomationPage() {
         {/* =============================================================== */}
         <Card title="Manual Triggers" variant="bordered">
           {triggerNotice && (
-            <TriggerNoticeBanner notice={triggerNotice} onDismiss={() => setTriggerNotice(null)} />
+            <TriggerNoticeBanner
+              notice={triggerNotice}
+              onDismiss={() => setTriggerNotice(null)}
+              onViewReport={
+                triggerNotice.report
+                  ? () => setRaiaModalOpen(true)
+                  : undefined
+              }
+            />
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <TriggerTile
@@ -441,6 +461,20 @@ export default function AutomationPage() {
               busy={triggerBusy === 'RAIA'}
               onClick={() =>
                 handleTrigger('RAIA', triggerRaiaSynthesis)
+              }
+              footer={
+                lastRaiaReport ? (
+                  <button
+                    type="button"
+                    className="hud-label text-[11px] text-cyan-300 hover:text-amber-300"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setRaiaModalOpen(true);
+                    }}
+                  >
+                    VIEW LAST REPORT →
+                  </button>
+                ) : undefined
               }
             />
             <TriggerTile
@@ -471,6 +505,13 @@ export default function AutomationPage() {
         </Card>
 
       </div>
+
+      {raiaModalOpen && lastRaiaReport && (
+        <RaiaReportModal
+          report={lastRaiaReport}
+          onClose={() => setRaiaModalOpen(false)}
+        />
+      )}
     </DashboardLayout>
   );
 }
@@ -574,36 +615,48 @@ function TriggerTile({
   subtitle,
   onClick,
   busy = false,
+  footer,
 }: {
   title: string;
   subtitle: string;
   onClick: () => void;
   busy?: boolean;
+  footer?: React.ReactNode;
 }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={busy}
+    <div
       className={`
         hud-panel hud-panel-flow hud-panel-dense p-4 text-left
         transition-transform hover:-translate-y-[1px]
-        disabled:opacity-60 disabled:cursor-wait disabled:translate-y-0
+        ${busy ? 'opacity-60 cursor-wait translate-y-0' : ''}
       `}
     >
-      <div className="font-display text-sm font-semibold text-slate-100 mb-1">
-        {title}
-      </div>
-      <div className="text-xs text-slate-400 leading-relaxed">
-        {subtitle}
-      </div>
-      <div
-        className={`mt-3 hud-label-accent hud-flow ${
-          busy ? 'animate-odia-breath' : ''
-        }`}
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={busy}
+        className="block w-full text-left disabled:cursor-wait"
       >
-        {busy ? 'EXECUTING…' : 'EXECUTE →'}
-      </div>
-    </button>
+        <div className="font-display text-sm font-semibold text-slate-100 mb-1">
+          {title}
+        </div>
+        <div className="text-xs text-slate-400 leading-relaxed">
+          {subtitle}
+        </div>
+        <div
+          className={`mt-3 hud-label-accent hud-flow ${
+            busy ? 'animate-odia-breath' : ''
+          }`}
+        >
+          {busy ? 'EXECUTING…' : 'EXECUTE →'}
+        </div>
+      </button>
+      {footer && (
+        <div className="mt-2 pt-2 border-t border-slate-800/50">
+          {footer}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -617,9 +670,11 @@ function TriggerTile({
 function TriggerNoticeBanner({
   notice,
   onDismiss,
+  onViewReport,
 }: {
   notice: TriggerNotification;
   onDismiss: () => void;
+  onViewReport?: () => void;
 }) {
   const toneClass =
     notice.level === 'success'
@@ -644,6 +699,16 @@ function TriggerNoticeBanner({
           </div>
         )}
       </div>
+      {onViewReport && (
+        <button
+          type="button"
+          className="hud-label text-xs px-2 py-1 text-cyan-300 hover:text-amber-300 shrink-0"
+          onClick={onViewReport}
+          aria-label="View report"
+        >
+          view report →
+        </button>
+      )}
       <button
         type="button"
         className="hud-label text-xs px-2 py-1 hover:text-amber-300 shrink-0"
@@ -652,6 +717,120 @@ function TriggerNoticeBanner({
       >
         dismiss
       </button>
+    </div>
+  );
+}
+
+/**
+ * v2.10.x — RAIA Synthesis report viewer.
+ *
+ * The trigger response carries `body.markdown` (rendered server-side
+ * via `render_markdown_template(result)`).  Pre-v2.10.x the frontend
+ * dropped that field on the floor, leaving users with only a toast.
+ * This modal renders the markdown verbatim (monospace, scrollable)
+ * with download + copy-to-clipboard affordances so the report can
+ * leave the app for evidence packets.
+ */
+function RaiaReportModal({
+  report,
+  onClose,
+}: {
+  report: RaiaReport;
+  onClose: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  const handleDownload = () => {
+    const blob = new Blob([report.markdown], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `raia_synthesis_${report.synthesisId}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopy = async () => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(report.markdown);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }
+    } catch {
+      /* clipboard blocked */
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="raia-report-title"
+    >
+      <div
+        className="hud-panel hud-panel-flow w-full max-w-4xl max-h-[85vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3 p-4 border-b border-slate-800">
+          <div className="min-w-0">
+            <div className="hud-label-accent hud-flow mb-1">
+              [ RAIA SYNTHESIS REPORT ]
+            </div>
+            <h2
+              id="raia-report-title"
+              className="font-display text-lg font-semibold text-slate-100 truncate"
+            >
+              {report.jurisdictions.length} jurisdiction(s) · {report.patternCount} pattern(s)
+            </h2>
+            <div className="text-xs text-slate-400 mt-1 font-mono truncate">
+              {report.synthesisId} · {new Date(report.generatedAt).toLocaleString()}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              className="hud-label text-xs px-2 py-1 text-cyan-300 hover:text-amber-300"
+              onClick={handleCopy}
+            >
+              {copied ? 'copied ✓' : 'copy'}
+            </button>
+            <button
+              type="button"
+              className="hud-label text-xs px-2 py-1 text-cyan-300 hover:text-amber-300"
+              onClick={handleDownload}
+            >
+              download .md
+            </button>
+            <button
+              type="button"
+              className="hud-label text-xs px-2 py-1 hover:text-amber-300"
+              onClick={onClose}
+              aria-label="Close report"
+            >
+              close ✕
+            </button>
+          </div>
+        </div>
+
+        <div className="hud-terminal flex-1 overflow-y-auto p-4 m-3 mt-3">
+          <pre className="text-xs text-slate-200 leading-relaxed whitespace-pre-wrap font-mono">
+            {report.markdown}
+          </pre>
+        </div>
+      </div>
     </div>
   );
 }
@@ -790,6 +969,44 @@ export interface TriggerNotification {
   level: TriggerLevel;
   title: string;
   detail?: string;
+  /**
+   * Optional viewable payload — if present, the banner renders an
+   * extra "View report →" action that opens a modal.  Used by RAIA
+   * Synthesis so the markdown report from the trigger response is
+   * not silently dropped on the floor.
+   */
+  report?: RaiaReport;
+}
+
+export interface RaiaReport {
+  synthesisId: string;
+  jurisdictions: string[];
+  patternCount: number;
+  generatedAt: string;        // ISO
+  markdown: string;
+  raw: Record<string, unknown>;
+}
+
+const RAIA_REPORT_STORAGE_KEY = 'odia.lastRaiaReport';
+
+function loadLastRaiaReport(): RaiaReport | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(RAIA_REPORT_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as RaiaReport;
+  } catch {
+    return null;
+  }
+}
+
+function saveLastRaiaReport(report: RaiaReport): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(RAIA_REPORT_STORAGE_KEY, JSON.stringify(report));
+  } catch {
+    /* quota exceeded — non-fatal */
+  }
 }
 
 async function triggerCpraDeadlines(): Promise<TriggerNotification> {
@@ -848,13 +1065,30 @@ async function triggerRaiaSynthesis(): Promise<TriggerNotification> {
         detail: body.message,
       };
     }
-    const result = body?.result;
+    const result = body?.result ?? {};
     const jurisdictionCount = result?.jurisdictions?.length ?? 0;
     const patternCount = result?.patterns?.length ?? 0;
+    const synthesisId = result?.synthesis_id ?? '(none)';
+    const markdown: string = body?.markdown ?? '';
+
+    let report: RaiaReport | undefined;
+    if (markdown) {
+      report = {
+        synthesisId,
+        jurisdictions: Array.isArray(body?.jurisdictions) ? body.jurisdictions : [],
+        patternCount,
+        generatedAt: new Date().toISOString(),
+        markdown,
+        raw: result,
+      };
+      saveLastRaiaReport(report);
+    }
+
     return {
       level: 'success',
       title: `RAIA synthesis: ${jurisdictionCount} jurisdiction(s), ${patternCount} pattern(s)`,
-      detail: `Synthesis ID: ${result?.synthesis_id ?? '(none)'}`,
+      detail: `Synthesis ID: ${synthesisId}`,
+      report,
     };
   } catch (err) {
     return {

@@ -350,6 +350,40 @@ export class APIClient {
     );
     return data;
   }
+
+  // -------------------------------------------------------------------------
+  // Runtime config — webhook token (v2.10.x)
+  // -------------------------------------------------------------------------
+
+  /** GET /api/v1/config/webhook-token — never returns the value itself. */
+  async getWebhookTokenStatus(): Promise<WebhookTokenStatus> {
+    const { data } = await this.http.get<WebhookTokenStatus>(
+      '/api/v1/config/webhook-token',
+    );
+    return data;
+  }
+
+  /** POST /api/v1/config/webhook-token — empty string clears the token. */
+  async setWebhookToken(token: string): Promise<WebhookTokenSetResult> {
+    const { data } = await this.http.post<WebhookTokenSetResult>(
+      '/api/v1/config/webhook-token',
+      { token },
+    );
+    return data;
+  }
+}
+
+export interface WebhookTokenStatus {
+  configured: boolean;
+  source: 'env' | 'file' | null;
+  file_path: string;
+  env_var: string;
+}
+
+export interface WebhookTokenSetResult {
+  status: 'ok';
+  source: 'env' | 'file' | null;
+  env_shadows_file: boolean;
 }
 
 export interface SeedJurisdictionsResult {

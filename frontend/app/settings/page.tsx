@@ -373,6 +373,9 @@ export default function SettingsPage() {
         {/* v2.7.9 B4 — Intro replay control */}
         <PresentationCard />
 
+        {/* v2.10.x — Webhook token for n8n integration */}
+        <WebhookTokenCard />
+
         {/* Authentication */}
         <AuthSection />
 
@@ -381,7 +384,7 @@ export default function SettingsPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Package:</span>
-              <span className="font-mono text-gray-900">odia 2.9.3</span>
+              <span className="font-mono text-gray-900">odia 2.10.1</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Frontend:</span>
@@ -403,6 +406,206 @@ export default function SettingsPage() {
 // ---------------------------------------------------------------------------
 // v2.7.9 B4 — Presentation card: replay the Oraculus intro on next launch
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// v2.10.x — Webhook token card
+//
+// Persists the n8n shared secret (ODIA_WEBHOOK_TOKEN) to a per-user file
+// via POST /api/v1/config/webhook-token.  Without this, the token can
+// only be set via the env var, which is impractical on a desktop install
+// where the Electron host has no shell.  The backend reads env first,
+// then file fallback — so when both are set, env wins and we surface
+// that to the user.
+// ---------------------------------------------------------------------------
+function WebhookTokenCard() {
+  const client = getAPIClient();
+  const [status, setStatus] = useState<{
+    configured: boolean;
+    source: 'env' | 'file' | null;
+    file_path: string;
+  } | null>(null);
+  const [token, setToken] = useState('');
+  const [reveal, setReveal] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ kind: 'ok' | 'warn' | 'err'; text: string } | null>(null);
+
+  const refresh = useCallback(async () => {
+    try {
+      const s = await client.getWebhookTokenStatus();
+      setStatus({ configured: s.configured, source: s.source, file_path: s.file_path });
+    } catch {
+      setStatus(null);
+    }
+  }, [client]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  const handleSave = async () => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const r = await client.setWebhookToken(token);
+      setToken('');
+      await refresh();
+      if (r.env_shadows_file) {
+        setMsg({
+          kind: 'warn',
+          text:
+            'Saved to disk, but the ODIA_WEBHOOK_TOKEN environment variable is set ' +
+            'and takes precedence. Unset it to use the value you just saved.',
+        });
+      } else {
+        setMsg({ kind: 'ok', text: 'Webhook token saved. n8n endpoints will accept it on the next request.' });
+      }
+    } catch (e: unknown) {
+      setMsg({ kind: 'err', text: e instanceof Error ? e.message : 'Failed to save token.' });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleClear = async () => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      await client.setWebhookToken('');
+      setToken('');
+      await refresh();
+      setMsg({ kind: 'ok', text: 'Webhook token cleared.' });
+    } catch (e: unknown) {
+      setMsg({ kind: 'err', text: e instanceof Error ? e.message : 'Failed to clear token.' });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleGenerate = () => {
+    // Generate a 32-byte cryptographically random hex string (= 64 chars).
+    // Falls back to Math.random when crypto is unavailable, which should
+    // not happen in any modern browser or Electron — the fallback is
+    // there only to keep the field usable in degraded environments.
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const buf = new Uint8Array(32);
+      crypto.getRandomValues(buf);
+      const hex = Array.from(buf, (b) => b.toString(16).padStart(2, '0')).join('');
+      setToken(hex);
+      setReveal(true);
+    } else {
+      setToken(Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
+      setReveal(true);
+    }
+  };
+
+  const sourcePill = status?.source === 'env'
+    ? { tone: 'bg-amber-500/20 text-amber-300', text: 'env var' }
+    : status?.source === 'file'
+      ? { tone: 'bg-emerald-500/20 text-emerald-300', text: 'on disk' }
+      : { tone: 'bg-slate-500/20 text-slate-300', text: 'not configured' };
+
+  return (
+    <Card title="Automation Webhook" variant="bordered">
+      <div className="space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="text-sm font-medium" style={{ color: 'var(--smoke-100)' }}>
+              ODIA_WEBHOOK_TOKEN
+            </div>
+            <div className="text-xs mt-1" style={{ color: 'var(--smoke-400)' }}>
+              Shared secret n8n sends in the <code>X-ODIA-Webhook-Token</code> header
+              when calling <code>/api/v1/webhook/*</code>. Required for the CivicPlus
+              scraper (WF-001) and every other n8n workflow that posts back into ODIA.
+            </div>
+          </div>
+          <span
+            className={`px-2 py-1 rounded text-xs font-semibold shrink-0 ${sourcePill.tone}`}
+          >
+            {sourcePill.text}
+          </span>
+        </div>
+
+        {status?.source === 'env' && (
+          <div className="p-3 rounded text-xs bg-amber-500/10 border border-amber-500/30 text-amber-200">
+            The environment variable <code>ODIA_WEBHOOK_TOKEN</code> is set and takes
+            precedence over anything saved here. To manage the token from this UI,
+            unset the env var and restart the backend.
+          </div>
+        )}
+
+        {msg && (
+          <div
+            className={`p-3 rounded text-sm border ${
+              msg.kind === 'ok'
+                ? 'bg-green-50 border-green-200 text-green-700'
+                : msg.kind === 'warn'
+                  ? 'bg-amber-50 border-amber-200 text-amber-800'
+                  : 'bg-red-50 border-red-200 text-red-700'
+            }`}
+          >
+            {msg.text}
+            <button className="ml-2 underline" onClick={() => setMsg(null)}>×</button>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type={reveal ? 'text' : 'password'}
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder={
+              status?.configured
+                ? 'Enter a new token to replace the saved one'
+                : 'Paste or generate a 32+ character secret'
+            }
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500"
+            spellCheck={false}
+            autoComplete="off"
+          />
+          <button
+            type="button"
+            onClick={() => setReveal((v) => !v)}
+            className="hud-btn hud-btn-ghost"
+          >
+            {reveal ? 'Hide' : 'Show'}
+          </button>
+          <button
+            type="button"
+            onClick={handleGenerate}
+            className="hud-btn hud-btn-ghost"
+          >
+            Generate
+          </button>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={handleSave}
+            disabled={busy || !token.trim()}
+            className="hud-btn hud-btn-emerald"
+          >
+            {busy ? '…' : 'Save Token'}
+          </button>
+          {status?.configured && status.source === 'file' && (
+            <button
+              onClick={handleClear}
+              disabled={busy}
+              className="hud-btn hud-btn-ghost"
+            >
+              Clear Saved Token
+            </button>
+          )}
+        </div>
+
+        <div className="text-xs" style={{ color: 'var(--smoke-500)' }}>
+          Stored at <code className="break-all">{status?.file_path ?? '…'}</code>.
+          The same value must be configured in n8n as the credential
+          <code> odia-backend-token</code>.
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 function PresentationCard() {
   const replay = useIntroStore((s) => s.replay);
   const [confirmed, setConfirmed] = useState(false);
