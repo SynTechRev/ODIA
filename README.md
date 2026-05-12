@@ -3,15 +3,18 @@
 A general-purpose **civic accountability intelligence platform** for forensic
 analysis of legal and government documents.
 
-Ingest legal documents (PDF, XML, JSON, TXT), detect anomalies across nine
+Ingest legal documents (PDF, XML, JSON, TXT), detect anomalies across ten
 specialized layers (fiscal, constitutional, surveillance, procurement, signature,
-scope, governance, administrative, grant compliance), reconstruct contract
-lineages, evaluate compliance against the ACLU CCOPS framework, and produce
-audit-ready reports — all locally, with full SHA-256 provenance.
+scope, governance, administrative, grant compliance, **cross-entity**),
+reconstruct contract lineages, evaluate compliance against the ACLU CCOPS
+framework, sweep cross-entity references via the Cross-Entity Analysis Protocol
+V1.0 (May 2026), and produce audit-ready reports — all locally, with full
+SHA-256 provenance.
 
 **Repository**: https://github.com/SynTechRev/ODIA
 **License**: MIT
-**Current version**: **2.7.8**
+**Current version**: **2.10.0** — *Cross-Entity Analysis Protocol V1.0*
+([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v2.10.0))
 **Python**: 3.11+
 
 ---
@@ -28,16 +31,16 @@ Download the latest installer from the
 
 | Platform | Installer | Architecture |
 |----------|-----------|--------------|
-| **Windows** | `ODIA-Setup-2.7.8.exe` | x64 |
-| **macOS (Apple Silicon)** | `ODIA-2.7.8-arm64.dmg` | arm64 (M1 / M2 / M3 / M4) |
-| **macOS (Intel)** | `ODIA-2.7.8-x64.dmg` | x64 |
-| **Linux** | `ODIA-2.7.8.AppImage` | x64 |
+| **Windows** | `ODIA-Setup-2.10.0.exe` | x64 |
+| **macOS (Apple Silicon)** | `ODIA-2.10.0-arm64.dmg` | arm64 (M1 / M2 / M3 / M4) |
+| **macOS (Intel)** | `ODIA-2.10.0-x64.dmg` | x64 |
+| **Linux** | `ODIA-2.10.0.AppImage` | x64 |
 
-**Direct download links (v2.7.8):**
-- [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v2.7.8/ODIA-Setup-2.7.8.exe)
-- [macOS Apple Silicon (arm64)](https://github.com/SynTechRev/ODIA/releases/download/v2.7.8/ODIA-2.7.8-arm64.dmg)
-- [macOS Intel (x64)](https://github.com/SynTechRev/ODIA/releases/download/v2.7.8/ODIA-2.7.8-x64.dmg)
-- [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v2.7.8/ODIA-2.7.8.AppImage)
+**Direct download links (v2.10.0):**
+- [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-Setup-2.10.0.exe)
+- [macOS Apple Silicon (arm64)](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-2.10.0-arm64.dmg)
+- [macOS Intel (x64)](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-2.10.0-x64.dmg)
+- [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-2.10.0.AppImage)
 
 **System Requirements:**
 - **Windows:** Windows 10 (64-bit) or later
@@ -65,7 +68,7 @@ python scripts/run_audit.py --source data/demo/ --output reports/demo/
 ```
 
 Open `reports/demo/audit_report.md` to see 10 synthetic documents analyzed
-across the nine-detector pipeline. Full walkthrough: [QUICKSTART.md](QUICKSTART.md)
+across the ten-detector pipeline. Full walkthrough: [QUICKSTART.md](QUICKSTART.md)
 
 ### Mobile (PWA — v2.9.0)
 
@@ -114,12 +117,39 @@ cd frontend && npm install && npm run dev
 
 ---
 
+## What's New in v2.10.0 (current)
+
+**v2.10.0 — Cross-Entity Analysis Protocol V1.0** ([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v2.10.0))
+
+Formalises cross-jurisdiction analysis into deterministic architecture. Every
+document entering O.D.I.A. is now classifiable against the full **Cross-Entity
+Registry** — 12 Tier-1 primary jurisdictions, 8 Tier-2 governance bodies, 10
+Tier-3 vendors, 6 Tier-4 external sources, 13 personnel, 7 finding-type rules.
+
+- **New `oraculus_di_auditor.registry/`** — canonical Sunshine Dragnet entity
+  catalogue with typed loader (`Entity`, `Personnel`, `FindingType`,
+  `NonStandardCategory`)
+- **New D-13 cross-entity detector** — function-style, emits seven finding
+  types (A–G) with confidence scoring and registry-aware severity rules
+- **TCDAO press-release archive scraper** (tulareda.org) — polite (robots.txt-
+  aware, rate-limited, identifying User-Agent), with monthly-archive-widget
+  discovery, 2022 path-variant handling, and **gap-band absence-record
+  emission** for the three known multi-year coverage gaps (GAP-A 2006–2011,
+  GAP-B 2011–2015, GAP-C 2015–2017)
+- `"critical"` joins the severity vocabulary in the analysis pipeline; flags
+  and summary lines updated to surface critical alongside high
+- 64 new tests pass; 212 broader regression tests pass with no failures
+
+Earlier v2.8.x and v2.9.x cycles (Mineral Calibration, Mineral Polish, Hero
+Pattern Convergence, Detector Calibration Sweep + OCR Coverage) are captured
+in [CHANGELOG.md](CHANGELOG.md) with full track-by-track detail.
+
 ## What's New in v2.7.x
 
 The v2.7 release line moved O.D.I.A. from a developer tool into a
 production-grade desktop application for civic-accountability operators.
 
-**v2.7.8 (current)** — TypeScript fix on top of v2.7.7's gemstone palette
+**v2.7.8** — TypeScript fix on top of v2.7.7's gemstone palette
 propagation: `<AppLink>` and SVG icon components now accept the `style`
 prop required by the new CSS-variable-based palette. v2.7.7's tag failed
 CI at the typecheck step; v2.7.8 supersedes it with the same gem palette.
@@ -167,10 +197,11 @@ See [docs/PHASES.md](docs/PHASES.md) for the full version history.
 
 ## Features
 
-- **Nine-detector analysis engine** — fiscal, constitutional, surveillance,
+- **Ten-detector analysis engine** — fiscal, constitutional, surveillance,
   procurement, signature, scope, governance, administrative integrity, grant
-  compliance (JAG / COPS / Edward Byrne anti-supplanting); all executed
-  locally, no cloud calls
+  compliance (JAG / COPS / Edward Byrne anti-supplanting), and **cross-entity
+  reference detection** (D-13, Cross-Entity Analysis Protocol V1.0); all
+  executed locally, no cloud calls
 - **Multi-format ingestion** — PDF (with OCR fallback), XML, JSON, TXT;
   drag-and-drop or programmatic
 - **Legistar retrieval** — pull legislative documents directly from any of 50
