@@ -1,0 +1,650 @@
+# O.D.I.A. — Cross-Entity Registry
+#
+# This file is the canonical source of truth for the Sunshine Dragnet
+# Entity Registry as defined in the Cross-Entity Analysis Protocol V1.0
+# (May 2026). Every document entering the O.D.I.A. pipeline is
+# classified against this registry at ingestion time.
+#
+# Schema
+# ------
+# tiers:
+#   - tier_id: 1 | 2 | 3 | 4
+#     label: short human description
+#     entities:
+#       - id: E-NNN | V-NNN | X-NNN  (Tier 1/2 → E, Tier 3 → V, Tier 4 → X)
+#         name: canonical entity name
+#         abbreviation: short form for filename / log prefixing
+#         aliases: list of alternate strings to scan in document text
+#         mas_status: human-readable state (V8.0, INITIATED, NOT_OPENED, NULL)
+#         alert_prefix: format string for emitted alert IDs (e.g., "VPD-{n:03d}")
+#         next_alert: integer — the next alert number to issue
+#         relevance: short description of why this entity matters (for Tier 2-4)
+#         presence: list of Tier 1 entity IDs where this vendor/source is confirmed
+#         sub_detectors: list of detector module names that activate when this entity is primary
+#         notes: free text for analyst context
+#
+# This file ships with /src/oraculus_di_auditor/registry/entities.yml. The
+# registry loader (registry/loader.py) provides typed access; runtime
+# updates from the Personnel Register are handled by registry/personnel.py.
+#
+# IMPORTANT: every change to this file must be committed alongside a test
+# update in tests/registry/test_entities.py confirming the integrity of
+# the affected tier. Personnel and vendor aliases are case-insensitive at
+# scan time; regex anchoring is handled in the detector module.
+
+schema_version: "1.0"
+generated_at: "2026-05-12T00:00:00Z"
+sources:
+  - "Cross-Entity Analysis Protocol V1.0 (May 2026)"
+  - "MAS V8.0 (VPD), V5.1 (PPD), V2.0 FINAL (TPD), V3.3 FINAL (LDPS),
+     V4.0 FINAL (FPD, WPD), V14.0 FINAL (DPD), V16.0 RAIA-8 (EPD),
+     V4.1 (TCSO)"
+
+tiers:
+  - tier_id: 1
+    label: "Primary Audit Jurisdictions (MAS-Producing Entities)"
+    entities:
+      - id: E-001
+        name: "Visalia Police Department"
+        abbreviation: VPD
+        aliases:
+          - "Visalia Police"
+          - "Visalia PD"
+          - "VPD"
+          - "City of Visalia Police"
+        mas_status: "V8.0 (466 alerts)"
+        alert_prefix: "VPD-{n:03d}"
+        next_alert: 467
+        sub_detectors: []
+        notes: "Deepest MAS in framework. Sequential alerts plus supplemental block #72-#80."
+
+      - id: E-002
+        name: "Porterville Police Department"
+        abbreviation: PPD
+        aliases:
+          - "Porterville Police"
+          - "Porterville PD"
+          - "PPD"
+          - "City of Porterville Police"
+        mas_status: "V5.1 (220 alerts)"
+        alert_prefix: "PPD-{n:03d}"
+        next_alert: 221
+        sub_detectors: []
+
+      - id: E-003
+        name: "Tulare Police Department"
+        abbreviation: TPD
+        aliases:
+          - "Tulare Police"
+          - "Tulare PD"
+          - "TPD"
+          - "City of Tulare Police"
+        mas_status: "V2.0 FINAL (101 alerts)"
+        alert_prefix: "TUL-{n:03d}"
+        next_alert: 102
+        sub_detectors: []
+
+      - id: E-004
+        name: "Lindsay Department of Public Safety"
+        abbreviation: LDPS
+        aliases:
+          - "Lindsay DPS"
+          - "Lindsay Department of Public Safety"
+          - "City of Lindsay Department of Public Safety"
+          - "LDPS"
+        mas_status: "V3.3 FINAL (35 alerts)"
+        alert_prefix: "LIND-{n:03d}"
+        next_alert: 36
+        sub_detectors: []
+
+      - id: E-005
+        name: "Farmersville Police Department"
+        abbreviation: FPD
+        aliases:
+          - "Farmersville Police"
+          - "Farmersville PD"
+          - "FPD"
+          - "City of Farmersville Police"
+        mas_status: "V4.0 FINAL (49 alerts)"
+        alert_prefix: "FAR-{n:03d}"
+        next_alert: 50
+        sub_detectors: []
+
+      - id: E-006
+        name: "Woodlake Police Department"
+        abbreviation: WPD
+        aliases:
+          - "Woodlake Police"
+          - "Woodlake PD"
+          - "WPD"
+          - "City of Woodlake Police"
+        mas_status: "V4.0 FINAL (37 alerts)"
+        alert_prefix: "WDL-{n:03d}"
+        next_alert: 38
+        sub_detectors: []
+
+      - id: E-007
+        name: "Dinuba Police Department"
+        abbreviation: DPD
+        aliases:
+          - "Dinuba Police"
+          - "Dinuba PD"
+          - "DPD"
+          - "City of Dinuba Police"
+        mas_status: "V14.0 FINAL (267 alerts)"
+        alert_prefix: "DIN-{n:03d}"
+        next_alert: 268
+        sub_detectors: []
+
+      - id: E-008
+        name: "Exeter Police Department"
+        abbreviation: EPD
+        aliases:
+          - "Exeter Police"
+          - "Exeter PD"
+          - "EPD"
+          - "City of Exeter Police"
+        mas_status: "V16.0 RAIA-8 (147 alerts)"
+        alert_prefix: "EXE-{n:03d}"
+        next_alert: 148
+        sub_detectors: []
+
+      - id: E-009
+        name: "Tulare County Sheriff's Office"
+        abbreviation: TCSO
+        aliases:
+          - "Tulare County Sheriff"
+          - "Tulare County Sheriff's Office"
+          - "Tulare County Sheriffs Office"
+          - "TCSO"
+          - "Sheriff Boudreaux"
+          - "Tulare County Sheriff Department"
+        mas_status: "V4.1 (57 alerts)"
+        alert_prefix: "TCSO-{n:03d}"
+        next_alert: 58
+        sub_detectors: []
+
+      - id: E-010
+        name: "Tulare County Probation Department"
+        abbreviation: TCPD
+        aliases:
+          - "Tulare County Probation"
+          - "Tulare County Probation Department"
+          - "TCPD"
+          - "Probation Department"
+          - "Chief Probation Officer"
+          - "Probation Officer"
+          - "DPO"  # deputy probation officer
+          - "S.E.U."
+          - "Special Enforcement Unit"
+        mas_status: "INITIATED"
+        alert_prefix: "TCPD-{n:03d}"
+        next_alert: 1
+        sub_detectors:
+          - "seu_operations"
+          - "fourth_amendment_waiver_scope"
+          - "ab109_funding_flow"
+          - "electronic_monitoring_vendor"
+          - "probationer_flock_data_access"
+        notes: |
+          New jurisdiction opened May 2026. April 29, 2026 enforcement
+          contact established TCPD S.E.U. participation in VPD operation.
+          Agreement 30233 with City of Dinuba ($19,268/yr Non-Custody
+          Intake Program) provides funding-flow precedent.
+
+      - id: E-011
+        name: "Tulare County District Attorney"
+        abbreviation: TCDAO
+        aliases:
+          - "Tulare County District Attorney"
+          - "Tulare County DA"
+          - "TCDAO"
+          - "TCDA"
+          - "Office of the District Attorney"
+          - "District Attorney's Office"
+          - "DA's Office"
+          - "Bureau of Investigations"
+          - "Bureau of Prosecutions"
+        mas_status: "INITIATED"
+        alert_prefix: "TCDAO-{n:03d}"
+        next_alert: 1
+        sub_detectors:
+          - "evidence_pipeline"
+          - "ai_evidence_acceptance"
+          - "prosecution_volume"
+          - "bureau_investigations_tech"
+          - "ab481_compliance_cross_reference"
+        notes: |
+          New jurisdiction opened May 2026. Bureau of Investigations
+          has confirmed AB 481 compliance (April 7, 2026 public meeting
+          announced) vs TCSO 5-year non-compliance — material asymmetry.
+          Website (tulareda.org) is Tier 4 archive scrape target.
+
+      - id: E-012
+        name: "California DMV"
+        abbreviation: DMV
+        aliases:
+          - "California DMV"
+          - "Department of Motor Vehicles"
+          - "DMV"
+          - "Virtual Intake Process"
+          - "VIP"
+        mas_status: "INITIATED (CPRA-005)"
+        alert_prefix: "DMV-{n:03d}"
+        next_alert: 1
+        sub_detectors:
+          - "vip_vendor_identity"
+          - "data_architecture"
+          - "dppa_compliance"
+          - "ipa_1798_34_access"
+
+  - tier_id: 2
+    label: "Governance and Oversight Entities (Cross-Cutting)"
+    entities:
+      - id: E-020
+        name: "Tulare County Board of Supervisors"
+        abbreviation: BOS
+        aliases:
+          - "Board of Supervisors"
+          - "Tulare County Board of Supervisors"
+          - "BOS"
+          - "County Board"
+          - "County Supervisors"
+        relevance: |
+          Budget authority for TCSO, TCPD, TCDAO, Public Defender.
+          Consent calendar analysis. Ordinance 3611 establishes AB 481
+          reporting obligation.
+
+      - id: E-021
+        name: "Tulare County Grand Jury"
+        abbreviation: GJ
+        aliases:
+          - "Tulare County Grand Jury"
+          - "Grand Jury"
+          - "Civil Grand Jury"
+        relevance: |
+          Annual reports covering all county LE agencies. 9 reports
+          analyzed for TCSO. BWC survey, county-wide tech assessment.
+
+      - id: E-022
+        name: "Tulare County Superior Court (Visalia Division)"
+        abbreviation: TCSC-V
+        aliases:
+          - "Tulare County Superior Court"
+          - "Visalia Superior Court"
+          - "Department 4"
+          - "Department 5"
+          - "Department 6"
+        relevance: "Case processing for all 9+ jurisdictions. DA filing destination."
+
+      - id: E-023
+        name: "Tulare County Superior Court (Porterville Division)"
+        abbreviation: TCSC-P
+        aliases:
+          - "South County Justice Center"
+          - "Department 17"
+          - "Department 20"
+          - "Department 22"
+          - "Porterville Superior Court"
+        relevance: "Case processing for PPD, Lindsay, Farmersville, portions of TCSO."
+
+      - id: E-024
+        name: "Tulare County Public Defender"
+        abbreviation: TCPDef
+        aliases:
+          - "Tulare County Public Defender"
+          - "Public Defender"
+          - "Defender's Office"
+        relevance: "Defense asymmetry analysis. $553,647 pilot grant. $200K settlement."
+
+      - id: E-025
+        name: "Tulare County Administrative Office"
+        abbreviation: CAO
+        aliases:
+          - "County Administrative Officer"
+          - "CAO"
+          - "Tulare County CAO"
+        relevance: "County-wide contract administration. CJIS compliance authority."
+
+      - id: E-026
+        name: "Community Corrections Partnership"
+        abbreviation: CCP
+        aliases:
+          - "Community Corrections Partnership"
+          - "CCP"
+          - "AB 109 Realignment"
+          - "AB 109"
+        relevance: "AB 109 realignment oversight. TCPD funding channel."
+
+      - id: E-027
+        name: "Visalia Economic Development Corporation"
+        abbreviation: VEDC
+        aliases:
+          - "Visalia Economic Development Corporation"
+          - "VEDC"
+        relevance: "Flock camera procurement outside Measure N. Councilperson board seat (F-8)."
+
+  - tier_id: 3
+    label: "Vendor Entities (Multi-Jurisdictional)"
+    entities:
+      - id: V-001
+        name: "Axon Enterprise"
+        aliases:
+          - "Axon"
+          - "Axon Enterprise"
+          - "Axon Enterprise Inc"
+          - "TASER"
+          - "Taser International"
+          - "Evidence.com"
+          - "Draft One"
+          - "Auto-Tag"
+          - "AutoTag"
+          - "Fleet 3"
+          - "Axon Air"
+          - "Axon Outpost"
+          - "Axon Lightpost"
+          - "Axon Fusus"
+          - "Axon Community Request"
+          - "ACEIP"
+          - "OSP"
+          - "OSP7"
+          - "MSPA"
+          - "MSPA V15.0"
+        presence: [E-001, E-002, E-003, E-004, E-005, E-006, E-007, E-008, E-009]
+
+      - id: V-002
+        name: "Flock Safety"
+        aliases:
+          - "Flock"
+          - "Flock Safety"
+          - "Flock Group"
+          - "Flock Group Inc"
+          - "FlockOS"
+          - "Flock Nova"
+          - "Aerodome"
+          - "Falcon"
+          - "Condor"
+          - "Sparrow"
+          - "Vehicle Fingerprint"
+        presence: [E-001, E-002, E-003, E-004, E-005, E-006, E-007, E-008]
+        notes: |
+          ALPR / LPR / license plate reader are context-dependent — must be
+          confirmed against Flock product context before counting as a
+          Flock-specific reference.
+
+      - id: V-003
+        name: "Motorola Solutions"
+        aliases:
+          - "Motorola"
+          - "Motorola Solutions"
+          - "APX"
+          - "Spillman"
+          - "CAD/RMS"
+          - "CommandCentral"
+          - "PremierOne"
+        presence: [E-002, E-008, E-009]
+
+      - id: V-004
+        name: "Lexipol"
+        aliases:
+          - "Lexipol"
+          - "Lexipol policy manual"
+        presence: [E-002, E-006]
+
+      - id: V-005
+        name: "BCS Consulting"
+        aliases:
+          - "BCS"
+          - "BCS Consulting"
+        presence: [E-007]
+
+      - id: V-006
+        name: "BRINC"
+        aliases:
+          - "BRINC"
+          - "BRINC Drones"
+        presence: [E-002]
+
+      - id: V-007
+        name: "NEC"
+        aliases:
+          - "NEC"
+          - "NEC biometrics"
+          - "LiveScan"
+        presence: [E-009]
+
+      - id: V-008
+        name: "Tyler Technologies / Journal Technologies"
+        aliases:
+          - "Tyler Technologies"
+          - "Tyler"
+          - "Odyssey"
+          - "New World"
+          - "Brazos"
+          - "Journal Technologies"
+          - "Journal"
+          - "eCourt"
+        presence: []
+        notes: "Predicted: TCDAO, Superior Court case management."
+
+      - id: V-009
+        name: "BI Incorporated / Sentinel / Securus"
+        aliases:
+          - "BI Inc"
+          - "BI Incorporated"
+          - "Sentinel"
+          - "Securus"
+          - "electronic monitoring"
+          - "GPS monitoring"
+          - "ankle monitor"
+        presence: []
+        notes: "Predicted: TCPD electronic monitoring."
+
+      - id: V-010
+        name: "Loops Marketing"
+        aliases:
+          - "Loops Marketing"
+          - "Loops"
+        presence: [E-011]
+        notes: "TCDAO website (tulareda.org) — Tier 4 archive scrape target."
+
+  - tier_id: 4
+    label: "External Intelligence Sources"
+    entities:
+      - id: X-001
+        name: "Nexanet.ai"
+        contribution: "53 hardcoded API keys; CJIS compliance destruction."
+
+      - id: X-002
+        name: "DeFlock Corona"
+        contribution: "Community conversation cheatsheet; patent/Nova/Palantir aggregation."
+
+      - id: X-003
+        name: "Electronic Frontier Foundation"
+        contribution: "Atlas of Surveillance; Flock 'dystopian panopticon' designation."
+
+      - id: X-004
+        name: "404 Media"
+        contribution: "Flock Nova investigation (May 2025)."
+
+      - id: X-005
+        name: "ILSR (Institute for Local Self-Reliance)"
+        contribution: "Dollar store predation research."
+
+      - id: X-006
+        name: "Columbia Law Review"
+        contribution: "Ghost jobs analysis (Nov 2025)."
+
+# Master Personnel Register — operator-curated. Each entry maps a named
+# individual to all jurisdictions where they've appeared in evidence,
+# in chronological order of evidentiary first contact.
+personnel:
+  - id: P-001
+    name: "Chief Robert Schimpf"
+    aliases: ["Robert Schimpf", "Chief Schimpf", "Schimpf"]
+    history:
+      - entity: E-009  # TCSO
+        role: "MOU originator"
+        evidence_refs: ["Exeter consent calendar Item I.10"]
+      - entity: E-008  # EPD
+        role: "Permanent Chief of Police"
+        evidence_refs: ["EPD MAS V16.0 RAIA-8 alert EXE-NNN"]
+    notes: "Institutional merger. TCSO supplies Chief to EPD."
+
+  - id: P-002
+    name: "Captain Dan Ford"
+    aliases: ["Dan Ford", "Captain Ford", "Ford"]
+    history:
+      - entity: E-001  # VPD
+        role: "Sole procurement/operational/compliance authority"
+        evidence_refs: ["VPD MAS V8.0"]
+
+  - id: P-003
+    name: "Captain Luma Fahoum"
+    aliases: ["Luma Fahoum", "Captain Fahoum", "Fahoum"]
+    history:
+      - entity: E-001  # VPD
+        role: "Procurement authority"
+        evidence_refs: ["VPD MAS V8.0"]
+      - entity: E-011  # TCDAO
+        role: "Subject of felony prosecution"
+        evidence_refs: ["DA Case 24-0032442"]
+
+  - id: P-004
+    name: "Chief Jason Salazar"
+    aliases: ["Jason Salazar", "Chief Salazar", "Salazar"]
+    history:
+      - entity: E-001  # VPD
+        role: "Chief; JAG signatory; discovered Fahoum"
+
+  - id: P-005
+    name: "Ybarra"
+    aliases: ["Ybarra"]
+    history:
+      - entity: E-001  # VPD
+        role: "JAG program contact; S→Y→S signatory anomaly"
+
+  - id: P-006
+    name: "Chief Jay Brock"
+    aliases: ["Jay Brock", "Chief Brock", "Brock"]
+    history:
+      - entity: E-005  # FPD
+        role: "Sworn in same meeting as Flock approval"
+
+  - id: P-007
+    name: "Steve Nelsen"
+    aliases: ["Steve Nelsen", "Nelsen"]
+    history:
+      - entity: E-027  # VEDC
+        role: "Director"
+      - entity: E-001  # VPD
+        role: "Advised VEDC on PBID"
+
+  - id: P-008
+    name: "Caroline Fraher"
+    aliases: ["Caroline Fraher", "Fraher"]
+    affiliation: V-002  # Flock Safety
+    history:
+      - entity: E-005  # FPD
+        role: "Vendor representative at FPD"
+
+  - id: P-009
+    name: "Garrett Langley"
+    aliases: ["Garrett Langley", "Langley"]
+    affiliation: V-002  # Flock Safety CEO
+    history:
+      - entity: E-003  # TPD
+        role: "Sole-source letter signatory"
+      - entity: null
+        role: "Sole-source letters to multiple agencies"
+
+  - id: P-010
+    name: "DPO G. Arreaga"
+    aliases: ["Arreaga", "DPO Arreaga", "G. Arreaga"]
+    history:
+      - entity: E-010  # TCPD
+        role: "S.E.U.; identified at April 29, 2026 enforcement contact"
+
+  - id: P-011
+    name: "Josh Rowlett"
+    aliases: ["Josh Rowlett", "Rowlett"]
+    history:
+      - entity: E-011  # TCDAO Bureau of Investigations
+        role: "Assistant Chief Investigator; AB 481 contact"
+
+  - id: P-012
+    name: "Tim Ward"
+    aliases: ["Tim Ward", "DA Tim Ward", "Ward"]
+    history:
+      - entity: E-011  # TCDAO
+        role: "District Attorney (current)"
+
+  - id: P-013
+    name: "Phil Cline"
+    aliases: ["Phil Cline", "Cline"]
+    history:
+      - entity: E-011  # TCDAO
+        role: "Former DA (2004-era press releases)"
+
+# Cross-categorical finding types — these map to D-13 sub-finding-IDs.
+# Each type has an associated severity-elevation rule per §4.3 of the protocol.
+finding_types:
+  - id: A
+    name: "Budget/Fiscal Cross-Reference"
+    severity_default: "HIGH"
+    severity_elevation: "CRITICAL when new vendor presence revealed"
+
+  - id: B
+    name: "Personnel Migration"
+    severity_default: "HIGH"
+    severity_elevation: "CRITICAL when personnel migrates from procurement authority to subject of prosecution (Fahoum precedent)"
+
+  - id: C
+    name: "Vendor Cross-Contamination"
+    severity_default: "CRITICAL"
+    severity_elevation: "Always CRITICAL — new vendor presence in non-standard record category"
+
+  - id: D
+    name: "Operational Intersection"
+    severity_default: "HIGH"
+
+  - id: E
+    name: "Governance Chain Cross-Reference"
+    severity_default: "HIGH"
+    severity_elevation: "CRITICAL when governance action by one entity creates obligation unmet by another (Ordinance 3611 / AB 481 precedent)"
+
+  - id: F
+    name: "Grant/Funding Pipeline Cross-Reference"
+    severity_default: "HIGH"
+
+  - id: G
+    name: "Data/Evidence Pipeline Cross-Reference"
+    severity_default: "HIGH"
+    severity_elevation: "CRITICAL when data flows across entities without disclosed governance (Axon Evidence.com → DA access)"
+
+# Non-standard record categories that have historically produced
+# CRITICAL findings invisible to standard ingestion. Every audit run
+# must verify these categories have been swept.
+leave_no_stone_unturned:
+  - category: "Planning Commission CIP consistency reviews"
+    precedent: "Farmersville Axon Fleet 3 ($202,409) discovery"
+  - category: "GASB lease/SBITA footnotes in audited financial statements"
+    precedent: "Woodlake Axon 60-month lease discovery (The Woodlake Method)"
+  - category: "Cannabis CUP conditions requiring PD camera access"
+    precedent: "Farmersville, Woodlake"
+  - category: "CEQA Notices of Exemption on CEQAnet"
+    precedent: "Exeter Flock NOE"
+  - category: "Warrant registers embedded in consent calendar packets"
+    precedent: "Lindsay, Woodlake primary discovery mechanism"
+  - category: "Grand Jury annual reports"
+    precedent: "TCSO BWC survey, county-wide technology assessment"
+  - category: "AB 481 military equipment reports"
+    precedent: "TCDAO Bureau confirmed; TCSO absent — asymmetry of evidentiary significance"
+  - category: "Website source code and CMS infrastructure"
+    precedent: "Exeter WordPress compromise"
+  - category: "Vendor bid portals / BidNet Direct"
+    precedent: "Exeter procurement discovery"
+  - category: "Opioid settlement participation records"
+    precedent: "Dinuba/Kroger — may contain DA references"
+  - category: "Press release archives on agency websites"
+    precedent: "TCDAO tulareda.org — personnel migration evidence, AB 481 announcements, prosecution patterns by originating agency"
