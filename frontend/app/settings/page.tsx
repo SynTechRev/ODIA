@@ -280,10 +280,10 @@ export default function SettingsPage() {
   return (
     <DashboardLayout>
       <div className="max-w-4xl space-y-6">
-        {/* v2.9.2 — canonical hero pattern (no metric tiles — config page) */}
-        <section className="page-hero-settings hud-brackets p-6 md:p-8 relative overflow-hidden">
+        {/* v3.0 — unified malachite gemstone hero (matches Dashboard) */}
+        <section className="gem-panel gem-panel-faceted gem-hero-malachite hud-brackets p-6 md:p-8 relative overflow-hidden">
           <div className="relative z-10">
-            <div className="hud-label-accent hud-amber mb-3">
+            <div className="hud-label-accent hud-cyan-bright mb-3">
               [ APPLICATION CONFIG · USER SCOPE ]
             </div>
             <h1 className="hud-heading text-2xl md:text-3xl">

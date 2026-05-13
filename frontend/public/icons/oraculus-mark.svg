@@ -1,34 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Oraculus Mark v2 — application icon source SVG
+  Oraculus Mark v3 — application icon source SVG
   ===============================================
 
-  Rebuilt at v2.8.0 with colors sampled directly from
-  reference_5_gold-swirl-icon-source.png. Every gradient stop is a real
-  measured pixel from that painting, not a designer's interpretation.
+  Replaces the v2.8.0 gold-swirl mark with the v3.0 O.D.I.A. monogram
+  crosshair.  Construction:
 
-  Color anchor table (measured):
-    catch_light  #eae1cf  L*=0.865   gold-tinted highlight (paint surface lit)
-    soft_high    #ded2be  L*=0.808   raised brushstroke face
-    catch_warm   #cdc1b0  L*=0.753   warm catch-light on stroke side
-    mid_light    #b89664  L*=0.557   mid-stroke value
-    primary      #997545  L*=0.435   PRIMARY brand gold (anchor color)
-    mid_dark     #8e704b  L*=0.425   mid-stroke shadow
-    deep         #4e4033  L*=0.253   inset shadow
-    void         #221f1f  L*=0.127   stroke base
-    paper        #cdcdc7  L*=0.792   white paint counterpoint
-    ink          #090706  L*=0.027   deepest void
-    smoke_900    #080c08  body bg
+    O  → outer ring (gold gradient, faceted stroke)
+    D  → left vertical tangent stem (the O's outline is shared as D's
+         right curve, so the ring reads as both letters)
+    I  → centre vertical stem with double top crossbar
+    A  → equilateral triangle inscribed in the O, apex at top, base
+         touching the ring at ±30° from horizontal
+
+  The triangle is bisected by the I's stem and split horizontally by
+  the I's top crossbar — yielding four facet regions:
+    upper pair → gold (matches O/D + crossbar tone)
+    lower pair → emerald (matches inscribed-A + I-stem tone)
+
+  Centre catch-light at (256,256) anchors the crosshair sighting point.
+  Hex-mesh underlay carried over from v2.8 to call back to the intro
+  animation grid and the brand reference at docs/BRAND.md.
+
+  Palette (sampled from v2.8.0 mineral reference):
+    gold_primary  #d8b13c   highlight gold (--gold-200)
+    gold_mid      #b89664   mid-stroke (--gold-300)
+    gold_deep     #997545   primary brand gold (--gold-500)
+    emerald_neon  #1fe88f   vivid emerald (--neon-emerald)
+    emerald_deep  #0f6546   deep emerald (--emerald-deep)
+    smoke_950     #0c0d0e   void background
+    smoke_900     #080c08   centre lift
 
   Rasterise to PNG at:
-    192x192 → frontend/public/icons/icon-192.png      (PWA standard)
-    512x512 → frontend/public/icons/icon-512.png      (PWA HD + Android)
-    512x512 → frontend/public/icons/icon-maskable-512.png
-    1024x1024 → desktop/resources/icon.png
-    Multi-size .ico → desktop/resources/icon.ico
+    192×192   → frontend/public/icons/icon-192.png
+    512×512   → frontend/public/icons/icon-512.png
+    512×512   → frontend/public/icons/icon-maskable-512.png
+    1024×1024 → desktop/resources/icon.png
+    Multi-size .ico  → desktop/resources/icon.ico
     Multi-size .icns → desktop/resources/icon.icns
 
   Recommended rasteriser: librsvg (rsvg-convert) for gradient fidelity.
+  The desktop installer pipeline picks this file up automatically via
+  the sharp-based PNG rasterizer added in v2.7.9 A2.
 -->
 <svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 512 512"
@@ -43,41 +56,52 @@
       <stop offset="100%" stop-color="#050505"/>
     </radialGradient>
 
-    <!--
-      Primary gold gradient — heavy crescent.
-      Rotation 35deg. Warm catch-light at upper-left falling off through
-      the measured mid-stroke value to the inset shadow.
-      Every stop is a real measured pixel from the painting.
-    -->
-    <linearGradient id="goldHeavy" x1="20%" y1="15%" x2="80%" y2="85%">
-      <stop offset="0%"   stop-color="#eae1cf"/>  <!-- catch_light -->
-      <stop offset="22%"  stop-color="#ded2be"/>  <!-- soft_high -->
-      <stop offset="45%"  stop-color="#cdc1b0"/>  <!-- catch_warm -->
-      <stop offset="62%"  stop-color="#b89664"/>  <!-- mid_light -->
-      <stop offset="78%"  stop-color="#997545"/>  <!-- PRIMARY -->
-      <stop offset="100%" stop-color="#4e4033"/>  <!-- deep shadow -->
+    <!-- Gold ring gradient — the O + D shared outline -->
+    <linearGradient id="goldRing" x1="20%" y1="15%" x2="80%" y2="85%">
+      <stop offset="0%"   stop-color="#ded2be"/>
+      <stop offset="35%"  stop-color="#d8b13c"/>
+      <stop offset="70%"  stop-color="#b89664"/>
+      <stop offset="100%" stop-color="#997545"/>
     </linearGradient>
 
-    <!-- Mid wisp gradient — anchored at PRIMARY, fading to deep -->
-    <linearGradient id="goldMid" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#b89664" stop-opacity="0.85"/>
-      <stop offset="100%" stop-color="#685339" stop-opacity="0.4"/>
+    <!-- Gold for the D-stem and crossbars — slightly cooler so the
+         ring stays visually dominant -->
+    <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#cdc1b0"/>
+      <stop offset="60%"  stop-color="#b89664"/>
+      <stop offset="100%" stop-color="#997545"/>
     </linearGradient>
 
-    <!-- White paint counterpoint — measured from painting (not pure white) -->
-    <linearGradient id="whiteWisp" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#cdcdc7" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#b7afa3" stop-opacity="0.1"/>
+    <!-- Emerald gradient for the A triangle + I stem -->
+    <linearGradient id="emeraldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1fe88f"/>
+      <stop offset="60%"  stop-color="#0f9a6a"/>
+      <stop offset="100%" stop-color="#0f6546"/>
     </linearGradient>
 
-    <!-- Soft blur for the outermost wisp halo -->
-    <filter id="softBlur" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur stdDeviation="2.5"/>
+    <!-- Facet tints — kept low-alpha so they read as gem facets, not
+         flat colour blocks against the dark background -->
+    <linearGradient id="goldFacet" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#d8b13c" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#997545" stop-opacity="0.18"/>
+    </linearGradient>
+    <linearGradient id="emeraldFacet" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#1fe88f" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#0f6546" stop-opacity="0.14"/>
+    </linearGradient>
+
+    <!-- Gem glow on the ring -->
+    <filter id="ringGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2.0" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
 
-    <!-- Inner glow on the heavy crescent edge -->
-    <filter id="goldGlow" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur stdDeviation="1.4" result="b"/>
+    <!-- Centre catch-light glow -->
+    <filter id="centreGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
       <feMerge>
         <feMergeNode in="b"/>
         <feMergeNode in="SourceGraphic"/>
@@ -86,13 +110,10 @@
 
   </defs>
 
-  <!-- Layer 1 — opaque dark-stone background -->
+  <!-- Layer 1 — opaque dark-stone background, rounded for icon shape -->
   <rect x="0" y="0" width="512" height="512" rx="96" ry="96" fill="url(#bgGrad)"/>
 
-  <!--
-    Faint hex-mesh underlay — calls back to the intro animation's
-    hexagonal grid. Gold-700 (#685339) hairline.
-  -->
+  <!-- Layer 2 — faint hex-mesh underlay (intro animation callback) -->
   <g opacity="0.05">
     <defs>
       <pattern id="hexUnderlay" x="0" y="0" width="56" height="48.5"
@@ -104,54 +125,108 @@
     <rect x="48" y="48" width="416" height="416" fill="url(#hexUnderlay)"/>
   </g>
 
-  <!-- Layer 2 — outer white-paint wisp halo -->
-  <g filter="url(#softBlur)" opacity="0.45">
-    <path d="M 110 290
-             A 200 200 0 0 1 256 80
-             A 200 200 0 0 1 410 200"
-          stroke="url(#whiteWisp)"
-          stroke-width="14"
-          stroke-linecap="round"
-          fill="none"/>
-  </g>
+  <!--
+    Geometry scaling for 512×512:
+      The 24-unit SVG component scales 1:21.33 to fit in a 480-unit
+      content area centered at (256,256).  Equivalent coordinates:
+        circle  cx=256 cy=256 r=200
+        D stem  x=66 (≈ leftmost edge of circle)
+        triangle apex (256, 76), base ( 96, 416 ) → ( 416, 416 )
+        I stem  x=256 from y=76 to y=416
+        I bar 1 y=120, x=170 → 342  (≈ triangle width at y=120)
+        I bar 2 y=165, x=205 → 307
+        centre dot (256, 256)
+  -->
 
-  <!-- Layer 3 — mid wisp -->
-  <path d="M 420 200
-           A 180 180 0 0 0 200 90"
-        stroke="url(#goldMid)"
-        stroke-width="6"
-        stroke-linecap="round"
-        fill="none"/>
+  <!-- Layer 3 — facet fills (drawn FIRST so strokes overlay cleanly) -->
+  <!-- upper-left facet (above crossbar, left of stem) -->
+  <polygon
+    points="256,76 256,120 170,120"
+    fill="url(#goldFacet)"
+  />
+  <!-- upper-right facet -->
+  <polygon
+    points="256,76 256,120 342,120"
+    fill="url(#goldFacet)"
+  />
+  <!-- lower-left facet (below crossbar, left of stem, down to base) -->
+  <polygon
+    points="170,120 256,120 256,416 96,416"
+    fill="url(#emeraldFacet)"
+  />
+  <!-- lower-right facet -->
+  <polygon
+    points="342,120 256,120 256,416 416,416"
+    fill="url(#emeraldFacet)"
+  />
 
-  <!-- Layer 4 — primary gold crescent -->
-  <path d="M 380 130
-           A 175 175 0 1 0 256 432
-           A 130 130 0 1 1 256 172
-           A 86 86 0 1 0 302 290"
-        stroke="url(#goldHeavy)"
-        stroke-width="50"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        fill="none"
-        filter="url(#goldGlow)"/>
+  <!-- Layer 4 — O + D shared outer ring -->
+  <circle
+    cx="256" cy="256" r="200"
+    fill="none"
+    stroke="url(#goldRing)"
+    stroke-width="14"
+    filter="url(#ringGlow)"
+  />
 
-  <!-- Layer 5 — gold paint splatter (measured colors) -->
+  <!-- Layer 5 — D's left tangent stem -->
+  <line
+    x1="66" y1="106" x2="66" y2="406"
+    stroke="url(#goldAccent)"
+    stroke-width="12"
+    stroke-linecap="round"
+  />
+
+  <!-- Layer 6 — A's inscribed equilateral triangle -->
+  <polygon
+    points="256,76 96,416 416,416"
+    fill="none"
+    stroke="url(#emeraldStroke)"
+    stroke-width="11"
+    stroke-linejoin="round"
+  />
+
+  <!-- Layer 7 — I's central vertical stem -->
+  <line
+    x1="256" y1="76" x2="256" y2="416"
+    stroke="url(#emeraldStroke)"
+    stroke-width="13"
+    stroke-linecap="round"
+  />
+
+  <!-- Layer 8 — I's double top crossbar -->
+  <line
+    x1="170" y1="120" x2="342" y2="120"
+    stroke="url(#goldAccent)"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+  <line
+    x1="205" y1="165" x2="307" y2="165"
+    stroke="url(#goldAccent)"
+    stroke-width="9"
+    stroke-linecap="round"
+    opacity="0.85"
+  />
+
+  <!-- Layer 9 — centre catch-light (crosshair sighting point) -->
+  <circle
+    cx="256" cy="256" r="9"
+    fill="#1fe88f"
+    opacity="0.95"
+    filter="url(#centreGlow)"
+  />
+
+  <!-- Layer 10 — gem flecks around the ring for surface texture -->
   <g>
-    <circle cx="430" cy="320" r="6"  fill="#b89664" opacity="0.85"/>
-    <circle cx="80"  cy="200" r="5"  fill="#997545" opacity="0.75"/>
-    <circle cx="350" cy="440" r="4"  fill="#cdc1b0" opacity="0.7"/>
-    <circle cx="140" cy="80"  r="4"  fill="#b89664" opacity="0.65"/>
-    <circle cx="460" cy="440" r="3"  fill="#ded2be" opacity="0.6"/>
-    <circle cx="60"  cy="360" r="3"  fill="#b89664" opacity="0.55"/>
-    <circle cx="120" cy="440" r="2"  fill="#997545" opacity="0.5"/>
-    <circle cx="450" cy="80"  r="2"  fill="#cdc1b0" opacity="0.5"/>
-  </g>
-
-  <!-- White paint specks (measured, not pure white) -->
-  <g>
-    <circle cx="200" cy="450" r="3"  fill="#cdcdc7" opacity="0.4"/>
-    <circle cx="395" cy="100" r="2"  fill="#b7afa3" opacity="0.35"/>
-    <circle cx="100" cy="280" r="2"  fill="#cdcdc7" opacity="0.3"/>
+    <circle cx="430" cy="320" r="5" fill="#d8b13c" opacity="0.55"/>
+    <circle cx="82"  cy="200" r="4" fill="#b89664" opacity="0.5"/>
+    <circle cx="356" cy="450" r="3" fill="#cdc1b0" opacity="0.45"/>
+    <circle cx="146" cy="86"  r="3" fill="#d8b13c" opacity="0.45"/>
+    <circle cx="466" cy="440" r="2" fill="#ded2be" opacity="0.4"/>
+    <circle cx="60"  cy="360" r="2" fill="#b89664" opacity="0.4"/>
+    <circle cx="120" cy="450" r="2" fill="#1fe88f" opacity="0.35"/>
+    <circle cx="450" cy="86"  r="2" fill="#1fe88f" opacity="0.3"/>
   </g>
 
 </svg>

@@ -1,15 +1,19 @@
 /**
- * Tests for OraculusMarkIcon (v2.7.9 Track A1).
+ * Tests for OraculusMarkIcon (v3.0 O.D.I.A. monogram crosshair).
  *
- * Verifies that:
- *   - The new mark renders the four expected geometry groups (primary
- *     swirl, mid wisp, outer wisp, splatter dots).
- *   - The deprecated aliases (OctopusMarkIcon, StrategyMarkIcon,
- *     OdiaMarkIcon) re-exported from Icons.tsx all render the same
- *     SVG geometry — so existing call sites keep compiling and now
- *     paint the new mark.
- *   - The icon respects the standard IconProps (size, className,
- *     style, aria-label).
+ * The v3.0 mark replaces the v2.7.9 gold-swirl design with a geometric
+ * O+D+I+A overlay: a gold outer circle (shared by O and D), a left
+ * tangent stem (D), an inscribed equilateral triangle (A), a centre
+ * vertical stem with double top crossbar (I), and four tinted facets
+ * inside the triangle.  The geometry shape changed completely, so
+ * these assertions count the new primitives:
+ *
+ *   - 5 polygons   = 4 facet fills + 1 triangle outline
+ *   - 2 circles    = 1 outer O/D ring + 1 centre catch-light
+ *   - 4 lines      = D stem, I stem, primary crossbar, echo crossbar
+ *
+ * The accessibility, sizing, and style-forwarding contracts are
+ * unchanged from v2.7.9 and continue to be exercised below.
  */
 
 import React from 'react';
@@ -22,12 +26,11 @@ import {
 } from '../Icons';
 
 describe('OraculusMarkIcon', () => {
-  it('renders the four expected geometry groups', () => {
+  it('renders the v3.0 monogram primitives', () => {
     const { container } = render(<OraculusMarkIcon aria-label="O.D.I.A. mark" />);
-    // Three stroked paths (primary swirl, mid wisp, outer wisp) plus
-    // four filled circles (splatter dots).
-    expect(container.querySelectorAll('path')).toHaveLength(3);
-    expect(container.querySelectorAll('circle')).toHaveLength(4);
+    expect(container.querySelectorAll('polygon')).toHaveLength(5);
+    expect(container.querySelectorAll('circle')).toHaveLength(2);
+    expect(container.querySelectorAll('line')).toHaveLength(4);
   });
 
   it('renders an svg with the standard 24x24 viewBox', () => {
@@ -70,7 +73,8 @@ describe('OraculusMarkIcon — deprecated aliases', () => {
     ['OdiaMarkIcon', OdiaMarkIcon],
   ])('%s renders the same geometry as OraculusMarkIcon', (_name, Alias) => {
     const { container } = render(<Alias aria-label="alias" />);
-    expect(container.querySelectorAll('path')).toHaveLength(3);
-    expect(container.querySelectorAll('circle')).toHaveLength(4);
+    expect(container.querySelectorAll('polygon')).toHaveLength(5);
+    expect(container.querySelectorAll('circle')).toHaveLength(2);
+    expect(container.querySelectorAll('line')).toHaveLength(4);
   });
 });

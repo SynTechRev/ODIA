@@ -305,11 +305,11 @@ export default function AutomationPage() {
         {/* =============================================================== */}
         {/* 1 · Hero + health strip                                          */}
         {/* =============================================================== */}
-        {/* v2.9.2 — canonical hero pattern with gold-flux + violet flow accents */}
-        <section className="page-hero-automation hud-brackets p-6 md:p-8 relative overflow-hidden">
+        {/* v3.0 — unified malachite gemstone hero (matches Dashboard) */}
+        <section className="gem-panel gem-panel-faceted gem-hero-malachite hud-brackets p-6 md:p-8 relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-violet-500/15 blur-3xl pointer-events-none" aria-hidden />
           <div className="relative z-10">
-            <div className="hud-label-accent hud-flow mb-3">
+            <div className="hud-label-accent hud-cyan-bright mb-3">
               [ AUTOMATION · n8n INTEGRATION ]
             </div>
             <h1 className="hud-heading text-2xl md:text-3xl">
