@@ -1,5 +1,40 @@
 # Changelog
 
+## [3.0.0] - 2026-05-13 — Live Automation Goes Online
+
+Marks the v2.x → v3.x cut. v3.0 is the operational-readiness release: the desktop installer now ships with everything needed to run n8n end-to-end against ODIA without manual env-var configuration. Three runtime bugs that survived v2.10.x are fixed, the brand mark is replaced with the geometric O.D.I.A. monogram crosshair, and the per-page hero treatment is unified across primary surfaces.
+
+### Brand — O.D.I.A. monogram crosshair + unified malachite hero
+- **New brand mark** (`frontend/components/base/icons/OraculusMarkIcon.tsx`). Geometric overlay of all four letters: O = outer gold ring, D = left tangent stem inside the O so the ring reads as both, A = inscribed equilateral triangle, I = centre vertical stem with double top crossbar. Triangle interior split into four facets — upper pair tinted gold, lower pair tinted emerald — by the I's stem + crossbar. Centre catch-light at (12,12) anchors the crosshair sighting point. Replaces the v2.7.9 gold-swirl mark.
+- **Standalone 512×512 SVG** (`frontend/public/icons/oraculus-mark.svg`) rebuilt with the same construction plus gem-glow filters, gradient fills, and the v2.8 hex-mesh underlay. Picked up automatically by the sharp-based installer rasteriser to regenerate `icon-192.png`, `icon-512.png`, and `desktop/resources/icon.{png,ico,icns}`.
+- **Unified hero** across Settings / Upload / Automation. The three pages previously used gold-flux / amber backgrounds (page-hero-settings / -upload / -automation) and now share Dashboard's `gem-panel gem-panel-faceted gem-hero-malachite` chain. Bracket-label tone bumped from amber/flow to cyan-bright to match. Note: this loses the v2.9.2 §8.5 differentiation (amber = library, cyan = live, flow = automation); intentional per user direction.
+
+### Fixed — RAIA synthesis report rendering
+- **Missing newline** between "Jurisdictions analysed" and "Missing (no persisted data)" in the rendered markdown. Root cause: Jinja's `trim_blocks=True` was stripping the newline after `{% endif %}` on the line ending the analysed list. Fixed by replacing the conditional with an explicit blank line + `{%- ... -%}` whitespace control.
+- **Em-dash rendering as `â`** in downloaded `.md` files opened in Windows Notepad. Backend correctly emits UTF-8; the issue is legacy Windows editors defaulting to Windows-1252 without BOM detection. Fixed by prepending UTF-8 BOM (`0xEF 0xBB 0xBF`) to the modal's download blob. Modern editors (VSCode, Notepad++, macOS TextEdit) ignore the BOM; Notepad now auto-detects UTF-8.
+
+### Fixed — Mesh-job lifecycle zombies
+- `MeshExecutionJob` rows previously stayed at `status="executing"` forever when the backend process was killed mid-audit (uvicorn restart, Electron quit, SIGTERM during installer upgrade). The transition to `completed` / `failed` lived in the in-process audit thread; when the thread died the row was orphaned.
+- New `_reconcile_stale_mesh_jobs()` in `src/oraculus_di_auditor/db/session.py` runs at `init_db()` boot, sweeps any `executing` row, marks it `failed` with a `reconciliation: "marked failed at startup..."` note in `metadata_json`, and commits. Conservative — no time window needed because a row claiming "executing" at boot is structurally orphaned (the process wasn't here when it started).
+- Result: Orchestrator's "Recent Mesh Jobs" panel now reports accurate state across restarts.
+
+### Fixed — PyInstaller installer bundle completeness
+- Four module trees were missing from `desktop/odia-backend.spec` `hiddenimports`, causing them to fail to import at runtime in the bundled `.exe` / `.dmg` / `.AppImage`. Symptoms: Tier 2 webhook tile showing OFFLINE, Settings → Automation Webhook card non-functional, RAIA Synthesis trigger 500-ing.
+- Added:
+  - `oraculus_di_auditor.interface.routes.config_routes` (v2.10.1 runtime config — the entire webhook-token Settings UI was unreachable on the v2.10.1 installer)
+  - `oraculus_di_auditor.mesh` + `oraculus_di_auditor.mesh.mesh_coordinator` (Tier 2 readiness)
+  - `oraculus_di_auditor.self_healing` + `oraculus_di_auditor.self_healing.self_healing_service` (Tier 2 readiness)
+  - `oraculus_di_auditor.raia` + `raia.raia_service` + `raia.synthesis_report` + `raia.schemas` + `raia.patterns` (Run RAIA Synthesis trigger)
+
+### Version sync
+- `pyproject.toml` `version = "3.0.0"` (was 2.10.1).
+- `desktop/package.json` `"version": "3.0.0"`.
+- Hardcoded fallbacks updated: `webhook.py` ODIA_VERSION defaults, `api.py` _resolve_odia_version() fallbacks, `frontend/components/dashboard/DashboardLayout.tsx` `ODIA_VERSION_FALLBACK`, `frontend/app/settings/page.tsx` System Information card, `frontend/app/page.tsx` hero strings (×2).
+
+### Deferred to v3.x sub-cycle
+- **Cross-Entity Tracks D / E / F** from v2.10.0 remain outstanding (14 entity-specific sub-detectors, XREF register persistence, frontend XREF page). Significant scope; will be the v3.1 / v3.2 themes.
+- **n8n + WF-001 end-to-end scraper baseline test** is the operational validation of v3.0's infrastructure; happens against the v3.0 binary in a follow-on session.
+
 ## [2.10.1] - 2026-05-12 — Post-install UX patch (RAIA viewer + webhook token UI)
 
 Closes three gaps a fresh v2.10.0 desktop install surfaced for the first user. Scope is deliberately narrow — UX wiring and runtime-mutable config — and is independent of v2.10.0's deferred Track D / Track E / Track F items, which remain on the v2.10.x sub-cycle roadmap.
