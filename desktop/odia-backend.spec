@@ -135,6 +135,27 @@ a = Analysis(
         "oraculus_di_auditor.interface.routes.auth_routes",
         "oraculus_di_auditor.interface.routes.workspace_routes",
         "oraculus_di_auditor.interface.routes.detectors",
+        # v2.10.1 runtime-config routes (webhook token UI backend).
+        # Without this, the Settings → Automation Webhook card is
+        # non-functional in the bundled installer.
+        "oraculus_di_auditor.interface.routes.config_routes",
+        # v3.0 — Tier 2 readiness modules. These are imported by name
+        # at runtime in webhook._check_tier_imports(_TIER2_MODULES);
+        # absent from hiddenimports they fail and the Automation page
+        # shows TIER 2 WEBHOOK = OFFLINE on bundled installs.
+        "oraculus_di_auditor.mesh",
+        "oraculus_di_auditor.mesh.mesh_coordinator",
+        "oraculus_di_auditor.self_healing",
+        "oraculus_di_auditor.self_healing.self_healing_service",
+        # v3.0 — RAIA synthesis service (triggered by Automation page's
+        # Run RAIA Synthesis button). render_markdown_template imports
+        # jinja2 lazily; the raia.* tree itself is imported by the
+        # triggers route at request time so PyInstaller misses it.
+        "oraculus_di_auditor.raia",
+        "oraculus_di_auditor.raia.raia_service",
+        "oraculus_di_auditor.raia.synthesis_report",
+        "oraculus_di_auditor.raia.schemas",
+        "oraculus_di_auditor.raia.patterns",
         "oraculus_di_auditor.auth.auth_service",
         "oraculus_di_auditor.auth.auth_middleware",
         "oraculus_di_auditor.auth.auth_models",

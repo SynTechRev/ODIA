@@ -77,6 +77,18 @@ def init_db(database_url: str | None = None) -> None:
     if url.startswith("sqlite"):
         _migrate_seen_hash_extraction_columns()
 
+    # v3.0 — Sweep zombie EXECUTING mesh-job rows.
+    # MeshExecutionJob rows are written by upload._execute_audit_job to
+    # track audit progress. If the backend process dies mid-audit (the
+    # user closes the desktop app, uvicorn crashes, SIGTERM during a
+    # reload, etc.) the row stays at status="executing" forever — the
+    # transition to "completed" / "failed" lives inside the audit
+    # thread, which is gone. On the next startup we reconcile: any
+    # "executing" row older than the threshold is marked "failed" with
+    # a generic message so the Orchestrator timeline shows accurate
+    # state instead of permanent zombies.
+    _reconcile_stale_mesh_jobs()
+
 
 def _migrate_seen_hash_extraction_columns() -> None:
     """Add `text_extraction_method` and `text_char_count` to seen_hashes if absent.
@@ -118,6 +130,72 @@ def _migrate_seen_hash_extraction_columns() -> None:
             "seen_hashes column migration skipped (likely fresh DB or "
             "non-SQLite backend)",
             exc_info=True,
+        )
+
+
+def _reconcile_stale_mesh_jobs() -> None:
+    """Mark zombie EXECUTING mesh-job rows as failed at startup (v3.0).
+
+    Backend restarts orphan any audit thread that was running at the
+    time of shutdown — the in-process state machine that would have
+    transitioned the row from ``executing`` to ``completed`` no longer
+    exists. Sweeping at startup keeps the Orchestrator's "Recent Mesh
+    Jobs" panel honest.
+
+    Conservative threshold: anything claiming to be still executing
+    when the process boots is clearly orphaned (a real audit running
+    at startup is impossible — the process wasn't here yet). No time
+    window needed; this is a clean reconciliation point.
+
+    Failures are logged but never raised — startup must not depend on
+    DB introspection succeeding. If the MeshExecutionJob table doesn't
+    exist yet (fresh install with old model snapshot), the query
+    raises and we silently skip.
+    """
+    if _SessionFactory is None:
+        return
+    try:
+        from datetime import UTC, datetime
+
+        from .models import MeshExecutionJob
+
+        session = _SessionFactory()
+        try:
+            stale = (
+                session.query(MeshExecutionJob)
+                .filter(MeshExecutionJob.status == "executing")
+                .all()
+            )
+            if not stale:
+                return
+            import json
+            import logging
+
+            now = datetime.now(UTC)
+            for row in stale:
+                row.status = "failed"
+                row.completed_at = now
+                try:
+                    meta = json.loads(row.metadata_json or "{}")
+                except Exception:
+                    meta = {}
+                meta["reconciliation"] = (
+                    "marked failed at startup — process exited mid-audit"
+                )
+                row.metadata_json = json.dumps(meta)
+            session.commit()
+            logging.getLogger(__name__).info(
+                "Reconciled %d zombie mesh-job row(s) to status=failed",
+                len(stale),
+            )
+        finally:
+            session.close()
+    except Exception:  # noqa: BLE001 — reconciliation is advisory
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "Mesh-job reconciliation skipped (table may not exist yet)",
+            exc_info=False,
         )
 
 

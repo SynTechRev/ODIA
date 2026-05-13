@@ -4,10 +4,12 @@
 **Generated:** {{ result.generated_at }}
 **Tier 3 recursive synthesis:** {% if result.include_tier3 %}included{% else %}not included{% endif %}
 
-**Jurisdictions analysed:** {% if result.jurisdictions %}{{ result.jurisdictions | map(attribute='jurisdiction_id') | join(', ') }}{% else %}none{% endif %}
-{% if result.missing_jurisdictions %}
+**Jurisdictions analysed:** {% if result.jurisdictions %}{{ result.jurisdictions | map(attribute='jurisdiction_id') | join(', ') }}{% else %}none{% endif %}{# v3.0: explicit newline below; trim_blocks would otherwise eat the line break before the next conditional #}
+
+{% if result.missing_jurisdictions -%}
 **Missing (no persisted data):** {{ result.missing_jurisdictions | join(', ') }}
-{% endif %}
+
+{% endif -%}
 
 ---
 

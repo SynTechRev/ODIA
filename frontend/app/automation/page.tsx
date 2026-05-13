@@ -749,7 +749,12 @@ function RaiaReportModal({
   }, [onClose]);
 
   const handleDownload = () => {
-    const blob = new Blob([report.markdown], { type: 'text/markdown;charset=utf-8' });
+    // v3.0: prepend UTF-8 BOM (0xEF 0xBB 0xBF) so Windows tools that
+    // default to Windows-1252 (notably Notepad pre-2019) auto-detect
+    // UTF-8 and render em-dashes / quotes correctly. Cross-platform
+    // editors (VSCode, Notepad++, macOS TextEdit) ignore the BOM.
+    const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+    const blob = new Blob([bom, report.markdown], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
