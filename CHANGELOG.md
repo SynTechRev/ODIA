@@ -1,5 +1,36 @@
 # Changelog
 
+## [3.0.2] - 2026-05-15 — Backend-Side Scraping + Real-World First Ingest
+
+Productionised the v3.0 autonomous-ingest thesis after a real first-light run against Visalia, CA's CivicPlus AgendaCenter surfaced one architectural gap (Cloudflare TLS-fingerprint blocking n8n's Node.js HTTP node) and one packaging gap (n8n's hardened Docker image strips Execute Command + curl, removing the natural workaround). Adds a backend-side download endpoint that routes around both, plus a simplified WF-001 that uses it.
+
+### Added — `POST /api/v1/webhook/scrape-and-ingest`
+- New endpoint at `src/oraculus_di_auditor/interface/routes/webhook.py`. Body: `{"url": "...", "jurisdiction_id": "...", "filename_hint": "..."}` (filename_hint optional). Downloads the URL server-side via Python's `urllib.request` with browser-like headers, computes SHA-256, dedups via `_dedup_check`, runs the Tier 1 audit pipeline, persists the Document/Analysis/Anomaly rows, and returns the same payload shape as `/webhook/ingest-and-analyze` so callers can treat them interchangeably.
+- **Why**: Cloudflare-fronted public-records sites (CivicPlus / Granicus / Legistar) inspect the JA3 TLS fingerprint of the client and block Node.js's well-known hash. Python's OpenSSL stack has a different fingerprint that's accepted. This endpoint moves the download into the backend so the orchestrator (n8n) only needs to POST URLs.
+- **Why now**: n8n's recent shift to hardened distroless-style images strips out the Execute Command node type AND the `curl` binary that were the natural workarounds for the Cloudflare block. Architectural fix beats trying to inject tools into a security-locked container.
+- 502 returned on upstream download failure with descriptive detail; 400 on missing/non-http(s) URL or missing jurisdiction; 401 on invalid token (same as other endpoints).
+
+### Added — `data/n8n-workflows/wf-001-visalia-url.json`
+- Simplified 5-node WF-001 variant that uses the new URL endpoint:
+  1. Daily 06:00 cron trigger
+  2. Jurisdiction Config (Visalia, search URL pre-set)
+  3. Fetch Portal HTML (with Cloudflare-bypass headers from v3.0.x)
+  4. Extract PDF Links (regex from v3.0.x)
+  5. POST `/webhook/scrape-and-ingest` with `{url, jurisdiction_id, filename_hint}` JSON body — batched 3 at a time with 2s interval
+- No Execute Command, no Read Binary File, no shell-out — works on n8n's hardened image. Replaces both the original `wf-001-visalia.json` (which hit Cloudflare on download) and the `wf-001-visalia-shellexec.json` shim (which hit the missing-Execute-Command-node block).
+
+### Added — `scripts/visalia_ingest.sh`
+- Standalone Ubuntu shell script that does the whole Visalia ingest in 10 lines of bash — useful for non-Docker environments or scripted bulk runs. Curls the AgendaCenter search page, greps for `/AgendaCenter/ViewFile/` links, loops with wget download → curl POST per URL. Includes 20 MB cap (skips agenda packets) and dedup via the webhook's `already_seen:true` short-circuit.
+- Used for tonight's first-light validation: **84 Visalia documents ingested, 85 total documents in DB, 80 anomalies persisted, 5 CRITICAL / 35 HIGH / 40 MEDIUM**. Pipeline integrity 100% (85/85 successful audits).
+
+### Tests
+- `tests/test_webhook_scrape_and_ingest.py` (new) — 10 tests covering happy path, filename-hint optional, missing/wrong token (401), missing URL / non-http URL / missing jurisdiction (400), dedup short-circuit, upstream `URLError` / empty-body (502). Mocks `urllib.request.urlopen` so tests never hit the network.
+- 35/35 webhook + config-routes + scrape-and-ingest tests green; black + ruff clean.
+
+### Notes for v3.0.x sub-cycle
+- WF-001 now has three importable variants in `data/n8n-workflows/`: original (`wf-001-visalia.json`), shellexec attempt (`wf-001-visalia-shellexec.json`), and URL-endpoint version (`wf-001-visalia-url.json` — recommended). Future v3.0.x may consolidate.
+- The `scrape-and-ingest` endpoint is the foundation for the Cross-Entity Tracks D/E/F deferred from v2.10.0 — future scrapers can reuse this path for Granicus / Legistar / TCDAO / etc. without re-solving the TLS-fingerprint problem.
+
 ## [3.0.0] - 2026-05-13 — Live Automation Goes Online
 
 Marks the v2.x → v3.x cut. v3.0 is the operational-readiness release: the desktop installer now ships with everything needed to run n8n end-to-end against ODIA without manual env-var configuration. Three runtime bugs that survived v2.10.x are fixed, the brand mark is replaced with the geometric O.D.I.A. monogram crosshair, and the per-page hero treatment is unified across primary surfaces.
