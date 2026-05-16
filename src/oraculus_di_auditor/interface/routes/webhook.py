@@ -371,7 +371,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "3.0.0"),
+                engine_version=os.environ.get("ODIA_VERSION", "3.0.2"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -472,7 +472,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": _token_configured(),
-            "odia_version": os.environ.get("ODIA_VERSION", "3.0.0"),
+            "odia_version": os.environ.get("ODIA_VERSION", "3.0.2"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
@@ -553,6 +553,177 @@ def register_webhook_routes(app: Any) -> None:
             result=result,
         )
         return {"status": "ok", "already_seen": False, **result}
+
+    # ---- Scrape + ingest (URL → audit, server-side download) ---------------
+    @router.post("/api/v1/webhook/scrape-and-ingest")
+    async def webhook_scrape_and_ingest(request: Request) -> dict[str, Any]:
+        """Download a URL server-side and run the Tier 1 audit on it.
+
+        Why this exists (v3.0.2 — "Backend-Side Scraping"):
+            Real-world scraping pipelines hit two recurring problems when
+            n8n's HTTP Request node tries to download directly:
+
+              1. Cloudflare-fronted public-records sites (very common for
+                 CivicPlus / Granicus / Legistar) inspect the TLS fingerprint
+                 of the client. Node.js's TLS stack has a well-known JA3
+                 hash that bot-protection rules block. Same request from
+                 Python's urllib / requests is accepted because the OpenSSL
+                 fingerprint is different.
+
+              2. n8n's recent shift to hardened distroless-style images
+                 strips out shell-execution node types (Execute Command)
+                 AND the curl binary, which were the natural workarounds.
+
+            Routing the download through this endpoint sidesteps both —
+            Python downloads the file, runs the audit, persists the rows,
+            and returns the finding payload n8n would have built itself.
+            n8n's job becomes trivial: POST a list of URLs.
+
+        Body (JSON):
+            {
+              "url": "https://www.visalia.gov/AgendaCenter/ViewFile/...",
+              "jurisdiction_id": "visalia",
+              "filename_hint": "visalia_agenda_05062026-821.pdf"   # optional
+            }
+
+        Returns the same payload shape as /webhook/ingest-and-analyze so
+        n8n / external orchestrators can treat them interchangeably:
+            {
+              "status": "ok",
+              "already_seen": bool,
+              "url": "...",
+              "sha256": "...",
+              "document": {...},
+              "findings": {"count": N, "anomalies": [...]},
+              "recursive_scalar_score": float,
+              "tier": 1
+            }
+        """
+        _require_token(request)
+
+        payload = await request.json()
+        url = (payload.get("url") or "").strip()
+        jurisdiction_id = (payload.get("jurisdiction_id") or "").strip()
+        filename_hint = (payload.get("filename_hint") or "").strip()
+
+        if not url or not url.startswith(("http://", "https://")):
+            raise HTTPException(
+                status_code=400,
+                detail="`url` must be an absolute http(s) URL",
+            )
+        if not jurisdiction_id:
+            raise HTTPException(
+                status_code=400,
+                detail="`jurisdiction_id` is required",
+            )
+
+        # Download server-side. urllib uses Python's TLS stack, whose JA3
+        # fingerprint differs from Node's — Cloudflare typically accepts it
+        # where it would block n8n's HTTP node. Browser-like headers help
+        # for extra Cloudflare rules that gate on Accept-* values.
+        import urllib.error
+        import urllib.request
+
+        browser_headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+            ),
+            "Accept": "application/pdf,application/octet-stream,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+        }
+        try:
+            req = urllib.request.Request(url, headers=browser_headers)
+            with urllib.request.urlopen(
+                req, timeout=120
+            ) as response:  # noqa: S310 — validated http(s) prefix above
+                file_bytes = response.read()
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
+            _record_webhook_call(
+                endpoint="scrape-and-ingest",
+                workflow_id=request.headers.get(N8N_WORKFLOW_HEADER),
+                execution_id=request.headers.get(N8N_EXECUTION_HEADER),
+                status=502,
+                source_ip=_client_ip(request),
+            )
+            raise HTTPException(
+                status_code=502,
+                detail=f"Upstream download failed: {exc}",
+            ) from exc
+
+        if not file_bytes:
+            raise HTTPException(
+                status_code=502,
+                detail="Upstream returned an empty body",
+            )
+
+        sha256 = hashlib.sha256(file_bytes).hexdigest()
+
+        # Early-exit on dedup — same logic as /webhook/ingest-and-analyze.
+        if _dedup_check(sha256):
+            _record_webhook_call(
+                endpoint="scrape-and-ingest",
+                workflow_id=request.headers.get(N8N_WORKFLOW_HEADER),
+                execution_id=request.headers.get(N8N_EXECUTION_HEADER),
+                status=200,
+                source_ip=_client_ip(request),
+            )
+            return {
+                "status": "ok",
+                "already_seen": True,
+                "url": url,
+                "sha256": sha256,
+                "jurisdiction_id": jurisdiction_id,
+            }
+
+        # Derive a filename for the persisted Document row. Prefer the
+        # caller's hint; otherwise pull the URL tail; otherwise fall back
+        # to the SHA prefix so we always have a useful title.
+        filename = filename_hint or url.rsplit("/", 1)[-1] or f"scraped_{sha256[:12]}"
+        if not filename.lower().endswith(".pdf"):
+            filename = f"{filename}.pdf"
+
+        try:
+            result = _run_tier1_pipeline(
+                file_bytes=file_bytes,
+                filename=filename,
+                jurisdiction_id=jurisdiction_id,
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.exception("webhook scrape-and-ingest failed")
+            _record_webhook_call(
+                endpoint="scrape-and-ingest",
+                workflow_id=request.headers.get(N8N_WORKFLOW_HEADER),
+                execution_id=request.headers.get(N8N_EXECUTION_HEADER),
+                status=500,
+                source_ip=_client_ip(request),
+            )
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        _record_webhook_call(
+            endpoint="scrape-and-ingest",
+            workflow_id=request.headers.get(N8N_WORKFLOW_HEADER),
+            execution_id=request.headers.get(N8N_EXECUTION_HEADER),
+            status=200,
+            source_ip=_client_ip(request),
+        )
+        _record_seen_hash(
+            sha256=sha256,
+            document_id=(result.get("document") or {}).get("document_id"),
+            jurisdiction_id=jurisdiction_id,
+        )
+        _persist_tier1_result(
+            sha256=sha256,
+            filename=filename,
+            jurisdiction_id=jurisdiction_id,
+            result=result,
+        )
+        return {
+            "status": "ok",
+            "already_seen": False,
+            "url": url,
+            **result,
+        }
 
     # ---- Batch ingest (enqueue) -------------------------------------------
     @router.post("/api/v1/webhook/batch-ingest")
