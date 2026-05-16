@@ -1,0 +1,33 @@
+# docker-compose.host-backend.yml
+# =============================================================================
+# Local dev override: ODIA backend runs on the Windows host as the v3.0
+# desktop binary (not in compose).  This file:
+#
+#   1. Repoints n8n's ODIA_BASE_URL from the compose-internal `backend:8000`
+#      to `host.docker.internal:8000` so HTTP Request nodes inside n8n
+#      reach the v3.0 desktop binary running on the Windows host.
+#
+#   2. Adds extra_hosts: host.docker.internal:host-gateway, which is
+#      required on Docker Engine native (the WSL2 install) — Docker Desktop
+#      auto-injected this entry but Engine doesn't.
+#
+# (Note: the n8n service's previous backend dependency was dropped in
+# docker-compose.n8n.yml itself — see comment block there.)
+#
+# Usage (always include this third -f flag for local dev):
+#
+#   docker compose -f docker-compose.yml \
+#                  -f docker-compose.n8n.yml \
+#                  -f docker-compose.host-backend.yml \
+#                  up -d n8n postgres
+#
+# To revert to the fully-containerized stack later, drop the third -f
+# flag (and re-add the backend dependency to docker-compose.n8n.yml).
+# =============================================================================
+
+services:
+  n8n:
+    environment:
+      ODIA_BASE_URL: http://host.docker.internal:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

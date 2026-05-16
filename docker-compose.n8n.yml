@@ -121,8 +121,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      backend:
-        condition: service_healthy
+      # Backend dependency removed (v3.0): the ODIA backend runs as the
+      # desktop binary on the Windows host, not in compose. n8n reaches it
+      # via host.docker.internal — see docker-compose.host-backend.yml for
+      # the env override and extra_hosts wiring required on Docker Engine
+      # native (Docker Desktop auto-provides host.docker.internal; Engine
+      # does not).
 
   # --------------------------------------------------------------------
   # Backend (override) — pick up the webhook token from env
