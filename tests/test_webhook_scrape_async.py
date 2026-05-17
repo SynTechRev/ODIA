@@ -506,9 +506,7 @@ def test_fetch_url_tier1_happy_returns_bytes(webhook_app, mock_upstream):
     assert body == fixture_bytes
 
 
-def test_fetch_url_tier1_403_falls_through_to_tier2_success(
-    webhook_app, monkeypatch
-):
+def test_fetch_url_tier1_403_falls_through_to_tier2_success(webhook_app, monkeypatch):
     """v3.1.0 core behaviour: HTTPError(403) on tier 1 triggers tier 2.
 
     Tier 2 returns the bytes that tier 1 was blocked from getting.
@@ -528,9 +526,9 @@ def test_fetch_url_tier1_403_falls_through_to_tier2_success(
     tier2_payload = b"%PDF-1.4 (tier-2 chrome-impersonated bytes)"
 
     def _tier2_ok(url, headers=None, impersonate=None, timeout=None):  # noqa: ARG001
-        assert impersonate == "chrome131", (
-            "v3.1.0 must impersonate Chrome 131 in tier 2"
-        )
+        assert (
+            impersonate == "chrome131"
+        ), "v3.1.0 must impersonate Chrome 131 in tier 2"
         return _MockCurlResponse(tier2_payload, status_code=200)
 
     _patch_curl_cffi(monkeypatch, get_callable=_tier2_ok)
@@ -590,9 +588,9 @@ def test_fetch_url_tier1_404_does_not_fall_through(webhook_app, monkeypatch):
     with pytest.raises(urllib.error.HTTPError) as exc:
         webhook_mod._fetch_url(SAMPLE_URL, timeout=10)
     assert exc.value.code == 404
-    assert tier2_called["count"] == 0, (
-        "tier-2 must not be invoked on non-fallback HTTP codes"
-    )
+    assert (
+        tier2_called["count"] == 0
+    ), "tier-2 must not be invoked on non-fallback HTTP codes"
 
 
 def test_fetch_url_tier1_oserror_falls_through_to_tier2(webhook_app, monkeypatch):

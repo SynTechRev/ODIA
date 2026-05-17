@@ -1120,8 +1120,7 @@ def _fetch_url(url: str, *, timeout: int = 120) -> bytes:
         # Wrap as OSError so the worker's existing OSError catch handles
         # it uniformly with tier-1 failures.
         raise OSError(
-            f"tier-2 (curl_cffi) failed: {exc} "
-            f"(tier-1 had: {tier1_error})"
+            f"tier-2 (curl_cffi) failed: {exc} " f"(tier-1 had: {tier1_error})"
         ) from exc
 
     if not resp.ok:
