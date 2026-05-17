@@ -1,5 +1,34 @@
 # Changelog
 
+## [3.0.5] - 2026-05-17 — RAIA pattern detection completeness + synthesis_id consistency
+
+Two minor polish items surfaced during the first real RAIA cross-jurisdiction synthesis run (Visalia + Porterville, 2026-05-17 ~16:53 UTC). Neither blocks functionality but both made the cross-jurisdiction report less informative than the underlying data warranted.
+
+### Fixed — pattern detection iterated capped `top_anomalies`, missed shared finding IDs
+- `_shared_anomaly_ids` and `_vendor_convergences` in [src/oraculus_di_auditor/raia/patterns.py](src/oraculus_di_auditor/raia/patterns.py) iterated each jurisdiction's `top_anomalies` (default cap: 10). Any finding ID outside that window was invisible to cross-jurisdiction matching. **Observed live**: raw SQL on the Visalia+Porterville DB showed 8 detector IDs firing in both jurisdictions, but the v3.0.4 RAIA report surfaced only 2 of them. The other 6 (`procurement:auto-renewal-clause`, `governance:auto-renewal-clause`, four `sole-source-*` variants, `scope:significant-expansion`, `scope:sole-source-expansion`) all sat past Visalia's top-10 cut-off because that cut-off was dominated by CRITICAL `signature:unsigned-instrument` entries plus high-frequency `admin:missing-final-action` ones.
+- Fix: added `all_anomalies: list[AnomalyRow]` field to `JurisdictionSummary` in [src/oraculus_di_auditor/raia/schemas.py](src/oraculus_di_auditor/raia/schemas.py). `RAIAService._build_summary` now populates this with the full unsliced anomaly list. Pattern detectors iterate `all_anomalies` (falling back to `top_anomalies` for backward compat with hand-built test summaries). `top_anomalies` remains as-is for display rendering — only pattern matching widens its window.
+- The new field is deliberately excluded from `JurisdictionSummary.to_dict()` so the webhook JSON response stays compact (otherwise a 1000-anomaly jurisdiction would multiply the response payload).
+- Same fix applied to vendor convergence: vendor mentions like `surveillance:vendor-detected:axon-enterprise` typically sit at LOW severity (below CRITICAL/HIGH structural defects) and were invisible to vendor-convergence detection pre-v3.0.5.
+
+### Fixed — `synthesis_id` mismatch between webhook JSON and rendered markdown
+- The `/api/v1/webhook/synthesize` route generated a `synthesis_id` (`secrets.token_hex(8)`) and called `_run_raia_synthesis` to render the markdown. The route then overrode `result_dict["synthesis_id"] = synthesis_id` AFTER the markdown was already rendered. Result: the JSON response carried the route's ID while the rendered `.md` embedded `RAIAService`'s internally-generated one. Cosmetic but operators correlating webhook responses to downloaded reports would see two different IDs.
+- Fix: `_run_raia_synthesis` gains an optional `synthesis_id_override: str | None = None` parameter. When provided, it's applied to the `RAIAResult` BEFORE `render_markdown_template()` is called. The route now passes its synthesis_id into the helper rather than overriding after the fact.
+
+### Tests
+- 3 new tests in [tests/test_raia_service.py](tests/test_raia_service.py):
+  - `test_shared_anomaly_surfaces_outside_top_n_via_all_anomalies` — primary regression guard for the pattern-detection bug
+  - `test_vendor_convergence_surfaces_outside_top_n_via_all_anomalies` — same for vendor convergence
+  - `test_pattern_detection_falls_back_to_top_anomalies_when_all_empty` — backward-compat with legacy test fixtures
+- 1 new test in [tests/test_webhook_ingest.py](tests/test_webhook_ingest.py): `test_synthesize_markdown_embeds_route_synthesis_id_not_internal_one` — regression guard for the synthesis_id reorder.
+- All existing RAIA + synthesize tests untouched and still passing.
+
+### Version sync
+- `pyproject.toml` `version = "3.0.5"` (was 3.0.4). `desktop/package.json` `"version": "3.0.5"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.0.5. Three frontend version strings → v3.0.5.
+
+### Notes
+- This polish unblocks meaningful cross-jurisdiction synthesis at any scale. With 2 jurisdictions the v3.0.4 RAIA missed 75% of shared finding IDs; with 3+ jurisdictions the proportion missed would have grown as more long-tail detectors became "shared". v3.0.5 makes RAIA scale linearly with jurisdiction count instead of being capped by per-jurisdiction display ranking.
+- v3.1.0 (next) introduces a fingerprint-resistant fetcher (`curl_cffi` as Tier 2 behind the current `urllib` Tier 1) to make backend-side scraping work against Akamai/Cloudflare-protected municipal sites that currently 403 our Python urllib requests (observed against Tulare CA earlier in v3.0.x bring-up).
+
 ## [3.0.4] - 2026-05-17 — Async worker hardening (RemoteDisconnected catch + download throttle)
 
 Polish release on v3.0.3 driven by a defect surfaced during v3.0.3 first-light validation. Firing 84 parallel scrape jobs at Visalia exposed two real-world failure modes that the unit tests hadn't covered.

@@ -186,6 +186,146 @@ def test_shared_layer_spike_pattern():
 
 
 # ---------------------------------------------------------------------------
+# v3.0.5 — pattern detection over full anomaly set (not just top-N)
+# ---------------------------------------------------------------------------
+
+
+def test_shared_anomaly_surfaces_outside_top_n_via_all_anomalies():
+    """v3.0.5 regression guard.
+
+    Pre-v3.0.5, ``_shared_anomaly_ids`` iterated only ``top_anomalies``.
+    If a shared finding ID lived past each jurisdiction's display cap
+    (top_anomalies defaulted to 10 in RAIAService), it was invisible to
+    cross-jurisdiction pattern detection. Observed live against
+    Visalia+Porterville: 6 of 8 actually-shared finding IDs were missed
+    because Visalia's top-10 was dominated by CRITICAL signature finds
+    and high-frequency admin:missing-final-action. v3.0.5 makes the
+    pattern detectors consume ``all_anomalies`` instead.
+    """
+    top_only_high = AnomalyRow(
+        anomaly_id="signature:unsigned-instrument",
+        issue="Signature gap detected",
+        severity="critical",
+        layer="signature",
+    )
+    buried_in_all = AnomalyRow(
+        anomaly_id="procurement:auto-renewal-clause",
+        issue="Vendor contract auto-renews",
+        severity="high",
+        layer="procurement",
+    )
+    s1 = JurisdictionSummary(
+        jurisdiction_id="visalia",
+        document_count=10,
+        analysis_count=10,
+        total_anomalies=2,
+        layer_counts={"signature": 1, "procurement": 1},
+        # top_anomalies cap simulated — only the CRITICAL one made the cut
+        top_anomalies=[top_only_high],
+        # but all_anomalies has both (the buried one too)
+        all_anomalies=[top_only_high, buried_in_all],
+    )
+    s2 = JurisdictionSummary(
+        jurisdiction_id="porterville",
+        document_count=8,
+        analysis_count=8,
+        total_anomalies=2,
+        layer_counts={"signature": 1, "procurement": 1},
+        top_anomalies=[top_only_high],
+        all_anomalies=[top_only_high, buried_in_all],
+    )
+    patterns = detect_patterns([s1, s2])
+    shared = [p for p in patterns if p.pattern_type == "shared_anomaly_id"]
+    shared_ids = {p.evidence.get("anomaly_id") for p in shared}
+    # The CRITICAL one was always going to surface (it's in top_anomalies).
+    # The HIGH `procurement:auto-renewal-clause` would have been missed
+    # pre-v3.0.5; now it must appear too.
+    assert "signature:unsigned-instrument" in shared_ids
+    assert "procurement:auto-renewal-clause" in shared_ids, (
+        "v3.0.5 regression: shared anomaly outside top_anomalies must "
+        "still surface via all_anomalies"
+    )
+
+
+def test_vendor_convergence_surfaces_outside_top_n_via_all_anomalies():
+    """v3.0.5 regression guard for vendor convergence.
+
+    Vendor mentions (Axon, Flock, etc.) typically appear in lower-
+    severity findings that sit below CRITICAL/HIGH structural defects.
+    Pre-v3.0.5, those mentions were invisible to vendor-convergence
+    detection because they didn't make the top_anomalies cut.
+    """
+    structural_only = AnomalyRow(
+        anomaly_id="admin:missing-final-action",
+        issue="Final action field is blank",
+        severity="high",
+        layer="administrative",
+    )
+    axon_buried = AnomalyRow(
+        anomaly_id="surveillance:vendor-detected:axon-enterprise",
+        issue="Axon Enterprise vendor mention detected",
+        severity="low",
+        layer="surveillance",
+    )
+    s1 = JurisdictionSummary(
+        jurisdiction_id="a",
+        document_count=1,
+        analysis_count=1,
+        layer_counts={"administrative": 1, "surveillance": 1},
+        top_anomalies=[structural_only],
+        all_anomalies=[structural_only, axon_buried],
+    )
+    s2 = JurisdictionSummary(
+        jurisdiction_id="b",
+        document_count=1,
+        analysis_count=1,
+        layer_counts={"administrative": 1, "surveillance": 1},
+        top_anomalies=[structural_only],
+        all_anomalies=[structural_only, axon_buried],
+    )
+    patterns = detect_patterns([s1, s2])
+    vendor = [p for p in patterns if p.pattern_type == "vendor_convergence"]
+    axon = [p for p in vendor if "axon" in p.pattern_id]
+    assert axon, (
+        "v3.0.5 regression: vendor mention outside top_anomalies must "
+        "still surface via all_anomalies"
+    )
+    assert set(axon[0].jurisdictions_affected) == {"a", "b"}
+
+
+def test_pattern_detection_falls_back_to_top_anomalies_when_all_empty():
+    """Backward-compat: legacy callers building summaries without
+    ``all_anomalies`` (e.g. hand-built fixtures from pre-v3.0.5 tests)
+    still get pattern detection over ``top_anomalies``.
+    """
+    a = AnomalyRow(
+        anomaly_id="surveillance:alpr-no-council-approval",
+        issue="ALPR no council vote",
+        severity="high",
+        layer="surveillance",
+    )
+    # NOTE: only top_anomalies populated; all_anomalies left as default []
+    s1 = JurisdictionSummary(
+        jurisdiction_id="a",
+        document_count=1,
+        analysis_count=1,
+        layer_counts={"surveillance": 1},
+        top_anomalies=[a],
+    )
+    s2 = JurisdictionSummary(
+        jurisdiction_id="b",
+        document_count=1,
+        analysis_count=1,
+        layer_counts={"surveillance": 1},
+        top_anomalies=[a],
+    )
+    patterns = detect_patterns([s1, s2])
+    shared = [p for p in patterns if p.pattern_type == "shared_anomaly_id"]
+    assert len(shared) == 1
+    assert shared[0].evidence["anomaly_id"] == "surveillance:alpr-no-council-approval"
+
+
+# ---------------------------------------------------------------------------
 # Service (DB-backed)
 # ---------------------------------------------------------------------------
 

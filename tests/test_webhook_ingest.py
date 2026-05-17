@@ -413,6 +413,44 @@ def test_synthesize_render_markdown_opt_out(client):
     assert "markdown" not in resp.json()
 
 
+def test_synthesize_markdown_embeds_route_synthesis_id_not_internal_one(client):
+    """v3.0.5 regression guard.
+
+    Pre-v3.0.5 the route overrode ``result_dict["synthesis_id"]`` AFTER
+    ``_run_raia_synthesis`` had already rendered the markdown with
+    ``RAIAService``'s internally-generated ID. Result: the rendered .md
+    embedded one ID while the JSON response carried a different one
+    (cosmetic but confusing for operators correlating reports to
+    webhook responses). The fix passes ``synthesis_id_override`` into
+    ``_run_raia_synthesis`` so the markdown is rendered with the
+    route-assigned ID from the start.
+    """
+    _ingest(client, "woodlake")
+    _ingest(client, "lindsay")
+
+    resp = client.post(
+        "/api/v1/webhook/synthesize",
+        headers={"X-ODIA-Webhook-Token": TOKEN},
+        json={
+            "jurisdictions": ["woodlake", "lindsay"],
+            "render_markdown": True,
+        },
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    route_synthesis_id = body["synthesis_id"]
+    md = body["markdown"]
+    assert md is not None
+    # The rendered markdown MUST embed the route-assigned synthesis_id,
+    # NOT some other ID. If this fails, the render-then-override ordering
+    # has regressed.
+    assert route_synthesis_id in md, (
+        f"v3.0.5 regression: rendered markdown does not embed the "
+        f"route's synthesis_id ({route_synthesis_id}). Markdown head:\n"
+        f"{md[:400]}"
+    )
+
+
 def test_synthesize_500_when_service_raises(client, monkeypatch):
     """If the RAIAService wrapper raises, the route returns 500 — the
     request body is malformed or the DB is unavailable. No partial

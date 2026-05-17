@@ -83,13 +83,23 @@ def _confidence(matching: int, total: int) -> float:
 def _shared_anomaly_ids(
     summaries: list[JurisdictionSummary],
 ) -> list[CrossJurisdictionPattern]:
-    """Flag detector-emitted IDs that appear in 2+ jurisdictions."""
+    """Flag detector-emitted IDs that appear in 2+ jurisdictions.
+
+    v3.0.5: iterates the FULL anomaly set (``all_anomalies``) not the
+    display-capped ``top_anomalies``. Without this, finding IDs outside
+    each jurisdiction's top-N window were invisible to pattern detection
+    — observed live against the Visalia+Porterville corpus where only
+    2 of 8 actually-shared finding IDs surfaced as patterns. Falls back
+    to ``top_anomalies`` if ``all_anomalies`` is empty so older callers
+    that build summaries by hand still work.
+    """
     # anomaly_id -> set(jurisdiction_id)
     by_id: dict[str, set[str]] = defaultdict(set)
     # anomaly_id -> example issue text (first seen)
     example: dict[str, str] = {}
     for s in summaries:
-        for a in s.top_anomalies:
+        source = s.all_anomalies if s.all_anomalies else s.top_anomalies
+        for a in source:
             by_id[a.anomaly_id].add(s.jurisdiction_id)
             example.setdefault(a.anomaly_id, a.issue)
 
@@ -180,12 +190,21 @@ def _shared_layer_spikes(
 def _vendor_convergences(
     summaries: list[JurisdictionSummary],
 ) -> list[CrossJurisdictionPattern]:
-    """Flag vendor names present in anomalies across 2+ jurisdictions."""
+    """Flag vendor names present in anomalies across 2+ jurisdictions.
+
+    v3.0.5: same fix as ``_shared_anomaly_ids`` — iterate the full
+    anomaly set so a vendor mentioned only in lower-severity findings
+    still surfaces. ``surveillance:vendor-detected:axon-enterprise``
+    type findings are typically not top-of-jurisdiction (sit behind
+    `signature:unsigned-instrument` CRITICALs) and were therefore
+    invisible to vendor-convergence detection pre-v3.0.5.
+    """
     vendor_to_jids: dict[str, set[str]] = defaultdict(set)
     vendor_counts: dict[str, Counter] = defaultdict(Counter)
     for s in summaries:
+        source = s.all_anomalies if s.all_anomalies else s.top_anomalies
         seen: set[str] = set()
-        for a in s.top_anomalies:
+        for a in source:
             seen.update(_extract_vendor_keywords(a))
         for vendor in seen:
             vendor_to_jids[vendor].add(s.jurisdiction_id)

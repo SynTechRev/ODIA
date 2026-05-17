@@ -372,7 +372,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "3.0.4"),
+                engine_version=os.environ.get("ODIA_VERSION", "3.0.5"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -473,7 +473,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": _token_configured(),
-            "odia_version": os.environ.get("ODIA_VERSION", "3.0.4"),
+            "odia_version": os.environ.get("ODIA_VERSION", "3.0.5"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
@@ -867,10 +867,18 @@ def register_webhook_routes(app: Any) -> None:
         synthesis_id = secrets.token_hex(8)
 
         try:
+            # v3.0.5: pass the route-assigned synthesis_id INTO
+            # _run_raia_synthesis so it's applied to the RAIAResult
+            # BEFORE markdown rendering. The pre-v3.0.5 code overrode
+            # result_dict["synthesis_id"] AFTER markdown was already
+            # rendered with RAIAService's internally-generated ID,
+            # causing the rendered .md to disagree with the JSON's
+            # synthesis_id (cosmetic but confusing for operators).
             result_dict, markdown = _run_raia_synthesis(
                 jurisdictions=jurisdictions,
                 include_tier3=include_tier3,
                 render_markdown_flag=want_markdown,
+                synthesis_id_override=synthesis_id,
             )
         except Exception as exc:  # noqa: BLE001
             logger.exception("webhook synthesize failed")
@@ -882,11 +890,6 @@ def register_webhook_routes(app: Any) -> None:
                 source_ip=_client_ip(request),
             )
             raise HTTPException(status_code=500, detail=str(exc)) from exc
-
-        # Override the synthesis_id on the inner result so it matches
-        # the one n8n was handed — RAIAService generates its own, but
-        # callers expect the returned synthesis_id to be the handle.
-        result_dict["synthesis_id"] = synthesis_id
 
         # Park the full result under _BATCH_JOBS so /status/{job_id}
         # can re-serve it. Strip _jobs-style internal keys from the
@@ -1147,16 +1150,27 @@ def _run_raia_synthesis(
     jurisdictions: list[str],
     include_tier3: bool,
     render_markdown_flag: bool,
+    synthesis_id_override: str | None = None,
 ) -> tuple[dict[str, Any], str | None]:
     """Invoke ``RAIAService.synthesize()`` and optionally render markdown.
 
     Returns ``(result_dict, markdown_or_none)``. Kept as a module-level
     function so tests can patch it without touching the route closure.
+
+    v3.0.5: ``synthesis_id_override`` lets the route stamp its own
+    synthesis_id on the RAIAResult BEFORE markdown rendering. Without
+    this override the rendered markdown embeds RAIAService's
+    internally-generated ID, which then disagreed with the JSON
+    response's synthesis_id (route applied its override later, on the
+    already-rendered dict). Optional + None default keeps the signature
+    backward-compatible with existing callers and tests.
     """
     from oraculus_di_auditor.raia import RAIAService, render_markdown_template
 
     svc = RAIAService()
     result = svc.synthesize(jurisdictions, include_tier3=include_tier3)
+    if synthesis_id_override:
+        result.synthesis_id = synthesis_id_override
     md = render_markdown_template(result) if render_markdown_flag else None
     return result.to_dict(), md
 

@@ -244,6 +244,8 @@ class RAIAService:
             severity_counts=dict(severity_counts),
             layer_counts=dict(layer_counts),
             top_anomalies=top,
+            # v3.0.5: full set for pattern detection (not display).
+            all_anomalies=flat,
         )
 
     def _tier3_stub(

@@ -59,6 +59,12 @@ class JurisdictionSummary:
     severity_counts: dict[str, int] = field(default_factory=dict)
     layer_counts: dict[str, int] = field(default_factory=dict)
     top_anomalies: list[AnomalyRow] = field(default_factory=list)
+    # v3.0.5: full uncapped anomaly set, used by pattern detection.
+    # top_anomalies stays bounded for display; pattern matching needs the
+    # full list so finding IDs outside the top-N window still surface as
+    # shared across jurisdictions. Deliberately excluded from to_dict()
+    # so the JSON response payload stays bounded.
+    all_anomalies: list[AnomalyRow] = field(default_factory=list, repr=False)
 
     def to_dict(self) -> dict[str, Any]:
         return {
