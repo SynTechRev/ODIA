@@ -29,5 +29,11 @@ services:
   n8n:
     environment:
       ODIA_BASE_URL: http://host.docker.internal:8000
+      # n8n's hardened distroless image defaults to blocking $env.* access
+      # in Code/HTTP nodes. We rely on $env.ODIA_BASE_URL and
+      # $env.ODIA_WEBHOOK_TOKEN in WF-001, so disable the block.
+      # Safe in our local-dev context — the only env reaching n8n is what
+      # we put in .env (no host process env leakage).
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
     extra_hosts:
       - "host.docker.internal:host-gateway"

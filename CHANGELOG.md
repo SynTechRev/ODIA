@@ -1,5 +1,36 @@
 # Changelog
 
+## [3.0.3] - 2026-05-16 — Async Scrape Endpoint (n8n never times out on large PDFs)
+
+Follow-up to v3.0.2's backend-side scraping. The synchronous `/webhook/scrape-and-ingest` blocks the HTTP connection for the full download + audit duration; large agenda packets (Visalia item 12 was an 18 MB PDF) push past n8n's 180 s HTTP node timeout and the request dies even though the backend was still working. v3.0.3 adds a fire-and-forget variant that hands the caller a job ID immediately and runs the work on a daemon thread.
+
+### Added — `POST /api/v1/webhook/scrape-and-ingest-async`
+- New endpoint at `src/oraculus_di_auditor/interface/routes/webhook.py`. Body is identical to `/scrape-and-ingest`: `{"url": "...", "jurisdiction_id": "...", "filename_hint": "..."}`. Returns HTTP 202 with `{"status": "accepted", "job_id": "...", "url": "...", "poll_url": "/api/v1/webhook/status/{job_id}"}` in well under 100 ms — n8n's HTTP node sees its response and moves on regardless of how big the upstream PDF is.
+- Backend work runs on a `threading.Thread(daemon=True)` worker (`_run_scrape_job_background`) that walks the same `_dedup_check` → `_run_tier1_pipeline` → `_record_seen_hash` → `_persist_tier1_result` chain as the sync endpoint, updating `_BATCH_JOBS[job_id]["status"]` through `queued → downloading → auditing → completed | failed` so polls can observe progress.
+- Reuses the existing `GET /api/v1/webhook/status/{job_id}` endpoint — no separate scrape-status route. Returns the full job state (job_id, type=scrape, status, url, jurisdiction_id, sha256, filename, result, error, already_seen) on demand; 404 on unknown ID.
+- **Threading note**: `db/session.py` already opens SQLite with `connect_args={"check_same_thread": False}` for tests, so the worker can use the same `get_db()` context manager from a non-request thread. The job registry is process-local (in-memory `_BATCH_JOBS`); a multi-worker deployment would back this with Redis or a jobs table.
+
+### Added — `data/n8n-workflows/wf-001-visalia-url-async.json`
+- New WF-001 variant. Identical to the v3.0.2 URL variant except:
+  - POSTs `/webhook/scrape-and-ingest-async` instead of `/scrape-and-ingest`
+  - HTTP node timeout dropped 180 s → 10 s (the call resolves in ~30 ms)
+  - Batching loosened: 5 per second instead of 3 per 2 s (no per-call audit wait)
+- Does NOT include a poll/notify branch. For first-light, "enqueue 84 jobs in under 30 s and let the backend chew" is the goal; per-doc completion visibility can be added as a separate workflow if needed.
+- Both URL variants are kept in-repo (per the `data/n8n-workflows/` operator-state policy these are `.gitignored` and only ship in `bundle.json`, but the source-of-truth JSON lives here for reference).
+
+### Tests — `tests/test_webhook_scrape_async.py`
+- 12 new tests across four sections: endpoint accept-and-dispatch (5 — happy path returns 202 + job_id, auth/validation rejections), background worker behaviour driven synchronously for determinism (4 — happy path, urlopen failure, empty body, dedup short-circuit), status polling (2 — 404 for unknown job, state passthrough for seeded job), end-to-end through the real thread with bounded poll loop (1).
+- **12/12 green.** Mocks `urllib.request.urlopen` so tests never hit the network; clears `_BATCH_JOBS` between tests via an autouse fixture.
+
+### Version sync
+- `pyproject.toml` `version = "3.0.3"` (was 3.0.2).
+- `desktop/package.json` `"version": "3.0.3"`.
+- Hardcoded fallbacks updated to 3.0.3: `api.py` `_resolve_odia_version()` (×2), `webhook.py` ODIA_VERSION defaults (×2), `frontend/components/dashboard/DashboardLayout.tsx` `ODIA_VERSION_FALLBACK`, `frontend/app/settings/page.tsx` System Information card, `frontend/app/page.tsx` hero strings (×2).
+
+### Notes
+- The sync `/scrape-and-ingest` endpoint stays in place. It's the right call when the audit fits comfortably inside the caller's request budget (small PDFs, retry-on-timeout orchestrators, manual `curl` from the terminal). For n8n in production, prefer the async variant.
+- v3.0.3 is the foundation for any future scraper that talks to large public-records PDFs — the same pattern can wrap Granicus / Legistar / TCDAO endpoints without re-solving the timeout problem.
+
 ## [3.0.2] - 2026-05-15 — Backend-Side Scraping + Real-World First Ingest
 
 Productionised the v3.0 autonomous-ingest thesis after a real first-light run against Visalia, CA's CivicPlus AgendaCenter surfaced one architectural gap (Cloudflare TLS-fingerprint blocking n8n's Node.js HTTP node) and one packaging gap (n8n's hardened Docker image strips Execute Command + curl, removing the natural workaround). Adds a backend-side download endpoint that routes around both, plus a simplified WF-001 that uses it.

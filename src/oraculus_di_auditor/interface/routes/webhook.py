@@ -371,7 +371,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "3.0.2"),
+                engine_version=os.environ.get("ODIA_VERSION", "3.0.3"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -472,7 +472,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": _token_configured(),
-            "odia_version": os.environ.get("ODIA_VERSION", "3.0.2"),
+            "odia_version": os.environ.get("ODIA_VERSION", "3.0.3"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
@@ -725,6 +725,70 @@ def register_webhook_routes(app: Any) -> None:
             **result,
         }
 
+    # ---- Scrape + ingest, async (v3.0.3) ----------------------------------
+    @router.post("/api/v1/webhook/scrape-and-ingest-async")
+    async def webhook_scrape_and_ingest_async(request: Request) -> dict[str, Any]:
+        """Fire-and-forget variant of /scrape-and-ingest. Returns 202 + job_id.
+
+        Why this exists (v3.0.3):
+            Synchronous /scrape-and-ingest blocks the HTTP connection for
+            the full download + audit duration. Large agenda packets push
+            past n8n's 180s HTTP node timeout and the request dies even
+            though the backend was still working. This variant queues the
+            work onto a daemon thread and hands the caller a poll URL —
+            n8n's Wait node + Loop pattern is the natural consumer.
+
+        Body (JSON): identical to /scrape-and-ingest.
+
+        Returns:
+            {
+              "status":   "accepted",
+              "job_id":   "...",
+              "url":      "...",
+              "poll_url": "/api/v1/webhook/status/{job_id}"
+            }
+        """
+        _require_token(request)
+
+        payload = await request.json()
+        url = (payload.get("url") or "").strip()
+        jurisdiction_id = (payload.get("jurisdiction_id") or "").strip()
+        filename_hint = (payload.get("filename_hint") or "").strip()
+
+        if not url or not url.startswith(("http://", "https://")):
+            raise HTTPException(
+                status_code=400,
+                detail="`url` must be an absolute http(s) URL",
+            )
+        if not jurisdiction_id:
+            raise HTTPException(
+                status_code=400,
+                detail="`jurisdiction_id` is required",
+            )
+
+        job_id = secrets.token_hex(8)
+        _enqueue_scrape_job(job_id, url, jurisdiction_id, filename_hint)
+
+        _record_webhook_call(
+            endpoint="scrape-and-ingest-async",
+            workflow_id=request.headers.get(N8N_WORKFLOW_HEADER),
+            execution_id=request.headers.get(N8N_EXECUTION_HEADER),
+            status=202,
+            source_ip=_client_ip(request),
+        )
+
+        from fastapi.responses import JSONResponse
+
+        return JSONResponse(
+            status_code=202,
+            content={
+                "status": "accepted",
+                "job_id": job_id,
+                "url": url,
+                "poll_url": f"/api/v1/webhook/status/{job_id}",
+            },
+        )
+
     # ---- Batch ingest (enqueue) -------------------------------------------
     @router.post("/api/v1/webhook/batch-ingest")
     async def webhook_batch_ingest(request: Request) -> dict[str, Any]:
@@ -914,6 +978,147 @@ def _get_batch_job_state(job_id: str) -> dict[str, Any] | None:
         return None
     # Strip internal fields before returning to the webhook client.
     return {k: v for k, v in state.items() if not k.startswith("_")}
+
+
+# ---- Async scrape job runner (v3.0.3) -------------------------------------
+#
+# Why this exists: real-world public-records PDFs routinely take 60-180s to
+# audit end-to-end (large agenda packets, OCR-heavy scans). n8n's HTTP node
+# defaults to ~180s and refuses to wait longer without per-node tuning. The
+# synchronous /scrape-and-ingest endpoint (v3.0.2) hit this ceiling on
+# Visalia item 12 — an 18MB agenda packet. The async variant flips the
+# control inversion: the endpoint accepts the URL, registers a job, kicks
+# off a daemon thread to do the work, and returns 202 immediately. n8n
+# polls /status/{job_id} until the job reports completed/failed.
+#
+# Threading note: db.session opens SQLite with check_same_thread=False, so
+# the worker can use the same get_db() context manager from a non-request
+# thread. The job registry (_BATCH_JOBS) is process-local; a real
+# multi-worker deployment would back this with Redis or a jobs table.
+
+
+def _run_scrape_job_background(
+    job_id: str,
+    url: str,
+    jurisdiction_id: str,
+    filename_hint: str,
+) -> None:
+    """Worker for /scrape-and-ingest-async. Mutates ``_BATCH_JOBS[job_id]``.
+
+    Phases (mirrored into ``state['status']`` so pollers can observe progress):
+        queued → downloading → auditing → completed | failed
+    """
+    state = _BATCH_JOBS.get(job_id)
+    if state is None:
+        logger.warning("scrape job %s missing from registry — aborting", job_id)
+        return
+
+    import urllib.error
+    import urllib.request
+
+    browser_headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        ),
+        "Accept": "application/pdf,application/octet-stream,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+
+    state["status"] = "downloading"
+    try:
+        req = urllib.request.Request(url, headers=browser_headers)
+        with urllib.request.urlopen(
+            req, timeout=120
+        ) as response:  # noqa: S310 — validated http(s) prefix in caller
+            file_bytes = response.read()
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
+        state["status"] = "failed"
+        state["error"] = f"Upstream download failed: {exc}"
+        return
+
+    if not file_bytes:
+        state["status"] = "failed"
+        state["error"] = "Upstream returned an empty body"
+        return
+
+    sha256 = hashlib.sha256(file_bytes).hexdigest()
+    state["sha256"] = sha256
+
+    if _dedup_check(sha256):
+        state["status"] = "completed"
+        state["already_seen"] = True
+        state["result"] = {
+            "status": "ok",
+            "already_seen": True,
+            "url": url,
+            "sha256": sha256,
+            "jurisdiction_id": jurisdiction_id,
+        }
+        return
+
+    filename = filename_hint or url.rsplit("/", 1)[-1] or f"scraped_{sha256[:12]}"
+    if not filename.lower().endswith(".pdf"):
+        filename = f"{filename}.pdf"
+    state["filename"] = filename
+
+    state["status"] = "auditing"
+    try:
+        result = _run_tier1_pipeline(
+            file_bytes=file_bytes,
+            filename=filename,
+            jurisdiction_id=jurisdiction_id,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("scrape job %s pipeline failed", job_id)
+        state["status"] = "failed"
+        state["error"] = str(exc)
+        return
+
+    _record_seen_hash(
+        sha256=sha256,
+        document_id=(result.get("document") or {}).get("document_id"),
+        jurisdiction_id=jurisdiction_id,
+    )
+    _persist_tier1_result(
+        sha256=sha256,
+        filename=filename,
+        jurisdiction_id=jurisdiction_id,
+        result=result,
+    )
+
+    state["status"] = "completed"
+    state["already_seen"] = False
+    state["result"] = {
+        "status": "ok",
+        "already_seen": False,
+        "url": url,
+        **result,
+    }
+
+
+def _enqueue_scrape_job(
+    job_id: str,
+    url: str,
+    jurisdiction_id: str,
+    filename_hint: str,
+) -> None:
+    """Register a scrape job and start its daemon worker thread."""
+    import threading
+
+    _BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": url,
+        "jurisdiction_id": jurisdiction_id,
+    }
+    threading.Thread(
+        target=_run_scrape_job_background,
+        args=(job_id, url, jurisdiction_id, filename_hint),
+        daemon=True,
+        name=f"scrape-job-{job_id}",
+    ).start()
 
 
 def _run_raia_synthesis(
