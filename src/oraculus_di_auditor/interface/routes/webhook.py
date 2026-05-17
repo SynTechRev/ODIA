@@ -53,6 +53,7 @@ import hmac
 import logging
 import os
 import secrets
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -371,7 +372,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "3.0.3"),
+                engine_version=os.environ.get("ODIA_VERSION", "3.0.4"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -472,7 +473,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": _token_configured(),
-            "odia_version": os.environ.get("ODIA_VERSION", "3.0.3"),
+            "odia_version": os.environ.get("ODIA_VERSION", "3.0.4"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
@@ -980,7 +981,7 @@ def _get_batch_job_state(job_id: str) -> dict[str, Any] | None:
     return {k: v for k, v in state.items() if not k.startswith("_")}
 
 
-# ---- Async scrape job runner (v3.0.3) -------------------------------------
+# ---- Async scrape job runner (v3.0.3, hardened in v3.0.4) -----------------
 #
 # Why this exists: real-world public-records PDFs routinely take 60-180s to
 # audit end-to-end (large agenda packets, OCR-heavy scans). n8n's HTTP node
@@ -991,10 +992,25 @@ def _get_batch_job_state(job_id: str) -> dict[str, Any] | None:
 # off a daemon thread to do the work, and returns 202 immediately. n8n
 # polls /status/{job_id} until the job reports completed/failed.
 #
+# v3.0.4 hardening: real-world Visalia first-light fired all 84 jobs in
+# near-parallel, which surfaced two issues. (1) Cloudflare in front of
+# visalia.gov TCP-reset some connections under that concurrency, raising
+# http.client.RemoteDisconnected. That's a ConnectionResetError → OSError,
+# NOT a urllib.error.URLError — so it escaped the original except clause
+# and crashed the worker thread, leaving the job stuck at "downloading"
+# in the registry. The catch is now widened to include OSError. (2) The
+# upstream rate-limit signal said we were being impolite. _DOWNLOAD_SEMAPHORE
+# caps concurrent outbound downloads at _DOWNLOAD_CONCURRENCY regardless of
+# how fast n8n enqueues. The semaphore only wraps the network read; audit
+# work continues in parallel.
+#
 # Threading note: db.session opens SQLite with check_same_thread=False, so
 # the worker can use the same get_db() context manager from a non-request
 # thread. The job registry (_BATCH_JOBS) is process-local; a real
 # multi-worker deployment would back this with Redis or a jobs table.
+
+_DOWNLOAD_CONCURRENCY = 4
+_DOWNLOAD_SEMAPHORE = threading.Semaphore(_DOWNLOAD_CONCURRENCY)
 
 
 def _run_scrape_job_background(
@@ -1013,7 +1029,6 @@ def _run_scrape_job_background(
         logger.warning("scrape job %s missing from registry — aborting", job_id)
         return
 
-    import urllib.error
     import urllib.request
 
     browser_headers = {
@@ -1028,11 +1043,19 @@ def _run_scrape_job_background(
     state["status"] = "downloading"
     try:
         req = urllib.request.Request(url, headers=browser_headers)
-        with urllib.request.urlopen(
-            req, timeout=120
-        ) as response:  # noqa: S310 — validated http(s) prefix in caller
-            file_bytes = response.read()
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
+        # Cap concurrent outbound downloads. Audit work happens after the
+        # `with` block exits — only the network read is throttled.
+        with _DOWNLOAD_SEMAPHORE:
+            with urllib.request.urlopen(
+                req, timeout=120
+            ) as response:  # noqa: S310 — validated http(s) prefix in caller
+                file_bytes = response.read()
+    except OSError as exc:
+        # Covers urllib.error.URLError (subclass of OSError),
+        # urllib.error.HTTPError (subclass of URLError), TimeoutError,
+        # and crucially http.client.RemoteDisconnected (subclass of
+        # ConnectionResetError → OSError) which v3.0.3's narrower
+        # catch missed and which crashed the worker thread.
         state["status"] = "failed"
         state["error"] = f"Upstream download failed: {exc}"
         return
@@ -1104,8 +1127,6 @@ def _enqueue_scrape_job(
     filename_hint: str,
 ) -> None:
     """Register a scrape job and start its daemon worker thread."""
-    import threading
-
     _BATCH_JOBS[job_id] = {
         "job_id": job_id,
         "type": "scrape",

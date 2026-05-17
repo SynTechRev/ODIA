@@ -368,3 +368,91 @@ def test_endpoint_to_completion_via_real_thread(client, mock_upstream):
     assert final["status"] == "completed", f"unexpected final state: {final}"
     assert final["result"]["status"] == "ok"
     assert final["filename"] == "visalia_e2e.pdf"
+
+
+# ---------------------------------------------------------------------------
+# 5. v3.0.4 — wider OSError catch + download throttle
+# ---------------------------------------------------------------------------
+
+
+def test_worker_marks_failed_on_remote_disconnected(webhook_app, monkeypatch):
+    """v3.0.4 regression guard: http.client.RemoteDisconnected is a
+    ConnectionResetError → OSError, NOT a urllib.error.URLError. v3.0.3's
+    narrower catch let it escape and crash the worker thread. The widened
+    OSError catch must now mark the job failed cleanly.
+    """
+    import http.client
+
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    def _raise(req, timeout=None):  # noqa: ARG001
+        raise http.client.RemoteDisconnected(
+            "Remote end closed connection without response"
+        )
+
+    monkeypatch.setattr("urllib.request.urlopen", _raise)
+
+    job_id = "test-job-remote-disconnected"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": SAMPLE_URL,
+        "jurisdiction_id": "visalia",
+    }
+    # Must NOT raise — that would crash the daemon thread in production.
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url=SAMPLE_URL,
+        jurisdiction_id="visalia",
+        filename_hint="",
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "failed"
+    assert "Remote end closed connection" in state["error"]
+
+
+def test_worker_marks_failed_on_generic_oserror(webhook_app, monkeypatch):
+    """Belt-and-braces: any other OSError (DNS failure, broken pipe,
+    connection refused) also resolves to status=failed instead of
+    propagating out of the worker.
+    """
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    def _raise(req, timeout=None):  # noqa: ARG001
+        raise OSError("simulated DNS resolution failure")
+
+    monkeypatch.setattr("urllib.request.urlopen", _raise)
+
+    job_id = "test-job-generic-oserror"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": SAMPLE_URL,
+        "jurisdiction_id": "visalia",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url=SAMPLE_URL,
+        jurisdiction_id="visalia",
+        filename_hint="",
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "failed"
+    assert "DNS resolution failure" in state["error"]
+
+
+def test_download_semaphore_is_module_level_and_sized():
+    """v3.0.4: the download throttle must exist at module scope (so all
+    worker threads share it) and be sized at the documented concurrency.
+    """
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    assert hasattr(webhook_mod, "_DOWNLOAD_SEMAPHORE")
+    assert hasattr(webhook_mod, "_DOWNLOAD_CONCURRENCY")
+    assert webhook_mod._DOWNLOAD_CONCURRENCY == 4
+    # Semaphore's internal counter is _value; with no waiters it equals capacity.
+    assert webhook_mod._DOWNLOAD_SEMAPHORE._value == 4

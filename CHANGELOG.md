@@ -1,5 +1,35 @@
 # Changelog
 
+## [3.0.4] - 2026-05-17 — Async worker hardening (RemoteDisconnected catch + download throttle)
+
+Polish release on v3.0.3 driven by a defect surfaced during v3.0.3 first-light validation. Firing 84 parallel scrape jobs at Visalia exposed two real-world failure modes that the unit tests hadn't covered.
+
+### Fixed — `_run_scrape_job_background` exception handler too narrow
+- The v3.0.3 catch was `(urllib.error.URLError, urllib.error.HTTPError, TimeoutError)`. `http.client.RemoteDisconnected` is a `ConnectionResetError` → `OSError`, **not** a `URLError` — when Cloudflare TCP-reset some connections under parallel load the exception escaped the worker, crashed the daemon thread, and left the job stuck at `status="downloading"` in the in-memory registry forever (no `failed` transition, no poll signal). The widened catch is now `except OSError` — `URLError`, `HTTPError`, `TimeoutError`, `RemoteDisconnected`, `ConnectionResetError`, DNS errors, etc. all funnel through the same `state["status"] = "failed"` path.
+- New regression tests in `tests/test_webhook_scrape_async.py`:
+  - `test_worker_marks_failed_on_remote_disconnected` — raises `http.client.RemoteDisconnected` from the mocked `urlopen`; asserts the worker does NOT propagate the exception and that `state["status"] == "failed"` with the error captured.
+  - `test_worker_marks_failed_on_generic_oserror` — belt-and-braces with a bare `OSError` to cover DNS / broken-pipe / connection-refused variants.
+
+### Added — `_DOWNLOAD_SEMAPHORE = threading.Semaphore(4)`
+- Module-level throttle in `src/oraculus_di_auditor/interface/routes/webhook.py`. The `urllib.request.urlopen` call in `_run_scrape_job_background` is wrapped with `with _DOWNLOAD_SEMAPHORE:`, capping concurrent outbound downloads at 4 regardless of how fast n8n enqueues. Audit work happens **after** the `with` block, so multi-doc audits still run in parallel — only the network read is throttled.
+- The cap is a soft etiquette signal toward upstream (CivicPlus / Cloudflare-fronted public-records sites observably rate-limit at higher concurrency). Matches the v3.0.2 shell script's polite pacing without needing the script's per-call `sleep 1`.
+- The constant `_DOWNLOAD_CONCURRENCY = 4` is module-level so future jurisdictions with different upstream tolerance can override it via a single edit.
+- `test_download_semaphore_is_module_level_and_sized` smoke-tests both invariants.
+
+### Tidy
+- `import threading` lifted to module top alongside the other stdlib imports; the lazy `import threading` inside `_enqueue_scrape_job` is now redundant and removed.
+- `import urllib.error` inside `_run_scrape_job_background` removed (unused after the catch widened to `OSError`).
+
+### Tests
+- 15 tests in `tests/test_webhook_scrape_async.py` (12 from v3.0.3 + 3 new). All 15 green. Sync `/scrape-and-ingest` tests untouched and still 10/10. Ruff clean.
+
+### Version sync
+- `pyproject.toml` `version = "3.0.4"`. `desktop/package.json` `"version": "3.0.4"`. `api.py` + `webhook.py` ODIA_VERSION fallbacks → 3.0.4. Three frontend version strings → v3.0.4.
+
+### Notes
+- The sync `/scrape-and-ingest` endpoint at v3.0.2 has the same narrow exception handler, but its failure mode is benign — a `RemoteDisconnected` there raises a 500 the caller sees immediately rather than leaking a zombie job. Deliberately not patched here to keep the v3.0.x sync interface stable.
+- The semaphore is process-local. A multi-worker `uvicorn --workers N` deployment effectively gets `N × 4` outbound slots, which is fine — the etiquette goal is "don't blast 84 at once from one process", not "global rate limit".
+
 ## [3.0.3] - 2026-05-16 — Async Scrape Endpoint (n8n never times out on large PDFs)
 
 Follow-up to v3.0.2's backend-side scraping. The synchronous `/webhook/scrape-and-ingest` blocks the HTTP connection for the full download + audit duration; large agenda packets (Visalia item 12 was an 18 MB PDF) push past n8n's 180 s HTTP node timeout and the request dies even though the backend was still working. v3.0.3 adds a fire-and-forget variant that hands the caller a job ID immediately and runs the work on a daemon thread.
