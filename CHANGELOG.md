@@ -1,5 +1,51 @@
 # Changelog
 
+## [3.1.0] - 2026-05-17 — Fingerprint-resistant fetcher (defeats Akamai / Cloudflare bot blocks)
+
+First minor-version bump in the v3.x line. Adds a two-tier HTTP fetcher to the async scraper so backend-side ingest works against Akamai-protected and similarly hardened municipal sites that pre-v3.1.0 returned HTTP 403 to Python's `urllib` because of TLS/JA3 + HTTP/2 fingerprint inspection. Observed live during v3.0.x bring-up against `tulare.ca.gov` (AkamaiGHost — blocked bare `curl`, browser-UA `curl`, AND browser-UA+Referer `curl` all returned 403 because the gate is at the handshake layer, not the header layer).
+
+### Added — two-tier `_fetch_url(url, *, timeout=120)` helper
+
+New module-level function in [src/oraculus_di_auditor/interface/routes/webhook.py](src/oraculus_di_auditor/interface/routes/webhook.py). Behaviour:
+
+- **Tier 1 — `urllib.request.urlopen` + Chrome-like headers.** Fast, dep-free, succeeds against ~80% of public-records sites (Revize, basic CivicPlus, sites without aggressive bot mitigation). This is the v3.0.x default path, retained as Tier 1 so the common case pays zero overhead.
+- **Tier 2 — `curl_cffi` with `impersonate="chrome131"`.** Activated automatically when Tier 1 returns HTTP 403 or 429 (`_TIER1_FALLBACK_HTTP_CODES`), OR fails with a connection-class `OSError` (TLS reset, `RemoteDisconnected`, DNS, timeout). `curl_cffi` ships libcurl-impersonate which replicates Chrome's exact TLS+HTTP2 fingerprint, defeating JA3/JA4 inspection + HTTP/2 frame-order inspection used by Akamai Bot Manager and hardened Cloudflare configurations.
+- **Real upstream errors propagate unchanged.** A genuine 404 / 401 / 500 from Tier 1 is NOT a bot block — it propagates immediately without wasting a Tier 2 attempt.
+- **Graceful degrade when `curl_cffi` is absent.** Lazy import inside the helper; on ImportError the original Tier 1 exception is re-raised so the operator sees the real underlying problem.
+
+### Added — `curl-cffi>=0.7.0` dependency
+
+Pip-installable, no system binary required (bundles its own `libcurl-impersonate`). Adds ~25 MB to the wheel. Loaded lazily inside `_fetch_url` so non-scraping deployments pay no import-time cost.
+
+### Refactor — `_run_scrape_job_background` worker simplified
+
+The async worker now calls `_fetch_url(url)` instead of inlining the `urllib.request.urlopen` block. Same `_DOWNLOAD_SEMAPHORE` wraps the whole fetch attempt (concurrency throttle covers both tiers). Browser headers lifted to module-level `_BROWSER_HEADERS` constant so tests + future fetchers share one source of truth.
+
+### Tests
+
+Seven new tests in [tests/test_webhook_scrape_async.py](tests/test_webhook_scrape_async.py) covering the fetcher tier logic:
+
+1. `test_fetch_url_tier1_happy_returns_bytes` — Tier 1 success short-circuits before Tier 2
+2. `test_fetch_url_tier1_403_falls_through_to_tier2_success` — primary Akamai-bypass scenario
+3. `test_fetch_url_tier1_429_falls_through_to_tier2` — rate-limit fallback
+4. `test_fetch_url_tier1_404_does_not_fall_through` — real upstream errors propagate immediately
+5. `test_fetch_url_tier1_oserror_falls_through_to_tier2` — connection-class failures
+6. `test_fetch_url_both_tiers_fail_raises_oserror_with_context` — error message names both failures
+7. `test_fetch_url_no_curl_cffi_reraises_tier1_error` — graceful degrade without the dep
+
+Three existing v3.0.4 worker failure-path tests updated to patch `_fetch_url` directly (cleaner separation: those tests exercise worker behaviour, not fetcher internals). All other tests unchanged.
+
+### Version sync
+
+`pyproject.toml` `version = "3.1.0"` (was 3.0.5). `desktop/package.json` `"version": "3.1.0"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.1.0. Three frontend version strings → v3.1.0.
+
+### Notes for operators
+
+- Existing deployments need `pip install curl-cffi>=0.7.0` to enable Tier 2. Without it, behaviour is identical to v3.0.5 (urllib only). The release workflow rebuilds the PyInstaller wheel with the new dep; manual upgrades from source need the pip install.
+- The semaphore (`Semaphore(4)`) cap applies to the WHOLE fetch attempt — switching tiers does not multiply effective concurrency.
+- Tier-2 is gated to 403/429/OSError specifically because those are the bot-mitigation signatures observed in v3.0.x bring-up. Sites with other rejection patterns can be added by widening `_TIER1_FALLBACK_HTTP_CODES`.
+- For Playwright/headless-browser Tier 3 (defeats remaining JS-execution-gate scrapers like some Granicus deployments), see future v3.2+ work — requires ~250 MB Chromium download and OS-level deps, so not bundled by default.
+
 ## [3.0.5] - 2026-05-17 — RAIA pattern detection completeness + synthesis_id consistency
 
 Two minor polish items surfaced during the first real RAIA cross-jurisdiction synthesis run (Visalia + Porterville, 2026-05-17 ~16:53 UTC). Neither blocks functionality but both made the cross-jurisdiction report less informative than the underlying data warranted.

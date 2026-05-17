@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odia"
-version = "3.0.5"
+version = "3.1.0"
 description = "O.D.I.A. — Oraculus Decimus Intellect Analyst: civic accountability intelligence platform for forensic analysis of legal and government documents"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -23,6 +23,12 @@ dependencies = [
     "jinja2>=3.0.0",
     "markdown>=3.5.0",
     "requests>=2.28.0",
+    # v3.1.0 — fingerprint-resistant HTTP for the async scraper. Wraps
+    # libcurl-impersonate to ship Chrome's exact TLS+HTTP2 fingerprint,
+    # defeating Akamai/Cloudflare bot detectors that block Python urllib
+    # at the handshake layer. Loaded lazily inside _fetch_url so it does
+    # not influence import time for non-scraping code paths.
+    "curl-cffi>=0.7.0",
     "beautifulsoup4>=4.12.0",
     "python-dateutil>=2.8.0",
     "passlib[bcrypt]>=1.7.4",

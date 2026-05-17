@@ -372,7 +372,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "3.0.5"),
+                engine_version=os.environ.get("ODIA_VERSION", "3.1.0"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -473,7 +473,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": _token_configured(),
-            "odia_version": os.environ.get("ODIA_VERSION", "3.0.5"),
+            "odia_version": os.environ.get("ODIA_VERSION", "3.1.0"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
@@ -1015,6 +1015,123 @@ def _get_batch_job_state(job_id: str) -> dict[str, Any] | None:
 _DOWNLOAD_CONCURRENCY = 4
 _DOWNLOAD_SEMAPHORE = threading.Semaphore(_DOWNLOAD_CONCURRENCY)
 
+# v3.1.0 — common browser headers used by both fetcher tiers. Defined at
+# module scope so tests can monkeypatch them without reaching into the
+# worker function.
+_BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/pdf,application/octet-stream,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+# HTTP status codes that v3.1.0 reads as "Tier-1 was blocked, try Tier-2".
+# 403 covers Akamai/Cloudflare Bot Manager rejects of Python urllib's
+# TLS fingerprint (observed live against tulare.ca.gov). 429 covers
+# rate-limit responses that the throttled Tier-2 may have better luck on.
+# Other 4xx (404, 401) propagate normally — they are real upstream errors,
+# not bot-mitigation.
+_TIER1_FALLBACK_HTTP_CODES = frozenset({403, 429})
+
+
+def _fetch_url(url: str, *, timeout: int = 120) -> bytes:
+    """Two-tier URL fetcher for fingerprint-resistant scraping (v3.1.0).
+
+    Tier 1 — ``urllib.request.urlopen`` with browser-like headers.
+        Fast, dep-free, succeeds against ~80% of public-records sites
+        (Revize, most CivicPlus, basic Cloudflare). Python's OpenSSL JA3
+        fingerprint passes most filters that block Node.js. This is the
+        v3.0.x default path; keeping it as Tier 1 means common-case
+        scraping pays no overhead.
+
+    Tier 2 — ``curl_cffi`` with Chrome impersonation.
+        Activated when Tier 1 returns 403/429 (Akamai/Cloudflare Bot
+        Manager pattern) or fails with a connection-class ``OSError``
+        (TLS handshake reset, server hangup mid-response). curl_cffi
+        ships libcurl-impersonate which replicates Chrome's exact
+        TLS+HTTP2 fingerprint, defeating JA3/JA4 + HTTP/2 frame-order
+        inspection. Observed live against tulare.ca.gov / AkamaiGHost
+        which 403s every Python urllib variant we tried.
+
+    Returns the response body as bytes on success from either tier.
+    Raises ``OSError`` on both-tier failure — caller can catch it
+    alongside other connection-class exceptions (matches the v3.0.4
+    OSError catch pattern in the scrape worker).
+
+    ``curl_cffi`` is imported lazily so a non-scraping deployment (or a
+    minimal wheel) that omits it can still import this module. If the
+    import fails AND Tier 1 also failed, the original Tier-1 exception
+    is re-raised (so the operator sees the real underlying problem,
+    not a misleading "tier-2 not installed" trail).
+    """
+    import urllib.error
+    import urllib.request
+
+    # --- Tier 1: urllib (current v3.0.x behaviour) ----------------------
+    tier1_error: Exception | None = None
+    try:
+        req = urllib.request.Request(url, headers=_BROWSER_HEADERS)
+        with urllib.request.urlopen(
+            req, timeout=timeout
+        ) as response:  # noqa: S310 — caller validated http(s) prefix
+            return response.read()
+    except urllib.error.HTTPError as exc:
+        if exc.code not in _TIER1_FALLBACK_HTTP_CODES:
+            raise
+        tier1_error = exc
+        logger.info(
+            "tier-1 fetcher got HTTP %s for %s; trying tier-2 (curl_cffi)",
+            exc.code,
+            url,
+        )
+    except OSError as exc:
+        # Connection-class failure (TLS reset, RemoteDisconnected, DNS,
+        # timeout). Tier 2 with a real-browser fingerprint may succeed.
+        tier1_error = exc
+        logger.info(
+            "tier-1 fetcher OSError for %s (%s); trying tier-2 (curl_cffi)",
+            url,
+            exc.__class__.__name__,
+        )
+
+    # --- Tier 2: curl_cffi Chrome impersonation -------------------------
+    try:
+        from curl_cffi import requests as curl_requests
+    except ImportError:
+        logger.warning(
+            "curl_cffi unavailable — cannot fall through to tier-2; "
+            "re-raising tier-1 error"
+        )
+        # Re-raise the original tier-1 failure (keeps its traceback);
+        # `from None` because the ImportError is incidental, not the
+        # operational cause the operator needs to see.
+        raise tier1_error from None
+
+    try:
+        resp = curl_requests.get(
+            url,
+            headers=_BROWSER_HEADERS,
+            impersonate="chrome131",
+            timeout=timeout,
+        )
+    except Exception as exc:  # noqa: BLE001 — curl_cffi raises its own classes
+        # Wrap as OSError so the worker's existing OSError catch handles
+        # it uniformly with tier-1 failures.
+        raise OSError(
+            f"tier-2 (curl_cffi) failed: {exc} "
+            f"(tier-1 had: {tier1_error})"
+        ) from exc
+
+    if not resp.ok:
+        raise OSError(
+            f"tier-2 (curl_cffi) got HTTP {resp.status_code} "
+            f"(tier-1 had: {tier1_error})"
+        )
+
+    return resp.content
+
 
 def _run_scrape_job_background(
     job_id: str,
@@ -1032,33 +1149,21 @@ def _run_scrape_job_background(
         logger.warning("scrape job %s missing from registry — aborting", job_id)
         return
 
-    import urllib.request
-
-    browser_headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        ),
-        "Accept": "application/pdf,application/octet-stream,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-    }
-
     state["status"] = "downloading"
     try:
-        req = urllib.request.Request(url, headers=browser_headers)
-        # Cap concurrent outbound downloads. Audit work happens after the
-        # `with` block exits — only the network read is throttled.
+        # v3.1.0: delegated to _fetch_url which transparently falls back
+        # from urllib (tier 1) to curl_cffi Chrome impersonation (tier 2)
+        # on 403/429 or OSError — defeats Akamai/Cloudflare bot blocks
+        # that pre-v3.1.0 caused permanent download failure. Semaphore
+        # wraps the WHOLE fetch attempt so concurrency is throttled
+        # regardless of which tier ends up serving the request.
         with _DOWNLOAD_SEMAPHORE:
-            with urllib.request.urlopen(
-                req, timeout=120
-            ) as response:  # noqa: S310 — validated http(s) prefix in caller
-                file_bytes = response.read()
+            file_bytes = _fetch_url(url)
     except OSError as exc:
-        # Covers urllib.error.URLError (subclass of OSError),
-        # urllib.error.HTTPError (subclass of URLError), TimeoutError,
-        # and crucially http.client.RemoteDisconnected (subclass of
-        # ConnectionResetError → OSError) which v3.0.3's narrower
-        # catch missed and which crashed the worker thread.
+        # Covers all tier-1/tier-2 failures: urllib.error.URLError,
+        # HTTPError, TimeoutError, http.client.RemoteDisconnected,
+        # curl_cffi exception classes (wrapped to OSError in _fetch_url),
+        # and DNS/connection-reset failures.
         state["status"] = "failed"
         state["error"] = f"Upstream download failed: {exc}"
         return
