@@ -199,9 +199,7 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
             # Remove non-content elements wholesale (script, style, nav,
             # footer, aside). Keeps the audit signal on the actual
             # article body / press-release prose.
-            for tag in soup(
-                ["script", "style", "noscript", "nav", "footer", "aside"]
-            ):
+            for tag in soup(["script", "style", "noscript", "nav", "footer", "aside"]):
                 tag.decompose()
             text = soup.get_text(separator="\n", strip=True)
         except Exception:
