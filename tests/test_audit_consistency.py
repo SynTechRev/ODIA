@@ -188,9 +188,7 @@ def seeded_app(monkeypatch, tmp_path):
     now = datetime.now(UTC)
     with db_session.get_db() as s:
         # alpha: 2 docs, 3 anomalies (CRIT + HIGH + MEDIUM)
-        for i, (sha, title) in enumerate(
-            [("a1", "doc-a1.pdf"), ("a2", "doc-a2.pdf")]
-        ):
+        for i, (sha, title) in enumerate([("a1", "doc-a1.pdf"), ("a2", "doc-a2.pdf")]):
             s.add(
                 db_models.Document(
                     document_id=sha,
