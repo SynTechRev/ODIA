@@ -1,30 +1,30 @@
 'use client';
 
 /**
- * Analysis Page — aggregate stats across all audits in local history.
+ * Analysis Page (v3.2.0) — DB-backed aggregate stats across the corpus.
  *
- * Reads from useAuditHistoryStore rather than the legacy useAnalysisStore.
- * Shows: severity distribution, per-detector finding counts, top findings
- * by severity, and a compact audit timeline.
+ * Pre-v3.2 this page read from useAuditHistoryStore (browser localStorage)
+ * and only counted UI-triggered audits. v3.2 pulls real aggregates from
+ * GET /api/v1/synthesis/aggregates (severity totals + by-layer + top
+ * findings by count) and a slice of GET /api/v1/analyses for the audit
+ * timeline. Numbers now reflect the full backend corpus regardless of
+ * how audits arrived (UI upload, webhook, direct curl, etc.).
  */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
 import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
-import { useAuditHistoryStore } from '@/lib/stores/audit-history';
-import type { AuditFinding } from '@/lib/types/api';
+import { getAPIClient } from '@/lib/api/client';
+import type {
+  AnalysisRow,
+  PagedResponse,
+  SynthesisAggregatesResponse,
+} from '@/lib/api/client';
 
 type Severity = 'critical' | 'high' | 'medium' | 'low';
-
-const SEVERITY_ORDER: Record<string, number> = {
-  critical: 0,
-  high: 1,
-  medium: 2,
-  low: 3,
-};
 
 const SEV_BADGE: Record<Severity, string> = {
   critical: 'bg-red-100 text-red-800',
@@ -33,8 +33,6 @@ const SEV_BADGE: Record<Severity, string> = {
   low: 'bg-blue-100 text-blue-700',
 };
 
-// v2.9.2 B3 — bar fills now use the severity CSS vars (matches the
-// HeroMetricTile dot colors above the chart, instead of pastel Tailwind).
 const SEV_BAR_VAR: Record<Severity, string> = {
   critical: 'var(--severity-critical)',
   high: 'var(--severity-high)',
@@ -42,66 +40,100 @@ const SEV_BAR_VAR: Record<Severity, string> = {
   low: 'var(--severity-low)',
 };
 
-interface EnrichedFinding extends AuditFinding {
-  job_id: string;
-  generated_at: string;
-}
+const TIMELINE_LIMIT = 20;
 
 export default function AnalysisPage() {
   const nav = useAppNavigate();
-  const entries = useAuditHistoryStore((s) => s.entries);
+  const client = useMemo(() => getAPIClient(), []);
 
-  const allFindings: EnrichedFinding[] = useMemo(() => {
-    const out: EnrichedFinding[] = [];
-    for (const entry of entries) {
-      for (const f of entry.results.findings ?? []) {
-        out.push({
-          ...f,
-          job_id: entry.job_id,
-          generated_at: entry.results.generated_at,
-        });
-      }
-    }
-    return out;
-  }, [entries]);
-
-  const totals = useMemo(() => {
-    const t = { critical: 0, high: 0, medium: 0, low: 0 };
-    for (const f of allFindings) {
-      if (f.severity in t) t[f.severity as Severity] += 1;
-    }
-    return t;
-  }, [allFindings]);
-
-  const byDetector = useMemo(() => {
-    const m = new Map<string, number>();
-    for (const f of allFindings) m.set(f.layer, (m.get(f.layer) ?? 0) + 1);
-    return [...m.entries()].sort((a, b) => b[1] - a[1]);
-  }, [allFindings]);
-
-  const top10 = useMemo(
-    () =>
-      [...allFindings]
-        .sort(
-          (a, b) =>
-            (SEVERITY_ORDER[a.severity] ?? 99) -
-            (SEVERITY_ORDER[b.severity] ?? 99),
-        )
-        .slice(0, 10),
-    [allFindings],
+  const [aggregates, setAggregates] = useState<SynthesisAggregatesResponse | null>(
+    null,
   );
+  const [analyses, setAnalyses] = useState<PagedResponse<AnalysisRow> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (entries.length === 0) {
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    Promise.all([
+      client.getSynthesisAggregates(),
+      client.listAnalyses({ per_page: TIMELINE_LIMIT }),
+    ])
+      .then(([agg, an]) => {
+        if (!cancelled) {
+          setAggregates(agg);
+          setAnalyses(an);
+          setLoading(false);
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setError(e?.message || 'Failed to load analysis aggregates');
+          setLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [client]);
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <Card variant="bordered">
+          <div className="text-center py-12">
+            <p className="text-gray-600">Loading aggregates…</p>
+          </div>
+        </Card>
+      </DashboardLayout>
+    );
+  }
+
+  if (error) {
     return (
       <DashboardLayout>
         <Card variant="bordered">
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No analyses yet
+              Unable to load analyses
+            </h3>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <Button variant="primary" onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+          </div>
+        </Card>
+      </DashboardLayout>
+    );
+  }
+
+  const totals = aggregates?.by_severity ?? {
+    critical: 0,
+    high: 0,
+    medium: 0,
+    low: 0,
+  };
+  const totalFindings = aggregates?.total_anomalies ?? 0;
+  const totalAnalyses = analyses?.total ?? 0;
+  const byLayer = aggregates?.by_layer ?? [];
+  const topFindings = (aggregates?.by_finding_id ?? []).slice(0, 10);
+  const timeline = analyses?.items ?? [];
+  const detectorCount = byLayer.length;
+  const maxLayerCount = byLayer[0]?.count ?? 1;
+
+  if (totalAnalyses === 0 && totalFindings === 0) {
+    return (
+      <DashboardLayout>
+        <Card variant="bordered">
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No analyses in database yet
             </h3>
             <p className="text-gray-600 mb-6">
-              Run an audit to see aggregate severity distribution, detector
-              activity, and top findings across all your local audits.
+              Run an audit — via the Upload page or the scraper webhook
+              pipeline — to populate the analysis store.
             </p>
             <Button variant="primary" onClick={() => nav('/upload')}>
               Go to Upload
@@ -112,27 +144,22 @@ export default function AnalysisPage() {
     );
   }
 
-  const totalFindings = allFindings.length;
-  const maxDetector = byDetector[0]?.[1] ?? 1;
-  const detectorCount = byDetector.length;
   const pct = (n: number, total: number): string =>
     total > 0 ? `${Math.round((n / total) * 1000) / 10}%` : '0%';
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* v2.9.2 — canonical hero pattern with marble texture */}
+        {/* Hero — full-corpus aggregate */}
         <section className="page-hero-analysis hud-brackets p-6 md:p-8 relative overflow-hidden">
           <div className="relative z-10">
             <div className="hud-label-accent hud-amber mb-3">
-              [ AGGREGATE ANALYTICS · ALL AUDITS ]
+              [ AGGREGATE ANALYTICS · DATABASE-BACKED ]
             </div>
-            <h1 className="hud-heading text-2xl md:text-3xl">
-              Analysis
-            </h1>
+            <h1 className="hud-heading text-2xl md:text-3xl">Analysis</h1>
             <p className="hud-subtext mt-3 max-w-3xl">
-              Aggregate statistics across {entries.length} audit
-              {entries.length === 1 ? '' : 's'} · {totalFindings} total
+              Aggregate statistics across {totalAnalyses} analysis
+              {totalAnalyses === 1 ? '' : 'es'} · {totalFindings} total
               finding{totalFindings === 1 ? '' : 's'} · {detectorCount}{' '}
               detector module{detectorCount === 1 ? '' : 's'} active.
             </p>
@@ -166,12 +193,13 @@ export default function AnalysisPage() {
           </div>
         </section>
 
-        {/* Severity distribution */}
+        {/* Severity distribution + by-detector bars */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card title="Severity distribution" variant="bordered">
             <div className="space-y-3">
               {(['critical', 'high', 'medium', 'low'] as const).map((k) => {
-                const pctVal = totalFindings > 0 ? (totals[k] / totalFindings) * 100 : 0;
+                const pctVal =
+                  totalFindings > 0 ? (totals[k] / totalFindings) * 100 : 0;
                 return (
                   <div key={k}>
                     <div className="flex items-center justify-between text-sm mb-1">
@@ -199,19 +227,15 @@ export default function AnalysisPage() {
           </Card>
 
           <Card title="Findings by detector" variant="bordered">
-            {byDetector.length === 0 ? (
+            {byLayer.length === 0 ? (
               <div className="text-center py-8 text-gray-400 text-sm">
                 No detector activity
               </div>
             ) : (
               <div className="space-y-2">
-                {byDetector.map(([layer, count], i) => {
-                  // v2.9.2 B3 — top detector gets gold-300; the rest fade
-                  // toward smoke-500 by rank, so the tallest bar reads as
-                  // the most active and the noise floor falls back.
-                  const fade = byDetector.length > 1
-                    ? i / (byDetector.length - 1)
-                    : 0;
+                {byLayer.map((row, i) => {
+                  const fade =
+                    byLayer.length > 1 ? i / (byLayer.length - 1) : 0;
                   const fill =
                     fade < 0.34
                       ? 'var(--gold-300)'
@@ -219,25 +243,26 @@ export default function AnalysisPage() {
                         ? 'var(--gold-500)'
                         : 'var(--smoke-500)';
                   return (
-                    <div key={layer}>
+                    <AppLink
+                      key={row.layer}
+                      href={`/anomalies?layer=${encodeURIComponent(row.layer)}`}
+                      className="block hover:bg-black/20 rounded -mx-1 px-1 py-0.5"
+                    >
                       <div className="flex items-center justify-between text-sm mb-1">
-                        <span className="font-mono text-gray-700">{layer}</span>
-                        <span className="text-gray-500">{count}</span>
+                        <span className="font-mono text-gray-700">{row.layer}</span>
+                        <span className="text-gray-500">{row.count}</span>
                       </div>
                       <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div
                           className="h-full"
                           style={{
-                            width: `${(count / maxDetector) * 100}%`,
+                            width: `${(row.count / maxLayerCount) * 100}%`,
                             background: fill,
-                            boxShadow:
-                              fade < 0.34
-                                ? `0 0 8px ${fill}`
-                                : 'none',
+                            boxShadow: fade < 0.34 ? `0 0 8px ${fill}` : 'none',
                           }}
                         />
                       </div>
-                    </div>
+                    </AppLink>
                   );
                 })}
               </div>
@@ -245,18 +270,18 @@ export default function AnalysisPage() {
           </Card>
         </div>
 
-        {/* Top findings */}
-        <Card title="Top findings by severity" variant="bordered">
-          {top10.length === 0 ? (
+        {/* Top finding IDs by count (more informative than top-10-by-severity) */}
+        <Card title="Top finding types (by occurrence count)" variant="bordered">
+          {topFindings.length === 0 ? (
             <div className="text-center py-8 text-gray-400 text-sm">
               No findings yet
             </div>
           ) : (
             <div className="space-y-2">
-              {top10.map((f, i) => (
+              {topFindings.map((f) => (
                 <AppLink
-                  key={`${f.job_id}-${f.id}-${i}`}
-                  href={`/results?job_id=${f.job_id}`}
+                  key={f.anomaly_id}
+                  href={`/anomalies?layer=${encodeURIComponent(f.layer)}`}
                   className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
                 >
                   <span
@@ -269,11 +294,15 @@ export default function AnalysisPage() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-gray-900 truncate">
-                      {f.issue}
+                      <span className="font-mono">{f.anomaly_id}</span>
+                      <span className="ml-2 text-gray-500">
+                        × {f.count}
+                      </span>
                     </div>
                     <div className="text-xs text-gray-500 truncate">
-                      <span className="font-mono">{f.layer}</span> ·{' '}
-                      {f.document_id} · {f.generated_at.slice(0, 10)}
+                      <span className="font-mono">{f.layer}</span>
+                      &nbsp;·&nbsp;
+                      jurisdictions: {f.jurisdictions.join(', ') || '—'}
                     </div>
                   </div>
                 </AppLink>
@@ -282,54 +311,39 @@ export default function AnalysisPage() {
           )}
         </Card>
 
-        {/* Audit timeline */}
-        <Card title="Audit timeline" variant="bordered">
+        {/* Recent analyses timeline */}
+        <Card
+          title={`Recent analyses (${timeline.length} of ${totalAnalyses})`}
+          variant="bordered"
+        >
           <div className="space-y-2">
-            {entries.map((e) => {
-              const sev = e.results.severity_summary;
-              return (
-                <AppLink
-                  key={e.job_id}
-                  href={`/results?job_id=${e.job_id}`}
-                  className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-gray-900 truncate">
-                      {e.results.document_manifest?.[0]?.filename ?? 'Audit'}
-                      {e.results.document_count > 1 &&
-                        ` +${e.results.document_count - 1} more`}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {e.results.generated_at.slice(0, 16).replace('T', ' ')} ·{' '}
-                      {e.results.finding_count} finding
-                      {e.results.finding_count === 1 ? '' : 's'}
-                    </div>
+            {timeline.map((a) => (
+              <AppLink
+                key={a.id}
+                href={`/anomalies?document_id=${encodeURIComponent(a.document_id)}`}
+                className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium text-gray-900 truncate">
+                    {a.document_title}
                   </div>
-                  <div className="flex gap-1 text-xs flex-shrink-0">
-                    {sev.critical > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-red-100 text-red-700">
-                        C {sev.critical}
-                      </span>
-                    )}
-                    {sev.high > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700">
-                        H {sev.high}
-                      </span>
-                    )}
-                    {sev.medium > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-700">
-                        M {sev.medium}
-                      </span>
-                    )}
-                    {sev.low > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
-                        L {sev.low}
-                      </span>
-                    )}
+                  <div className="text-xs text-gray-500">
+                    {a.analysis_timestamp?.slice(0, 16).replace('T', ' ') ?? '—'}
+                    &nbsp;·&nbsp;
+                    {a.anomaly_count} finding{a.anomaly_count === 1 ? '' : 's'}
+                    &nbsp;·&nbsp;
+                    <span className="text-gray-400">
+                      {a.jurisdiction ?? 'no jurisdiction'}
+                    </span>
                   </div>
-                </AppLink>
-              );
-            })}
+                </div>
+                {a.scalar_score !== null && (
+                  <div className="text-xs flex-shrink-0 text-gray-500">
+                    score {(a.scalar_score * 100).toFixed(0)}%
+                  </div>
+                )}
+              </AppLink>
+            ))}
           </div>
         </Card>
       </div>

@@ -371,6 +371,190 @@ export class APIClient {
     );
     return data;
   }
+
+  // -------------------------------------------------------------------------
+  // DB-backed list queries (v3.2.0) — supersedes localStorage-only listing
+  // -------------------------------------------------------------------------
+
+  /** GET /api/v1/documents — paginated Document rows with anomaly counts. */
+  async listDocuments(params: ListDocumentsParams = {}): Promise<PagedResponse<DocumentRow>> {
+    const { data } = await this.http.get<PagedResponse<DocumentRow>>(
+      '/api/v1/documents',
+      { params },
+    );
+    return data;
+  }
+
+  /** GET /api/v1/anomalies — paginated Anomaly rows joined to documents. */
+  async listAnomalies(params: ListAnomaliesParams = {}): Promise<PagedResponse<AnomalyRow>> {
+    const { data } = await this.http.get<PagedResponse<AnomalyRow>>(
+      '/api/v1/anomalies',
+      { params },
+    );
+    return data;
+  }
+
+  /** GET /api/v1/analyses — paginated Analysis rows joined to documents. */
+  async listAnalyses(params: ListAnalysesParams = {}): Promise<PagedResponse<AnalysisRow>> {
+    const { data } = await this.http.get<PagedResponse<AnalysisRow>>(
+      '/api/v1/analyses',
+      { params },
+    );
+    return data;
+  }
+
+  /** GET /api/v1/jurisdictions — DISTINCT jurisdictions with rollup counts. */
+  async listJurisdictions(): Promise<JurisdictionsResponse> {
+    const { data } = await this.http.get<JurisdictionsResponse>(
+      '/api/v1/jurisdictions',
+    );
+    return data;
+  }
+
+  /** GET /api/v1/synthesis/aggregates — cross-document aggregates for Synthesis. */
+  async getSynthesisAggregates(
+    jurisdictions?: string[],
+  ): Promise<SynthesisAggregatesResponse> {
+    const params: Record<string, string> = {};
+    if (jurisdictions && jurisdictions.length) {
+      params.jurisdictions = jurisdictions.join(',');
+    }
+    const { data } = await this.http.get<SynthesisAggregatesResponse>(
+      '/api/v1/synthesis/aggregates',
+      { params },
+    );
+    return data;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// v3.2.0 query-endpoint types
+// ---------------------------------------------------------------------------
+
+export interface PagedResponse<T> {
+  items: T[];
+  total: number;
+  page: number;
+  per_page: number;
+  has_more: boolean;
+}
+
+export interface ListDocumentsParams {
+  page?: number;
+  per_page?: number;
+  jurisdiction?: string;
+  document_type?: string;
+}
+
+export interface DocumentRow {
+  id: number;
+  document_id: string;
+  title: string;
+  document_type: string;
+  jurisdiction: string | null;
+  authority: string | null;
+  version_date: string | null;
+  signatory: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  latest_analysis_id: number | null;
+  latest_analysis_at: string | null;
+  scalar_score: number | null;
+  anomaly_count: number;
+}
+
+export interface ListAnomaliesParams {
+  page?: number;
+  per_page?: number;
+  severity?: 'critical' | 'high' | 'medium' | 'low';
+  layer?: string;
+  jurisdiction?: string;
+  document_id?: string;
+}
+
+export interface AnomalyRow {
+  id: number;
+  anomaly_id: string;
+  issue: string;
+  severity: string;
+  layer: string;
+  details: Record<string, unknown>;
+  analysis_id: number;
+  analysis_timestamp: string | null;
+  document_id: string;
+  document_title: string;
+  jurisdiction: string | null;
+}
+
+export interface ListAnalysesParams {
+  page?: number;
+  per_page?: number;
+  jurisdiction?: string;
+}
+
+export interface AnalysisRow {
+  id: number;
+  document_id: string;
+  document_title: string;
+  document_type: string;
+  jurisdiction: string | null;
+  analysis_timestamp: string | null;
+  anomaly_count: number;
+  scalar_score: number | null;
+  severity_score: number | null;
+  engine_version: string | null;
+  summary: string | null;
+}
+
+export interface JurisdictionRollup {
+  jurisdiction: string;
+  document_count: number;
+  analysis_count: number;
+  anomaly_count: number;
+  last_audit_at: string | null;
+}
+
+export interface JurisdictionsResponse {
+  available: boolean;
+  items: JurisdictionRollup[];
+}
+
+export interface SynthesisFindingAggregate {
+  anomaly_id: string;
+  count: number;
+  severity: string;
+  layer: string;
+  jurisdictions: string[];
+  jurisdiction_count: number;
+  example_issue: string;
+}
+
+export interface SynthesisVendorAggregate {
+  vendor: string;
+  count: number;
+  jurisdictions: string[];
+  jurisdiction_count: number;
+}
+
+export interface SynthesisLayerAggregate {
+  layer: string;
+  count: number;
+}
+
+export interface SynthesisAggregatesResponse {
+  available: boolean;
+  jurisdictions_scope: string[];
+  total_documents: number;
+  total_anomalies: number;
+  by_severity: {
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+  };
+  by_finding_id: SynthesisFindingAggregate[];
+  by_vendor: SynthesisVendorAggregate[];
+  by_layer: SynthesisLayerAggregate[];
 }
 
 export interface WebhookTokenStatus {

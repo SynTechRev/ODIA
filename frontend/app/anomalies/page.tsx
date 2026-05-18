@@ -1,32 +1,43 @@
 'use client';
 
 /**
- * Anomalies Page — cross-audit findings explorer.
+ * Anomalies Page (v3.2.0) — DB-backed cross-jurisdiction findings explorer.
  *
- * Reads all findings across all local audits from useAuditHistoryStore,
- * groups them by detector layer, and offers severity / detector / document
- * filters. Replaces the legacy per-doc /analyze/detailed view.
+ * Pre-v3.2 this page read findings from useAuditHistoryStore (browser
+ * localStorage), which only captured UI-triggered audits and missed
+ * everything ingested via the webhook scraper pipeline.
+ *
+ * v3.2: queries GET /api/v1/anomalies (paginated, filterable by severity,
+ * layer, jurisdiction, document_id). Top severity-tile totals are pulled
+ * from /api/v1/synthesis/aggregates so they reflect the full corpus, not
+ * just the current page.
+ *
+ * Pre-population: deep-linked URL params (`?document_id=…`, `?jurisdiction=…`,
+ * `?severity=…`, `?layer=…`) seed the initial filters so the Documents
+ * page can jump straight to a single doc's anomalies and the Dashboard
+ * jurisdiction tiles can drill in.
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
 import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
-import { AppLink, useAppNavigate } from '@/lib/navigation';
-import { useAuditHistoryStore } from '@/lib/stores/audit-history';
 import { PullToRefresh } from '@/components/mobile/PullToRefresh';
-import type { AuditFinding } from '@/lib/types/api';
+import { getAPIClient } from '@/lib/api/client';
+import type {
+  AnomalyRow,
+  JurisdictionRollup,
+  PagedResponse,
+  SynthesisAggregatesResponse,
+} from '@/lib/api/client';
 
 type Severity = 'critical' | 'high' | 'medium' | 'low';
 type SeverityFilter = 'all' | Severity;
 
-interface EnrichedFinding extends AuditFinding {
-  job_id: string;
-  generated_at: string;
-}
+const PAGE_SIZE = 50;
 
-// v2.9.1 — HUD severity primitives (no pastel pills, severity-stripe handles edge)
 const SEV_BADGE: Record<Severity, string> = {
   critical: 'hud-sev hud-sev-critical',
   high: 'hud-sev hud-sev-high',
@@ -35,85 +46,166 @@ const SEV_BADGE: Record<Severity, string> = {
 };
 
 export default function AnomaliesPage() {
-  const nav = useAppNavigate();
-  const entries = useAuditHistoryStore((s) => s.entries);
+  const client = useMemo(() => getAPIClient(), []);
+  const searchParams = useSearchParams();
 
-  const [filterSeverity, setFilterSeverity] = useState<SeverityFilter>('all');
-  const [filterDetector, setFilterDetector] = useState<string>('all');
-  const [filterDocument, setFilterDocument] = useState<string>('all');
-  // v2.9.0 B3 — pull-to-refresh tick (forces useMemo re-evaluation).
-  const [, setRefreshTick] = useState(0);
+  // Initial filter state seeded from URL query params (deep-link entry).
+  const initialSeverity =
+    (searchParams.get('severity') as SeverityFilter | null) ?? 'all';
+  const initialLayer = searchParams.get('layer') ?? '';
+  const initialJurisdiction = searchParams.get('jurisdiction') ?? '';
+  const initialDocumentId = searchParams.get('document_id') ?? '';
+
+  const [filterSeverity, setFilterSeverity] = useState<SeverityFilter>(initialSeverity);
+  const [filterLayer, setFilterLayer] = useState<string>(initialLayer);
+  const [filterJurisdiction, setFilterJurisdiction] =
+    useState<string>(initialJurisdiction);
+  const [filterDocumentId] = useState<string>(initialDocumentId);
+  const [page, setPage] = useState(1);
+  const [refreshTick, setRefreshTick] = useState(0);
+
+  const [data, setData] = useState<PagedResponse<AnomalyRow> | null>(null);
+  const [aggregates, setAggregates] = useState<SynthesisAggregatesResponse | null>(
+    null,
+  );
+  const [jurisdictions, setJurisdictions] = useState<JurisdictionRollup[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const handleRefresh = useCallback(async () => {
     setRefreshTick((n) => n + 1);
   }, []);
 
-  // Flatten findings across every audit, enriched with job_id + generated_at.
-  const allFindings: EnrichedFinding[] = useMemo(() => {
-    const out: EnrichedFinding[] = [];
-    for (const entry of entries) {
-      for (const f of entry.results.findings ?? []) {
-        out.push({
-          ...f,
-          job_id: entry.job_id,
-          generated_at: entry.results.generated_at,
-        });
-      }
-    }
-    return out;
-  }, [entries]);
+  // Load aggregates + jurisdictions once on mount + on manual refresh.
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([client.getSynthesisAggregates(), client.listJurisdictions()])
+      .then(([agg, jur]) => {
+        if (!cancelled) {
+          setAggregates(agg);
+          setJurisdictions(jur.items);
+        }
+      })
+      .catch(() => {
+        /* aggregates are nice-to-have for tile totals; not blocking */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [client, refreshTick]);
 
-  const detectors = useMemo(
-    () => [...new Set(allFindings.map((f) => f.layer))].sort(),
-    [allFindings],
-  );
-  const documents = useMemo(
-    () => [...new Set(allFindings.map((f) => f.document_id))].sort(),
-    [allFindings],
-  );
+  // Load anomaly page on every filter / page / refresh change.
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    client
+      .listAnomalies({
+        page,
+        per_page: PAGE_SIZE,
+        severity: filterSeverity === 'all' ? undefined : filterSeverity,
+        layer: filterLayer || undefined,
+        jurisdiction: filterJurisdiction || undefined,
+        document_id: filterDocumentId || undefined,
+      })
+      .then((r) => {
+        if (!cancelled) {
+          setData(r);
+          setLoading(false);
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setError(e?.message || 'Failed to load anomalies');
+          setLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    client,
+    page,
+    filterSeverity,
+    filterLayer,
+    filterJurisdiction,
+    filterDocumentId,
+    refreshTick,
+  ]);
 
-  const totals = useMemo(() => {
-    const t = { critical: 0, high: 0, medium: 0, low: 0 };
-    for (const f of allFindings) {
-      if (f.severity in t) t[f.severity as Severity] += 1;
-    }
-    return t;
-  }, [allFindings]);
+  // Totals across the whole corpus (not just current filter / page).
+  const totals = aggregates?.by_severity ?? {
+    critical: 0,
+    high: 0,
+    medium: 0,
+    low: 0,
+  };
+  const totalAllSeverities = totals.critical + totals.high + totals.medium + totals.low;
 
-  const filtered = useMemo(
-    () =>
-      allFindings.filter((f) => {
-        if (filterSeverity !== 'all' && f.severity !== filterSeverity) return false;
-        if (filterDetector !== 'all' && f.layer !== filterDetector) return false;
-        if (filterDocument !== 'all' && f.document_id !== filterDocument) return false;
-        return true;
-      }),
-    [allFindings, filterSeverity, filterDetector, filterDocument],
-  );
+  // Layer options come from aggregates (full corpus, not current page).
+  const layerOptions = aggregates?.by_layer ?? [];
 
+  const rows = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const hasMore = data?.has_more ?? false;
+
+  // Group current page by layer for display.
   const grouped = useMemo(() => {
-    const g = new Map<string, EnrichedFinding[]>();
-    for (const f of filtered) {
-      if (!g.has(f.layer)) g.set(f.layer, []);
-      g.get(f.layer)!.push(f);
+    const g = new Map<string, AnomalyRow[]>();
+    for (const r of rows) {
+      if (!g.has(r.layer)) g.set(r.layer, []);
+      g.get(r.layer)!.push(r);
     }
     return [...g.entries()].sort(([a], [b]) => a.localeCompare(b));
-  }, [filtered]);
+  }, [rows]);
 
-  if (allFindings.length === 0) {
+  const setSeverityFilter = (next: Severity) => {
+    setFilterSeverity(filterSeverity === next ? 'all' : next);
+    setPage(1);
+  };
+
+  if (loading && rows.length === 0 && page === 1 && !aggregates) {
+    return (
+      <DashboardLayout>
+        <Card variant="bordered">
+          <div className="text-center py-12">
+            <p className="text-gray-600">Loading anomalies…</p>
+          </div>
+        </Card>
+      </DashboardLayout>
+    );
+  }
+
+  if (error) {
     return (
       <DashboardLayout>
         <Card variant="bordered">
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No anomalies yet
+              Unable to load anomalies
+            </h3>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <Button variant="primary" onClick={handleRefresh}>
+              Retry
+            </Button>
+          </div>
+        </Card>
+      </DashboardLayout>
+    );
+  }
+
+  if (totalAllSeverities === 0) {
+    return (
+      <DashboardLayout>
+        <Card variant="bordered">
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No anomalies in database yet
             </h3>
             <p className="text-gray-600 mb-6">
-              Run an audit to see detector findings grouped here across all
-              your local audit history.
+              Run an audit — via the Upload page or the scraper webhook
+              pipeline — to populate the persistent anomaly store.
             </p>
-            <Button variant="primary" onClick={() => nav('/upload')}>
-              Go to Upload
-            </Button>
           </div>
         </Card>
       </DashboardLayout>
@@ -123,117 +215,165 @@ export default function AnomaliesPage() {
   return (
     <DashboardLayout>
       <PullToRefresh onRefresh={handleRefresh}>
-      <div className="space-y-6">
-        {/* v2.9.2 — canonical hero pattern: bracket label + heading + subtext + metric tile grid */}
-        <section className="page-hero-anomalies hud-brackets p-6 md:p-8 relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="hud-label-accent hud-cyan-bright mb-3">
-              [ ANOMALY EXPLORER · CROSS-AUDIT ]
-            </div>
-            <h1 className="hud-heading text-2xl md:text-3xl">
-              Anomalies
-            </h1>
-            <p className="hud-subtext mt-3 max-w-3xl">
-              Detector findings grouped by layer across every audit in local
-              history. Click a severity tile to filter; click again to clear.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-              {(['critical', 'high', 'medium', 'low'] as const).map((k) => (
-                <HeroMetricTile
-                  key={k}
-                  label={k}
-                  value={totals[k]}
-                  tone={k}
-                  active={filterSeverity === k}
-                  onClick={() =>
-                    setFilterSeverity(filterSeverity === k ? 'all' : k)
-                  }
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Filters */}
-        <Card variant="bordered">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                Detector:
-              </label>
-              <select
-                value={filterDetector}
-                onChange={(e) => setFilterDetector(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-              >
-                <option value="all">All</option>
-                {detectors.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
+        <div className="space-y-6">
+          {/* Hero — full-corpus severity tiles (click to filter) */}
+          <section className="page-hero-anomalies hud-brackets p-6 md:p-8 relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="hud-label-accent hud-cyan-bright mb-3">
+                [ ANOMALY EXPLORER · DATABASE-BACKED ]
+              </div>
+              <h1 className="hud-heading text-2xl md:text-3xl">Anomalies</h1>
+              <p className="hud-subtext mt-3 max-w-3xl">
+                Every detector finding in the persistent backend database.
+                Click a severity tile to filter; click again to clear.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                {(['critical', 'high', 'medium', 'low'] as const).map((k) => (
+                  <HeroMetricTile
+                    key={k}
+                    label={k}
+                    value={totals[k]}
+                    tone={k}
+                    active={filterSeverity === k}
+                    onClick={() => setSeverityFilter(k)}
+                  />
                 ))}
-              </select>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                Document:
-              </label>
-              <select
-                value={filterDocument}
-                onChange={(e) => setFilterDocument(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm max-w-xs truncate"
-              >
-                <option value="all">All</option>
-                {documents.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="ml-auto text-sm text-gray-500">
-              {filtered.length} of {allFindings.length} findings shown
-            </div>
-          </div>
-        </Card>
+          </section>
 
-        {/* Grouped by detector */}
-        {grouped.map(([layer, findings]) => (
-          <div key={layer}>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              {layer}
-              <span className="ml-2 text-sm font-normal text-gray-500">
-                — {findings.length} finding{findings.length === 1 ? '' : 's'}
-              </span>
-            </h2>
-            <div className="space-y-2">
-              {findings.map((f, i) => (
-                <AppLink
-                  key={`${f.job_id}-${f.id}-${i}`}
-                  href={`/results?job_id=${f.job_id}`}
-                  className={`block hud-panel hud-panel-dense severity-stripe s-${f.severity} relative pl-5 transition-colors p-3`}
+          {/* Filters bar */}
+          <Card variant="bordered">
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Jurisdiction:
+                </label>
+                <select
+                  value={filterJurisdiction}
+                  onChange={(e) => {
+                    setFilterJurisdiction(e.target.value);
+                    setPage(1);
+                  }}
+                  className="hud-input text-sm px-2 py-1"
                 >
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span
-                      className={`${SEV_BADGE[f.severity as Severity] ?? 'hud-sev'} uppercase`}
-                    >
-                      {f.severity}
-                    </span>
-                    <span className="hud-finding-id">{f.id}</span>
-                    <span className="hud-finding-doc truncate max-w-xs">
-                      {f.document_id}
-                    </span>
-                    <span className="text-xs ml-auto" style={{ color: 'var(--smoke-400)' }}>
-                      {f.generated_at.slice(0, 10)}
-                    </span>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900">{f.issue}</p>
-                </AppLink>
-              ))}
+                  <option value="">All</option>
+                  {jurisdictions.map((j) => (
+                    <option key={j.jurisdiction} value={j.jurisdiction}>
+                      {j.jurisdiction} ({j.anomaly_count})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Detector:
+                </label>
+                <select
+                  value={filterLayer}
+                  onChange={(e) => {
+                    setFilterLayer(e.target.value);
+                    setPage(1);
+                  }}
+                  className="hud-input text-sm px-2 py-1"
+                >
+                  <option value="">All</option>
+                  {layerOptions.map((l) => (
+                    <option key={l.layer} value={l.layer}>
+                      {l.layer} ({l.count})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {filterDocumentId && (
+                <div className="text-xs text-gray-500 font-mono">
+                  doc: {filterDocumentId.slice(0, 12)}…
+                </div>
+              )}
+              <div className="ml-auto text-sm text-gray-500">
+                showing {rows.length ? (page - 1) * PAGE_SIZE + 1 : 0}–
+                {(page - 1) * PAGE_SIZE + rows.length} of {total}
+                {loading && rows.length > 0 && (
+                  <span className="ml-2 text-gray-400">refreshing…</span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          </Card>
+
+          {/* Empty-after-filter */}
+          {rows.length === 0 && (
+            <Card variant="bordered">
+              <div className="text-center py-8">
+                <p className="text-gray-500">No anomalies match the current filters.</p>
+              </div>
+            </Card>
+          )}
+
+          {/* Grouped by layer */}
+          {grouped.map(([layer, items]) => (
+            <div key={layer}>
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+                {layer}
+                <span className="ml-2 text-sm font-normal text-gray-500">
+                  — {items.length} on this page
+                </span>
+              </h2>
+              <div className="space-y-2">
+                {items.map((f) => (
+                  <div
+                    key={f.id}
+                    className={`block hud-panel hud-panel-dense severity-stripe s-${f.severity} relative pl-5 p-3`}
+                  >
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span
+                        className={`${SEV_BADGE[f.severity as Severity] ?? 'hud-sev'} uppercase`}
+                      >
+                        {f.severity}
+                      </span>
+                      <span className="hud-finding-id">{f.anomaly_id}</span>
+                      {f.jurisdiction && (
+                        <span className="text-xs px-2 py-0.5 rounded bg-black/30 text-gray-300 uppercase">
+                          {f.jurisdiction}
+                        </span>
+                      )}
+                      <span className="hud-finding-doc truncate max-w-xs">
+                        {f.document_title}
+                      </span>
+                      <span
+                        className="text-xs ml-auto"
+                        style={{ color: 'var(--smoke-400)' }}
+                      >
+                        {f.analysis_timestamp?.slice(0, 10) ?? '—'}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">{f.issue}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {/* Pagination */}
+          {(page > 1 || hasMore) && (
+            <div className="flex items-center justify-center gap-3 pt-4">
+              <Button
+                variant="secondary"
+                disabled={page <= 1 || loading}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                ← Prev
+              </Button>
+              <span className="text-sm text-gray-400">page {page}</span>
+              <Button
+                variant="secondary"
+                disabled={!hasMore || loading}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                Next →
+              </Button>
+            </div>
+          )}
+        </div>
       </PullToRefresh>
     </DashboardLayout>
   );

@@ -1,5 +1,60 @@
 # Changelog
 
+## [3.2.0] - 2026-05-18 — Operator UI parity with backend state (DB-backed listing pages)
+
+The first minor in the v3.2 line closes a year-old structural gap: pre-v3.2 every operator-facing listing page (Documents, Anomalies, Analysis, Synthesis) read from a browser `localStorage` Zustand store (`useAuditHistoryStore`) that only captured audits initiated via the UI's drag-and-drop Upload flow. Webhook-driven ingests — the entire scraper pipeline introduced in v3.0.x — persisted directly to the SQLite DB without ever touching that store, so the UI was empty even when the DB held hundreds of audited documents. Only the Dashboard's summary tile had a DB-backed view.
+
+v3.2.0 closes the gap end-to-end: 5 new backend list/query endpoints + 4 listing pages swapped to fetch from them + a multi-jurisdiction expansion of the Dashboard's JURISDICTION card. What you see in the UI now honestly reflects what's in the DB, regardless of how each audit arrived.
+
+### Added — 5 DB-backed list query endpoints in `routes/query.py`
+
+- **`GET /api/v1/documents`** — paginated `Document` rows joined to latest `Analysis` for `scalar_score` and to `Anomaly` count for `anomaly_count`. Filter by `jurisdiction` or `document_type`.
+- **`GET /api/v1/anomalies`** — paginated `Anomaly` rows joined through `Analysis` to `Document` for `jurisdiction` + `document_title`. Filter by `severity`, `layer`, `jurisdiction`, or `document_id`.
+- **`GET /api/v1/analyses`** — paginated `Analysis` rows joined to documents. Filter by `jurisdiction`.
+- **`GET /api/v1/jurisdictions`** — non-paginated DISTINCT jurisdictions with per-jurisdiction roll-up counts (docs / analyses / anomalies / last_audit_at). Sorted by document_count desc. Powers the multi-jurisdiction dashboard tile + filter dropdowns throughout the UI.
+- **`GET /api/v1/synthesis/aggregates`** — cross-document aggregations: severity rollup, findings grouped by `anomaly_id` with jurisdiction-presence counts, vendor keyword convergence (Flock, Axon, Motorola, Palantir, Verkada, Lexipol, etc.), per-layer activity. Optional `?jurisdictions=a,b,c` query param scopes the aggregation. Returns the same shape the Synthesis page was previously computing client-side from localStorage, but sourced from the real persisted corpus.
+
+All endpoints follow a uniform pagination contract (`page` / `per_page` / `total` / `has_more`), fail-open on DB-layer-unavailable (return structurally-valid empty responses), and use the same `get_db()` session pattern as the existing dashboard route.
+
+### Refactor — 4 frontend listing pages swapped to DB-backed fetches
+
+- **`frontend/app/documents/page.tsx`** — replaces `useAuditHistoryStore` aggregation with `client.listDocuments()`. Adds jurisdiction filter dropdown (populated from `/jurisdictions`) and Prev/Next pagination. Each row click navigates to `/anomalies?document_id=…` for drill-down.
+- **`frontend/app/anomalies/page.tsx`** — replaces localStorage with `client.listAnomalies()`. Top severity tiles now pull totals from `/synthesis/aggregates` so they reflect the full corpus (not just the current page). Adds jurisdiction + layer filters from server data; severity tile click filters via URL param so deep-linking from Dashboard tiles works. URL params `?severity=…&layer=…&jurisdiction=…&document_id=…` seed initial filter state.
+- **`frontend/app/analysis/page.tsx`** — pulls severity totals + by-layer + top-finding-IDs from `/synthesis/aggregates` and a 20-row slice of `listAnalyses` for the timeline. "Top findings by severity" replaced with "Top finding types by occurrence count" (more informative aggregate).
+- **`frontend/app/synthesis/page.tsx`** — pulls every section from `/synthesis/aggregates`. Adds jurisdiction-pill multi-select scope picker that re-queries the endpoint with `?jurisdictions=…`. The legacy client-side Markdown/DOCX export logic (which built from localStorage) is replaced by a button that links to the Automation page's existing "Run RAIA Synthesis" trigger — the backend's full RAIA pipeline (DB → patterns → Jinja2 render) is the canonical export path.
+
+### Refactor — Dashboard JURISDICTION card surfaces real DB jurisdictions
+
+- `frontend/components/dashboard/JurisdictionCard.tsx` now fetches BOTH `/config/jurisdiction` (legacy single-jurisdiction config) AND `/api/v1/jurisdictions` (real DB roll-up). When the DB has active jurisdictions they render in a clickable list ("Active jurisdictions (4)") regardless of config-file state. Each entry links to `/anomalies?jurisdiction=…`. Pre-v3.2 the card showed "City of Example" placeholder content whenever no jurisdiction.json was copied to the user dir; v3.2 shows real data immediately.
+
+### Added — frontend API client helpers + types
+
+`frontend/lib/api/client.ts` gains 5 new methods (`listDocuments`, `listAnomalies`, `listAnalyses`, `listJurisdictions`, `getSynthesisAggregates`) plus exported TypeScript types (`PagedResponse<T>`, `DocumentRow`, `AnomalyRow`, `AnalysisRow`, `JurisdictionRollup`, `SynthesisAggregatesResponse`, etc.) so future React components consume the new endpoints with full type safety.
+
+### Tests
+
+`tests/test_query_routes.py` (new, 12 tests) covers all 5 endpoints against a seeded test DB (2 jurisdictions × 3 documents × 4 anomalies with mixed severities):
+
+- `/jurisdictions` rollup counts + descending-doc-count ordering
+- `/documents` full list, jurisdiction filter, pagination + `has_more` flag
+- `/anomalies` document-join shape, severity filter, jurisdiction filter, layer filter, document_id filter
+- `/analyses` document-join, jurisdiction filter
+- `/synthesis/aggregates` full-corpus shape, scope filter, by_layer breakdown
+- Fail-open: empty DB returns structurally-valid empty responses (not 500)
+
+All 12 green. ruff clean. Frontend tsc: 0 app-code errors (109 pre-existing test-file errors are unrelated — missing `@types/jest` setup, predates v3.2).
+
+### Version sync
+
+`pyproject.toml` `version = "3.2.0"` (was 3.1.1). `desktop/package.json` `"version": "3.2.0"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.2.0. Three frontend version strings → v3.2.0.
+
+### Notes / known follow-ups for v3.2.x
+
+- The Upload-route audit pipeline (UI drag-and-drop) still writes only to in-memory `_JOBS` and not to the DB. v3.2 surfaces webhook-ingested data correctly; making UI uploads ALSO persist would unify the two ingest paths fully. Tracked for v3.2.1.
+- The `bash` bulk-ingest poll loop pattern (`declare -A JOBS`, infinite-poll on stale phantom IDs) we hit during the TCDA bulk should be wrapped into a reusable `scripts/bulk_ingest.sh` with `unset JOBS` + 404→completed handling baked in. Tracked for v3.2.x.
+- Mesh-job zombies from prior multi-agent test runs still litter the Orchestrator timeline. SQL prune (`DELETE FROM mesh_execution_jobs WHERE status='failed' AND created_at < datetime('now','-7 days')`) is operator-side housekeeping; could be added as an Orchestrator-page button.
+- TCDA-specific n8n workflow (`wf-tcda-async.json` for production WordPress auto-scrape) is operator-state, not shipping code, but worth building once the production n8n stack is back up.
+
 ## [3.1.1] - 2026-05-17 — HTML ingest support (unblocks WordPress / press-release jurisdictions)
 
 Surfaced while bringing up the Tulare County DA (TCDA) scrape — their portal is a WordPress site exposing 667 press releases as HTML pages, not PDFs. The v3.0.x pipeline had two blockers that would have silently failed:

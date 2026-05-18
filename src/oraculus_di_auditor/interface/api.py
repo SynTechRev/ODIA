@@ -40,11 +40,11 @@ def _resolve_odia_version() -> str:
     try:
         from importlib.metadata import PackageNotFoundError, version
     except ImportError:
-        return os.environ.get("ODIA_VERSION", "3.1.1")
+        return os.environ.get("ODIA_VERSION", "3.2.0")
     try:
         return version("odia")
     except PackageNotFoundError:
-        return os.environ.get("ODIA_VERSION", "3.1.1")
+        return os.environ.get("ODIA_VERSION", "3.2.0")
 
 
 ODIA_VERSION = _resolve_odia_version()
@@ -365,6 +365,21 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
         logger.info("Runtime-config routes registered")
     except Exception as e:
         logger.warning(f"Config routes not available: {e}")
+
+    try:
+        from .routes.query import register_query_routes
+
+        # v3.2.0 — DB-backed list query endpoints for the operator UI
+        # listing pages (Documents / Anomalies / Analysis / Synthesis).
+        # Pre-v3.2 those pages read from a browser localStorage store
+        # that only captured UI-driven uploads, leaving the entire
+        # webhook-ingested corpus invisible in the UI. These endpoints
+        # close that gap by exposing paginated + filterable views over
+        # the persisted Document / Analysis / Anomaly rows.
+        register_query_routes(app)
+        logger.info("Query routes registered")
+    except Exception as e:
+        logger.warning(f"Query routes not available: {e}")
 
 
 def _init_database_at_startup() -> None:

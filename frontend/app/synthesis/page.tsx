@@ -1,582 +1,152 @@
 'use client';
 
 /**
- * Master Audit Synthesis — cross-audit aggregation report.
+ * Master Audit Synthesis Page (v3.2.0) — DB-backed cross-jurisdiction
+ * aggregates from /api/v1/synthesis/aggregates.
  *
- * Takes every audit in local history (useAuditHistoryStore) and produces:
- *   - Severity totals across all audits
- *   - Top finding IDs by cross-document prevalence
- *   - Vendor aggregation (findings with `vendor` in details)
- *   - Statute aggregation (findings with `statute` in details)
- *   - Markdown + DOCX exports
+ * Pre-v3.2 this page computed all aggregates client-side from
+ * useAuditHistoryStore (browser localStorage), which only captured
+ * UI-triggered audits. v3.2 pulls real cross-corpus aggregates from
+ * the backend — the same query path RAIA uses internally — so the
+ * numbers reflect the full persisted DB regardless of how audits
+ * arrived (UI, webhook, direct curl).
  *
- * Purely client-side. No backend endpoint required. The `docx` library is
- * imported dynamically inside the export handler so it doesn't inflate
- * the initial page bundle for users who never export.
+ * The legacy client-side Markdown/DOCX export logic has been replaced
+ * by a link to the Automation page's "Run RAIA Synthesis" trigger,
+ * which hits the backend's full RAIA pipeline (DB → patterns →
+ * Jinja2 markdown render) and returns a litigation-grade report.
+ *
+ * Jurisdiction filter: optional `?jurisdictions=a,b,c` URL param scopes
+ * the aggregation. Default is "all jurisdictions in the DB".
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
 import { HeroMetricTile } from '@/components/hero/HeroMetricTile';
 import { AppLink, useAppNavigate } from '@/lib/navigation';
-import { useAuditHistoryStore } from '@/lib/stores/audit-history';
-import type { AuditFinding } from '@/lib/types/api';
-// Type-only imports from `docx` so we can annotate the DOCX builder's
-// intermediate variables. The actual classes are loaded at runtime via
-// a dynamic `await import('docx')` inside the export handler — these
-// type references are erased at compile time and don't bloat the bundle.
+import { getAPIClient } from '@/lib/api/client';
 import type {
-  Paragraph as DocxParagraph,
-  Table as DocxTable,
-  TableRow as DocxTableRow,
-} from 'docx';
+  JurisdictionRollup,
+  SynthesisAggregatesResponse,
+} from '@/lib/api/client';
 
 type Severity = 'critical' | 'high' | 'medium' | 'low';
 
-const SEV_ORDER: Record<string, number> = {
-  critical: 0,
-  high: 1,
-  medium: 2,
-  low: 3,
+const SEV_BADGE: Record<Severity, string> = {
+  critical: 'bg-red-100 text-red-800',
+  high: 'bg-orange-100 text-orange-800',
+  medium: 'bg-yellow-100 text-yellow-800',
+  low: 'bg-blue-100 text-blue-700',
 };
-
-interface FindingGroup {
-  id: string;
-  issue: string;
-  layer: string;
-  severity: string;
-  document_ids: Set<string>; // distinct AuditFinding.document_id values
-  unique_shas: Set<string>;  // v2.9.3 C.1 — distinct SHA-256s (deduped)
-  job_ids: Set<string>;
-  count: number;             // raw emission count across all audits
-}
-
-interface VendorGroup {
-  vendor: string;
-  count: number;                              // vendor-tagged finding count
-  severities: Record<Severity, number>;       // severity histogram of vendor-tagged findings
-  document_ids: Set<string>;                  // doc_ids carrying this vendor
-  unique_shas: Set<string>;                   // v2.9.3 C.2 — SHAs carrying this vendor
-  related_count: number;                      // v2.9.3 C.2 — total findings on those docs
-  related_severities: Record<Severity, number>; // v2.9.3 C.2 — full severity histogram
-}
-
-interface StatuteGroup {
-  statute: string;
-  count: number;
-  document_ids: Set<string>;
-  unique_shas: Set<string>;
-}
-
-function pctOf(part: number, whole: number): string {
-  if (whole <= 0) return '0%';
-  return `${Math.round((part / whole) * 1000) / 10}%`;
-}
-
-function triggerMarkdownDownload(content: string, filename: string): void {
-  const blob = new Blob([content], { type: 'text/markdown' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function triggerBlobDownload(blob: Blob, filename: string): void {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
 
 export default function SynthesisPage() {
   const nav = useAppNavigate();
-  const entries = useAuditHistoryStore((s) => s.entries);
+  const client = useMemo(() => getAPIClient(), []);
+  const searchParams = useSearchParams();
 
-  const aggregates = useMemo(() => {
-    const severity = { critical: 0, high: 0, medium: 0, low: 0 };
-    const uniqueDocs = new Set<string>();
-    const byFindingId = new Map<string, FindingGroup>();
-    const byVendor = new Map<string, VendorGroup>();
-    const byStatute = new Map<string, StatuteGroup>();
+  // Optional jurisdiction filter from URL: ?jurisdictions=visalia,tcda
+  const urlJurisdictions = (searchParams.get('jurisdictions') ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
 
-    // v2.9.3 C.1 — `document_id` on AuditFinding is the per-audit
-    // document handle, not the SHA-256. Building a job-scoped doc_id →
-    // sha256 map lets the aggregations report unique-SHA counts that
-    // don't double-count the same bytes uploaded under different
-    // filenames. Without this, the MAS top-findings table reports
-    // "50 docs / 50 occurrences" because doc_id IS the per-upload
-    // handle (the run-12 silent-failure motivating example).
-    const docIdToSha = new Map<string, string>(); // key: `${job_id}::${document_id}`
-    // v2.9.3 C.2 — also build a vendor-per-document index so the vendor
-    // aggregation can produce a related-findings severity histogram
-    // (covering ALL findings on docs where the vendor was detected,
-    // not just the LOW-severity vendor-detected:* emissions).
-    const docVendors = new Map<string, Set<string>>(); // key: `${job_id}::${document_id}`
+  const [aggregates, setAggregates] = useState<SynthesisAggregatesResponse | null>(
+    null,
+  );
+  const [jurisdictions, setJurisdictions] = useState<JurisdictionRollup[]>([]);
+  const [selectedJurisdictions, setSelectedJurisdictions] =
+    useState<string[]>(urlJurisdictions);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    for (const entry of entries) {
-      for (const doc of entry.results.document_manifest ?? []) {
-        uniqueDocs.add(doc.sha256);
-        docIdToSha.set(`${entry.job_id}::${doc.document_id}`, doc.sha256);
-      }
-      // First pass: index vendors by document so the second pass can
-      // attribute every finding on a vendor-tagged document.
-      for (const f of entry.results.findings ?? []) {
-        const vendor = (f.details as Record<string, unknown>)?.vendor;
-        if (typeof vendor === 'string' && vendor.length > 0) {
-          const k = `${entry.job_id}::${f.document_id}`;
-          if (!docVendors.has(k)) docVendors.set(k, new Set<string>());
-          docVendors.get(k)!.add(vendor);
-        }
-      }
-
-      for (const f of entry.results.findings ?? []) {
-        if (f.severity in severity) severity[f.severity as Severity] += 1;
-        const docKey = `${entry.job_id}::${f.document_id}`;
-        const sha = docIdToSha.get(docKey) ?? f.document_id;
-
-        // Group by finding id
-        const fg = byFindingId.get(f.id);
-        if (!fg) {
-          byFindingId.set(f.id, {
-            id: f.id,
-            issue: f.issue,
-            layer: f.layer,
-            severity: f.severity,
-            document_ids: new Set([f.document_id]),
-            unique_shas: new Set([sha]),
-            job_ids: new Set([entry.job_id]),
-            count: 1,
-          });
-        } else {
-          fg.document_ids.add(f.document_id);
-          fg.unique_shas.add(sha);
-          fg.job_ids.add(entry.job_id);
-          fg.count += 1;
-        }
-
-        // Group by vendor (surveillance detector — vendor-tagged emissions)
-        const vendor = (f.details as Record<string, unknown>)?.vendor;
-        if (typeof vendor === 'string' && vendor.length > 0) {
-          let vg = byVendor.get(vendor);
-          if (!vg) {
-            vg = {
-              vendor,
-              count: 0,
-              severities: { critical: 0, high: 0, medium: 0, low: 0 },
-              document_ids: new Set<string>(),
-              unique_shas: new Set<string>(),
-              related_count: 0,
-              related_severities: { critical: 0, high: 0, medium: 0, low: 0 },
-            };
-            byVendor.set(vendor, vg);
-          }
-          vg.count += 1;
-          if (f.severity in vg.severities) {
-            vg.severities[f.severity as Severity] += 1;
-          }
-          vg.document_ids.add(f.document_id);
-          vg.unique_shas.add(sha);
-        }
-
-        // v2.9.3 C.2 — related-findings tally: every finding on a
-        // vendor-tagged document, regardless of which detector emitted
-        // it, contributes to the vendor's related-severity histogram.
-        // This is what answers "Axon-related risk profile" (mixed
-        // severities) instead of "vendor-detection emissions" (all LOW).
-        const vendorsOnDoc = docVendors.get(docKey);
-        if (vendorsOnDoc) {
-          for (const vName of vendorsOnDoc) {
-            const vg = byVendor.get(vName);
-            if (vg) {
-              vg.related_count += 1;
-              if (f.severity in vg.related_severities) {
-                vg.related_severities[f.severity as Severity] += 1;
-              }
-            }
-          }
-        }
-
-        // Group by statute
-        const statute = (f.details as Record<string, unknown>)?.statute;
-        if (typeof statute === 'string' && statute.length > 0) {
-          const sg = byStatute.get(statute);
-          if (!sg) {
-            byStatute.set(statute, {
-              statute,
-              count: 1,
-              document_ids: new Set([f.document_id]),
-              unique_shas: new Set([sha]),
-            });
-          } else {
-            sg.count += 1;
-            sg.document_ids.add(f.document_id);
-            sg.unique_shas.add(sha);
-          }
-        }
-      }
-    }
-
-    const byFindingArr = [...byFindingId.values()].sort((a, b) => {
-      const sevDiff =
-        (SEV_ORDER[a.severity] ?? 99) - (SEV_ORDER[b.severity] ?? 99);
-      if (sevDiff !== 0) return sevDiff;
-      return b.unique_shas.size - a.unique_shas.size;
-    });
-
-    const byVendorArr = [...byVendor.values()].sort((a, b) => b.count - a.count);
-    const byStatuteArr = [...byStatute.values()].sort((a, b) => b.count - a.count);
-
-    return {
-      severity,
-      uniqueDocCount: uniqueDocs.size,
-      totalFindings:
-        severity.critical + severity.high + severity.medium + severity.low,
-      byFinding: byFindingArr,
-      byVendor: byVendorArr,
-      byStatute: byStatuteArr,
+  // Available jurisdictions for the multi-select filter (loaded once).
+  useEffect(() => {
+    let cancelled = false;
+    client
+      .listJurisdictions()
+      .then((r) => {
+        if (!cancelled) setJurisdictions(r.items);
+      })
+      .catch(() => {
+        /* filter just won't be available */
+      });
+    return () => {
+      cancelled = true;
     };
-  }, [entries]);
+  }, [client]);
 
-  const handleExportMarkdown = useCallback(() => {
-    const { severity, uniqueDocCount, totalFindings, byFinding, byVendor, byStatute } =
-      aggregates;
-    const now = new Date().toISOString();
-
-    const lines: string[] = [];
-    lines.push(`# O.D.I.A. Master Audit Synthesis`);
-    lines.push('');
-    lines.push(`Generated ${now.slice(0, 19).replace('T', ' ')} UTC`);
-    lines.push('');
-    lines.push(`## Scope`);
-    lines.push('');
-    lines.push(`- **Audits analyzed**: ${entries.length}`);
-    lines.push(`- **Unique documents** (by SHA-256): ${uniqueDocCount}`);
-    lines.push(`- **Total findings**: ${totalFindings}`);
-    lines.push('');
-    lines.push(`## Severity distribution`);
-    lines.push('');
-    lines.push(`| Severity | Count |`);
-    lines.push(`|----------|------:|`);
-    lines.push(`| Critical | ${severity.critical} |`);
-    lines.push(`| High     | ${severity.high} |`);
-    lines.push(`| Medium   | ${severity.medium} |`);
-    lines.push(`| Low      | ${severity.low} |`);
-    lines.push('');
-
-    lines.push(`## Top findings by severity and cross-document prevalence`);
-    lines.push('');
-    if (byFinding.length === 0) {
-      lines.push(`_No findings._`);
-    } else {
-      // v2.9.3 C.1 — "Unique SHAs" replaces "Docs" so duplicate uploads
-      // of the same bytes don't inflate the prevalence count. "Total
-      // Emissions" replaces the ambiguous "Occurrences".
-      lines.push(`| Finding ID | Detector | Severity | Unique SHAs | Total Emissions | Issue |`);
-      lines.push(`|-----------|---------|----------|-----:|-----:|-------|`);
-      for (const f of byFinding.slice(0, 25)) {
-        const issueEscaped = f.issue.replace(/\|/g, '\\|');
-        lines.push(
-          `| \`${f.id}\` | ${f.layer} | ${f.severity} | ${f.unique_shas.size} | ${f.count} | ${issueEscaped} |`,
-        );
-      }
-    }
-    lines.push('');
-
-    if (byVendor.length > 0) {
-      // v2.9.3 C.2 — split detection emissions from related-findings
-      // severity histogram. The pre-2.9.3 column reported the severity
-      // of `vendor-detected:*` emissions only (uniformly LOW, which is
-      // misleading). "Related findings C/H/M/L" reflects every finding
-      // on documents where the vendor was detected, regardless of which
-      // detector emitted it — that's the column that answers "what's
-      // this vendor's actual risk surface?"
-      lines.push(`## Vendor aggregation`);
-      lines.push('');
-      lines.push(
-        `| Vendor | Detections | Unique SHAs | Related Findings | C/H/M/L (related) |`,
-      );
-      lines.push(
-        `|--------|-----------:|------------:|-----------------:|-------------------|`,
-      );
-      for (const v of byVendor) {
-        const sev = v.related_severities;
-        const breakdown = `${sev.critical}/${sev.high}/${sev.medium}/${sev.low}`;
-        lines.push(
-          `| ${v.vendor} | ${v.count} | ${v.unique_shas.size} | ${v.related_count} | ${breakdown} |`,
-        );
-      }
-      lines.push('');
-    }
-
-    if (byStatute.length > 0) {
-      lines.push(`## Statute aggregation`);
-      lines.push('');
-      lines.push(`| Statute | Findings | Documents |`);
-      lines.push(`|---------|---------:|----------:|`);
-      for (const s of byStatute) {
-        lines.push(
-          `| ${s.statute} | ${s.count} | ${s.document_ids.size} |`,
-        );
-      }
-      lines.push('');
-    }
-
-    lines.push(`## Audit history`);
-    lines.push('');
-    lines.push(`| Generated | Job ID | Document(s) | Findings |`);
-    lines.push(`|-----------|--------|-------------|---------:|`);
-    for (const e of entries) {
-      const first = e.results.document_manifest?.[0]?.filename ?? 'Audit';
-      const more =
-        e.results.document_count > 1
-          ? ` +${e.results.document_count - 1} more`
-          : '';
-      const name = (first + more).replace(/\|/g, '\\|');
-      lines.push(
-        `| ${e.results.generated_at.slice(0, 16).replace('T', ' ')} | \`${e.job_id.slice(0, 8)}\` | ${name} | ${e.results.finding_count} |`,
-      );
-    }
-    lines.push('');
-
-    triggerMarkdownDownload(
-      lines.join('\n'),
-      `odia_master_audit_synthesis_${now.slice(0, 10)}.md`,
-    );
-  }, [aggregates, entries]);
-
-  const handleExportDocx = useCallback(async () => {
-    const {
-      severity,
-      uniqueDocCount,
-      totalFindings,
-      byFinding,
-      byVendor,
-      byStatute,
-    } = aggregates;
-    const now = new Date().toISOString();
-
-    // Dynamic import so the ~400KB docx bundle only loads when the user
-    // clicks Export — not on every Synthesis page view.
-    const {
-      Document,
-      Packer,
-      Paragraph,
-      HeadingLevel,
-      TextRun,
-      Table,
-      TableRow,
-      TableCell,
-      WidthType,
-      AlignmentType,
-    } = await import('docx');
-
-    const heading = (text: string, level: (typeof HeadingLevel)[keyof typeof HeadingLevel]) =>
-      new Paragraph({ text, heading: level, spacing: { before: 240, after: 120 } });
-
-    const para = (text: string, bold = false) =>
-      new Paragraph({
-        children: [new TextRun({ text, bold })],
-        spacing: { after: 80 },
+  // Reload aggregates when scope changes.
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    const scope = selectedJurisdictions.length ? selectedJurisdictions : undefined;
+    client
+      .getSynthesisAggregates(scope)
+      .then((r) => {
+        if (!cancelled) {
+          setAggregates(r);
+          setLoading(false);
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setError(e?.message || 'Failed to load synthesis aggregates');
+          setLoading(false);
+        }
       });
+    return () => {
+      cancelled = true;
+    };
+  }, [client, selectedJurisdictions]);
 
-    const cell = (text: string, opts: { bold?: boolean; width?: number } = {}) =>
-      new TableCell({
-        width: opts.width
-          ? { size: opts.width, type: WidthType.PERCENTAGE }
-          : undefined,
-        children: [
-          new Paragraph({
-            children: [new TextRun({ text, bold: opts.bold })],
-          }),
-        ],
-      });
-
-    const headerRow = (labels: string[]) =>
-      new TableRow({
-        tableHeader: true,
-        children: labels.map((l) => cell(l, { bold: true })),
-      });
-
-    const dataRow = (values: string[]) =>
-      new TableRow({ children: values.map((v) => cell(v)) });
-
-    // Column widths are given in DXA (twentieths of a point; 1440 DXA = 1 inch).
-    // Without explicit per-column widths, WordPad (and some older DOCX
-    // renderers) collapse every cell to minimum width and wrap text
-    // character-by-character. Total should sit around the usable page width,
-    // roughly 9360 DXA for letter-size paper with 1-inch margins.
-    const table = (rows: DocxTableRow[], columnWidths: number[]) =>
-      new Table({
-        rows,
-        width: { size: 100, type: WidthType.PERCENTAGE },
-        columnWidths,
-      });
-
-    const children: (DocxParagraph | DocxTable)[] = [];
-
-    children.push(
-      new Paragraph({
-        alignment: AlignmentType.LEFT,
-        heading: HeadingLevel.TITLE,
-        children: [new TextRun({ text: 'O.D.I.A. Master Audit Synthesis' })],
-      }),
-      para(`Generated ${now.slice(0, 19).replace('T', ' ')} UTC`),
+  if (loading && !aggregates) {
+    return (
+      <DashboardLayout>
+        <Card variant="bordered">
+          <div className="text-center py-12">
+            <p className="text-gray-600">Loading synthesis aggregates…</p>
+          </div>
+        </Card>
+      </DashboardLayout>
     );
+  }
 
-    children.push(heading('Scope', HeadingLevel.HEADING_1));
-    children.push(para(`Audits analyzed: ${entries.length}`));
-    children.push(para(`Unique documents (by SHA-256): ${uniqueDocCount}`));
-    children.push(para(`Total findings: ${totalFindings}`));
-
-    children.push(heading('Severity distribution', HeadingLevel.HEADING_1));
-    children.push(
-      table(
-        [
-          headerRow(['Severity', 'Count']),
-          dataRow(['Critical', String(severity.critical)]),
-          dataRow(['High', String(severity.high)]),
-          dataRow(['Medium', String(severity.medium)]),
-          dataRow(['Low', String(severity.low)]),
-        ],
-        [4680, 4680], // 3.25" + 3.25"
-      ),
+  if (error) {
+    return (
+      <DashboardLayout>
+        <Card variant="bordered">
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Unable to load synthesis
+            </h3>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <Button variant="primary" onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+          </div>
+        </Card>
+      </DashboardLayout>
     );
+  }
 
-    children.push(
-      heading(
-        'Top findings by severity and cross-document prevalence',
-        HeadingLevel.HEADING_1,
-      ),
-    );
-    if (byFinding.length === 0) {
-      children.push(para('No findings.'));
-    } else {
-      children.push(
-        table(
-          [
-            headerRow([
-              'Finding ID',
-              'Detector',
-              'Severity',
-              'Unique SHAs',
-              'Total Emissions',
-              'Issue',
-            ]),
-            ...byFinding
-              .slice(0, 25)
-              .map((f) =>
-                dataRow([
-                  f.id,
-                  f.layer,
-                  f.severity,
-                  String(f.unique_shas.size),
-                  String(f.count),
-                  f.issue,
-                ]),
-              ),
-          ],
-          [2200, 1400, 1000, 700, 1060, 3000], // 6 cols, Issue widest
-        ),
-      );
-    }
+  const severity = aggregates?.by_severity ?? {
+    critical: 0,
+    high: 0,
+    medium: 0,
+    low: 0,
+  };
+  const totalFindings = aggregates?.total_anomalies ?? 0;
+  const totalDocs = aggregates?.total_documents ?? 0;
+  const byFinding = aggregates?.by_finding_id ?? [];
+  const byVendor = aggregates?.by_vendor ?? [];
+  const byLayer = aggregates?.by_layer ?? [];
+  const scope = aggregates?.jurisdictions_scope ?? [];
 
-    if (byVendor.length > 0) {
-      children.push(heading('Vendor aggregation', HeadingLevel.HEADING_1));
-      children.push(
-        table(
-          [
-            headerRow([
-              'Vendor',
-              'Detections',
-              'Unique SHAs',
-              'Related',
-              'Critical',
-              'High',
-              'Medium',
-              'Low',
-            ]),
-            ...byVendor.map((v) =>
-              dataRow([
-                v.vendor,
-                String(v.count),
-                String(v.unique_shas.size),
-                String(v.related_count),
-                String(v.related_severities.critical),
-                String(v.related_severities.high),
-                String(v.related_severities.medium),
-                String(v.related_severities.low),
-              ]),
-            ),
-          ],
-          [2400, 900, 900, 900, 900, 900, 900, 900], // 8 cols, Vendor widest
-        ),
-      );
-    }
-
-    if (byStatute.length > 0) {
-      children.push(heading('Statute aggregation', HeadingLevel.HEADING_1));
-      children.push(
-        table(
-          [
-            headerRow(['Statute', 'Findings', 'Documents']),
-            ...byStatute.map((s) =>
-              dataRow([
-                s.statute,
-                String(s.count),
-                String(s.document_ids.size),
-              ]),
-            ),
-          ],
-          [5560, 1900, 1900], // 3 cols, Statute widest
-        ),
-      );
-    }
-
-    children.push(heading('Audit history', HeadingLevel.HEADING_1));
-    children.push(
-      table(
-        [
-          headerRow(['Generated', 'Job ID', 'Document(s)', 'Findings']),
-          ...entries.map((e) => {
-            const first =
-              e.results.document_manifest?.[0]?.filename ?? 'Audit';
-            const more =
-              e.results.document_count > 1
-                ? ` +${e.results.document_count - 1} more`
-                : '';
-            return dataRow([
-              e.results.generated_at.slice(0, 16).replace('T', ' '),
-              e.job_id.slice(0, 8),
-              first + more,
-              String(e.results.finding_count),
-            ]);
-          }),
-        ],
-        [2200, 1400, 4700, 1060], // 4 cols, Document(s) widest
-      ),
-    );
-
-    const doc = new Document({
-      creator: 'O.D.I.A.',
-      title: 'Master Audit Synthesis',
-      description: 'Cross-audit findings synthesis report',
-      sections: [{ children }],
-    });
-
-    const blob = await Packer.toBlob(doc);
-    triggerBlobDownload(
-      blob,
-      `odia_master_audit_synthesis_${now.slice(0, 10)}.docx`,
-    );
-  }, [aggregates, entries]);
-
-  if (entries.length === 0) {
+  if (totalFindings === 0 && totalDocs === 0) {
     return (
       <DashboardLayout>
         <Card variant="bordered">
@@ -585,8 +155,9 @@ export default function SynthesisPage() {
               No audits to synthesize
             </h3>
             <p className="text-gray-600 mb-6">
-              Run one or more audits first. Synthesis aggregates findings across
-              all local audit history to surface cross-document patterns.
+              Run one or more audits first. Synthesis aggregates findings
+              across all local audit history to surface cross-document
+              patterns.
             </p>
             <Button variant="primary" onClick={() => nav('/upload')}>
               Go to Upload
@@ -597,35 +168,43 @@ export default function SynthesisPage() {
     );
   }
 
-  const { severity, uniqueDocCount, totalFindings, byFinding, byVendor, byStatute } =
-    aggregates;
+  const pctOf = (n: number, total: number): string =>
+    total > 0 ? `${Math.round((n / total) * 1000) / 10}%` : '0%';
+
+  const toggleJurisdiction = (jur: string) => {
+    setSelectedJurisdictions((prev) =>
+      prev.includes(jur) ? prev.filter((j) => j !== jur) : [...prev, jur],
+    );
+  };
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* v2.9.2 — canonical hero pattern with marble texture */}
+        {/* Hero — full-corpus or filtered aggregate */}
         <section className="page-hero-synthesis hud-brackets p-6 md:p-8 relative overflow-hidden">
           <div className="relative z-10">
             <div className="hud-label-accent hud-amber mb-3">
-              [ MASTER AUDIT SYNTHESIS · CROSS-JURISDICTIONAL ]
+              [ MASTER AUDIT SYNTHESIS · DATABASE-BACKED ]
             </div>
             <h1 className="hud-heading text-2xl md:text-3xl">
               Master Audit Synthesis
             </h1>
             <p className="hud-subtext mt-3 max-w-3xl">
-              {entries.length} audit{entries.length === 1 ? '' : 's'} ·{' '}
-              {uniqueDocCount} unique document{uniqueDocCount === 1 ? '' : 's'}{' '}
-              · {totalFindings} findings — cumulative across all local audit
-              history.
+              {totalDocs} document{totalDocs === 1 ? '' : 's'} · {totalFindings}{' '}
+              finding{totalFindings === 1 ? '' : 's'} ·{' '}
+              {scope.length === 0
+                ? 'all jurisdictions'
+                : `scope: ${scope.join(', ')}`}
+              .
             </p>
 
             <div className="flex items-center gap-3 mt-6 flex-wrap">
-              <Button variant="secondary" onClick={handleExportMarkdown}>
-                ↓ Markdown
+              <Button variant="primary" onClick={() => nav('/automation')}>
+                ↗ Run RAIA Synthesis (Markdown / DOCX)
               </Button>
-              <Button variant="primary" onClick={handleExportDocx}>
-                ↓ DOCX
-              </Button>
+              <span className="text-xs text-gray-500">
+                Full cross-jurisdiction RAIA report lives on the Automation page.
+              </span>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
@@ -657,55 +236,100 @@ export default function SynthesisPage() {
           </div>
         </section>
 
-        {/* Top findings by prevalence */}
+        {/* Jurisdiction scope picker (multi-select pills) */}
+        {jurisdictions.length > 0 && (
+          <Card variant="bordered">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm font-medium text-gray-700">
+                Scope:
+              </span>
+              <button
+                type="button"
+                onClick={() => setSelectedJurisdictions([])}
+                className={`px-3 py-1 rounded text-xs font-medium ${
+                  selectedJurisdictions.length === 0
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-black/30 text-gray-300 hover:bg-black/40'
+                }`}
+              >
+                All ({jurisdictions.length})
+              </button>
+              {jurisdictions.map((j) => (
+                <button
+                  key={j.jurisdiction}
+                  type="button"
+                  onClick={() => toggleJurisdiction(j.jurisdiction)}
+                  className={`px-3 py-1 rounded text-xs font-medium ${
+                    selectedJurisdictions.includes(j.jurisdiction)
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-black/30 text-gray-300 hover:bg-black/40'
+                  }`}
+                >
+                  {j.jurisdiction} ({j.anomaly_count})
+                </button>
+              ))}
+              {loading && (
+                <span className="text-xs text-gray-400 ml-auto">refreshing…</span>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Top finding IDs by cross-document prevalence */}
         <Card title="Top findings by cross-document prevalence" variant="bordered">
           {byFinding.length === 0 ? (
             <div className="text-center py-8 text-gray-400 text-sm">
-              No findings to rank
+              No findings in this scope
             </div>
           ) : (
             <div className="space-y-2">
-              {byFinding.slice(0, 15).map((f) => (
-                <div
-                  key={f.id}
-                  className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0"
+              {byFinding.slice(0, 20).map((f) => (
+                <AppLink
+                  key={f.anomaly_id}
+                  href={`/anomalies?layer=${encodeURIComponent(f.layer)}`}
+                  className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="px-2 py-0.5 rounded text-xs font-semibold uppercase bg-gray-100 text-gray-800">
+                      <span
+                        className={`px-2 py-0.5 rounded text-xs font-semibold uppercase ${
+                          SEV_BADGE[f.severity as Severity] ??
+                          'bg-gray-100 text-gray-700'
+                        }`}
+                      >
                         {f.severity}
                       </span>
                       <span className="text-xs font-mono text-gray-500">
-                        {f.id}
+                        {f.anomaly_id}
                       </span>
-                      <span className="text-xs text-gray-400">
-                        {f.layer}
-                      </span>
+                      <span className="text-xs text-gray-400">{f.layer}</span>
                     </div>
-                    <div className="text-sm text-gray-900">{f.issue}</div>
+                    <div className="text-sm text-gray-900 truncate">
+                      {f.example_issue}
+                    </div>
                   </div>
                   <div className="text-right text-xs text-gray-600 flex-shrink-0">
                     <div>
-                      <span className="font-semibold">{f.unique_shas.size}</span>{' '}
-                      SHA{f.unique_shas.size === 1 ? '' : 's'}
+                      <span className="font-semibold">{f.count}</span> total
                     </div>
                     <div>
-                      <span className="font-semibold">{f.count}</span> emission
-                      {f.count === 1 ? '' : 's'}
+                      <span className="font-semibold">{f.jurisdiction_count}</span>{' '}
+                      jurisdiction{f.jurisdiction_count === 1 ? '' : 's'}
                     </div>
                   </div>
-                </div>
+                </AppLink>
               ))}
-              {byFinding.length > 15 && (
+              {byFinding.length > 20 && (
                 <div className="text-xs text-gray-500 pt-2">
-                  …and {byFinding.length - 15} more (included in Markdown export)
+                  …and {byFinding.length - 20} more (full list available via
+                  RAIA Synthesis export).
                 </div>
               )}
             </div>
           )}
         </Card>
 
-        {/* Vendor + statute side-by-side */}
+        {/* Vendor + layer side-by-side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card title="Vendors flagged" variant="bordered">
             {byVendor.length === 0 ? (
@@ -722,81 +346,45 @@ export default function SynthesisPage() {
                     <div className="min-w-0 flex-1">
                       <div className="font-medium text-gray-900">{v.vendor}</div>
                       <div className="text-xs text-gray-500 mt-0.5">
-                        {v.unique_shas.size} SHA{v.unique_shas.size === 1 ? '' : 's'} ·{' '}
-                        {v.count} detection{v.count === 1 ? '' : 's'}
+                        {v.count} detection{v.count === 1 ? '' : 's'} across{' '}
+                        {v.jurisdiction_count} jurisdiction
+                        {v.jurisdiction_count === 1 ? '' : 's'}
+                        {v.jurisdictions.length > 0 && (
+                          <span className="ml-1 text-gray-400">
+                            ({v.jurisdictions.join(', ')})
+                          </span>
+                        )}
                       </div>
                     </div>
-                    {/* v2.9.3 C.2 — related-findings severity histogram */}
-                    {v.related_count > 0 && (
-                      <div className="text-xs text-gray-600 flex-shrink-0 text-right">
-                        <div className="font-mono">
-                          {v.related_severities.critical}/
-                          {v.related_severities.high}/
-                          {v.related_severities.medium}/
-                          {v.related_severities.low}
-                        </div>
-                        <div className="text-[10px] text-gray-400">C/H/M/L related</div>
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
             )}
           </Card>
 
-          <Card title="Statutes referenced" variant="bordered">
-            {byStatute.length === 0 ? (
+          <Card title="Detector layer activity" variant="bordered">
+            {byLayer.length === 0 ? (
               <div className="text-center py-8 text-gray-400 text-sm">
-                No statute-specific findings detected
+                No detector activity in this scope
               </div>
             ) : (
               <div className="space-y-2">
-                {byStatute.map((s) => (
-                  <div
-                    key={s.statute}
-                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                {byLayer.map((l) => (
+                  <AppLink
+                    key={l.layer}
+                    href={`/anomalies?layer=${encodeURIComponent(l.layer)}`}
+                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
                   >
-                    <div className="font-medium text-gray-900">{s.statute}</div>
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="text-gray-500">
-                        {s.document_ids.size} doc{s.document_ids.size === 1 ? '' : 's'}
-                      </span>
-                      <span className="text-gray-500">· {s.count} findings</span>
+                    <div className="font-mono text-sm text-gray-700">{l.layer}</div>
+                    <div className="text-sm text-gray-500">
+                      {l.count} finding{l.count === 1 ? '' : 's'}
                     </div>
-                  </div>
+                  </AppLink>
                 ))}
               </div>
             )}
           </Card>
         </div>
-
-        {/* Audit timeline */}
-        <Card title="Audits in this synthesis" variant="bordered">
-          <div className="space-y-2">
-            {entries.map((e) => (
-              <AppLink
-                key={e.job_id}
-                href={`/results?job_id=${e.job_id}`}
-                className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="text-sm text-gray-900 truncate">
-                    {e.results.document_manifest?.[0]?.filename ?? 'Audit'}
-                    {e.results.document_count > 1 &&
-                      ` +${e.results.document_count - 1} more`}
-                  </div>
-                  <div className="text-xs text-gray-500 font-mono">
-                    {e.job_id.slice(0, 8)} ·{' '}
-                    {e.results.generated_at.slice(0, 16).replace('T', ' ')}
-                  </div>
-                </div>
-                <div className="text-sm text-gray-700 flex-shrink-0">
-                  {e.results.finding_count} findings
-                </div>
-              </AppLink>
-            ))}
-          </div>
-        </Card>
       </div>
     </DashboardLayout>
   );
