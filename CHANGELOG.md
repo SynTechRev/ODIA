@@ -1,5 +1,49 @@
 # Changelog
 
+## [3.2.2] - 2026-05-18 — Audit-consistency test suite (determinism + MAS faithfulness + RAIA subphase)
+
+Pure-test polish release. Adds 15 new pytest assertions across three orthogonal frameworks so the audit / aggregation / synthesis pipeline can't drift without CI catching it. No backend or frontend code changes; the existing pipeline is validated, not modified.
+
+### Added — `tests/test_audit_consistency.py` (15 tests across 3 frameworks)
+
+**Test A — Pipeline determinism + golden-file findings (3 tests)**
+- `test_a_pipeline_is_deterministic_for_same_bytes` — runs the sample fixture through `_run_tier1_pipeline` twice, asserts the normalized result signature (anomalies sorted by id+severity, details JSON-serialized with sorted keys) is byte-identical. Catches non-deterministic detector output: random IDs, current timestamps in details, set-vs-list ordering drift, etc.
+- `test_a_fixture_sha256_stable` — defensive: confirms `tests/fixtures/sample_audit_doc.txt` hasn't been mutated. If you change the fixture, this assertion has to be updated consciously.
+- `test_a_fixture_audit_produces_expected_shape` — golden-file: pins the canonical fixture's audit-output shape. Score bounded in [0, 1], findings dict + anomalies list present, document_id is 64-char SHA-256, etc. Any new detector that starts (or stops) firing on the fixture surfaces here.
+
+**Test B — MAS faithfulness: aggregates match raw SQL (7 tests)**
+- `test_b_aggregates_total_documents_matches_raw_sql` — `/synthesis/aggregates.total_documents` = `COUNT(*) FROM documents`
+- `test_b_aggregates_total_anomalies_matches_raw_sql` — same for anomalies count
+- `test_b_aggregates_by_severity_matches_raw_sql` — severity rollup = `GROUP BY severity` raw query
+- `test_b_aggregates_by_layer_matches_raw_sql` — layer breakdown = `GROUP BY layer` raw query
+- `test_b_aggregates_by_finding_id_matches_raw_sql` — per-finding-id count = `GROUP BY anomaly_id` raw query
+- `test_b_documents_endpoint_total_matches_count_query` — `/documents.total` = `COUNT(*)`
+- `test_b_anomalies_endpoint_total_matches_count_query` — `/anomalies.total` = `COUNT(*)`
+- `test_b_jurisdictions_doc_counts_match_raw_sql` — `/jurisdictions[].document_count` = `GROUP BY jurisdiction` raw query
+
+Catches off-by-one bugs, bucket-key normalization drift, set-vs-list semantics in jurisdiction collation, and any silent divergence between the aggregation code path and a fresh raw SQL view of the same data.
+
+**Test C — RAIA subphase + golden synthesis output (4 tests)**
+- `test_c_raia_synthesize_returns_stable_structure` — every top-level key the Synthesis page + markdown template depend on is present
+- `test_c_raia_surfaces_4_of_4_shared_pattern_when_present` — when an anomaly_id fires across all jurisdictions in scope, RAIA's pattern detector produces a 1.00-confidence `shared_anomaly_id` pattern. Locks in the empirical contract validated by the v3.2.0 production data (`admin:missing-final-action` 4-of-4 finding).
+- `test_c_raia_markdown_embeds_synthesis_id` — v3.0.5 regression guard repeated structurally: rendered markdown embeds the synthesis_id callers see (caught the pre-v3.0.5 render-then-override ordering bug).
+- `test_c_aggregates_endpoint_jurisdiction_filter_matches_raia_scope` — two views of the same data (RAIA Pythonic synthesize() vs `/synthesis/aggregates` REST endpoint) produce identical totals for a scoped jurisdiction.
+
+### Tests
+
+15/15 green in 4m23s. ruff clean. Total backend test surface this brings to v3.2.2: 16 existing query-route tests + 15 new audit-consistency tests + 33 existing async/scrape/RAIA tests = **64 active tests**, all green.
+
+### Version sync
+
+`pyproject.toml` `version = "3.2.2"` (was 3.2.1). `desktop/package.json` `"version": "3.2.2"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.2.2. Three frontend version strings → v3.2.2.
+
+### Notes
+
+- These tests are CI-friendly (low cost, no network, no flakiness sources) so they catch regressions on every push.
+- Test A's golden-file design intentionally requires manual update if the detector taxonomy changes — that's the point. Detector behaviour drift should be a conscious decision, not an accident.
+- Test B's "compare to raw SQL" pattern is reusable for future endpoints that add aggregations (e.g. when v3.2.x adds UI-upload-to-DB persistence parity, the upload-path aggregates should test the same way).
+- Test C's golden synthesis pattern complements the existing `test_raia_service.py` unit tests with end-to-end fidelity coverage.
+
 ## [3.2.1] - 2026-05-18 — Suspense wrapper on Anomalies + Synthesis pages (unblocks Electron desktop build)
 
 Hotfix for v3.2.0. The new Anomalies and Synthesis pages call `useSearchParams()` for deep-link URL params (jurisdiction / severity / layer / document_id), which Next.js 15 requires to be wrapped in a `<Suspense>` boundary when the build target is a static export. The dev server (and Docker / web deployments) tolerate the bare hook fine, but the Electron desktop build's `next build` step fails the `/anomalies` and `/synthesis` prerenders with `useSearchParams() should be wrapped in a suspense boundary at page` → desktop installer artifacts couldn't be generated for the v3.2.0 tag.
