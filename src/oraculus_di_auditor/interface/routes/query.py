@@ -108,9 +108,7 @@ _VENDOR_KEYWORDS = (
 def register_query_routes(app: Any) -> None:  # noqa: C901 — route registrar
     """Attach DB-backed list query routes to a FastAPI application."""
     if not _FASTAPI_AVAILABLE:
-        logger.warning(
-            "FastAPI not installed — query routes will not be registered."
-        )
+        logger.warning("FastAPI not installed — query routes will not be registered.")
         return
 
     router = APIRouter(tags=["query"])
@@ -339,9 +337,8 @@ def register_query_routes(app: Any) -> None:  # noqa: C901 — route registrar
                 Document = db_models.Document  # noqa: N806
                 Analysis = db_models.Analysis  # noqa: N806
 
-                base = (
-                    session.query(Analysis, Document)
-                    .join(Document, Document.document_id == Analysis.document_id)
+                base = session.query(Analysis, Document).join(
+                    Document, Document.document_id == Analysis.document_id
                 )
                 if jurisdiction:
                     base = base.filter(Document.jurisdiction == jurisdiction)
@@ -534,10 +531,14 @@ def register_query_routes(app: Any) -> None:  # noqa: C901 — route registrar
                     .distinct()
                     .all()
                 )
-                jurisdictions_in_scope = sorted(
-                    {r[0] for r in scope_rows if r[0]}
-                    & (set(jurisdiction_filter) if jurisdiction_filter else set())
-                ) if jurisdiction_filter else sorted({r[0] for r in scope_rows if r[0]})
+                jurisdictions_in_scope = (
+                    sorted(
+                        {r[0] for r in scope_rows if r[0]}
+                        & (set(jurisdiction_filter) if jurisdiction_filter else set())
+                    )
+                    if jurisdiction_filter
+                    else sorted({r[0] for r in scope_rows if r[0]})
+                )
 
                 # Pull all anomalies in scope. For sane corpora (<100k
                 # anomalies) this is fine; would paginate or stream for
@@ -632,10 +633,7 @@ def register_query_routes(app: Any) -> None:  # noqa: C901 — route registrar
                     key=lambda x: (-x["count"], x["vendor"]),
                 )
                 layer_items = sorted(
-                    (
-                        {"layer": k, "count": v}
-                        for k, v in by_layer.items()
-                    ),
+                    ({"layer": k, "count": v} for k, v in by_layer.items()),
                     key=lambda x: (-x["count"], x["layer"]),
                 )
         except Exception as exc:  # noqa: BLE001
