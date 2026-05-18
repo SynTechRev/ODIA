@@ -20,7 +20,7 @@
  * the aggregation. Default is "all jurisdictions in the DB".
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
@@ -42,7 +42,7 @@ const SEV_BADGE: Record<Severity, string> = {
   low: 'bg-blue-100 text-blue-700',
 };
 
-export default function SynthesisPage() {
+function SynthesisPageContent() {
   const nav = useAppNavigate();
   const client = useMemo(() => getAPIClient(), []);
   const searchParams = useSearchParams();
@@ -387,5 +387,26 @@ export default function SynthesisPage() {
         </div>
       </div>
     </DashboardLayout>
+  );
+}
+
+/**
+ * Suspense wrapper required by Next.js 15 static export when the page
+ * calls useSearchParams(). Without this the desktop Electron build's
+ * `next build` step bails the /synthesis prerender (CSR detection).
+ */
+export default function SynthesisPage() {
+  return (
+    <Suspense
+      fallback={
+        <DashboardLayout>
+          <div className="text-center py-12 text-gray-600">
+            Loading synthesis…
+          </div>
+        </DashboardLayout>
+      }
+    >
+      <SynthesisPageContent />
+    </Suspense>
   );
 }

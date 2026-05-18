@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.2.1] - 2026-05-18 — Suspense wrapper on Anomalies + Synthesis pages (unblocks Electron desktop build)
+
+Hotfix for v3.2.0. The new Anomalies and Synthesis pages call `useSearchParams()` for deep-link URL params (jurisdiction / severity / layer / document_id), which Next.js 15 requires to be wrapped in a `<Suspense>` boundary when the build target is a static export. The dev server (and Docker / web deployments) tolerate the bare hook fine, but the Electron desktop build's `next build` step fails the `/anomalies` and `/synthesis` prerenders with `useSearchParams() should be wrapped in a suspense boundary at page` → desktop installer artifacts couldn't be generated for the v3.2.0 tag.
+
+### Fixed — Suspense wrappers
+
+- `frontend/app/anomalies/page.tsx` — body extracted to `AnomaliesPageContent()`; default export now wraps it in `<Suspense fallback={...}>` with a `DashboardLayout` skeleton.
+- `frontend/app/synthesis/page.tsx` — same pattern: body in `SynthesisPageContent()`, default export wraps in Suspense.
+
+### Notes
+
+- No backend changes. No DB changes. Pure frontend prerender fix.
+- v3.2.0 was fully functional for dev-server + Docker deployments; only the Electron desktop installer artifact was blocked. Operators running `npm run dev` or self-hosting via Docker saw no issue.
+- v3.2.x backend test suite unchanged (16/16 still green); no new tests needed since this is a static-build-only configuration concern.
+
 ## [3.2.0] - 2026-05-18 — Operator UI parity with backend state (DB-backed listing pages)
 
 The first minor in the v3.2 line closes a year-old structural gap: pre-v3.2 every operator-facing listing page (Documents, Anomalies, Analysis, Synthesis) read from a browser `localStorage` Zustand store (`useAuditHistoryStore`) that only captured audits initiated via the UI's drag-and-drop Upload flow. Webhook-driven ingests — the entire scraper pipeline introduced in v3.0.x — persisted directly to the SQLite DB without ever touching that store, so the UI was empty even when the DB held hundreds of audited documents. Only the Dashboard's summary tile had a DB-backed view.

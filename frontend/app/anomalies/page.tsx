@@ -18,7 +18,13 @@
  * jurisdiction tiles can drill in.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useSearchParams } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
@@ -45,7 +51,7 @@ const SEV_BADGE: Record<Severity, string> = {
   low: 'hud-sev hud-sev-low',
 };
 
-export default function AnomaliesPage() {
+function AnomaliesPageContent() {
   const client = useMemo(() => getAPIClient(), []);
   const searchParams = useSearchParams();
 
@@ -376,5 +382,29 @@ export default function AnomaliesPage() {
         </div>
       </PullToRefresh>
     </DashboardLayout>
+  );
+}
+
+/**
+ * Next.js 15 static export requires every page that calls
+ * useSearchParams() to be wrapped in a Suspense boundary; otherwise
+ * `next build` fails the /anomalies prerender step (CSR bailout
+ * detection). The Electron desktop build runs `next build` against the
+ * exported static bundle so this matters for desktop installer
+ * generation even though the dev server tolerates the bare hook.
+ */
+export default function AnomaliesPage() {
+  return (
+    <Suspense
+      fallback={
+        <DashboardLayout>
+          <div className="text-center py-12 text-gray-600">
+            Loading anomalies…
+          </div>
+        </DashboardLayout>
+      }
+    >
+      <AnomaliesPageContent />
+    </Suspense>
   );
 }
