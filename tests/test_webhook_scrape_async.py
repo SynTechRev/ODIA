@@ -664,3 +664,139 @@ def test_fetch_url_no_curl_cffi_reraises_tier1_error(webhook_app, monkeypatch):
     with pytest.raises(urllib.error.HTTPError) as exc:
         webhook_mod._fetch_url(SAMPLE_URL, timeout=10)
     assert exc.value.code == 403
+
+
+# ---------------------------------------------------------------------------
+# 7. v3.1.1 — HTML ingest path (TCDA WordPress press releases)
+# ---------------------------------------------------------------------------
+
+
+def test_worker_handles_html_with_html_filename_hint(webhook_app, monkeypatch):
+    """v3.1.1: HTML URL + filename_hint ending in .html routes through the
+    HTML ingest branch, NOT the PDF parser.
+
+    Pre-v3.1.1 the worker force-appended `.pdf` to every filename, so HTML
+    bytes got tempfile'd with `.pdf` suffix → PDF parser returned an
+    error string → audit saw essentially no text → 0 anomalies (silent
+    failure). Verify the worker now preserves the .html suffix and that
+    detector text-based detectors fire on real HTML body content.
+    """
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    html_payload = b"""<!DOCTYPE html>
+<html><head><title>Test Press Release</title></head>
+<body>
+<nav>SHOULD BE STRIPPED</nav>
+<article>
+<h1>District Attorney announces $1,234,567 settlement</h1>
+<p>The settlement was authorized retroactively by the board on
+2026-05-15 without final action recorded. The agreement includes
+auto-renewal language and a sole-source contractor designation.</p>
+</article>
+<footer>SHOULD ALSO BE STRIPPED</footer>
+</body></html>"""
+
+    monkeypatch.setattr(
+        webhook_mod, "_fetch_url", lambda url, timeout=120: html_payload  # noqa: ARG005
+    )
+
+    job_id = "test-job-html"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.org/press/test",
+        "jurisdiction_id": "tcda",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.org/press/test",
+        jurisdiction_id="tcda",
+        filename_hint="tcda_test.html",
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "completed", state
+    # Filename suffix preserved (NOT force-mangled to .pdf)
+    assert state["filename"].endswith(".html"), state["filename"]
+    # Pipeline ran end-to-end
+    assert state["result"]["status"] == "ok"
+    assert state["result"]["tier"] == 1
+    # Detectors should fire on the real article text (retroactive auth,
+    # signature/final-action signals, auto-renewal, sole-source language)
+    findings = state["result"]["findings"]
+    assert findings["count"] > 0, (
+        "v3.1.1 regression: HTML content produced zero findings — "
+        "extraction may have dropped the body text"
+    )
+
+
+def test_worker_sniffs_html_bytes_without_filename_hint(webhook_app, monkeypatch):
+    """v3.1.1: when no filename_hint is provided and the URL has no
+    recognized extension, the worker peeks at the first bytes of the
+    response to detect HTML and labels the tempfile .html accordingly.
+    """
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    html_payload = (
+        b"<!DOCTYPE html><html><body><p>retroactive authorization detected</p>"
+        b"</body></html>"
+    )
+
+    monkeypatch.setattr(
+        webhook_mod, "_fetch_url", lambda url, timeout=120: html_payload  # noqa: ARG005
+    )
+
+    job_id = "test-job-sniff-html"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.org/press/no-extension",
+        "jurisdiction_id": "tcda",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.org/press/no-extension",
+        jurisdiction_id="tcda",
+        filename_hint="",
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "completed", state
+    # Magic-byte sniffer picked .html, not .pdf
+    assert state["filename"].endswith(".html"), state["filename"]
+
+
+def test_worker_sniffs_pdf_bytes_without_filename_hint(webhook_app, monkeypatch):
+    """v3.1.1 backward-compat: PDF bytes still resolve to .pdf without
+    filename_hint, preserving the v3.0.x scraping-PDFs use case."""
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    # Minimal PDF magic header — enough for the sniffer; the audit will
+    # fail downstream on real PDF parsing but that's not what we test.
+    pdf_payload = b"%PDF-1.4\nfake content"
+
+    monkeypatch.setattr(
+        webhook_mod, "_fetch_url", lambda url, timeout=120: pdf_payload  # noqa: ARG005
+    )
+
+    job_id = "test-job-sniff-pdf"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.org/no-extension",
+        "jurisdiction_id": "test",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.org/no-extension",
+        jurisdiction_id="test",
+        filename_hint="",
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    # Filename ended in .pdf (whether final status is completed depends on
+    # whether the fake PDF parses; we only care about the suffix decision).
+    assert state["filename"].endswith(".pdf"), state["filename"]

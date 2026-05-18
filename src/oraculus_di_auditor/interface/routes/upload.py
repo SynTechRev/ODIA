@@ -185,6 +185,28 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
         except Exception:
             text = path.read_text(encoding="utf-8", errors="replace")
 
+    elif ext in (".html", ".htm"):
+        # v3.1.1: HTML pages (e.g. WordPress press releases scraped via
+        # /webhook/scrape-and-ingest-async). Strip tags + scripts + styles
+        # via BeautifulSoup (already a dep) so detectors see body text
+        # only, not navigation chrome or inline JS. Falls back to raw
+        # read on parse failure so the audit always gets *some* signal.
+        try:
+            from bs4 import BeautifulSoup
+
+            raw = path.read_text(encoding="utf-8", errors="replace")
+            soup = BeautifulSoup(raw, "html.parser")
+            # Remove non-content elements wholesale (script, style, nav,
+            # footer, aside). Keeps the audit signal on the actual
+            # article body / press-release prose.
+            for tag in soup(
+                ["script", "style", "noscript", "nav", "footer", "aside"]
+            ):
+                tag.decompose()
+            text = soup.get_text(separator="\n", strip=True)
+        except Exception:
+            text = path.read_text(encoding="utf-8", errors="replace")
+
     text_extraction: dict[str, Any] | None = None
     if ext == ".pdf":
         # Delegate to ingestion.engine.extract_text_from_pdf_with_metadata

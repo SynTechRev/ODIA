@@ -1,5 +1,47 @@
 # Changelog
 
+## [3.1.1] - 2026-05-17 — HTML ingest support (unblocks WordPress / press-release jurisdictions)
+
+Surfaced while bringing up the Tulare County DA (TCDA) scrape — their portal is a WordPress site exposing 667 press releases as HTML pages, not PDFs. The v3.0.x pipeline had two blockers that would have silently failed:
+
+1. **`_run_scrape_job_background` force-appended `.pdf`** to any filename not ending in `.pdf`. HTML bytes from an HTML URL got tempfile'd with `.pdf` suffix, routed through the PDF parser, returned an error string, and the audit ran on near-empty text → ~0 anomalies (silent failure).
+2. **`ingest_uploaded_file` had no `.html`/`.htm` branch.** Even if the suffix were preserved, the ingestion engine would fall through every if/elif without populating `text`, leaving `text=""` for the audit. Same silent failure mode.
+
+### Added — HTML branch in `ingest_uploaded_file`
+
+[src/oraculus_di_auditor/interface/routes/upload.py](src/oraculus_di_auditor/interface/routes/upload.py): when extension is `.html` or `.htm`, parse with BeautifulSoup (already in deps), strip `script`/`style`/`noscript`/`nav`/`footer`/`aside` tags wholesale, then extract text via `soup.get_text(separator="\n", strip=True)`. Falls back to raw text read on parse failure so the audit always gets *some* signal. Keeps detector input focused on the actual article body / press-release prose, not navigation chrome or inline JS.
+
+### Refactor — smarter filename-suffix logic in async worker
+
+[src/oraculus_di_auditor/interface/routes/webhook.py](src/oraculus_di_auditor/interface/routes/webhook.py) `_run_scrape_job_background`:
+
+- If `filename_hint` already has a recognised extension (`.pdf`, `.json`, `.xml`, `.txt`, `.html`, `.htm`), preserve it
+- Otherwise, sniff the first 16 bytes of the downloaded body and pick the right extension:
+  - `%PDF-` → `.pdf`
+  - `<!doctype` / `<html` → `.html`
+  - `<?xml` → `.xml`
+  - `{` / `[` → `.json`
+  - fallback → `.pdf` (conservative, preserves v3.0.x scraping-PDFs behaviour)
+
+Means TCDA-style HTML URLs work without any per-caller extension handling, AND v3.0.x PDF-scraping behaviour is preserved exactly when callers don't pass a filename_hint.
+
+### Tests
+
+Three new tests in [tests/test_webhook_scrape_async.py](tests/test_webhook_scrape_async.py):
+- `test_worker_handles_html_with_html_filename_hint` — primary v3.1.1 regression guard. Feeds a tiny HTML payload (with `<nav>` and `<footer>` cruft that must be stripped) through the worker, asserts the audit runs end-to-end AND produces > 0 findings (proves text extraction reached the detectors).
+- `test_worker_sniffs_html_bytes_without_filename_hint` — magic-byte sniffer picks `.html` from `<!DOCTYPE` opener with no filename hint.
+- `test_worker_sniffs_pdf_bytes_without_filename_hint` — backward-compat: `%PDF-` opener still resolves to `.pdf`.
+
+### Version sync
+
+`pyproject.toml` `version = "3.1.1"` (was 3.1.0). `desktop/package.json` `"version": "3.1.1"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.1.1. Three frontend version strings → v3.1.1.
+
+### Notes
+
+- BeautifulSoup4 was already a dep (added for Sprint F Legistar adapter), no new pip install needed for operators.
+- HTML ingest unblocks not just TCDA but ANY WordPress / Drupal / static-site-rendered government portal where press releases or notices are HTML pages rather than PDFs.
+- Detector profile on HTML content differs from PDF contracts — expect more `governance:*` / `admin:*` / `surveillance:*` findings, fewer `signature:*` / `procurement:*` ones (prosecutors announce charges/policies; they don't sign contracts).
+
 ## [3.1.0] - 2026-05-17 — Fingerprint-resistant fetcher (defeats Akamai / Cloudflare bot blocks)
 
 First minor-version bump in the v3.x line. Adds a two-tier HTTP fetcher to the async scraper so backend-side ingest works against Akamai-protected and similarly hardened municipal sites that pre-v3.1.0 returned HTTP 403 to Python's `urllib` because of TLS/JA3 + HTTP/2 fingerprint inspection. Observed live during v3.0.x bring-up against `tulare.ca.gov` (AkamaiGHost — blocked bare `curl`, browser-UA `curl`, AND browser-UA+Referer `curl` all returned 403 because the gate is at the handshake layer, not the header layer).

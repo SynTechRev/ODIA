@@ -372,7 +372,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "3.1.0"),
+                engine_version=os.environ.get("ODIA_VERSION", "3.1.1"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -473,7 +473,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": _token_configured(),
-            "odia_version": os.environ.get("ODIA_VERSION", "3.1.0"),
+            "odia_version": os.environ.get("ODIA_VERSION", "3.1.1"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
@@ -1188,8 +1188,29 @@ def _run_scrape_job_background(
         return
 
     filename = filename_hint or url.rsplit("/", 1)[-1] or f"scraped_{sha256[:12]}"
-    if not filename.lower().endswith(".pdf"):
-        filename = f"{filename}.pdf"
+    # v3.1.1: honour any extension already on the filename that the
+    # ingestion pipeline knows how to parse (PDF, JSON, XML, TXT, HTML).
+    # Pre-v3.1.1 force-appended `.pdf` to everything, which routed HTML
+    # press releases through the PDF parser → silent failure. If no
+    # recognised extension, sniff the first 16 bytes: PDF magic header
+    # (%PDF-), HTML opener (<!DOCTYPE / <html), JSON ({ or [) all have
+    # distinguishable signatures. Default to .pdf for binary blobs since
+    # that matches the v3.0.x scraping-PDFs use case.
+    known_exts = {".pdf", ".json", ".xml", ".txt", ".html", ".htm"}
+    if Path(filename).suffix.lower() not in known_exts:
+        head = file_bytes[:16].lstrip()
+        head_lower = head.lower()
+        if head.startswith(b"%PDF-"):
+            ext = ".pdf"
+        elif head_lower.startswith(b"<!doctype") or head_lower.startswith(b"<html"):
+            ext = ".html"
+        elif head.startswith(b"<?xml"):
+            ext = ".xml"
+        elif head and head[:1] in (b"{", b"["):
+            ext = ".json"
+        else:
+            ext = ".pdf"  # conservative fallback — preserves v3.0.x behaviour
+        filename = f"{filename}{ext}"
     state["filename"] = filename
 
     state["status"] = "auditing"
