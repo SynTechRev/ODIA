@@ -1,5 +1,36 @@
 # Changelog
 
+## [3.2.4] - 2026-05-19 — Drupal-aware HTML extraction (semantic containers preferred)
+
+Real-world bug found during Tulare County Sheriff smoke test. Every TCSO press release ingested via `/scrape-and-ingest-async` returned 0 anomalies with a perfect 1.0 score — suspicious given TCDA's 14.8% finding rate on similar prosecution narratives. Probe revealed: the v3.1.1 generic HTML strip (`script/style/noscript/nav/footer/aside`) was missing Drupal's `<div>`-wrapped navigation regions, leaving the article body as 1.6 KB of real prose buried in 13.2 KB of nav menus / sidebar links / footer chrome. Detector pack sees mostly cruft; signals get diluted to ~0.
+
+### Fixed — `ingest_uploaded_file` HTML branch prefers semantic containers
+
+`src/oraculus_di_auditor/interface/routes/upload.py`:
+- Try `<main>` → `<article>` → `[role="main"]` in order
+- Use the first one that yields ≥ 200 chars of extracted text
+- Fall back to v3.1.1's full-strip behaviour (WordPress / older / hand-coded HTML)
+- Scripts/styles are always stripped first (regardless of which container wins) so they can't leak
+
+Why semantic-container-first: modern CMS themes (Drupal, Wagtail, GovStack, most React/Gatsby static sites) wrap navigation in `<div>` with theme-specific classes that no generic strip can know about. But they universally tag the article container with `<main>` or `<article>` or `role="main"` — that's the standard for accessibility + SEO. Preferring those selectors means we get clean article text on any properly-marked-up site without needing per-CMS rules.
+
+### Tests
+
+`tests/test_webhook_scrape_async.py::test_worker_drupal_extraction_prefers_main_over_nav_cruft` (new) — synthetic fixture mimics the Drupal layout (~13 KB of `<div>`-wrapped menu cruft + small `<main><article>` body containing fiscal/admin/retroactive/sole-source signals). Asserts `findings.count > 0` post-fix — pre-fix the cruft drowned the signals.
+
+Plus the existing `test_worker_handles_html_with_html_filename_hint` (v3.1.1 regression net) still passes — the fallback path is preserved for WordPress / hand-coded HTML that lacks semantic containers.
+
+### Notes
+
+- This bug was invisible against TCDA (WordPress) because WordPress themes typically use `<nav>` and `<footer>` tags directly — the v3.1.1 strip caught them. Drupal's classed-div pattern is what slipped through.
+- Affects any Drupal-based municipal site (very common in California government — Tulare County, San Mateo County, City of Berkeley all use Drupal). v3.2.4 unblocks all of them.
+- The 5 Tulare County Sheriff smoke-test docs already ingested at v3.2.3 will need re-audit to surface findings. Easiest: delete the 5 rows by SHA and re-POST.
+- Backend test count unchanged at 64 + 1 new = 65 active.
+
+### Version sync
+
+`pyproject.toml` `version = "3.2.4"` (was 3.2.3). `desktop/package.json` `"version": "3.2.4"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.2.4. Three frontend version strings → v3.2.4.
+
 ## [3.2.3] - 2026-05-18 — CRLF-aware fixture-size assertions (Linux CI hotfix)
 
 Hotfix for v3.2.2. The new `test_a_fixture_sha256_stable` and `test_a_fixture_audit_produces_expected_shape` tests pinned `tests/fixtures/sample_audit_doc.txt` byte-size to exactly 959 — which is the file's size on Windows checkouts (CRLF line endings). On Linux CI the same file is smaller because git's `core.autocrlf` converts line endings on checkout. Result: tests passed locally on Windows, failed in Linux CI with "size drifted" assertion error. Tag-triggered desktop builds passed (different workflow); only the master pytest pipeline was affected.

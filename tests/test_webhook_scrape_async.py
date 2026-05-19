@@ -731,6 +731,86 @@ auto-renewal language and a sole-source contractor designation.</p>
     )
 
 
+def test_worker_drupal_extraction_prefers_main_over_nav_cruft(
+    webhook_app, monkeypatch
+):
+    """v3.2.4 regression guard. Drupal / Wagtail / modern-CMS themes wrap
+    navigation in <div> elements with custom classes (not <nav>), so the
+    v3.1.1 generic strip (script/style/nav/footer/aside) misses them and
+    the article body drowns in chrome.
+
+    Observed live against Tulare County (Drupal): a TCSO press release
+    returned 14 KB of "extracted text" that was 96% navigation menus,
+    leaving the 1.6 KB real article body buried — every smoke-test doc
+    surfaced 0 anomalies with a perfect 1.0 score, when the real content
+    contained signals our detectors should have caught.
+
+    v3.2.4 prefers <main> / <article> / [role="main"] when present.
+    This test pins that behaviour: a fixture that mimics the Drupal
+    layout (nav cruft in <div>, article in <main>) must extract just
+    the article body, not the menu noise.
+    """
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    # Mock fixture: ~13 KB of nav cruft in <div> wrappers (NOT <nav>),
+    # plus a small real article body inside <main>. If extraction is
+    # working correctly the detectors will see ONLY the article body's
+    # accountability signals — not the cruft.
+    nav_cruft = "\n".join([
+        f"<div class='menu-{i}'>Pay my property taxes | Department Directory |"
+        f" Contact Sheriff | I need to... | TipNow program | Sheriff incident"
+        f" report | County of Tulare main site | Skip to main content</div>"
+        for i in range(200)
+    ])
+    article_body = """<main>
+    <article>
+    <h1>Department Settlement of $1,234,567 — Final Action Pending</h1>
+    <p>The settlement amount of $1,234,567 was negotiated retroactively
+    after the agreement was already executed. The auto-renewal clause in
+    the original sole-source contract triggered without affirmative
+    council action. No final_action field was recorded.</p>
+    </article>
+    </main>"""
+    html_payload = (
+        "<!DOCTYPE html><html><head><title>Press Release</title></head>"
+        "<body>" + nav_cruft + article_body + "</body></html>"
+    ).encode()
+
+    monkeypatch.setattr(
+        webhook_mod, "_fetch_url",
+        lambda url, timeout=120: html_payload,  # noqa: ARG005
+    )
+
+    job_id = "test-job-drupal-extraction"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.gov/sheriff/news/test",
+        "jurisdiction_id": "drupal_test",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.gov/sheriff/news/test",
+        jurisdiction_id="drupal_test",
+        filename_hint="drupal_test.html",
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "completed", state
+    findings = state["result"]["findings"]
+    # The article body has plenty of accountability signals
+    # (retroactive auth, auto-renewal, sole-source, missing final action,
+    # fiscal amount); pre-v3.2.4 the detectors saw 13 KB of cruft and
+    # 0.6 KB of article so the signals diluted to ~0. Post-fix the
+    # detectors see ONLY the 0.6 KB article and surface findings.
+    assert findings["count"] > 0, (
+        "v3.2.4 regression: Drupal-style nav-cruft-in-divs is drowning "
+        "the article body. Semantic extraction (main/article/role=main) "
+        "should isolate just the article text. Got findings: " + str(findings)
+    )
+
+
 def test_worker_sniffs_html_bytes_without_filename_hint(webhook_app, monkeypatch):
     """v3.1.1: when no filename_hint is provided and the URL has no
     recognized extension, the worker peeks at the first bytes of the

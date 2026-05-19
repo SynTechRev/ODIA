@@ -191,17 +191,47 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
         # via BeautifulSoup (already a dep) so detectors see body text
         # only, not navigation chrome or inline JS. Falls back to raw
         # read on parse failure so the audit always gets *some* signal.
+        #
+        # v3.2.4: prefer semantic content containers (<main>, <article>,
+        # [role="main"]) when present. Drupal / Wagtail / modern CMS
+        # themes wrap navigation in <div> elements with custom classes
+        # that the v3.1.1 generic strip (script/style/nav/footer/aside)
+        # misses entirely — observed live on Tulare County's Drupal
+        # site where the article body is 1.6 KB of real prose buried
+        # in 13 KB of <div>-wrapped sidebar/menu cruft. Semantic
+        # extraction recovers just the article text. Falls back to
+        # the generic strip if no semantic container is present (older
+        # WordPress themes, hand-coded HTML).
         try:
             from bs4 import BeautifulSoup
 
             raw = path.read_text(encoding="utf-8", errors="replace")
             soup = BeautifulSoup(raw, "html.parser")
-            # Remove non-content elements wholesale (script, style, nav,
-            # footer, aside). Keeps the audit signal on the actual
-            # article body / press-release prose.
-            for tag in soup(["script", "style", "noscript", "nav", "footer", "aside"]):
+
+            # Strip scripts/styles globally so they don't leak into
+            # whichever container we pick.
+            for tag in soup(["script", "style", "noscript"]):
                 tag.decompose()
-            text = soup.get_text(separator="\n", strip=True)
+
+            # Try semantic-container extraction first. ~200 chars is
+            # the minimum that suggests we actually got an article
+            # body (not just a placeholder div).
+            text = ""
+            for selector in ("main", "article", '[role="main"]'):
+                el = soup.select_one(selector)
+                if el is not None:
+                    candidate = el.get_text(separator="\n", strip=True)
+                    if len(candidate) >= 200:
+                        text = candidate
+                        break
+
+            # No semantic container yielded enough — fall through to
+            # the v3.1.1 generic strip (preserves WordPress / older
+            # CMS behaviour).
+            if not text:
+                for tag in soup(["nav", "footer", "aside"]):
+                    tag.decompose()
+                text = soup.get_text(separator="\n", strip=True)
         except Exception:
             text = path.read_text(encoding="utf-8", errors="replace")
 
