@@ -372,7 +372,7 @@ def _persist_tier1_result(
                 document_id=sha256,
                 anomaly_count=len(anomalies),
                 scalar_score=float(score) if score is not None else 0.0,
-                engine_version=os.environ.get("ODIA_VERSION", "3.2.4"),
+                engine_version=os.environ.get("ODIA_VERSION", "3.2.5"),
                 metadata_json=json.dumps({"source": "webhook/ingest-and-analyze"}),
             )
             session.add(analysis_row)
@@ -473,7 +473,7 @@ def register_webhook_routes(app: Any) -> None:
             "tier1_ready": tier1_ok,
             "tier2_ready": tier2_ok,
             "webhook_token_configured": _token_configured(),
-            "odia_version": os.environ.get("ODIA_VERSION", "3.2.4"),
+            "odia_version": os.environ.get("ODIA_VERSION", "3.2.5"),
         }
 
     # ---- Ingest + analyze (single document) -------------------------------
@@ -1196,7 +1196,18 @@ def _run_scrape_job_background(
     # (%PDF-), HTML opener (<!DOCTYPE / <html), JSON ({ or [) all have
     # distinguishable signatures. Default to .pdf for binary blobs since
     # that matches the v3.0.x scraping-PDFs use case.
-    known_exts = {".pdf", ".json", ".xml", ".txt", ".html", ".htm"}
+    known_exts = {
+        ".pdf",
+        ".json",
+        ".xml",
+        ".txt",
+        ".html",
+        ".htm",
+        ".doc",
+        ".docx",
+        ".tif",
+        ".tiff",
+    }
     if Path(filename).suffix.lower() not in known_exts:
         head = file_bytes[:16].lstrip()
         head_lower = head.lower()
@@ -1208,6 +1219,21 @@ def _run_scrape_job_background(
             ext = ".xml"
         elif head and head[:1] in (b"{", b"["):
             ext = ".json"
+        elif head.startswith(b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"):
+            # v3.2.5: OLE compound file (Microsoft Office binary) — .doc / .xls / .ppt.
+            # Tulare County Questys archive serves ~2006-2012 BOS agendas as .doc.
+            ext = ".doc"
+        elif head.startswith(b"PK\x03\x04"):
+            # v3.2.5: ZIP magic — modern Office (.docx / .xlsx / .pptx) is a
+            # ZIP container. Default to .docx since that's what civic-records
+            # ingestion overwhelmingly sees (board packets, staff reports).
+            ext = ".docx"
+        elif head.startswith(b"II*\x00") or head.startswith(b"MM\x00*"):
+            # v3.2.5: TIFF magic — Intel little-endian (II*\\x00) or
+            # Motorola big-endian (MM\\x00*). Tulare County's pre-2005
+            # BOS archive is scanned multi-page TIFFs (board minutes,
+            # budget hearings, addenda) digitized from microfilm.
+            ext = ".tif"
         else:
             ext = ".pdf"  # conservative fallback — preserves v3.0.x behaviour
         filename = f"{filename}{ext}"

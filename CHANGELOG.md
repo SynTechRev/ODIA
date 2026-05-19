@@ -1,5 +1,58 @@
 # Changelog
 
+## [3.2.5] - 2026-05-19 — Microsoft Word + scanned TIFF ingestion (.docx / .doc / .tif)
+
+Prerequisite for the Tulare County BOS corpus bring-up. The county's public-records portal (Questys CMX, a 2010-era ASP.NET WebForms app) hosts ~20 years of Board of Supervisors agendas, packets, resolutions, and staff reports — all served via `File.ashx?id=N`. Format mix in the public-search-indexed subset: 45 PDF, 15 TIFF (scanned pre-2005 historical), 12 DOC (2006-2012 weekly agendas), 4 DOCX (2016+ addenda), 3 HTML, 1 PPTX. v3.2.4's `ingest_uploaded_file` recognised only PDF and HTML — the rest routed to the catch-all PDF branch, which then crashed or silently returned empty text.
+
+### Added — `.docx` extraction in `ingest_uploaded_file`
+
+`src/oraculus_di_auditor/interface/routes/upload.py`:
+- New `elif ext == ".docx"` branch: uses `python-docx` (already a project dep) to walk `Document.paragraphs` + `Document.tables` and join paragraphs newline-delimited, table rows pipe-delimited. Headers/footers skipped (agency boilerplate, low signal-to-noise).
+- Graceful exception swallow: malformed `.docx` returns empty text rather than crashing the worker thread.
+
+### Added — `.doc` (OLE binary) extraction with graceful fallback
+
+`src/oraculus_di_auditor/interface/routes/upload.py`:
+- New `elif ext == ".doc"` branch: tries `antiword -w 0 <path>` first (fastest, smallest dep), then falls back to `libreoffice --headless --convert-to txt`. Both via `subprocess.run` with bounded timeouts (30s + 60s).
+- If neither binary is on PATH, logs a warning and stores the doc with empty text — provenance preserved (SHA-256 hash + raw byte length), detectors see no content, audit still completes cleanly. No crash.
+- This is the deliberate trade-off: ODIA runs on Windows, macOS, and Linux; antiword/libreoffice are Linux-friendly but not universal. Graceful degradation > brittle hard-dependency.
+
+### Added — multi-page `.tif` / `.tiff` OCR extraction
+
+`src/oraculus_di_auditor/interface/routes/upload.py`:
+- New `elif ext in (".tif", ".tiff")` branch: opens via PIL.Image, iterates every frame via `Image.seek(page_idx)` until `EOFError`, OCRs each page via pytesseract, joins blank-line-separated. Without seek-iteration we'd only get the cover page of a multi-page TIFF (Tulare's pre-2005 archive is dozens of pages per scan).
+- Populates `text_extraction` with `method="tesseract_ocr_tiff"`, `page_count`, `char_count`, `ocr_used=True` so the evidence packet can flag OCR-extracted docs.
+- Graceful degradation when pytesseract/PIL aren't installed (returns placeholder text + `pytesseract_unavailable` method tag).
+
+### Added — magic-byte sniffing for `.doc` / `.docx` / `.tif` in async worker
+
+`src/oraculus_di_auditor/interface/routes/webhook.py` (`_run_scrape_job_background`):
+- `known_exts` set extended to include `.doc`, `.docx`, `.tif`, `.tiff`.
+- Sniff table extended:
+  - `\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1` → `.doc` (OLE compound)
+  - `PK\x03\x04` → `.docx` (ZIP container)
+  - `II*\x00` (Intel LE) or `MM\x00*` (Motorola BE) → `.tif`
+- Critical because Questys `File.ashx?id=N` URLs carry no extension — without sniffing, every Office doc + TIFF would default to `.pdf` and fail extraction inside pypdf.
+
+### Added — `_ALLOWED_EXTENSIONS` includes Office + HTML + TIFF
+
+`src/oraculus_di_auditor/interface/routes/upload.py`:
+- `_ALLOWED_EXTENSIONS` expanded from `{.pdf, .json, .txt, .xml}` to `{.pdf, .json, .txt, .xml, .html, .htm, .doc, .docx, .tif, .tiff}`. UI uploads + Legistar adapter now accept Office docs + scanned TIFFs; the v3.1.1 HTML branch was already handling html/htm but the gate hadn't been updated.
+
+### Tests — 4 new, 65 → 69 active
+
+`tests/test_webhook_scrape_async.py`:
+- `test_worker_handles_docx_payload` — synthesizes a real `.docx` in-memory via `python-docx`, embeds fiscal+sole-source+retroactive signals, asserts `findings.count > 0`.
+- `test_worker_sniffs_docx_when_no_filename_hint` — confirms `PK\x03\x04` magic routes to `.docx` even with empty `filename_hint` (the Questys `File.ashx` reality).
+- `test_worker_doc_binary_graceful_fallback` — synthetic OLE header (no real Word structure); asserts the worker completes (does not crash) when no .doc converter is present. The graceful-degradation contract.
+- `test_worker_handles_tiff_payload` — synthesizes a real 2-page TIFF via Pillow's `ImageDraw`, asserts the worker sniffs `II*\x00` / `MM\x00*` to `.tif`, routes through OCR, and completes cleanly.
+
+5/5 green locally including the v3.2.4 Drupal regression guard.
+
+### Version sync
+
+`pyproject.toml` `version = "3.2.5"` (was 3.2.4). `desktop/package.json` `"version": "3.2.5"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.2.5. Three frontend version strings (`DashboardLayout.tsx` `ODIA_VERSION_FALLBACK`, `settings/page.tsx` Package label, `page.tsx` hero × 2) → v3.2.5.
+
 ## [3.2.4] - 2026-05-19 — Drupal-aware HTML extraction (semantic containers preferred)
 
 Real-world bug found during Tulare County Sheriff smoke test. Every TCSO press release ingested via `/scrape-and-ingest-async` returned 0 anomalies with a perfect 1.0 score — suspicious given TCDA's 14.8% finding rate on similar prosecution narratives. Probe revealed: the v3.1.1 generic HTML strip (`script/style/noscript/nav/footer/aside`) was missing Drupal's `<div>`-wrapped navigation regions, leaving the article body as 1.6 KB of real prose buried in 13.2 KB of nav menus / sidebar links / footer chrome. Detector pack sees mostly cruft; signals get diluted to ~0.

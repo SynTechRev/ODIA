@@ -47,7 +47,9 @@ _STORE_LOCK = threading.Lock()
 _UPLOAD_DIR: Path = Path(tempfile.gettempdir()) / "odia_uploads"
 _UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-_ALLOWED_EXTENSIONS = frozenset({".pdf", ".json", ".txt", ".xml"})
+_ALLOWED_EXTENSIONS = frozenset(
+    {".pdf", ".json", ".txt", ".xml", ".html", ".htm", ".doc", ".docx", ".tif", ".tiff"}
+)
 _ALLOWED_IMAGE_EXTENSIONS = frozenset({".jpg", ".jpeg", ".png"})
 
 try:
@@ -150,6 +152,7 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
     """
     ext = path.suffix.lower()
     text = ""
+    text_extraction: dict[str, Any] | None = None
 
     if ext == ".txt":
         text = path.read_text(encoding="utf-8", errors="replace")
@@ -184,6 +187,139 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
             )
         except Exception:
             text = path.read_text(encoding="utf-8", errors="replace")
+
+    elif ext == ".docx":
+        # v3.2.5: modern Word (.docx) — pulled via python-docx, paragraphs
+        # joined newline-delimited so detectors see the document as flowing
+        # text. Tables flattened by row-then-cell ordering. Headers/footers
+        # skipped since they are usually agency boilerplate that depresses
+        # signal-to-noise without adding civic-procurement information.
+        try:
+            from docx import Document
+
+            doc = Document(str(path))
+            chunks: list[str] = []
+            for p in doc.paragraphs:
+                t = p.text.strip()
+                if t:
+                    chunks.append(t)
+            for table in doc.tables:
+                for row in table.rows:
+                    cells = [c.text.strip() for c in row.cells if c.text.strip()]
+                    if cells:
+                        chunks.append(" | ".join(cells))
+            text = "\n".join(chunks)
+        except Exception:
+            text = ""
+
+    elif ext == ".doc":
+        # v3.2.5: legacy Word binary (.doc / OLE compound format). No
+        # reliable pure-Python parser exists, so we shell out to one of:
+        #   1. antiword (Debian package: `apt-get install antiword`) —
+        #      fastest, smallest dependency
+        #   2. libreoffice --headless --convert-to txt — heavier but
+        #      already on many servers
+        # If neither is installed we fall back to empty text and log a
+        # warning; the document still gets persisted (raw bytes + SHA-256
+        # for provenance) but detectors see no content.
+        import shutil
+        import subprocess
+        import tempfile
+
+        text = ""
+        if shutil.which("antiword"):
+            try:
+                r = subprocess.run(
+                    ["antiword", "-w", "0", str(path)],
+                    capture_output=True,
+                    timeout=30,
+                    check=False,
+                )
+                if r.returncode == 0:
+                    text = r.stdout.decode("utf-8", errors="replace")
+            except Exception:
+                text = ""
+
+        if not text:
+            soffice = shutil.which("libreoffice") or shutil.which("soffice")
+            if soffice:
+                try:
+                    with tempfile.TemporaryDirectory() as outdir:
+                        subprocess.run(
+                            [
+                                soffice,
+                                "--headless",
+                                "--convert-to",
+                                "txt",
+                                "--outdir",
+                                outdir,
+                                str(path),
+                            ],
+                            capture_output=True,
+                            timeout=60,
+                            check=False,
+                        )
+                        out_txt = Path(outdir) / (path.stem + ".txt")
+                        if out_txt.exists():
+                            text = out_txt.read_text(encoding="utf-8", errors="replace")
+                except Exception:
+                    text = ""
+
+        if not text:
+            logger.warning(
+                "ingest_uploaded_file: no .doc text extractor available "
+                "(install antiword or libreoffice); doc %s will be stored "
+                "with empty text",
+                path.name,
+            )
+
+    elif ext in (".tif", ".tiff"):
+        # v3.2.5: scanned multi-page TIFF (Tulare County's pre-2005 BOS
+        # archive is mostly TIFFs — board minutes, budget hearings, addenda
+        # were paper-scanned and microfilm-digitized). Iterate every frame
+        # via PIL.Image.seek + OCR each via pytesseract, then concatenate
+        # blank-line separated. Without seek() we'd only get the cover
+        # page and miss everything after.
+        try:
+            import pytesseract  # type: ignore[import]
+            from PIL import Image  # type: ignore[import]
+
+            img = Image.open(str(path))
+            pages: list[str] = []
+            try:
+                page_idx = 0
+                while True:
+                    img.seek(page_idx)
+                    page_text = pytesseract.image_to_string(img)
+                    if page_text and page_text.strip():
+                        pages.append(page_text.strip())
+                    page_idx += 1
+            except EOFError:
+                pass
+            text = "\n\n".join(pages)
+            text_extraction = {
+                "method": "tesseract_ocr_tiff",
+                "char_count": len(text),
+                "ocr_used": True,
+                "page_count": page_idx,
+            }
+        except ImportError:
+            text = (
+                f"[TIFF: {path.name} — install pytesseract + Pillow "
+                f"for OCR text extraction]"
+            )
+            text_extraction = {
+                "method": "pytesseract_unavailable",
+                "char_count": 0,
+                "ocr_used": False,
+            }
+        except Exception as exc:
+            text = f"[TIFF: {path.name} — OCR error: {exc}]"
+            text_extraction = {
+                "method": "tesseract_ocr_tiff_failed",
+                "char_count": 0,
+                "ocr_used": False,
+            }
 
     elif ext in (".html", ".htm"):
         # v3.1.1: HTML pages (e.g. WordPress press releases scraped via
@@ -235,7 +371,6 @@ def ingest_uploaded_file(path: Path) -> dict[str, Any]:
         except Exception:
             text = path.read_text(encoding="utf-8", errors="replace")
 
-    text_extraction: dict[str, Any] | None = None
     if ext == ".pdf":
         # Delegate to ingestion.engine.extract_text_from_pdf_with_metadata
         # so scanned PDFs fall through to the Tesseract+Poppler OCR path

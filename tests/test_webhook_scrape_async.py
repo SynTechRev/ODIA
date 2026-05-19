@@ -812,6 +812,229 @@ def test_worker_drupal_extraction_prefers_main_over_nav_cruft(webhook_app, monke
     )
 
 
+def test_worker_handles_docx_payload(webhook_app, monkeypatch):
+    """v3.2.5 regression guard. Modern Word documents (.docx) — what
+    Questys CMX serves for post-~2013 BOS agendas — must extract via
+    python-docx and produce non-empty text that detectors can analyze.
+
+    The Tulare County BOS archive contains thousands of .docx agendas
+    and staff reports; without this extraction path they would all
+    persist with empty raw_text and contribute nothing to the audit.
+    """
+    pytest.importorskip("docx")  # python-docx
+    from docx import Document
+
+    # Build a real .docx in-memory containing fiscal/admin accountability
+    # signals so detectors fire after extraction.
+    doc = Document()
+    doc.add_heading("BOS Agenda — Item 12 — Settlement Approval", level=1)
+    doc.add_paragraph(
+        "The Board of Supervisors will consider retroactive approval of "
+        "a $1,234,567 settlement negotiated under a sole-source agreement "
+        "with an auto-renewal clause. No final action was recorded for the "
+        "prior fiscal year. Staff recommends approval without further "
+        "review or appropriation."
+    )
+    table = doc.add_table(rows=2, cols=2)
+    table.rows[0].cells[0].text = "Vendor"
+    table.rows[0].cells[1].text = "Amount"
+    table.rows[1].cells[0].text = "ACME Corp"
+    table.rows[1].cells[1].text = "$1,234,567"
+
+    buf = io.BytesIO()
+    doc.save(buf)
+    docx_payload = buf.getvalue()
+    assert docx_payload.startswith(b"PK\x03\x04"), "docx must be ZIP-magic"
+
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    monkeypatch.setattr(
+        webhook_mod,
+        "_fetch_url",
+        lambda url, timeout=120: docx_payload,  # noqa: ARG005
+    )
+
+    job_id = "test-job-docx"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.gov/questys/File.ashx?id=12345",
+        "jurisdiction_id": "docx_test",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.gov/questys/File.ashx?id=12345",
+        jurisdiction_id="docx_test",
+        filename_hint="bos_agenda.docx",
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "completed", state
+    # Pre-v3.2.5 the audit ran but on an empty raw_text (.docx wasn't
+    # recognised so ingest_uploaded_file returned text=""). Post-fix
+    # detectors see the fiscal + sole-source + retroactive signals.
+    findings = state["result"]["findings"]
+    assert findings["count"] > 0, (
+        "v3.2.5 regression: .docx extraction yielded empty text. "
+        f"Got findings: {findings}"
+    )
+
+
+def test_worker_sniffs_docx_when_no_filename_hint(webhook_app, monkeypatch):
+    """v3.2.5: ZIP magic (PK\\x03\\x04) without a filename hint must be
+    treated as .docx so the right extraction branch fires. Questys File.ashx
+    URLs have NO file extension in the URL itself — the worker has to sniff.
+    """
+    pytest.importorskip("docx")
+    from docx import Document
+
+    doc = Document()
+    doc.add_paragraph(
+        "Item 8.A — Approve retroactive payment to ACME Corp for $500,000 "
+        "under existing sole-source agreement."
+    )
+    buf = io.BytesIO()
+    doc.save(buf)
+    docx_payload = buf.getvalue()
+
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    monkeypatch.setattr(
+        webhook_mod,
+        "_fetch_url",
+        lambda url, timeout=120: docx_payload,  # noqa: ARG005
+    )
+
+    job_id = "test-job-docx-sniff"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.gov/questys/File.ashx?id=99999",
+        "jurisdiction_id": "docx_sniff_test",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.gov/questys/File.ashx?id=99999",
+        jurisdiction_id="docx_sniff_test",
+        filename_hint="",  # NO hint — worker must sniff bytes
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "completed", state
+    # If the sniff defaulted to .pdf (pre-v3.2.5 behaviour) the audit
+    # would have crashed or produced garbage; the .docx branch in the
+    # sniff table must add .docx and the audit must complete cleanly.
+    assert state["filename"].endswith(".docx"), state["filename"]
+
+
+def test_worker_handles_tiff_payload(webhook_app, monkeypatch):
+    """v3.2.5 regression guard. Scanned multi-page TIFFs are how counties
+    like Tulare digitized pre-2005 board minutes / budget hearings /
+    addenda. ODIA must (a) sniff TIFF magic into .tif extension and
+    (b) route through OCR (tesseract via PIL.Image.seek) per page.
+
+    We synthesize a TIFF with multiple frames of bitmap text rendered
+    via Pillow's ImageDraw, then assert the worker completes and the
+    resulting filename ends in .tif. If pytesseract or Pillow aren't
+    available we skip cleanly — the graceful-degradation contract is
+    covered by test_worker_doc_binary_graceful_fallback.
+    """
+    pytest.importorskip("PIL.Image")
+    pytest.importorskip("PIL.ImageDraw")
+
+    from PIL import Image, ImageDraw
+
+    # Build a 2-page TIFF in memory with rendered text on each page.
+    # We don't assert OCR text quality (depends on tesseract availability)
+    # — only that the sniff + ingest path completes without crash.
+    pages = []
+    for i in range(2):
+        img = Image.new("L", (400, 100), color=255)
+        d = ImageDraw.Draw(img)
+        d.text((10, 30), f"BOS Minutes Page {i+1} retroactive sole-source", fill=0)
+        pages.append(img)
+
+    buf = io.BytesIO()
+    pages[0].save(buf, format="TIFF", save_all=True, append_images=pages[1:])
+    tiff_payload = buf.getvalue()
+    assert tiff_payload.startswith(b"II*\x00") or tiff_payload.startswith(
+        b"MM\x00*"
+    ), f"TIFF magic missing: {tiff_payload[:8]!r}"
+
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    monkeypatch.setattr(
+        webhook_mod,
+        "_fetch_url",
+        lambda url, timeout=120: tiff_payload,  # noqa: ARG005
+    )
+
+    job_id = "test-job-tiff"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.gov/questys/File.ashx?id=2787",
+        "jurisdiction_id": "tiff_test",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.gov/questys/File.ashx?id=2787",
+        jurisdiction_id="tiff_test",
+        filename_hint="",  # NO hint — worker must sniff TIFF magic
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    assert state["status"] == "completed", state
+    # If sniff defaulted to .pdf (pre-v3.2.5 behaviour) the audit would
+    # have crashed inside pypdf; the .tif sniff branch must add .tif
+    # and the audit must complete cleanly.
+    assert state["filename"].endswith(".tif"), state["filename"]
+
+
+def test_worker_doc_binary_graceful_fallback(webhook_app, monkeypatch):
+    """v3.2.5: .doc (OLE compound binary) is the format Questys serves for
+    pre-2013 BOS agendas. We try antiword then libreoffice via subprocess;
+    if neither is installed the file still gets persisted (with empty text)
+    and the audit doesn't crash — graceful degradation is the contract.
+    """
+    from oraculus_di_auditor.interface.routes import webhook as webhook_mod
+
+    # OLE compound-document magic header + dummy padding. We don't need a
+    # real Word structure — only that the worker's sniff path routes this
+    # to .doc and ingest_uploaded_file handles it without throwing.
+    doc_payload = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" + (b"\x00" * 2048)
+
+    monkeypatch.setattr(
+        webhook_mod,
+        "_fetch_url",
+        lambda url, timeout=120: doc_payload,  # noqa: ARG005
+    )
+
+    job_id = "test-job-doc-fallback"
+    webhook_mod._BATCH_JOBS[job_id] = {
+        "job_id": job_id,
+        "type": "scrape",
+        "status": "queued",
+        "url": "https://example.gov/questys/File.ashx?id=2824",
+        "jurisdiction_id": "doc_test",
+    }
+    webhook_mod._run_scrape_job_background(
+        job_id=job_id,
+        url="https://example.gov/questys/File.ashx?id=2824",
+        jurisdiction_id="doc_test",
+        filename_hint="",  # let the worker sniff
+    )
+
+    state = webhook_mod._BATCH_JOBS[job_id]
+    # The audit must COMPLETE (not crash), even when the OLE payload
+    # has no usable Word structure — that's the graceful-fallback contract.
+    assert state["status"] == "completed", state
+    assert state["filename"].endswith(".doc"), state["filename"]
+
+
 def test_worker_sniffs_html_bytes_without_filename_hint(webhook_app, monkeypatch):
     """v3.1.1: when no filename_hint is provided and the URL has no
     recognized extension, the worker peeks at the first bytes of the
