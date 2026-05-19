@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.2.3] - 2026-05-18 — CRLF-aware fixture-size assertions (Linux CI hotfix)
+
+Hotfix for v3.2.2. The new `test_a_fixture_sha256_stable` and `test_a_fixture_audit_produces_expected_shape` tests pinned `tests/fixtures/sample_audit_doc.txt` byte-size to exactly 959 — which is the file's size on Windows checkouts (CRLF line endings). On Linux CI the same file is smaller because git's `core.autocrlf` converts line endings on checkout. Result: tests passed locally on Windows, failed in Linux CI with "size drifted" assertion error. Tag-triggered desktop builds passed (different workflow); only the master pytest pipeline was affected.
+
+### Fixed — range-based size assertions
+
+- `tests/test_audit_consistency.py::test_a_fixture_sha256_stable` (renamed to `test_a_fixture_exists_and_is_readable`) — replaces pinned `st_size == 959` with `500 <= size <= 2000` range. Still catches accidental fixture deletion or massive growth without being CRLF-fragile.
+- `tests/test_audit_consistency.py::test_a_fixture_audit_produces_expected_shape` — same fix for the `byte_length == 959` assertion on the audit output's `document.byte_length` field. Now `isinstance(byte_len, int) and 500 <= byte_len <= 2000`.
+
+Inline comment explains the gotcha for future maintainers so the same CRLF trap doesn't reappear.
+
+### Notes
+
+- No production code changes. v3.2.2 backend / frontend ship as-is.
+- All other 14 v3.2.2 audit-consistency tests passed in Linux CI; this was the only assertion sensitive to line-ending conversion.
+- Total backend test count unchanged at 64.
+
 ## [3.2.2] - 2026-05-18 — Audit-consistency test suite (determinism + MAS faithfulness + RAIA subphase)
 
 Pure-test polish release. Adds 15 new pytest assertions across three orthogonal frameworks so the audit / aggregation / synthesis pipeline can't drift without CI catching it. No backend or frontend code changes; the existing pipeline is validated, not modified.

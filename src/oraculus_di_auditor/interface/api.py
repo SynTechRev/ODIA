@@ -40,11 +40,11 @@ def _resolve_odia_version() -> str:
     try:
         from importlib.metadata import PackageNotFoundError, version
     except ImportError:
-        return os.environ.get("ODIA_VERSION", "3.2.2")
+        return os.environ.get("ODIA_VERSION", "3.2.3")
     try:
         return version("odia")
     except PackageNotFoundError:
-        return os.environ.get("ODIA_VERSION", "3.2.2")
+        return os.environ.get("ODIA_VERSION", "3.2.3")
 
 
 ODIA_VERSION = _resolve_odia_version()
