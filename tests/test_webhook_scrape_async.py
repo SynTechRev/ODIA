@@ -731,9 +731,7 @@ auto-renewal language and a sole-source contractor designation.</p>
     )
 
 
-def test_worker_drupal_extraction_prefers_main_over_nav_cruft(
-    webhook_app, monkeypatch
-):
+def test_worker_drupal_extraction_prefers_main_over_nav_cruft(webhook_app, monkeypatch):
     """v3.2.4 regression guard. Drupal / Wagtail / modern-CMS themes wrap
     navigation in <div> elements with custom classes (not <nav>), so the
     v3.1.1 generic strip (script/style/nav/footer/aside) misses them and
@@ -756,12 +754,14 @@ def test_worker_drupal_extraction_prefers_main_over_nav_cruft(
     # plus a small real article body inside <main>. If extraction is
     # working correctly the detectors will see ONLY the article body's
     # accountability signals — not the cruft.
-    nav_cruft = "\n".join([
-        f"<div class='menu-{i}'>Pay my property taxes | Department Directory |"
-        f" Contact Sheriff | I need to... | TipNow program | Sheriff incident"
-        f" report | County of Tulare main site | Skip to main content</div>"
-        for i in range(200)
-    ])
+    nav_cruft = "\n".join(
+        [
+            f"<div class='menu-{i}'>Pay my property taxes | Department Directory |"
+            f" Contact Sheriff | I need to... | TipNow program | Sheriff incident"
+            f" report | County of Tulare main site | Skip to main content</div>"
+            for i in range(200)
+        ]
+    )
     article_body = """<main>
     <article>
     <h1>Department Settlement of $1,234,567 — Final Action Pending</h1>
@@ -777,7 +777,8 @@ def test_worker_drupal_extraction_prefers_main_over_nav_cruft(
     ).encode()
 
     monkeypatch.setattr(
-        webhook_mod, "_fetch_url",
+        webhook_mod,
+        "_fetch_url",
         lambda url, timeout=120: html_payload,  # noqa: ARG005
     )
 
