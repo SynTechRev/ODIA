@@ -72,8 +72,10 @@ def test_register_with_move_false_copies(fresh_upload_store, tmp_path):
 
 def test_register_rejects_unknown_extension(fresh_upload_store, tmp_path):
     upload_routes, _upload_dir = fresh_upload_store
-    src = tmp_path / "weird.docx"
-    src.write_bytes(b"docx bytes")
+    # v3.2.5 expanded _ALLOWED_EXTENSIONS to include .doc/.docx/.tif/.tiff
+    # so this test now uses a genuinely-unsupported extension.
+    src = tmp_path / "weird.xyz"
+    src.write_bytes(b"some bytes of unknown type")
 
     with pytest.raises(ValueError, match="Unsupported file type"):
         upload_routes.register_uploaded_path(src)
@@ -181,13 +183,16 @@ def test_retrieval_registers_files_into_upload_store(client_with_fake_legistar):
     assert resp.status_code == 200
     job_id = resp.json()["job_id"]
 
-    # Wait for the background thread (cap at 5s).
-    deadline = time.time() + 5.0
+    # Wait for the background thread. Bumped from 5s -> 30s because the
+    # FastAPI app's startup is heavier post-v3.2.5 (more routes registered,
+    # init_db on first import) and 5s was tripping a flaky timeout under
+    # slower / loaded test runs.
+    deadline = time.time() + 30.0
     while time.time() < deadline:
         body = client.get(f"/api/v1/retrieve/status/{job_id}").json()
         if body["status"] in ("complete", "error"):
             break
-        time.sleep(0.05)
+        time.sleep(0.1)
     assert body["status"] == "complete", body
     manifest = body["manifest"]
     assert manifest["downloaded_count"] == 2
