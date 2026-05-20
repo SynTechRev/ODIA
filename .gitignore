@@ -64,6 +64,7 @@ data/reports/
 !data/multi_jurisdiction/
 !data/reference/
 !data/n8n-workflows/
+!data/legal_corpora/
 
 # Phase 7: External legal corpus data paths
 /data/legal/
