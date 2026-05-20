@@ -27,7 +27,11 @@ Post-v2.7.2 rewrite (D1 from CLAUDE_CODE_HANDOFF_v2_7_3):
 
 from __future__ import annotations
 
+import logging
+from datetime import date
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Translation table
@@ -1251,6 +1255,22 @@ def translate_finding(finding: dict[str, Any]) -> dict[str, Any]:
         )
 
     result["plain_evidence_echo"] = _evidence_echo(details)
+
+    # v3.3.0: append resolved statute text for every USC citation
+    # present in the rendered narrative. Additive — does not alter the
+    # existing three plain-language fields. Graceful no-op if the
+    # legal resolver is unavailable or no citation resolves.
+    combined_narrative = " ".join(
+        [
+            result.get("plain_summary", ""),
+            result.get("plain_impact", ""),
+            result.get("plain_action", ""),
+        ]
+    )
+    statute_block = _embed_statute_text(combined_narrative)
+    if statute_block:
+        result["plain_statute_text"] = statute_block
+
     return result
 
 
@@ -1384,3 +1404,90 @@ def _evidence_echo(details: dict[str, Any]) -> str:
             rendered = rendered[:77] + "..."
         parts.append(f"{key}={rendered}")
     return "Evidence anchors: " + "; ".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# v3.3.0 — Statute-text embedding
+#
+# For every USC citation in a rendered narrative, append an indented
+# quoted block with the actual statutory text. Used by translate_finding
+# to make findings self-contained: the reader sees the alleged
+# violation AND the statute it allegedly violated, without leaving
+# the artifact.
+#
+# Graceful degradation: if the resolver isn't installed, the submodule
+# is missing, or a citation doesn't resolve, this function returns "".
+# Callers must treat empty string as "no embed needed".
+# ---------------------------------------------------------------------------
+
+_MAX_EMBED_CHARS = 1500
+
+
+def _render_statute_block(result) -> str:  # type: ignore[no-untyped-def]
+    """Format a resolved LegalText into a markdown quoted block."""
+    text = result.text.strip()
+    if len(text) > _MAX_EMBED_CHARS:
+        truncated = text[:_MAX_EMBED_CHARS].rsplit("\n", 1)[0]
+        text = truncated + "\n\n[…text truncated; see full section at the URL below]"
+    quoted = "\n".join(f"> {line}" for line in text.split("\n"))
+    source_line = result.url or result.source_path
+    return (
+        f"\n\n**Statutory text — {result.citation}:**\n\n"
+        f"{quoted}\n\n*Source: {source_line}*"
+    )
+
+
+def _dedupe_citations(citations):  # type: ignore[no-untyped-def]
+    """Return unique citations by canonical form, first-seen order."""
+    seen: set[str] = set()
+    unique = []
+    for cit in citations:
+        if cit.canonical not in seen:
+            seen.add(cit.canonical)
+            unique.append(cit)
+    return unique
+
+
+def _resolve_one(resolver, canonical: str, as_of: date | None):  # type: ignore[no-untyped-def]
+    """Single resolve() with graceful exception swallow. Returns None on miss."""
+    try:
+        return resolver.resolve(canonical, as_of=as_of)
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("resolve(%r) failed: %s", canonical, exc)
+        return None
+
+
+def _embed_statute_text(narrative: str, as_of: date | None = None) -> str:
+    """Return a markdown block embedding resolved USC text, or "".
+
+    Never raises. Importing the resolver is deferred so a test or
+    operator running without legal_corpora.yml never pays the import
+    cost.
+    """
+    if not narrative:
+        return ""
+    try:
+        from oraculus_di_auditor.legal.legal_resolver import get_resolver
+        from oraculus_di_auditor.legal.statute_citation import parse_usc_citations
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("legal resolver unavailable: %s", exc)
+        return ""
+
+    citations = parse_usc_citations(narrative)
+    if not citations:
+        return ""
+    unique = _dedupe_citations(citations)
+
+    try:
+        resolver = get_resolver()
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("get_resolver failed: %s", exc)
+        return ""
+
+    blocks: list[str] = []
+    for cit in unique:
+        result = _resolve_one(resolver, cit.canonical, as_of)
+        if result is None:
+            continue
+        blocks.append(_render_statute_block(result))
+    return "".join(blocks)
