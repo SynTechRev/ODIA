@@ -1,0 +1,27 @@
+# Registry of installed legal corpora. The legal_resolver reads this
+# at boot and instantiates one loader per entry. Corpora not yet
+# installed have enabled: false; loaders skip them.
+
+schema_version: "1.0"
+
+corpora:
+  - id: us-code
+    name: "United States Code"
+    enabled: true
+    loader: oraculus_di_auditor.legal.us_code_loader.USCodeLoader
+    submodule_path: data/legal_corpora/us-code
+    source_url: https://github.com/nickvido/us-code
+    citation_patterns:
+      - "U.S.C."
+      - "U.S.C"
+      - "USC"
+    notes: |
+      Federal statutory law. Data starts 2013 (OLRC release points
+      as git commits). Pre-2013 history not in repo; resolve_citation
+      with as_of < 2013-01-01 returns text at the earliest available
+      commit with a note.
+
+  # Phase 2+: append more entries here without touching code.
+  # - id: cfr
+  #   enabled: false  # not yet ingested
+  #   loader: oraculus_di_auditor.legal.cfr_loader.CFRLoader
