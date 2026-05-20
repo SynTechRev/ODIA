@@ -13,8 +13,8 @@ SHA-256 provenance.
 
 **Repository**: https://github.com/SynTechRev/ODIA
 **License**: MIT
-**Current version**: **2.10.0** — *Cross-Entity Analysis Protocol V1.0*
-([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v2.10.0))
+**Current version**: **3.2.5** — *Microsoft Word + scanned TIFF ingestion*
+([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.2.5))
 **Python**: 3.11+
 
 ---
@@ -31,16 +31,16 @@ Download the latest installer from the
 
 | Platform | Installer | Architecture |
 |----------|-----------|--------------|
-| **Windows** | `ODIA-Setup-2.10.0.exe` | x64 |
-| **macOS (Apple Silicon)** | `ODIA-2.10.0-arm64.dmg` | arm64 (M1 / M2 / M3 / M4) |
-| **macOS (Intel)** | `ODIA-2.10.0-x64.dmg` | x64 |
-| **Linux** | `ODIA-2.10.0.AppImage` | x64 |
+| **Windows** | `ODIA-Setup-3.2.5.exe` | x64 |
+| **macOS (Apple Silicon)** | `ODIA-3.2.5-arm64.dmg` | arm64 (M1 / M2 / M3 / M4) |
+| **macOS (Intel)** | `ODIA-3.2.5-x64.dmg` | x64 |
+| **Linux** | `ODIA-3.2.5.AppImage` | x64 |
 
-**Direct download links (v2.10.0):**
-- [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-Setup-2.10.0.exe)
-- [macOS Apple Silicon (arm64)](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-2.10.0-arm64.dmg)
-- [macOS Intel (x64)](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-2.10.0-x64.dmg)
-- [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v2.10.0/ODIA-2.10.0.AppImage)
+**Direct download links (v3.2.5):**
+- [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-Setup-3.2.5.exe)
+- [macOS Apple Silicon (arm64)](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-3.2.5-arm64.dmg)
+- [macOS Intel (x64)](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-3.2.5-x64.dmg)
+- [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-3.2.5.AppImage)
 
 **System Requirements:**
 - **Windows:** Windows 10 (64-bit) or later
@@ -117,32 +117,54 @@ cd frontend && npm install && npm run dev
 
 ---
 
-## What's New in v2.10.0 (current)
+## What's New in v3.x (current)
 
-**v2.10.0 — Cross-Entity Analysis Protocol V1.0** ([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v2.10.0))
+The v3 release line shipped automated multi-CMS scraping + ingestion + cross-jurisdiction RAIA synthesis at scale. Empirically validated on **4 jurisdictions / 848 documents / 324 anomalies** across **4 distinct CMS platforms** (CivicPlus, Revize, WordPress, Drupal + Questys CMX).
 
-Formalises cross-jurisdiction analysis into deterministic architecture. Every
-document entering O.D.I.A. is now classifiable against the full **Cross-Entity
-Registry** — 12 Tier-1 primary jurisdictions, 8 Tier-2 governance bodies, 10
-Tier-3 vendors, 6 Tier-4 external sources, 13 personnel, 7 finding-type rules.
+**v3.2.5 — Microsoft Word + scanned TIFF ingestion** ([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.2.5))
 
-- **New `oraculus_di_auditor.registry/`** — canonical Sunshine Dragnet entity
-  catalogue with typed loader (`Entity`, `Personnel`, `FindingType`,
-  `NonStandardCategory`)
-- **New D-13 cross-entity detector** — function-style, emits seven finding
-  types (A–G) with confidence scoring and registry-aware severity rules
-- **TCDAO press-release archive scraper** (tulareda.org) — polite (robots.txt-
-  aware, rate-limited, identifying User-Agent), with monthly-archive-widget
-  discovery, 2022 path-variant handling, and **gap-band absence-record
-  emission** for the three known multi-year coverage gaps (GAP-A 2006–2011,
-  GAP-B 2011–2015, GAP-C 2015–2017)
-- `"critical"` joins the severity vocabulary in the analysis pipeline; flags
-  and summary lines updated to surface critical alongside high
-- 64 new tests pass; 212 broader regression tests pass with no failures
+Closes the format gap for legacy civic-records archives. Tulare County's Questys CMX archive serves ~20 years of Board of Supervisors agendas, packets, resolutions, and staff reports as a mix of PDF / DOC / DOCX / HTML / scanned TIFF. v3.2.4 recognised only PDF and HTML; v3.2.5 adds:
 
-Earlier v2.8.x and v2.9.x cycles (Mineral Calibration, Mineral Polish, Hero
-Pattern Convergence, Detector Calibration Sweep + OCR Coverage) are captured
-in [CHANGELOG.md](CHANGELOG.md) with full track-by-track detail.
+- **`.docx`** via `python-docx` (paragraphs + tables, headers/footers skipped)
+- **`.doc`** (OLE binary, pre-2013 Word) via `antiword` / `libreoffice` subprocess with graceful empty-text fallback
+- **`.tif` / `.tiff`** multi-page OCR via `PIL.Image.seek` + `pytesseract` (scanned 2001-2009 microfilm records)
+- Magic-byte sniffing in the async-scrape worker for ID-only URLs (Questys `File.ashx?id=N` carries no extension): OLE → `.doc`, ZIP → `.docx`, `II*\x00`/`MM\x00*` → `.tif`
+- 4 new tests + v3.2.4 regression guard = 5/5 green
+
+**v3.2.0 → v3.2.4 — Operator UI parity + Drupal extraction + audit-consistency tests**
+
+- **v3.2.0**: 5 new DB-backed list/query endpoints (`/documents`, `/anomalies`, `/analyses`, `/jurisdictions`, `/synthesis/aggregates`) + 4 listing pages swapped from browser localStorage to backend fetches. Closes a year-old gap where webhook-ingested data was invisible in the operator UI.
+- **v3.2.1**: Suspense wrapper for `useSearchParams()` (Next.js 15 static-export compatibility) — unblocked desktop builds.
+- **v3.2.2 / v3.2.3**: 15-test audit-consistency suite (Test A determinism + Test B MAS faithfulness vs raw SQL + Test C RAIA subphase contract). CRLF-aware fixture-size assertions for Linux CI parity.
+- **v3.2.4**: Semantic-container HTML extraction (`<main>` → `<article>` → `[role="main"]`) — fixed Drupal sites where the v3.1.1 generic strip missed `<div>`-wrapped nav cruft and drowned the article body.
+
+**v3.1.0 → v3.1.1 — Tier-2 fetcher + HTML ingest**
+
+- **v3.1.0**: `curl_cffi` Chrome impersonation as a Tier-2 fallback for HTTP 403/429/OSError — defeats Akamai/Cloudflare bot mitigation that pre-v3.1.0 made entire jurisdictions unreachable.
+- **v3.1.1**: HTML (`.html`/`.htm`) ingestion branch + filename-suffix logic respecting the recognised types. Unblocked WordPress-based jurisdictions.
+
+**v3.0.0 → v3.0.5 — Live automation goes online**
+
+- **v3.0.0**: Production multi-platform desktop release (Windows / macOS arm64 / macOS Intel / Linux AppImage) — Oraculus monogram, malachite hero, RAIA template hardening, mesh-job zombie reconciliation.
+- **v3.0.2**: Backend-side URL scraping via `POST /webhook/scrape-and-ingest` — solves Cloudflare TLS-fingerprint blocks that the n8n HTTP node couldn't bypass.
+- **v3.0.3 / v3.0.4**: `POST /webhook/scrape-and-ingest-async` for fire-and-forget downloads + `_DOWNLOAD_SEMAPHORE(4)` concurrency cap + widened OSError catch for `RemoteDisconnected`.
+- **v3.0.5**: RAIA pattern-detection polish — `all_anomalies` field surfaces complete shared-finding sets to pattern detectors (previously capped at the top-10 slice).
+
+Older v2.x release cycles (Cross-Entity Analysis Protocol, Mineral Calibration, JARVIS HUD, gemstone palette, OCR coverage) are captured in [CHANGELOG.md](CHANGELOG.md) with full track-by-track detail.
+
+## Empirical State (live as of v3.2.5 + Tulare County BOS bring-up)
+
+ODIA has been live-ingested across 4 California jurisdictions on 4 distinct CMS platforms:
+
+| Jurisdiction | CMS | Docs | Anomalies | Critical | Score |
+|---|---|---|---|---|---|
+| Tulare County (BOS) | Questys CMX + Drupal | 95 | 119 | 8 | 0.917 |
+| Visalia | CivicPlus | 85 | 80 | 5 | 0.932 |
+| Porterville | Revize | 8 | 23 | 2 | 0.766 |
+| TCDA (DA narratives) | WordPress | 660 | 102 | 0 | 0.989 |
+| **TOTAL** | **4 CMS** | **848** | **324** | **15** | — |
+
+**Cross-jurisdiction RAIA synthesis** surfaces **1 universal pattern at 1.00 confidence** (`admin:missing-final-action` — fires in all 4 jurisdictions) and **8 patterns at 0.75 confidence** (3 of 4 jurisdictions): signature-unsigned-instrument, scope-significant-expansion, vendor-convergence:sole-source, shared-layer:administrative, governance:sole-source-without-justification, fiscal:amount-without-appropriation, scope:amendment-without-baseline, procurement:sole-source-without-gov-code-citation. Two **TC-exclusive critical-severity findings** (`grant:jag-without-anti-supplanting`, `admin:retroactive-authorization` × 29) are surfaced exclusively by the BOS corpus.
 
 ## What's New in v2.7.x
 
