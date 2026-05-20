@@ -381,6 +381,39 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
     except Exception as e:
         logger.warning(f"Query routes not available: {e}")
 
+    try:
+        from .routes.legal_routes import register_legal_routes
+
+        # v3.3.0 — Legal-corpus status endpoint backing the dashboard
+        # 'Legal corpus' card + n8n verification workflows. Resolver
+        # warms on first call to get_resolver() either here (via the
+        # startup hook below) or lazily on the first plain_language
+        # render.
+        register_legal_routes(app)
+        logger.info("Legal routes registered")
+    except Exception as e:
+        logger.warning(f"Legal routes not available: {e}")
+
+    # v3.3.0 — pre-warm the legal resolver at startup so the first
+    # finding-render isn't delayed by the index build. Best-effort:
+    # any failure here just leaves the resolver to lazy-init on first
+    # use, matching the rest of the graceful-degradation contract.
+    try:
+
+        @app.on_event("startup")
+        async def _initialize_legal_resolver() -> None:
+            try:
+                from oraculus_di_auditor.legal.legal_resolver import get_resolver
+
+                resolver = get_resolver()
+                stats = resolver.statistics()
+                logger.info("Legal resolver pre-warmed at boot: %s", stats)
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Legal resolver pre-warm failed: %s", exc)
+
+    except Exception as e:  # noqa: BLE001
+        logger.warning(f"Legal resolver boot hook not registered: {e}")
+
 
 def _init_database_at_startup() -> None:
     """Best-effort DB schema bootstrap at app start (v2.7.3 V1).
