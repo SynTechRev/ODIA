@@ -1,5 +1,108 @@
 # Changelog
 
+## [3.3.0] - 2026-05-19 — USC corpus integration (legal text in findings)
+
+The first phase of the broader legal-corpus build (USC → CFR → SCOTUS → Federal Circuits → CRS/OIG/GAO). v3.3.0 makes the United States Code addressable inside Oraculus: every USC citation in a finding now resolves to the actual statutory text, embedded inline as a markdown-quoted block under the evidence anchors.
+
+The barrier-flattening rationale: forensic audits cite statutes constantly. v3.2.5 finding sheets reference `34 U.S.C. § 10152` as a string the reader is trusted to look up. v3.3.0 finding sheets reference the same citation AND show the reader exactly what the statute says, with a Cornell LII source URL. Audits become self-contained evidentiary artifacts — no external lookup required to understand the alleged violation.
+
+### Added — `data/legal_corpora/us-code` (git submodule)
+
+[`nickvido/us-code`](https://github.com/nickvido/us-code) as a git submodule. United States Code as Markdown files, with OLRC release points as git commits. 326 MB working tree, 53 title directories indexed to 52,586 sections. OLRC annual tags surfaced: 2013, 2014, 2015, 2017, 2019, 2021, 2022, 2024, 2025.
+
+To refresh on a fresh clone:
+
+    git submodule update --init --recursive
+
+To pull upstream updates:
+
+    git submodule update --remote data/legal_corpora/us-code
+
+Windows MAX_PATH gotcha (260-char limit): cloning from default Windows git fails on USC's deeply-nested filenames. Two workarounds:
+  - Enable Windows-level long paths via registry, then `git config --global core.longpaths true`
+  - Clone from WSL / Linux first (no MAX_PATH limit), then read from Windows via the existing checkout
+
+`.gitignore` updated with `!data/legal_corpora/` exception so the submodule pointer is tracked (the default `data/*` ignore covered it pre-v3.3.0).
+
+### Added — `src/oraculus_di_auditor/legal/corpus_base.py`
+
+Abstract `CorpusLoader` interface and frozen `LegalText` result type. Single source of truth for what an addressable legal corpus means in O.D.I.A. Future corpora (CFR, SCOTUS, Federal Circuits) implement this interface and slot into the resolver via `config/legal_corpora.yml` without code changes elsewhere.
+
+### Added — `src/oraculus_di_auditor/legal/statute_citation.py`
+
+USC citation parser. Extracts (title, section, subsection_path) tuples from narrative text. Handles `34 U.S.C. § 10152`, `34 U.S.C. § 10152(a)(1)(G)`, `34 USC 10152` (no periods, no §), `34 U.S.C. §§ 10152-10153` (range — captured but reported as first). Rejects out-of-range titles (>54) AND CFR-format lookalikes (`2 C.F.R. § 200.303`) via negative-lookbehind guards on the regex. Canonical-form normalization for stable cache keys.
+
+### Added — `src/oraculus_di_auditor/legal/us_code_loader.py`
+
+`USCodeLoader` implements `CorpusLoader` for the USC submodule.
+
+- Walks `uscode/title-NN-*/chapter-NNN-*.md` at boot, scans every `## §` / `### §` header, indexes (title, section) → chapter file. 52,586 sections indexed across 53 titles.
+- `resolve_citation()`: parses citation → indexed lookup → extracts the section block between this header and the next sibling §-header. Returns `LegalText` with the actual section text + `title` (section name) + Cornell LII URL.
+- Temporal lookup: when `as_of` is set, finds the OLRC `annual/<year>` tag ≤ as_of and uses `git show <tag>:<path>` to return text as it stood that year. Result includes `source_commit=annual/2021` etc. for provenance.
+- `list_amendments(citation)`: `git log --oneline` for the chapter file containing the cited section. Returns `[{commit, date, message}, ...]`.
+- `search_text(query, limit)`: substring search across indexed chapter files. Adequate for the v3.3.0 operator-debug use case; a richer search slots in later via a rapidfuzz/whoosh layer without changing the public signature.
+- `statistics()`: titles_indexed, sections_indexed, annual_tags.
+- Graceful degradation: if the submodule isn't initialised, `initialize()` returns empty stats with a warning; `resolve_citation()` returns `None`; nothing raises.
+
+Subsection extraction (e.g. `(a)(1)(G)`) is lossy on this corpus because chapter files use markdown bold for subsections, not nested lists. When a subsection_path is requested, the loader returns the full section with a note in `LegalText.notes`.
+
+### Added — `src/oraculus_di_auditor/legal/legal_resolver.py`
+
+Unified `LegalResolver` service. Loads loaders from `config/legal_corpora.yml` at boot via `importlib`. Provides `get_resolver()` module-level singleton used by `plain_language` and any other component that needs to embed legal text. `reset_resolver_for_testing()` drops the singleton for test isolation.
+
+`resolve(citation, as_of=None)`: tries each loader in order, returns the first successful `LegalText` or `None`. Future enhancement: route by citation-pattern instead of try-each (matters when CFR/SCOTUS land alongside USC).
+
+### Modified — `src/oraculus_di_auditor/reporting/plain_language.py`
+
+`translate_finding()` now additively attaches a `plain_statute_text` field when any USC citation appears in the rendered summary+impact+action narrative. The three existing fields (`plain_summary`, `plain_impact`, `plain_action`) are unchanged.
+
+The embed format:
+
+    **Statutory text — 34 U.S.C. § 10152:**
+
+    > ## § 10152. Description
+    > **(a) Grants authorized**
+    > (1) **In general** — From amounts made available to carry out this part…
+    >   (A) Law enforcement programs.
+    >   (B) Prosecution and court programs.
+    >   …
+
+    *Source: https://www.law.cornell.edu/uscode/text/34/10152*
+
+Long sections (>1500 chars) are truncated at the last paragraph boundary with a `[…text truncated; see full section at the URL below]` marker and the Cornell LII link.
+
+Graceful degradation: if the resolver is unavailable, the YAML doesn't parse, the submodule is missing, or no citation resolves, the narrative renders as before (text-only, no embed). The field simply isn't attached.
+
+**Coverage observation surfaced during D1 visible-payoff render**: of all current TRANSLATIONS templates, only `constitutional:civil-rights-deprivation` (line 253) cites a USC section (`42 U.S.C. § 1983`). The JAG narrative cites `2 C.F.R. § 200.303` (CFR — Phase 2 corpus). So the embed fires on civil-rights findings today but not on JAG/grant findings until either Phase 2 (CFR corpus) lands or the JAG template is extended to also cite `34 U.S.C. § 10152` alongside the CFR citation. This is narrative polish, not a v3.3.0 concern.
+
+### Added — `GET /api/v1/legal/status`
+
+Reports installed corpora + their statistics. Used by the operator to verify the USC submodule loaded correctly via dashboard, n8n workflow, or curl. Returns:
+
+    {"status": "ok", "corpora": {"us-code": {"titles_indexed": 53, "sections_indexed": 52586, "annual_tags": 9}}}
+
+503 with detail when the resolver can't initialise at all (vs. resolver-initialised-but-empty, which is a valid 200 with `corpora: {}`).
+
+### Added — Boot-time resolver pre-warm
+
+`@app.on_event("startup")` hook in `interface/api.py` calls `get_resolver()` so the index build (~5s on warm filesystem) happens once at boot, not lazily on the first finding-render. Failure to pre-warm is swallowed; the resolver stays lazy.
+
+Note: FastAPI emits a `DeprecationWarning` for `on_event` in favor of lifespan handlers. Acknowledged; left as-is for v3.3.0 since the broader app uses the same pattern. Migrate as a separate cleanup pass.
+
+### Tests — 30 new in `tests/legal/`, full sweep 3353 passed / 14 skipped
+
+  - `tests/legal/test_corpus_base.py` (3) — ABC enforcement + frozen LegalText + YAML registry shape
+  - `tests/legal/test_statute_citation.py` (13) — citation parser including CFR-lookalike rejection + real-narrative regression guards
+  - `tests/legal/test_us_code_loader.py` (6) — real-submodule resolution of 34 U.S.C. § 10152, 42 U.S.C. § 1983, 18 U.S.C. § 242 + canonical-citation preservation
+  - `tests/legal/test_legal_resolver.py` (7) — resolver service init/resolve/dedupe + plain_language embed integration + graceful-degradation contract
+  - `tests/legal/test_legal_routes.py` (1) — /api/v1/legal/status endpoint
+
+Full pytest sweep against v3.3.0 head: **3353 passed, 14 skipped, 0 failed** in 76m23s (excluding the slow `test_webhook_scrape_async.py` set already verified during v3.2.5 ship). Skipped tests are submodule-gated (`pytest.skip` when `data/legal_corpora/us-code` isn't initialised) and data-dependent corpus/transparency tests carried over from earlier releases.
+
+### Version sync
+
+`pyproject.toml` `version = "3.3.0"`. `desktop/package.json` `"version": "3.3.0"`. `api.py` + `webhook.py` `ODIA_VERSION` fallbacks → 3.3.0. Three frontend version strings (`DashboardLayout.tsx` `ODIA_VERSION_FALLBACK`, `settings/page.tsx` Package label, `page.tsx` hero × 2) → v3.3.0.
+
 ## [3.2.5] - 2026-05-19 — Microsoft Word + scanned TIFF ingestion (.docx / .doc / .tif)
 
 Prerequisite for the Tulare County BOS corpus bring-up. The county's public-records portal (Questys CMX, a 2010-era ASP.NET WebForms app) hosts ~20 years of Board of Supervisors agendas, packets, resolutions, and staff reports — all served via `File.ashx?id=N`. Format mix in the public-search-indexed subset: 45 PDF, 15 TIFF (scanned pre-2005 historical), 12 DOC (2006-2012 weekly agendas), 4 DOCX (2016+ addenda), 3 HTML, 1 PPTX. v3.2.4's `ingest_uploaded_file` recognised only PDF and HTML — the rest routed to the catch-all PDF branch, which then crashed or silently returned empty text.
