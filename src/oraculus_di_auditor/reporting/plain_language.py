@@ -208,9 +208,11 @@ TRANSLATIONS: dict[str, dict[str, dict[str, str]]] = {
                 "BJA requires grant recipients to itemise technology "
                 "and equipment purchases separately from personnel, and "
                 "to report surveillance deployments against the JAG "
-                "Program Assessment Rating Tool metrics. Bundling "
-                "surveillance purchases into generic line items defeats "
-                "federal oversight."
+                "Program Assessment Rating Tool metrics. The JAG award "
+                "itself is authorized under 34 U.S.C. § 10152, which "
+                "conditions federal funding on accurate program "
+                "reporting; bundling surveillance purchases into "
+                "generic line items defeats that oversight."
             ),
             "action": (
                 "Request the JAG grant-application line-item budget and "
