@@ -13,8 +13,8 @@ SHA-256 provenance.
 
 **Repository**: https://github.com/SynTechRev/ODIA
 **License**: MIT
-**Current version**: **3.2.5** — *Microsoft Word + scanned TIFF ingestion*
-([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.2.5))
+**Current version**: **3.4.0** — *Jurisdiction tracking · DB-persisted upload audits · Inline RAIA synthesis*
+([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.4.0))
 **Python**: 3.11+
 
 ---
@@ -31,16 +31,16 @@ Download the latest installer from the
 
 | Platform | Installer | Architecture |
 |----------|-----------|--------------|
-| **Windows** | `ODIA-Setup-3.2.5.exe` | x64 |
-| **macOS (Apple Silicon)** | `ODIA-3.2.5-arm64.dmg` | arm64 (M1 / M2 / M3 / M4) |
-| **macOS (Intel)** | `ODIA-3.2.5-x64.dmg` | x64 |
-| **Linux** | `ODIA-3.2.5.AppImage` | x64 |
+| **Windows** | `ODIA-Setup-3.4.0.exe` | x64 |
+| **macOS (Apple Silicon)** | `ODIA-3.4.0-arm64.dmg` | arm64 (M1 / M2 / M3 / M4) |
+| **macOS (Intel)** | `ODIA-3.4.0-x64.dmg` | x64 |
+| **Linux** | `ODIA-3.4.0.AppImage` | x64 |
 
-**Direct download links (v3.2.5):**
-- [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-Setup-3.2.5.exe)
-- [macOS Apple Silicon (arm64)](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-3.2.5-arm64.dmg)
-- [macOS Intel (x64)](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-3.2.5-x64.dmg)
-- [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v3.2.5/ODIA-3.2.5.AppImage)
+**Direct download links (v3.4.0):**
+- [Windows x64](https://github.com/SynTechRev/ODIA/releases/download/v3.4.0/ODIA-Setup-3.4.0.exe)
+- [macOS Apple Silicon (arm64)](https://github.com/SynTechRev/ODIA/releases/download/v3.4.0/ODIA-3.4.0-arm64.dmg)
+- [macOS Intel (x64)](https://github.com/SynTechRev/ODIA/releases/download/v3.4.0/ODIA-3.4.0-x64.dmg)
+- [Linux AppImage](https://github.com/SynTechRev/ODIA/releases/download/v3.4.0/ODIA-3.4.0.AppImage)
 
 **System Requirements:**
 - **Windows:** Windows 10 (64-bit) or later
@@ -119,7 +119,33 @@ cd frontend && npm install && npm run dev
 
 ## What's New in v3.x (current)
 
-The v3 release line shipped automated multi-CMS scraping + ingestion + cross-jurisdiction RAIA synthesis at scale. Empirically validated on **4 jurisdictions / 848 documents / 324 anomalies** across **4 distinct CMS platforms** (CivicPlus, Revize, WordPress, Drupal + Questys CMX).
+The v3 release line shipped automated multi-CMS scraping + ingestion + cross-jurisdiction RAIA synthesis at scale. Empirically validated on **5 jurisdictions / 910 documents / 601 anomalies** across **4 distinct CMS platforms** (CivicPlus, Revize, WordPress, Drupal + Questys CMX).
+
+**v3.4.0 — Jurisdiction tracking · DB-persisted audits · Inline RAIA · SynTechRev brand** ([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.4.0))
+
+The operator experience release. Every upload audit now persists its documents, analyses, and anomalies to the backend database so they appear in the Documents, Anomalies, and Synthesis pages alongside webhook-scraped data. Dinuba brought on as the fifth jurisdiction, contributing 62 documents and 49 critical findings — the highest critical-anomaly density corpus yet.
+
+- **Jurisdiction field on Upload page** — tag every audit batch at submission time; value persists in localStorage across page navigations so multi-batch ingestion requires no re-typing
+- **Upload audit DB persistence** — `_persist_upload_document` saves each document + analysis + anomalies to `documents`/`analyses`/`anomalies` tables on every upload audit run (previously only webhook-ingested data appeared in the UI evidence library)
+- **Backend audit history** — `GET /api/v1/audit/history` returns paginated lightweight summaries from `mesh_execution_jobs.results_json`; results page syncs from backend on mount so history survives server restarts
+- **Audit history scaled to 10,000 entries** — frontend store switched from full `AuditResults` payloads (~100–500 KB each) to lightweight metadata summaries (~300 bytes), eliminating the 5–10 MB localStorage ceiling
+- **`GET /api/v1/audit/results/{id}` DB fallback** — serves completed results from the database when the in-memory job has been evicted after a server restart
+- **Inline RAIA synthesis** — "Run RAIA Synthesis" button on the Synthesis page now calls `POST /api/v1/triggers/raia-synthesize-all` directly and renders the Markdown report inline with Copy + Download controls; no redirect to Automation page required
+- **RAIA jurisdiction source fixed** — synthesis now queries the `documents` table for known jurisdictions instead of reading the `config/multi_jurisdiction/` file stubs (which contained only `example_city_a/b/c`)
+- **Pipeline ingestion banner** — Results history page surfaces webhook-scraped document count with a direct link to the Documents library even when no upload audits have been run
+- **SynTechRev brand** — octopus logo replaces default icon across all six slots: browser favicon (16/32/48 px), PWA icons (192/512/maskable-512 px), Electron dock/taskbar (1024 px), Windows titlebar ICO (16–256 px)
+- **34 U.S.C. § 10152 JAG statute embedded** — `grant:jag-funded-surveillance` findings now cite the Byrne JAG authorization statute with plain-language statute text embedded via the legal resolver
+
+**v3.3.1 — PyYAML dependency + resolver CWD-independence** ([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.3.1))
+
+- Declared `pyyaml` as an explicit dependency (was an undeclared transitive dep that broke fresh installs)
+- `LegalResolver` no longer assumes CWD is the repo root — resolves paths relative to its own module file, fixing `FileNotFoundError` on desktop and subprocess launches
+
+**v3.3.0 — USC legal corpus integration** ([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.3.0))
+
+- Full United States Code corpus (53 titles, 52,586 sections) indexed as a git submodule via `nickvido/us-code`
+- `LegalResolver` service pre-warms the index at boot; `GET /api/v1/legal/status` surfaces corpus health
+- USC citation parser recognises `X U.S.C. § NNN` patterns and resolves to statute text for plain-language embedding
 
 **v3.2.5 — Microsoft Word + scanned TIFF ingestion** ([release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.2.5))
 
@@ -152,19 +178,22 @@ Closes the format gap for legacy civic-records archives. Tulare County's Questys
 
 Older v2.x release cycles (Cross-Entity Analysis Protocol, Mineral Calibration, JARVIS HUD, gemstone palette, OCR coverage) are captured in [CHANGELOG.md](CHANGELOG.md) with full track-by-track detail.
 
-## Empirical State (live as of v3.2.5 + Tulare County BOS bring-up)
+## Empirical State (live as of v3.4.0)
 
-ODIA has been live-ingested across 4 California jurisdictions on 4 distinct CMS platforms:
+ODIA has been live-ingested across 5 California jurisdictions on 4 distinct CMS platforms:
 
-| Jurisdiction | CMS | Docs | Anomalies | Critical | Score |
+| Jurisdiction | CMS | Docs | Anomalies | Critical | Avg Score |
 |---|---|---|---|---|---|
-| Tulare County (BOS) | Questys CMX + Drupal | 95 | 119 | 8 | 0.917 |
-| Visalia | CivicPlus | 85 | 80 | 5 | 0.932 |
-| Porterville | Revize | 8 | 23 | 2 | 0.766 |
 | TCDA (DA narratives) | WordPress | 660 | 102 | 0 | 0.989 |
-| **TOTAL** | **4 CMS** | **848** | **324** | **15** | — |
+| Tulare County (BOS) | Questys CMX + Drupal | 95 | 119 | 8 | 0.909 |
+| Visalia | CivicPlus | 85 | 80 | 5 | 0.932 |
+| **Dinuba** | Upload audit | **62** | **277** | **49** | — |
+| Porterville | Revize | 8 | 23 | 2 | 0.766 |
+| **TOTAL** | **4 CMS + upload** | **910** | **601** | **64** | — |
 
-**Cross-jurisdiction RAIA synthesis** surfaces **1 universal pattern at 1.00 confidence** (`admin:missing-final-action` — fires in all 4 jurisdictions) and **8 patterns at 0.75 confidence** (3 of 4 jurisdictions): signature-unsigned-instrument, scope-significant-expansion, vendor-convergence:sole-source, shared-layer:administrative, governance:sole-source-without-justification, fiscal:amount-without-appropriation, scope:amendment-without-baseline, procurement:sole-source-without-gov-code-citation. Two **TC-exclusive critical-severity findings** (`grant:jag-without-anti-supplanting`, `admin:retroactive-authorization` × 29) are surfaced exclusively by the BOS corpus.
+**Dinuba** is the highest critical-anomaly-density corpus yet — 49 critical findings across 62 documents, driven by signature gaps on formal instruments and significant procurement irregularities.
+
+**Cross-jurisdiction RAIA synthesis** across all 5 jurisdictions surfaces **1 universal pattern at 1.00 confidence** (`admin:missing-final-action` — fires in all 5 jurisdictions) and a growing set of shared patterns including: signature-unsigned-instrument, scope-significant-expansion, vendor-convergence:sole-source, governance:sole-source-without-justification, fiscal:amount-without-appropriation, procurement:sole-source-without-gov-code-citation. **Tulare County-exclusive critical findings** (`grant:jag-without-anti-supplanting` citing 34 U.S.C. § 10152, `admin:retroactive-authorization` × 29) are surfaced exclusively by the BOS corpus and now include embedded statute text via the USC legal resolver.
 
 ## What's New in v2.7.x
 

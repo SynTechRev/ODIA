@@ -1,5 +1,48 @@
 # Changelog
 
+## [3.4.0] - 2026-05-29 — Jurisdiction tracking · DB-persisted audits · Inline RAIA · SynTechRev brand
+
+The operator experience release — closes the long-standing gap where upload-audited documents were invisible in the evidence library, adds jurisdiction tagging to every audit batch, puts RAIA synthesis one click away on the Synthesis page, and ships the SynTechRev octopus brand across all icon surfaces. Dinuba becomes the fifth live jurisdiction: 62 documents, 277 anomalies, 49 critical findings — the highest critical-anomaly-density corpus yet.
+
+### Added
+
+**Upload audit DB persistence**
+- `_persist_upload_document` saves each document, analysis, and anomaly set to the `documents`/`analyses`/`anomalies` tables on every upload audit run. Previously only webhook-scraped documents appeared in the Documents, Anomalies, and Synthesis UI; upload-audited documents existed only in the in-memory job dict and were lost on server restart.
+- `GET /api/v1/audit/results/{job_id}` now falls back to `mesh_execution_jobs.results_json` when the in-memory job has been evicted, so completed reports survive server restarts.
+- `GET /api/v1/audit/history` — new paginated endpoint returning lightweight audit summaries (no findings array) from the database, enabling history lists that scale to thousands of entries without hitting browser storage limits.
+
+**Jurisdiction field on Upload page**
+- Text input above the Run Audit button lets operators tag every batch with a jurisdiction identifier at submission time.
+- Value persists to `localStorage` so multi-batch ingestion (e.g. 10 × 40-file runs for a single city) requires no re-typing between navigations.
+
+**Audit history scaled to 10,000 entries**
+- Frontend store (`audit-history.ts`) switched from persisting full `AuditResults` payloads (~100–500 KB each) to lightweight metadata summaries (~300 bytes), eliminating the 5–10 MB localStorage ceiling that silently dropped older entries.
+- Store version migrated from v1 to v2; existing entries auto-converted on load.
+- Results page syncs from `GET /api/v1/audit/history` on mount so DB-persisted audits from previous sessions appear immediately.
+
+**Inline RAIA synthesis**
+- "Run RAIA Synthesis (Markdown / DOCX)" button on the Synthesis page now calls `POST /api/v1/triggers/raia-synthesize-all` directly and renders the markdown report inline with Copy + Download controls — no redirect to the Automation page.
+
+**SynTechRev octopus brand**
+- Replaces default icon across all six slots: browser favicon (16/32/48 px ICO), PWA manifest icons (192 px, 512 px, maskable 512 px), Electron taskbar/dock PNG (1024 px), Windows titlebar ICO (16–256 px).
+
+**Pipeline ingestion banner**
+- Results history page now fetches `GET /api/v1/documents?per_page=1` on mount and shows a banner with the total pipeline-ingested document count + link to the Documents library, even when no upload audits have been run on the current machine.
+
+### Fixed
+
+- `analyses.scalar_score NOT NULL` constraint — upload-audited documents have no scalar score; `_persist_upload_document` now defaults to `1.0` (clean-document baseline) instead of `None`, which was causing silent `IntegrityError` rollbacks and leaving documents unpersisted.
+- RAIA synthesis jurisdiction source — `POST /api/v1/triggers/raia-synthesize-all` was reading jurisdictions from `config/multi_jurisdiction/` (which contains only `example_city_a/b/c` stubs) instead of the `documents` table. Now queries the DB first; falls back to file-system discovery only when the DB is empty.
+- Jurisdiction field state reset — after audit completion the Upload page navigates to `/results?job_id=…`, unmounting the React component and resetting `jurisdiction` to `''`. The field now reads from and writes to `localStorage` so the value survives navigation.
+- Desktop binary naming — `desktop/package.json` version was `3.3.0` when the v3.3.1 CI ran, so release binaries were named `ODIA-Setup-3.3.0.exe`. Bumped to `3.4.0` so CI output matches the release tag going forward.
+
+### Changed
+
+- `MAX_ENTRIES` in audit history store: `10` → `100` (superseded immediately by the 10,000-entry lightweight-summary architecture above, but documented for completeness).
+- Displayed version strings updated to `v3.4.0` across dashboard hero, settings page, and all package manifests.
+
+---
+
 ## [3.3.1] - 2026-05-28 — Legal-resolver boot fixes (pyyaml dep + CWD-independence)
 
 Hotfix for two defects that left `/api/v1/legal/status` returning empty corpora on real deployments of v3.3.0.
