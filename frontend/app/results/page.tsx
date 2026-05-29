@@ -265,12 +265,10 @@ function ResultsPageInner() {
 
   const client = getAPIClient();
   const historyEntries = useAuditHistoryStore((s) => s.entries);
-  const addAuditToHistory = useAuditHistoryStore((s) => s.addAudit);
-  const getAuditFromHistory = useAuditHistoryStore((s) => s.getAudit);
+  const addAuditFromResults = useAuditHistoryStore((s) => s.addAuditFromResults);
+  const mergeFromBackend = useAuditHistoryStore((s) => s.mergeFromBackend);
 
   // v2.9.0 B3 — extracted fetch so PullToRefresh can re-invoke it.
-  // Pull-to-refresh BYPASSES the cache (the user is asking for fresh
-  // data). Mount-time fetch keeps the cache-first behaviour.
   const fetchFromBackend = useCallback(async () => {
     if (!jobId) return;
     try {
@@ -278,46 +276,41 @@ function ResultsPageInner() {
       if (response.results) {
         setResults(response.results);
         setError(null);
-        addAuditToHistory(jobId, response.results);
+        addAuditFromResults(jobId, response.results as Record<string, unknown>);
       } else {
         setError(`Job is not complete yet (status: ${response.status}). Please wait and refresh.`);
       }
     } catch {
       setError('Failed to load audit results. Check that the server is running.');
     }
-  }, [jobId, client, addAuditToHistory]);
+  }, [jobId, client, addAuditFromResults]);
 
-  // Fetch results on mount — cache-first, then backend fallback.
+  // Fetch results on mount — backend always (store no longer caches full results).
   // When no jobId is present we render a history list view instead of an error.
   useEffect(() => {
     if (!jobId) {
       setLoading(false);
       return;
     }
-
-    const cached = getAuditFromHistory(jobId);
-    if (cached) {
-      setResults(cached.results);
-      setLoading(false);
-      return;
-    }
-
     (async () => {
       await fetchFromBackend();
       setLoading(false);
     })();
   }, [jobId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // When showing the history list, fetch the pipeline ingestion total from
-  // the backend so webhook-scraped documents are surfaced here too.
+  // When showing the history list: sync from backend DB + fetch pipeline total.
   useEffect(() => {
     if (jobId) return;
+    // Pull completed audit jobs from DB into local store.
+    client
+      .getAuditHistory(1, 500)
+      .then((r) => mergeFromBackend(r.items ?? []))
+      .catch(() => { /* backend offline */ });
+    // Pipeline ingestion banner.
     client
       .listDocuments({ page: 1, per_page: 1 })
-      .then((r) => {
-        if (typeof r.total === 'number') setPipelineTotal(r.total);
-      })
-      .catch(() => { /* backend offline — skip the banner */ });
+      .then((r) => { if (typeof r.total === 'number') setPipelineTotal(r.total); })
+      .catch(() => { /* backend offline */ });
   }, [jobId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Download handlers
@@ -431,10 +424,8 @@ function ResultsPageInner() {
 
           <div className="space-y-2">
             {historyEntries.map((entry) => {
-              const r = entry.results;
-              const sev = r.severity_summary;
-              const firstDoc = r.document_manifest?.[0]?.filename ?? 'Unnamed';
-              const more = r.document_count > 1 ? ` +${r.document_count - 1} more` : '';
+              const sev = entry.severity_summary ?? {};
+              const more = entry.more_docs > 0 ? ` +${entry.more_docs} more` : '';
               return (
                 <AppLink
                   key={entry.job_id}
@@ -444,27 +435,27 @@ function ResultsPageInner() {
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-gray-900 text-sm truncate">
-                        {firstDoc}{more}
+                        {entry.first_filename}{more}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {r.generated_at?.slice(0, 16).replace('T', ' ')}
+                        {entry.generated_at?.slice(0, 16).replace('T', ' ')}
                         &nbsp;·&nbsp;
-                        {r.finding_count} finding{r.finding_count === 1 ? '' : 's'}
+                        {entry.finding_count} finding{entry.finding_count === 1 ? '' : 's'}
                         &nbsp;·&nbsp;
                         <span className="font-mono">{entry.job_id.slice(0, 8)}</span>
                       </p>
                     </div>
                     <div className="flex gap-1 text-xs flex-shrink-0">
-                      {sev.critical > 0 && (
+                      {(sev.critical ?? 0) > 0 && (
                         <span className="hud-sev hud-sev-critical">C {sev.critical}</span>
                       )}
-                      {sev.high > 0 && (
+                      {(sev.high ?? 0) > 0 && (
                         <span className="hud-sev hud-sev-high">H {sev.high}</span>
                       )}
-                      {sev.medium > 0 && (
+                      {(sev.medium ?? 0) > 0 && (
                         <span className="hud-sev hud-sev-medium">M {sev.medium}</span>
                       )}
-                      {sev.low > 0 && (
+                      {(sev.low ?? 0) > 0 && (
                         <span className="hud-sev hud-sev-low">L {sev.low}</span>
                       )}
                     </div>

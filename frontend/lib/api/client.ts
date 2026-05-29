@@ -230,6 +230,14 @@ export class APIClient {
     return data;
   }
 
+  /** GET /api/v1/audit/history — lightweight summaries for history list. */
+  async getAuditHistory(page = 1, perPage = 500): Promise<AuditHistoryResponse> {
+    const { data } = await this.http.get<AuditHistoryResponse>(
+      `/api/v1/audit/history?page=${page}&per_page=${perPage}`,
+    );
+    return data;
+  }
+
   /** GET /api/v1/audit/export/{job_id} — returns Blob for download */
   async exportAudit(jobId: string, format = 'markdown'): Promise<Blob> {
     const { data } = await this.http.get<Blob>(
@@ -425,6 +433,30 @@ export class APIClient {
     );
     return data;
   }
+}
+
+// ---------------------------------------------------------------------------
+// v3.3.2 audit history types
+// ---------------------------------------------------------------------------
+
+export interface AuditHistorySummaryItem {
+  job_id: string;
+  status: string;
+  completed_at: string | null;
+  generated_at: string | null;
+  document_count: number;
+  finding_count: number;
+  severity_summary: { critical: number; high: number; medium: number; low: number };
+  first_filename: string;
+  more_docs: number;
+}
+
+export interface AuditHistoryResponse {
+  items: AuditHistorySummaryItem[];
+  total: number;
+  page: number;
+  per_page: number;
+  has_more: boolean;
 }
 
 // ---------------------------------------------------------------------------
