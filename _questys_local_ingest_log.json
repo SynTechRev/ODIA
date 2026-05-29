@@ -1,0 +1,713 @@
+{
+  "2824": {
+    "status": "completed",
+    "sha256": "d0a0eeca932764ed22cde54c401d509251fa1ad9666b6acb10ed5ef0d52bede4",
+    "filename": "AGENDA 14 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 567296,
+    "findings": 2,
+    "score": 0.8,
+    "reingested": true
+  },
+  "2825": {
+    "status": "completed",
+    "sha256": "c9e4d73b84e30f4140dbd4fe8c62b034fe31fa109f5be68134a02a381402b5ad",
+    "filename": "WEB AGENDA 14 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 574464,
+    "findings": 2,
+    "score": 0.8,
+    "reingested": true
+  },
+  "2868": {
+    "status": "completed",
+    "sha256": "d3e11ab9ef7175a96bca9d97add06821ae7c6a43fcf4a6cc7d49c1156c053301",
+    "filename": "AGENDA 07 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 558080,
+    "findings": 3,
+    "score": 0.75,
+    "reingested": true
+  },
+  "2869": {
+    "status": "completed",
+    "sha256": "6f0875645b35d5b41bd497943e5454d6c3cd717c5de9baa44101adc1d4df5080",
+    "filename": "WEB AGENDA 07 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 560128,
+    "findings": 3,
+    "score": 0.75,
+    "reingested": true
+  },
+  "2913": {
+    "status": "completed",
+    "sha256": "0a307787af2ef1a0dcbd9a6efffce308fde676a0268190ac4d33436493083eb0",
+    "filename": "AGENDA 21 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 559104,
+    "findings": 2,
+    "score": 0.8,
+    "reingested": true
+  },
+  "2914": {
+    "status": "completed",
+    "sha256": "9b19c656749be882f7de270639d37daf640d9573d63834c103ce14a95f5e709a",
+    "filename": "WEB AGENDA 21 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 560640,
+    "findings": 2,
+    "score": 0.8,
+    "reingested": true
+  },
+  "2952": {
+    "status": "completed",
+    "sha256": "467303cff3ec6aa13028e29345069330b7df905328ff1c01a9813f145f67bf01",
+    "filename": "AGENDA 14 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 534528,
+    "findings": 1,
+    "score": 0.95,
+    "reingested": true
+  },
+  "2953": {
+    "status": "completed",
+    "sha256": "b2d5950dda273584cf89027aeb673f3825a58d842b591ab6c5228c08b5a41492",
+    "filename": "WEB AGENDA 14 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 534528,
+    "findings": 1,
+    "score": 0.95,
+    "reingested": true
+  },
+  "2957": {
+    "status": "completed",
+    "sha256": "5e04c534a545215b8255fb8e10fb4c2f38cd3e8b747bb00f5e9e38213fef8c4b",
+    "filename": "AGENDA 28 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 568320,
+    "findings": 3,
+    "score": 0.75,
+    "reingested": true
+  },
+  "2958": {
+    "status": "completed",
+    "sha256": "01645836f1d9be78c84cb8b2e8e41d5750998b77d6e0893810f41aa30f5ca773",
+    "filename": "AGENDA 28 MAR 2006.doc",
+    "ext": "doc",
+    "bytes": 564224,
+    "findings": 3,
+    "score": 0.75,
+    "reingested": true
+  },
+  "164293": {
+    "status": "completed",
+    "sha256": "65765c1bc865ca7b22f0cd90341b1ce8721b0eaa45dc738186297749bf9dd130",
+    "filename": "01.05.2021 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 984254,
+    "findings": 3,
+    "score": 0.75
+  },
+  "164294": {
+    "status": "completed",
+    "sha256": "1f30c38c71cc4c092974c735d13e02a4d9b8f5c6e253d5a5a1b984f077e03682",
+    "filename": "01.26.2021 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 1138497,
+    "findings": 3,
+    "score": 0.75
+  },
+  "164329": {
+    "status": "completed",
+    "sha256": "3e72355bf594bf7c72aaf8de7f3a3773af01f39b83b62a3f42b10c25eedda466",
+    "filename": "01.04.2022 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 1275673,
+    "findings": 3,
+    "score": 0.75
+  },
+  "164330": {
+    "status": "completed",
+    "sha256": "9e0170c0a041a1cba348f2f89b1d052d7ebae32bdbd5258b50f7daca1ce0159c",
+    "filename": "01.11.2022 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 829710,
+    "findings": 3,
+    "score": 0.75
+  },
+  "164363": {
+    "status": "completed",
+    "sha256": "c877cdd1830907c6cdd32c1b7778a8a6ecaef2b0d009fb4f95abe2e1922e8748",
+    "filename": "01.10.2023 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 1662249,
+    "findings": 3,
+    "score": 0.75
+  },
+  "164364": {
+    "status": "completed",
+    "sha256": "d5cda30b28c916fcc246e950434234f3a94717a55566e2430677eaf4bb09adbf",
+    "filename": "01.24.2023 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 844845,
+    "findings": 4,
+    "score": 0.6499999999999999
+  },
+  "179354": {
+    "status": "completed",
+    "sha256": "6b25dd3a12726e34dbb6ae7a74e22972ad817eb639239e041fcf87d5ff8717aa",
+    "filename": "01.09.2024 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 1124790,
+    "findings": 4,
+    "score": 0.7
+  },
+  "179355": {
+    "status": "completed",
+    "sha256": "40d534171ff7b4284c85a463f46fc8f8da311e31bb637085cc6b63397768045d",
+    "filename": "01.23.2024 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 1145277,
+    "findings": 3,
+    "score": 0.75
+  },
+  "179389": {
+    "status": "completed",
+    "sha256": "8c1e6f1a3f9a4b45164bf60df478bb06e6964b5e178c6d7f0b7c2df503d8b92f",
+    "filename": "01.07.2025 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 175926,
+    "findings": 3,
+    "score": 0.75
+  },
+  "179390": {
+    "status": "completed",
+    "sha256": "d4d43606f92c74e8ad4167ecd4e58d43ecbfd5cb7c91781c996c4c983a281c24",
+    "filename": "01.14.2025 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 156859,
+    "findings": 4,
+    "score": 0.6499999999999999
+  },
+  "90351": {
+    "status": "completed",
+    "sha256": "f3a3f586b0be29db4d8269e221ab7558edcb5544fb25f9c0c9967259e88c9674",
+    "filename": "Agenda Packet Document 1.pdf",
+    "ext": "pdf",
+    "bytes": 11852,
+    "findings": 0,
+    "score": 1.0
+  },
+  "95935": {
+    "status": "download_failed",
+    "reason": "persistent_tiny_response (59B)",
+    "bytes": 59,
+    "filename": "Agenda Packet Document 1.pdf",
+    "ext": "pdf"
+  },
+  "102053": {
+    "status": "completed",
+    "sha256": "78bd9500c3ca863e5af5e431b8523ce41e1d50beb6468a2b30d433fee9d87561",
+    "filename": "Agenda Packet Document 1.pdf",
+    "ext": "pdf",
+    "bytes": 93917,
+    "findings": 1,
+    "score": 0.9
+  },
+  "102054": {
+    "status": "download_failed",
+    "reason": "persistent_tiny_response (59B)",
+    "bytes": 59,
+    "filename": "Agenda Packet Document 1.pdf",
+    "ext": "pdf"
+  },
+  "133063": {
+    "status": "completed",
+    "sha256": "132cf6d1e2c6f62a3a4282423f146b049bf0315ad6fa3805953daa9d877aa65f",
+    "filename": "Agenda Packet Document 1.pdf",
+    "ext": "pdf",
+    "bytes": 1138406,
+    "findings": 2,
+    "score": 0.85
+  },
+  "133064": {
+    "status": "completed",
+    "sha256": "33da68e502de1b51fed8cc9ae699b6e8e6a0232c46fe5745d3727169aca61de0",
+    "filename": "Agenda Packet Document 2.pdf",
+    "ext": "pdf",
+    "bytes": 11474669,
+    "findings": 5,
+    "score": 0.71
+  },
+  "133065": {
+    "status": "completed",
+    "sha256": "a68ca23791a7620d6ef959efe46f7d7cca01665d219bd2b0328969a71bcd705e",
+    "filename": "Agenda Packet Document 3.pdf",
+    "ext": "pdf",
+    "bytes": 167943,
+    "findings": 2,
+    "score": 0.85
+  },
+  "168051": {
+    "status": "completed",
+    "sha256": "699454f9b3e7b14bf59b3598bfffe91649baeba02adc714e3c0f28d3870bf79a",
+    "filename": "Appellant Packet.pdf",
+    "ext": "pdf",
+    "bytes": 908416,
+    "findings": 2,
+    "score": 0.8
+  },
+  "10889": {
+    "status": "completed",
+    "sha256": "dfe6bc424a9ae5fa3f6556768d7bf7cc9b37ea73b9cea2501d8168841ff824cd",
+    "filename": "08.28.2012.01.SCE Presentation.tif",
+    "ext": "tif",
+    "bytes": 52829,
+    "findings": 0,
+    "score": 1.0
+  },
+  "94157": {
+    "status": "completed",
+    "sha256": "f32fd6feceb11aa116d97fb13811cc5a2de729e95070af45fb0e2b5a08427804",
+    "filename": "08.26.2014.Sheriff.Presentation.tif",
+    "ext": "tif",
+    "bytes": 51511,
+    "findings": 0,
+    "score": 1.0
+  },
+  "147398": {
+    "status": "completed",
+    "sha256": "5dd28a548cb3f81b3ea44cc243c52f8136889b5ab658b74ec3d0433b6a2e820a",
+    "filename": "Attachments.pdf",
+    "ext": "pdf",
+    "bytes": 10742860,
+    "findings": 0,
+    "score": 1.0
+  },
+  "179434": {
+    "status": "completed",
+    "sha256": "a470655aad52f1389e2fec836c0fa5e8c81fd211e2b24d66b54df471d0dbbb9d",
+    "filename": "Attachment.pdf",
+    "ext": "pdf",
+    "bytes": 45535,
+    "findings": 0,
+    "score": 1.0
+  },
+  "179452": {
+    "status": "completed",
+    "sha256": "d148acd2a98695096b005ae55fdbcc04c4af7fcf7d7c4bc2c9ce2f7a0c877dc8",
+    "filename": "Attachment.pdf",
+    "ext": "pdf",
+    "bytes": 1819003,
+    "findings": 4,
+    "score": 0.6499999999999999
+  },
+  "179460": {
+    "status": "completed",
+    "sha256": "f845e24b199d3d3341786cecddb937c84a17c193badd0b2ac9cb32cc1ed4e8ed",
+    "filename": "Attachment.pdf",
+    "ext": "pdf",
+    "bytes": 249917,
+    "findings": 2,
+    "score": 0.85
+  },
+  "179482": {
+    "status": "completed",
+    "sha256": "a13502820d90ec3336485ca4643beca336f4f64ed8a5df5de51b7b18a836411b",
+    "filename": "Attachments.pdf",
+    "ext": "pdf",
+    "bytes": 1057289,
+    "findings": 0,
+    "score": 1.0
+  },
+  "179485": {
+    "status": "completed",
+    "sha256": "8ab5adb13bef08fbe83b9d2bad868e2048528855e2f80a6ae40bd1c614d99172",
+    "filename": "Attachment- Notice of Award.pdf",
+    "ext": "pdf",
+    "bytes": 2985401,
+    "findings": 0,
+    "score": 1.0
+  },
+  "179495": {
+    "status": "already_seen",
+    "sha256": "c531766e996ed0bc252f69a1b9d4013f7c2b747bff31cada03abd90f2ce9f498",
+    "filename": "Attachment B.pdf",
+    "ext": "pdf",
+    "bytes": 632619
+  },
+  "179501": {
+    "status": "completed",
+    "sha256": "bc522be9a2aebf4a9e356543654d691ddb95493961af26dda520c3f054cadea6",
+    "filename": "Attachment- Applicaton and Terms and Conditions.pdf",
+    "ext": "pdf",
+    "bytes": 262791,
+    "findings": 2,
+    "score": 0.85
+  },
+  "179502": {
+    "status": "completed",
+    "sha256": "3f4ca02288aa58c6778213102fdf8ea6d486b8433ee23ea393934408bf9f5994",
+    "filename": "Attachment C- Attestation Only.docx",
+    "ext": "docx",
+    "bytes": 149544,
+    "findings": 0,
+    "score": 1.0
+  },
+  "45914": {
+    "status": "completed",
+    "sha256": "211dadd6585e9dbbcfb779c8e9d4131c233d4067c3cdbee17c63d1609186c469",
+    "filename": "01.09.2001.Addendum.tif",
+    "ext": "tif",
+    "bytes": 51894,
+    "findings": 0,
+    "score": 1.0
+  },
+  "47905": {
+    "status": "completed",
+    "sha256": "d13cd2b375d925e1822a0f2e3b37dda18b71cb22e19369ab7059e16d58f2c48b",
+    "filename": "01.07.2003.Addendum.tif",
+    "ext": "tif",
+    "bytes": 51764,
+    "findings": 0,
+    "score": 1.0
+  },
+  "50919": {
+    "status": "completed",
+    "sha256": "53ec9638a5cbecad0fb93d98933789704ab3ea7f1b64684d3a0511d68b357803",
+    "filename": "01.10.2006.Addendum.tif",
+    "ext": "tif",
+    "bytes": 51764,
+    "findings": 0,
+    "score": 1.0
+  },
+  "108075": {
+    "status": "completed",
+    "sha256": "2da06813f4113c26e7056040bdae2cf2dfcccb0fe59002af678e9a7c69cf7725",
+    "filename": "01.26.2016.Addendum Agenda.docx",
+    "ext": "docx",
+    "bytes": 511935,
+    "findings": 1,
+    "score": 0.95
+  },
+  "108076": {
+    "status": "download_failed",
+    "reason": "persistent_tiny_response (30843B)",
+    "bytes": 30843,
+    "filename": "01.26.2016.Addendum Web Agenda.html",
+    "ext": "html"
+  },
+  "122005": {
+    "status": "completed",
+    "sha256": "e0845e7859f7e5a1e62066e94f7c6994cc8a9205b45a67648ffc881a519167ca",
+    "filename": "01.09.2018.Addendum Agenda.docx",
+    "ext": "docx",
+    "bytes": 509650,
+    "findings": 1,
+    "score": 0.95
+  },
+  "122006": {
+    "status": "download_failed",
+    "reason": "persistent_tiny_response (35687B)",
+    "bytes": 35687,
+    "filename": "01.09.2018.Web Agenda Addendum.html",
+    "ext": "html"
+  },
+  "131455": {
+    "status": "completed",
+    "sha256": "0bcfc2d06bfc875bde44afa5d27cc34308368e3b5493e2e7da92c21768b67c09",
+    "filename": "01.29.2019.ADDENDUM.docx",
+    "ext": "docx",
+    "bytes": 69723,
+    "findings": 1,
+    "score": 0.95
+  },
+  "131456": {
+    "status": "download_failed",
+    "reason": "persistent_tiny_response (44894B)",
+    "bytes": 44894,
+    "filename": "01.29.2019.Web Addendum.html",
+    "ext": "html"
+  },
+  "179901": {
+    "status": "completed",
+    "sha256": "8015c56dcd41187b222774e930e0fa26d4e9711b99b0b432fddb4941f2b18218",
+    "filename": "Funding Extension Letter -AMD Lab Expansion Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 246526,
+    "findings": 1,
+    "score": 0.95
+  },
+  "170980": {
+    "status": "completed",
+    "sha256": "7c2f7ffea21154ebaebbe53c20240f174f9907cc789fbffea8132eccf84e7225",
+    "filename": "UV22 RFP Denial Letter.pdf",
+    "ext": "pdf",
+    "bytes": 111496,
+    "findings": 0,
+    "score": 1.0
+  },
+  "173440": {
+    "status": "completed",
+    "sha256": "f8ffd39fbdf5eb23dd520feef5d345b7d09ff75082c037d286fb2047e312ebec",
+    "filename": "Attachment 3-Graviton RFP Response No 23-005.pdf",
+    "ext": "pdf",
+    "bytes": 6781705,
+    "findings": 4,
+    "score": 0.7
+  },
+  "47536": {
+    "status": "completed",
+    "sha256": "ccd5c5a7c94336a6d0a03857600f0923178c14fa8e8e9acc97ce9de0ac3835c9",
+    "filename": "09.09.2002.Budget Hearings.tif",
+    "ext": "tif",
+    "bytes": 51779,
+    "findings": 0,
+    "score": 1.0
+  },
+  "47560": {
+    "status": "completed",
+    "sha256": "837d004bd319d6dd482bd126b52ea4e8c36edc4f34e352a82b3597f056f046d0",
+    "filename": "09.16.2002.Budget Hearings.tif",
+    "ext": "tif",
+    "bytes": 81113,
+    "findings": 0,
+    "score": 1.0
+  },
+  "49661": {
+    "status": "completed",
+    "sha256": "64619a8ab34e607dc6f707a15a2aea2edd434b5ef069afa4ccbd459eae3636f2",
+    "filename": "09.14.2004.BUDGET HEARINGS.tif",
+    "ext": "tif",
+    "bytes": 52039,
+    "findings": 0,
+    "score": 1.0
+  },
+  "49662": {
+    "status": "completed",
+    "sha256": "b0c38aa67a2c1889ae2e9ed8f19b9529639f84bf5e9f3bef036faebca392aeac",
+    "filename": "09.14.2004.BUDGETHEARINGS.tif",
+    "ext": "tif",
+    "bytes": 54017,
+    "findings": 0,
+    "score": 1.0
+  },
+  "78098": {
+    "status": "completed",
+    "sha256": "5d90868fb2e25ea45396fd3902697c813290dea46f4a691afe68a4d3f4dce37f",
+    "filename": "09.15.2009.36.Budget Hearings.tif",
+    "ext": "tif",
+    "bytes": 64560,
+    "findings": 0,
+    "score": 1.0
+  },
+  "180126": {
+    "status": "completed",
+    "sha256": "24a2024b960d4f3b6475eb5de745a9e29112b2140cdcccbc8417f797ad239cb9",
+    "filename": "Notice of Hearing.pdf",
+    "ext": "pdf",
+    "bytes": 182562,
+    "findings": 0,
+    "score": 1.0
+  },
+  "172240": {
+    "status": "completed",
+    "sha256": "e3dc9f340d0ecdff1a83e2cd4ac1521612a5c575bee49da84de9033218274d53",
+    "filename": "PSA Program Supplement No F118 Received 7 6 2023.pdf",
+    "ext": "pdf",
+    "bytes": 832695,
+    "findings": 3,
+    "score": 0.8
+  },
+  "172241": {
+    "status": "completed",
+    "sha256": "53354869c8567cde31630c577697038c056dfef85e8b462d79c23c7c476c0717",
+    "filename": "PSA Program Supplemental No F119 Received 7 6 2023.pdf",
+    "ext": "pdf",
+    "bytes": 860599,
+    "findings": 3,
+    "score": 0.8
+  },
+  "172292": {
+    "status": "completed",
+    "sha256": "1d12f4cd1a07ed6f24233aa4d3e304468d033ca96799723e5e3ca2782710a06b",
+    "filename": "PSA Program Supplement No F117 Received 4 14 2023.pdf",
+    "ext": "pdf",
+    "bytes": 953040,
+    "findings": 2,
+    "score": 0.85
+  },
+  "182226": {
+    "status": "completed",
+    "sha256": "42f89f08d3edf67d7630891f912ec105d3c6c216b70291b56d68b7a000cb0577",
+    "filename": "Consent Letter.pdf",
+    "ext": "pdf",
+    "bytes": 498993,
+    "findings": 0,
+    "score": 1.0
+  },
+  "182229": {
+    "status": "completed",
+    "sha256": "337c6ea80c7d02ad4f41a0cf0221844cb5a06b5a57889cd705528fc1a3bbb230",
+    "filename": "Consent Letter.pdf",
+    "ext": "pdf",
+    "bytes": 502261,
+    "findings": 0,
+    "score": 1.0
+  },
+  "179269": {
+    "status": "completed",
+    "sha256": "a6d390068e11b62eb5649ab08989b2e304a78adf9197ae52865ad0f3b4fc93c0",
+    "filename": "01.07.2025 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 135813,
+    "findings": 2,
+    "score": 0.8
+  },
+  "179271": {
+    "status": "completed",
+    "sha256": "4eda7f281757a5da835cde9ac035d4fd661c4d23c2744058b14c9d745c0a369d",
+    "filename": "01.14.2025 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 124911,
+    "findings": 2,
+    "score": 0.8
+  },
+  "179273": {
+    "status": "completed",
+    "sha256": "6caac38313effba65fcc7445835a385084c244f4855cd35134b94f41b8b49f95",
+    "filename": "01.28.2025 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 153883,
+    "findings": 2,
+    "score": 0.8
+  },
+  "179391": {
+    "status": "completed",
+    "sha256": "0547dae67a0a406f79af5da110c69ea179f4c6a3d8c04715bf8435989f2aa091",
+    "filename": "01.28.2025 Minutes.pdf",
+    "ext": "pdf",
+    "bytes": 201815,
+    "findings": 3,
+    "score": 0.75
+  },
+  "179181": {
+    "status": "completed",
+    "sha256": "937a907c2d4a31a4b0ced1ea4ac724c3c0c080d8db50e688e795c76bf60c2016",
+    "filename": "01.09.2024 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 141311,
+    "findings": 3,
+    "score": 0.75
+  },
+  "179183": {
+    "status": "completed",
+    "sha256": "65e41eb9ec6262830c0fe925ade02cfe850adb8de72cacc9019b835e1a5164ee",
+    "filename": "01.23.2024 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 139884,
+    "findings": 2,
+    "score": 0.8
+  },
+  "164120": {
+    "status": "completed",
+    "sha256": "ba606303272fbcc29df2db5721002423ac46e319ff1f1b8ffb461f3cdd438a01",
+    "filename": "01.04.2022 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 222218,
+    "findings": 2,
+    "score": 0.8
+  },
+  "164122": {
+    "status": "completed",
+    "sha256": "adbbd7a867933ab17e41e50627d8c28886bfa04c81a445db6b79ce00de02a310",
+    "filename": "01.11.2022 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 129419,
+    "findings": 2,
+    "score": 0.8
+  },
+  "164124": {
+    "status": "completed",
+    "sha256": "2b4623442665dc82a6b162cc9a80d6441b022fea840a314c0db982762a9fd217",
+    "filename": "01.25.2022 PDF Agenda.pdf",
+    "ext": "pdf",
+    "bytes": 147884,
+    "findings": 2,
+    "score": 0.8
+  },
+  "2787": {
+    "status": "completed",
+    "sha256": "85f49c7974ef502cc4da9bff25abb70b3f3cedd451cdd41d1d674718746be1ca",
+    "filename": "02.28.2006.02.HHSA.tif",
+    "ext": "tif",
+    "bytes": 51626,
+    "findings": 0,
+    "score": 1.0
+  },
+  "2788": {
+    "status": "completed",
+    "sha256": "88300ece2b264248c21fe593b3c14bc3ce4877baf4dafc5c11fceb277434e206",
+    "filename": "02.28.2006.02.HHSA.doc",
+    "ext": "doc",
+    "bytes": 27648,
+    "findings": 1,
+    "score": 0.95,
+    "reingested": true
+  },
+  "2789": {
+    "status": "completed",
+    "sha256": "6fcf9521919274104652e665612872759e20bca6e8cc09735cd78a98b820e6ad",
+    "filename": "02.28.2006.02.HHSA.doc",
+    "ext": "doc",
+    "bytes": 19968,
+    "findings": 1,
+    "score": 0.95,
+    "reingested": true
+  },
+  "2790": {
+    "status": "completed",
+    "sha256": "f76fba42f46f256ffa6d535dfd0a46586674a22ac7b81d3420035538a059ee02",
+    "filename": "02.28.2006.02.HHSA.tif",
+    "ext": "tif",
+    "bytes": 52016,
+    "findings": 0,
+    "score": 1.0
+  },
+  "68239": {
+    "status": "completed",
+    "sha256": "853273d5c69ffd258043fa8c03e9bbe69752ac30508d6c485a92f965b0945410",
+    "filename": "02.28.2006.03.Auditor.tif",
+    "ext": "tif",
+    "bytes": 51766,
+    "findings": 0,
+    "score": 1.0
+  },
+  "68240": {
+    "status": "completed",
+    "sha256": "6724aec3c5fc238e4beb1972731adce8ac51dcc574e483fd35cc845ac1fcff63",
+    "filename": "22631- Secretary of State - 2.28.2006.tif",
+    "ext": "tif",
+    "bytes": 53380,
+    "findings": 0,
+    "score": 1.0
+  },
+  "68242": {
+    "status": "completed",
+    "sha256": "4e737e308cfaa6dc017548d32d6264bfd27f99da96aeb869059e2f417b27c337",
+    "filename": "02.28.2006.04.BOS.tif",
+    "ext": "tif",
+    "bytes": 51628,
+    "findings": 0,
+    "score": 1.0
+  },
+  "183304": {
+    "status": "completed",
+    "sha256": "15237a0b5384c8e9ae282047f37e14af908eb05b9fa802b1ef8b79fd8950c0e1",
+    "filename": "32006  Department of Social Services.pdf",
+    "ext": "pdf",
+    "bytes": 566734,
+    "findings": 0,
+    "score": 1.0
+  }
+}

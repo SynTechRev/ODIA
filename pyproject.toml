@@ -34,6 +34,10 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",
     "python-jose[cryptography]>=3.3.0",
     "python-docx>=1.1.0",
+    # v3.3.0 — pyyaml is required for the legal_corpora.yml registry
+    # consumed by LegalResolver at boot. Without this, /api/v1/legal/status
+    # 503s with "No module named 'yaml'" and statute embedding is dead.
+    "pyyaml>=6.0",
 ]
 authors = [
     {name = "Synthetic Technology Revolution", email = "syntechrev@gmail.com"}

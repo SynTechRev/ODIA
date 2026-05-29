@@ -1,0 +1,1001 @@
+
+
+<!--[if HTML5]><![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js lt-ie10" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js" lang="en"> <!--<![endif]--> 
+<head id="ctl00_Head1"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta charset="utf-8" /><title>
+	LSx Agenda in Questys Solutions - CMx Web Client
+</title><meta name="description" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Le styles -->   
+    <link rel="stylesheet" href="../assets/css/bootstrap.css" media="all" /><link rel="stylesheet" href="../assets/css/bootstrap-responsive.css" media="all" /><link rel="stylesheet" href="../assets/css/custom.css" />
+
+    <script src="../assets/js/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>        
+        <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../Images/App.ico" /><link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png" /><link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png" /><link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png" /><link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png" />
+    <style type="text/css">
+        .treePanel {
+            background-color:#f5f5f5;
+            max-height:600px;
+            overflow:auto;
+            padding-bottom:30px;
+        }
+    </style>
+    <script type="text/javascript">
+        function CloseTab(tabId) {
+            try{
+                var $edit = $('#browseTab a:last');
+                $edit.remove();
+
+                var recTab = null;
+                if (tabId != "") {
+                    var tabHref = window.location + "#" + tabId; //sometimes browser append hash on windows location
+                    recTab = $('#browseTab a[href="' + tabHref + '"]');
+                }
+                if (recTab == null || recTab.length == 0) {
+                    recTab = $('#browseTab a:first');
+                }               
+                if (recTab != null && recTab.length > 0 && recTab.val() != "")
+                    recTab.tab('show');
+            }
+            catch (e) {
+                window.status = e;
+            }
+        }
+        function CloseAndRefreshTab(tabId, tabHeader) {
+             try{                
+                 CloseTab(tabId);
+                 if (tabId == "newAgendaTab") {   //for new event tab do not refresh updatepanel just show tab and refresh iframe and fields
+                     loadIframe("ifrm", "../Agenda/NewAgendaMeeting.aspx?sourceTabId=recordTab&refreshFields=true");
+                 }
+                 else {
+                     RefreshView(tabHeader);
+                 }
+            }
+            catch (e) {
+                window.status = e;
+            }
+        }
+        function CloseMeetingTemplateTab(refreshSelectedTemplate) {
+            try {
+                CloseTab('Meeting Templates');
+
+                var $newAgendaTab = $('#browseTab a[href="#newAgendaTab"]');
+                if ($newAgendaTab.length > 0 && refreshSelectedTemplate) {
+                        loadIframe("ifrm", "../Agenda/NewAgendaMeeting.aspx?sourceTabId=recordTab");
+                }
+                else {
+                    RefreshView('Meeting Templates');
+                }
+            }
+            catch (e) {
+                window.status = e;
+            }
+        }
+        function AddTab(title, url, tabName) {
+            try {
+                if ($('#rightTabs').length > 0) {
+                    $('#rightTabs div.active').removeClass('active');
+                    $('#browseTab li.active').removeClass('active');
+                    var $edit = $('#browseTab a[href="#'+tabName+'"]');
+                    if ($edit.length > 0)
+                        $edit.remove();
+                    var $dinTab = $('#' + tabName);
+                    if ($dinTab.length > 0) //if exist remove. (this is moved from Close function)
+                        $dinTab.remove();
+
+                    var ifr = CreateIframe(url);
+                    $('#rightTabs').append("<div class='tab-pane active' id='" + tabName + "'>" + ifr + "</div>");
+                    $('#browseTab').append('<li><a href="#' + tabName + '" data-toggle="tab">' + title + '</a></li>');
+                    $('#browseTab a:last').tab('show');
+
+                    ShowHideRightPanel("visible");
+                }
+            }
+            catch (e) {
+                window.status = e;
+            }
+        }
+        function loadIframe(iframeName, url) {
+            var $iframe = $('#' + iframeName);
+            if ($iframe.length) {
+                $iframe.attr('src', url);
+                return false;
+            }
+            return true;
+        }
+        function CreateIframe(url) {
+            var fr = "<div id='divLoading' class='divLoading'>" +
+                   "<img alt='Loading' src='../Images/file-loader.gif' style='margin-right:3px;'><span style='color:#003399;'>Loading...</span></div>";
+            fr = fr + "<iframe name='ifrm' id='ifrm' src='" + url + "' style='margin: 0px; width: 100%; height: 600px;border:none;' frameBorder='0'></iframe>";
+            return fr;
+        }
+        function RefreshView(args) {
+            var UpdatePanel1 = 'ctl00_DefaultContent_upLeftTree';
+             if (UpdatePanel1 != null)
+                 __doPostBack(UpdatePanel1, args);
+         }
+         function RefreshRecordInfoPanel(args) {
+             var UpdatePanel1 = 'ctl00_DefaultContent_upRight';
+             if (UpdatePanel1 != null)
+                 __doPostBack(UpdatePanel1, args);
+         }
+         function HideLoading() {
+             //hide multiple loading divs for each iframe
+             var loadFiles = getBCN('divLoading');
+             if (loadFiles !== null && loadFiles.length > 0) {
+                 for (var i = 0; i < loadFiles.length; i++) {
+                     loadFiles[i].style.display = "none";
+                 }
+             }
+             else {
+                 loadFiles = document.getElementById('divLoading');
+                 if (loadFiles !== null) {
+                     //loadFiles.style.display = "none";
+                     loadFiles.height = "0px";
+                     loadFiles.parentNode.removeChild(loadFiles);
+                 }
+             }
+         }
+         function getElementsById(id) {
+             return [document.getElementById(id)];
+         }
+         function getBCN(cn) {
+             if (document.getElementsByClassName) // Returns NodeList here
+                 return document.getElementsByClassName(cn);
+
+             cn = cn.replace(/ *$/, '');
+
+             if (document.querySelectorAll) // Returns NodeList here
+                 return document.querySelectorAll((' ' + cn).replace(/ +/g, '.'));
+
+             cn = cn.replace(/^ */, '');
+
+             var classes = cn.split(/ +/), clength = classes.length;
+             var els = document.getElementsByTagName('*'), elength = els.length;
+             var results = [];
+             var i, j, match;
+
+             for (i = 0; i < elength; i++) {
+                 match = true;
+                 for (j = clength; j--; )
+                     if (!RegExp(' ' + classes[j] + ' ').test(' ' + els[i].className + ' '))
+                         match = false;
+                 if (match)
+                     results.push(els[i]);
+             }
+
+             // Returns Array here
+             return results;
+         }
+         function ShowHideRightPanel(att) {
+             var div = document.getElementById('ctl00_DefaultContent_rightDIV');
+             if (div !== undefined) {
+                 div.style.visibility = att;
+             }
+         }
+         function OnClientItemsRequesting(sender, eventArgs) {
+             var context = eventArgs.get_context();
+             //var hidden_fields = $('#recordTab').find('input:hidden');
+             //if (hidden_fields != undefined) {
+             //    for (var i = 0; i < hidden_fields.length; i++) {
+             //        if (hidden_fields[i].value != '')
+             //            context["FilterIdList"] += hidden_fields[i].value + ',';
+             //    }
+             //}
+             var fieldKey = sender.get_attributes().getAttribute("key");
+             if (fieldKey != undefined) {
+                 context["FieldId"] = fieldKey;
+             }
+         }
+         function OnLookupFieldRefresh(ctrlId, id) {
+             var imgSucc = $("#" + ctrlId.id).find("#imgSucc");
+             var imgErr = $("#" + ctrlId.id).find("#imgError");
+             imgSucc.hide();
+             imgErr.hide();
+             $.ajax({
+                 type: "POST",
+                 contentType: "application/json; charset=utf-8",
+                 url: "../Record/Services/FieldsService.asmx/RefreshFieldLookup",
+                 data: "{'fieldId': '" + id + "'}",
+                 dataType: "json",
+                 success: function (data) {
+                     if (data.d == "ok") {
+                         imgSucc.show();
+                     }
+                 },
+                 error: function (result) {
+                     imgErr.show();
+                 }
+             });
+         }
+         function OnRefreshing(imgId) {
+             var iTemp = document.getElementById(imgId);
+             if (iTemp !== null) {
+                 iTemp.style.display = "inline";
+             }
+             return true;
+         }
+    </script>
+
+    <style type="text/css">        
+        .brand
+        {
+            margin-top: 7px;
+        }
+        .row-fluid > .inner-fluid
+        {
+            border: 0px none white;
+            border-left-style: solid;
+            border-right-style: solid;
+        }
+        .dropdown
+        {
+            list-style: none;
+        }
+        .dropdown-toggle
+        {
+            color: white;
+        }
+    </style>
+
+    <script type="text/javascript">        
+        function doRefresh() { javascript: __doPostBack(''); } // window.location.href=window.location.href
+        function doRedirect() { window.location.href = '/Questys.CMx.WebClient/Login.aspx?Redirect=True?s=true&ReturnUrl=%2fquestys.cmx.webclient%2fAgenda%2fDefault.aspx'; }
+
+        function showUserMessage(secondsToCount) {
+            var myCounter = new Countdown({
+                seconds: secondsToCount,  // number of seconds to count down
+                onUpdateStatus: function (sec) { SetTimerValue(sec); }, // callback for each second
+                onCounterEnd: function () { doRedirect(); } // final action
+            });
+
+            myCounter.start();
+            $('#userMessage').modal('show');
+        } //show session expire message
+        function hideUserMessage() { $('#userMessage').modal('hide'); }
+        function Countdown(options) {
+            var timer,
+            instance = this,
+            seconds = options.seconds || 30,
+            updateStatus = options.onUpdateStatus || function () { },
+            counterEnd = options.onCounterEnd || function () { };
+
+            function decrementCounter() {
+                seconds--;
+                updateStatus(seconds);
+                if (seconds === 0) {
+                    counterEnd();
+                    instance.stop();
+                }
+            }
+
+            this.start = function () {
+                updateStatus(seconds);
+                clearInterval(timer);
+                timer = 0;
+                seconds = options.seconds;
+                timer = setInterval(decrementCounter, 1000);
+            };
+
+            this.stop = function () {
+                clearInterval(timer);
+            };
+        }
+        function SetTimerValue(value) {
+            $('#timer').html(value);
+        }
+
+        function ShowFileHistoryModal(id, headerText) {
+            var url = '';
+            if (id != null) {
+                url = '../File/FilesVersionsList.aspx' + '?id=' + id;               
+            }
+            ShowIframeModal(url, headerText, '300px');
+        }
+        function ShowIframeModal(url, headerText, frameHeight) {
+            SetModalHeaderText(headerText);
+            if (url != '') {
+                var iframe = CreateModalIframe(url, frameHeight)
+                AddControlInCustomModal(iframe);
+            }
+            ShowCustomModal();
+        }
+        function ShowLinkModal(txtValue, headerText, isFile) {
+
+            SetModalHeaderText(headerText);
+            var txtControl = CreateModalInputControl(txtValue.split(';').join('<br />'));
+            AddControlInCustomModal(txtControl);
+            ShowCustomModal();
+        }
+        function AddControlInCustomModal(control) {
+            $('#modalControlHolder').empty();
+            $('#modalControlHolder').append(control);
+        }
+        function CreateModalIframe(url, frameHeight) {
+            var fr = "<div id='divLoading' style='display:inline;'>" +
+                    "<img alt='Loading' src='../Images/file-loader.gif' style='margin-right:3px;'><span style='color:#003399;'>Loading...</span></div>";
+            fr = fr + "<iframe name='ifrm' id='ifrm' src='" + url + "' style='overflow:auto; margin: 0px; width:100%; height: " + frameHeight + ";border:none;' onload='javascript:HideLoading();'></iframe>";
+            return fr;
+        }
+        function CreateModalInputControl(textValue) {
+            var input = "<div style='width:100%;max-height:200px;overflow:auto;'>"+textValue+"</div>"//"<textarea name='ctl00$txtModalLink' class='input-block-level' id='ctl00_txtModalLink' innerText='" + textValue + "' onmouseup='return false' onfocus='this.select()' rows='7' cols='20'/>";
+            return input;
+        }
+        function SetModalHeaderText(headerText) {
+            var header = document.getElementById("modalCustomHeaderLabel");
+            if (header !== undefined) {
+                header.innerText = headerText;
+            }
+        }
+        function ShowCustomModal() {
+            $('#custom_modal').modal('show');
+        }
+        function HideCustomModal() {
+            $('#custom_modal').modal('hide');
+        }
+        function HideLoading() {           
+            var loadFiles = document.getElementById('divLoading');
+            if (loadFiles !== null) {                
+                loadFiles.height = "0px";
+                loadFiles.parentNode.removeChild(loadFiles);
+            }
+        }
+        function CreateRollCallIframe() {
+            var rollDiv = document.getElementById("rollCallTab");
+            if (rollDiv !== undefined && rollDiv.childElementCount == 0) {
+                var i = document.createElement("iframe");
+                i.src = "../Agenda/RollCall.aspx";
+                i.width = "100%";
+                i.height = "600px";
+                i.marginWidth = "0px";
+                i.frameBorder = "none";
+                i.border = "0px";
+                i.style.background = "#ffffff url('../Images/file-loader.gif') no-repeat 5% 5%";
+                rollDiv.appendChild(i)
+            }
+        }
+        function CreatePreviewIframe(recordId, version) {
+            var previewDiv = document.getElementById("previewTab");
+            if (previewDiv !== undefined && previewDiv.childElementCount == 0) {
+                var i = document.createElement("iframe");
+
+                i.src = "../File.ashx?id=" + recordId + "&v=" + version + "&preview=true";
+                i.allowTransparency = true;
+                i.style.width = "100%";
+                i.style.height = "600px";
+                i.marginWidth = "0px";
+                i.frameBorder = "none";
+                i.border = "0px";
+                i.style.background = "#ffffff url('../Images/file-loader.gif') no-repeat 5% 5%";
+                i.id = "PreviewFrame";
+                previewDiv.appendChild(i);
+            }
+        }
+        function PreviewLoaded() {
+            document.getElementById("PreviewFrame").style.display = "";
+        }
+    </script>
+<link href="/Questys.CMx.WebClient/WebResource.axd?d=ssSO-4r07vHylFYbMwHMeN8sxoNgJoVTFo50mOYzf4IFHdr0zsmduSixXfOCFVnywIYgR6DnSmzjHUrusgN-SXSKlFZcHXalfXCOIgiHTWdHGJwCUlBt4tsVmdXysef8Q85-vcro6ta8OsZJI7oEow2&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=1K-KLLga5UwmC6XbXz4lm5Az_6JIM1kqS61G3QkGzVVfxOrLLHrmJZ0T7qRo-NyrH5_6YKi0zxsT83QD0vs8gzj8yByZRrANscFX6AheX4zJCBFjfcCQF04jGpl4IkcLRatedVtohgUy6bxhU45bZ36g8bgrx5rVdVWsqNheA-o1&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=KyJ7Wi0o3Qe1hgCOHC-HlUIvClukvW4Xi9UFhjW-TluqBmZm-gMLHmnmu88aSqAKTlM_0P2dDexMamUw_VfkuiSSy8C1Q_vnTIacO73UEwHaUfOay62qm4eCcyuPkUfAbLsfiztE1VYozjrM904o-Q2&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=2gleHKrY4pFAi4Ey7yAa0nyDF18eBNHwtbEdLkZH5rR78rI15kKTezAQEXL6kDiOfD6aMQ1KVPUDyipds4YgQIg8nTpg1oC3wmKHIhpkJxAGHuVhdk_OvxdNsNMBj5zyoGD3j1VCOhLtHOoLAEyapHtYIXcpeyvMwEOAjBAxFBg1&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /></head>
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+    <form name="aspnetForm" method="post" action="./Default.aspx" id="aspnetForm" class="form-inline">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Questys.CMx.WebClient/WebResource.axd?d=eYBnq4wOI5gUDJYwu2K3507y5iJJu1TxvDH_tWM8SYDoOrYBUdhSxyrFu6tS-XQV7Hu0Yud2IAj1oyhHfY4jYwOjqkH4Qo7FFc3mF49z4Ps1&amp;t=637100542300000000" type="text/javascript"></script>
+
+<script language='javascript' type='text/javascript'>
+var myTimeReminder, myTimeOut;
+clearTimeout(myTimeReminder);
+clearTimeout(myTimeOut);
+myTimeReminder=setTimeout('showUserMessage(180)', 1020000);
+myTimeOut=setTimeout('doRedirect()', 1199995);
+</script>
+
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=NC8gXMsSW3FFGYQ59uW44o9dLl6OlfltjqxwtTryu476DRiA9uYc6UqTf8xqFcsvPuwRVB-wu3oXcWxem7GxQ01N28j4CeM-DmgEjbxqBiNGE0hGbJaB2NI86W6uQRMxrygLsURbHneoUSq1KuvtZQ2&amp;t=7f16157c" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=zHPwi1Pdc3Y0VjT4nUIRuEJa5Gjmh_HDTvImKA0KGc4iStXQOP2eugzdpnXUN55mJ67w-bIGBB5Ynl7KrY3rRcxxQWQxfuRvVuOU1wZDG1KoWzsgnKSIqdTUjv0u8f1Pn9HiJJhUwLqx0uNLjbaWKg2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/button.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/dropdown.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/tab.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/tooltip.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/modal.js" type="text/javascript"></script>
+<script src="../js/Safari3AjaxHack.js" type="text/javascript"></script>
+<script src="../js/default.js" type="text/javascript"></script>
+<script src="../js/LongPolling.js" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=quSyArF8niJX0yZaPWQhnzJdwV3JNybtbwZZQ8OBsHuyCPVhu3e_lYLA0iUazVuP-24ENxoVyTLgHE3f9t2VMA7Kingm6nrynB9pIQtKHUQqGb0xTPS9WQ4_cd4CkRCgBJIL7oW_Mva07BjRvUwOqA2&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=3GhgMhzytzo1TYFenUgN2ZvM1B8Z-L2QwsunKp-YNj-RLsqPt2vxKo3GP5V0Y0OC0l9cw0Y4A9h44ite_hvzLYX1aIxP_uVb30qWSK7fe6reOg-wKYMeQj8DKy6DutGXtK-naMX9HdlVqL9ih6ySZQ2&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=Pt1tDfq0ik3_SThRIXrZs8Psr8fJoe82hqEYmN-x3-xzRw_fEKXW9HS1qkv2vRtJVdqpT5kv6_lDNXVGMyM0p-16pGb_AZaUE9p_9ClIe5FJyoQLsmh8wrgULQzPL2Ndez9p5V9yPS3aeP6rDNjWWg2&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=inaT5vpZbsSqFBMXkT1sVFHO3RGXFKN5zIqCALwJd3X3lt2qtpcgr5k1a-FHct3KhKmDJAAliMU22awezX_AUKWvc_OkYGrEAgCQ77A5H_24FAeUrS0q8foaOesk3zKfnaQAwVTQhn8jfno4mF2t0lx5PQCgYYdZTMTCjtePytk1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=7n_jUVHBrOUJrG8f_enxDgadQErCVQpX1-ZlpXjJ25jrG62v3Ct79s8e001tJgMFMdc1NRlx1lYN02eu31__dV2LekaeDhcDqJvQpykJZRsYihRWeRrcmSBRURpaNt44aUcxRGJRVwpI4LHDgZkg-OECsmdkN1yTbvXrHecAS1U1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=ULOcDxKGsRmW83EHo7_Flaem1X2kf6tX7VGFYbS8lNsbg8v3QoBm2OIddx87I-C07gPtZ6V80VR6jZmiFgSFznF-pqbOzML0iO7hxP0p9mBuJqQ-ifNgEVtqkaFNoI7bdrAf1ulLtUnnU9DP-ZqyDcEFMu1u-EMxT1Bl6UkZeQI1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=w1kFRdBM00SGVAE6zVgsUd5P1gpjkFXW94t1qpk9WqJTNIQ5gef1ST-uByBwoXiWqgjZA6Cwzrj8IWa-TOnw3ZdTuYqz2LcDMLW_FSBzkLLV2viV0TmWBTTqw92PuJBOAbHcNqUrOaGlpZGo_lmZBr9iEK8o79W8useZhJqxnD01&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=EMTLA3eghZl6lq_wwCUz9OqfyydwaGndKXIypwcXRwREdx90x3C25Ux-0tRjh3PlNdMGRAx-g8g2Ew-6kRsoj5jcWN5aF2pIjWT6-rC-z0q0YjK62oo6_h3GCsrfwqdEfEPL_a3sQ8j3tl_01_fdWsyWXx2SuFNafjGp8t71muY1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=MsRYIHxDDaW4zMuSVDlOnfRraqYG2JfkBe-QqS872eamU8fZh9EcUFuB7k6WDoPt_KGhiQtNuD2TsVUGSHz9J9Z1SWQOeAB0jgrXUsfEQTk56f7yKdODfF_NKXd6w2H20J9rDQ8TGjZSWyzgUCalVUMFoZ6x6VWZABub0CIK3vM1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F0857CD1" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+</div>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$upMsgBox','','tctl00$DefaultContent$upLeftTop','','tctl00$DefaultContent$upLeftTree','','tctl00$DefaultContent$upLeftUnassignedTree','','tctl00$DefaultContent$upRight','','tctl00$DefaultContent$recordDetailsInfo$upRecordDetailsInfo','','tctl00$DefaultContent$Workpad$upWorkpad',''], ['ctl00$DefaultContent$listMeetings',''], [], 360000, 'ctl00');
+//]]>
+</script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(window).resize(resizeWindow);
+            resizeWindow();
+        });
+
+        function resizeWindow()
+        {
+            var defaultContainer = $("#DefaultContentContainer");
+            var paddingTop = $("#HeaderContainer").outerHeight(true) + 7;
+            $("body").css("padding-top", paddingTop);
+            defaultContainer.height($(window).height() - paddingTop - $("#BreadcrumbContainer").outerHeight(true)
+                                                       - $("#ctl00_upMsgBox").parent().outerHeight(true) - $("#FooterContainer").outerHeight(true) - 9);
+            defaultContainer[0].style.marginBottom = 0;
+        }
+    </script>
+
+    <div id="HeaderContainer" class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+          <div class="container-fluid">
+              <a class="brand" href="../">Questys CMx</a>
+              <div id="ctl00_NavigationContainer">               
+                  <div class="active">
+                      <ul>
+                          <li class="btn-navbar dropdown">
+                              <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-white icon-chevron-down"></span>Menu</a>
+                              <ul class="dropdown-menu">
+                                  
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl00_hlMenuItem" href="../Browse/Default.aspx">Browse</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl01_hlMenuItem" href="../Search/Default.aspx">Search</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl02_hlMenuItem" href="Default.aspx">Agenda</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl04_hlMenuItem" href="../Workflow/Default.aspx?key=CmdWorkQueues">Work Queue</a>
+                                          </li>
+                                      
+                              </ul>
+                          </li>
+                      </ul>
+                  </div>
+                  <div class="nav-collapse collapse in">
+                      <ul class="nav">
+                          
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl00_hlMenuItem" href="../Browse/Default.aspx">Browse</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl01_hlMenuItem" href="../Search/Default.aspx">Search</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl02_hlMenuItem" href="Default.aspx">Agenda</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl04_hlMenuItem" href="../Workflow/Default.aspx?key=CmdWorkQueues">Work Queue</a>
+                                  </li>
+                              
+                      </ul>
+                  </div>
+                  <div class="navbar-text pull-right">
+                      <i class="icon-user icon-white"></i>
+                      <a id="ctl00_LoginStatus1" href="javascript:__doPostBack(&#39;ctl00$LoginStatus1$ctl00&#39;,&#39;&#39;)" style="color:White;font-weight:bold;">Logout</a>
+                      &nbsp;&nbsp;<span id="ctl00_LoginName1">Welcome, Guest</span>
+                      &nbsp;
+                    
+                  </div>
+              </div>
+          </div>
+      </div>      
+    </div>            
+    <div id="BreadcrumbContainer" class="container-fluid">
+        <div class="row-fluid" style="padding-top: 0px; margin: 0;">
+            <div class="span6">
+                <span id="ctl00_Breadcrumb" class="breadcrumb"><a href="#ctl00_Breadcrumb_SkipLink"><img alt="Skip Navigation Links" src="/Questys.CMx.WebClient/WebResource.axd?d=iebUVdi7OVlXkU-VEZbZ-Zfsd9-CEnHTRy6V2PqxsWO6zQUy6Qa1woI8cqa9x51o_X-Qn9-LjGxnScucHlwoDFZtmL-tke5fNWoxwEnbEpQ1&amp;t=637100542300000000" width="0" height="0" style="border-width:0px;" /></a><span><a href="/questys.cmx.webclient/Default.aspx">Home</a></span><span> &gt; </span><span>Agenda</span><a id="ctl00_Breadcrumb_SkipLink"></a></span>
+                
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div id="ctl00_upMsgBox">
+	
+                    
+
+                
+</div>
+        </div>
+    </div>
+    <div id="DefaultContentContainer" class="container-fluid">
+        <div class="row-fluid" style="height: 100%">
+            <div class="inner-fluid clearfix" style="height: 100%;">
+                
+    <div class="span6" style="margin-left:0px;">
+        <div class="row-fluid">
+            <ul class="nav nav-tabs" id="agendaTab">
+                <li class="active"><a href="#meetingsTab" data-toggle="tab">Meetings</a></li>
+                <li><a href="#unassignedTab" data-toggle="tab">Unassigned Items</a></li>
+            </ul>
+            <div class="tab-content" id="leftTabs" style="background-color: #FFFFFF">
+                <div class="tab-pane active" id="meetingsTab">
+                    <div id="ctl00_DefaultContent_upLeftTop">
+	
+                            <div class="row-fluid">
+                                <div class="span4">
+                                    <div>
+                                        <input name="ctl00$DefaultContent$txtDate" type="text" value="5/19/2026" readonly="readonly" id="ctl00_DefaultContent_txtDate" class="uneditable-input" style="color:DarkBlue;border-color:DarkBlue;font-size:20px;font-weight:bold;height:26px;width:120px;" />
+                                        <input type="image" name="ctl00$DefaultContent$ibtnCalendar" id="ctl00_DefaultContent_ibtnCalendar" title="Click to open calendar" src="../Images/calendar.png" alt="Calendar" onclick="javascript:ChangeDivHeight(&#39;mainCalendar&#39;,220); return false;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$ibtnCalendar&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+                                    </div>
+                                    <div id="mainCalendar" style="position: absolute; z-index: 11; right: 0px; left: 5%; width: 240px; height: 0px; overflow: hidden; text-align: center;">
+                                        <table id="ctl00_DefaultContent_agendaCalendar" cellspacing="0" cellpadding="1" title="Calendar" border="0" style="width:220px;height:200px;font-size:8pt;font-family:Verdana;color:#003399;border-width:1px;border-style:solid;border-color:#3366CC;background-color:White;border-collapse:collapse;">
+		<tr><td colspan="7" style="background-color:#29326D;border-color:#3366CC;border-width:1px;border-style:solid;height:25px;"><table cellspacing="0" border="0" style="color:White;font-family:Verdana;font-size:10pt;font-weight:bold;width:100%;border-collapse:collapse;">
+			<tr><td style="color:#CCCCFF;font-size:8pt;width:15%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','V9587')" style="color:#CCCCFF" title="Go to the previous month">&lt;</a></td><td align="center" style="width:70%;">May 2026</td><td align="right" style="color:#CCCCFF;font-size:8pt;width:15%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','V9648')" style="color:#CCCCFF" title="Go to the next month">&gt;</a></td></tr>
+		</table></td></tr><tr><th align="center" abbr="Sunday" scope="col" style="color:#336666;background-color:#99CCCC;height:1px;">Su</th><th align="center" abbr="Monday" scope="col" style="color:#336666;background-color:#99CCCC;height:1px;">Mo</th><th align="center" abbr="Tuesday" scope="col" style="color:#336666;background-color:#99CCCC;height:1px;">Tu</th><th align="center" abbr="Wednesday" scope="col" style="color:#336666;background-color:#99CCCC;height:1px;">We</th><th align="center" abbr="Thursday" scope="col" style="color:#336666;background-color:#99CCCC;height:1px;">Th</th><th align="center" abbr="Friday" scope="col" style="color:#336666;background-color:#99CCCC;height:1px;">Fr</th><th align="center" abbr="Saturday" scope="col" style="color:#336666;background-color:#99CCCC;height:1px;">Sa</th></tr><tr><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9617')" style="color:#003399" title="May 01">1</a></td><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9618')" style="color:#003399" title="May 02">2</a></td></tr><tr><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9619')" style="color:#003399" title="May 03">3</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9620')" style="color:#003399" title="May 04">4</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9621')" style="color:#003399" title="May 05">5</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9622')" style="color:#003399" title="May 06">6</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9623')" style="color:#003399" title="May 07">7</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9624')" style="color:#003399" title="May 08">8</a></td><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9625')" style="color:#003399" title="May 09">9</a></td></tr><tr><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9626')" style="color:#003399" title="May 10">10</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9627')" style="color:#003399" title="May 11">11</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9628')" style="color:#003399" title="May 12">12</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9629')" style="color:#003399" title="May 13">13</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9630')" style="color:#003399" title="May 14">14</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9631')" style="color:#003399" title="May 15">15</a></td><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9632')" style="color:#003399" title="May 16">16</a></td></tr><tr><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9633')" style="color:#003399" title="May 17">17</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9634')" style="color:#003399" title="May 18">18</a></td><td align="center" style="color:#CCFF99;background-color:#009999;font-weight:bold;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9635')" style="color:#CCFF99" title="May 19">19</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9636')" style="color:#003399" title="May 20">20</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9637')" style="color:#003399" title="May 21">21</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9638')" style="color:#003399" title="May 22">22</a></td><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9639')" style="color:#003399" title="May 23">23</a></td></tr><tr><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9640')" style="color:#003399" title="May 24">24</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9641')" style="color:#003399" title="May 25">25</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9642')" style="color:#003399" title="May 26">26</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9643')" style="color:#003399" title="May 27">27</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9644')" style="color:#003399" title="May 28">28</a></td><td align="center" style="width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9645')" style="color:#003399" title="May 29">29</a></td><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9646')" style="color:#003399" title="May 30">30</a></td></tr><tr><td align="center" style="background-color:#CCCCFF;width:14%;"><a href="javascript:__doPostBack('ctl00$DefaultContent$agendaCalendar','9647')" style="color:#003399" title="May 31">31</a></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td><td align="center" style="color:#999999;background-color:White;width:14%;"></td></tr>
+	</table>
+                                    </div>
+                                </div>
+                                <div class="span8">                                  
+                                    <div class="btn-group pull-right">
+                                        <input type="submit" name="ctl00$DefaultContent$btnTemplates" value="Templates" onclick="javascript:AddTab(&#39;Meeting Templates&#39;,&#39;../Agenda/MeetingTemplate.aspx?sourceTabId=templateTabPanel&#39;,&#39;templateTabPanel&#39;); return false;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$btnTemplates&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_btnTemplates" class="btn" />
+                                        <input type="submit" name="ctl00$DefaultContent$btnVenues" value="Venues" onclick="javascript:AddTab(&#39;Venues&#39;,&#39;../Agenda/Venue.aspx?sourceTabId=venuesTab&#39;,&#39;venuesTab&#39;); return false;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$btnVenues&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_btnVenues" class="btn" />
+                                        <input type="submit" name="ctl00$DefaultContent$btnNewMeeting" value="New Meeting" onclick="javascript:AddTab(&#39;New Agenda Meeting&#39;,&#39;../Agenda/NewAgendaMeeting.aspx?sourceTabId=newAgendaTab&#39;,&#39;newAgendaTab&#39;); return false;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$btnNewMeeting&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_btnNewMeeting" class="btn" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <b>List of the Meetings for Selected Date</b>
+                                <select size="4" name="ctl00$DefaultContent$listMeetings" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$DefaultContent$listMeetings\&#39;,\&#39;\&#39;)&#39;, 0)" id="ctl00_DefaultContent_listMeetings" class="input-block-level">
+
+	</select>
+                            </div>
+                        
+</div>
+                    <div id="ctl00_DefaultContent_upLeftTree">
+	
+                            <div id="ctl00_DefaultContent_TreeViewControl_panelTree" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl00_DefaultContent_TreeViewControl_btnRefreshHiiden&#39;)">
+		
+    <div class="row-fluid">
+        <div class="btn-group pull-right">
+            <span title="The number of records that will be loaded in each request">Load Count: </span>
+            <input name="ctl00$DefaultContent$TreeViewControl$txtFetchNodes" type="text" maxlength="3" id="ctl00_DefaultContent_TreeViewControl_txtFetchNodes" class="input-mini" />
+            <input type="image" name="ctl00$DefaultContent$TreeViewControl$ibtnExpand" id="ctl00_DefaultContent_TreeViewControl_ibtnExpand" title="Expand selected record" src="../Images/expand.jpg" alt="Click to expand selected record" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewControl$ibtnExpand&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            <input type="image" name="ctl00$DefaultContent$TreeViewControl$ibtnCollapse" id="ctl00_DefaultContent_TreeViewControl_ibtnCollapse" title="Collapse selected record" src="../Images/collapse.jpg" alt="Click to collapse selected record" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewControl$ibtnCollapse&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            <input type="image" name="ctl00$DefaultContent$TreeViewControl$ibtnRefresh" id="ctl00_DefaultContent_TreeViewControl_ibtnRefresh" title="Refresh selected record" src="../Images/refresh.png" alt="Click to Refresh selected record" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewControl$ibtnRefresh&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            <input type="submit" name="ctl00$DefaultContent$TreeViewControl$btnRefreshHiiden" value="" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewControl$btnRefreshHiiden&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_TreeViewControl_btnRefreshHiiden" style="visibility: hidden" />
+        </div>
+    </div>
+     <div class="row-fluid">
+        <div id="ctl00_DefaultContent_TreeViewControl_radTree" class="RadTreeView RadTreeView_Default treeview overflow">
+			<!-- 2014.2.724.35 --><input id="ctl00_DefaultContent_TreeViewControl_radTree_ClientState" name="ctl00_DefaultContent_TreeViewControl_radTree_ClientState" type="hidden" />
+		</div>
+     </div>
+
+	</div>
+
+<style>
+    .treeview
+    {
+        overflow: visible;
+    }
+</style>
+
+<script>
+    function pageLoad() {
+        window.setTimeout(function () {
+            if (!$)
+                return;
+
+            var treeElements = $("#ctl00_DefaultContent_TreeViewControl_radTree");
+            if (treeElements.length == 0)
+                return;
+
+            var tree = $find(treeElements[0].id);
+            var selectedNode = tree.get_selectedNode();
+
+            if (selectedNode)
+                $("#treeContainer").attr("scrollTop", selectedNode.get_element().offsetTop - 200);
+        }, 200);
+    }
+</script>
+                        
+</div>
+                </div>
+                <div class="tab-pane" id="unassignedTab">
+                    <div id="ctl00_DefaultContent_upLeftUnassignedTree">
+	
+                            <div id="ctl00_DefaultContent_TreeViewUnassignedControl_panelTree" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl00_DefaultContent_TreeViewUnassignedControl_btnRefreshHiiden&#39;)">
+		
+    <div class="row-fluid">
+        <div class="btn-group pull-right">
+            <span title="The number of records that will be loaded in each request">Load Count: </span>
+            <input name="ctl00$DefaultContent$TreeViewUnassignedControl$txtFetchNodes" type="text" value="10" maxlength="3" id="ctl00_DefaultContent_TreeViewUnassignedControl_txtFetchNodes" class="input-mini" />
+            <input type="image" name="ctl00$DefaultContent$TreeViewUnassignedControl$ibtnExpand" id="ctl00_DefaultContent_TreeViewUnassignedControl_ibtnExpand" title="Expand selected record" src="../Images/expand.jpg" alt="Click to expand selected record" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewUnassignedControl$ibtnExpand&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            <input type="image" name="ctl00$DefaultContent$TreeViewUnassignedControl$ibtnCollapse" id="ctl00_DefaultContent_TreeViewUnassignedControl_ibtnCollapse" title="Collapse selected record" src="../Images/collapse.jpg" alt="Click to collapse selected record" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewUnassignedControl$ibtnCollapse&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            <input type="image" name="ctl00$DefaultContent$TreeViewUnassignedControl$ibtnRefresh" id="ctl00_DefaultContent_TreeViewUnassignedControl_ibtnRefresh" title="Refresh selected record" src="../Images/refresh.png" alt="Click to Refresh selected record" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewUnassignedControl$ibtnRefresh&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            <input type="submit" name="ctl00$DefaultContent$TreeViewUnassignedControl$btnRefreshHiiden" value="" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$TreeViewUnassignedControl$btnRefreshHiiden&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_TreeViewUnassignedControl_btnRefreshHiiden" style="visibility: hidden" />
+        </div>
+    </div>
+     <div class="row-fluid">
+        <div id="ctl00_DefaultContent_TreeViewUnassignedControl_radTree" class="RadTreeView RadTreeView_Default treeview overflow">
+			<ul class="rtUL rtLines">
+				<li class="rtLI rtFirst rtLast"><div class="rtTop rtSelected">
+					<span class="rtSp"></span><img src="/Questys.CMx.WebClient/Icon.ashx?t=Folder&amp;l=False" alt="" class="rtImg" /><span class="rtIn">Unassigned items</span>
+				</div></li>
+			</ul><input id="ctl00_DefaultContent_TreeViewUnassignedControl_radTree_ClientState" name="ctl00_DefaultContent_TreeViewUnassignedControl_radTree_ClientState" type="hidden" />
+		</div>
+     </div>
+
+	</div>
+
+<style>
+    .treeview
+    {
+        overflow: visible;
+    }
+</style>
+
+<script>
+    function pageLoad() {
+        window.setTimeout(function () {
+            if (!$)
+                return;
+
+            var treeElements = $("#ctl00_DefaultContent_TreeViewUnassignedControl_radTree");
+            if (treeElements.length == 0)
+                return;
+
+            var tree = $find(treeElements[0].id);
+            var selectedNode = tree.get_selectedNode();
+
+            if (selectedNode)
+                $("#treeContainer").attr("scrollTop", selectedNode.get_element().offsetTop - 200);
+        }, 200);
+    }
+</script>                         
+                        
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span6">
+        <div id="ctl00_DefaultContent_upRight" class="row-fluid">
+	
+                <div id="ctl00_DefaultContent_rightDIV" class="span12" style="visibility: hidden">
+                    <ul class="nav nav-tabs" id="browseTab">
+                        
+                    </ul>
+                    <div class="tab-content" style="overflow: visible;" id="rightTabs">
+                        
+<style type="text/css">
+    .RadPanelBar label
+    {
+        padding-left: 3px;
+    }
+</style>
+<div id="ctl00_DefaultContent_recordDetailsInfo_upRecordDetailsInfo" class="container-fluid" style="padding-left:0px;">
+		
+        <div id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo" class="RadPanelBar RadPanelBar_Default" style="border: none !important; width: 100%">
+			<ul class="rpRootGroup">
+				<li class="rpItem rpFirst rpLast"><div class="rpSlide">
+					<ul class="rpGroup rpLevel1 ">
+						<li class="rpItem rpFirst rpLast"><div class="rpTemplate">
+							                                
+                                    <div class="row-fluid">
+                                        <div class="span2"><label for="txtRecExtention">Extension:</label></div>
+                                        <div class="span3">
+                                            <input name="ctl00$DefaultContent$recordDetailsInfo$panelRecordInfo$i0$i0$txtRecExtention" type="text" id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_i0_i0_txtRecExtention" disabled="disabled" class="input-small" /></div>
+                                        <div class="span3"><label for="txtRecStatus">Status:</label></div>
+                                        <div class="span4">
+                                            <input name="ctl00$DefaultContent$recordDetailsInfo$panelRecordInfo$i0$i0$txtRecStatus" type="text" id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_i0_i0_txtRecStatus" disabled="disabled" class="input-medium" /></div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2"><label for="txtRecID">ID:</label></div>
+                                        <div class="span3">
+                                            <input name="ctl00$DefaultContent$recordDetailsInfo$panelRecordInfo$i0$i0$txtRecID" type="text" id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_i0_i0_txtRecID" disabled="disabled" class="input-small" /></div>
+                                        <div class="span3"><label id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_i0_i0_lblRecOwner" for="txtRecOwner">Owner:</label></div>
+                                        <div class="span4">
+                                            <input name="ctl00$DefaultContent$recordDetailsInfo$panelRecordInfo$i0$i0$txtRecOwner" type="text" id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_i0_i0_txtRecOwner" disabled="disabled" class="input-medium" /></div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2"><label for="txtRecVersion">Version:</label></div>
+                                        <div class="span3">
+                                            <input name="ctl00$DefaultContent$recordDetailsInfo$panelRecordInfo$i0$i0$txtRecVersion" type="text" id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_i0_i0_txtRecVersion" disabled="disabled" class="input-small" /></div>
+                                        <div class="span3"><label for="txtRecDate">Date:</label></div>
+                                        <div class="span4">
+                                            <input name="ctl00$DefaultContent$recordDetailsInfo$panelRecordInfo$i0$i0$txtRecDate" type="text" id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_i0_i0_txtRecDate" disabled="disabled" class="input-medium" />
+                                        </div>
+                                    </div>
+                                <hr style="margin: 0;" />
+                            
+						</div></li>
+					</ul>
+				</div></li>
+			</ul><input id="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_ClientState" name="ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_ClientState" type="hidden" />
+		</div>
+    
+	</div>                           
+                        <div class="tab-pane active" id="recordTab">
+                            
+                            
+                            
+
+                            
+                                                        
+                            <div id="ctl00_DefaultContent_Files_panelFiles" style="height: 350px; padding-bottom: 17px; margin-left: 0; padding-left: 0; width: 100%;">
+		
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(window).resize(resizeFileList);
+            resizeFileList();
+        });
+
+        function resizeFileList() {
+            var filePanel = $("#ctl00_DefaultContent_Files_panelFiles");
+            var parentMain = filePanel.parents(".overflow");
+            if ((filePanel.length > 0) && (parentMain.length > 0))
+            {
+                filePanel.height(parentMain.height() - filePanel.offset().top + parentMain.offset().top - filePanel.innerHeight() + filePanel.height() - 7);
+            }
+        }
+    </script>
+    <iframe id="ctl00_DefaultContent_Files_ifrmFiles" name="ifrmFiles" seamless="seamless" style="width: 100%; height: 100%; margin-left: 0; padding-left: 0; border: 0 none #ffffff; background: url(&#39;~/Images/file-loader.gif&#39;) no-repeat 2% 5%;">Your browser doesn't support iframes.</iframe>
+
+	</div>                           
+                        </div>
+                        <div class="tab-pane" id="clerkTab">
+                            
+
+                        </div>
+                        <div class="tab-pane" id="workpadTab">
+                            <div id="ctl00_DefaultContent_Workpad_panelNotes" class="form-horizontal" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl00_DefaultContent_Workpad_btnSave&#39;)" style="overflow:auto;margin-left: 0;">
+		
+    <div id="ctl00_DefaultContent_Workpad_upWorkpad">
+			
+            <div style="background-color: #F0F0F0;">
+                <input type="hidden" name="ctl00$DefaultContent$Workpad$hfNoteId" id="ctl00_DefaultContent_Workpad_hfNoteId" />
+                <textarea name="ctl00$DefaultContent$Workpad$txtNotes" rows="2" cols="20" id="ctl00_DefaultContent_Workpad_txtNotes" style="height:400px;width:97%;">
+</textarea>
+            </div>
+            <div class="btn-toolbar" style="background-color: #ffffff;">
+                <input type="submit" name="ctl00$DefaultContent$Workpad$btnSave" value="Save" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$Workpad$btnSave&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_Workpad_btnSave" class="btn btn-medium" />
+                <input type="submit" name="ctl00$DefaultContent$Workpad$btnClear" value="Clear" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$Workpad$btnClear&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_Workpad_btnClear" class="btn btn-medium" />
+            </div>
+        
+		</div>
+
+	</div>
+
+                        </div>
+                        <div class="tab-pane" id="rollCallTab">
+                        </div>
+                    </div>
+                </div>
+            
+</div>
+    </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="userMessage" style="display: none; border: 1px solid #CC3300;" data-keyboard="false" data-backdrop="static">
+        <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px;">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 id="modalHeaderLabel">Session will expire</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group" style="margin: 0;">
+                Warning: Your session will time out within <span id="timer">180</span> seconds and you will be returned
+                to the login page. Please save changes or click Refresh in order to remain logged in.
+            </div>
+        </div>
+        <div class="modal-footer" style="padding-top: 5px; padding-bottom: 5px;">
+            <input type="submit" name="ctl00$btnStillHere" value="Refresh" onclick="doRefresh();WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$btnStillHere&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_btnStillHere" class="btn" />
+        </div>
+    </div>
+    <div class="modal" id="custom_modal" style="display: none; border: 1px solid #CC3300;" data-keyboard="false" data-backdrop="static">
+        <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px;">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 id="modalCustomHeaderLabel"></h3>
+        </div>
+        <div class="modal-body" style="margin-left: 5px; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; overflow: visible;">
+            <div class="control-group" style="margin: 0;" id="modalControlHolder">
+            </div>
+        </div>
+        <div class="modal-footer" style="padding-top: 5px; padding-bottom: 5px;">
+            <input type="submit" name="ctl00$Button2" value="Close" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$Button2&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_Button2" class="btn" data-dismiss="modal" />
+        </div>
+    </div>
+    <div id="FooterContainer" class="navbar navbar-fixed-bottom">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <span class="pull-left">
+                    <div id="ctl00_updateProgress1" style="display:none;">
+	
+                            <img id="ctl00_Image1" src="../Shared/SpinningWheel.gif" alt="" style="height:16px;width:16px;border-width:0px;" />
+                            Please wait ...
+                        
+</div>
+                </span>
+                <span class="pull-left">
+                    <a id="ctl00_lbHTEText" href="../HTE/Default.aspx" style="color:#ffffff"></a>
+                </span>
+                <span class="pull-right">
+                    v11.5.0.183&nbsp;  
+                    Copyright <a target="_blank" href="http://www.questys.com">Questys Solutions</a>
+                    2026 All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>  
+    
+    <script type="text/javascript" src="../JS/default.js"></script>
+
+    
+
+<script type="text/javascript">
+//<![CDATA[
+Telerik.Web.UI.RadTreeView._preInitialize("ctl00_DefaultContent_TreeViewControl_radTree","0");Telerik.Web.UI.RadTreeView._preInitialize("ctl00_DefaultContent_TreeViewUnassignedControl_radTree","0");Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadTreeView, {"_postBackOnClick":true,"_postBackOnExpand":true,"_postBackReference":"WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\u0027ctl00$DefaultContent$TreeViewControl$radTree\u0027, \u0027arguments\u0027, true, \u0027\u0027, \u0027\u0027, false, true))","_skin":"Default","_uniqueId":"ctl00$DefaultContent$TreeViewControl$radTree","clientStateFieldID":"ctl00_DefaultContent_TreeViewControl_radTree_ClientState","collapseAnimation":"{\"duration\":200}","expandAnimation":"{\"duration\":200}","loadingStatusPosition":1,"nodeData":[]}, null, null, $get("ctl00_DefaultContent_TreeViewControl_radTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadTreeView, {"_postBackOnClick":true,"_postBackOnExpand":true,"_postBackReference":"WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\u0027ctl00$DefaultContent$TreeViewUnassignedControl$radTree\u0027, \u0027arguments\u0027, true, \u0027\u0027, \u0027\u0027, false, true))","_selectedValue":"-3","_skin":"Default","_uniqueId":"ctl00$DefaultContent$TreeViewUnassignedControl$radTree","clientStateFieldID":"ctl00_DefaultContent_TreeViewUnassignedControl_radTree_ClientState","collapseAnimation":"{\"duration\":200}","expandAnimation":"{\"duration\":200}","loadingStatusPosition":1,"nodeData":[{"value":"-3","selected":1,"attributes":{"data-type":"Folder"}}],"selectedIndexes":["0"]}, null, null, $get("ctl00_DefaultContent_TreeViewUnassignedControl_radTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadPanelBar, {"_skin":"Default","attributes":{},"clientStateFieldID":"ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo_ClientState","collapseAnimation":"{\"type\":0,\"duration\":100}","expandAnimation":"{\"type\":0,\"duration\":100}","itemData":[{"items":[{"cssClass":"row-fluid","templated":true}]}]}, null, null, $get("ctl00_DefaultContent_recordDetailsInfo_panelRecordInfo"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":null,"displayAfter":500,"dynamicLayout":true}, null, null, $get("ctl00_updateProgress1"));
+});
+//]]>
+</script>
+</form>
+
+    <script type="text/javascript">
+        var instance = Sys.WebForms.PageRequestManager.getInstance();
+        instance.add_beginRequest(BeginRequestHandler);
+        instance.add_endRequest(EndRequestHandler);
+        function BeginRequestHandler(sender, args) {
+            $get('ctl00_updateProgress1').style.display = 'block';
+        }
+        function EndRequestHandler(sender, args) {
+            if (args.get_error() != undefined) {
+                var errorMessage = "";
+                switch (args.get_response().get_statusCode()) {
+                    case 12031:
+                    case 12030:
+                        errorMessage = "Your session was timed out due to inactivity. Please Login to continue";
+                        doRedirect();
+                        break;
+                    case 12007:
+                    case 12029:
+                        errorMessage = "Please make sure you are connected to internet";
+                        break;
+                    case 200:
+                        errorMessage = args.get_error().message;
+                        break;
+                    case 500:
+                        errorMessage = ""
+                        break;
+                    default:
+                        errorMessage = "An unknown error occurred...";
+                        break;
+                }
+                if (errorMessage != "") {
+                    var specChar = /[<>]/ig;
+                    errorMessage = errorMessage.replace(specChar, "");
+
+                    // Added later since msgbox could not be shown
+                    var aPos = errorMessage.indexOf(":") + 1;
+                    alert(errorMessage.substr(aPos));
+                }
+                // now make sure the system knows we handled the error.
+                args.set_errorHandled(true);
+                $get('ctl00_updateProgress1').style.display = 'none';
+            }
+        }
+
+
+    </script>
+
+   <style>
+    body {
+        font-family: Tahoma;
+        font-size: 12px;
+        color: #000000;
+        margin: 0;
+        padding: 47px 0px 31px 0px;
+        height: auto
+        }
+    .header {
+        width: 100%;
+        height: 17px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        position: absolute;
+        top: 0px;
+        background:green;
+        text-align:center
+        }
+    .footer {
+        bottom: 0px;
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        height: 37px;
+        background: orange;
+        padding-top: 20px
+        }
+    #HeaderContainer {
+        position: fixed;
+        top: 0
+        }
+    #FooterContainer {
+        position: fixed;
+        bottom: 0
+        }
+    #DefaultContentContainer {
+        overflow: auto
+        }
+    #mainForm {
+        width: 100%
+        }
+    a.aspNetDisabled {
+        color: lightgray;
+        }
+</style>
+
+</body>
+</html>

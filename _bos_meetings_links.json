@@ -1,0 +1,34 @@
+{
+  "source": "https://www.tularecounty.ca.gov/board/board-of-supervisors-meetings",
+  "doc_hrefs": [],
+  "keyword_hrefs": [
+    "https://tcera.org/retirement-board/board-committee-meetings/",
+    "https://tularecog.org/tcag/agendas-minutes",
+    "https://tularecounty.ca.gov/board/board-of-supervisors-meetings",
+    "https://tularecounty.ca.gov/pt/board/board-of-supervisors-meetings",
+    "https://tularecounty.ca.gov/tl/board/board-of-supervisors-meetings",
+    "https://www.tularecounty.ca.gov/board/board-of-supervisors-meetings",
+    "https://www.tularecounty.ca.gov/pt/board/board-of-supervisors-meetings",
+    "https://www.tularecounty.ca.gov/tl/board/board-of-supervisors-meetings"
+  ],
+  "iframes": [
+    "https://www.youtube.com/embed/taa98CpiWpo?si=cWdVO7wAKqSmYexM"
+  ],
+  "hosts": {
+    "tularecounty.ca.gov": 54,
+    "www.tularecounty.ca.gov": 52,
+    "tc-web.widen.net": 10,
+    "ktaaa.org": 5,
+    "tcanimalservices.org": 5,
+    "tchhsa.org": 5,
+    "fonts.googleapis.com": 4,
+    "tularecountyeh.org": 4,
+    "tularecountyparks.org": 4,
+    "tcera.org": 3,
+    "tularecog.org": 3,
+    "agcomm.co.tulare.ca.us": 2,
+    "childsupport.ca.gov": 2,
+    "friendsoftularecounty.org": 2,
+    "iportal.tularecounty.ca.gov": 2
+  }
+}
