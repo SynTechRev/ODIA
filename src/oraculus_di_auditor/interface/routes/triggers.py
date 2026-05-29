@@ -161,14 +161,33 @@ def register_trigger_routes(app: Any) -> None:
                 detail=f"RAIA service unavailable: {exc}",
             ) from exc
 
-        jurisdictions = list(discover_jurisdictions().keys())
+        # Prefer DB jurisdictions (documents table) over file-system discovery
+        # so the Synthesis button works for upload-audited and webhook-ingested
+        # documents even when config/multi_jurisdiction/ has only example stubs.
+        jurisdictions: list[str] = []
+        try:
+            from oraculus_di_auditor.db import models as db_models
+            from oraculus_di_auditor.db.session import get_db
+            with get_db() as session:
+                rows = (
+                    session.query(db_models.Document.jurisdiction)
+                    .filter(db_models.Document.jurisdiction.isnot(None))
+                    .distinct()
+                    .all()
+                )
+                jurisdictions = [r[0] for r in rows if r[0]]
+        except Exception:  # noqa: BLE001
+            pass
+
+        if not jurisdictions:
+            jurisdictions = list(discover_jurisdictions().keys())
+
         if not jurisdictions:
             return {
                 "status": "no_jurisdictions",
                 "message": (
-                    "No jurisdictions found under config/multi_jurisdiction/. "
-                    "Add at least one subdirectory containing a "
-                    "jurisdiction.json before running synthesis."
+                    "No jurisdictions found in the database or config/multi_jurisdiction/. "
+                    "Run at least one audit with a jurisdiction set before running synthesis."
                 ),
                 "result": None,
                 "markdown": None,

@@ -649,7 +649,7 @@ def _persist_upload_document(
                 session,
                 {
                     "document_id": doc["document_id"],
-                    "scalar_score": float(scalar) if scalar is not None else None,
+                    "scalar_score": float(scalar) if scalar is not None else 1.0,
                     "anomaly_count": len(findings),
                     "engine_version": "3.3.1",
                     "metadata": {"source": "upload.audit_run"},
