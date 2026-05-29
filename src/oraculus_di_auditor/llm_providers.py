@@ -255,7 +255,7 @@ class OllamaProvider(BaseLLMProvider):
                     "temperature": temperature,
                     "stream": False,
                 },
-                timeout=60,
+                timeout=300,  # 5 min — cold model load can take 60-90s
             )
             response.raise_for_status()
             return response.json().get("response", "")
