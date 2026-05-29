@@ -259,6 +259,10 @@ function ResultsPageInner() {
   const [filterDetector, setFilterDetector] = useState<string>('all');
   const [filterDocument, setFilterDocument] = useState<string>('all');
 
+  // Pipeline ingestion summary — shown on the history list view alongside
+  // localStorage audit entries so webhook-scraped documents are visible.
+  const [pipelineTotal, setPipelineTotal] = useState<number | null>(null);
+
   const client = getAPIClient();
   const historyEntries = useAuditHistoryStore((s) => s.entries);
   const addAuditToHistory = useAuditHistoryStore((s) => s.addAudit);
@@ -302,6 +306,18 @@ function ResultsPageInner() {
       await fetchFromBackend();
       setLoading(false);
     })();
+  }, [jobId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // When showing the history list, fetch the pipeline ingestion total from
+  // the backend so webhook-scraped documents are surfaced here too.
+  useEffect(() => {
+    if (jobId) return;
+    client
+      .listDocuments({ page: 1, per_page: 1 })
+      .then((r) => {
+        if (typeof r.total === 'number') setPipelineTotal(r.total);
+      })
+      .catch(() => { /* backend offline — skip the banner */ });
   }, [jobId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Download handlers
@@ -391,6 +407,28 @@ function ResultsPageInner() {
               Past audits from this machine. Click a row to reopen its report.
             </p>
           </div>
+
+          {/* Pipeline ingestion summary — shows webhook-scraped documents
+              that were never stored in the local audit history. */}
+          {pipelineTotal !== null && pipelineTotal > 0 && (
+            <AppLink
+              href="/documents"
+              className="block hud-panel hud-panel-dense p-4 border-l-4 border-blue-500 transition-colors hover:bg-blue-50"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="font-medium text-gray-900 text-sm">
+                    Pipeline ingestion — {pipelineTotal.toLocaleString()} document{pipelineTotal !== 1 ? 's' : ''}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Ingested via scrape / webhook pipeline. Click to browse and filter all documents.
+                  </p>
+                </div>
+                <span className="text-blue-600 text-xs font-medium flex-shrink-0">View all →</span>
+              </div>
+            </AppLink>
+          )}
+
           <div className="space-y-2">
             {historyEntries.map((entry) => {
               const r = entry.results;

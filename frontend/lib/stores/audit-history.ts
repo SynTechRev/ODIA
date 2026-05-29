@@ -12,7 +12,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { AuditResults } from '@/lib/types/api';
 
-const MAX_ENTRIES = 10;
+const MAX_ENTRIES = 100;
 
 export interface AuditHistoryEntry {
   job_id: string;
