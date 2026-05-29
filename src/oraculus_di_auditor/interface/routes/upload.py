@@ -605,6 +605,71 @@ def _record_mesh_job(job_id: str, file_count: int, status: str, **extras: Any) -
         logger.warning("Failed to record MeshExecutionJob for %s: %s", job_id, exc)
 
 
+def _persist_upload_document(
+    doc: dict[str, Any],
+    findings: list[dict[str, Any]],
+    jurisdiction: str | None,
+) -> None:
+    """Persist an upload-flow document + its analysis to the DB.
+
+    Best-effort — failure is logged but never propagates to the audit job.
+    Skips if the document_id is already present (idempotent re-runs).
+    """
+    try:
+        from oraculus_di_auditor.db import crud as db_crud
+        from oraculus_di_auditor.db.session import get_db
+    except ImportError:
+        return
+
+    try:
+        with get_db() as session:
+            existing = db_crud.get_document_by_id(session, doc["document_id"])
+            if existing is None:
+                db_crud.create_document(
+                    session,
+                    {
+                        "document_id": doc["document_id"],
+                        "title": doc.get("title") or doc.get("filename", "Untitled"),
+                        "document_type": doc.get("document_type", "document"),
+                        "jurisdiction": jurisdiction,
+                        "authority": doc.get("authority"),
+                        "version_date": doc.get("version_date"),
+                        "signatory": doc.get("signatory"),
+                    },
+                )
+
+            scalar = doc.get("scalar_score")
+            severity_counts = {
+                "critical": sum(1 for f in findings if f.get("severity") == "critical"),
+                "high": sum(1 for f in findings if f.get("severity") == "high"),
+                "medium": sum(1 for f in findings if f.get("severity") == "medium"),
+                "low": sum(1 for f in findings if f.get("severity") == "low"),
+            }
+            db_crud.create_analysis(
+                session,
+                {
+                    "document_id": doc["document_id"],
+                    "scalar_score": float(scalar) if scalar is not None else None,
+                    "anomaly_count": len(findings),
+                    "engine_version": "3.3.1",
+                    "metadata": {"source": "upload.audit_run"},
+                },
+                [
+                    {
+                        "anomaly_id": f.get("id", "unknown"),
+                        "issue": f.get("issue", ""),
+                        "severity": f.get("severity", "low"),
+                        "layer": f.get("layer", "unknown"),
+                        "details": f.get("details", {}),
+                    }
+                    for f in findings
+                ],
+            )
+            session.commit()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Failed to persist upload document %s: %s", doc.get("document_id"), exc)
+
+
 def _execute_audit_job(
     job_id: str, file_ids: list[str], config_overrides: dict[str, Any]
 ) -> None:
@@ -652,6 +717,11 @@ def _execute_audit_job(
             findings = _flatten_findings(result, doc["document_id"])
             all_findings.extend(findings)
             docs_processed += 1
+
+            # Persist document + analysis to DB so it appears in the
+            # Documents, Anomalies, and Synthesis pages alongside
+            # webhook-ingested documents.
+            _persist_upload_document(doc, findings, config_overrides.get("jurisdiction"))
 
             manifest_entry: dict[str, Any] = {
                 "document_id": doc["document_id"],

@@ -289,6 +289,7 @@ export default function UploadPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [jurisdiction, setJurisdiction] = useState<string>('');
 
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
   const [jobStatus, setJobStatus] = useState<AuditStatus | null>(null);
@@ -447,7 +448,7 @@ export default function UploadPage() {
     setError(null);
     setIsRunning(true);
     try {
-      const result = await client.runAudit(uploadedFiles.map((f) => f.file_id));
+      const result = await client.runAudit(uploadedFiles.map((f) => f.file_id), jurisdiction.trim() || undefined);
       setActiveJobId(result.job_id);
     } catch (err) {
       const msg = axios.isAxiosError(err)
@@ -783,6 +784,20 @@ export default function UploadPage() {
             )}
           </Card>
         )}
+
+        {/* Jurisdiction */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+            Jurisdiction <span className="text-gray-600 font-normal normal-case">(optional — e.g. dinuba, porterville)</span>
+          </label>
+          <input
+            type="text"
+            value={jurisdiction}
+            onChange={(e) => setJurisdiction(e.target.value)}
+            placeholder="Enter jurisdiction identifier"
+            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-900 text-gray-100 text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500"
+          />
+        </div>
 
         {/* Run Audit button */}
         <button
