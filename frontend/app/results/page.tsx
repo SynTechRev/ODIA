@@ -374,20 +374,40 @@ function ResultsPageInner() {
     if (historyEntries.length === 0) {
       return (
         <DashboardLayout>
-          <Card variant="bordered">
-            <div className="text-center py-12">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No audit history yet</h3>
-              <p className="text-gray-600 mb-6">
-                Run an audit to see its report here. Past audits are saved locally on this machine.
-              </p>
+          <div className="space-y-4">
+            {pipelineTotal !== null && pipelineTotal > 0 && (
               <AppLink
-                href="/upload"
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                href="/documents"
+                className="block hud-panel hud-panel-dense p-4 border-l-4 border-blue-500 transition-colors hover:bg-blue-50"
               >
-                Go to Upload
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm">
+                      Pipeline ingestion — {pipelineTotal.toLocaleString()} document{pipelineTotal !== 1 ? 's' : ''}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Ingested via scrape / webhook pipeline. Click to browse and filter all documents.
+                    </p>
+                  </div>
+                  <span className="text-blue-600 text-xs font-medium flex-shrink-0">View all →</span>
+                </div>
               </AppLink>
-            </div>
-          </Card>
+            )}
+            <Card variant="bordered">
+              <div className="text-center py-12">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No upload audit history yet</h3>
+                <p className="text-gray-600 mb-6">
+                  Upload documents and run an audit to see its report here. Past audits are saved locally on this machine.
+                </p>
+                <AppLink
+                  href="/upload"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Go to Upload
+                </AppLink>
+              </div>
+            </Card>
+          </div>
         </DashboardLayout>
       );
     }
