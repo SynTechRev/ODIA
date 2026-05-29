@@ -384,7 +384,7 @@ export default function SettingsPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Package:</span>
-              <span className="font-mono text-gray-900">odia 3.3.0</span>
+              <span className="font-mono text-gray-900">odia 3.4.0</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Frontend:</span>

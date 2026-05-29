@@ -1,0 +1,544 @@
+
+
+<!--[if HTML5]><![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js lt-ie10" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js" lang="en"> <!--<![endif]--> 
+<head id="ctl00_Head1"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta charset="utf-8" /><title>
+	Questys Solutions - CMx Web Client
+</title><meta name="description" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Le styles -->   
+    <link rel="stylesheet" href="assets/css/bootstrap.css" media="all" /><link rel="stylesheet" href="assets/css/bootstrap-responsive.css" media="all" /><link rel="stylesheet" href="assets/css/custom.css" />
+
+    <script src="assets/js/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>        
+        <script src="assets/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="Images/App.ico" /><link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png" /><link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png" /><link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png" /><link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png" />
+    <style type="text/css">        
+        .brand
+        {
+            margin-top: 7px;
+        }
+        .row-fluid > .inner-fluid
+        {
+            border: 0px none white;
+            border-left-style: solid;
+            border-right-style: solid;
+        }
+        .dropdown
+        {
+            list-style: none;
+        }
+        .dropdown-toggle
+        {
+            color: white;
+        }
+    </style>
+
+    <script type="text/javascript">        
+        function doRefresh() { javascript: __doPostBack(''); } // window.location.href=window.location.href
+        function doRedirect() { window.location.href = '/Questys.CMx.WebClient/Login.aspx?Redirect=True?s=true&ReturnUrl=%2fquestys.cmx.webclient%2fdefault.aspx'; }
+
+        function showUserMessage(secondsToCount) {
+            var myCounter = new Countdown({
+                seconds: secondsToCount,  // number of seconds to count down
+                onUpdateStatus: function (sec) { SetTimerValue(sec); }, // callback for each second
+                onCounterEnd: function () { doRedirect(); } // final action
+            });
+
+            myCounter.start();
+            $('#userMessage').modal('show');
+        } //show session expire message
+        function hideUserMessage() { $('#userMessage').modal('hide'); }
+        function Countdown(options) {
+            var timer,
+            instance = this,
+            seconds = options.seconds || 30,
+            updateStatus = options.onUpdateStatus || function () { },
+            counterEnd = options.onCounterEnd || function () { };
+
+            function decrementCounter() {
+                seconds--;
+                updateStatus(seconds);
+                if (seconds === 0) {
+                    counterEnd();
+                    instance.stop();
+                }
+            }
+
+            this.start = function () {
+                updateStatus(seconds);
+                clearInterval(timer);
+                timer = 0;
+                seconds = options.seconds;
+                timer = setInterval(decrementCounter, 1000);
+            };
+
+            this.stop = function () {
+                clearInterval(timer);
+            };
+        }
+        function SetTimerValue(value) {
+            $('#timer').html(value);
+        }
+
+        function ShowFileHistoryModal(id, headerText) {
+            var url = '';
+            if (id != null) {
+                url = 'File/FilesVersionsList.aspx' + '?id=' + id;               
+            }
+            ShowIframeModal(url, headerText, '300px');
+        }
+        function ShowIframeModal(url, headerText, frameHeight) {
+            SetModalHeaderText(headerText);
+            if (url != '') {
+                var iframe = CreateModalIframe(url, frameHeight)
+                AddControlInCustomModal(iframe);
+            }
+            ShowCustomModal();
+        }
+        function ShowLinkModal(txtValue, headerText, isFile) {
+
+            SetModalHeaderText(headerText);
+            var txtControl = CreateModalInputControl(txtValue.split(';').join('<br />'));
+            AddControlInCustomModal(txtControl);
+            ShowCustomModal();
+        }
+        function AddControlInCustomModal(control) {
+            $('#modalControlHolder').empty();
+            $('#modalControlHolder').append(control);
+        }
+        function CreateModalIframe(url, frameHeight) {
+            var fr = "<div id='divLoading' style='display:inline;'>" +
+                    "<img alt='Loading' src='../Images/file-loader.gif' style='margin-right:3px;'><span style='color:#003399;'>Loading...</span></div>";
+            fr = fr + "<iframe name='ifrm' id='ifrm' src='" + url + "' style='overflow:auto; margin: 0px; width:100%; height: " + frameHeight + ";border:none;' onload='javascript:HideLoading();'></iframe>";
+            return fr;
+        }
+        function CreateModalInputControl(textValue) {
+            var input = "<div style='width:100%;max-height:200px;overflow:auto;'>"+textValue+"</div>"//"<textarea name='ctl00$txtModalLink' class='input-block-level' id='ctl00_txtModalLink' innerText='" + textValue + "' onmouseup='return false' onfocus='this.select()' rows='7' cols='20'/>";
+            return input;
+        }
+        function SetModalHeaderText(headerText) {
+            var header = document.getElementById("modalCustomHeaderLabel");
+            if (header !== undefined) {
+                header.innerText = headerText;
+            }
+        }
+        function ShowCustomModal() {
+            $('#custom_modal').modal('show');
+        }
+        function HideCustomModal() {
+            $('#custom_modal').modal('hide');
+        }
+        function HideLoading() {           
+            var loadFiles = document.getElementById('divLoading');
+            if (loadFiles !== null) {                
+                loadFiles.height = "0px";
+                loadFiles.parentNode.removeChild(loadFiles);
+            }
+        }
+        function CreateRollCallIframe() {
+            var rollDiv = document.getElementById("rollCallTab");
+            if (rollDiv !== undefined && rollDiv.childElementCount == 0) {
+                var i = document.createElement("iframe");
+                i.src = "../Agenda/RollCall.aspx";
+                i.width = "100%";
+                i.height = "600px";
+                i.marginWidth = "0px";
+                i.frameBorder = "none";
+                i.border = "0px";
+                i.style.background = "#ffffff url('../Images/file-loader.gif') no-repeat 5% 5%";
+                rollDiv.appendChild(i)
+            }
+        }
+        function CreatePreviewIframe(recordId, version) {
+            var previewDiv = document.getElementById("previewTab");
+            if (previewDiv !== undefined && previewDiv.childElementCount == 0) {
+                var i = document.createElement("iframe");
+
+                i.src = "../File.ashx?id=" + recordId + "&v=" + version + "&preview=true";
+                i.allowTransparency = true;
+                i.style.width = "100%";
+                i.style.height = "600px";
+                i.marginWidth = "0px";
+                i.frameBorder = "none";
+                i.border = "0px";
+                i.style.background = "#ffffff url('../Images/file-loader.gif') no-repeat 5% 5%";
+                i.id = "PreviewFrame";
+                previewDiv.appendChild(i);
+            }
+        }
+        function PreviewLoaded() {
+            document.getElementById("PreviewFrame").style.display = "";
+        }
+    </script>
+</head>
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+    <form name="aspnetForm" method="post" action="./" id="aspnetForm" class="form-inline">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTkyMDgxNDk2Nw9kFgJmD2QWBGYPZBYEAgkPFQIuYXNzZXRzL2pzL21vZGVybml6ci0yLjUuMy1yZXNwb25kLTEuMS4wLm1pbi5qcxZhc3NldHMvanMvaHRtbDVzaGl2LmpzZAIQDxUDLy9RdWVzdHlzLkNNeC5XZWJDbGllbnQvTG9naW4uYXNweD9SZWRpcmVjdD1UcnVlJyUyZnF1ZXN0eXMuY214LndlYmNsaWVudCUyZmRlZmF1bHQuYXNweBtGaWxlL0ZpbGVzVmVyc2lvbnNMaXN0LmFzcHhkAgEPZBYEAgEPZBYGAgEPFgIeC18hSXRlbUNvdW50AgYWDGYPZBYEZg8VAQBkAgEPDxYCHgtOYXZpZ2F0ZVVybAUVfi9Ccm93c2UvRGVmYXVsdC5hc3B4ZBYCZg8VAQZCcm93c2VkAgEPZBYEZg8VAQBkAgEPDxYCHwEFFX4vU2VhcmNoL0RlZmF1bHQuYXNweGQWAmYPFQEGU2VhcmNoZAICD2QWBGYPFQEAZAIBDw8WAh8BBRV+L0FnZW5kYS9EZWZhdWx0LmFzcHhkFgJmDxUBBkFnZW5kYWQCAw8WAh4HVmlzaWJsZWgWBGYPFQEAZAIBDw8WAh8BBRh+L1dvcmtzcGFjZS9EZWZhdWx0LmFzcHhkFgJmDxUBB015IFdvcmtkAgQPZBYEZg8VAQBkAgEPDxYCHwEFKX4vV29ya2Zsb3cvRGVmYXVsdC5hc3B4P2tleT1DbWRXb3JrUXVldWVzZBYCZg8VAQpXb3JrIFF1ZXVlZAIFDxYCHwJoFgRmDxUBAGQCAQ8PFgIfAQUnfi9Xb3JrZmxvdy9EZWZhdWx0LmFzcHg/a2V5PUNtZFByb2plY3RzZBYCZg8VAQhQcm9qZWN0c2QCAw8WAh8AAgYWDGYPZBYEZg8VAQBkAgEPDxYCHwEFFX4vQnJvd3NlL0RlZmF1bHQuYXNweGQWAmYPFQEGQnJvd3NlZAIBD2QWBGYPFQEAZAIBDw8WAh8BBRV+L1NlYXJjaC9EZWZhdWx0LmFzcHhkFgJmDxUBBlNlYXJjaGQCAg9kFgRmDxUBAGQCAQ8PFgIfAQUVfi9BZ2VuZGEvRGVmYXVsdC5hc3B4ZBYCZg8VAQZBZ2VuZGFkAgMPFgIfAmgWBGYPFQEAZAIBDw8WAh8BBRh+L1dvcmtzcGFjZS9EZWZhdWx0LmFzcHhkFgJmDxUBB015IFdvcmtkAgQPZBYEZg8VAQBkAgEPDxYCHwEFKX4vV29ya2Zsb3cvRGVmYXVsdC5hc3B4P2tleT1DbWRXb3JrUXVldWVzZBYCZg8VAQpXb3JrIFF1ZXVlZAIFDxYCHwJoFgRmDxUBAGQCAQ8PFgIfAQUnfi9Xb3JrZmxvdy9EZWZhdWx0LmFzcHg/a2V5PUNtZFByb2plY3RzZBYCZg8VAQhQcm9qZWN0c2QCCQ8WAh4EVGV4dGVkAgUPZBYEAgMPZBYCZg9kFgICAw8PFgQeB0VuYWJsZWRoHwJoZGQCBQ8WAh8AAgYWDGYPZBYCAgEPDxYCHwEFFX4vQnJvd3NlL0RlZmF1bHQuYXNweGQWAmYPFQEGQnJvd3NlZAIBD2QWAgIBDw8WAh8BBRV+L1NlYXJjaC9EZWZhdWx0LmFzcHhkFgJmDxUBBlNlYXJjaGQCAg9kFgICAQ8PFgIfAQUVfi9BZ2VuZGEvRGVmYXVsdC5hc3B4ZBYCZg8VAQZBZ2VuZGFkAgMPFgIfAmgWAgIBDw8WAh8BBRh+L1dvcmtzcGFjZS9EZWZhdWx0LmFzcHhkFgJmDxUBB015IFdvcmtkAgQPZBYCAgEPDxYCHwEFKX4vV29ya2Zsb3cvRGVmYXVsdC5hc3B4P2tleT1DbWRXb3JrUXVldWVzZBYCZg8VAQpXb3JrIFF1ZXVlZAIFDxYCHwJoFgICAQ8PFgIfAQUnfi9Xb3JrZmxvdy9EZWZhdWx0LmFzcHg/a2V5PUNtZFByb2plY3RzZBYCZg8VAQhQcm9qZWN0c2QYAgUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgIFGGN0bDAwJExvZ2luU3RhdHVzMSRjdGwwMQUYY3RsMDAkTG9naW5TdGF0dXMxJGN0bDAzBR9jdGwwMCREZWZhdWx0Q29udGVudCRsb2dpblZpZXcxDw9kAgFk35IlIU4TpONRoHSlRcRO22Yd/HbFZ5HepvtEaAsYAEg=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Questys.CMx.WebClient/WebResource.axd?d=eYBnq4wOI5gUDJYwu2K3507y5iJJu1TxvDH_tWM8SYDoOrYBUdhSxyrFu6tS-XQV7Hu0Yud2IAj1oyhHfY4jYwOjqkH4Qo7FFc3mF49z4Ps1&amp;t=637100542300000000" type="text/javascript"></script>
+
+<script language='javascript' type='text/javascript'>
+var myTimeReminder, myTimeOut;
+clearTimeout(myTimeReminder);
+clearTimeout(myTimeOut);
+myTimeReminder=setTimeout('showUserMessage(180)', 1020000);
+myTimeOut=setTimeout('doRedirect()', 1199995);
+</script>
+
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=NC8gXMsSW3FFGYQ59uW44o9dLl6OlfltjqxwtTryu476DRiA9uYc6UqTf8xqFcsvPuwRVB-wu3oXcWxem7GxQ01N28j4CeM-DmgEjbxqBiNGE0hGbJaB2NI86W6uQRMxrygLsURbHneoUSq1KuvtZQ2&amp;t=7f16157c" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=zHPwi1Pdc3Y0VjT4nUIRuEJa5Gjmh_HDTvImKA0KGc4iStXQOP2eugzdpnXUN55mJ67w-bIGBB5Ynl7KrY3rRcxxQWQxfuRvVuOU1wZDG1KoWzsgnKSIqdTUjv0u8f1Pn9HiJJhUwLqx0uNLjbaWKg2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap/button.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap/dropdown.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap/tab.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap/tooltip.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap/modal.js" type="text/javascript"></script>
+<script src="js/Safari3AjaxHack.js" type="text/javascript"></script>
+<script src="js/default.js" type="text/javascript"></script>
+<script src="js/LongPolling.js" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="29F6829E" />
+</div>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$upMsgBox',''], [], [], 360000, 'ctl00');
+//]]>
+</script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(window).resize(resizeWindow);
+            resizeWindow();
+        });
+
+        function resizeWindow()
+        {
+            var defaultContainer = $("#DefaultContentContainer");
+            var paddingTop = $("#HeaderContainer").outerHeight(true) + 7;
+            $("body").css("padding-top", paddingTop);
+            defaultContainer.height($(window).height() - paddingTop - $("#BreadcrumbContainer").outerHeight(true)
+                                                       - $("#ctl00_upMsgBox").parent().outerHeight(true) - $("#FooterContainer").outerHeight(true) - 9);
+            defaultContainer[0].style.marginBottom = 0;
+        }
+    </script>
+
+    <div id="HeaderContainer" class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+          <div class="container-fluid">
+              <a class="brand" href="./">Questys CMx</a>
+              <div id="ctl00_NavigationContainer">               
+                  <div class="active">
+                      <ul>
+                          <li class="btn-navbar dropdown">
+                              <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-white icon-chevron-down"></span>Menu</a>
+                              <ul class="dropdown-menu">
+                                  
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl00_hlMenuItem" href="Browse/Default.aspx">Browse</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl01_hlMenuItem" href="Search/Default.aspx">Search</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl02_hlMenuItem" href="Agenda/Default.aspx">Agenda</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl04_hlMenuItem" href="Workflow/Default.aspx?key=CmdWorkQueues">Work Queue</a>
+                                          </li>
+                                      
+                              </ul>
+                          </li>
+                      </ul>
+                  </div>
+                  <div class="nav-collapse collapse in">
+                      <ul class="nav">
+                          
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl00_hlMenuItem" href="Browse/Default.aspx">Browse</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl01_hlMenuItem" href="Search/Default.aspx">Search</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl02_hlMenuItem" href="Agenda/Default.aspx">Agenda</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl04_hlMenuItem" href="Workflow/Default.aspx?key=CmdWorkQueues">Work Queue</a>
+                                  </li>
+                              
+                      </ul>
+                  </div>
+                  <div class="navbar-text pull-right">
+                      <i class="icon-user icon-white"></i>
+                      <a id="ctl00_LoginStatus1" href="javascript:__doPostBack(&#39;ctl00$LoginStatus1$ctl00&#39;,&#39;&#39;)" style="color:White;font-weight:bold;">Logout</a>
+                      &nbsp;&nbsp;<span id="ctl00_LoginName1">Welcome, Guest</span>
+                      &nbsp;
+                    
+                  </div>
+              </div>
+          </div>
+      </div>      
+    </div>            
+    <div id="BreadcrumbContainer" class="container-fluid">
+        <div class="row-fluid" style="padding-top: 0px; margin: 0;">
+            <div class="span6">
+                <span id="ctl00_Breadcrumb" class="breadcrumb"><a href="#ctl00_Breadcrumb_SkipLink"><img alt="Skip Navigation Links" src="/Questys.CMx.WebClient/WebResource.axd?d=iebUVdi7OVlXkU-VEZbZ-Zfsd9-CEnHTRy6V2PqxsWO6zQUy6Qa1woI8cqa9x51o_X-Qn9-LjGxnScucHlwoDFZtmL-tke5fNWoxwEnbEpQ1&amp;t=637100542300000000" width="0" height="0" style="border-width:0px;" /></a><a id="ctl00_Breadcrumb_SkipLink"></a></span>
+                
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div id="ctl00_upMsgBox">
+	
+                    
+
+                
+</div>
+        </div>
+    </div>
+    <div id="DefaultContentContainer" class="container-fluid">
+        <div class="row-fluid" style="height: 100%">
+            <div class="inner-fluid clearfix" style="height: 100%;">
+                
+<div class="span12">
+    <div>
+</div>
+    <h1>Welcome to Questys Web Client</h1>
+    <label>You can navigate this site, browse and search repository, download and view files and images.</label>		
+	<ul>      
+        
+                <li>You are logged in as
+                    <span id="ctl00_DefaultContent_loginView1_loginName1">Guest</span>
+                    and have access rights granted to this account.
+                </li>
+                <li>
+                                                                
+                </li>
+            
+        
+                <li>
+                    <a id="ctl00_DefaultContent_rptPageMenu_ctl00_hlMenuItem" href="Browse/Default.aspx">Browse</a>
+                </li>
+            
+                <li>
+                    <a id="ctl00_DefaultContent_rptPageMenu_ctl01_hlMenuItem" href="Search/Default.aspx">Search</a>
+                </li>
+            
+                <li>
+                    <a id="ctl00_DefaultContent_rptPageMenu_ctl02_hlMenuItem" href="Agenda/Default.aspx">Agenda</a>
+                </li>
+            
+                <li>
+                    <a id="ctl00_DefaultContent_rptPageMenu_ctl04_hlMenuItem" href="Workflow/Default.aspx?key=CmdWorkQueues">Work Queue</a>
+                </li>
+            
+    </ul>
+</div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="userMessage" style="display: none; border: 1px solid #CC3300;" data-keyboard="false" data-backdrop="static">
+        <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px;">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 id="modalHeaderLabel">Session will expire</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group" style="margin: 0;">
+                Warning: Your session will time out within <span id="timer">180</span> seconds and you will be returned
+                to the login page. Please save changes or click Refresh in order to remain logged in.
+            </div>
+        </div>
+        <div class="modal-footer" style="padding-top: 5px; padding-bottom: 5px;">
+            <input type="submit" name="ctl00$btnStillHere" value="Refresh" onclick="doRefresh();" id="ctl00_btnStillHere" class="btn" />
+        </div>
+    </div>
+    <div class="modal" id="custom_modal" style="display: none; border: 1px solid #CC3300;" data-keyboard="false" data-backdrop="static">
+        <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px;">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 id="modalCustomHeaderLabel"></h3>
+        </div>
+        <div class="modal-body" style="margin-left: 5px; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; overflow: visible;">
+            <div class="control-group" style="margin: 0;" id="modalControlHolder">
+            </div>
+        </div>
+        <div class="modal-footer" style="padding-top: 5px; padding-bottom: 5px;">
+            <input type="submit" name="ctl00$Button2" value="Close" id="ctl00_Button2" class="btn" data-dismiss="modal" />
+        </div>
+    </div>
+    <div id="FooterContainer" class="navbar navbar-fixed-bottom">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <span class="pull-left">
+                    <div id="ctl00_updateProgress1" style="display:none;">
+	
+                            <img id="ctl00_Image1" src="Shared/SpinningWheel.gif" alt="" style="height:16px;width:16px;border-width:0px;" />
+                            Please wait ...
+                        
+</div>
+                </span>
+                <span class="pull-left">
+                    <a id="ctl00_lbHTEText" href="HTE/Default.aspx" style="color:#ffffff"></a>
+                </span>
+                <span class="pull-right">
+                    v11.5.0.183&nbsp;  
+                    Copyright <a target="_blank" href="http://www.questys.com">Questys Solutions</a>
+                    2026 All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>  
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(function() {
+    $create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":null,"displayAfter":500,"dynamicLayout":true}, null, null, $get("ctl00_updateProgress1"));
+});
+//]]>
+</script>
+</form>
+
+    <script type="text/javascript">
+        var instance = Sys.WebForms.PageRequestManager.getInstance();
+        instance.add_beginRequest(BeginRequestHandler);
+        instance.add_endRequest(EndRequestHandler);
+        function BeginRequestHandler(sender, args) {
+            $get('ctl00_updateProgress1').style.display = 'block';
+        }
+        function EndRequestHandler(sender, args) {
+            if (args.get_error() != undefined) {
+                var errorMessage = "";
+                switch (args.get_response().get_statusCode()) {
+                    case 12031:
+                    case 12030:
+                        errorMessage = "Your session was timed out due to inactivity. Please Login to continue";
+                        doRedirect();
+                        break;
+                    case 12007:
+                    case 12029:
+                        errorMessage = "Please make sure you are connected to internet";
+                        break;
+                    case 200:
+                        errorMessage = args.get_error().message;
+                        break;
+                    case 500:
+                        errorMessage = ""
+                        break;
+                    default:
+                        errorMessage = "An unknown error occurred...";
+                        break;
+                }
+                if (errorMessage != "") {
+                    var specChar = /[<>]/ig;
+                    errorMessage = errorMessage.replace(specChar, "");
+
+                    // Added later since msgbox could not be shown
+                    var aPos = errorMessage.indexOf(":") + 1;
+                    alert(errorMessage.substr(aPos));
+                }
+                // now make sure the system knows we handled the error.
+                args.set_errorHandled(true);
+                $get('ctl00_updateProgress1').style.display = 'none';
+            }
+        }
+
+
+    </script>
+
+   <style>
+    body {
+        font-family: Tahoma;
+        font-size: 12px;
+        color: #000000;
+        margin: 0;
+        padding: 47px 0px 31px 0px;
+        height: auto
+        }
+    .header {
+        width: 100%;
+        height: 17px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        position: absolute;
+        top: 0px;
+        background:green;
+        text-align:center
+        }
+    .footer {
+        bottom: 0px;
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        height: 37px;
+        background: orange;
+        padding-top: 20px
+        }
+    #HeaderContainer {
+        position: fixed;
+        top: 0
+        }
+    #FooterContainer {
+        position: fixed;
+        bottom: 0
+        }
+    #DefaultContentContainer {
+        overflow: auto
+        }
+    #mainForm {
+        width: 100%
+        }
+    a.aspNetDisabled {
+        color: lightgray;
+        }
+</style>
+
+</body>
+</html>

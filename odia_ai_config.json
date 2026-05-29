@@ -1,0 +1,54 @@
+{
+  "dataset": {
+    "mas_corpus_dir": "./data/mas_corpus",
+    "output_dir": "./data/training_splits",
+    "format": "alpaca",
+    "enable_jurisdiction_transfer": true,
+    "enable_negatives": false,
+    "negative_sources_dir": null,
+    "holdout_validation_jurisdiction": "TCSO",
+    "holdout_test_jurisdiction": "Exeter",
+    "random_seed": 42,
+    "min_alert_body_chars": 80
+  },
+  "training": {
+    "base_model": "meta-llama/Llama-3.1-8B-Instruct",
+    "output_dir": "./models/odia-l2-latest",
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "num_train_epochs": 3,
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 16,
+    "learning_rate": 0.0002,
+    "max_seq_length": 4096,
+    "load_in_4bit": true,
+    "bf16": true,
+    "seed": 42
+  },
+  "evaluation": {
+    "validation_dataset_path": "./data/training_splits/validation.jsonl",
+    "test_dataset_path": "./data/training_splits/test.jsonl",
+    "report_dir": "./reports/eval",
+    "max_examples": null,
+    "evaluate_backends": [
+      "pattern",
+      "rag_llm",
+      "finetuned"
+    ]
+  },
+  "continual": {
+    "correction_store_path": "./data/corrections.db",
+    "min_new_corrections": 50,
+    "min_days_since_last_training": 30,
+    "min_reviewed_fraction": 0.8,
+    "regression_f1_threshold": 0.02
+  },
+  "deployment": {
+    "registry_root": "./models/registry",
+    "default_llm_provider": "ollama",
+    "default_llm_model": "llama3.1:8b",
+    "finetuned_model_path": null,
+    "force_backend": null
+  }
+}

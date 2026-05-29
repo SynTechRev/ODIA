@@ -1,0 +1,1451 @@
+
+
+<!--[if HTML5]><![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js lt-ie10" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js" lang="en"> <!--<![endif]--> 
+<head id="ctl00_Head1"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta charset="utf-8" /><title>
+	Tulare - Search
+</title><meta name="description" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Le styles -->   
+    <link rel="stylesheet" href="../assets/css/bootstrap.css" media="all" /><link rel="stylesheet" href="../assets/css/bootstrap-responsive.css" media="all" /><link rel="stylesheet" href="../assets/css/custom.css" />
+
+    <script src="../assets/js/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>        
+        <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../Images/App.ico" /><link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png" /><link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png" /><link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png" /><link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png" />
+    <script type="text/javascript">
+        function CloseTab(tabId) {
+            try {
+                var $edit = $('#browseTab a:last');
+                $edit.remove();
+
+                var recTab = null;
+                if (tabId != "") {
+                    var tabHref = window.location + "#" + tabId; //sometimes browser append hash on windows location
+                    recTab = $('#browseTab a[href="' + tabHref + '"]');
+                }
+                if (recTab == null || recTab.length == 0) {
+                    recTab = $('#browseTab a:first');
+                }
+                if (recTab != null && recTab.length > 0)
+                    recTab.tab('show');
+            }
+            catch (e) {
+                window.status = e;
+            }
+        }
+        function CloseAndRefreshTab(tabId, tabHeader) {
+            try{
+                CloseTab(tabId);
+                if (tabId == "newAgendaTab") {   //for new event tab do not refresh updatepanel just show tab and refresh iframe and fields
+                    loadIframe("ifrm", "../Agenda/NewAgendaMeeting.aspx?sourceTabId=recordTab&refreshFields=true");
+                }
+                else {
+                    RefreshView(tabHeader);
+                }
+            }
+            catch (e) {
+            }
+        }
+        function CloseMeetingTemplateTab(refreshSelectedTemplate) {
+            try {
+                var $edit = $('#browseTab a:last');
+                $edit.remove();
+
+                $('#meetingTemplates').remove();
+
+                var $newAgendaTab = $('#browseTab a[href="#newAgendaTab"]');
+                if ($newAgendaTab.length == 0) {
+                    var tabHref = window.location + "#newAgendaTab"; //sometimes browser append hash on windows location
+                    $newAgendaTab = $('#browseTab a[href="' + tabHref + '"]');
+                }
+                $newAgendaTab.tab('show');
+                if (refreshSelectedTemplate)
+                    loadIframe("ifrm", "../Agenda/NewAgendaMeeting.aspx?sourceTabId=recordTab");
+            }
+            catch (e) {
+                window.status = e;
+            }
+        }
+        function HideLoading() {
+            var loadFiles = document.getElementById('divLoading');
+            if (loadFiles !== null) {
+                //loadFiles.style.display = "none";
+                loadFiles.height = "0px";
+                loadFiles.parentNode.removeChild(loadFiles);
+            }
+        }
+        function AddTab(title, url, tabName) {
+            try {
+                if ($('#rightTabs').length > 0) {
+                    $('#rightTabs div.active').removeClass('active');
+                    $('#browseTab li.active').removeClass('active');
+                    var $dinTab = $('#' + tabName);
+                    if ($dinTab.length > 0)//if exist remove. (this is moved from Close function)
+                        $dinTab.remove();
+                    var ifr = CreateIframe(url);
+                    $('#rightTabs').append("<div class='tab-pane active' id='" + tabName + "'>" + ifr + "</div>");
+                    $('#browseTab').append("<li><a href='#" + tabName + "' data-toggle='tab'>" + title + "</a></li>");
+                    $('#browseTab a:last').tab('show');
+
+                    ShowHideRightPanel("visible");
+                }
+            }
+            catch (e) {
+                alert("Error Adding Tab: " + e.Message);
+            }
+        }
+        function loadIframe(iframeName, url) {
+            var $iframe = $('#' + iframeName);
+            if ($iframe.length) {
+                $iframe.attr('src', url);
+                return false;
+            }
+            return true;
+        }
+        function CreateIframe(url) {
+            return "<div id='divLoading' style='display:inline;'>"
+                   + "<img alt='Loading' src='../Images/file-loader.gif' style='margin-right:3px;'><span style='color:#003399;'>Loading...</span></div>"
+                   + "<iframe name='ifrm' id='ifrm' src='" + url + "' style='margin: 0px; width: 100%; height: 450px;border:none;'></iframe>";
+        }
+        function RefreshView(args) {
+            var UpdatePanel1 = 'ctl00_DefaultContent_upRight';
+            if (UpdatePanel1 != null)
+                __doPostBack(UpdatePanel1, args);
+
+            //$('#browseTab a:first').tab('show');
+        }
+        ///On File CheckOut/CheckIn/Release
+        function RefreshRecordInfoPanel(args) {
+            var UpdatePanel1 = 'ctl00_DefaultContent_upRight';
+            if (UpdatePanel1 != null)
+                __doPostBack(UpdatePanel1, args);
+        }
+        function ShowHideRightPanel(att) {
+            var div = document.getElementById('ctl00_DefaultContent_rightDIV');
+            if (div !== undefined && div != null) {
+                div.style.visibility = att;
+            }
+        }
+
+        var fieldsLoaded = [];
+
+        function LoadFieldList(elementId, fieldId)
+        {
+            if (fieldsLoaded.indexOf(elementId) == -1)
+            {
+                fieldsLoaded.push(elementId);
+                setTimeout(function() { LoadFieldListWorker(elementId, fieldId); }, 7);
+            }
+        }
+
+        function LoadFieldListWorker(elementId, fieldId)
+        {
+            PageMethods.GetFieldList(fieldId, function (ret) { OnLoadFieldListComplete(elementId, ret); });
+        }
+
+        function OnLoadFieldListComplete(elementId, ret)
+        {
+            if (ret.length > 0)
+            {
+                var elemSelector = $("#" + elementId);
+                elemSelector.combobox(ret);
+                FocusOnElement(elemSelector);
+            }
+        }
+
+        function ResetFields()
+        {
+            fieldsLoaded = [];
+        }
+
+        function FocusOnElement(elemSelector)
+        {
+            elemSelector.focus();
+            elemSelector.select();
+        }
+        function OnClientItemsRequesting(sender, eventArgs) {
+            var context = eventArgs.get_context();
+            //var hidden_fields = $('#recordTable').find('input:hidden');
+            //if (hidden_fields != undefined) {
+            //    for (var i = 0; i < hidden_fields.length; i++) {
+            //        if (hidden_fields[i].value != '')
+            //            context["FilterIdList"] += hidden_fields[i].value + ',';
+            //    }
+            //}
+            var fieldKey = sender.get_attributes().getAttribute("key");
+            if (fieldKey != undefined) {
+                context["FieldId"] = fieldKey;
+            }
+        }
+        function OnLookupFieldRefresh(ctrlId, id) {
+            var imgSucc = $("#" + ctrlId.id).find("#imgSucc");
+            var imgErr = $("#" + ctrlId.id).find("#imgError");
+            imgSucc.hide();
+            imgErr.hide();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "../Record/Services/FieldsService.asmx/RefreshFieldLookup",
+                data: "{'fieldId': '" + id + "'}",
+                dataType: "json",
+                success: function (data) {
+                    if (data.d == "ok") {
+                        imgSucc.show();
+                    }
+                },
+                error: function (result) {
+                    imgErr.show();
+                }
+            });
+        }
+        function OnRefreshing(imgId) {
+            var iTemp = document.getElementById(imgId);
+            if (iTemp !== null) {
+                iTemp.style.display = "inline";
+            }
+            return true;
+        }
+        function Results_RowSelected(sender, eventArgs) {
+            var e = eventArgs.get_domEvent();
+            var id = eventArgs.getDataKeyValue("ID");
+            if (id != null) {
+                RefreshView("ResultsRowSelected;" + id);
+            }
+        }
+        function ResultsDetails_Clicked() {
+            RefreshView("Record Details");
+        }
+        function ResultsGridCreated(sender, args) {
+            var scrollArea = sender.GridDataDiv;
+            var dataHeight = sender.get_masterTableView().get_element().clientHeight; if (dataHeight < 350) {
+                scrollArea.style.height = dataHeight + 17 + "px";
+            }
+        }
+
+        function ButtonSaveAsNewSearchForm_Click()
+        {
+            var newFormDialog = $("#NewSearchFormForm"); //");
+            newFormDialog.css("left", $("#buttonSaveAsNewSearchForm").position().left);
+            newFormDialog.show();
+
+            var searchFormNameControl = $("#ctl00_DefaultContent_NewSearchFormName");
+            searchFormNameControl.focus();
+            searchFormNameControl.select();
+        }
+
+        function HandleSearchFormNameKeyPress(args, args2)
+        {
+            if (args.keyCode == 13)
+                $("#ctl00_DefaultContent_CreateSearchForm").click();
+        }
+
+        function IsCustomSearchFormSelected(selectedForm)
+        {
+            if (!selectedForm)
+                selectedForm = $("#ctl00_DefaultContent_searchFormList").val();
+
+            return IsCustomSearch(selectedForm);
+        }
+
+        function IsCustomSearch(formName)
+        {
+            return formName && (formName.length > 0)
+                   && (formName != "Basic") && (formName != "Advanced")
+                   && (formName != "—————————————————");
+        }
+
+        function UpdateSearchLayout(layoutName)
+        {
+            var panelAdvanced = $("#ctl00_DefaultContent_panelX");
+
+            if (layoutName == "Basic")
+            {
+                panelAdvanced.hide();
+                setCookie("search", "Basic", 365);
+            }
+            else
+            {
+                // Advanced layout applies to all saved forms
+                panelAdvanced.show();
+                setCookie("search", "Advanced", 365);
+            }
+        }
+
+        function HandleSearchFormSelectionChange(selectedForm)
+        {
+            var comboBox = $("#ctl00_DefaultContent_searchFormList");
+            var selectedForm = comboBox.val();
+            if (selectedForm == "—————————————————")
+            {
+                comboBox.val(lastSearchFormName);
+                return true;
+            }
+
+            var wasCustom = IsCustomSearch(lastSearchFormName);
+
+            lastSearchFormName = selectedForm;
+            UpdateSearchLayout(selectedForm);
+
+            return !wasCustom && !IsCustomSearchFormSelected(selectedForm);
+        }
+
+        var lastSearchFormName;
+    </script>
+    <style type="text/css">
+        .RadGrid .rgRow td, .RadGrid .rgAltRow td, .RadGrid .rgEditRow td, .RadGrid .rgFooter td, .RadGrid .rgFilterRow td, .RadGrid  .rgHeader, .RadGrid .rgResizeCol, .RadGrid .rgGroupHeader td
+        {
+            padding-top:0px !important;
+            padding-bottom: 0px !important;
+        }
+        .SearchLabel
+        {
+            margin-left: 7px;
+        }
+    </style>
+<link rel="stylesheet" href="../assets/css/combobox.css">
+
+    <style type="text/css">        
+        .brand
+        {
+            margin-top: 7px;
+        }
+        .row-fluid > .inner-fluid
+        {
+            border: 0px none white;
+            border-left-style: solid;
+            border-right-style: solid;
+        }
+        .dropdown
+        {
+            list-style: none;
+        }
+        .dropdown-toggle
+        {
+            color: white;
+        }
+    </style>
+
+    <script type="text/javascript">        
+        function doRefresh() { javascript: __doPostBack(''); } // window.location.href=window.location.href
+        function doRedirect() { window.location.href = '/Questys.CMx.WebClient/Login.aspx?Redirect=True?s=true&ReturnUrl=%2fquestys.cmx.webclient%2fSearch%2fDefault.aspx'; }
+
+        function showUserMessage(secondsToCount) {
+            var myCounter = new Countdown({
+                seconds: secondsToCount,  // number of seconds to count down
+                onUpdateStatus: function (sec) { SetTimerValue(sec); }, // callback for each second
+                onCounterEnd: function () { doRedirect(); } // final action
+            });
+
+            myCounter.start();
+            $('#userMessage').modal('show');
+        } //show session expire message
+        function hideUserMessage() { $('#userMessage').modal('hide'); }
+        function Countdown(options) {
+            var timer,
+            instance = this,
+            seconds = options.seconds || 30,
+            updateStatus = options.onUpdateStatus || function () { },
+            counterEnd = options.onCounterEnd || function () { };
+
+            function decrementCounter() {
+                seconds--;
+                updateStatus(seconds);
+                if (seconds === 0) {
+                    counterEnd();
+                    instance.stop();
+                }
+            }
+
+            this.start = function () {
+                updateStatus(seconds);
+                clearInterval(timer);
+                timer = 0;
+                seconds = options.seconds;
+                timer = setInterval(decrementCounter, 1000);
+            };
+
+            this.stop = function () {
+                clearInterval(timer);
+            };
+        }
+        function SetTimerValue(value) {
+            $('#timer').html(value);
+        }
+
+        function ShowFileHistoryModal(id, headerText) {
+            var url = '';
+            if (id != null) {
+                url = '../File/FilesVersionsList.aspx' + '?id=' + id;               
+            }
+            ShowIframeModal(url, headerText, '300px');
+        }
+        function ShowIframeModal(url, headerText, frameHeight) {
+            SetModalHeaderText(headerText);
+            if (url != '') {
+                var iframe = CreateModalIframe(url, frameHeight)
+                AddControlInCustomModal(iframe);
+            }
+            ShowCustomModal();
+        }
+        function ShowLinkModal(txtValue, headerText, isFile) {
+
+            SetModalHeaderText(headerText);
+            var txtControl = CreateModalInputControl(txtValue.split(';').join('<br />'));
+            AddControlInCustomModal(txtControl);
+            ShowCustomModal();
+        }
+        function AddControlInCustomModal(control) {
+            $('#modalControlHolder').empty();
+            $('#modalControlHolder').append(control);
+        }
+        function CreateModalIframe(url, frameHeight) {
+            var fr = "<div id='divLoading' style='display:inline;'>" +
+                    "<img alt='Loading' src='../Images/file-loader.gif' style='margin-right:3px;'><span style='color:#003399;'>Loading...</span></div>";
+            fr = fr + "<iframe name='ifrm' id='ifrm' src='" + url + "' style='overflow:auto; margin: 0px; width:100%; height: " + frameHeight + ";border:none;' onload='javascript:HideLoading();'></iframe>";
+            return fr;
+        }
+        function CreateModalInputControl(textValue) {
+            var input = "<div style='width:100%;max-height:200px;overflow:auto;'>"+textValue+"</div>"//"<textarea name='ctl00$txtModalLink' class='input-block-level' id='ctl00_txtModalLink' innerText='" + textValue + "' onmouseup='return false' onfocus='this.select()' rows='7' cols='20'/>";
+            return input;
+        }
+        function SetModalHeaderText(headerText) {
+            var header = document.getElementById("modalCustomHeaderLabel");
+            if (header !== undefined) {
+                header.innerText = headerText;
+            }
+        }
+        function ShowCustomModal() {
+            $('#custom_modal').modal('show');
+        }
+        function HideCustomModal() {
+            $('#custom_modal').modal('hide');
+        }
+        function HideLoading() {           
+            var loadFiles = document.getElementById('divLoading');
+            if (loadFiles !== null) {                
+                loadFiles.height = "0px";
+                loadFiles.parentNode.removeChild(loadFiles);
+            }
+        }
+        function CreateRollCallIframe() {
+            var rollDiv = document.getElementById("rollCallTab");
+            if (rollDiv !== undefined && rollDiv.childElementCount == 0) {
+                var i = document.createElement("iframe");
+                i.src = "../Agenda/RollCall.aspx";
+                i.width = "100%";
+                i.height = "600px";
+                i.marginWidth = "0px";
+                i.frameBorder = "none";
+                i.border = "0px";
+                i.style.background = "#ffffff url('../Images/file-loader.gif') no-repeat 5% 5%";
+                rollDiv.appendChild(i)
+            }
+        }
+        function CreatePreviewIframe(recordId, version) {
+            var previewDiv = document.getElementById("previewTab");
+            if (previewDiv !== undefined && previewDiv.childElementCount == 0) {
+                var i = document.createElement("iframe");
+
+                i.src = "../File.ashx?id=" + recordId + "&v=" + version + "&preview=true";
+                i.allowTransparency = true;
+                i.style.width = "100%";
+                i.style.height = "600px";
+                i.marginWidth = "0px";
+                i.frameBorder = "none";
+                i.border = "0px";
+                i.style.background = "#ffffff url('../Images/file-loader.gif') no-repeat 5% 5%";
+                i.id = "PreviewFrame";
+                previewDiv.appendChild(i);
+            }
+        }
+        function PreviewLoaded() {
+            document.getElementById("PreviewFrame").style.display = "";
+        }
+    </script>
+<link href="/Questys.CMx.WebClient/WebResource.axd?d=LSGTFMonv7s-EBEZJ8CXO7uFmADKUQ5eewTuYQK-7E35-k1gE5n0Af0Muu6Z7rSo3syxvRYZssxT9s2Vtyr7Zk2Z2QAmi8ZKRJoBQTqbX4cGNNgMA7pueZjAgveI4Dnsykdm8tWQ4HXQW9l9phHWMQ2&amp;t=636319139920000000" type="text/css" rel="stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=6L_PZFF5hWzzhjqf421a0S78D16_g5O0TMAOEM6JmGXqmVlAbOll8br3jsY1EOC75fqCptQ4rSIbNPRLhH26c7XajHUqTcqi-MGHE_okmIT6do8KcDO0_S4m7Q6evdWWKF3u_-jsEUkh-sehv0DIlA2&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=2oV-BIxbOdHnHGe046eTYpIQGmoTouHI42zVsIW6CAecEHDxvnltJ-YL5eNPO4voLEAS5yVZS2tyCgs3FK3cB56KGAgWirSWHDQU023Aw7ow_lQ0bmy-yad-6LJviP27d2bR-AaE52kDOKZqVrGJaP4auVUPOFQHFUeXSJ6zIRg1&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=3n8u2lEfNCoCVQ6b05iqpnGitebvAbPRnuIlc9_r2-dW1g4vCos671y4KdlE0LNx_xrXaf0JTuQjt25Nn4qnPTZZxQBVy0Apa6VoHmkhTlLhORCLuyWcjyAyrhjYq7uLp7NDGfuPLP-J5Oj87iDwtQ2&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=YSBzPzJr53Z8d_1VOERqeOBrgefJw2pFdAmgTbzEFdY7V1QBUoo35GpoZlnsx9Wf8p3-Qa93j336kkRh2W1YNDr-rx_0E-_Bj1g3FLp8SDni2lKpyC2r6wNWk20F9Q6Ba1ySERlOwXdUWwL6alTmKqL8jALCBuue86kYxiQWP1k1&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=GnxiNzPe0WyfilhwhJxExrIUrfqpWxVJm0m7kUSjn1TrnF1RpvdBB8HJtmcO3yzCJkwSOy7SAlRJnZWO1rezE41fW8Cn_Fd1gyIsZwgzyq8Kx7e0p22OLlojQP9KV9D1gxOos1aXri5DdwS4csZYuA2&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/Questys.CMx.WebClient/WebResource.axd?d=DuJSI4fnHOaXV0r9BSFy9_qzpfYTeSEuIwdqyELVP4sDyFRMh1bDbHa-Hj_QkjkAub5neEscle16j-NJqMMCIG15RYk5x3Y4CtmycQ4Blul3F4B1Scr-u55cu7AWtEpRGAQ0cUZBoHY0G_zUs_JvoT_76HqyS36MOhz3sph18fA1&amp;t=636319139980000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /></head>
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+    <form name="aspnetForm" method="post" action="./Default.aspx" onsubmit="javascript:return WebForm_OnSubmit();" id="aspnetForm" class="form-inline">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Questys.CMx.WebClient/WebResource.axd?d=eYBnq4wOI5gUDJYwu2K3507y5iJJu1TxvDH_tWM8SYDoOrYBUdhSxyrFu6tS-XQV7Hu0Yud2IAj1oyhHfY4jYwOjqkH4Qo7FFc3mF49z4Ps1&amp;t=637100542300000000" type="text/javascript"></script>
+
+<script language='javascript' type='text/javascript'>
+var myTimeReminder, myTimeOut;
+clearTimeout(myTimeReminder);
+clearTimeout(myTimeOut);
+myTimeReminder=setTimeout('showUserMessage(180)', 1020000);
+myTimeOut=setTimeout('doRedirect()', 1199995);
+</script>
+
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=-iqfaf4S3ZV2t4AWmlBHb_F88oxb9CKtKU63NoAbmuQvSOhfRwYHVzeQWg0cYQTy5DiQIzZgdL4_BGa79Un68rW_mHrW80gx-iM95GoV_nSSTm-O5cwlvyYRp5W1h3g2DWVhqAehyhJqiis4FjJEPRtEL0HXDBj1IZmR-07iuus1&amp;t=6e1d6511" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=NC8gXMsSW3FFGYQ59uW44o9dLl6OlfltjqxwtTryu476DRiA9uYc6UqTf8xqFcsvPuwRVB-wu3oXcWxem7GxQ01N28j4CeM-DmgEjbxqBiNGE0hGbJaB2NI86W6uQRMxrygLsURbHneoUSq1KuvtZQ2&amp;t=7f16157c" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=zHPwi1Pdc3Y0VjT4nUIRuEJa5Gjmh_HDTvImKA0KGc4iStXQOP2eugzdpnXUN55mJ67w-bIGBB5Ynl7KrY3rRcxxQWQxfuRvVuOU1wZDG1KoWzsgnKSIqdTUjv0u8f1Pn9HiJJhUwLqx0uNLjbaWKg2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/button.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/dropdown.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/tab.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/tooltip.js" type="text/javascript"></script>
+<script src="../assets/js/bootstrap/modal.js" type="text/javascript"></script>
+<script src="../js/Safari3AjaxHack.js" type="text/javascript"></script>
+<script src="../js/default.js" type="text/javascript"></script>
+<script src="../js/LongPolling.js" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=quSyArF8niJX0yZaPWQhnzJdwV3JNybtbwZZQ8OBsHuyCPVhu3e_lYLA0iUazVuP-24ENxoVyTLgHE3f9t2VMA7Kingm6nrynB9pIQtKHUQqGb0xTPS9WQ4_cd4CkRCgBJIL7oW_Mva07BjRvUwOqA2&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=3GhgMhzytzo1TYFenUgN2ZvM1B8Z-L2QwsunKp-YNj-RLsqPt2vxKo3GP5V0Y0OC0l9cw0Y4A9h44ite_hvzLYX1aIxP_uVb30qWSK7fe6reOg-wKYMeQj8DKy6DutGXtK-naMX9HdlVqL9ih6ySZQ2&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=Pt1tDfq0ik3_SThRIXrZs8Psr8fJoe82hqEYmN-x3-xzRw_fEKXW9HS1qkv2vRtJVdqpT5kv6_lDNXVGMyM0p-16pGb_AZaUE9p_9ClIe5FJyoQLsmh8wrgULQzPL2Ndez9p5V9yPS3aeP6rDNjWWg2&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=w1kFRdBM00SGVAE6zVgsUd5P1gpjkFXW94t1qpk9WqJTNIQ5gef1ST-uByBwoXiWqgjZA6Cwzrj8IWa-TOnw3ZdTuYqz2LcDMLW_FSBzkLLV2viV0TmWBTTqw92PuJBOAbHcNqUrOaGlpZGo_lmZBr9iEK8o79W8useZhJqxnD01&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=ULOcDxKGsRmW83EHo7_Flaem1X2kf6tX7VGFYbS8lNsbg8v3QoBm2OIddx87I-C07gPtZ6V80VR6jZmiFgSFznF-pqbOzML0iO7hxP0p9mBuJqQ-ifNgEVtqkaFNoI7bdrAf1ulLtUnnU9DP-ZqyDcEFMu1u-EMxT1Bl6UkZeQI1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=inaT5vpZbsSqFBMXkT1sVFHO3RGXFKN5zIqCALwJd3X3lt2qtpcgr5k1a-FHct3KhKmDJAAliMU22awezX_AUKWvc_OkYGrEAgCQ77A5H_24FAeUrS0q8foaOesk3zKfnaQAwVTQhn8jfno4mF2t0lx5PQCgYYdZTMTCjtePytk1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=JX7TwhjqYChBIjpePe6Zl6TnPxbNn_iM1Qfx4xtTTB1u8Ld4hVbpAwQodk4J0cp-DP66qC5JqFerXrVg2Hzm2rZy3s4wmDzD0dHCmE-TNSEsmrmFGMI3-x1KTYv4yyBozAbB25stLgU_KTHLIFqoe-W0aLDxH1FNn8gO0NJ95pw1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=7n_jUVHBrOUJrG8f_enxDgadQErCVQpX1-ZlpXjJ25jrG62v3Ct79s8e001tJgMFMdc1NRlx1lYN02eu31__dV2LekaeDhcDqJvQpykJZRsYihRWeRrcmSBRURpaNt44aUcxRGJRVwpI4LHDgZkg-OECsmdkN1yTbvXrHecAS1U1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=sdxnTZ9Qaehchm9WjdvLvRSS17mC_jJZ4RGcOgPWy10Q89LxJ-P3GPT996YfsKMd7RfHwb8P2mMBTxIPmVrnrj-NTYLL6RisFZHFIaSDROREraKuAGYgWt-oOjj5NK5jAdCApvJs0y6G_TwRmd4zMqIAu9tkFShHluGNOKrfGmI1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=rHKeuNDZi_Zbn6rVjlzeEKo9v81d89mCS5yKjlv2w_LHOJP9HqR0dxNW4rwCGghrS0i2mjeLsf2fvI0q0FtqDQwFbSAJxe8MfLKNsEc0gMAQlGDjyNHdI81h5IvOmKYhjRUwFAFh1ltkyvaBB9B7HmBsttN-8uN1gXM7FcmPa7U1&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=EbciQOMXAM_ZZApY7dyMFUAeGAJbH1t2uga6A2VPS7pB2_MaDwE0uSR6M1inWSwZIZU3qkrRqJVJT1qVK8MXm2z7kZtucrk9fpPPARXNgEIKoHf6Oas_ApcS1WvbT1ajeevKK3GgnM-oSN3OxQrJAg2&amp;t=ffffffff8195fe05" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=L1vVbd4mLsSYTKWVdnlKrfIoGvdffHZ8_CFBy1CPU4UFVJUlvBZPUJwChSN8Sl8F7D0FhNK4PEhw2-CjecQ3n58yXumcnREE4g2qwL1P7nfN2PJUzDLW7PeOXl8Y9eSft3cGvAVRsA0I3jbX0OnIFQ2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=kSQL_SrTlk4mRLa99_7MGpir-4pV9WhDgXlh-BNVAw1IggaV50wR0iXUA0pVSP24JcxaIw1bPs6dnRgsADZ_DQELH5xKq34GscDas_lijDvrPDWcn6VlGdqwEUYoV7S1QFIVJvUNM4reN75VD6hMNw2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=QkVtWhjWctrKOpm4oXxxYjvrwii2M5wzE_xGqjiTuZiRCiV8NKTyKIKvkaVhJAu2VMh_Qb1C0dBWZFbjzH-6W8JRa4Oh3c7SOL4SQjFDtML8f1jpQf092nFNyvUZZAU2YOXXc1tbCtvGOxs33utzfA2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=H08wFAvx6-bQWCKg4AyzrxFK9qEqXdCtAPUOgSNtfH65bx32vKYpmDkhCOOH4r_N8GzcQqLdSrG1W2CHTM5tpovWwbnY5Srb8G0j18JKYrrgDogER_is43JtPbtuTs7_n3Wi1_uQ4ZEDpPTubeyvBg2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=skG-sB8wkZS1y8lEnYulOMGhrjxs-Q1IghCxqE0ihRe6NrDzqwKjemNZhsU2ZNZEOHp5fbh0Lzk2HQzNcvhd5LtEIWuNM_G9QGdXUgxGTVX6YeVVQgDsf9yWcBLhxpXCs8p9ovjKRKDkyyA15MEzkQ2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=u2_6ZuvEFbxooCxWOXLAkSGPV1MYq59-pwOLJ8qfIJhKbCFU_gfVlcLODOAZwCPAZUY_U8W5A0Ovv7VzPOihvdMJztWYbx80BLObCijhRmmlYUZjJnNxoOb3t08TQOwFR3d8QS0WPkMfNGkshF-aft3zQKmKI6SSo9rXdpgQ_f41&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=8Hddt-0k_vMJtLRXqrMDe4aSIYDCd-tc1YTCg_F9WAibjfAntczgNOtu2bkq-XUW8YExBdtAx9jJd2pv8mQ46GVAE8UqtyPIqEPHyxEElMJhqGujHGRrXUA4ku1cOPjdp2SsUQ9RjUwxZDlkfXZ8vaJeCgIXN5SlfPMQWOZ-eVU1&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=0rzV3SzI0o3YLXPypqsxjcCDoEWJwTfHHwb7TZtIjYz34HOxojvcRUwR6qiWyaUsmJ7cDoz7A80oazBJNoGUzaMSUYmyCuokx0Fk-PSa__1s_Bd8PfEdyADk1m0d-er9ad-0nEucU4loBbqMqqFnWg2&amp;t=7f16157c" type="text/javascript"></script>
+<script src="/Questys.CMx.WebClient/ScriptResource.axd?d=l0luRt_0z-Wh_1-Q_MaiJcFlAtDjatw5UIlZuj0CGdgypBh_n5w_QNK2uWZR3iEgFA_a-MpZECMDX0CzrkIk5JwshmX0yBF8p9xUExa3MS2aelZ4NJ9Qa_u_IWO8Dmhgb4iXEvFUl8Y5E8XhwnCINg2&amp;t=7f16157c" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+var PageMethods = function() {
+PageMethods.initializeBase(this);
+this._timeout = 0;
+this._userContext = null;
+this._succeeded = null;
+this._failed = null;
+}
+PageMethods.prototype = {
+_get_path:function() {
+ var p = this.get_path();
+ if (p) return p;
+ else return PageMethods._staticInstance.get_path();},
+GetFieldList:function(fieldId,succeededCallback, failedCallback, userContext) {
+/// <param name="fieldId" type="Number">System.Int16</param>
+/// <param name="succeededCallback" type="Function" optional="true" mayBeNull="true"></param>
+/// <param name="failedCallback" type="Function" optional="true" mayBeNull="true"></param>
+/// <param name="userContext" optional="true" mayBeNull="true"></param>
+return this._invoke(this._get_path(), 'GetFieldList',false,{fieldId:fieldId},succeededCallback,failedCallback,userContext); }}
+PageMethods.registerClass('PageMethods',Sys.Net.WebServiceProxy);
+PageMethods._staticInstance = new PageMethods();
+PageMethods.set_path = function(value) {
+PageMethods._staticInstance.set_path(value); }
+PageMethods.get_path = function() { 
+/// <value type="String" mayBeNull="true">The service url.</value>
+return PageMethods._staticInstance.get_path();}
+PageMethods.set_timeout = function(value) {
+PageMethods._staticInstance.set_timeout(value); }
+PageMethods.get_timeout = function() { 
+/// <value type="Number">The service timeout.</value>
+return PageMethods._staticInstance.get_timeout(); }
+PageMethods.set_defaultUserContext = function(value) { 
+PageMethods._staticInstance.set_defaultUserContext(value); }
+PageMethods.get_defaultUserContext = function() { 
+/// <value mayBeNull="true">The service default user context.</value>
+return PageMethods._staticInstance.get_defaultUserContext(); }
+PageMethods.set_defaultSucceededCallback = function(value) { 
+ PageMethods._staticInstance.set_defaultSucceededCallback(value); }
+PageMethods.get_defaultSucceededCallback = function() { 
+/// <value type="Function" mayBeNull="true">The service default succeeded callback.</value>
+return PageMethods._staticInstance.get_defaultSucceededCallback(); }
+PageMethods.set_defaultFailedCallback = function(value) { 
+PageMethods._staticInstance.set_defaultFailedCallback(value); }
+PageMethods.get_defaultFailedCallback = function() { 
+/// <value type="Function" mayBeNull="true">The service default failed callback.</value>
+return PageMethods._staticInstance.get_defaultFailedCallback(); }
+PageMethods.set_enableJsonp = function(value) { PageMethods._staticInstance.set_enableJsonp(value); }
+PageMethods.get_enableJsonp = function() { 
+/// <value type="Boolean">Specifies whether the service supports JSONP for cross domain calling.</value>
+return PageMethods._staticInstance.get_enableJsonp(); }
+PageMethods.set_jsonpCallbackParameter = function(value) { PageMethods._staticInstance.set_jsonpCallbackParameter(value); }
+PageMethods.get_jsonpCallbackParameter = function() { 
+/// <value type="String">Specifies the parameter name that contains the callback function name for a JSONP request.</value>
+return PageMethods._staticInstance.get_jsonpCallbackParameter(); }
+PageMethods.set_path("Default.aspx");
+PageMethods.GetFieldList= function(fieldId,onSuccess,onFailed,userContext) {
+/// <param name="fieldId" type="Number">System.Int16</param>
+/// <param name="succeededCallback" type="Function" optional="true" mayBeNull="true"></param>
+/// <param name="failedCallback" type="Function" optional="true" mayBeNull="true"></param>
+/// <param name="userContext" optional="true" mayBeNull="true"></param>
+PageMethods._staticInstance.GetFieldList(fieldId,onSuccess,onFailed,userContext); }
+function WebForm_OnSubmit() {
+if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+//]]>
+</script>
+
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="BF2B1591" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+</div>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$upMsgBox','','tctl00$DefaultContent$upLeft','','tctl00$DefaultContent$upLeftButtons','','tctl00$DefaultContent$upResults','','tctl00$DefaultContent$upRight',''], ['ctl00$DefaultContent$Search','','ctl00$DefaultContent$Reset',''], [], 360000, 'ctl00');
+//]]>
+</script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(window).resize(resizeWindow);
+            resizeWindow();
+        });
+
+        function resizeWindow()
+        {
+            var defaultContainer = $("#DefaultContentContainer");
+            var paddingTop = $("#HeaderContainer").outerHeight(true) + 7;
+            $("body").css("padding-top", paddingTop);
+            defaultContainer.height($(window).height() - paddingTop - $("#BreadcrumbContainer").outerHeight(true)
+                                                       - $("#ctl00_upMsgBox").parent().outerHeight(true) - $("#FooterContainer").outerHeight(true) - 9);
+            defaultContainer[0].style.marginBottom = 0;
+        }
+    </script>
+
+    <div id="HeaderContainer" class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+          <div class="container-fluid">
+              <a class="brand" href="../">Questys CMx</a>
+              <div id="ctl00_NavigationContainer">               
+                  <div class="active">
+                      <ul>
+                          <li class="btn-navbar dropdown">
+                              <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-white icon-chevron-down"></span>Menu</a>
+                              <ul class="dropdown-menu">
+                                  
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl00_hlMenuItem" href="../Browse/Default.aspx">Browse</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl01_hlMenuItem" href="Default.aspx">Search</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl02_hlMenuItem" href="../Agenda/Default.aspx">Agenda</a>
+                                          </li>
+                                      
+                                          <li class="">
+                                              <a id="ctl00_rptMenuDropdown_ctl04_hlMenuItem" href="../Workflow/Default.aspx?key=CmdWorkQueues">Work Queue</a>
+                                          </li>
+                                      
+                              </ul>
+                          </li>
+                      </ul>
+                  </div>
+                  <div class="nav-collapse collapse in">
+                      <ul class="nav">
+                          
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl00_hlMenuItem" href="../Browse/Default.aspx">Browse</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl01_hlMenuItem" href="Default.aspx">Search</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl02_hlMenuItem" href="../Agenda/Default.aspx">Agenda</a>
+                                  </li>
+                              
+                                  <li class="">
+                                      <a id="ctl00_rptMenu_ctl04_hlMenuItem" href="../Workflow/Default.aspx?key=CmdWorkQueues">Work Queue</a>
+                                  </li>
+                              
+                      </ul>
+                  </div>
+                  <div class="navbar-text pull-right">
+                      <i class="icon-user icon-white"></i>
+                      <a id="ctl00_LoginStatus1" href="javascript:__doPostBack(&#39;ctl00$LoginStatus1$ctl00&#39;,&#39;&#39;)" style="color:White;font-weight:bold;">Logout</a>
+                      &nbsp;&nbsp;<span id="ctl00_LoginName1">Welcome, Guest</span>
+                      &nbsp;
+                    
+                  </div>
+              </div>
+          </div>
+      </div>      
+    </div>            
+    <div id="BreadcrumbContainer" class="container-fluid">
+        <div class="row-fluid" style="padding-top: 0px; margin: 0;">
+            <div class="span6">
+                <span id="ctl00_Breadcrumb" class="breadcrumb"><a href="#ctl00_Breadcrumb_SkipLink"><img alt="Skip Navigation Links" src="/Questys.CMx.WebClient/WebResource.axd?d=iebUVdi7OVlXkU-VEZbZ-Zfsd9-CEnHTRy6V2PqxsWO6zQUy6Qa1woI8cqa9x51o_X-Qn9-LjGxnScucHlwoDFZtmL-tke5fNWoxwEnbEpQ1&amp;t=637100542300000000" width="0" height="0" style="border-width:0px;" /></a><span><a href="/questys.cmx.webclient/Default.aspx">Home</a></span><span> &gt; </span><span>Search</span><a id="ctl00_Breadcrumb_SkipLink"></a></span>
+                
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div id="ctl00_upMsgBox">
+	
+                    
+
+                
+</div>
+        </div>
+    </div>
+    <div id="DefaultContentContainer" class="container-fluid">
+        <div class="row-fluid" style="height: 100%">
+            <div class="inner-fluid clearfix" style="height: 100%;">
+                
+<script type="text/javascript" src="../assets/js/jquery.combobox.js"></script>
+<div class="span6" style="height: 100%; overflow: auto; margin-left: 0;">
+    <div id="divExpandCollaps" style="text-align: right; vertical-align: top;" class="row-fluid">
+        <label>Search Template:</label>
+        <select name="ctl00$DefaultContent$searchFormList" onchange="if (HandleSearchFormSelectionChange()) return true;setTimeout(&#39;__doPostBack(\&#39;ctl00$DefaultContent$searchFormList\&#39;,\&#39;\&#39;)&#39;, 0)" id="ctl00_DefaultContent_searchFormList">
+	<option selected="selected" value="Basic">Basic</option>
+	<option value="Advanced">Advanced</option>
+
+</select>
+        <input type="image" name="ctl00$DefaultContent$buttonSaveSearchForm" id="ctl00_DefaultContent_buttonSaveSearchForm" title="Save the currently displayed search criteria as the selected search form" src="../Images/Save.png" onclick="if (!IsCustomSearchFormSelected()) return false;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$buttonSaveSearchForm&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+        <input type="image" id="buttonSaveAsNewSearchForm" src="../Images/Save_As.png" onclick="ButtonSaveAsNewSearchForm_Click(); return false;" title="Save the current search criteria as a new search form" />
+        <div id="NewSearchFormForm" style="display: none; padding: 7px; position: absolute; background-color: white; border: solid 1px blue;">
+            <input name="ctl00$DefaultContent$NewSearchFormName" type="text" value="New Search Form" id="ctl00_DefaultContent_NewSearchFormName" />
+            <input type="submit" name="ctl00$DefaultContent$CreateSearchForm" value="Save" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$CreateSearchForm&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_CreateSearchForm" />
+            <input type="button" id="CancelSearchForm" onclick="$('#NewSearchFormForm').hide();" value="Cancel" />
+        </div>
+        <input type="image" name="ctl00$DefaultContent$buttonDeleteSearchForm" id="ctl00_DefaultContent_buttonDeleteSearchForm" title="Delete the currently selected search form" src="../Images/Delete.png" onclick="if (!IsCustomSearchFormSelected()) return false;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$buttonDeleteSearchForm&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+    </div>
+    <div id="ctl00_DefaultContent_upLeft" class="row-fluid">
+	
+            <script type="text/javascript">
+                function PredicateChanging(ddlPredicate) {
+                    var tableId = ddlPredicate.id.replace('FieldPredicate', 'rangeTable');
+                    var table = document.getElementById(tableId);
+                    if (table !== undefined && table !== null) {
+                        if (ddlPredicate.value != 'GT' && ddlPredicate.value != 'GTE')
+                            table.style.display = 'none'
+                        else
+                            table.style.display = 'inline';
+                    }
+                }
+                function DatePredicateChanging(ddlPredicate) {
+                    var predicateCell = document.getElementById('dateToPredicate');
+                    var controlsCell = document.getElementById('dateToControls');
+                    if (predicateCell !== undefined && controlsCell !== undefined) {
+                        if (ddlPredicate.value == 'GT' || ddlPredicate.value == 'GTE') {
+                            predicateCell.style.visibility = "visible";
+                            controlsCell.style.visibility = 'visible';
+                        }
+                        else {
+                            predicateCell.style.visibility = 'hidden';
+                            controlsCell.style.visibility = 'hidden';
+                        }
+                    }
+                }
+                function SetWildCardAsDefault(isDefault) {
+                    var ddl = $get("ctl00_DefaultContent_DropListName");
+                    var ddlVal = 'EQ';
+                    if (isDefault)
+                        ddlVal = 'LIKE';
+                    if (ddl !== null && ddl != undefined)
+                        setDropDownList(ddl, ddlVal);
+
+                    $('#tblSearchQuery tr td select').each(function () {
+                        $(this).val(ddlVal);
+                    });
+                }
+                function setDropDownList(elementRef, valueToSetTo) {
+                    for (var i = 0; i < elementRef.options.length; i++) {
+                        if (elementRef.options[i].value == valueToSetTo) {
+                            elementRef.options[i].selected = true;
+                            return;
+                        }
+                    }
+
+                    elementRef.options[0].selected = true;
+                }
+                //Sys.Application.add_load(BindShowHideEvents);
+            </script>
+            <div id="ctl00_DefaultContent_panelSearch" class="span12" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl00_DefaultContent_Search&#39;)" style="margin-left: 0">
+		
+                <table class="table table-condensed" style="border:none;">
+                    <thead>
+                        <tr id="tr1">
+                            <th colspan="2">
+                            </th>
+                            <th colspan="3">
+                                <label class="checkbox">
+                                    <input name="ctl00$DefaultContent$cbWildCard" type="checkbox" id="ctl00_DefaultContent_cbWildCard" onclick="SetWildCardAsDefault(this.checked);" checked="checked" class="checkbox" />
+                                    <label for="ctl00_DefaultContent_cbWildCard">Wildcard search</label>
+                                </label>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="table table-condensed" style="border:none" id="tblSearchQuery">
+                    <tbody>
+                        <tr>
+                            <td style="width:31%;">
+                                <label for="ctl00_DefaultContent_DropListName" id="ctl00_DefaultContent_LabelName" class="SearchLabel">Name:</label>
+                            </td>
+                            <td class="mini">
+                                <select name="ctl00$DefaultContent$DropListName" id="ctl00_DefaultContent_DropListName" class="mini">
+			<option selected="selected" value="LIKE">* - Like</option>
+			<option value="EQ">=</option>
+			<option value="LT">&lt; - Less Than</option>
+			<option value="LTE">≤ - Less Than or Equal</option>
+			<option value="GT">&gt; - Greater Than</option>
+			<option value="GTE">≥ - Greater Than or Equal</option>
+
+		</select>
+                            </td>
+                            <td>
+                                <input name="ctl00$DefaultContent$TextName" type="text" id="ctl00_DefaultContent_TextName" class="input-block-level" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="ctl00_DefaultContent_TextTEXT" id="ctl00_DefaultContent_LabelTEXT" class="SearchLabel">Text:</label>
+                            </td>
+                            <td>
+                                <select name="ctl00$DefaultContent$DropListTEXT" id="ctl00_DefaultContent_DropListTEXT" class="mini">
+			<option selected="selected" value="CONTAINS">כ - Contains</option>
+			<option value="ISNULL">&#248; - Is Null</option>
+
+		</select>
+                            </td>
+                            <td>
+                                <input name="ctl00$DefaultContent$TextTEXT" type="text" id="ctl00_DefaultContent_TextTEXT" class="input-block-level" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="ctl00_DefaultContent_LabelCategory" class="SearchLabel">Category:</span>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <div id="ctl00_DefaultContent_ddlCategories" class="RadDropDownList RadDropDownList_Default" style="width:100%;">
+			<!-- 2014.2.724.35 --><span class="rddlInner"><span class="rddlFakeInput rddlDefaultMessage">Select Category</span><span class="rddlIcon"><!-- &nbsp; --></span></span><div class="rddlSlide" id="ctl00_DefaultContent_ddlCategories_DropDown" style="display:none;">
+				<div class="rddlPopup rddlPopup_Default" style="width:100%;">
+
+				</div>
+			</div><input id="ctl00_DefaultContent_ddlCategories_ClientState" name="ctl00_DefaultContent_ddlCategories_ClientState" type="hidden" />
+		</div>
+                            </td>
+                        </tr>
+                        
+                                <tr>
+                                    <td colspan="2">
+                                        <span>Add to results</span>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                
+                                 <tr id="trFooter">
+                                    <td style="text-align: right" colspan="4">
+                                        <div id="ctl00_DefaultContent_Fields_ctrl0_DropListField" class="RadComboBox RadComboBox_Default" style="width:160px;white-space:normal;min-width: 307px">
+			<table summary="combobox" border="0" style="border-width:0;border-collapse:collapse;width:100%">
+				<tr>
+					<td class="rcbInputCell rcbInputCellLeft" style="width:100%;"><input name="ctl00$DefaultContent$Fields$ctrl0$DropListField" type="text" class="rcbInput radPreventDecorate rcbEmptyMessage" id="ctl00_DefaultContent_Fields_ctrl0_DropListField_Input" value="Add Field..." /></td><td class="rcbArrowCell rcbArrowCellRight"><a id="ctl00_DefaultContent_Fields_ctrl0_DropListField_Arrow" style="overflow: hidden;display: block;position: relative;outline: none;">select</a></td>
+				</tr>
+			</table><div class="rcbSlide" style="z-index:6000;"><div id="ctl00_DefaultContent_Fields_ctrl0_DropListField_DropDown" class="RadComboBoxDropDown RadComboBoxDropDown_Default " style="display:none;"><div class="rcbScroll rcbWidth" style="height:250px;width:100%;"><ul class="rcbList" style="list-style:none;margin:0;padding:0;zoom:1;"><li class="rcbItem">(i.e. 9:00 AM Board Convenes)</li><li class="rcbItem">(i.e. January 1, 2005)</li><li class="rcbItem">Abstract</li><li class="rcbItem">Action</li><li class="rcbItem">Address</li><li class="rcbItem">Addressee</li><li class="rcbItem">Adjourn Field1</li><li class="rcbItem">Adjourn Field2</li><li class="rcbItem">Ag Preserve No.</li><li class="rcbItem">agreement</li><li class="rcbItem">Agreement #</li><li class="rcbItem">Agreement #s</li><li class="rcbItem">AgreementNo</li><li class="rcbItem">ANNOTATION</li><li class="rcbItem">Application</li><li class="rcbItem">Archived</li><li class="rcbItem">Assessor&#39;s Parcel #s</li><li class="rcbItem">Assessor&#39;s Parcel No.</li><li class="rcbItem">Author</li><li class="rcbItem">Box #</li><li class="rcbItem">Box #s</li><li class="rcbItem">Card #</li><li class="rcbItem">Category</li><li class="rcbItem">Character Count</li><li class="rcbItem">City</li><li class="rcbItem">Closed Session Address</li><li class="rcbItem">Closed Session City</li><li class="rcbItem">Closed Session Location</li><li class="rcbItem">Closed Session State</li><li class="rcbItem">Closed Session Time</li><li class="rcbItem">Closed Session Zip</li><li class="rcbItem">Code</li><li class="rcbItem">CREATED</li><li class="rcbItem">Date</li><li class="rcbItem">Date Approved</li><li class="rcbItem">Date-5</li><li class="rcbItem">DEPARTMENT</li><li class="rcbItem">Description</li><li class="rcbItem">Detail</li><li class="rcbItem">Details</li><li class="rcbItem">Document</li><li class="rcbItem">Document Number</li><li class="rcbItem">Document Type</li><li class="rcbItem">DocumentDate</li><li class="rcbItem">DocumentID</li><li class="rcbItem">DocumentTitle</li><li class="rcbItem">Employee ID</li><li class="rcbItem">Exhibit</li><li class="rcbItem">File No</li><li class="rcbItem">filenum</li><li class="rcbItem">Hide backup material</li><li class="rcbItem">Is Other Info Items</li><li class="rcbItem">ItemName</li><li class="rcbItem">ItemNum</li><li class="rcbItem">Keywords</li><li class="rcbItem">Last Printed</li><li class="rcbItem">Last Saved</li><li class="rcbItem">Meeting Date</li><li class="rcbItem">MO #</li><li class="rcbItem">Month</li><li class="rcbItem">Name</li><li class="rcbItem">Next Item(s) Sitting as...</li><li class="rcbItem">Notes</li><li class="rcbItem">OCR Text</li><li class="rcbItem">OMIT</li><li class="rcbItem">ordinance</li><li class="rcbItem">Ordinance No</li><li class="rcbItem">OrdinanceNo</li><li class="rcbItem">Page</li><li class="rcbItem">Page Count</li><li class="rcbItem">Priority</li><li class="rcbItem">resolution</li><li class="rcbItem">Resolution #</li><li class="rcbItem">Resolution #s</li><li class="rcbItem">Resolution No</li><li class="rcbItem">ResolutionNo</li><li class="rcbItem">RETENTION DATE</li><li class="rcbItem">RevisionNo</li><li class="rcbItem">SectionName</li><li class="rcbItem">Source</li><li class="rcbItem">SPONSOR</li><li class="rcbItem">SSN</li><li class="rcbItem">State</li><li class="rcbItem">SUBJECT</li><li class="rcbItem">Subject-5</li><li class="rcbItem">Template</li><li class="rcbItem">Time</li><li class="rcbItem">TITLE</li><li class="rcbItem">Type</li><li class="rcbItem">Vendor</li><li class="rcbItem">VIDEO URL</li><li class="rcbItem">Volume</li><li class="rcbItem">Word Count</li><li class="rcbItem">Year</li><li class="rcbItem">Zip</li></ul></div><div class="rcbMoreResults" id="ctl00_DefaultContent_Fields_ctrl0_DropListField_MoreResultsBox"><a id="ctl00_DefaultContent_Fields_ctrl0_DropListField_MoreResultsBoxImage">select</a><span></span></div></div></div><input id="ctl00_DefaultContent_Fields_ctrl0_DropListField_ClientState" name="ctl00_DefaultContent_Fields_ctrl0_DropListField_ClientState" type="hidden" />
+		</div>
+                                    </td>
+                                </tr>
+                            
+                            
+                    </tbody>
+                </table>
+                <div id="ctl00_DefaultContent_panelX" class="well" style="display: none; padding: 0; margin-bottom: 0px;">
+			
+                    <table id="tableRecord" class="table table-condensed" style="border: 0; vertical-align:top;">
+                        <tbody>
+                            <tr id="trSearchRecord1" style="border: 0; vertical-align:top;">
+                                <td style="width:20%">
+                                    <label for="ctl00_DefaultContent_DropListType" id="ctl00_DefaultContent_LabelType" class="SearchLabel">Type:</label>
+                                </td>
+                                <td style="width:30%">
+                                    <select name="ctl00$DefaultContent$DropListType" id="ctl00_DefaultContent_DropListType" class="input-block-level">
+				<option selected="selected" value="-1"></option>
+				<option value="12">Document</option>
+				<option value="1">File</option>
+				<option value="0">Folder</option>
+				<option value="8">Item</option>
+				<option value="6">Meeting</option>
+				<option value="2">Record</option>
+				<option value="7">Section</option>
+
+			</select>
+                                </td>
+                                <td style="width:20%">
+                                    <label for="ctl00_DefaultContent_TextExtension" id="ctl00_DefaultContent_LabelExtension" class="SearchLabel">Extension:</label>
+                                </td>
+                                <td style="width:10%">
+                                    <select name="ctl00$DefaultContent$DropListExtension" id="ctl00_DefaultContent_DropListExtension" class="mini">
+				<option selected="selected" value="LIKE">* - Like</option>
+				<option value="EQ">=</option>
+				<option value="LT">&lt; - Less Than</option>
+				<option value="LTE">≤ - Less Than or Equal</option>
+				<option value="GT">&gt; - Greater Than</option>
+				<option value="GTE">≥ - Greater Than or Equal</option>
+
+			</select>
+                                </td>
+                                <td style="width:20%">
+                                    <input name="ctl00$DefaultContent$TextExtension" type="text" id="ctl00_DefaultContent_TextExtension" class="input-block-level" />
+                                </td>
+                            </tr>
+                            <tr id="trSearchRecord2" style="border: 0; vertical-align:top;">
+                                <td>
+                                    <label for="ctl00_DefaultContent_DropListState" id="ctl00_DefaultContent_LabelState" class="SearchLabel">Status:</label>
+                                </td>
+                                <td>
+                                    <select name="ctl00$DefaultContent$DropListState" id="ctl00_DefaultContent_DropListState" class="input-block-level">
+				<option selected="selected" value=""></option>
+				<option value="14">Archived</option>
+				<option value="4">Checked In</option>
+				<option value="3">Checked Out</option>
+				<option value="1">Created</option>
+				<option value="8">Deleted</option>
+				<option value="5">Locked</option>
+				<option value="15">Posted</option>
+				<option value="16">Published</option>
+				<option value="10">Submitted</option>
+				<option value="17">Unassigned</option>
+
+			</select>
+                                </td>
+                                <td>
+                                    <label for="ctl00_DefaultContent_TextID" id="ctl00_DefaultContent_LabelID" class="SearchLabel">ID:</label>
+                                    <span id="ctl00_DefaultContent_CompareID" style="color:Red;display:none;">*</span>
+                                </td>
+                                <td>
+                                    <select name="ctl00$DefaultContent$DropListID" id="ctl00_DefaultContent_DropListID" class="mini">
+				<option selected="selected" value="EQ">=</option>
+				<option value="LT">&lt; - Less Than</option>
+				<option value="LTE">≤ - Less Than or Equal</option>
+				<option value="GT">&gt; - Greater Than</option>
+				<option value="GTE">≥ - Greater Than or Equal</option>
+
+			</select>
+                                </td>
+                                <td>
+                                    <input name="ctl00$DefaultContent$TextID" type="text" id="ctl00_DefaultContent_TextID" class="input-block-level" />
+                                </td>
+                            </tr>
+                            <tr id="trSearchRecord3" style="border: 0; vertical-align:top;">
+                                <td>
+                                    <label for="ctl00_DefaultContent_TextOwner" id="ctl00_DefaultContent_LabelOwner" class="SearchLabel">Owner:</label>
+                                </td>
+                                <td>
+                                    <input name="ctl00$DefaultContent$TextOwner" type="text" id="ctl00_DefaultContent_TextOwner" class="input-block-level" />
+                                </td>
+                                <td>
+                                    <label for="ctl00_DefaultContent_TextVersion" id="ctl00_DefaultContent_LabelVersion" class="SearchLabel">Version:</label>
+                                    <span id="ctl00_DefaultContent_CompareVersion" style="color:Red;display:none;">*</span>
+                                </td>
+                                <td>
+                                    <select name="ctl00$DefaultContent$DropListVersion" id="ctl00_DefaultContent_DropListVersion" class="mini">
+				<option selected="selected" value="EQ">=</option>
+				<option value="LT">&lt; - Less Than</option>
+				<option value="LTE">≤ - Less Than or Equal</option>
+				<option value="GT">&gt; - Greater Than</option>
+				<option value="GTE">≥ - Greater Than or Equal</option>
+
+			</select>
+                                </td>
+                                <td>
+                                    <input name="ctl00$DefaultContent$TextVersion" type="text" id="ctl00_DefaultContent_TextVersion" class="input-block-level" />
+                                </td>
+                            </tr>
+                            <tr id="trSearchRecord4">
+                                <td>
+                                    <label for="ctl00_DefaultContent_TextDate" id="ctl00_DefaultContent_LabelDate" class="SearchLabel">Date:</label>
+                                    <span id="ctl00_DefaultContent_CompareDateFrom" style="color:Red;display:none;">*</span>
+                                </td>
+                                <td colspan="2"> 
+                                    <select name="ctl00$DefaultContent$DropListDate" id="ctl00_DefaultContent_DropListDate" class="mini" onchange="DatePredicateChanging(this);">
+				<option selected="selected" value="ON">≈ - On</option>
+				<option value="LT">&lt; - Less Than</option>
+				<option value="LTE">≤ - Less Than or Equal</option>
+				<option value="GT">&gt; - Greater Than</option>
+				<option value="GTE">≥ - Greater Than or Equal</option>
+
+			</select>
+                                    <input name="ctl00$DefaultContent$TextDate" type="text" id="ctl00_DefaultContent_TextDate" class="input-mini" />
+                                    <input type="image" name="ctl00$DefaultContent$ibtnFrom" id="ctl00_DefaultContent_ibtnFrom" src="../Images/calendar.png" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$ibtnFrom&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+                                    
+                                </td>
+                                <td id="dateToPredicate" style="visibility: hidden">
+                                    <select name="ctl00$DefaultContent$dropListDateTo" id="ctl00_DefaultContent_dropListDateTo" class="mini">
+				<option selected="selected" value="LT">&lt; - Less Than</option>
+				<option value="LTE">≤ - Less Than or Equal</option>
+
+			</select>
+                                </td>
+                                <td id="dateToControls" style="visibility: hidden">
+                                    <input name="ctl00$DefaultContent$textDateTo" type="text" id="ctl00_DefaultContent_textDateTo" class="input-mini" />
+                                    <input type="image" name="ctl00$DefaultContent$ibtnTo" id="ctl00_DefaultContent_ibtnTo" src="../Images/calendar.png" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$ibtnTo&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+                                    
+                                    <span id="ctl00_DefaultContent_CompareDateTo" style="color:Red;display:none;">*</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr id="trSearchRecord5">
+                                <td colspan="5">
+                                    <div class="checkbox SearchLabel" style="padding-top:5px">
+                                        <span disabled="disabled"><input id="ctl00_DefaultContent_CheckInFolder" type="checkbox" name="ctl00$DefaultContent$CheckInFolder" disabled="disabled" /><label for="ctl00_DefaultContent_CheckInFolder">Search Within Current Folder</label></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                
+		</div>
+            
+	</div>
+        
+</div>
+    <div id="ctl00_DefaultContent_upLeftButtons" class="row-fluid">
+	
+            <table class="table table-condensed" style="border: none; margin-top: 3px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: right;">
+                            <label for="ctl00_DefaultContent_txtNumber" id="ctl00_DefaultContent_lbNumberLabel">Results Page Size:</label>
+                            <input name="ctl00$DefaultContent$txtNumber" type="text" value="10" id="ctl00_DefaultContent_txtNumber" class="input-mini" style="margin-right:5px;" />
+                            <input type="submit" name="ctl00$DefaultContent$Search" value="Search" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$Search&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_DefaultContent_Search" accesskey="S" class="btn btn-medium" />
+                            <input type="submit" name="ctl00$DefaultContent$Reset" value="Reset" onclick="ResetFields();" id="ctl00_DefaultContent_Reset" accesskey="R" class="btn btn-medium" />
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="ErrorMessage">
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    
+</div>
+    <div id="ctl00_DefaultContent_upResults" class="row-fluid">
+	
+            <div id="ctl00_DefaultContent_panelResults" style="display: none;">
+		
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td><label id="ctl00_DefaultContent_lbResultCount" style="font-weight: bold"></label></td>
+                        <td style="width:32%">
+                            
+<table id="tblPaging">
+    <thead>
+        <tr>
+            <td>
+                <input type="image" name="ctl00$DefaultContent$NavigationControl$btnFirst" id="ctl00_DefaultContent_NavigationControl_btnFirst" title="First" class="btn btn-mini" src="../Images/first.png" alt="First" onclick="javascript:OnRefreshing(&#39;imgPaging&#39;);WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$NavigationControl$btnFirst&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            </td>
+            <td>
+                <input type="image" name="ctl00$DefaultContent$NavigationControl$btnPrev" id="ctl00_DefaultContent_NavigationControl_btnPrev" title="Previous" class="btn btn-mini" src="../Images/previous.png" alt="Previous" onclick="javascript:OnRefreshing(&#39;imgPaging&#39;);WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$NavigationControl$btnPrev&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            </td>
+            <td>
+                <span id="ctl00_DefaultContent_NavigationControl_lbNumberLabel"></span>
+            </td>
+            <td>
+                <input name="ctl00$DefaultContent$NavigationControl$txtNumber" type="text" id="ctl00_DefaultContent_NavigationControl_txtNumber" style="width: 25px; text-align: right" />
+            </td>
+            <td>
+                
+            </td>
+             <td>
+                <span id="ctl00_DefaultContent_NavigationControl_lbTotalCount"></span>
+            </td>
+            <td>
+                <input type="image" name="ctl00$DefaultContent$NavigationControl$btnNext" id="ctl00_DefaultContent_NavigationControl_btnNext" title="Next" class="btn btn-mini" src="../Images/next.png" alt="Next" onclick="javascript:OnRefreshing(&#39;imgPaging&#39;);WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$NavigationControl$btnNext&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            </td>
+            <td>
+                <input type="image" name="ctl00$DefaultContent$NavigationControl$btnLast" id="ctl00_DefaultContent_NavigationControl_btnLast" title="Last" class="btn btn-mini" src="../Images/last.png" alt="Last" onclick="javascript:OnRefreshing(&#39;imgPaging&#39;);WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$DefaultContent$NavigationControl$btnLast&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" style="border-width:0px;" />
+            </td>
+            <td>
+                <img alt="Loadind page" src="../Shared/SpinningWheel.gif" id="imgPaging" style="display: none; width: 16px; height: 16px;" />
+            </td>
+        </tr>
+    </thead>
+</table>
+
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        function onItemSelected(sender, args) {
+            return OnRefreshing('imgPaging');
+        }
+        function OnRefreshing(imgId) {
+            var iTemp = document.getElementById(imgId);
+            if (iTemp !== null) {
+                iTemp.style.display = "inline";
+            }
+            return true;
+        }
+        /*]]>*/
+    </script>
+
+
+                        </td>
+                    </tr>
+                    </thead>
+                </table>
+                
+                <div id="ctl00_DefaultContent_gvResults" class="RadGrid RadGrid_Default" style="border-style:None;">
+
+		<input id="ctl00_DefaultContent_gvResults_ClientState" name="ctl00_DefaultContent_gvResults_ClientState" type="hidden" />	</div>
+		
+                <div style="padding-bottom:50px;" class="btn-group pull-right">
+                    <input type="submit" name="ctl00$DefaultContent$btnClearResults" value="Clear" id="ctl00_DefaultContent_btnClearResults" accesskey="C" class="btn btn-medium" />
+                    <input type="button" name="ctl00$DefaultContent$btnDetails" value="Details" onclick="ResultsDetails_Clicked(); return false;__doPostBack(&#39;ctl00$DefaultContent$btnDetails&#39;,&#39;&#39;)" id="ctl00_DefaultContent_btnDetails" accesskey="D" title="Click to show details" class="btn btn-medium" />
+                </div>
+            
+	</div>
+        
+</div>
+
+</div>
+    <div class="span6">
+        <div id="ctl00_DefaultContent_upRight" class="row-fluid">
+	
+            
+        
+</div>
+</div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="userMessage" style="display: none; border: 1px solid #CC3300;" data-keyboard="false" data-backdrop="static">
+        <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px;">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 id="modalHeaderLabel">Session will expire</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group" style="margin: 0;">
+                Warning: Your session will time out within <span id="timer">180</span> seconds and you will be returned
+                to the login page. Please save changes or click Refresh in order to remain logged in.
+            </div>
+        </div>
+        <div class="modal-footer" style="padding-top: 5px; padding-bottom: 5px;">
+            <input type="submit" name="ctl00$btnStillHere" value="Refresh" onclick="doRefresh();WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$btnStillHere&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_btnStillHere" class="btn" />
+        </div>
+    </div>
+    <div class="modal" id="custom_modal" style="display: none; border: 1px solid #CC3300;" data-keyboard="false" data-backdrop="static">
+        <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px;">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 id="modalCustomHeaderLabel"></h3>
+        </div>
+        <div class="modal-body" style="margin-left: 5px; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; overflow: visible;">
+            <div class="control-group" style="margin: 0;" id="modalControlHolder">
+            </div>
+        </div>
+        <div class="modal-footer" style="padding-top: 5px; padding-bottom: 5px;">
+            <input type="submit" name="ctl00$Button2" value="Close" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$Button2&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_Button2" class="btn" data-dismiss="modal" />
+        </div>
+    </div>
+    <div id="FooterContainer" class="navbar navbar-fixed-bottom">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <span class="pull-left">
+                    <div id="ctl00_updateProgress1" style="display:none;">
+	
+                            <img id="ctl00_Image1" src="../Shared/SpinningWheel.gif" alt="" style="height:16px;width:16px;border-width:0px;" />
+                            Please wait ...
+                        
+</div>
+                </span>
+                <span class="pull-left">
+                    <a id="ctl00_lbHTEText" href="../HTE/Default.aspx" style="color:#ffffff"></a>
+                </span>
+                <span class="pull-right">
+                    v11.5.0.183&nbsp;  
+                    Copyright <a target="_blank" href="http://www.questys.com">Questys Solutions</a>
+                    2026 All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>  
+    
+<script type="text/javascript" src="../JS/default.js"></script>
+    <script type="text/javascript">
+        function SetSearchLayoutFromCookie() {
+            // Show/Hide advanced or basic serach criteria event
+            var comboBox = $("#ctl00_DefaultContent_searchFormList");
+            UpdateSearchLayout(comboBox.val());
+        }
+        function getCookie(c_name) {
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    return unescape(y);
+                }
+            }
+        }
+        function setCookie(c_name, value, exdays) {
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + exdays);
+            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+            document.cookie = c_name + "=" + c_value;
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(endRequestHandler);
+        function endRequestHandler() {
+            SetSearchLayoutFromCookie();
+        }
+
+        $(document).ready(function () {
+            SetSearchLayoutFromCookie();
+
+            $("form").attr("autocomplete", "off");
+            $("#ctl00_DefaultContent_NewSearchFormName").keypress(HandleSearchFormNameKeyPress);
+            lastSearchFormName = $("#ctl00_DefaultContent_searchFormList").val();
+        });
+    </script>
+
+    
+<script type="text/javascript">
+//<![CDATA[
+var Page_Validators =  new Array(document.getElementById("ctl00_DefaultContent_CompareID"), document.getElementById("ctl00_DefaultContent_CompareVersion"), document.getElementById("ctl00_DefaultContent_CompareDateFrom"), document.getElementById("ctl00_DefaultContent_CompareDateTo"));
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+var ctl00_DefaultContent_CompareID = document.all ? document.all["ctl00_DefaultContent_CompareID"] : document.getElementById("ctl00_DefaultContent_CompareID");
+ctl00_DefaultContent_CompareID.controltovalidate = "ctl00_DefaultContent_TextID";
+ctl00_DefaultContent_CompareID.errormessage = "Invalid number format.";
+ctl00_DefaultContent_CompareID.display = "Dynamic";
+ctl00_DefaultContent_CompareID.type = "Integer";
+ctl00_DefaultContent_CompareID.evaluationfunction = "CompareValidatorEvaluateIsValid";
+ctl00_DefaultContent_CompareID.operator = "DataTypeCheck";
+var ctl00_DefaultContent_CompareVersion = document.all ? document.all["ctl00_DefaultContent_CompareVersion"] : document.getElementById("ctl00_DefaultContent_CompareVersion");
+ctl00_DefaultContent_CompareVersion.controltovalidate = "ctl00_DefaultContent_TextVersion";
+ctl00_DefaultContent_CompareVersion.errormessage = "Invalid number format.";
+ctl00_DefaultContent_CompareVersion.display = "Dynamic";
+ctl00_DefaultContent_CompareVersion.type = "Integer";
+ctl00_DefaultContent_CompareVersion.evaluationfunction = "CompareValidatorEvaluateIsValid";
+ctl00_DefaultContent_CompareVersion.operator = "DataTypeCheck";
+var ctl00_DefaultContent_CompareDateFrom = document.all ? document.all["ctl00_DefaultContent_CompareDateFrom"] : document.getElementById("ctl00_DefaultContent_CompareDateFrom");
+ctl00_DefaultContent_CompareDateFrom.controltovalidate = "ctl00_DefaultContent_TextDate";
+ctl00_DefaultContent_CompareDateFrom.focusOnError = "t";
+ctl00_DefaultContent_CompareDateFrom.errormessage = "Invalid date format.";
+ctl00_DefaultContent_CompareDateFrom.display = "Dynamic";
+ctl00_DefaultContent_CompareDateFrom.type = "Date";
+ctl00_DefaultContent_CompareDateFrom.dateorder = "mdy";
+ctl00_DefaultContent_CompareDateFrom.cutoffyear = "2029";
+ctl00_DefaultContent_CompareDateFrom.century = "2000";
+ctl00_DefaultContent_CompareDateFrom.evaluationfunction = "CompareValidatorEvaluateIsValid";
+ctl00_DefaultContent_CompareDateFrom.operator = "DataTypeCheck";
+var ctl00_DefaultContent_CompareDateTo = document.all ? document.all["ctl00_DefaultContent_CompareDateTo"] : document.getElementById("ctl00_DefaultContent_CompareDateTo");
+ctl00_DefaultContent_CompareDateTo.controltovalidate = "ctl00_DefaultContent_textDateTo";
+ctl00_DefaultContent_CompareDateTo.focusOnError = "t";
+ctl00_DefaultContent_CompareDateTo.errormessage = "Invalid date format.";
+ctl00_DefaultContent_CompareDateTo.display = "Dynamic";
+ctl00_DefaultContent_CompareDateTo.type = "Date";
+ctl00_DefaultContent_CompareDateTo.dateorder = "mdy";
+ctl00_DefaultContent_CompareDateTo.cutoffyear = "2029";
+ctl00_DefaultContent_CompareDateTo.century = "2000";
+ctl00_DefaultContent_CompareDateTo.evaluationfunction = "CompareValidatorEvaluateIsValid";
+ctl00_DefaultContent_CompareDateTo.operator = "DataTypeCheck";
+//]]>
+</script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+    ValidatorOnLoad();
+}
+
+function ValidatorOnSubmit() {
+    if (Page_ValidationActive) {
+        return ValidatorCommonOnSubmit();
+    }
+    else {
+        return true;
+    }
+}
+        Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadDropDownList, {"_cachedSelectedIndex":0,"_postBackReference":"WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\u0027ctl00$DefaultContent$ddlCategories\u0027, \u0027arguments\u0027, true, \u0027\u0027, \u0027\u0027, false, true))","_uniqueId":"ctl00$DefaultContent$ddlCategories","autoPostBack":true,"clientStateFieldID":"ctl00_DefaultContent_ddlCategories_ClientState","defaultMessage":"Select Category","itemCountPerRequest":50,"itemData":[],"webServiceSettings":"{\"path\":\"../Record/Services/CategoriesService.asmx\",\"method\":\"GetAllCategoriesItemsList\"}"}, null, null, $get("ctl00_DefaultContent_ddlCategories"));
+});
+
+var callBackFrameUrl='/Questys.CMx.WebClient/WebResource.axd?d=kwxqX6Eq_NYVkagPAkZ1vP7QTrRTLfJi9gwat3YxS8CyeQ9yO_LpLnlOO-3Dic4PRfA-uPekc-26vjHYpryA0RYRsB6GolFo_wiztvnzgZM1&t=637100542300000000';
+WebForm_InitCallback();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":250,"_postBackReference":"WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\u0027ctl00$DefaultContent$Fields$ctrl0$DropListField\u0027, \u0027arguments\u0027, true, \u0027\u0027, \u0027\u0027, false, true))","_showMoreResultsBox":true,"_skin":"Default","_uniqueId":"ctl00$DefaultContent$Fields$ctrl0$DropListField","_virtualScroll":true,"attributes":{},"clientStateFieldID":"ctl00_DefaultContent_Fields_ctrl0_DropListField_ClientState","collapseAnimation":"{\"duration\":450}","emptyMessage":"Add Field...","enableLoadOnDemand":true,"expandAnimation":"{\"duration\":450}","filter":2,"itemData":[{"value":"310"},{"value":"309"},{"value":"285"},{"value":"333"},{"value":"271"},{"value":"283"},{"value":"320"},{"value":"321"},{"value":"345"},{"value":"307"},{"value":"292"},{"value":"344"},{"value":"302"},{"value":"2"},{"value":"267"},{"value":"268"},{"value":"347"},{"value":"346"},{"value":"258"},{"value":"331"},{"value":"342"},{"value":"332"},{"value":"282"},{"value":"266"},{"value":"272"},{"value":"326"},{"value":"327"},{"value":"325"},{"value":"328"},{"value":"324"},{"value":"329"},{"value":"290"},{"value":"262"},{"value":"269"},{"value":"303"},{"value":"284"},{"value":"10"},{"value":"270"},{"value":"330"},{"value":"311"},{"value":"280"},{"value":"323"},{"value":"295"},{"value":"278"},{"value":"276"},{"value":"277"},{"value":"297"},{"value":"288"},{"value":"294"},{"value":"305"},{"value":"8"},{"value":"11"},{"value":"350"},{"value":"352"},{"value":"259"},{"value":"261"},{"value":"263"},{"value":"340"},{"value":"338"},{"value":"322"},{"value":"298"},{"value":"312"},{"value":"337"},{"value":"0"},{"value":"7"},{"value":"308"},{"value":"293"},{"value":"301"},{"value":"335"},{"value":"264"},{"value":"287"},{"value":"306"},{"value":"336"},{"value":"343"},{"value":"291"},{"value":"300"},{"value":"1"},{"value":"279"},{"value":"349"},{"value":"289"},{"value":"9"},{"value":"299"},{"value":"273"},{"value":"6"},{"value":"286"},{"value":"260"},{"value":"275"},{"value":"5"},{"value":"281"},{"value":"304"},{"value":"4"},{"value":"334"},{"value":"265"},{"value":"296"},{"value":"274"}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}"}, null, null, $get("ctl00_DefaultContent_Fields_ctrl0_DropListField"));
+});
+
+document.getElementById('ctl00_DefaultContent_CompareID').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_DefaultContent_CompareID'));
+}
+
+document.getElementById('ctl00_DefaultContent_CompareVersion').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_DefaultContent_CompareVersion'));
+}
+
+document.getElementById('ctl00_DefaultContent_CompareDateFrom').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_DefaultContent_CompareDateFrom'));
+}
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.CalendarBehavior, {"button":$get("ctl00_DefaultContent_ibtnFrom"),"format":"M/d/yyyy","id":"ctl00_DefaultContent_CalendarExtender1"}, null, null, $get("ctl00_DefaultContent_TextDate"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.CalendarBehavior, {"button":$get("ctl00_DefaultContent_ibtnTo"),"format":"M/d/yyyy","id":"ctl00_DefaultContent_CalendarExtender2"}, null, null, $get("ctl00_DefaultContent_textDateTo"));
+});
+
+document.getElementById('ctl00_DefaultContent_CompareDateTo').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_DefaultContent_CompareDateTo'));
+}
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadGrid, {"ClientID":"ctl00_DefaultContent_gvResults","ClientSettings":{"AllowAutoScrollOnDragDrop":true,"EnableRowHoverStyle":true,"EnableAlternatingItems":false,"ShouldCreateRows":true,"DataBinding":{},"Selecting":{"CellSelectionMode":0,"AllowRowSelect":true,"EnableDragToSelectRows":true},"Scrolling":{"AllowScroll":true,"SaveScrollPosition":true,"ScrollHeight":"450px"},"Resizing":{},"ClientMessages":{},"KeyboardNavigationSettings":{"AllowActiveRowCycle":false,"EnableKeyboardShortcuts":true,"FocusKey":89,"InitInsertKey":73,"RebindKey":82,"ExitEditInsertModeKey":27,"UpdateInsertItemKey":13,"DeleteActiveRow":127,"ExpandDetailTableKey":39,"CollapseDetailTableKey":37,"SaveChangesKey":85,"CancelChangesKey":67},"Animation":{},"Virtualization":{}},"Skin":"Default","UniqueID":"ctl00$DefaultContent$gvResults","_activeRowIndex":"","_controlToFocus":"","_currentPageIndex":0,"_defaultDateTimeFormat":"M/d/yyyy h:mm:ss tt","_editIndexes":"[]","_embeddedSkin":true,"_gridTableViewsData":"[{\"ClientID\":null,\"UniqueID\":null,\"PageSize\":10,\"PageCount\":1,\"EditMode\":\"EditForms\",\"AllowPaging\":false,\"CurrentPageIndex\":0,\"VirtualItemCount\":0,\"AllowMultiColumnSorting\":false,\"AllowNaturalSort\":true,\"AllowFilteringByColumn\":false,\"PageButtonCount\":10,\"HasDetailTables\":true,\"HasMultiHeaders\":false,\"CheckListWebServicePath\":\"\",\"HierarchyLoadMode\":\"Client\",\"GroupLoadMode\":\"Server\",\"EnableHierarchyExpandAll\":false,\"PagerAlwaysVisible\":false,\"Name\":\"Parent\",\"IsItemInserted\":false,\"clientDataKeyNames\":[\"ID\"],\"hasDetailItemTemplate\":false,\"_dataBindTemplates\":false,\"_selectedItemStyle\":\"background-color:Gray;\",\"_selectedItemStyleClass\":\"rgSelectedRow\",\"_columnsData\":[{\"UniqueName\":\"ExpandColumn\",\"Resizable\":false,\"Reorderable\":false,\"Selectable\":false,\"Groupable\":false,\"ColumnType\":\"GridExpandColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"ExpandImageUrl\":\"\",\"CollapseImageUrl\":\"\",\"Display\":true},{\"UniqueName\":\"TemplateColumn\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"TemplateColumn1\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"TemplateColumn2\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"STATE_DATE\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"DataField\":\"STATE_DATE\",\"DataFormatString\":\"{0:d}\",\"Display\":true},{\"UniqueName\":\"TemplateColumn3\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"VERSION_PAGES\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"DataField\":\"VERSION_PAGES\",\"DataFormatString\":\"{0} \",\"Display\":true}]}]","_hierarchySettings":{"ExpandTooltip":"Expand","CollapseTooltip":"Collapse","SelfExpandTooltip":"Self reference expand","SelfCollapseTooltip":"Self reference collapse","ViewState":{}},"_masterClientID":null,"_shouldFocusOnPage":false,"allowMultiRowSelection":false,"clientStateFieldID":"ctl00_DefaultContent_gvResults_ClientState"}, {"gridCreated":ResultsGridCreated,"hierarchyExpanded":ResultsGridCreated,"rowSelected":Results_RowSelected}, null, $get("ctl00_DefaultContent_gvResults"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":null,"displayAfter":500,"dynamicLayout":true}, null, null, $get("ctl00_updateProgress1"));
+});
+//]]>
+</script>
+</form>
+
+    <script type="text/javascript">
+        var instance = Sys.WebForms.PageRequestManager.getInstance();
+        instance.add_beginRequest(BeginRequestHandler);
+        instance.add_endRequest(EndRequestHandler);
+        function BeginRequestHandler(sender, args) {
+            $get('ctl00_updateProgress1').style.display = 'block';
+        }
+        function EndRequestHandler(sender, args) {
+            if (args.get_error() != undefined) {
+                var errorMessage = "";
+                switch (args.get_response().get_statusCode()) {
+                    case 12031:
+                    case 12030:
+                        errorMessage = "Your session was timed out due to inactivity. Please Login to continue";
+                        doRedirect();
+                        break;
+                    case 12007:
+                    case 12029:
+                        errorMessage = "Please make sure you are connected to internet";
+                        break;
+                    case 200:
+                        errorMessage = args.get_error().message;
+                        break;
+                    case 500:
+                        errorMessage = ""
+                        break;
+                    default:
+                        errorMessage = "An unknown error occurred...";
+                        break;
+                }
+                if (errorMessage != "") {
+                    var specChar = /[<>]/ig;
+                    errorMessage = errorMessage.replace(specChar, "");
+
+                    // Added later since msgbox could not be shown
+                    var aPos = errorMessage.indexOf(":") + 1;
+                    alert(errorMessage.substr(aPos));
+                }
+                // now make sure the system knows we handled the error.
+                args.set_errorHandled(true);
+                $get('ctl00_updateProgress1').style.display = 'none';
+            }
+        }
+
+
+    </script>
+
+   <style>
+    body {
+        font-family: Tahoma;
+        font-size: 12px;
+        color: #000000;
+        margin: 0;
+        padding: 47px 0px 31px 0px;
+        height: auto
+        }
+    .header {
+        width: 100%;
+        height: 17px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        position: absolute;
+        top: 0px;
+        background:green;
+        text-align:center
+        }
+    .footer {
+        bottom: 0px;
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        height: 37px;
+        background: orange;
+        padding-top: 20px
+        }
+    #HeaderContainer {
+        position: fixed;
+        top: 0
+        }
+    #FooterContainer {
+        position: fixed;
+        bottom: 0
+        }
+    #DefaultContentContainer {
+        overflow: auto
+        }
+    #mainForm {
+        width: 100%
+        }
+    a.aspNetDisabled {
+        color: lightgray;
+        }
+</style>
+
+</body>
+</html>

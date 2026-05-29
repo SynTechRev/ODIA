@@ -1,0 +1,581 @@
+{
+  "harvested_at_unix": 1779204235,
+  "query_count": 82,
+  "total_unique_ids": 80,
+  "ids": {
+    "2824": {
+      "filename": "AGENDA 14 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2825": {
+      "filename": "WEB AGENDA 14 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2868": {
+      "filename": "AGENDA 07 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2869": {
+      "filename": "WEB AGENDA 07 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2913": {
+      "filename": "AGENDA 21 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2914": {
+      "filename": "WEB AGENDA 21 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2952": {
+      "filename": "AGENDA 14 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2953": {
+      "filename": "WEB AGENDA 14 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2957": {
+      "filename": "AGENDA 28 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "2958": {
+      "filename": "AGENDA 28 MAR 2006.doc",
+      "ext": "doc",
+      "found_via": [
+        "agenda"
+      ]
+    },
+    "164293": {
+      "filename": "01.05.2021 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes"
+      ]
+    },
+    "164294": {
+      "filename": "01.26.2021 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes"
+      ]
+    },
+    "164329": {
+      "filename": "01.04.2022 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes",
+        "2022"
+      ]
+    },
+    "164330": {
+      "filename": "01.11.2022 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes",
+        "2022"
+      ]
+    },
+    "164363": {
+      "filename": "01.10.2023 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes"
+      ]
+    },
+    "164364": {
+      "filename": "01.24.2023 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes"
+      ]
+    },
+    "179354": {
+      "filename": "01.09.2024 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes"
+      ]
+    },
+    "179355": {
+      "filename": "01.23.2024 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes"
+      ]
+    },
+    "179389": {
+      "filename": "01.07.2025 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes",
+        "2025"
+      ]
+    },
+    "179390": {
+      "filename": "01.14.2025 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "minute",
+        "minutes",
+        "2025"
+      ]
+    },
+    "90351": {
+      "filename": "Agenda Packet Document 1.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "95935": {
+      "filename": "Agenda Packet Document 1.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "102053": {
+      "filename": "Agenda Packet Document 1.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "102054": {
+      "filename": "Agenda Packet Document 1.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "133063": {
+      "filename": "Agenda Packet Document 1.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "133064": {
+      "filename": "Agenda Packet Document 2.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "133065": {
+      "filename": "Agenda Packet Document 3.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "168051": {
+      "filename": "Appellant Packet.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "packet"
+      ]
+    },
+    "10889": {
+      "filename": "08.28.2012.01.SCE Presentation.tif",
+      "ext": "tif",
+      "found_via": [
+        "presentation"
+      ]
+    },
+    "94157": {
+      "filename": "08.26.2014.Sheriff.Presentation.tif",
+      "ext": "tif",
+      "found_via": [
+        "presentation"
+      ]
+    },
+    "183770": {
+      "filename": "#33 - HR&D Movember Challenge Presentation 2024.pptx",
+      "ext": "pptx",
+      "found_via": [
+        "presentation"
+      ]
+    },
+    "147398": {
+      "filename": "Attachments.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179434": {
+      "filename": "Attachment.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179452": {
+      "filename": "Attachment.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179460": {
+      "filename": "Attachment.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179482": {
+      "filename": "Attachments.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179485": {
+      "filename": "Attachment- Notice of Award.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179495": {
+      "filename": "Attachment B.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179501": {
+      "filename": "Attachment- Applicaton and Terms and Conditions.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "179502": {
+      "filename": "Attachment C- Attestation Only.docx",
+      "ext": "docx",
+      "found_via": [
+        "attachment"
+      ]
+    },
+    "45914": {
+      "filename": "01.09.2001.Addendum.tif",
+      "ext": "tif",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "47905": {
+      "filename": "01.07.2003.Addendum.tif",
+      "ext": "tif",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "50919": {
+      "filename": "01.10.2006.Addendum.tif",
+      "ext": "tif",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "108075": {
+      "filename": "01.26.2016.Addendum Agenda.docx",
+      "ext": "docx",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "108076": {
+      "filename": "01.26.2016.Addendum Web Agenda.html",
+      "ext": "html",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "122005": {
+      "filename": "01.09.2018.Addendum Agenda.docx",
+      "ext": "docx",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "122006": {
+      "filename": "01.09.2018.Web Agenda Addendum.html",
+      "ext": "html",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "131455": {
+      "filename": "01.29.2019.ADDENDUM.docx",
+      "ext": "docx",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "131456": {
+      "filename": "01.29.2019.Web Addendum.html",
+      "ext": "html",
+      "found_via": [
+        "addendum"
+      ]
+    },
+    "179901": {
+      "filename": "Funding Extension Letter -AMD Lab Expansion Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "extension"
+      ]
+    },
+    "170980": {
+      "filename": "UV22 RFP Denial Letter.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "RFP"
+      ]
+    },
+    "173440": {
+      "filename": "Attachment 3-Graviton RFP Response No 23-005.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "RFP"
+      ]
+    },
+    "47536": {
+      "filename": "09.09.2002.Budget Hearings.tif",
+      "ext": "tif",
+      "found_via": [
+        "budget"
+      ]
+    },
+    "47560": {
+      "filename": "09.16.2002.Budget Hearings.tif",
+      "ext": "tif",
+      "found_via": [
+        "budget"
+      ]
+    },
+    "49661": {
+      "filename": "09.14.2004.BUDGET HEARINGS.tif",
+      "ext": "tif",
+      "found_via": [
+        "budget"
+      ]
+    },
+    "49662": {
+      "filename": "09.14.2004.BUDGETHEARINGS.tif",
+      "ext": "tif",
+      "found_via": [
+        "budget"
+      ]
+    },
+    "78098": {
+      "filename": "09.15.2009.36.Budget Hearings.tif",
+      "ext": "tif",
+      "found_via": [
+        "budget"
+      ]
+    },
+    "180126": {
+      "filename": "Notice of Hearing.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "hearing"
+      ]
+    },
+    "172240": {
+      "filename": "PSA Program Supplement No F118 Received 7 6 2023.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "PSA"
+      ]
+    },
+    "172241": {
+      "filename": "PSA Program Supplemental No F119 Received 7 6 2023.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "PSA"
+      ]
+    },
+    "172292": {
+      "filename": "PSA Program Supplement No F117 Received 4 14 2023.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "PSA"
+      ]
+    },
+    "182226": {
+      "filename": "Consent Letter.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "consent"
+      ]
+    },
+    "182229": {
+      "filename": "Consent Letter.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "consent"
+      ]
+    },
+    "179269": {
+      "filename": "01.07.2025 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2025"
+      ]
+    },
+    "179271": {
+      "filename": "01.14.2025 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2025"
+      ]
+    },
+    "179273": {
+      "filename": "01.28.2025 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2025"
+      ]
+    },
+    "179391": {
+      "filename": "01.28.2025 Minutes.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2025"
+      ]
+    },
+    "179181": {
+      "filename": "01.09.2024 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2024"
+      ]
+    },
+    "179183": {
+      "filename": "01.23.2024 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2024"
+      ]
+    },
+    "164120": {
+      "filename": "01.04.2022 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2022"
+      ]
+    },
+    "164122": {
+      "filename": "01.11.2022 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2022"
+      ]
+    },
+    "164124": {
+      "filename": "01.25.2022 PDF Agenda.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2022"
+      ]
+    },
+    "2787": {
+      "filename": "02.28.2006.02.HHSA.tif",
+      "ext": "tif",
+      "found_via": [
+        "2006"
+      ]
+    },
+    "2788": {
+      "filename": "02.28.2006.02.HHSA.doc",
+      "ext": "doc",
+      "found_via": [
+        "2006"
+      ]
+    },
+    "2789": {
+      "filename": "02.28.2006.02.HHSA.doc",
+      "ext": "doc",
+      "found_via": [
+        "2006"
+      ]
+    },
+    "2790": {
+      "filename": "02.28.2006.02.HHSA.tif",
+      "ext": "tif",
+      "found_via": [
+        "2006"
+      ]
+    },
+    "68239": {
+      "filename": "02.28.2006.03.Auditor.tif",
+      "ext": "tif",
+      "found_via": [
+        "2006"
+      ]
+    },
+    "68240": {
+      "filename": "22631- Secretary of State - 2.28.2006.tif",
+      "ext": "tif",
+      "found_via": [
+        "2006"
+      ]
+    },
+    "68242": {
+      "filename": "02.28.2006.04.BOS.tif",
+      "ext": "tif",
+      "found_via": [
+        "2006"
+      ]
+    },
+    "183304": {
+      "filename": "32006  Department of Social Services.pdf",
+      "ext": "pdf",
+      "found_via": [
+        "2006"
+      ]
+    }
+  }
+}

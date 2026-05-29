@@ -41,7 +41,9 @@ def _default_config_path() -> Path:
 
 class LegalResolver:
     def __init__(self, config_path: Path | str | None = None):
-        self._config_path = Path(config_path) if config_path else _default_config_path()
+        self._config_path = (
+            Path(config_path) if config_path else _default_config_path()
+        )
         self._loaders: dict[str, CorpusLoader] = {}
         self._initialized = False
 

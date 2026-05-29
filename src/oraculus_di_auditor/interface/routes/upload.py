@@ -586,6 +586,9 @@ def _record_mesh_job(job_id: str, file_count: int, status: str, **extras: Any) -
                 existing.status = status
                 if status in ("completed", "failed"):
                     existing.completed_at = now
+                results = extras.pop("results", None)
+                if results is not None:
+                    existing.results_json = json.dumps(results)
                 if extras:
                     try:
                         meta = json.loads(existing.metadata_json or "{}")
@@ -600,6 +603,71 @@ def _record_mesh_job(job_id: str, file_count: int, status: str, **extras: Any) -
         return
     except Exception as exc:  # noqa: BLE001
         logger.warning("Failed to record MeshExecutionJob for %s: %s", job_id, exc)
+
+
+def _persist_upload_document(
+    doc: dict[str, Any],
+    findings: list[dict[str, Any]],
+    jurisdiction: str | None,
+) -> None:
+    """Persist an upload-flow document + its analysis to the DB.
+
+    Best-effort — failure is logged but never propagates to the audit job.
+    Skips if the document_id is already present (idempotent re-runs).
+    """
+    try:
+        from oraculus_di_auditor.db import crud as db_crud
+        from oraculus_di_auditor.db.session import get_db
+    except ImportError:
+        return
+
+    try:
+        with get_db() as session:
+            existing = db_crud.get_document_by_id(session, doc["document_id"])
+            if existing is None:
+                db_crud.create_document(
+                    session,
+                    {
+                        "document_id": doc["document_id"],
+                        "title": doc.get("title") or doc.get("filename", "Untitled"),
+                        "document_type": doc.get("document_type", "document"),
+                        "jurisdiction": jurisdiction,
+                        "authority": doc.get("authority"),
+                        "version_date": doc.get("version_date"),
+                        "signatory": doc.get("signatory"),
+                    },
+                )
+
+            scalar = doc.get("scalar_score")
+            severity_counts = {
+                "critical": sum(1 for f in findings if f.get("severity") == "critical"),
+                "high": sum(1 for f in findings if f.get("severity") == "high"),
+                "medium": sum(1 for f in findings if f.get("severity") == "medium"),
+                "low": sum(1 for f in findings if f.get("severity") == "low"),
+            }
+            db_crud.create_analysis(
+                session,
+                {
+                    "document_id": doc["document_id"],
+                    "scalar_score": float(scalar) if scalar is not None else 1.0,
+                    "anomaly_count": len(findings),
+                    "engine_version": "3.3.1",
+                    "metadata": {"source": "upload.audit_run"},
+                },
+                [
+                    {
+                        "anomaly_id": f.get("id", "unknown"),
+                        "issue": f.get("issue", ""),
+                        "severity": f.get("severity", "low"),
+                        "layer": f.get("layer", "unknown"),
+                        "details": f.get("details", {}),
+                    }
+                    for f in findings
+                ],
+            )
+            session.commit()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Failed to persist upload document %s: %s", doc.get("document_id"), exc)
 
 
 def _execute_audit_job(
@@ -649,6 +717,11 @@ def _execute_audit_job(
             findings = _flatten_findings(result, doc["document_id"])
             all_findings.extend(findings)
             docs_processed += 1
+
+            # Persist document + analysis to DB so it appears in the
+            # Documents, Anomalies, and Synthesis pages alongside
+            # webhook-ingested documents.
+            _persist_upload_document(doc, findings, config_overrides.get("jurisdiction"))
 
             manifest_entry: dict[str, Any] = {
                 "document_id": doc["document_id"],
@@ -749,6 +822,8 @@ def _execute_audit_job(
                 },
             }
         )
+        with _STORE_LOCK:
+            completed_results = _JOBS[job_id].get("results")
         _record_mesh_job(
             job_id,
             len(file_ids),
@@ -756,6 +831,7 @@ def _execute_audit_job(
             documents=docs_processed,
             findings=len(all_findings),
             severity_summary=severity_counts,
+            results=completed_results,
         )
 
     except Exception as exc:
@@ -978,18 +1054,101 @@ def register_upload_routes(app: Any) -> None:
 
     @router.get("/api/v1/audit/results/{job_id}")
     async def audit_results(job_id: str) -> dict[str, Any]:
-        """Return complete audit results. Returns status-only dict if not yet complete."""
+        """Return complete audit results. Falls back to DB when the in-memory
+        job has been evicted (e.g. after a server restart)."""
         with _STORE_LOCK:
             job = _JOBS.get(job_id)
-        if not job:
-            raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found")
-        if job["status"] == "error":
-            raise HTTPException(
-                status_code=500, detail=job.get("error", "Audit failed")
-            )
-        if job["status"] != "complete":
-            return {"job_id": job_id, "status": job["status"], "results": None}
-        return {"job_id": job_id, "status": "complete", "results": job["results"]}
+        if job:
+            if job["status"] == "error":
+                raise HTTPException(
+                    status_code=500, detail=job.get("error", "Audit failed")
+                )
+            if job["status"] != "complete":
+                return {"job_id": job_id, "status": job["status"], "results": None}
+            return {"job_id": job_id, "status": "complete", "results": job["results"]}
+
+        # Job not in memory — try DB fallback.
+        try:
+            from oraculus_di_auditor.db import models as db_models
+            from oraculus_di_auditor.db.session import get_db
+
+            with get_db() as session:
+                row = (
+                    session.query(db_models.MeshExecutionJob)
+                    .filter(db_models.MeshExecutionJob.job_id == job_id)
+                    .one_or_none()
+                )
+                if row and row.results_json:
+                    return {
+                        "job_id": job_id,
+                        "status": "complete",
+                        "results": json.loads(row.results_json),
+                    }
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("DB fallback for audit results failed: %s", exc)
+
+        raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found")
+
+    @router.get("/api/v1/audit/history")
+    async def audit_history(
+        page: int = 1, per_page: int = 100
+    ) -> dict[str, Any]:
+        """Paginated list of completed audit jobs from the DB, newest first.
+
+        Returns lightweight summaries (no findings array) so the frontend
+        history list can support thousands of entries without hitting
+        localStorage size limits. Full results are fetched on demand via
+        GET /api/v1/audit/results/{job_id}.
+        """
+        per_page = max(1, min(per_page, 500))
+        try:
+            from oraculus_di_auditor.db import models as db_models
+            from oraculus_di_auditor.db.session import get_db
+
+            with get_db() as session:
+                base = (
+                    session.query(db_models.MeshExecutionJob)
+                    .filter(
+                        db_models.MeshExecutionJob.job_type == "audit",
+                        db_models.MeshExecutionJob.results_json.isnot(None),
+                    )
+                    .order_by(db_models.MeshExecutionJob.completed_at.desc())
+                )
+                total = base.count()
+                rows = base.offset((page - 1) * per_page).limit(per_page).all()
+
+                items = []
+                for row in rows:
+                    try:
+                        r = json.loads(row.results_json or "{}")
+                        manifest = r.get("document_manifest", [])
+                        first_name = manifest[0]["filename"] if manifest else "Unknown"
+                        doc_count = r.get("document_count", 0)
+                        items.append({
+                            "job_id": row.job_id,
+                            "status": row.status,
+                            "completed_at": row.completed_at.isoformat() if row.completed_at else None,
+                            "generated_at": r.get("generated_at"),
+                            "document_count": doc_count,
+                            "finding_count": r.get("finding_count", 0),
+                            "severity_summary": r.get("severity_summary", {}),
+                            "first_filename": first_name,
+                            "more_docs": max(0, doc_count - 1),
+                        })
+                    except Exception:  # noqa: BLE001
+                        continue
+
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("audit_history query failed: %s", exc)
+            return {"items": [], "total": 0, "page": page, "per_page": per_page, "has_more": False}
+
+        return {
+            "items": items,
+            "total": total,
+            "page": page,
+            "per_page": per_page,
+            "has_more": (page * per_page) < total,
+        }
 
     @router.get("/api/v1/audit/export/{job_id}")
     async def export_audit(job_id: str, format: str = "markdown") -> Any:  # noqa: A002

@@ -1,0 +1,432 @@
+﻿{
+    "status":  "ok",
+    "synthesis_id":  "f1aee6c60a6d6ead",
+    "jurisdictions":  [
+                          "visalia",
+                          "tulare-county"
+                      ],
+    "include_tier3":  false,
+    "result":  {
+                   "synthesis_id":  "f1aee6c60a6d6ead",
+                   "generated_at":  "2026-05-19T17:49:34.087300+00:00",
+                   "jurisdictions":  [
+                                         {
+                                             "jurisdiction_id":  "visalia",
+                                             "document_count":  85,
+                                             "analysis_count":  85,
+                                             "total_anomalies":  80,
+                                             "scalar_score_avg":  0.9324,
+                                             "severity_counts":  {
+                                                                     "medium":  40,
+                                                                     "high":  35,
+                                                                     "critical":  5
+                                                                 },
+                                             "layer_counts":  {
+                                                                  "governance":  6,
+                                                                  "administrative":  29,
+                                                                  "procurement":  6,
+                                                                  "scope":  28,
+                                                                  "signature":  7,
+                                                                  "fiscal":  4
+                                                              },
+                                             "top_anomalies":  [
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in AMENDMENT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "AMENDMENT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$500"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in AGREEMENT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "AGREEMENT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$1"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in AGREEMENT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "AGREEMENT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$427"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in AGREEMENT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "AGREEMENT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$      187.00"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in AGREEMENT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "AGREEMENT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$1"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved adopted enacted authorized"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved adopted passed authorized"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved passed"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved adopted enacted authorized"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved passed"
+                                                                                   }
+                                                                   }
+                                                               ]
+                                         },
+                                         {
+                                             "jurisdiction_id":  "tulare-county",
+                                             "document_count":  88,
+                                             "analysis_count":  88,
+                                             "total_anomalies":  90,
+                                             "scalar_score_avg":  0.9166,
+                                             "severity_counts":  {
+                                                                     "high":  58,
+                                                                     "medium":  23,
+                                                                     "critical":  7,
+                                                                     "low":  2
+                                                                 },
+                                             "layer_counts":  {
+                                                                  "administrative":  52,
+                                                                  "scope":  27,
+                                                                  "grant_compliance":  2,
+                                                                  "signature":  5,
+                                                                  "cross_reference":  2,
+                                                                  "governance":  1,
+                                                                  "procurement":  1
+                                                              },
+                                             "top_anomalies":  [
+                                                                   {
+                                                                       "anomaly_id":  "grant:jag-without-anti-supplanting",
+                                                                       "issue":  "JAG/Edward Byrne grant referenced without anti-supplanting certification â 34 U.S.C. Â§ 10152 requires certification that grant funds do not supplant local appropriations",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "grant_compliance",
+                                                                       "details":  {
+                                                                                       "statute":  "34 U.S.C. Â§ 10152(a)(1)(G)"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "grant:jag-without-anti-supplanting",
+                                                                       "issue":  "JAG/Edward Byrne grant referenced without anti-supplanting certification â 34 U.S.C. Â§ 10152 requires certification that grant funds do not supplant local appropriations",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "grant_compliance",
+                                                                       "details":  {
+                                                                                       "statute":  "34 U.S.C. Â§ 10152(a)(1)(G)"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in CONTRACT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "CONTRACT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$30,306"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in CONTRACT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "CONTRACT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$100"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in MOU instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "MOU",
+                                                                                       "signature_gap_type":  "\\bplaceholder\\b",
+                                                                                       "gap_pattern_count":  2,
+                                                                                       "dollar_amount":  "$ 634,362"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in AGREEMENT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "AGREEMENT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$6,776.57"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "signature:unsigned-instrument",
+                                                                       "issue":  "Signature gap detected in AGREEMENT instrument",
+                                                                       "severity":  "critical",
+                                                                       "layer":  "signature",
+                                                                       "details":  {
+                                                                                       "instrument_type":  "AGREEMENT",
+                                                                                       "signature_gap_type":  "_{5,}",
+                                                                                       "gap_pattern_count":  1,
+                                                                                       "dollar_amount":  "$115,000.00"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved authorized"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved passed"
+                                                                                   }
+                                                                   },
+                                                                   {
+                                                                       "anomaly_id":  "admin:missing-final-action",
+                                                                       "issue":  "Document text indicates approval but final_action field is blank",
+                                                                       "severity":  "high",
+                                                                       "layer":  "administrative",
+                                                                       "details":  {
+                                                                                       "final_action_value":  null,
+                                                                                       "approval_signals_found":  "approved passed"
+                                                                                   }
+                                                                   }
+                                                               ]
+                                         }
+                                     ],
+                   "patterns":  [
+                                    {
+                                        "pattern_id":  "shared-anomaly:admin-missing-final-action",
+                                        "pattern_type":  "shared_anomaly_id",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Detector fired the same anomaly `admin:missing-final-action` in 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Example issue: Document text indicates approval but final_action field is blank",
+                                        "evidence":  {
+                                                         "anomaly_id":  "admin:missing-final-action",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ],
+                                                         "example_issue":  "Document text indicates approval but final_action field is blank"
+                                                     }
+                                    },
+                                    {
+                                        "pattern_id":  "shared-anomaly:governance-sole-source-without-justification",
+                                        "pattern_type":  "shared_anomaly_id",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Detector fired the same anomaly `governance:sole-source-without-justification` in 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Example issue: Sole-source procurement referenced without California Gov Code Â§ 10340 justification citation",
+                                        "evidence":  {
+                                                         "anomaly_id":  "governance:sole-source-without-justification",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ],
+                                                         "example_issue":  "Sole-source procurement referenced without California Gov Code Â§ 10340 justification citation"
+                                                     }
+                                    },
+                                    {
+                                        "pattern_id":  "shared-anomaly:procurement-sole-source-without-gov-code-citation",
+                                        "pattern_type":  "shared_anomaly_id",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Detector fired the same anomaly `procurement:sole-source-without-gov-code-citation` in 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Example issue: Sole-source procurement referenced without California Gov Code Â§ 10340 / Â§ 10300â10334 justification",
+                                        "evidence":  {
+                                                         "anomaly_id":  "procurement:sole-source-without-gov-code-citation",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ],
+                                                         "example_issue":  "Sole-source procurement referenced without California Gov Code Â§ 10340 / Â§ 10300â10334 justification"
+                                                     }
+                                    },
+                                    {
+                                        "pattern_id":  "shared-anomaly:scope-amendment-without-baseline",
+                                        "pattern_type":  "shared_anomaly_id",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Detector fired the same anomaly `scope:amendment-without-baseline` in 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Example issue: Amendment instrument found with no original authorization reference",
+                                        "evidence":  {
+                                                         "anomaly_id":  "scope:amendment-without-baseline",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ],
+                                                         "example_issue":  "Amendment instrument found with no original authorization reference"
+                                                     }
+                                    },
+                                    {
+                                        "pattern_id":  "shared-anomaly:scope-significant-expansion",
+                                        "pattern_type":  "shared_anomaly_id",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Detector fired the same anomaly `scope:significant-expansion` in 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Example issue: Contract amount expanded by 525.0% â possible amendment-as-procurement",
+                                        "evidence":  {
+                                                         "anomaly_id":  "scope:significant-expansion",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ],
+                                                         "example_issue":  "Contract amount expanded by 525.0% â possible amendment-as-procurement"
+                                                     }
+                                    },
+                                    {
+                                        "pattern_id":  "shared-anomaly:signature-unsigned-instrument",
+                                        "pattern_type":  "shared_anomaly_id",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Detector fired the same anomaly `signature:unsigned-instrument` in 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Example issue: Signature gap detected in AMENDMENT instrument",
+                                        "evidence":  {
+                                                         "anomaly_id":  "signature:unsigned-instrument",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ],
+                                                         "example_issue":  "Signature gap detected in AMENDMENT instrument"
+                                                     }
+                                    },
+                                    {
+                                        "pattern_id":  "shared-layer:administrative",
+                                        "pattern_type":  "shared_layer_spike",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Detector layer `administrative` is a top anomaly producer in 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Suggests the same category of governance gap is recurring.",
+                                        "evidence":  {
+                                                         "layer":  "administrative",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ]
+                                                     }
+                                    },
+                                    {
+                                        "pattern_id":  "vendor-convergence:sole-source",
+                                        "pattern_type":  "vendor_convergence",
+                                        "jurisdictions_affected":  [
+                                                                       "tulare-county",
+                                                                       "visalia"
+                                                                   ],
+                                        "confidence":  1.0,
+                                        "description":  "Vendor keyword `sole-source` appears in anomalies across 2 jurisdictions: [\u0027tulare-county\u0027, \u0027visalia\u0027]. Consistent with a shared vendor playbook or boilerplate contract.",
+                                        "evidence":  {
+                                                         "vendor":  "sole-source",
+                                                         "jurisdictions":  [
+                                                                               "tulare-county",
+                                                                               "visalia"
+                                                                           ],
+                                                         "per_jurisdiction_hits":  {
+                                                                                       "visalia":  1,
+                                                                                       "tulare-county":  1
+                                                                                   }
+                                                     }
+                                    }
+                                ],
+                   "include_tier3":  false,
+                   "tier3_notes":  null,
+                   "missing_jurisdictions":  [
+
+                                             ]
+               }
+}

@@ -1,0 +1,792 @@
+﻿{
+    "68240":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:42:08.2406179-07:00",
+                  "filename":  "22631- Secretary of State - 2.28.2006.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "164329":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:13:56.7736671-07:00",
+                   "filename":  "01.04.2022 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179354":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:14:12.0909534-07:00",
+                   "filename":  "01.09.2024 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "182226":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:35:40.6239225-07:00",
+                   "filename":  "Consent Letter.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "108076":  {
+                   "ext":  "html",
+                   "ts":  "2026-05-19T09:27:21.5492823-07:00",
+                   "filename":  "01.26.2016.Addendum Web Agenda.html",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "164124":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:38:51.6122596-07:00",
+                   "filename":  "01.25.2022 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179502":  {
+                   "ext":  "docx",
+                   "ts":  "2026-05-19T09:23:44.3581925-07:00",
+                   "filename":  "Attachment C- Attestation Only.docx",
+                   "findings":  0,
+                   "status":  "completed",
+                   "error":  null,
+                   "bytes":  26808,
+                   "sha256":  "250140edb54c409536a5b3babb9e4559a05d118e96d2c6483b59270173facfe0"
+               },
+    "102053":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:15:11.3764884-07:00",
+                   "filename":  "Agenda Packet Document 1.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179501":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:23:44.3463684-07:00",
+                   "filename":  "Attachment- Applicaton and Terms and Conditions.pdf",
+                   "findings":  0,
+                   "status":  "completed",
+                   "error":  null,
+                   "bytes":  26808,
+                   "sha256":  "71e77a815933497e04599ae16488a040a5a17a507d61f716435feafb01243e3b"
+               },
+    "90351":  {
+                  "ext":  "pdf",
+                  "ts":  "2026-05-19T09:14:50.9747197-07:00",
+                  "filename":  "Agenda Packet Document 1.pdf",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "47536":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:30:38.8624305-07:00",
+                  "filename":  "09.09.2002.Budget Hearings.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "179460":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:20:13.0437177-07:00",
+                   "filename":  "Attachment.pdf",
+                   "findings":  0,
+                   "status":  "completed",
+                   "error":  null,
+                   "bytes":  26808,
+                   "sha256":  "1ca7d94f642a857707f9b99ccccf40dc7029e6c6974240279a3f1a7c1cffb026"
+               },
+    "2790":  {
+                 "ext":  "tif",
+                 "ts":  "2026-05-19T09:41:12.5259049-07:00",
+                 "filename":  "02.28.2006.02.HHSA.tif",
+                 "findings":  0,
+                 "status":  "completed",
+                 "error":  null,
+                 "bytes":  27066,
+                 "sha256":  "7c44362265ce0ccaa761ec61a261d4e67565387b0dfd88e2c31cbe96dbf2b6f7"
+             },
+    "172240":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:33:56.4910810-07:00",
+                   "filename":  "PSA Program Supplement No F118 Received 7 6 2023.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "2824":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:12:11.5595805-07:00",
+                 "filename":  "AGENDA 14 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "68242":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:42:08.2406179-07:00",
+                  "filename":  "02.28.2006.04.BOS.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "179271":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:35:40.6736106-07:00",
+                   "filename":  "01.14.2025 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "2788":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:41:32.8579080-07:00",
+                 "filename":  "02.28.2006.02.HHSA.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "179452":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:20:38.6227398-07:00",
+                   "filename":  "Attachment.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: tier-2 (curl_cffi) failed: Failed to perform, curl: (28) Operation timed out after 120000 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. (tier-1 had: The read operation timed out)",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "45914":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:23:44.3744052-07:00",
+                  "filename":  "01.09.2001.Addendum.tif",
+                  "findings":  0,
+                  "status":  "completed",
+                  "error":  null,
+                  "bytes":  26806,
+                  "sha256":  "56d8733ce12439ec8a18de213a21ee8d59a886eef17d4449420e5a08ea0de902"
+              },
+    "179485":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:21:44.9589088-07:00",
+                   "filename":  "Attachment- Notice of Award.pdf",
+                   "findings":  0,
+                   "status":  "completed",
+                   "error":  null,
+                   "bytes":  26808,
+                   "sha256":  "bf76e70309fdcf98f01e91ee1ac0a39c45f942bfe40964e081ca382d292b48b2"
+               },
+    "2787":  {
+                 "ext":  "tif",
+                 "ts":  "2026-05-19T09:38:51.6311126-07:00",
+                 "filename":  "02.28.2006.02.HHSA.tif",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "78098":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:34:11.7568497-07:00",
+                  "filename":  "09.15.2009.36.Budget Hearings.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "2952":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:13:07.2816784-07:00",
+                 "filename":  "AGENDA 14 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "179391":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:36:56.3905799-07:00",
+                   "filename":  "01.28.2025 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "2914":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:12:32.4024608-07:00",
+                 "filename":  "WEB AGENDA 21 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "180126":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:33:56.4717318-07:00",
+                   "filename":  "Notice of Hearing.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179389":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:14:50.9446987-07:00",
+                   "filename":  "01.07.2025 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "2868":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:12:11.8055850-07:00",
+                 "filename":  "AGENDA 07 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "183304":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:42:23.8569631-07:00",
+                   "filename":  "32006  Department of Social Services.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "133063":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:16:09.1012545-07:00",
+                   "filename":  "Agenda Packet Document 1.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179269":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:35:40.6540280-07:00",
+                   "filename":  "01.07.2025 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "68239":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:40:51.7720085-07:00",
+                  "filename":  "02.28.2006.03.Auditor.tif",
+                  "findings":  0,
+                  "status":  "completed",
+                  "error":  null,
+                  "bytes":  26806,
+                  "sha256":  "24071a6776091ec005bf633de297530a3debc06e923b32c3c873976bf9258a53"
+              },
+    "102054":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:15:06.2934694-07:00",
+                   "filename":  "Agenda Packet Document 1.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "168051":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:16:09.1370005-07:00",
+                   "filename":  "Appellant Packet.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "47905":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:25:15.8466609-07:00",
+                  "filename":  "01.07.2003.Addendum.tif",
+                  "findings":  0,
+                  "status":  "completed",
+                  "error":  null,
+                  "bytes":  26806,
+                  "sha256":  "86856d3af45e9484aafc77ea2cae6d26c26ec6cf45df976667623562d1cf751a"
+              },
+    "2958":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:13:07.3248819-07:00",
+                 "filename":  "AGENDA 28 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "2957":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:13:07.3130452-07:00",
+                 "filename":  "AGENDA 28 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "172292":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:34:52.3766740-07:00",
+                   "filename":  "PSA Program Supplement No F117 Received 4 14 2023.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "2825":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:12:11.7824563-07:00",
+                 "filename":  "WEB AGENDA 14 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "164294":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:13:23.3873838-07:00",
+                   "filename":  "01.26.2021 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "164364":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:13:56.8547119-07:00",
+                   "filename":  "01.24.2023 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179355":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:14:12.1027625-07:00",
+                   "filename":  "01.23.2024 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "10889":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:16:34.4520789-07:00",
+                  "filename":  "08.28.2012.01.SCE Presentation.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "179390":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:14:50.9482400-07:00",
+                   "filename":  "01.14.2025 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "133065":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:16:09.1128725-07:00",
+                   "filename":  "Agenda Packet Document 3.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "2953":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:13:07.2968514-07:00",
+                 "filename":  "WEB AGENDA 14 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "122006":  {
+                   "ext":  "html",
+                   "ts":  "2026-05-19T09:27:21.6260959-07:00",
+                   "filename":  "01.09.2018.Web Agenda Addendum.html",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "164122":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:38:16.1753056-07:00",
+                   "filename":  "01.11.2022 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "2869":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:12:17.1953835-07:00",
+                 "filename":  "WEB AGENDA 07 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "164330":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:13:56.7876070-07:00",
+                   "filename":  "01.11.2022 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "173440":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:30:43.9328878-07:00",
+                   "filename":  "Attachment 3-Graviton RFP Response No 23-005.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179273":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:36:51.3447132-07:00",
+                   "filename":  "01.28.2025 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "49662":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:34:01.6107430-07:00",
+                  "filename":  "09.14.2004.BUDGETHEARINGS.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "164120":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:38:00.9117667-07:00",
+                   "filename":  "01.04.2022 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "94157":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:16:34.4733252-07:00",
+                  "filename":  "08.26.2014.Sheriff.Presentation.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "2913":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:12:32.3964318-07:00",
+                 "filename":  "AGENDA 21 MAR 2006.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "95935":  {
+                  "ext":  "pdf",
+                  "ts":  "2026-05-19T09:14:50.9865184-07:00",
+                  "filename":  "Agenda Packet Document 1.pdf",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "108075":  {
+                   "ext":  "docx",
+                   "ts":  "2026-05-19T09:27:21.4752699-07:00",
+                   "filename":  "01.26.2016.Addendum Agenda.docx",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "147398":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:22:10.0661943-07:00",
+                   "filename":  "Attachments.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: tier-2 (curl_cffi) failed: Failed to perform, curl: (28) Operation timed out after 120003 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. (tier-1 had: The read operation timed out)",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "182229":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:35:40.6299479-07:00",
+                   "filename":  "Consent Letter.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "47560":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:33:05.3214268-07:00",
+                  "filename":  "09.16.2002.Budget Hearings.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              },
+    "179183":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:37:50.6071805-07:00",
+                   "filename":  "01.23.2024 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179181":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:38:00.8921799-07:00",
+                   "filename":  "01.09.2024 PDF Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "170980":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:30:49.0034456-07:00",
+                   "filename":  "UV22 RFP Denial Letter.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "131456":  {
+                   "ext":  "html",
+                   "ts":  "2026-05-19T09:27:57.0759375-07:00",
+                   "filename":  "01.29.2019.Web Addendum.html",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "122005":  {
+                   "ext":  "docx",
+                   "ts":  "2026-05-19T09:27:21.6170321-07:00",
+                   "filename":  "01.09.2018.Addendum Agenda.docx",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "164363":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:13:56.8290592-07:00",
+                   "filename":  "01.10.2023 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179434":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:19:52.2325911-07:00",
+                   "filename":  "Attachment.pdf",
+                   "findings":  0,
+                   "status":  "completed",
+                   "error":  null,
+                   "bytes":  26808,
+                   "sha256":  "cf0a3b470f25de882b6af390617ef1b3d0914150fb31bc2819922d46b0f059ae"
+               },
+    "133064":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:16:09.1128725-07:00",
+                   "filename":  "Agenda Packet Document 2.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179482":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:21:19.7018007-07:00",
+                   "filename":  "Attachments.pdf",
+                   "findings":  0,
+                   "status":  "completed",
+                   "error":  null,
+                   "bytes":  26808,
+                   "sha256":  "0fdb835d955a3d1fda38d1ffd82cc521655154f1406590652b9d4df8d0d30192"
+               },
+    "164293":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:13:23.3353038-07:00",
+                   "filename":  "01.05.2021 Minutes.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179901":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:30:54.0603179-07:00",
+                   "filename":  "Funding Extension Letter -AMD Lab Expansion Agenda.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "172241":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:34:57.3985890-07:00",
+                   "filename":  "PSA Program Supplemental No F119 Received 7 6 2023.pdf",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "179495":  {
+                   "ext":  "pdf",
+                   "ts":  "2026-05-19T09:26:16.3814148-07:00",
+                   "filename":  "Attachment B.pdf",
+                   "findings":  1,
+                   "status":  "completed",
+                   "error":  null,
+                   "bytes":  632619,
+                   "sha256":  "c531766e996ed0bc252f69a1b9d4013f7c2b747bff31cada03abd90f2ce9f498"
+               },
+    "2789":  {
+                 "ext":  "doc",
+                 "ts":  "2026-05-19T09:41:53.0938296-07:00",
+                 "filename":  "02.28.2006.02.HHSA.doc",
+                 "findings":  0,
+                 "status":  "failed",
+                 "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                 "bytes":  0,
+                 "sha256":  null
+             },
+    "50919":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:25:15.8999676-07:00",
+                  "filename":  "01.10.2006.Addendum.tif",
+                  "findings":  0,
+                  "status":  "completed",
+                  "error":  null,
+                  "bytes":  26806,
+                  "sha256":  "6ecfd5eea5500ba33503f9b1689ea375736ec859c787775513a2dce287fed037"
+              },
+    "131455":  {
+                   "ext":  "docx",
+                   "ts":  "2026-05-19T09:27:57.0597246-07:00",
+                   "filename":  "01.29.2019.ADDENDUM.docx",
+                   "findings":  0,
+                   "status":  "failed",
+                   "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                   "bytes":  0,
+                   "sha256":  null
+               },
+    "49661":  {
+                  "ext":  "tif",
+                  "ts":  "2026-05-19T09:33:05.3304605-07:00",
+                  "filename":  "09.14.2004.BUDGET HEARINGS.tif",
+                  "findings":  0,
+                  "status":  "failed",
+                  "error":  "Upstream download failed: HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound",
+                  "bytes":  0,
+                  "sha256":  null
+              }
+}
