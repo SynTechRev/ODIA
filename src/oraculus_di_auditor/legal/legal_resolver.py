@@ -23,9 +23,27 @@ from .corpus_base import CorpusLoader, LegalText
 logger = logging.getLogger(__name__)
 
 
+def _default_config_path() -> Path:
+    """Locate config/legal_corpora.yml without depending on the CWD.
+
+    uvicorn is frequently launched from a directory other than the repo
+    root (it has crashed the resolver in practice). So: prefer the
+    CWD-relative path when it exists (lets an operator override per run),
+    otherwise fall back to the path derived from this file's location:
+    src/oraculus_di_auditor/legal/legal_resolver.py -> parents[3] is the
+    repo root.
+    """
+    cwd_relative = Path("config/legal_corpora.yml")
+    if cwd_relative.exists():
+        return cwd_relative
+    return Path(__file__).resolve().parents[3] / "config" / "legal_corpora.yml"
+
+
 class LegalResolver:
-    def __init__(self, config_path: Path | str = "config/legal_corpora.yml"):
-        self._config_path = Path(config_path)
+    def __init__(self, config_path: Path | str | None = None):
+        self._config_path = (
+            Path(config_path) if config_path else _default_config_path()
+        )
         self._loaders: dict[str, CorpusLoader] = {}
         self._initialized = False
 
@@ -67,12 +85,20 @@ class LegalResolver:
         return stats
 
     def _instantiate_loader(self, entry: dict) -> CorpusLoader:
-        """Import the loader class and instantiate with submodule_path."""
+        """Import the loader class and instantiate with submodule_path.
+
+        A relative submodule_path in the registry is anchored to the repo
+        root (the config file's grandparent), not the CWD — same
+        CWD-independence the config path itself gets.
+        """
         loader_dotted = entry["loader"]
         module_name, class_name = loader_dotted.rsplit(".", 1)
         module = importlib.import_module(module_name)
         cls = getattr(module, class_name)
-        return cls(submodule_path=entry["submodule_path"])
+        submodule_path = Path(entry["submodule_path"])
+        if not submodule_path.is_absolute():
+            submodule_path = self._config_path.resolve().parent.parent / submodule_path
+        return cls(submodule_path=submodule_path)
 
     def resolve(
         self,

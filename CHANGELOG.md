@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.3.1] - 2026-05-28 — Legal-resolver boot fixes (pyyaml dep + CWD-independence)
+
+Hotfix for two defects that left `/api/v1/legal/status` returning empty corpora on real deployments of v3.3.0.
+
+### Fixed — missing `pyyaml` dependency
+
+`legal_resolver.py` imports `yaml` to read `config/legal_corpora.yml`, but `pyyaml` was never declared in `pyproject.toml`. A fresh install (or any environment without pyyaml already present) hit `ModuleNotFoundError: No module named 'yaml'` at resolver boot, the resolver swallowed it, and the USC corpus silently never loaded. Added `pyyaml>=6.0` to runtime dependencies.
+
+### Fixed — resolver was CWD-dependent
+
+`LegalResolver` resolved `config/legal_corpora.yml` and the registry's `submodule_path` relative to the process working directory. uvicorn launched from anywhere other than the repo root would find neither, and the USC corpus would not load — with no error surfaced to the operator. Both paths are now anchored to the repo root derived from the resolver module's own location (`__file__`), with the CWD-relative path still preferred when present so an operator can override per run. The resolver now populates regardless of where the server is started.
+
 ## [3.3.0] - 2026-05-19 — USC corpus integration (legal text in findings)
 
 The first phase of the broader legal-corpus build (USC → CFR → SCOTUS → Federal Circuits → CRS/OIG/GAO). v3.3.0 makes the United States Code addressable inside Oraculus: every USC citation in a finding now resolves to the actual statutory text, embedded inline as a markdown-quoted block under the evidence anchors.
