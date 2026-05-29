@@ -61,6 +61,9 @@ function SynthesisPageContent() {
     useState<string[]>(urlJurisdictions);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [raiaRunning, setRaiaRunning] = useState(false);
+  const [raiaMarkdown, setRaiaMarkdown] = useState<string | null>(null);
+  const [raiaError, setRaiaError] = useState<string | null>(null);
 
   // Available jurisdictions for the multi-select filter (loaded once).
   useEffect(() => {
@@ -199,13 +202,40 @@ function SynthesisPageContent() {
             </p>
 
             <div className="flex items-center gap-3 mt-6 flex-wrap">
-              <Button variant="primary" onClick={() => nav('/automation')}>
-                ↗ Run RAIA Synthesis (Markdown / DOCX)
+              <Button
+                variant="primary"
+                onClick={async () => {
+                  setRaiaRunning(true);
+                  setRaiaMarkdown(null);
+                  setRaiaError(null);
+                  try {
+                    const { data } = await client.http.post('/api/v1/triggers/raia-synthesize-all', null, { params: { render_markdown: true } });
+                    setRaiaMarkdown(data.markdown ?? JSON.stringify(data.result, null, 2));
+                  } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : 'RAIA synthesis failed';
+                    setRaiaError(msg);
+                  } finally {
+                    setRaiaRunning(false);
+                  }
+                }}
+                disabled={raiaRunning}
+              >
+                {raiaRunning ? '⏳ Running RAIA…' : '↗ Run RAIA Synthesis (Markdown / DOCX)'}
               </Button>
-              <span className="text-xs text-gray-500">
-                Full cross-jurisdiction RAIA report lives on the Automation page.
-              </span>
+              {raiaError && <span className="text-xs text-red-400">{raiaError}</span>}
             </div>
+            {raiaMarkdown && (
+              <div className="mt-4 p-4 bg-gray-950 border border-gray-700 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs text-gray-400 font-mono">RAIA SYNTHESIS REPORT</span>
+                  <div className="flex gap-2">
+                    <button onClick={() => navigator.clipboard.writeText(raiaMarkdown)} className="text-xs text-blue-400 hover:text-blue-300">Copy</button>
+                    <button onClick={() => { const b = new Blob([raiaMarkdown], {type:'text/markdown'}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href=u; a.download='raia_synthesis.md'; a.click(); }} className="text-xs text-blue-400 hover:text-blue-300">Download .md</button>
+                  </div>
+                </div>
+                <pre className="text-xs text-gray-300 whitespace-pre-wrap overflow-auto max-h-96">{raiaMarkdown}</pre>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               <HeroMetricTile

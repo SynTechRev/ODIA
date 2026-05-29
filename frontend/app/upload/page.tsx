@@ -289,7 +289,9 @@ export default function UploadPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [jurisdiction, setJurisdiction] = useState<string>('');
+  const [jurisdiction, setJurisdiction] = useState<string>(
+    () => (typeof window !== 'undefined' ? localStorage.getItem('odia-last-jurisdiction') ?? '' : '')
+  );
 
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
   const [jobStatus, setJobStatus] = useState<AuditStatus | null>(null);
@@ -793,7 +795,7 @@ export default function UploadPage() {
           <input
             type="text"
             value={jurisdiction}
-            onChange={(e) => setJurisdiction(e.target.value)}
+            onChange={(e) => { setJurisdiction(e.target.value); localStorage.setItem('odia-last-jurisdiction', e.target.value); }}
             placeholder="Enter jurisdiction identifier"
             className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-900 text-gray-100 text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500"
           />
