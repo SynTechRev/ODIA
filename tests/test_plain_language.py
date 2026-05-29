@@ -4,11 +4,28 @@ from __future__ import annotations
 
 import pytest
 
+from oraculus_di_auditor.legal.statute_citation import parse_usc_citations
 from oraculus_di_auditor.reporting.plain_language import (
     TRANSLATIONS,
     translate_finding,
     translate_report,
 )
+
+
+def _usc_corpus_available() -> bool:
+    """True when the USC corpus is loadable (pyyaml + submodule present).
+
+    Uses a throwaway resolver so the availability probe never disturbs
+    the module-level singleton that translate_finding relies on.
+    """
+    try:
+        from oraculus_di_auditor.legal.legal_resolver import LegalResolver
+
+        stats = LegalResolver().initialize()
+        return stats.get("us-code", {}).get("sections_indexed", 0) > 0
+    except Exception:
+        return False
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -493,3 +510,101 @@ class TestDynamicVendorDetectedFindingID:
         result = translate_finding(finding)
         assert "anomaly was detected" not in result["plain_summary"].lower()
         assert len(result["plain_summary"]) > 20
+
+
+# ---------------------------------------------------------------------------
+# v3.3.x — 34 U.S.C. § 10152 wiring for the JAG findings
+#
+# Both JAG findings must surface the Byrne JAG authorizing statute in their
+# rendered narrative so the statute-embedding layer can attach the text.
+# The CI-safe tests only assert the citation is present and parseable; the
+# end-to-end test (which needs the USC corpus) asserts the text embeds.
+# ---------------------------------------------------------------------------
+
+
+def _narrative(result: dict) -> str:
+    return " ".join(
+        [result["plain_summary"], result["plain_impact"], result["plain_action"]]
+    )
+
+
+def _cites_10152(narrative: str) -> bool:
+    return any(
+        c.title == 34 and c.section == "10152" for c in parse_usc_citations(narrative)
+    )
+
+
+class TestJagStatuteCitationWiring:
+    """The § 10152 citation lands in the narrative the embedder scans."""
+
+    def test_anti_supplanting_narrative_cites_10152(self):
+        # Mirrors what grant_compliance.py emits: statute in details.
+        finding = {
+            "id": "grant:jag-without-anti-supplanting",
+            "issue": "test",
+            "severity": "critical",
+            "layer": "grant_compliance",
+            "details": {"statute": "34 U.S.C. § 10152(a)(1)(G)"},
+        }
+        assert _cites_10152(_narrative(translate_finding(finding)))
+
+    def test_funded_surveillance_narrative_cites_10152(self):
+        # No statute detail — the citation must come from the template itself.
+        finding = {
+            "id": "grant:jag-funded-surveillance",
+            "issue": "test",
+            "severity": "high",
+            "layer": "grant_compliance",
+            "details": {"vendors": ["Flock Safety"]},
+        }
+        assert _cites_10152(_narrative(translate_finding(finding)))
+
+
+@pytest.mark.skipif(
+    not _usc_corpus_available(),
+    reason="USC corpus unavailable (pyyaml or us-code submodule missing)",
+)
+class TestJagStatuteEmbedEndToEnd:
+    """With the corpus present, the § 10152 text actually embeds."""
+
+    def setup_method(self):
+        # Force a clean resolver init so a poisoned singleton from another
+        # test module can't make this skip-or-fail spuriously.
+        from oraculus_di_auditor.legal.legal_resolver import (
+            reset_resolver_for_testing,
+        )
+
+        reset_resolver_for_testing()
+
+    def teardown_method(self):
+        from oraculus_di_auditor.legal.legal_resolver import (
+            reset_resolver_for_testing,
+        )
+
+        reset_resolver_for_testing()
+
+    def test_anti_supplanting_embeds_statute_text(self):
+        finding = {
+            "id": "grant:jag-without-anti-supplanting",
+            "issue": "test",
+            "severity": "critical",
+            "layer": "grant_compliance",
+            "details": {"statute": "34 U.S.C. § 10152(a)(1)(G)"},
+        }
+        result = translate_finding(finding)
+        assert "plain_statute_text" in result
+        block = result["plain_statute_text"]
+        assert "10152" in block
+        assert "Grants authorized" in block
+
+    def test_funded_surveillance_embeds_statute_text(self):
+        finding = {
+            "id": "grant:jag-funded-surveillance",
+            "issue": "test",
+            "severity": "high",
+            "layer": "grant_compliance",
+            "details": {"vendors": ["Flock Safety"]},
+        }
+        result = translate_finding(finding)
+        assert "plain_statute_text" in result
+        assert "Grants authorized" in result["plain_statute_text"]
