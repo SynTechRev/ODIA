@@ -25,51 +25,51 @@ def validate_cdsce_schema() -> bool:
 
     # Check if files exist
     if not schema_path.exists():
-        print(f"❌ Schema file not found: {schema_path}")
+        print(f"FAIL: Schema file not found: {schema_path}")
         return False
 
     if not corpus_path.exists():
-        print(f"⚠️  Corpus file not found: {corpus_path}")
-        print("   This is acceptable if CDSCE has not been run yet.")
+        print(f"WARN: Corpus file not found: {corpus_path}")
+        print("      This is acceptable if CDSCE has not been run yet.")
         return True
 
     try:
         # Load schema
-        with open(schema_path) as f:
+        with open(schema_path, encoding="utf-8") as f:
             schema = json.load(f)
 
         # Load corpus
-        with open(corpus_path) as f:
+        with open(corpus_path, encoding="utf-8") as f:
             corpus = json.load(f)
 
         # Empty corpus is a valid stub state — CDSCE hasn't been run yet
         if not corpus:
-            print("⚠️  CDSCE corpus is empty (stub state) — skipping validation")
+            print("SKIP: CDSCE corpus is empty (stub state) — skipping validation")
             return True
 
         # Validate
         jsonschema.validate(instance=corpus, schema=schema)
 
-        print("✅ CDSCE schema validation passed")
-        print(f"   Corpus version: {corpus.get('version', 'unknown')}")
-        print(f"   Total terms: {corpus.get('total_terms', 0)}")
+        print("PASS: CDSCE schema validation passed")
+        print(f"      Corpus version: {corpus.get('version', 'unknown')}")
+        print(f"      Total terms: {corpus.get('total_terms', 0)}")
 
         return True
 
     except jsonschema.ValidationError as e:
-        print("❌ CDSCE schema validation failed:")
-        print(f"   {e.message}")
-        print(f"   Path: {' -> '.join(str(p) for p in e.path)}")
+        print("FAIL: CDSCE schema validation failed:")
+        print(f"      {e.message}")
+        print(f"      Path: {' -> '.join(str(p) for p in e.path)}")
         return False
 
     except json.JSONDecodeError as e:
-        print("❌ JSON parsing error:")
-        print(f"   {e}")
+        print("FAIL: JSON parsing error:")
+        print(f"      {e}")
         return False
 
     except Exception as e:
-        print("❌ Validation error:")
-        print(f"   {e}")
+        print("FAIL: Validation error:")
+        print(f"      {e}")
         return False
 
 
