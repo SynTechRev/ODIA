@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card } from '@/components/base/Card';
 import { Button } from '@/components/base/Button';
@@ -127,7 +127,7 @@ function SourceCard({ source, index }: { source: RAGSource; index: number }) {
   );
 }
 
-export default function RAGPage() {
+function RAGPageContent() {
   const client = useMemo(() => getAPIClient(), []);
 
   const [status, setStatus] = useState<RAGStatusResponse | null>(null);
@@ -141,11 +141,14 @@ export default function RAGPage() {
   const [result, setResult] = useState<RAGQueryResponse | null>(null);
   const [queryError, setQueryError] = useState<string | null>(null);
 
+  const mountedRef = useRef(true);
   useEffect(() => {
+    mountedRef.current = true;
     client
       .ragStatus()
-      .then(setStatus)
-      .catch(() => setStatusError(true));
+      .then((s) => { if (mountedRef.current) setStatus(s); })
+      .catch(() => { if (mountedRef.current) setStatusError(true); });
+    return () => { mountedRef.current = false; };
   }, [client]);
 
   const totalIndexed = status
@@ -164,12 +167,14 @@ export default function RAGPage() {
         topK,
         sourceFilter || null,
       );
-      setResult(r);
+      if (mountedRef.current) setResult(r);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Query failed';
-      setQueryError(msg);
+      if (mountedRef.current) {
+        const msg = err instanceof Error ? err.message : 'Query failed';
+        setQueryError(msg);
+      }
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   };
 
@@ -413,5 +418,21 @@ export default function RAGPage() {
         )}
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function RAGPage() {
+  return (
+    <Suspense
+      fallback={
+        <DashboardLayout>
+          <div className="text-center py-12" style={{ color: 'var(--smoke-400)' }}>
+            Loading RAG Query…
+          </div>
+        </DashboardLayout>
+      }
+    >
+      <RAGPageContent />
+    </Suspense>
   );
 }

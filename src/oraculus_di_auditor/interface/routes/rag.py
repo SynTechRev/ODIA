@@ -1,8 +1,8 @@
 """FastAPI routes for RAG natural language querying.
 
 Provides:
-- POST /rag/query — natural language question with grounded answer
-- GET  /rag/status — RAG system status (indexed counts, LLM availability)
+- POST /api/v1/rag/query — natural language question with grounded answer
+- GET  /api/v1/rag/status — RAG system status (indexed counts, LLM availability)
 """
 
 from __future__ import annotations
@@ -75,11 +75,11 @@ def _get_service():
 
 
 def register_rag_routes(app: Any) -> None:
-    """Register /rag/* endpoints on *app*."""
+    """Register /api/v1/rag/* endpoints on *app*."""
     if not _FASTAPI_AVAILABLE:
         return  # pragma: no cover
 
-    router = APIRouter(prefix="/rag", tags=["rag"])
+    router = APIRouter(prefix="/api/v1/rag", tags=["rag"])
 
     @router.post("/query", response_model=RAGQueryResponse)
     async def rag_query(request: RAGQueryRequest) -> RAGQueryResponse:
