@@ -2,55 +2,80 @@
 
 ## What This Project Is
 
-ODIA is a **general-purpose legal document ingestion, normalization, and anomaly auditing platform**. It ingests legal documents (PDF, XML, JSON, TXT), normalizes and chunks them, generates deterministic TF-IDF embeddings, detects anomalies (fiscal, constitutional, surveillance, cross-jurisdiction, procurement), orchestrates multi-document analysis, and enforces governance policies — all with full provenance tracking.
+ODIA is a **general-purpose legal document ingestion, normalization, and anomaly auditing platform**. It ingests legal documents (PDF, XML, JSON, TXT), normalizes and chunks them, generates deterministic TF-IDF embeddings, detects anomalies (fiscal, constitutional, surveillance, cross-jurisdiction, procurement), orchestrates multi-document analysis, enforces governance policies, and supports natural language querying of the full audit corpus via a local RAG pipeline — all with full provenance tracking.
 
 **Repository**: https://github.com/SynTechRev/ODIA
 **License**: MIT
 
 ## Current State
 
-- **Version**: 2.0.0
-- **Python**: 3.11+ required (tested on 3.13)
-- **Tests**: 2719 passing, 9 skipped (data-dependent corpus/transparency tests)
-- **Working core**: Phases 5–9 (ingestion, analysis, orchestration, governance) are functional and tested
-- **Higher phases** (12–20): Architectural scaffolding exists — these are experimental/theoretical
-- **Frontend**: Next.js 14 app in `frontend/` (production-ready skeleton)
-- **API**: FastAPI backend in `src/oraculus_di_auditor/interface/api.py`
+- **Version**: 3.5.3
+- **Python**: 3.11+ required (tested on 3.14)
+- **Tests**: 3396 passing, 17 skipped (data-dependent corpus/transparency tests)
+- **Working core**: Ingestion, analysis, orchestration, governance, compliance, auth, RAG — all functional and tested
+- **Higher phases** (12–20): Architectural scaffolding exists — experimental/theoretical
+- **Frontend**: Next.js 14 production app in `frontend/` — Upload, Results History, Synthesis/RAIA, RAG Query, Compliance, Legal, Config
+- **API**: FastAPI backend in `src/oraculus_di_auditor/interface/api.py` + modular routes in `interface/routes/`
+- **Desktop**: Electron builds via GitHub Actions (`Build and Release Desktop Apps` workflow)
+- **RAG**: Local Ollama llama3.1:8b — `POST /api/v1/rag/query`, `GET /api/v1/rag/status`; index built by `scripts/build_rag_index.py`
+- **DB**: SQLAlchemy + SQLite (`oraculus_audit.db`) — persists documents, audits, anomalies, governance, agent mesh state
 
 ## Architecture
 
 Two source packages under `src/`:
 
-- `oraculus_di_auditor/` — Main platform: ingestion, analysis, orchestrator, governor, API, frontend generation, higher-phase engines
-- `oraculus/` — Legacy thin wrapper; empty `__init__.py`. Submodules (core, ingestion, pipelines, etc.) remain for backward compatibility but new code goes in `oraculus_di_auditor/`
+- `oraculus_di_auditor/` — Main platform: all active development
+- `oraculus/` — Legacy thin wrapper; empty `__init__.py`. Submodules remain for backward compatibility; new code goes in `oraculus_di_auditor/`
 
 Key module groups inside `oraculus_di_auditor/`:
 - `analysis/` — Anomaly detectors: fiscal, constitutional, surveillance, cross-reference, procurement timeline, scalar scoring
-- `adapters/` — External data source adapters (Sprint 9): `base.py` (DataSourceAdapter ABC with cache-aside), `ccops_adapter.py` (11 ACLU CCOPS mandates), `atlas_adapter.py` (EFF Atlas of Surveillance, JSON/CSV), `compliance_engine.py` (ComplianceAssessmentEngine — maps ODIA findings to CCOPS mandates, produces ComplianceScorecard)
-- `orchestrator/` — Multi-agent task graph coordination (Phase 5/8)
-- `governor/` — Pipeline governance and policy enforcement (Phase 9)
+- `adapters/` — External data source adapters: `base.py` (DataSourceAdapter ABC), `ccops_adapter.py` (ACLU CCOPS mandates), `atlas_adapter.py` (EFF Atlas of Surveillance), `compliance_engine.py` (ComplianceAssessmentEngine → ComplianceScorecard), `questys_adapter.py`
+- `auth/` — JWT-based authentication and session management
+- `db/` — SQLAlchemy models, session management, migration helpers (`models.py`, `session.py`)
+- `rag/` — RAG pipeline: `OracRAG` class, vector store, query/filter logic
+- `raia/` — Synthesis and inline analysis engine
+- `registry/` — Detector and adapter registry
+- `scrapers/` — Data source scrapers
+- `multi_jurisdiction/` — Cross-jurisdiction analysis and comparison
+- `reporting/` — Report generation pipeline
+- `self_healing/` — CI self-healing pipeline hooks
+- `orchestrator/` — Multi-agent task graph coordination
+- `governor/` — Pipeline governance and policy enforcement
+- `gcn/` — Governance constraint network and validator
 - `ingestion/` — XML parser, checksum tracker, document engine
-- `interface/` — FastAPI REST API with routes for orchestrator, governor, mesh, GCN, compliance (`POST /compliance/assess`, `GET /compliance/mandates`)
-- `frontend/` — Phase 6 frontend generation system (component specs, API client, gap detection)
-- `rec17/`, `rgk18/`, `aei19/`, `aer20/` — Higher-phase experimental engines (Phases 17–20)
-- `mesh/` — Adaptive agent mesh (Phase 13/14)
-- `scalar_convergence/` — Recursive scalar scoring (Phase 12)
+- `legal/` — Legal reference resolver (34 U.S.C. § 10152 / JAG, etc.)
+- `mesh/` — Adaptive agent mesh
+- `scalar_convergence/` — Recursive scalar scoring
 - `qdcl/` — Quantum-inspired decision/cognition layer (Phase 11)
-- `otge15/` — Temporal governance engine (Phase 15)
-- `evolution/` — Evolution engine
+- `temporal/` — Temporal governance engine
+- `workspace/` — Workspace and session management
+- `rec17/`, `rgk18/`, `aei19/`, `aer20/`, `emcs16/`, `rpg14/` — Higher-phase experimental engines
+- `llm_providers.py` — Ollama/OpenAI/Anthropic LLM abstraction (300s timeout for cold model loads)
+- `rag_context.py`, `rag_prompts.py` — RAG context builder and civic-accountability prompt templates
+- `retriever.py`, `embeddings.py` — TF-IDF vector retrieval and embedding generation
+
+API routes in `interface/routes/`:
+`auth_routes`, `automation`, `compliance`, `config_routes`, `cpra`, `dashboard`, `detectors`, `field`, `gcn`, `governor`, `legal_routes`, `mesh`, `multi_jurisdiction`, `orchestrator`, `query`, `rag`, `reports`, `retrieval`, `temporal`, `triggers`, `upload`, `webhook`, `workspace_routes`
 
 ## Development Priorities
 
-All six original priorities are complete. Active work areas:
+All original priorities are complete. Active work:
 
-1. ~~README rewrite~~ — Done. `docs/PHASES.md` created; README is ~150 lines.
-2. ~~Package consolidation~~ — Done. `oraculus/` is now a thin wrapper; `oraculus_di_auditor/` is authoritative.
-3. ~~Configurable jurisdiction system~~ — Done. `scripts/corpus_manager.py` loads from `config/corpus_manifest.json`. Jurisdiction config in `config/jurisdiction.json`.
-4. ~~Stabilize core pipeline~~ — Done. 2100+ tests pass; Windows cp1252 and datetime compat fixed.
-5. ~~Rename higher-phase terminology~~ — Done. Mythological names replaced with plain engineering terms.
-6. ~~Clean public presentation~~ — Done. Contributing guide added; repo is approachable.
+1. ~~README rewrite~~ — Done.
+2. ~~Package consolidation~~ — Done.
+3. ~~Configurable jurisdiction system~~ — Done.
+4. ~~Stabilize core pipeline~~ — Done.
+5. ~~Rename higher-phase terminology~~ — Done.
+6. ~~Clean public presentation~~ — Done.
+7. ~~DB-persisted audits~~ — Done. SQLAlchemy + SQLite, history backed to 10k scale.
+8. ~~SynTechRev brand + desktop builds~~ — Done. Electron CI ships `.exe`/`.dmg`/`.AppImage`.
+9. ~~RAG on Ollama~~ — Done. `build_rag_index.py` + `/api/v1/rag/query` + RAG Query UI page.
 
-**Next areas to consider**: extend `analyze_document()` in `audit_engine.py` to include the procurement timeline detector; add more detector coverage (grant funding trails, vote-date alignment).
+**Active next steps**:
+- Populate `oraculus_audit.db` with real audit corpus and run `build_rag_index.py` to make RAG live
+- Extend `analyze_document()` in `audit_engine.py` to include the procurement timeline detector
+- Migrate `@app.on_event("startup")` → FastAPI `lifespan` handler (deprecation warnings in every test run)
+- Implement multi-index RAG routing — expose `corpus`/`ace`/`jim` sub-indexes via `corpus_filter` in the API (index builder already creates them)
 
 ## Conventions
 
@@ -71,6 +96,8 @@ All six original priorities are complete. Active work areas:
 - Provenance: SHA-256 hashing throughout
 - Config: YAML in `config/` for settings, JSON for corpus manifests
 - Skipped tests: data-dependent tests use `@pytest.mark.skip` with a reason string; do not delete them
+- RAG request schema: `query` (str), `top_k` (int, default 5), `corpus_filter` (list[str]|None), `date_range` (list[str]|None)
+- RAG response schema: `answer` (str), `sources` (list[dict]), `confidence` (float), `error` (str|None)
 
 ## What NOT to Do
 
@@ -78,9 +105,12 @@ All six original priorities are complete. Active work areas:
 - Do NOT hardcode API keys — use environment variables (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`)
 - Do NOT commit data files to `oraculus/corpus/` — that's for user-generated corpus data at runtime
 - Do NOT commit generated analysis outputs to `analysis/` or `AUDIT_REPORT.txt` — those are runtime artifacts
+- Do NOT commit `oraculus_audit.db` — runtime database, gitignored
+- Do NOT commit `data/vectors/*.npy` / `*.pkl` — RAG index artifacts, gitignored
 - Do NOT use overly abstract/mythological naming for new code — prefer clear engineering terminology
 - Do NOT use `datetime.utcnow()` — use `datetime.now(UTC)` (UTC imported from `datetime`)
 - Do NOT open files without `encoding="utf-8"` when reading JSON or text on Windows
+- Do NOT use `@app.on_event("startup")` — migrate new handlers to the `lifespan` context manager
 
 ## Running the Project
 
@@ -100,6 +130,9 @@ uvicorn oraculus_di_auditor.interface.api:app --reload
 # Start frontend (separate terminal)
 cd frontend && npm install && npm run dev
 
+# Build RAG index (requires oraculus_audit.db populated with audit data)
+python scripts/build_rag_index.py
+
 # Lint and format
 black --check src tests
 ruff check src tests
@@ -112,14 +145,16 @@ ODIA/
 ├── src/
 │   ├── oraculus_di_auditor/   # Main platform package
 │   └── oraculus/              # Legacy thin wrapper (backward compat only)
-├── tests/                     # ~2130 tests organized by module
+├── tests/                     # ~3400 tests organized by module
 ├── scripts/                   # Utility and pipeline scripts
+│   ├── build_rag_index.py     # Builds TF-IDF RAG index from live DB
 │   └── examples/              # Jurisdiction-specific example scripts
 ├── config/                    # Configuration files (YAML, JSON)
 │   ├── corpus_manifest.json   # Maps corpus IDs to meeting dates
 │   └── jurisdiction.json      # Active jurisdiction config (gitignored)
-├── frontend/                  # Next.js 14 application
-├── docs/                      # Documentation (PHASES.md, contributing guide, etc.)
+├── data/vectors/              # RAG vector index artifacts (gitignored)
+├── frontend/                  # Next.js 14 production application
+├── docs/                      # Documentation (PHASES.md, RAG_SETUP.md, etc.)
 ├── legal/                     # Legal reference data (case law, lexicon)
 ├── constitutional/            # Constitutional linguistic frameworks
 ├── schemas/                   # JSON Schema definitions

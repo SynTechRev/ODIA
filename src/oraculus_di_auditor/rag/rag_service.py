@@ -176,9 +176,35 @@ class RAGService:
 
     def get_status(self) -> dict[str, Any]:
         """Return RAG system status."""
+        indexed = self._indexed_counts_from_disk()
         return {
-            "indexed": dict(self._counts),
+            "indexed": indexed,
             "llm_available": self._llm is not None,
             "llm_provider": self._llm_provider_name,
             "llm_model": self._llm_model_name,
+        }
+
+    def _indexed_counts_from_disk(self) -> dict[str, int]:
+        """Read actual entry counts from saved vector files, falling back to
+        in-memory counters when no index files exist yet."""
+        from pathlib import Path
+
+        import numpy as np
+
+        vectors_dir = Path("data/vectors")
+
+        def _count(name: str) -> int:
+            path = vectors_dir / f"{name}_vectors.npy"
+            try:
+                if path.exists():
+                    arr = np.load(path, mmap_mode="r")
+                    return int(arr.shape[0])
+            except Exception:
+                pass
+            return 0
+
+        return {
+            "documents": _count("collection") or self._counts["documents"],
+            "findings": _count("ace_collection") or self._counts["findings"],
+            "analysis": _count("jim_collection") or self._counts["analysis"],
         }
