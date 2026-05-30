@@ -1,5 +1,56 @@
 # Changelog
 
+## [3.6.0] - 2026-05-30 — Detector expansion + RAG multi-index + CI hardening
+
+### Added
+
+**Grant Funding Trails Detector (`analysis/grant_funding_trails.py`)**
+Five new finding types tracking the federal grant money chain through legislative documents:
+- `grant_trail:amount-without-tracking` — grant award cited with no drawdown/disbursement/quarterly-report language
+- `grant_trail:passthrough-without-attribution` — pass-through/subgrant with no federal-agency attribution (CFDA/ALN untraceable)
+- `grant_trail:no-single-audit-reference` — multiple dollar amounts in a grant document with no Uniform Guidance (2 CFR) accountability language
+- `grant_trail:jag-without-award-number` — JAG/Edward Byrne reference without BJA award number or tracking identifier
+- `grant_trail:amount-reconciliation-gap` — dollar amounts spanning >5× range suggesting unreconciled grant vs. local funds
+
+**Vote-Date Alignment Detector (`analysis/vote_date_alignment.py`)**
+Six new finding types flagging temporal misalignment between authorization and execution:
+- `vote_date:retroactive-approval` — nunc pro tunc, "retroactive", or past-dated effective clause
+- `vote_date:urgency-without-finding` — urgency designation without recorded urgency finding (Cal. Gov. Code § 36937)
+- `vote_date:consent-calendar-high-value` — high-value contract placed on consent calendar (bypasses individual vote)
+- `vote_date:execution-before-authorization` — execution date precedes authorization date in document metadata
+- `vote_date:authorization-execution-gap` — >90-day gap between authorization and execution
+- `vote_date:text-date-ordering-anomaly` — prose-derived date ordering anomaly (fallback when metadata dates absent)
+
+Both detectors wired into `analyze_document()` in `audit_engine.py`.
+
+**RAG Multi-Index Routing**
+`corpus_filter` in `POST /api/v1/rag/query` now routes to the correct TF-IDF sub-index:
+- `"documents"` / `"corpus"` → `collection` (one entry per document)
+- `"findings"` / `"ace"` → `ace_collection` (one entry per anomaly finding)
+- `"patterns"` / `"jim"` → `jim_collection` (cross-jurisdiction patterns)
+No filter → all three indices queried and sources merged by score. Module-level `_rag_cache` avoids reloading on every request.
+
+**RAG Status Real Counts**
+`RAGService.get_status()` now reads actual entry counts from saved vector files (`data/vectors/*.npy`) via numpy mmap rather than returning in-memory counters that reset to zero on every service init.
+
+**RAG End-to-End Verified**
+Ollama llama3.1:8b confirmed live — RAG Query UI returning grounded answers from 910-document Dinuba audit corpus with BCS Consulting JAG procurement findings surfaced.
+
+### Fixed
+
+- `FastAPI @app.on_event("startup")` migrated to `asynccontextmanager lifespan` — eliminates DeprecationWarning on every test run
+- Pre-commit workflow restructured to use `black --check` (read-only) instead of auto-fixer — eliminates the persistent failure loop caused by `contents: read` permission conflict
+- `validate_cdsce_schema.py` emoji replaced with ASCII (`PASS/FAIL/SKIP/WARN`) — fixes UnicodeEncodeError crash on Windows cp1252 terminals
+- `PYTHONIOENCODING: utf-8` added to pre-commit workflow environment
+- CLAUDE.md rewritten for v3.5.3→v3.6.0: accurate version, test counts (3444+/17), all new modules, full route list, updated next steps
+
+### Tests
+
+- 25 new tests: 11 for `grant_funding_trails`, 14 for `vote_date_alignment`
+- `test_rag_service.py` updated to patch `_indexed_counts_from_disk` for pre-load assertions
+
+---
+
 ## [3.5.3] - 2026-05-30 — RAG white-screen fix + backend compatibility
 
 ### Fixed
