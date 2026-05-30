@@ -135,7 +135,9 @@ def _extract_dates_from_text(text: str) -> list[date]:
 # ---------------------------------------------------------------------------
 
 
-def detect_vote_date_alignment_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
+def detect_vote_date_alignment_anomalies(  # noqa: C901
+    doc: dict[str, Any],
+) -> list[dict[str, Any]]:
     """Detect vote / authorization vs. execution date misalignment in *doc*."""
     findings: list[dict[str, Any]] = []
     if not isinstance(doc, dict):
@@ -199,7 +201,6 @@ def detect_vote_date_alignment_anomalies(doc: dict[str, Any]) -> list[dict[str, 
     # ------------------------------------------------------------------
     auth_date = _parse_iso(doc.get("authorization_date") or doc.get("approval_date"))
     exec_date = _parse_iso(doc.get("execution_date") or doc.get("effective_date"))
-    version_date = _parse_iso(doc.get("version_date"))
 
     if auth_date and exec_date and exec_date < auth_date:
         findings.append(

@@ -101,7 +101,9 @@ def _dollar_amounts(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def detect_grant_funding_trail_anomalies(doc: dict[str, Any]) -> list[dict[str, Any]]:
+def detect_grant_funding_trail_anomalies(  # noqa: C901
+    doc: dict[str, Any],
+) -> list[dict[str, Any]]:
     """Detect missing or broken grant funding trail signals in *doc*."""
     findings: list[dict[str, Any]] = []
     if not isinstance(doc, dict):
@@ -111,7 +113,6 @@ def detect_grant_funding_trail_anomalies(doc: dict[str, Any]) -> list[dict[str, 
     if not text.strip():
         return findings
 
-    text_lower = text.lower()
     has_grant_ref = bool(_GRANT_REFERENCE.search(text))
     if not has_grant_ref:
         return findings  # not a grant-related document
