@@ -1,6 +1,8 @@
 """Diagnostic: pick a known Tuesday and inspect what actually lands in
 the ifrmFiles iframe after the postback."""
+
 import re
+
 from playwright.sync_api import sync_playwright
 
 BASE = "https://publicdocs.co.tulare.ca.us/questys.cmx.webclient/"
@@ -44,7 +46,7 @@ with sync_playwright() as pw:
     if ifr is None:
         print("\n  no ifrmFiles frame named 'ifrmFiles'")
     else:
-        print(f"\n=== ifrmFiles ===")
+        print("\n=== ifrmFiles ===")
         print(f"  url: {ifr.url}")
         try:
             content = ifr.content()
@@ -52,7 +54,7 @@ with sync_playwright() as pw:
             iframe_ids = sorted(set(re.findall(r"File\.ashx\?id=(\d+)", content)))
             print(f"  File.ashx IDs in iframe: {iframe_ids}")
             # Dump first 1500 chars
-            print(f"  --- first 1500 chars ---")
+            print("  --- first 1500 chars ---")
             print(content[:1500])
         except Exception as exc:
             print(f"  content err: {exc}")

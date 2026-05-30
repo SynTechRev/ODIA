@@ -168,6 +168,7 @@ def register_trigger_routes(app: Any) -> None:
         try:
             from oraculus_di_auditor.db import models as db_models
             from oraculus_di_auditor.db.session import get_db
+
             with get_db() as session:
                 rows = (
                     session.query(db_models.Document.jurisdiction)

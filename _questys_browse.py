@@ -1,5 +1,7 @@
 """Probe Questys for folder/tree/browse endpoints + map the full URL surface."""
+
 import re
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -49,7 +51,12 @@ nav_links = []
 for a in soup.find_all("a", href=True):
     href = a.get("href", "")
     label = a.get_text(" ", strip=True)
-    if href.endswith(".aspx") or "Default" in href or href.startswith("./") or href.startswith("../"):
+    if (
+        href.endswith(".aspx")
+        or "Default" in href
+        or href.startswith("./")
+        or href.startswith("../")
+    ):
         nav_links.append((label, href))
 unique_links = sorted(set(nav_links), key=lambda x: x[1])
 print(f"  unique .aspx-ish nav hrefs: {len(unique_links)}")

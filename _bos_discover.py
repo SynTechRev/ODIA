@@ -5,8 +5,8 @@ Strategy:
 2. Probe the BOS landing page for direct agenda/packet links (PDFs)
 3. Pick a sample meeting page and harvest attached docs to confirm structure
 """
+
 import re
-import sys
 from collections import Counter
 from urllib.parse import urljoin
 
@@ -56,7 +56,7 @@ for u in bos_urls:
     else:
         depth_buckets[parts[0]] += 1
 
-print(f"\n  BOS subpath buckets (top 12):")
+print("\n  BOS subpath buckets (top 12):")
 for path, count in depth_buckets.most_common(12):
     print(f"    {count:>5}  /{path}")
 
@@ -69,11 +69,18 @@ r = requests.get(landing, impersonate=UA_IMP, timeout=30)
 print(f"  {landing}: status={r.status_code} bytes={len(r.content)}")
 
 # Hunt for PDF + Legistar + obvious meeting/agenda hrefs
-pdf_hrefs = sorted(set(re.findall(r"""href=["']([^"']+\.pdf[^"']*)["']""", r.text, re.I)))
-meeting_hrefs = sorted(set(re.findall(
-    r"""href=["']([^"']*(?:meeting|agenda|packet|minutes)[^"']*?)["']""",
-    r.text, re.I
-)))
+pdf_hrefs = sorted(
+    set(re.findall(r"""href=["']([^"']+\.pdf[^"']*)["']""", r.text, re.I))
+)
+meeting_hrefs = sorted(
+    set(
+        re.findall(
+            r"""href=["']([^"']*(?:meeting|agenda|packet|minutes)[^"']*?)["']""",
+            r.text,
+            re.I,
+        )
+    )
+)
 print(f"  PDFs on landing: {len(pdf_hrefs)}")
 for p in pdf_hrefs[:5]:
     print(f"    {p}")
@@ -95,7 +102,9 @@ if sample_meeting:
     print(f"\n=== sample meeting page: {sample_meeting} ===")
     r = requests.get(sample_meeting, impersonate=UA_IMP, timeout=30)
     print(f"  status={r.status_code} bytes={len(r.content)}")
-    attach_pdfs = sorted(set(re.findall(r"""href=["']([^"']+\.pdf[^"']*)["']""", r.text, re.I)))
+    attach_pdfs = sorted(
+        set(re.findall(r"""href=["']([^"']+\.pdf[^"']*)["']""", r.text, re.I))
+    )
     print(f"  attached PDFs: {len(attach_pdfs)}")
     for p in attach_pdfs[:10]:
         print(f"    {p}")
@@ -104,11 +113,16 @@ else:
 
 # Persist for next steps
 import json
+
 with open("_bos_urls.json", "w", encoding="utf-8") as f:
-    json.dump({
-        "total_walked": total_walked,
-        "bos_urls": bos_urls,
-        "landing_pdfs": pdf_hrefs,
-        "landing_meeting_hrefs": meeting_hrefs,
-    }, f, indent=2)
+    json.dump(
+        {
+            "total_walked": total_walked,
+            "bos_urls": bos_urls,
+            "landing_pdfs": pdf_hrefs,
+            "landing_meeting_hrefs": meeting_hrefs,
+        },
+        f,
+        indent=2,
+    )
 print(f"\n  saved _bos_urls.json ({len(bos_urls)} BOS urls + landing hrefs)")

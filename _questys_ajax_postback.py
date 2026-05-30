@@ -1,6 +1,8 @@
 """Proper ASP.NET AJAX async postback against the agenda calendar."""
+
 import re
 from datetime import date
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -64,12 +66,12 @@ with open("_questys_ajax_response.txt", "w", encoding="utf-8") as f:
     f.write(rp.text)
 
 # Parse the pipe-delimited UpdatePanel response: len|type|name|payload|len|type|...
-print(f"\n  first 800 chars of response:")
+print("\n  first 800 chars of response:")
 print(f"  {rp.text[:800]!r}")
 
 # Look for the UpdatePanel payload format
 # Format: <len>|<type>|<controlId>|<content>|<len>|<type>|...
-print(f"\n  response chunks (parsed):")
+print("\n  response chunks (parsed):")
 parts = rp.text.split("|")
 i = 0
 chunk_idx = 0
@@ -80,8 +82,10 @@ while i < len(parts) and chunk_idx < 20:
         cname = parts[i + 2]
         if i + 3 + 1 > len(parts):
             break
-        content = "|".join(parts[i + 3:])[:clen]
-        print(f"    [{chunk_idx}] len={clen:>6}  type={ctype:<20}  name={cname[:40]:<40}  content_head={content[:80]!r}")
+        content = "|".join(parts[i + 3 :])[:clen]
+        print(
+            f"    [{chunk_idx}] len={clen:>6}  type={ctype:<20}  name={cname[:40]:<40}  content_head={content[:80]!r}"
+        )
         i += 3
         # advance past content (find next sep by length)
         i_consumed = 0
@@ -102,7 +106,11 @@ fids = sorted(set(re.findall(r"File\.ashx\?id=(\d+)", rp.text)))
 print(f"\n  File.ashx IDs in response: {len(fids)}  {fids[:20]}")
 
 # Look for iframe src in response
-iframe_srcs = re.findall(r"(?:src|location)\s*=\s*['\"]?([^'\";\s]*?(?:Files|Meeting)[\w/.?=&-]*?\.aspx[^'\";\s]*)", rp.text, re.I)
+iframe_srcs = re.findall(
+    r"(?:src|location)\s*=\s*['\"]?([^'\";\s]*?(?:Files|Meeting)[\w/.?=&-]*?\.aspx[^'\";\s]*)",
+    rp.text,
+    re.I,
+)
 iframe_srcs = sorted(set(iframe_srcs))
 print(f"\n  *.aspx URLs (Files/Meeting/iframe): {len(iframe_srcs)}")
 for s in iframe_srcs[:5]:

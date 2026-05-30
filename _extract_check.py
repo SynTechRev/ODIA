@@ -1,4 +1,5 @@
 """Confirm v3.2.4 semantic-container extraction yields real article text."""
+
 import tempfile
 from pathlib import Path
 

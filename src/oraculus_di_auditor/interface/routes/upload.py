@@ -667,7 +667,9 @@ def _persist_upload_document(
             )
             session.commit()
     except Exception as exc:  # noqa: BLE001
-        logger.warning("Failed to persist upload document %s: %s", doc.get("document_id"), exc)
+        logger.warning(
+            "Failed to persist upload document %s: %s", doc.get("document_id"), exc
+        )
 
 
 def _execute_audit_job(
@@ -721,7 +723,9 @@ def _execute_audit_job(
             # Persist document + analysis to DB so it appears in the
             # Documents, Anomalies, and Synthesis pages alongside
             # webhook-ingested documents.
-            _persist_upload_document(doc, findings, config_overrides.get("jurisdiction"))
+            _persist_upload_document(
+                doc, findings, config_overrides.get("jurisdiction")
+            )
 
             manifest_entry: dict[str, Any] = {
                 "document_id": doc["document_id"],
@@ -1090,9 +1094,7 @@ def register_upload_routes(app: Any) -> None:
         raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found")
 
     @router.get("/api/v1/audit/history")
-    async def audit_history(
-        page: int = 1, per_page: int = 100
-    ) -> dict[str, Any]:
+    async def audit_history(page: int = 1, per_page: int = 100) -> dict[str, Any]:
         """Paginated list of completed audit jobs from the DB, newest first.
 
         Returns lightweight summaries (no findings array) so the frontend
@@ -1124,23 +1126,35 @@ def register_upload_routes(app: Any) -> None:
                         manifest = r.get("document_manifest", [])
                         first_name = manifest[0]["filename"] if manifest else "Unknown"
                         doc_count = r.get("document_count", 0)
-                        items.append({
-                            "job_id": row.job_id,
-                            "status": row.status,
-                            "completed_at": row.completed_at.isoformat() if row.completed_at else None,
-                            "generated_at": r.get("generated_at"),
-                            "document_count": doc_count,
-                            "finding_count": r.get("finding_count", 0),
-                            "severity_summary": r.get("severity_summary", {}),
-                            "first_filename": first_name,
-                            "more_docs": max(0, doc_count - 1),
-                        })
+                        items.append(
+                            {
+                                "job_id": row.job_id,
+                                "status": row.status,
+                                "completed_at": (
+                                    row.completed_at.isoformat()
+                                    if row.completed_at
+                                    else None
+                                ),
+                                "generated_at": r.get("generated_at"),
+                                "document_count": doc_count,
+                                "finding_count": r.get("finding_count", 0),
+                                "severity_summary": r.get("severity_summary", {}),
+                                "first_filename": first_name,
+                                "more_docs": max(0, doc_count - 1),
+                            }
+                        )
                     except Exception:  # noqa: BLE001
                         continue
 
         except Exception as exc:  # noqa: BLE001
             logger.warning("audit_history query failed: %s", exc)
-            return {"items": [], "total": 0, "page": page, "per_page": per_page, "has_more": False}
+            return {
+                "items": [],
+                "total": 0,
+                "page": page,
+                "per_page": per_page,
+                "has_more": False,
+            }
 
         return {
             "items": items,

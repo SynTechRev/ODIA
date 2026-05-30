@@ -4,8 +4,8 @@ This is a backend-API smoke test for the v3.2.0 routes, exercised against
 the live 848-doc / 324-anomaly state after .doc reingest. If any of these
 fail, the frontend page that consumes them will show empty / broken.
 """
+
 import json
-import sys
 import urllib.request
 
 BASE = "http://127.0.0.1:8000/api/v1"
@@ -36,19 +36,27 @@ print("\n=== /api/v1/jurisdictions ===")
 d = check("/jurisdictions", lambda: get("/jurisdictions"))
 if d:
     for j in d["items"]:
-        print(f"     {j['jurisdiction']:<18} docs={j['document_count']:<4} anomalies={j['anomaly_count']}")
+        print(
+            f"     {j['jurisdiction']:<18} docs={j['document_count']:<4} anomalies={j['anomaly_count']}"
+        )
 
 print("\n=== /api/v1/documents (paginated) ===")
 d = check("/documents?per_page=10", lambda: get("/documents?per_page=10"))
-d = check("/documents?jurisdiction=tulare-county&per_page=10",
-          lambda: get("/documents?jurisdiction=tulare-county&per_page=10"))
+d = check(
+    "/documents?jurisdiction=tulare-county&per_page=10",
+    lambda: get("/documents?jurisdiction=tulare-county&per_page=10"),
+)
 
 print("\n=== /api/v1/anomalies (paginated + filtered) ===")
 d = check("/anomalies?per_page=10", lambda: get("/anomalies?per_page=10"))
-d = check("/anomalies?severity=critical&per_page=10",
-          lambda: get("/anomalies?severity=critical&per_page=10"))
-d = check("/anomalies?jurisdiction=tulare-county&severity=critical",
-          lambda: get("/anomalies?jurisdiction=tulare-county&severity=critical"))
+d = check(
+    "/anomalies?severity=critical&per_page=10",
+    lambda: get("/anomalies?severity=critical&per_page=10"),
+)
+d = check(
+    "/anomalies?jurisdiction=tulare-county&severity=critical",
+    lambda: get("/anomalies?jurisdiction=tulare-county&severity=critical"),
+)
 
 print("\n=== /api/v1/analyses (paginated) ===")
 d = check("/analyses?per_page=10", lambda: get("/analyses?per_page=10"))

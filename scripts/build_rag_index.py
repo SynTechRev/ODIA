@@ -20,14 +20,12 @@ import pickle
 import sys
 from pathlib import Path
 
-import numpy as np
-
 REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT / "config"))
 
-from oraculus_di_auditor.db.session import init_db, get_db
-from oraculus_di_auditor.db.models import Document, Analysis, Anomaly
+from oraculus_di_auditor.db.models import Analysis, Anomaly, Document
+from oraculus_di_auditor.db.session import get_db, init_db
 from oraculus_di_auditor.embeddings import LocalEmbedder
 from oraculus_di_auditor.retriever import Retriever
 
@@ -77,14 +75,16 @@ def build_corpus_index(session) -> tuple[list[str], list[dict]]:
             f"Findings: {anomaly_text or 'none'}"
         )
         texts.append(text)
-        metas.append({
-            "id": doc.document_id,
-            "title": doc.title or "Untitled",
-            "text": text,          # field name expected by ContextAssembler
-            "jurisdiction": doc.jurisdiction,
-            "document_type": doc.document_type,
-            "anomaly_count": len(anomalies),
-        })
+        metas.append(
+            {
+                "id": doc.document_id,
+                "title": doc.title or "Untitled",
+                "text": text,  # field name expected by ContextAssembler
+                "jurisdiction": doc.jurisdiction,
+                "document_type": doc.document_type,
+                "anomaly_count": len(anomalies),
+            }
+        )
     return texts, metas
 
 
@@ -96,9 +96,11 @@ def build_ace_index(session) -> tuple[list[str], list[dict]]:
         analysis = session.query(Analysis).filter(Analysis.id == a.analysis_id).first()
         doc = None
         if analysis:
-            doc = session.query(Document).filter(
-                Document.document_id == analysis.document_id
-            ).first()
+            doc = (
+                session.query(Document)
+                .filter(Document.document_id == analysis.document_id)
+                .first()
+            )
 
         details_str = _safe_details(a.details_json)
         jur = doc.jurisdiction if doc else "unknown"
@@ -111,22 +113,25 @@ def build_ace_index(session) -> tuple[list[str], list[dict]]:
             f"Details: {details_str}"
         )
         texts.append(text)
-        metas.append({
-            "id": a.anomaly_id,
-            "title": f"{jur} / {doc_title}",
-            "text": text,          # field name expected by ContextAssembler
-            "issue": a.issue,
-            "severity": a.severity,
-            "layer": a.layer,
-            "document_id": analysis.document_id if analysis else None,
-            "jurisdiction": jur,
-        })
+        metas.append(
+            {
+                "id": a.anomaly_id,
+                "title": f"{jur} / {doc_title}",
+                "text": text,  # field name expected by ContextAssembler
+                "issue": a.issue,
+                "severity": a.severity,
+                "layer": a.layer,
+                "document_id": analysis.document_id if analysis else None,
+                "jurisdiction": jur,
+            }
+        )
     return texts, metas
 
 
 def build_jim_index(session) -> tuple[list[str], list[dict]]:
     """Cross-jurisdiction pattern summaries."""
     from sqlalchemy import func
+
     patterns = (
         session.query(
             Anomaly.anomaly_id,
@@ -157,15 +162,17 @@ def build_jim_index(session) -> tuple[list[str], list[dict]]:
             f"Jurisdictions ({len(jur_list)}): {', '.join(jur_list)}"
         )
         texts.append(text)
-        metas.append({
-            "id": p.anomaly_id,
-            "title": f"Cross-jurisdiction: {p.issue[:60]}",
-            "text": text,          # field name expected by ContextAssembler
-            "layer": p.layer,
-            "severity": p.severity,
-            "count": p.count,
-            "jurisdictions": jur_list,
-        })
+        metas.append(
+            {
+                "id": p.anomaly_id,
+                "title": f"Cross-jurisdiction: {p.issue[:60]}",
+                "text": text,  # field name expected by ContextAssembler
+                "layer": p.layer,
+                "severity": p.severity,
+                "count": p.count,
+                "jurisdictions": jur_list,
+            }
+        )
     return texts, metas
 
 
@@ -182,7 +189,7 @@ def fit_and_save(
         print(f"  Fitting embedder on {len(texts)} documents…")
         embedder.fit(texts)
 
-    for text, meta in zip(texts, metas):
+    for text, meta in zip(texts, metas, strict=False):
         vec = embedder.embed(text)
         retriever.add_vector(vec, meta)
 

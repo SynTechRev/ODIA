@@ -1,5 +1,5 @@
 """Inspect Agenda/Default.aspx — the meeting calendar/index for BOS."""
-import re
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -58,5 +58,7 @@ for t in tables:
         print(f"  table rows={len(rows)} class={cls} id={t.get('id')}")
         # Show first 3 row labels
         for row in rows[:3]:
-            cells = [c.get_text(' ', strip=True)[:30] for c in row.find_all(['th', 'td'])[:8]]
+            cells = [
+                c.get_text(" ", strip=True)[:30] for c in row.find_all(["th", "td"])[:8]
+            ]
             print(f"    {cells}")

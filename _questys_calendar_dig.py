@@ -1,5 +1,7 @@
 """Dig into the agenda calendar: postback target + date format + iframe URL."""
+
 import re
+
 from bs4 import BeautifulSoup
 
 text = open("_questys_agenda_root.html", encoding="utf-8").read()
@@ -17,13 +19,17 @@ for td in cal.find_all("td"):
         href = a.get("href", "")
         if "javascript:" in href:
             # Extract __doPostBack call signature
-            m = re.search(r"__doPostBack\(['\"]([^'\"]+)['\"],\s*['\"]([^'\"]*)['\"]\)", href)
+            m = re.search(
+                r"__doPostBack\(['\"]([^'\"]+)['\"],\s*['\"]([^'\"]*)['\"]\)", href
+            )
             if m:
                 tgt, arg = m.groups()
                 key = (tgt, arg[:30])
                 if key not in seen_callbacks:
                     seen_callbacks.add(key)
-                    print(f"  __doPostBack target={tgt!r}  arg={arg!r}  label={a.get_text(strip=True)!r}")
+                    print(
+                        f"  __doPostBack target={tgt!r}  arg={arg!r}  label={a.get_text(strip=True)!r}"
+                    )
 
 print(f"\n  unique calendar postback targets: {len({c[0] for c in seen_callbacks})}")
 print(f"  unique (target, arg) pairs: {len(seen_callbacks)}")
@@ -38,7 +44,11 @@ for t in tgts:
 
 # 3. Find the JS that sets the iframe src after a date pick (UpdatePanel + JS)
 print("\n=== iframe src setters ===")
-for m in re.finditer(r"(?:ifrmFiles|Files_ifrmFiles)[^;]*?(?:src|location)\s*=\s*['\"]?([^'\";\s]+)", text, re.I):
+for m in re.finditer(
+    r"(?:ifrmFiles|Files_ifrmFiles)[^;]*?(?:src|location)\s*=\s*['\"]?([^'\";\s]+)",
+    text,
+    re.I,
+):
     print(f"  iframe src assignment: {m.group()[:200]}")
 
 # 4. Look for the iframe URL format anywhere in the page

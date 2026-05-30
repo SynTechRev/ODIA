@@ -1,5 +1,7 @@
 """Simulate calendar __doPostBack for a Tuesday BOS meeting day → harvest files."""
+
 import re
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -28,7 +30,11 @@ print(f"  initial __VIEWSTATE len={len(vs)}")
 
 # 3. Try posting back for a few candidate Tuesday day-ids
 #    May 19 2026 (today) = 9635; May 12 = 9628; May 5 = 9621
-for day_id, label in [(9628, "May 12 2026"), (9621, "May 5 2026"), (9614, "Apr 28 2026")]:
+for day_id, label in [
+    (9628, "May 12 2026"),
+    (9621, "May 5 2026"),
+    (9614, "Apr 28 2026"),
+]:
     post_data = {
         "__EVENTTARGET": "ctl00$DefaultContent$agendaCalendar",
         "__EVENTARGUMENT": str(day_id),
@@ -36,10 +42,15 @@ for day_id, label in [(9628, "May 12 2026"), (9621, "May 5 2026"), (9614, "Apr 2
         "__VIEWSTATEGENERATOR": vsg,
         "__LASTFOCUS": "",
     }
-    rp = sess.post(AGENDA, data=post_data, headers={
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Referer": AGENDA,
-    }, timeout=60)
+    rp = sess.post(
+        AGENDA,
+        data=post_data,
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Referer": AGENDA,
+        },
+        timeout=60,
+    )
     soup2 = BeautifulSoup(rp.text, "html.parser")
     # Re-extract viewstate for next request
     vs = soup2.find("input", {"name": "__VIEWSTATE"})
@@ -51,7 +62,9 @@ for day_id, label in [(9628, "May 12 2026"), (9621, "May 5 2026"), (9614, "Apr 2
 
     # Hunt for File.ashx links AND iframe URLs in the response
     file_ids = sorted(set(re.findall(r"File\.ashx\?id=(\d+)", rp.text)))
-    files_links = re.findall(r"(?:src|href)=['\"]([^'\"]*?Files[^'\"]*?\.aspx[^'\"]*)['\"]", rp.text)
+    files_links = re.findall(
+        r"(?:src|href)=['\"]([^'\"]*?Files[^'\"]*?\.aspx[^'\"]*)['\"]", rp.text
+    )
     files_links = sorted(set(files_links))
 
     print(f"\n--- {label} (day_id={day_id}) ---")

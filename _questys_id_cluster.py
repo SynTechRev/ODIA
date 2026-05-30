@@ -1,5 +1,7 @@
 """Test if IDs near known-good BOS docs are also accessible (clustered) or sparse."""
+
 import re
+
 from curl_cffi import requests
 
 UA = "chrome131"

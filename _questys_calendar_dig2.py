@@ -1,6 +1,8 @@
 """Deeper diagnostic: look for the 'List of Meetings' panel + check if the
 postback is even reaching the server (via network monitoring)."""
+
 import re
+
 from playwright.sync_api import sync_playwright
 
 BASE = "https://publicdocs.co.tulare.ca.us/questys.cmx.webclient/"
@@ -34,7 +36,9 @@ with sync_playwright() as pw:
 
     # Find divs/panels that might be the meeting list
     print("\n=== meetingList / panelMeetings / etc ===")
-    for m in re.finditer(r'id="([^"]*(?:Meeting|panelM|MeetingList|meetings)[^"]*)"', html, re.I):
+    for m in re.finditer(
+        r'id="([^"]*(?:Meeting|panelM|MeetingList|meetings)[^"]*)"', html, re.I
+    ):
         print(f"  {m.group(1)}")
 
     # Reset network capture, then trigger postback

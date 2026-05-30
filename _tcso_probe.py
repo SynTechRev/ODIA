@@ -1,5 +1,7 @@
 """Probe TCSO news-release index for fresh URLs to smoke-test v3.2.4."""
+
 import re
+
 from curl_cffi import requests
 
 INDEX = "https://tularecounty.ca.gov/sheriff/media/news-releases/"

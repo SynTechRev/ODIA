@@ -11,7 +11,6 @@ after the user wants to see.
 
 from oraculus_di_auditor.reporting.plain_language import translate_finding
 
-
 # A representative grant_compliance:jag-without-anti-supplanting finding.
 # The narrative TRANSLATIONS for this includes the actual USC citation
 # (34 U.S.C. § 10152) which the v3.3.0 embed resolves.

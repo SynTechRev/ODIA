@@ -13,13 +13,14 @@ Strategy:
 
 Throttled to match the same 3s + 20s/10 cadence used during v2 bulk.
 """
+
 import hashlib
 import json
 import sys
 import time
 from pathlib import Path
 
-from oraculus_di_auditor.db.session import init_db, get_db
+from oraculus_di_auditor.db.session import get_db, init_db
 
 init_db()
 
@@ -50,37 +51,55 @@ def delete_by_sha(sha256):
     deleted_counts = {}
     with get_db() as session:
         # 1. Find document_id rows matching sha256
-        doc_ids = [r[0] for r in session.execute(
-            text("SELECT id FROM documents WHERE document_id IN "
-                 "(SELECT sha256 FROM seen_hashes WHERE sha256=:s)"),
-            {"s": sha256}
-        ).all()]
+        doc_ids = [
+            r[0]
+            for r in session.execute(
+                text(
+                    "SELECT id FROM documents WHERE document_id IN "
+                    "(SELECT sha256 FROM seen_hashes WHERE sha256=:s)"
+                ),
+                {"s": sha256},
+            ).all()
+        ]
         # Actually document_id is the SHA itself
-        doc_ids = [r[0] for r in session.execute(
-            text("SELECT id FROM documents WHERE document_id=:s"),
-            {"s": sha256}
-        ).all()]
+        doc_ids = [
+            r[0]
+            for r in session.execute(
+                text("SELECT id FROM documents WHERE document_id=:s"), {"s": sha256}
+            ).all()
+        ]
         if not doc_ids:
             # Try by other patterns
             pass
         # Delete anomalies via analyses
         for doc_id in doc_ids:
-            analysis_ids = [r[0] for r in session.execute(
-                text("SELECT id FROM analyses WHERE document_id=:d"),
-                {"d": doc_id}
-            ).all()]
+            analysis_ids = [
+                r[0]
+                for r in session.execute(
+                    text("SELECT id FROM analyses WHERE document_id=:d"), {"d": doc_id}
+                ).all()
+            ]
             for aid in analysis_ids:
                 r = session.execute(
-                    text("DELETE FROM anomalies WHERE analysis_id=:a"),
-                    {"a": aid}
+                    text("DELETE FROM anomalies WHERE analysis_id=:a"), {"a": aid}
                 )
-                deleted_counts["anomalies"] = deleted_counts.get("anomalies", 0) + r.rowcount
-            r = session.execute(text("DELETE FROM analyses WHERE document_id=:d"), {"d": doc_id})
+                deleted_counts["anomalies"] = (
+                    deleted_counts.get("anomalies", 0) + r.rowcount
+                )
+            r = session.execute(
+                text("DELETE FROM analyses WHERE document_id=:d"), {"d": doc_id}
+            )
             deleted_counts["analyses"] = deleted_counts.get("analyses", 0) + r.rowcount
         for doc_id in doc_ids:
-            r = session.execute(text("DELETE FROM documents WHERE id=:d"), {"d": doc_id})
-            deleted_counts["documents"] = deleted_counts.get("documents", 0) + r.rowcount
-        r = session.execute(text("DELETE FROM seen_hashes WHERE sha256=:s"), {"s": sha256})
+            r = session.execute(
+                text("DELETE FROM documents WHERE id=:d"), {"d": doc_id}
+            )
+            deleted_counts["documents"] = (
+                deleted_counts.get("documents", 0) + r.rowcount
+            )
+        r = session.execute(
+            text("DELETE FROM seen_hashes WHERE sha256=:s"), {"s": sha256}
+        )
         deleted_counts["seen_hashes"] = r.rowcount
         session.commit()
     return deleted_counts
@@ -89,7 +108,8 @@ def delete_by_sha(sha256):
 def main():
     log = json.loads(Path(LOG_PATH).read_text(encoding="utf-8-sig"))
     doc_rows = [
-        (did, meta) for did, meta in log.items()
+        (did, meta)
+        for did, meta in log.items()
         if meta.get("ext") == "doc" and meta.get("status") == "completed"
     ]
     print(f"found {len(doc_rows)} .doc rows in log")
@@ -118,7 +138,9 @@ def main():
         if prev_sha:
             d = delete_by_sha(prev_sha)
             if d:
-                print(f"  [{i:>2}/{len(doc_rows)}] id={did} fn={fn[:50]:<50}  deleted prior: {d}")
+                print(
+                    f"  [{i:>2}/{len(doc_rows)}] id={did} fn={fn[:50]:<50}  deleted prior: {d}"
+                )
 
         # 2. Re-download
         url = f"{QUESTYS_BASE}File.ashx?id={did}&v=1"
@@ -129,7 +151,9 @@ def main():
             continue
 
         if r.status_code != 200 or len(r.content) < 1000:
-            print(f"  [{i:>2}/{len(doc_rows)}] id={did}  bad response: status={r.status_code} bytes={len(r.content)}")
+            print(
+                f"  [{i:>2}/{len(doc_rows)}] id={did}  bad response: status={r.status_code} bytes={len(r.content)}"
+            )
             continue
 
         new_sha = hashlib.sha256(r.content).hexdigest()
@@ -146,8 +170,12 @@ def main():
         # 4. Persist
         try:
             doc_id = (result.get("document") or {}).get("document_id")
-            _record_seen_hash(sha256=new_sha, document_id=doc_id, jurisdiction_id=JURISDICTION)
-            _persist_tier1_result(sha256=new_sha, filename=fn, jurisdiction_id=JURISDICTION, result=result)
+            _record_seen_hash(
+                sha256=new_sha, document_id=doc_id, jurisdiction_id=JURISDICTION
+            )
+            _persist_tier1_result(
+                sha256=new_sha, filename=fn, jurisdiction_id=JURISDICTION, result=result
+            )
         except Exception as exc:
             print(f"  [{i:>2}/{len(doc_rows)}] id={did}  PERSIST WARN: {exc}")
 
@@ -156,12 +184,19 @@ def main():
         completed += 1
         total_findings += findings
         log[did] = {
-            "status": "completed", "sha256": new_sha, "filename": fn, "ext": "doc",
-            "bytes": len(r.content), "findings": findings, "score": score,
+            "status": "completed",
+            "sha256": new_sha,
+            "filename": fn,
+            "ext": "doc",
+            "bytes": len(r.content),
+            "findings": findings,
+            "score": score,
             "reingested": True,
         }
-        print(f"  [{i:>2}/{len(doc_rows)}] id={did} fn={fn[:50]:<50}  "
-              f"OK {len(r.content):>9}B  findings={findings} score={score:.3f}")
+        print(
+            f"  [{i:>2}/{len(doc_rows)}] id={did} fn={fn[:50]:<50}  "
+            f"OK {len(r.content):>9}B  findings={findings} score={score:.3f}"
+        )
 
     Path(LOG_PATH).write_text(json.dumps(log, indent=2), encoding="utf-8")
     elapsed = time.time() - start

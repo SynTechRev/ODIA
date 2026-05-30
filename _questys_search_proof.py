@@ -6,8 +6,10 @@ Approach:
 - POST same URL with __EVENTTARGET=Search button + filters
 - Parse the resulting HTML grid for document download links
 """
+
 import re
 from urllib.parse import urljoin
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -39,7 +41,9 @@ event_validation = get_hidden("__EVENTVALIDATION")
 print(f"   __VIEWSTATE: {len(viewstate)} chars")
 print(f"   __VIEWSTATEGENERATOR: {viewstate_gen!r}")
 print(f"   __VIEWSTATEENCRYPTED present: {bool(viewstate_enc)}")
-print(f"   __EVENTVALIDATION: {len(event_validation)} chars (likely empty — site has it disabled)")
+print(
+    f"   __EVENTVALIDATION: {len(event_validation)} chars (likely empty — site has it disabled)"
+)
 
 # ---- Step 2: POST a Type=Meeting search ----
 # Per the dropdown options:
@@ -52,7 +56,7 @@ post_data = {
     "__VIEWSTATE": viewstate,
     "__VIEWSTATEGENERATOR": viewstate_gen,
     "ctl00$DefaultContent$searchFormList": "Basic",
-    "ctl00$DefaultContent$DropListType": "6",          # 6 = Meeting
+    "ctl00$DefaultContent$DropListType": "6",  # 6 = Meeting
     "ctl00$DefaultContent$TextName": "",
     "ctl00$DefaultContent$DropListName": "LIKE",
     "ctl00$DefaultContent$TextTEXT": "",
@@ -100,7 +104,9 @@ print(f"\n   tables on results page: {len(tables)}")
 for i, t in enumerate(tables):
     rows = t.find_all("tr")
     if len(rows) >= 3:  # plausible data table
-        print(f"     table[{i}]: {len(rows)} rows, id={t.get('id')!r}, class={t.get('class')}")
+        print(
+            f"     table[{i}]: {len(rows)} rows, id={t.get('id')!r}, class={t.get('class')}"
+        )
 
 # Hunt for any href that looks like a document detail/download
 hrefs = sorted({a.get("href", "") for a in soup2.select("a[href]")})
@@ -116,6 +122,10 @@ ids = sorted(set(int(m) for m in id_pat.findall(r2.text)))
 print(f"\n   numeric IDs found via regex: {len(ids)}  (sample: {ids[:10]})")
 
 # Show any error / message banners
-errors = [el.get_text(strip=True) for el in soup2.select(".error, .alert, [class*=Error], [class*=Message]") if el.get_text(strip=True)]
+errors = [
+    el.get_text(strip=True)
+    for el in soup2.select(".error, .alert, [class*=Error], [class*=Message]")
+    if el.get_text(strip=True)
+]
 if errors:
     print(f"\n   error/message banners: {errors[:5]}")

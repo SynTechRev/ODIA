@@ -1,4 +1,5 @@
 """Find ScriptManager + UpdatePanel IDs in Agenda page."""
+
 import re
 
 text = open("_questys_agenda_root.html", encoding="utf-8").read()
@@ -13,7 +14,9 @@ form_name = m.group(1) if m else None
 print(f"form: action={form_action!r}  id={form_id!r}  name={form_name!r}")
 
 # ScriptManager IDs
-sm_ids = sorted(set(re.findall(r"id=[\"'](ctl00[^\"']*?ScriptManager[^\"']*)[\"']", text)))
+sm_ids = sorted(
+    set(re.findall(r"id=[\"'](ctl00[^\"']*?ScriptManager[^\"']*)[\"']", text))
+)
 print(f"\nScriptManager IDs: {sm_ids}")
 
 # upXXX UpdatePanel IDs

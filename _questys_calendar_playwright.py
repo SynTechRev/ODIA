@@ -16,11 +16,11 @@ Tactic:
 Runtime estimate: ~50 years * ~50 meetings/year * ~3s/click = ~2 hours
 for the full archive. Throttled to be polite (1-2s between clicks).
 """
+
 import json
 import re
 import sys
 import time
-from datetime import date, timedelta
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
@@ -82,8 +82,13 @@ def harvest():
                     "#ctl00_DefaultContent_agendaCalendar td.rcMainHeader, "
                     "#ctl00_DefaultContent_agendaCalendar td[class*='Header']"
                 ).first
-                return hdr.text_content() if hdr.count() else page.locator(
-                    "#ctl00_DefaultContent_agendaCalendar tr").first.text_content()
+                return (
+                    hdr.text_content()
+                    if hdr.count()
+                    else page.locator(
+                        "#ctl00_DefaultContent_agendaCalendar tr"
+                    ).first.text_content()
+                )
             except Exception:
                 return "?"
 
@@ -102,6 +107,7 @@ def harvest():
                 ids = sorted(set(hits))
                 # Also pull filenames from anchor text
                 from bs4 import BeautifulSoup
+
                 soup = BeautifulSoup(html, "html.parser")
                 fnames = {}
                 for a in soup.find_all("a", href=True):
@@ -118,7 +124,8 @@ def harvest():
                         ext = fn.rsplit(".", 1)[-1].lower()
                     if fid not in harvested:
                         harvested[fid] = {
-                            "filename": fn, "ext": ext,
+                            "filename": fn,
+                            "ext": ext,
                             "meeting_date": meeting_label,
                         }
             except Exception as exc:
@@ -144,7 +151,7 @@ def harvest():
                     const m = href.match(/__doPostBack\\(['\\"]([^'\\"]+)['\\"],\\s*['\\"]([^'\\"]*)['\\"]\\)/);
                     if (m) return {target: m[1], arg: m[2], text: a.textContent.trim()};
                     return null;
-                }).filter(Boolean)"""
+                }).filter(Boolean)""",
             )
             day_cells = [c for c in date_cells if not c["arg"].startswith("V")]
             print(f"     {len(day_cells)} clickable day cells in this month")
@@ -164,13 +171,22 @@ def harvest():
                     page.wait_for_timeout(int(PAUSE_SEC * 1000))
                     ids = harvest_iframe_for_day(f"{label} day {day_label}")
                     if ids:
-                        print(f"       day {day_label:>2}: {len(ids)} files  ({ids[:3]})")
+                        print(
+                            f"       day {day_label:>2}: {len(ids)} files  ({ids[:3]})"
+                        )
                 except Exception as exc:
                     print(f"       day {day_label} postback ERR: {str(exc)[:120]}")
                     continue
 
             # Navigate to previous month via __doPostBack with V-prefix arg
-            prev_arrow = next((c for c in date_cells if c["arg"].startswith("V") and c["text"] == "<"), None)
+            prev_arrow = next(
+                (
+                    c
+                    for c in date_cells
+                    if c["arg"].startswith("V") and c["text"] == "<"
+                ),
+                None,
+            )
             if prev_arrow is None:
                 print("     no prev-month arrow — stopping")
                 break
@@ -186,18 +202,21 @@ def harvest():
 
             # Persist running totals
             Path(NEW_MANIFEST).write_text(
-                json.dumps({
-                    "harvested_at_unix": int(time.time()),
-                    "month_iterations": month_iter + 1,
-                    "total_new_ids": len(harvested),
-                    "ids": harvested,
-                }, indent=2),
+                json.dumps(
+                    {
+                        "harvested_at_unix": int(time.time()),
+                        "month_iterations": month_iter + 1,
+                        "total_new_ids": len(harvested),
+                        "ids": harvested,
+                    },
+                    indent=2,
+                ),
                 encoding="utf-8",
             )
 
         browser.close()
 
-    print(f"\n=== DONE ===")
+    print("\n=== DONE ===")
     print(f"  new unique IDs harvested: {len(harvested)}")
     print(f"  already in main manifest: {len(set(harvested.keys()) & existing)}")
     print(f"  truly new (not in main):  {len(set(harvested.keys()) - existing)}")

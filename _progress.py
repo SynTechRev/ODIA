@@ -22,7 +22,9 @@ for (e, s), c in sorted(ext_status.items()):
 completed = [m for m in data.values() if m.get("status") == "completed"]
 total_findings = sum(m.get("findings", 0) for m in completed)
 total_bytes = sum(m.get("bytes", 0) for m in completed)
-print(f"\ncompleted: {len(completed)}  findings={total_findings}  bytes={total_bytes:,}")
+print(
+    f"\ncompleted: {len(completed)}  findings={total_findings}  bytes={total_bytes:,}"
+)
 
 print("\ndocs WITH findings:")
 for did, m in data.items():

@@ -1,5 +1,7 @@
 """Test File.ashx?id=N direct download + figure out pagination."""
+
 import re
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -12,7 +14,9 @@ sess = requests.Session(impersonate=UA)
 for doc_id in [2824, 2913, 2952]:
     url = f"{BASE}File.ashx?id={doc_id}&v=1"
     r = sess.get(url, timeout=30, allow_redirects=True)
-    print(f"  File.ashx?id={doc_id}: status={r.status_code} bytes={len(r.content):>8} content-type={r.headers.get('content-type', '')[:50]}")
+    print(
+        f"  File.ashx?id={doc_id}: status={r.status_code} bytes={len(r.content):>8} content-type={r.headers.get('content-type', '')[:50]}"
+    )
     # Show content-disposition (gives us filename + extension)
     cd = r.headers.get("content-disposition", "")
     if cd:
@@ -43,7 +47,9 @@ print(f"  range: {min(ids)} .. {max(ids)}")
 print(f"  full list: {ids}")
 
 # 4. Total result count text
-for m in re.finditer(r"(\d{1,5})\s+(?:items|results|matches|records|found)", text, re.I):
+for m in re.finditer(
+    r"(\d{1,5})\s+(?:items|results|matches|records|found)", text, re.I
+):
     print(f"\n  result count text: '{m.group()}'")
     break
 for m in re.finditer(r"Page\s+\d+\s+of\s+\d+|of\s+\d+\s+items", text, re.I):

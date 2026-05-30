@@ -11,9 +11,9 @@ Post-consolidation:
 Touches three tables: documents, analyses, anomalies. Wrapped in a
 single transaction so the rename is atomic.
 """
-import sys
 
-from oraculus_di_auditor.db.session import init_db, get_db
+
+from oraculus_di_auditor.db.session import get_db, init_db
 
 init_db()
 
@@ -26,8 +26,10 @@ with get_db() as session:
     # Show pre-state
     print("=== pre-state ===")
     rows = session.execute(
-        text("SELECT jurisdiction, COUNT(*) FROM documents GROUP BY jurisdiction "
-             "ORDER BY 2 DESC")
+        text(
+            "SELECT jurisdiction, COUNT(*) FROM documents GROUP BY jurisdiction "
+            "ORDER BY 2 DESC"
+        )
     ).all()
     for j, c in rows:
         print(f"  {j!s:<20}  {c} docs")
@@ -37,7 +39,7 @@ with get_db() as session:
     # Actually the safest path is to introspect: try both column names per table.
     table_columns = [
         ("documents", "jurisdiction"),
-        ("analyses",  "jurisdiction"),
+        ("analyses", "jurisdiction"),
         ("anomalies", "jurisdiction"),
         ("seen_hashes", "jurisdiction_id"),
         ("mesh_execution_jobs", None),  # no jurisdiction column
@@ -64,15 +66,19 @@ with get_db() as session:
                 {"canon": CANONICAL, "alias": alias},
             )
             if r.rowcount:
-                print(f"  {table}.{col}: {alias!r} -> {CANONICAL!r}  ({r.rowcount} rows)")
+                print(
+                    f"  {table}.{col}: {alias!r} -> {CANONICAL!r}  ({r.rowcount} rows)"
+                )
 
     session.commit()
 
     # Post-state
     print("\n=== post-state ===")
     rows = session.execute(
-        text("SELECT jurisdiction, COUNT(*) FROM documents GROUP BY jurisdiction "
-             "ORDER BY 2 DESC")
+        text(
+            "SELECT jurisdiction, COUNT(*) FROM documents GROUP BY jurisdiction "
+            "ORDER BY 2 DESC"
+        )
     ).all()
     for j, c in rows:
         print(f"  {j!s:<20}  {c} docs")

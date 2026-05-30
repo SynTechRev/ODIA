@@ -1,5 +1,7 @@
 """Inspect Questys ?q=agenda result grid: row structure + download URL pattern."""
+
 import re
+
 from bs4 import BeautifulSoup
 
 text = open("_questys_q_agenda.html", encoding="utf-8").read()
@@ -18,12 +20,12 @@ print(f"grid rows: {len(rows)}")
 
 # Header row
 hdr = rows[0]
-print(f"\n=== header ===")
+print("\n=== header ===")
 for th in hdr.find_all(["th", "td"]):
     print(f"  [{th.get_text(' ', strip=True)[:60]}]")
 
 # First few data rows — print all cells + links
-print(f"\n=== first 3 data rows ===")
+print("\n=== first 3 data rows ===")
 for i, row in enumerate(rows[1:4], 1):
     print(f"\n--- row {i} ---")
     cells = row.find_all(["td", "th"])
@@ -35,10 +37,12 @@ for i, row in enumerate(rows[1:4], 1):
         for img in c.find_all("img", src=True):
             print(f"    img:  {img.get('src')[:80]}  alt={img.get('alt')}")
         for inp in c.find_all("input"):
-            print(f"    input: type={inp.get('type')} name={inp.get('name')} value={inp.get('value')}")
+            print(
+                f"    input: type={inp.get('type')} name={inp.get('name')} value={inp.get('value')}"
+            )
 
 # Look for the pagination / "X of Y results" text
-print(f"\n=== pagination hints ===")
+print("\n=== pagination hints ===")
 for kw in ["of", "Page", "results", "found"]:
     pat = re.compile(rf"\d+\s*{kw}\s*\d+|\d+\s+items", re.I)
     for m in pat.finditer(soup.get_text(" ", strip=True)):
@@ -46,13 +50,13 @@ for kw in ["of", "Page", "results", "found"]:
         break
 
 # Find all hrefs in the grid that look like detail/download
-print(f"\n=== all unique hrefs in grid (first 20) ===")
+print("\n=== all unique hrefs in grid (first 20) ===")
 hrefs = sorted({a.get("href", "") for a in grid.select("a[href]") if a.get("href")})
 for h in hrefs[:20]:
     print(f"  {h[:120]}")
 
 # Also any JS function call patterns we should mimic
-print(f"\n=== onclick/href javascript patterns ===")
+print("\n=== onclick/href javascript patterns ===")
 for a in grid.select("a[onclick], a[href^='javascript']")[:10]:
     js = a.get("onclick") or a.get("href")
     print(f"  {a.get_text(strip=True)[:30]:<30} -> {js[:100]}")

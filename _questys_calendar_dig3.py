@@ -1,5 +1,7 @@
 """Inspect listMeetings panel after date postback to find meeting click targets."""
+
 import re
+
 from playwright.sync_api import sync_playwright
 
 BASE = "https://publicdocs.co.tulare.ca.us/questys.cmx.webclient/"
@@ -21,15 +23,21 @@ with sync_playwright() as pw:
     # Jan 14 2025 = 9145 (Tuesday)
     # Oct 1 2024 = 9040 (Tuesday)
 
-    for day_id, label in [(9628, "May 12 2026"), (9145, "Jan 14 2025"), (9040, "Oct 1 2024")]:
+    for day_id, label in [
+        (9628, "May 12 2026"),
+        (9145, "Jan 14 2025"),
+        (9040, "Oct 1 2024"),
+    ]:
         print(f"\n========== POSTBACK for {label} (day_id={day_id}) ==========")
-        page.evaluate(f"__doPostBack('ctl00$DefaultContent$agendaCalendar', '{day_id}')")
+        page.evaluate(
+            f"__doPostBack('ctl00$DefaultContent$agendaCalendar', '{day_id}')"
+        )
         page.wait_for_timeout(6000)
 
         # Inspect the listMeetings panel
         panel_el = page.locator("#ctl00_DefaultContent_listMeetings")
         if panel_el.count() == 0:
-            print(f"  no listMeetings panel found")
+            print("  no listMeetings panel found")
             continue
         panel_html = panel_el.inner_html()
         print(f"  listMeetings inner_html len: {len(panel_html)}")
@@ -43,7 +51,9 @@ with sync_playwright() as pw:
             print(f"    {h[:160]}")
 
         # Extract __doPostBack targets
-        post_pat = re.compile(r"__doPostBack\(['\"]([^'\"]+)['\"],\s*['\"]([^'\"]*)['\"]\)")
+        post_pat = re.compile(
+            r"__doPostBack\(['\"]([^'\"]+)['\"],\s*['\"]([^'\"]*)['\"]\)"
+        )
         posts = post_pat.findall(panel_html)
         print(f"  __doPostBack calls in panel: {len(posts)}")
         for tgt, arg in posts[:5]:

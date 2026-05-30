@@ -1,4 +1,5 @@
 """Deep-probe the BOS meetings page for attached agenda/packet/minutes PDFs."""
+
 import json
 import re
 from collections import Counter
@@ -22,12 +23,14 @@ all_hrefs = re.findall(r"""href=["']([^"']+)["']""", r.text)
 print(f"  total hrefs on page: {len(all_hrefs)}")
 
 # Resolve to absolute + dedupe
-absolute = sorted({urljoin(MEETINGS, h) for h in all_hrefs if h.strip() and not h.startswith("#")})
+absolute = sorted(
+    {urljoin(MEETINGS, h) for h in all_hrefs if h.strip() and not h.startswith("#")}
+)
 print(f"  unique absolute hrefs: {len(absolute)}")
 
 # Bucket by host
 host_counts = Counter(urlparse(u).netloc for u in absolute)
-print(f"\n  hosts (top 8):")
+print("\n  hosts (top 8):")
 for host, count in host_counts.most_common(8):
     print(f"    {count:>4}  {host}")
 
@@ -53,11 +56,15 @@ for s in iframe_srcs[:5]:
 
 # Persist findings
 with open("_bos_meetings_links.json", "w", encoding="utf-8") as f:
-    json.dump({
-        "source": MEETINGS,
-        "doc_hrefs": doc_hrefs,
-        "keyword_hrefs": keyword_hrefs,
-        "iframes": iframe_srcs,
-        "hosts": dict(host_counts.most_common(15)),
-    }, f, indent=2)
-print(f"\n  saved _bos_meetings_links.json")
+    json.dump(
+        {
+            "source": MEETINGS,
+            "doc_hrefs": doc_hrefs,
+            "keyword_hrefs": keyword_hrefs,
+            "iframes": iframe_srcs,
+            "hosts": dict(host_counts.most_common(15)),
+        },
+        f,
+        indent=2,
+    )
+print("\n  saved _bos_meetings_links.json")

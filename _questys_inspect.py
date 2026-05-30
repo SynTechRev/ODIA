@@ -1,5 +1,6 @@
 """Inspect Questys search button + ScriptManager / LongPolling.js to understand
 the real submit mechanism (direct postback vs async polling vs RadAjax)."""
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -19,8 +20,17 @@ for s in soup.find_all("input", {"type": ["submit", "button"]}):
 
 # 2. Telerik / RadAjax / UpdatePanel hints
 print("\n=== framework hints ===")
-for hint in ["ScriptManager", "RadAjaxManager", "UpdatePanel", "RadAjax", "Telerik",
-             "WebForm_DoPostBackWithOptions", "__doPostBack", "ASPx", "PageMethods"]:
+for hint in [
+    "ScriptManager",
+    "RadAjaxManager",
+    "UpdatePanel",
+    "RadAjax",
+    "Telerik",
+    "WebForm_DoPostBackWithOptions",
+    "__doPostBack",
+    "ASPx",
+    "PageMethods",
+]:
     if hint in text:
         print(f"  contains {hint!r}")
 

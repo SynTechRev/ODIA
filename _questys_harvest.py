@@ -11,10 +11,12 @@ Output: _questys_harvested_ids.json with deduped File.ashx IDs +
 
 Run-time: ~5-10 minutes (one Questys round-trip per query, 50+ queries).
 """
+
 import json
 import re
 import time
 from pathlib import Path
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -29,25 +31,91 @@ SEARCH = BASE + "Search/Default.aspx"
 # best high-coverage strategy.
 QUERIES = [
     # Document-type keywords
-    "agenda", "minute", "minutes", "resolution", "ordinance", "appendix",
-    "staff", "report", "memo", "memorandum", "summary", "packet",
-    "presentation", "exhibit", "attachment", "exhibit a", "exhibit b",
-    "contract", "agreement", "amendment", "addendum", "extension",
-    "RFP", "RFQ", "bid", "proposal", "award", "purchase",
-    "appointment", "appointing", "appoint",
-    "allocation", "appropriation", "budget", "fiscal", "expenditure",
-    "hearing", "notice", "public hearing", "PSA",
-    "approval", "approve", "consent", "action",
+    "agenda",
+    "minute",
+    "minutes",
+    "resolution",
+    "ordinance",
+    "appendix",
+    "staff",
+    "report",
+    "memo",
+    "memorandum",
+    "summary",
+    "packet",
+    "presentation",
+    "exhibit",
+    "attachment",
+    "exhibit a",
+    "exhibit b",
+    "contract",
+    "agreement",
+    "amendment",
+    "addendum",
+    "extension",
+    "RFP",
+    "RFQ",
+    "bid",
+    "proposal",
+    "award",
+    "purchase",
+    "appointment",
+    "appointing",
+    "appoint",
+    "allocation",
+    "appropriation",
+    "budget",
+    "fiscal",
+    "expenditure",
+    "hearing",
+    "notice",
+    "public hearing",
+    "PSA",
+    "approval",
+    "approve",
+    "consent",
+    "action",
     # Body-of-government keywords (BOS-specific)
-    "board", "supervisor", "supervisors", "BOS",
+    "board",
+    "supervisor",
+    "supervisors",
+    "BOS",
     # Year-anchored (catches dated filenames like "AGENDA 14 MAR 2006")
-    "2025", "2024", "2023", "2022", "2021", "2020",
-    "2019", "2018", "2017", "2016", "2015",
-    "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006",
+    "2025",
+    "2024",
+    "2023",
+    "2022",
+    "2021",
+    "2020",
+    "2019",
+    "2018",
+    "2017",
+    "2016",
+    "2015",
+    "2014",
+    "2013",
+    "2012",
+    "2011",
+    "2010",
+    "2009",
+    "2008",
+    "2007",
+    "2006",
     # Department / function (catches non-BOS but accountability-relevant)
-    "sheriff", "fire", "health", "housing", "planning", "transit",
-    "grant", "settlement", "litigation", "lawsuit",
-    "personnel", "salary", "pension", "benefit",
+    "sheriff",
+    "fire",
+    "health",
+    "housing",
+    "planning",
+    "transit",
+    "grant",
+    "settlement",
+    "litigation",
+    "lawsuit",
+    "personnel",
+    "salary",
+    "pension",
+    "benefit",
 ]
 
 
@@ -66,7 +134,9 @@ def harvest():
 
             # File.ashx IDs always appear in iframe-preview hrefs:
             #   javascript:ShowIframeModal("../File.ashx?id=N&v=V&isSearch=true", ...)
-            ids = sorted(set(int(m) for m in re.findall(r"File\.ashx\?id=(\d+)", r.text)))
+            ids = sorted(
+                set(int(m) for m in re.findall(r"File\.ashx\?id=(\d+)", r.text))
+            )
 
             # Try to also pair each ID with its filename from the result grid.
             # Each result row's cell[5] holds the filename.
@@ -97,8 +167,11 @@ def harvest():
                 if did not in catalog:
                     catalog[did] = {
                         "filename": grid_ids_with_fnames.get(did, ""),
-                        "ext": (grid_ids_with_fnames.get(did, "").rsplit(".", 1)[-1].lower()
-                                if "." in grid_ids_with_fnames.get(did, "") else ""),
+                        "ext": (
+                            grid_ids_with_fnames.get(did, "").rsplit(".", 1)[-1].lower()
+                            if "." in grid_ids_with_fnames.get(did, "")
+                            else ""
+                        ),
                         "found_via": [q],
                     }
                     new_ids += 1
@@ -112,8 +185,10 @@ def harvest():
                         if "." in fn:
                             catalog[did]["ext"] = fn.rsplit(".", 1)[-1].lower()
 
-            print(f"  [{i+1:>2}/{len(QUERIES)}] q={q!r:<22} returned {len(ids):>3} hits "
-                  f"(count={count!s:<4}) — {new_ids} new ({len(catalog)} total)")
+            print(
+                f"  [{i+1:>2}/{len(QUERIES)}] q={q!r:<22} returned {len(ids):>3} hits "
+                f"(count={count!s:<4}) — {new_ids} new ({len(catalog)} total)"
+            )
         except Exception as exc:
             print(f"  [{i+1:>2}/{len(QUERIES)}] q={q!r} FAILED: {exc}")
         # Be polite — small pause between queries
@@ -137,10 +212,11 @@ if __name__ == "__main__":
 
     # Summary by extension
     from collections import Counter
+
     ext_dist = Counter(meta["ext"] or "(unknown)" for meta in catalog.values())
-    print(f"\n=== summary ===")
+    print("\n=== summary ===")
     print(f"  unique IDs: {len(catalog)}")
-    print(f"  extension distribution:")
+    print("  extension distribution:")
     for ext, c in ext_dist.most_common(10):
         print(f"    {ext:<12} {c}")
-    print(f"\n  saved to _questys_harvested_ids.json")
+    print("\n  saved to _questys_harvested_ids.json")

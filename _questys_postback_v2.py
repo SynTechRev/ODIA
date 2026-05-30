@@ -1,6 +1,8 @@
 """Iteratively post calendar __doPostBack; re-fetch fresh ViewState each time."""
+
 import re
-from datetime import date, timedelta
+from datetime import date
+
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
@@ -36,16 +38,21 @@ def click_calendar(sess, vs, vsg, day_id):
         "__VIEWSTATEGENERATOR": vsg,
         "__LASTFOCUS": "",
     }
-    return sess.post(AGENDA, data=post_data, headers={
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Referer": AGENDA,
-    }, timeout=60)
+    return sess.post(
+        AGENDA,
+        data=post_data,
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Referer": AGENDA,
+        },
+        timeout=60,
+    )
 
 
 # Test 4 recent Tuesdays + last Tuesday of April
 test_days = [
     date(2026, 5, 12),  # 9628
-    date(2026, 5, 5),   # 9621
+    date(2026, 5, 5),  # 9621
     date(2026, 4, 28),  # 9614
     date(2026, 4, 21),  # 9607
     date(2025, 12, 16),  # arbitrary mid-archive
@@ -60,7 +67,7 @@ for d in test_days:
 
     if len(rp.content) < 5000:
         # probably error page
-        print(f"   tiny response — likely server error. First 400 chars:")
+        print("   tiny response — likely server error. First 400 chars:")
         print(f"   {rp.text[:400]}")
         continue
 
@@ -68,13 +75,19 @@ for d in test_days:
     soup = BeautifulSoup(rp.text, "html.parser")
     ifr = soup.find("iframe", id="ctl00_DefaultContent_Files_ifrmFiles")
     print(f"   iframe src: {ifr.get('src') if ifr else '(none)'}")
-    print(f"   File.ashx IDs: {sorted(set(re.findall(r'File.ashx.id=(.d+)', rp.text)))[:10]}")
+    print(
+        f"   File.ashx IDs: {sorted(set(re.findall(r'File.ashx.id=(.d+)', rp.text)))[:10]}"
+    )
 
     # Look for the file panel content
-    fp = soup.find("div", id="ctl00_DefaultContent_Files_pnlFiles") or soup.find(id=re.compile(r"Files|Meeting|Record"))
+    fp = soup.find("div", id="ctl00_DefaultContent_Files_pnlFiles") or soup.find(
+        id=re.compile(r"Files|Meeting|Record")
+    )
     if fp:
-        print(f"   files panel: id={fp.get('id')} class={fp.get('class')} text_len={len(fp.get_text(strip=True))}")
-        sample = fp.get_text(' ', strip=True)[:300]
+        print(
+            f"   files panel: id={fp.get('id')} class={fp.get('class')} text_len={len(fp.get_text(strip=True))}"
+        )
+        sample = fp.get_text(" ", strip=True)[:300]
         if sample:
             print(f"     content sample: {sample!r}")
 

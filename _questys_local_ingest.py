@@ -13,6 +13,7 @@ v2:
   60-sec backoff up to 3 attempts.
 - Hard reject login-page HTML responses by content sniff.
 """
+
 import hashlib
 import json
 import sys
@@ -57,9 +58,15 @@ def is_login_page(content_type: str, body: bytes) -> bool:
     if len(body) > LOGIN_PAGE_MAX_BYTES:
         return False
     head = body[:8000].lower()
-    return any(m in head for m in (
-        b"login.aspx", b"<title>login", b"questys solutions", b"sign in",
-    ))
+    return any(
+        m in head
+        for m in (
+            b"login.aspx",
+            b"<title>login",
+            b"questys solutions",
+            b"sign in",
+        )
+    )
 
 
 def looks_like_real_file(content_type: str, body: bytes) -> bool:
@@ -90,10 +97,15 @@ def fetch_with_retry(sess, url, ext_hint=""):
         if looks_like_real_file(ct, r.content):
             return r, "ok"
         # Suspicious tiny response — back off and retry
-        print(f"    retry {attempt+1}/{MAX_RETRIES}: got {len(r.content)}B "
-              f"ct={ct} — sleeping {RETRY_BACKOFF_SEC}s")
+        print(
+            f"    retry {attempt+1}/{MAX_RETRIES}: got {len(r.content)}B "
+            f"ct={ct} — sleeping {RETRY_BACKOFF_SEC}s"
+        )
         time.sleep(RETRY_BACKOFF_SEC)
-    return last_resp, f"persistent_tiny_response ({len(last_resp.content) if last_resp else 0}B)"
+    return (
+        last_resp,
+        f"persistent_tiny_response ({len(last_resp.content) if last_resp else 0}B)",
+    )
 
 
 def load_manifest():
@@ -121,7 +133,11 @@ def main():
     todo = []
     for did, meta in manifest.items():
         prev = log.get(did)
-        if prev and prev.get("status") == "completed" and prev.get("bytes", 0) > MIN_REAL_FILE_BYTES:
+        if (
+            prev
+            and prev.get("status") == "completed"
+            and prev.get("bytes", 0) > MIN_REAL_FILE_BYTES
+        ):
             continue
         ext = "." + (meta.get("ext") or "").lower()
         if ext not in EXT_FILTER:
@@ -129,14 +145,18 @@ def main():
         todo.append((did, meta))
 
     print(f"manifest: {len(manifest)} IDs  |  resume log: {len(log)} entries")
-    print(f"to ingest: {len(todo)} (skipped {len(log) - sum(1 for d, _ in todo if d in log)} truly-done)")
+    print(
+        f"to ingest: {len(todo)} (skipped {len(log) - sum(1 for d, _ in todo if d in log)} truly-done)"
+    )
 
     if not todo:
         return
 
     sess = requests.Session(impersonate=UA)
     r = sess.get(QUESTYS_BASE + "Search/Default.aspx", timeout=30)
-    print(f"session warmup: {r.status_code} ({len(r.content)}B)  cookies: {len(sess.cookies)}")
+    print(
+        f"session warmup: {r.status_code} ({len(r.content)}B)  cookies: {len(sess.cookies)}"
+    )
 
     start = time.time()
     completed = 0
@@ -160,23 +180,37 @@ def main():
         if status != "ok":
             if status == "login_page":
                 rejected_login += 1
-                log[did] = {"status": "rejected_login_page",
-                            "bytes": len(r.content) if r else 0,
-                            "filename": fn, "ext": ext}
+                log[did] = {
+                    "status": "rejected_login_page",
+                    "bytes": len(r.content) if r else 0,
+                    "filename": fn,
+                    "ext": ext,
+                }
             else:
                 download_failed += 1
-                log[did] = {"status": "download_failed", "reason": status,
-                            "bytes": len(r.content) if r else 0,
-                            "filename": fn, "ext": ext}
+                log[did] = {
+                    "status": "download_failed",
+                    "reason": status,
+                    "bytes": len(r.content) if r else 0,
+                    "filename": fn,
+                    "ext": ext,
+                }
             print(f"  [{i:>3}/{len(todo)}] id={did} fn={fn[:50]:<50}  FAIL: {status}")
             save_log(log)
             continue
 
         sha256 = hashlib.sha256(r.content).hexdigest()
         if _dedup_check(sha256):
-            log[did] = {"status": "already_seen", "sha256": sha256,
-                        "filename": fn, "ext": ext, "bytes": len(r.content)}
-            print(f"  [{i:>3}/{len(todo)}] id={did} fn={fn[:50]:<50}  dedup ({len(r.content)}B)")
+            log[did] = {
+                "status": "already_seen",
+                "sha256": sha256,
+                "filename": fn,
+                "ext": ext,
+                "bytes": len(r.content),
+            }
+            print(
+                f"  [{i:>3}/{len(todo)}] id={did} fn={fn[:50]:<50}  dedup ({len(r.content)}B)"
+            )
             continue
 
         try:
@@ -184,17 +218,27 @@ def main():
                 file_bytes=r.content, filename=fn, jurisdiction_id=JURISDICTION
             )
         except Exception as exc:
-            log[did] = {"status": "pipeline_failed", "error": str(exc)[:200],
-                        "bytes": len(r.content), "filename": fn, "ext": ext}
-            print(f"  [{i:>3}/{len(todo)}] id={did} fn={fn[:50]:<50}  PIPELINE ERR: {exc}")
+            log[did] = {
+                "status": "pipeline_failed",
+                "error": str(exc)[:200],
+                "bytes": len(r.content),
+                "filename": fn,
+                "ext": ext,
+            }
+            print(
+                f"  [{i:>3}/{len(todo)}] id={did} fn={fn[:50]:<50}  PIPELINE ERR: {exc}"
+            )
             save_log(log)
             continue
 
         try:
             doc_id = (result.get("document") or {}).get("document_id")
-            _record_seen_hash(sha256=sha256, document_id=doc_id, jurisdiction_id=JURISDICTION)
-            _persist_tier1_result(sha256=sha256, filename=fn,
-                                  jurisdiction_id=JURISDICTION, result=result)
+            _record_seen_hash(
+                sha256=sha256, document_id=doc_id, jurisdiction_id=JURISDICTION
+            )
+            _persist_tier1_result(
+                sha256=sha256, filename=fn, jurisdiction_id=JURISDICTION, result=result
+            )
         except Exception as exc:
             print(f"  [{i:>3}/{len(todo)}] id={did}  persist warn: {exc}")
 
@@ -203,12 +247,18 @@ def main():
         completed += 1
         findings_total += findings_count
         log[did] = {
-            "status": "completed", "sha256": sha256, "filename": fn,
-            "ext": ext, "bytes": len(r.content),
-            "findings": findings_count, "score": score,
+            "status": "completed",
+            "sha256": sha256,
+            "filename": fn,
+            "ext": ext,
+            "bytes": len(r.content),
+            "findings": findings_count,
+            "score": score,
         }
-        print(f"  [{i:>3}/{len(todo)}] id={did} fn={fn[:50]:<50}  "
-              f"OK {len(r.content):>9}B findings={findings_count} score={score:.3f}")
+        print(
+            f"  [{i:>3}/{len(todo)}] id={did} fn={fn[:50]:<50}  "
+            f"OK {len(r.content):>9}B findings={findings_count} score={score:.3f}"
+        )
 
         if i % 5 == 0:
             save_log(log)
