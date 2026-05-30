@@ -26,25 +26,24 @@ def client():
 def test_rag_query_returns_response(client):
     resp = client.post(
         "/api/v1/rag/query",
-        json={"question": "What anomalies were found?", "top_k": 3},
+        json={"query": "What anomalies were found?", "top_k": 3},
     )
     assert resp.status_code == 200
     body = resp.json()
     assert "answer" in body
     assert "sources" in body
-    assert "query" in body
-    assert body["query"] == "What anomalies were found?"
+    assert "confidence" in body
 
 
-# -- test: POST /api/v1/rag/query with source_filter -------------------------
+# -- test: POST /api/v1/rag/query with corpus_filter -------------------------
 
 
-def test_rag_query_with_source_filter(client):
+def test_rag_query_with_corpus_filter(client):
     resp = client.post(
         "/api/v1/rag/query",
         json={
-            "question": "budget allocation",
-            "source_filter": "documents",
+            "query": "budget allocation",
+            "corpus_filter": ["documents"],
         },
     )
     assert resp.status_code == 200
