@@ -1,4 +1,4 @@
-"""Tests for RAG API routes (POST /rag/query, GET /rag/status)."""
+"""Tests for RAG API routes (POST /api/v1/rag/query, GET /api/v1/rag/status)."""
 
 import pytest
 
@@ -20,12 +20,12 @@ def client():
     return TestClient(app)
 
 
-# -- test: POST /rag/query returns valid response ----------------------------
+# -- test: POST /api/v1/rag/query returns valid response ---------------------
 
 
 def test_rag_query_returns_response(client):
     resp = client.post(
-        "/rag/query",
+        "/api/v1/rag/query",
         json={"question": "What anomalies were found?", "top_k": 3},
     )
     assert resp.status_code == 200
@@ -36,12 +36,12 @@ def test_rag_query_returns_response(client):
     assert body["query"] == "What anomalies were found?"
 
 
-# -- test: POST /rag/query with source_filter --------------------------------
+# -- test: POST /api/v1/rag/query with source_filter -------------------------
 
 
 def test_rag_query_with_source_filter(client):
     resp = client.post(
-        "/rag/query",
+        "/api/v1/rag/query",
         json={
             "question": "budget allocation",
             "source_filter": "documents",
@@ -52,11 +52,11 @@ def test_rag_query_with_source_filter(client):
     assert "answer" in body
 
 
-# -- test: GET /rag/status returns status ------------------------------------
+# -- test: GET /api/v1/rag/status returns status -----------------------------
 
 
 def test_rag_status(client):
-    resp = client.get("/rag/status")
+    resp = client.get("/api/v1/rag/status")
     assert resp.status_code == 200
     body = resp.json()
     assert "indexed" in body
