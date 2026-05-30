@@ -230,6 +230,12 @@ export class APIClient {
     return data;
   }
 
+  /** POST any trigger endpoint — used by Synthesis page RAIA button. */
+  async postTrigger<T = unknown>(path: string, params?: Record<string, unknown>): Promise<T> {
+    const { data } = await this.http.post<T>(path, null, { params });
+    return data;
+  }
+
   /** GET /api/v1/audit/history — lightweight summaries for history list. */
   async getAuditHistory(page = 1, perPage = 500): Promise<AuditHistoryResponse> {
     const { data } = await this.http.get<AuditHistoryResponse>(

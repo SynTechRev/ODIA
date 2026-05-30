@@ -276,7 +276,7 @@ function ResultsPageInner() {
       if (response.results) {
         setResults(response.results);
         setError(null);
-        addAuditFromResults(jobId, response.results as Record<string, unknown>);
+        addAuditFromResults(jobId, response.results as unknown as Record<string, unknown>);
       } else {
         setError(`Job is not complete yet (status: ${response.status}). Please wait and refresh.`);
       }
@@ -304,7 +304,7 @@ function ResultsPageInner() {
     // Pull completed audit jobs from DB into local store.
     client
       .getAuditHistory(1, 500)
-      .then((r) => mergeFromBackend(r.items ?? []))
+      .then((r) => mergeFromBackend((r.items ?? []).map((item) => ({ ...item, saved_at: Date.now() }))))
       .catch(() => { /* backend offline */ });
     // Pipeline ingestion banner.
     client

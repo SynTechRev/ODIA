@@ -280,7 +280,7 @@ export default function UploadPage() {
   const auditEntries = useAuditHistoryStore((s) => s.entries);
   const priorAuditCount = auditEntries.length;
   const priorFindingCount = auditEntries.reduce(
-    (acc, e) => acc + (e.results?.finding_count ?? 0),
+    (acc, e) => acc + (e.finding_count ?? 0),
     0,
   );
 

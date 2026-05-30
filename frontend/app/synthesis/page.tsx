@@ -209,7 +209,7 @@ function SynthesisPageContent() {
                   setRaiaMarkdown(null);
                   setRaiaError(null);
                   try {
-                    const { data } = await client.http.post('/api/v1/triggers/raia-synthesize-all', null, { params: { render_markdown: true } });
+                    const data = await client.postTrigger<{ markdown?: string; result?: unknown }>('/api/v1/triggers/raia-synthesize-all', { render_markdown: true });
                     setRaiaMarkdown(data.markdown ?? JSON.stringify(data.result, null, 2));
                   } catch (e: unknown) {
                     const msg = e instanceof Error ? e.message : 'RAIA synthesis failed';
