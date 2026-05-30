@@ -212,6 +212,14 @@ export const ChevronRightIcon: React.FC<IconProps> = (p) => (
   </IconBase>
 );
 
+export const RAGIcon: React.FC<IconProps> = (p) => (
+  <IconBase {...p}>
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    <path d="M8 11 Q9.5 9 11 11 Q12.5 13 14 11" />
+  </IconBase>
+);
+
 export const MapPinIcon: React.FC<IconProps> = (p) => (
   <IconBase {...p}>
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />

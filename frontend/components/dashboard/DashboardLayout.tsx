@@ -20,6 +20,7 @@ import {
   DocumentsIcon,
   AnomaliesIcon,
   SynthesisIcon,
+  RAGIcon,
   OrchestratorIcon,
   AutomationIcon,
   SettingsIcon,
@@ -58,6 +59,7 @@ const sidebarNav: NavItem[] = [
   { name: 'Results',       href: '/results',       Icon: ResultsIcon,      group: 'Evidence' },
   { name: 'Anomalies',     href: '/anomalies',     Icon: AnomaliesIcon,    group: 'Evidence' },
   { name: 'Synthesis',     href: '/synthesis',     Icon: SynthesisIcon,    group: 'Evidence' },
+  { name: 'RAG Query',     href: '/rag',            Icon: RAGIcon,          group: 'Evidence' },
 
   { name: 'Orchestrator',  href: '/orchestrator',  Icon: OrchestratorIcon, group: 'System' },
   { name: 'Automation',    href: '/automation',    Icon: AutomationIcon,   group: 'System' },

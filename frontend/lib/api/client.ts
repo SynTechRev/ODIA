@@ -425,6 +425,31 @@ export class APIClient {
     return data;
   }
 
+  // -------------------------------------------------------------------------
+  // RAG — natural language querying (v3.5.0)
+  // -------------------------------------------------------------------------
+
+  /** GET /api/v1/rag/status — indexed counts + LLM availability. */
+  async ragStatus(): Promise<RAGStatusResponse> {
+    const { data } = await this.http.get<RAGStatusResponse>('/api/v1/rag/status');
+    return data;
+  }
+
+  /** POST /api/v1/rag/query — natural language question against audit corpus.
+   *  Uses a 300s timeout to accommodate cold Ollama model loads. */
+  async ragQuery(
+    question: string,
+    topK = 5,
+    sourceFilter: string | null = null,
+  ): Promise<RAGQueryResponse> {
+    const { data } = await this.http.post<RAGQueryResponse>(
+      '/api/v1/rag/query',
+      { question, top_k: topK, source_filter: sourceFilter },
+      { timeout: 300_000 },
+    );
+    return data;
+  }
+
   /** GET /api/v1/synthesis/aggregates — cross-document aggregates for Synthesis. */
   async getSynthesisAggregates(
     jurisdictions?: string[],
@@ -655,3 +680,35 @@ export function resetAPIClient(): void {
 
 /** Exported for tests. */
 export { resolveBaseURL };
+
+// ---------------------------------------------------------------------------
+// RAG types (v3.5.0)
+// ---------------------------------------------------------------------------
+
+export interface RAGSource {
+  id: string;
+  title: string;
+  text: string;
+  jurisdiction: string | null;
+  document_type?: string | null;
+  score?: number | null;
+  layer?: string | null;
+  issue?: string | null;
+  [key: string]: unknown;
+}
+
+export interface RAGQueryResponse {
+  answer: string;
+  sources: RAGSource[];
+  query: string;
+  model_used: string;
+  confidence: number | null;
+  tokens_used: number | null;
+}
+
+export interface RAGStatusResponse {
+  indexed: Record<string, number>;
+  llm_available: boolean;
+  llm_provider: string;
+  llm_model: string;
+}
