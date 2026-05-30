@@ -411,7 +411,6 @@ def _register_feature_routes(app: Any) -> None:  # noqa: C901
         logger.warning(f"Legal routes not available: {e}")
 
 
-
 def _init_database_at_startup() -> None:
     """Best-effort DB schema bootstrap at app start (v2.7.3 V1).
 
