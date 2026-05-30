@@ -1,5 +1,37 @@
 # Changelog
 
+## [3.5.0] - 2026-05-29 — Oraculus RAG on Ollama llama3.1:8b
+
+The first live RAG (Retrieval-Augmented Generation) release — natural language querying of the full indexed audit corpus via a local Ollama LLM. Operators can now ask cross-jurisdiction questions ("which jurisdictions have the most critical JAG violations?") and receive grounded, source-cited answers synthesised from 910 document entries, 601 anomaly findings, and 44 cross-jurisdiction patterns — all without any data leaving the local machine.
+
+### Added
+
+**`scripts/build_rag_index.py` — corpus indexer**
+- Builds three TF-IDF vector collections from the live `oraculus_audit.db`: `corpus` (one entry per document — title, jurisdiction, anomaly summary), `ace` (one entry per anomaly finding — issue, layer, severity, details), and `jim` (cross-jurisdiction pattern summaries ranked by occurrence count).
+- Saves each collection's vocabulary as `data/vectors/<name>_vocab.pkl` for independent loading by `LocalEmbedder`.
+- Run from the repo root: `python scripts/build_rag_index.py`
+
+**RAG API endpoints**
+- `POST /api/v1/rag/query` — natural language question returns a grounded answer, source citations, model used, and optional confidence/token counts. Degrades gracefully: if no LLM is configured the endpoint returns the retrieval context with `answer: ""` rather than 500.
+- `GET /api/v1/rag/status` — returns indexed document counts per collection, LLM availability, provider name, and model name.
+
+**Civic accountability RAG identity**
+- `rag_prompts.py` AUDIT and LEGAL prompt templates rewritten to establish Oraculus's civic accountability context, preventing LLM refusals on legitimate audit queries (JAG statute citations, procurement violation language, surveillance vendor findings).
+
+### Fixed
+
+- Ollama request timeout: 60s → 300s (`llm_providers.py`) — cold model loads for 8B+ parameter models routinely take 60–90s; the previous 60s ceiling caused spurious timeouts on first query after server start.
+- RAG context field names: `build_rag_index.py` metadata keys corrected to `text` and `id` (matching `ContextAssembler` field expectations) — previously the context passed to the LLM was an empty string because the assembler could not find the expected keys.
+- Four TypeScript errors breaking the Electron CI build:
+  - `results/page.tsx`: double-cast `AuditResults` through `unknown` for `addAuditFromResults`; add `saved_at` when merging backend history items.
+  - `upload/page.tsx`: `e.results?.finding_count` → `e.finding_count` (store v2 payload no longer carries the full `AuditResults` object).
+  - `synthesis/page.tsx`: replace `client.http.post()` (private) with new `client.postTrigger()` public method.
+  - `client.ts`: add `postTrigger<T>()` for calling trigger endpoints from UI components without accessing the private `http` instance.
+
+**Verified live**: queries return named findings across Dinuba, Porterville, Visalia, and Tulare County with correct document IDs.
+
+---
+
 ## [3.4.0] - 2026-05-29 — Jurisdiction tracking · DB-persisted audits · Inline RAIA · SynTechRev brand
 
 The operator experience release — closes the long-standing gap where upload-audited documents were invisible in the evidence library, adds jurisdiction tagging to every audit batch, puts RAIA synthesis one click away on the Synthesis page, and ships the SynTechRev octopus brand across all icon surfaces. Dinuba becomes the fifth live jurisdiction: 62 documents, 277 anomalies, 49 critical findings — the highest critical-anomaly-density corpus yet.
