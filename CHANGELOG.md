@@ -1,5 +1,32 @@
 # Changelog
 
+## [3.5.1] - 2026-05-30 — RAG Query UI + CI stability
+
+Operator-facing release that surfaces the v3.5.0 RAG backend through a dedicated sidebar page, and hardens CI to eliminate pre-commit cache-expiry failures.
+
+### Added
+
+**RAG Query page (`/rag`)**
+- New sidebar entry under Evidence: **RAG Query** — natural language queries against the full indexed audit corpus without leaving the app.
+- Live status bar showing indexed document, finding, and pattern counts plus LLM provider availability.
+- Query input with example question chips (JAG violations, surveillance procurement, fiscal anomalies, vendor patterns), top-k slider (1–20), and source filter (all / documents / findings / analysis).
+- Grounded answer panel with model name, token count, and confidence metadata.
+- Expandable source citation cards showing jurisdiction, detector layer, relevance score, and full retrieved text.
+- Graceful empty-index state with the `build_rag_index.py` command displayed inline.
+- LLM-offline fallback: retrieval context is shown even when Ollama is unavailable.
+- 300s per-request timeout on the API client to absorb Ollama cold model loads.
+
+### Fixed
+
+- `scripts/validate_cdsce_schema.py`: skip schema validation when `SEMIOTIC_CORPUS.json` is an empty stub, eliminating a spurious pre-commit failure on fresh clones.
+- `pyproject.toml` ruff `exclude`: add `_*.py` glob so root-level operator/diagnostic scripts are not linted, removing a pre-commit cache-expiry regression introduced in v3.5.0.
+- `triggers.py` E501: split 92/94-char message strings to satisfy ruff line-length limit.
+- `upload.py` F841: remove dead `severity_counts` assignment; bump `engine_version` `3.3.1` → `3.5.0`.
+- `.gitattributes` added to document and enforce LF line endings for all text files.
+- `data/vectors/*.npy` / `*.pkl` added to `.gitignore` — per-deployment runtime artifacts should not be version-controlled.
+
+---
+
 ## [3.5.0] - 2026-05-29 — Oraculus RAG on Ollama llama3.1:8b
 
 The first live RAG (Retrieval-Augmented Generation) release — natural language querying of the full indexed audit corpus via a local Ollama LLM. Operators can now ask cross-jurisdiction questions ("which jurisdictions have the most critical JAG violations?") and receive grounded, source-cited answers synthesised from 910 document entries, 601 anomaly findings, and 44 cross-jurisdiction patterns — all without any data leaving the local machine.
