@@ -461,45 +461,130 @@ def _load_jurisdiction_config_at_startup() -> Any:
         return None
 
 
+# Maps corpus_filter terms to (index_name, vocab_filename) pairs.
+# The index builder (scripts/build_rag_index.py) creates all three collections.
+_INDEX_MAP: dict[str, tuple[str, str]] = {
+    "documents": ("collection", "data/vectors/collection_vocab.pkl"),
+    "corpus": ("collection", "data/vectors/collection_vocab.pkl"),
+    "findings": ("ace_collection", "data/vectors/ace_collection_vocab.pkl"),
+    "ace": ("ace_collection", "data/vectors/ace_collection_vocab.pkl"),
+    "patterns": ("jim_collection", "data/vectors/jim_collection_vocab.pkl"),
+    "jim": ("jim_collection", "data/vectors/jim_collection_vocab.pkl"),
+}
+
+_ALL_INDICES: list[tuple[str, str]] = [
+    ("collection", "data/vectors/collection_vocab.pkl"),
+    ("ace_collection", "data/vectors/ace_collection_vocab.pkl"),
+    ("jim_collection", "data/vectors/jim_collection_vocab.pkl"),
+]
+
+# Module-level OracRAG cache keyed by index_name — avoids reloading TF-IDF
+# vocabulary and numpy arrays on every request.
+_rag_cache: dict[str, Any] = {}
+
+
+def _get_rag_instance(index_name: str, vocab_path: str) -> Any:
+    """Return a cached OracRAG instance for *index_name*, loading it on first use."""
+    if index_name not in _rag_cache:
+        from oraculus_di_auditor.rag import OracRAG
+
+        instance = OracRAG()
+        try:
+            instance.load_index(index_name=index_name, vocab_path=vocab_path)
+        except FileNotFoundError:
+            return None
+        _rag_cache[index_name] = instance
+    return _rag_cache[index_name]
+
+
+def _resolve_target_indices(
+    corpus_filter: list[str] | None,
+) -> list[tuple[str, str]]:
+    """Map corpus_filter values to (index_name, vocab_path) pairs.
+
+    Unknown filter terms are ignored. No filter → all three indices.
+    """
+    if not corpus_filter:
+        return _ALL_INDICES
+    seen: set[str] = set()
+    targets: list[tuple[str, str]] = []
+    for term in corpus_filter:
+        pair = _INDEX_MAP.get(term.lower())
+        if pair and pair[0] not in seen:
+            targets.append(pair)
+            seen.add(pair[0])
+    return targets or _ALL_INDICES
+
+
 def _execute_rag_query(
     request: RAGQueryRequest,
 ) -> RAGQueryResponse:
-    """Execute a RAG query, returning a populated response or an error response.
+    """Execute a RAG query across one or more vector indices.
 
-    Args:
-        request: RAG query request containing query text, top_k, and optional filter
-
-    Returns:
-        RAGQueryResponse with answer, sources, confidence, and optional error
+    corpus_filter routes the query to specific sub-indices:
+      "documents"/"corpus"  → collection (one entry per document)
+      "findings"/"ace"      → ace_collection (one entry per anomaly)
+      "patterns"/"jim"      → jim_collection (cross-jurisdiction patterns)
+    No filter → all three indices are queried and sources are merged.
     """
     _logger = logging.getLogger(__name__)
     try:
-        from oraculus_di_auditor.rag import OracRAG
+        targets = _resolve_target_indices(request.corpus_filter)
 
-        orac_rag = OracRAG()
-        # TODO: Cache loaded index in production (e.g., using functools.lru_cache
-        # or global singleton) to avoid reloading on every request
-        orac_rag.load_index(index_name="collection")
+        all_sources: list[dict] = []
+        primary_answer = ""
+        primary_confidence = 0.0
 
-        if request.corpus_filter:
-            result = orac_rag.query_with_filter(
-                question=request.query,
-                corpus_ids=request.corpus_filter,
-                top_k=request.top_k,
-            )
-        else:
-            result = orac_rag.query(
+        for index_name, vocab_path in targets:
+            rag = _get_rag_instance(index_name, vocab_path)
+            if rag is None:
+                _logger.debug("Index '%s' not built yet — skipping", index_name)
+                continue
+
+            result = rag.query(
                 question=request.query,
                 top_k=request.top_k,
                 include_sources=True,
             )
 
+            sources = result.get("sources", [])
+            for src in sources:
+                src.setdefault("index", index_name)
+            all_sources.extend(sources)
+
+            conf = result.get("confidence") or 0.0
+            if conf > primary_confidence:
+                primary_confidence = conf
+                primary_answer = result.get("answer", "")
+
+        if not all_sources and not primary_answer:
+            return RAGQueryResponse(
+                answer="No indexed data found. Run scripts/build_rag_index.py first.",
+                sources=[],
+                confidence=0.0,
+            )
+
+        # Deduplicate and sort sources by score descending
+        seen_ids: set[str] = set()
+        merged: list[dict] = []
+        for src in sorted(all_sources, key=lambda s: s.get("score", 0), reverse=True):
+            sid = src.get("id") or src.get("source_id") or str(src)
+            if sid not in seen_ids:
+                seen_ids.add(sid)
+                merged.append(src)
+        merged = merged[: request.top_k]
+
         _logger.debug(
-            "RAG query complete: confidence=%.2f, sources=%d",
-            result.get("confidence", 0),
-            len(result.get("sources", [])),
+            "RAG query complete: indices=%s confidence=%.2f sources=%d",
+            [t[0] for t in targets],
+            primary_confidence,
+            len(merged),
         )
-        return RAGQueryResponse(**result)
+        return RAGQueryResponse(
+            answer=primary_answer,
+            sources=merged,
+            confidence=round(primary_confidence, 3),
+        )
 
     except ImportError as e:
         _logger.error("RAG not available: %s", e)
