@@ -12,7 +12,6 @@ Touches three tables: documents, analyses, anomalies. Wrapped in a
 single transaction so the rename is atomic.
 """
 
-
 from oraculus_di_auditor.db.session import get_db, init_db
 
 init_db()
