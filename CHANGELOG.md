@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.5.3] - 2026-05-30 — RAG white-screen fix + backend compatibility
+
+### Fixed
+
+**White screen on navigation (root cause found):**
+The `Suspense` wrapper added in v3.5.2 is only required by Next.js when a page uses `useSearchParams()`. The RAG page does not; wrapping it anyway caused React to engage suspension-state machinery during static-export page transitions that unmounted the entire app tree. Removed `Suspense` entirely from the RAG page — consistent with every other page that doesn't call `useSearchParams()`.
+
+**Request field mismatch (422 on every query):**
+`api.py`'s `RAGQueryRequest` model uses field `query`, not `question`. Client now sends both `query` and `question` so the request is accepted by any bundled backend version (Pydantic ignores the extra field).
+
+**Status endpoint compatibility:**
+`GET /api/v1/rag/status` does not exist in bundled backends built before v3.5.2. Client now falls back to `GET /rag/status` (the path registered by `register_rag_routes` in earlier builds) if the primary path returns an error.
+
+**Response type alignment:**
+`api.py` returns `{ answer, sources, confidence, error }` — not `model_used`, `query`, or `tokens_used`. Types and display code updated to treat those as optional, so the page renders correctly against both the api.py backend and the routes/rag.py backend.
+
+**Component lifecycle:**
+Replaced `useMemo` client reference with direct `getAPIClient()` calls per handler/effect. Moved all state into a single flat component (no Suspense, no sub-tree boundary). Both the status fetch and query submit are now `mountedRef`-guarded and use `useCallback`.
+
+---
+
 ## [3.5.2] - 2026-05-30 — RAG endpoint fix + navigation stability
 
 ### Fixed

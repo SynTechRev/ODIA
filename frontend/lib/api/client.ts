@@ -426,16 +426,24 @@ export class APIClient {
   }
 
   // -------------------------------------------------------------------------
-  // RAG — natural language querying (v3.5.0)
+  // RAG — natural language querying (v3.5.x)
   // -------------------------------------------------------------------------
 
-  /** GET /api/v1/rag/status — indexed counts + LLM availability. */
+  /** GET /api/v1/rag/status — indexed counts + LLM availability (v3.5.2+ backend). */
   async ragStatus(): Promise<RAGStatusResponse> {
     const { data } = await this.http.get<RAGStatusResponse>('/api/v1/rag/status');
     return data;
   }
 
+  /** GET /rag/status — legacy path for bundled backends built before v3.5.2. */
+  async ragStatusLegacy(): Promise<RAGStatusResponse> {
+    const { data } = await this.http.get<RAGStatusResponse>('/rag/status');
+    return data;
+  }
+
   /** POST /api/v1/rag/query — natural language question against audit corpus.
+   *  Sends both `query` (api.py model) and `question` (routes/rag.py model) so
+   *  the request is accepted regardless of which backend version is running.
    *  Uses a 300s timeout to accommodate cold Ollama model loads. */
   async ragQuery(
     question: string,
@@ -444,7 +452,7 @@ export class APIClient {
   ): Promise<RAGQueryResponse> {
     const { data } = await this.http.post<RAGQueryResponse>(
       '/api/v1/rag/query',
-      { question, top_k: topK, source_filter: sourceFilter },
+      { query: question, question, top_k: topK, source_filter: sourceFilter },
       { timeout: 300_000 },
     );
     return data;
@@ -685,25 +693,15 @@ export { resolveBaseURL };
 // RAG types (v3.5.0)
 // ---------------------------------------------------------------------------
 
-export interface RAGSource {
-  id: string;
-  title: string;
-  text: string;
-  jurisdiction: string | null;
-  document_type?: string | null;
-  score?: number | null;
-  layer?: string | null;
-  issue?: string | null;
-  [key: string]: unknown;
-}
-
 export interface RAGQueryResponse {
   answer: string;
-  sources: RAGSource[];
-  query: string;
-  model_used: string;
+  sources: Record<string, unknown>[];
   confidence: number | null;
-  tokens_used: number | null;
+  error?: string | null;
+  // v3.5.2+ fields (routes/rag.py backend — optional for compat)
+  query?: string;
+  model_used?: string;
+  tokens_used?: number | null;
 }
 
 export interface RAGStatusResponse {
