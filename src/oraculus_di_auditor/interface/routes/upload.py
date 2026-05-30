@@ -639,19 +639,13 @@ def _persist_upload_document(
                 )
 
             scalar = doc.get("scalar_score")
-            severity_counts = {
-                "critical": sum(1 for f in findings if f.get("severity") == "critical"),
-                "high": sum(1 for f in findings if f.get("severity") == "high"),
-                "medium": sum(1 for f in findings if f.get("severity") == "medium"),
-                "low": sum(1 for f in findings if f.get("severity") == "low"),
-            }
             db_crud.create_analysis(
                 session,
                 {
                     "document_id": doc["document_id"],
                     "scalar_score": float(scalar) if scalar is not None else 1.0,
                     "anomaly_count": len(findings),
-                    "engine_version": "3.3.1",
+                    "engine_version": "3.5.0",
                     "metadata": {"source": "upload.audit_run"},
                 },
                 [

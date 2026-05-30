@@ -187,8 +187,10 @@ def register_trigger_routes(app: Any) -> None:
             return {
                 "status": "no_jurisdictions",
                 "message": (
-                    "No jurisdictions found in the database or config/multi_jurisdiction/. "
-                    "Run at least one audit with a jurisdiction set before running synthesis."
+                    "No jurisdictions found in the database "
+                    "or config/multi_jurisdiction/. "
+                    "Run at least one audit with a "
+                    "jurisdiction set before running synthesis."
                 ),
                 "result": None,
                 "markdown": None,
