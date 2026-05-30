@@ -78,12 +78,12 @@ def build_corpus_index(session) -> tuple[list[str], list[dict]]:
         )
         texts.append(text)
         metas.append({
-            "document_id": doc.document_id,
-            "title": doc.title,
+            "id": doc.document_id,
+            "title": doc.title or "Untitled",
+            "text": text,          # field name expected by ContextAssembler
             "jurisdiction": doc.jurisdiction,
             "document_type": doc.document_type,
             "anomaly_count": len(anomalies),
-            "text_preview": text[:300],
         })
     return texts, metas
 
@@ -101,24 +101,25 @@ def build_ace_index(session) -> tuple[list[str], list[dict]]:
             ).first()
 
         details_str = _safe_details(a.details_json)
+        jur = doc.jurisdiction if doc else "unknown"
+        doc_title = doc.title if doc else "unknown"
         text = (
-            f"Finding: {a.issue} | "
-            f"Severity: {a.severity} | "
+            f"[{a.severity.upper()}] {a.issue} | "
             f"Detector: {a.layer} | "
-            f"Jurisdiction: {doc.jurisdiction if doc else 'unknown'} | "
-            f"Document: {doc.title if doc else 'unknown'} | "
+            f"Jurisdiction: {jur} | "
+            f"Document: {doc_title} | "
             f"Details: {details_str}"
         )
         texts.append(text)
         metas.append({
-            "anomaly_id": a.anomaly_id,
+            "id": a.anomaly_id,
+            "title": f"{jur} / {doc_title}",
+            "text": text,          # field name expected by ContextAssembler
             "issue": a.issue,
             "severity": a.severity,
             "layer": a.layer,
             "document_id": analysis.document_id if analysis else None,
-            "document_title": doc.title if doc else None,
-            "jurisdiction": doc.jurisdiction if doc else None,
-            "text_preview": text[:300],
+            "jurisdiction": jur,
         })
     return texts, metas
 
@@ -141,7 +142,6 @@ def build_jim_index(session) -> tuple[list[str], list[dict]]:
 
     texts, metas = [], []
     for p in patterns:
-        # Find which jurisdictions this pattern appears in
         juris = (
             session.query(Document.jurisdiction)
             .join(Analysis, Analysis.document_id == Document.document_id)
@@ -151,23 +151,20 @@ def build_jim_index(session) -> tuple[list[str], list[dict]]:
             .all()
         )
         jur_list = [j[0] for j in juris if j[0]]
-
         text = (
-            f"Cross-jurisdiction pattern: {p.issue} | "
+            f"[{p.severity.upper()} PATTERN x{p.count}] {p.issue} | "
             f"Detector: {p.layer} | "
-            f"Severity: {p.severity} | "
-            f"Occurrences: {p.count} | "
-            f"Jurisdictions: {', '.join(jur_list)}"
+            f"Jurisdictions ({len(jur_list)}): {', '.join(jur_list)}"
         )
         texts.append(text)
         metas.append({
-            "anomaly_id": p.anomaly_id,
-            "issue": p.issue,
+            "id": p.anomaly_id,
+            "title": f"Cross-jurisdiction: {p.issue[:60]}",
+            "text": text,          # field name expected by ContextAssembler
             "layer": p.layer,
             "severity": p.severity,
             "count": p.count,
             "jurisdictions": jur_list,
-            "text_preview": text[:300],
         })
     return texts, metas
 
@@ -192,17 +189,20 @@ def fit_and_save(
     retriever.save(collection_name)
 
     # Save vocab for the corpus collection (used as the shared vocabulary)
-    if collection_name == "collection":
-        vocab_path = VECTORS_DIR / "collection_vocab.pkl"
-        vocab_data = {
-            "max_features": embedder.max_features,
-            "norm": embedder.norm,
-            "vocabulary": embedder.vectorizer.vocabulary_,
-            "idf": embedder.vectorizer.idf_,
-        }
-        with open(vocab_path, "wb") as f:
-            pickle.dump(vocab_data, f)
-        print(f"  Vocab saved -> {vocab_path}")
+    # Save vocab for every collection so each can be loaded independently
+    vocab_path = VECTORS_DIR / f"{collection_name}_vocab.pkl"
+    vocab_data = {
+        "max_features": embedder.max_features,
+        "norm": embedder.norm,
+        "vocabulary": embedder.vectorizer.vocabulary_,
+        "idf": embedder.vectorizer.idf_,
+    }
+    with open(vocab_path, "wb") as f:
+        pickle.dump(vocab_data, f)
+    # Keep legacy collection_vocab.pkl alias for corpus index
+    if collection_name != "collection":
+        pass  # each collection already gets <name>_vocab.pkl
+    print(f"  Vocab saved -> {vocab_path}")
 
     print(f"  {len(texts)} vectors -> data/vectors/{collection_name}_vectors.npy")
 
