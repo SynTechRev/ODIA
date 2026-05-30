@@ -1,0 +1,23 @@
+# Enforce LF line endings for all text files stored in git.
+# This prevents Black/Ruff from seeing CRLF on Linux CI and
+# triggering spurious "file modified by hook" pre-commit failures.
+* text=auto eol=lf
+
+# Explicit overrides for known binary types
+*.npy binary
+*.pkl binary
+*.pdf binary
+*.png binary
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.db binary
+*.sqlite binary
+*.exe binary
+*.zip binary
+*.tar.gz binary

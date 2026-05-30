@@ -103,7 +103,7 @@ include = '\.pyi?$'
 line-length = 88
 target-version = "py311"
 fix = true
-exclude = [".git", "build", "dist", "**/__pycache__"]
+exclude = [".git", "build", "dist", "**/__pycache__", "_*.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
