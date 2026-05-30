@@ -113,9 +113,7 @@ def test_query_without_llm_context_preview():
 
 def test_get_status():
     _zero = {"documents": 0, "findings": 0, "analysis": 0}
-    with patch.object(
-        RAGService, "_indexed_counts_from_disk", return_value=_zero
-    ):
+    with patch.object(RAGService, "_indexed_counts_from_disk", return_value=_zero):
         svc = RAGService()
         status = svc.get_status()
         assert status["indexed"]["documents"] == 0

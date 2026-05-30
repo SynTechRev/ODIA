@@ -13,7 +13,7 @@ action and when that action was executed or became effective:
 from __future__ import annotations
 
 import re
-from datetime import date, timedelta
+from datetime import date
 from typing import Any
 
 from .text_utils import extract_text_content

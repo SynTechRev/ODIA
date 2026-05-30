@@ -1,6 +1,5 @@
 """Tests for grant_funding_trails detector."""
 
-import pytest
 
 from oraculus_di_auditor.analysis.grant_funding_trails import (
     detect_grant_funding_trail_anomalies,

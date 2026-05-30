@@ -36,7 +36,6 @@ from .fiscal import detect_fiscal_anomalies
 from .governance_gap import detect_governance_gap_anomalies
 from .grant_compliance import detect_grant_compliance_anomalies
 from .grant_funding_trails import detect_grant_funding_trail_anomalies
-from .vote_date_alignment import detect_vote_date_alignment_anomalies
 from .ingestion_integrity import detect_ingestion_integrity_anomalies
 from .procurement_timeline import detect_procurement_timeline_anomalies
 from .scalar_core import compute_recursive_scalar_score
@@ -44,6 +43,7 @@ from .scope_expansion import detect_scope_expansion_anomalies
 from .signature_chain import detect_signature_anomalies
 from .surveillance import detect_surveillance_anomalies
 from .text_utils import extract_text_content
+from .vote_date_alignment import detect_vote_date_alignment_anomalies
 
 
 def analyze_document(doc: dict[str, Any]) -> dict[str, Any]:
