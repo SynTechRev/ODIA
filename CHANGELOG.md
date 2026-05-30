@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.5.2] - 2026-05-30 — RAG endpoint fix + navigation stability
+
+### Fixed
+
+- `routes/rag.py`: router prefix was `/rag` instead of `/api/v1/rag` — `GET /api/v1/rag/status` returned 404, leaving the RAG Query status bar permanently in error state.
+- `frontend/app/rag/page.tsx`: `ragStatus()` promise had no cleanup — settling after component unmount triggered a React state update that blanked the entire app on navigation. Added `mountedRef` guard on all async setters, wrapped page in `Suspense` (consistent with all other pages).
+
+---
+
 ## [3.5.1] - 2026-05-30 — RAG Query UI + CI stability
 
 Operator-facing release that surfaces the v3.5.0 RAG backend through a dedicated sidebar page, and hardens CI to eliminate pre-commit cache-expiry failures.
