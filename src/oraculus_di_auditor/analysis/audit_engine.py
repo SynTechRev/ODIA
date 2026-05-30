@@ -35,6 +35,8 @@ from .cross_reference import detect_cross_jurisdiction_refs
 from .fiscal import detect_fiscal_anomalies
 from .governance_gap import detect_governance_gap_anomalies
 from .grant_compliance import detect_grant_compliance_anomalies
+from .grant_funding_trails import detect_grant_funding_trail_anomalies
+from .vote_date_alignment import detect_vote_date_alignment_anomalies
 from .ingestion_integrity import detect_ingestion_integrity_anomalies
 from .procurement_timeline import detect_procurement_timeline_anomalies
 from .scalar_core import compute_recursive_scalar_score
@@ -71,6 +73,8 @@ def analyze_document(doc: dict[str, Any]) -> dict[str, Any]:
     anomalies.extend(detect_scope_expansion_anomalies(doc))
     anomalies.extend(detect_signature_anomalies(doc))
     anomalies.extend(detect_grant_compliance_anomalies(doc))
+    anomalies.extend(detect_grant_funding_trail_anomalies(doc))
+    anomalies.extend(detect_vote_date_alignment_anomalies(doc))
 
     # detect_cross_jurisdiction_refs takes raw text and returns a different shape;
     # normalize each ref into the standard anomaly dict before appending.
