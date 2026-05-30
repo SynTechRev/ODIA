@@ -1,6 +1,5 @@
 """Tests for vote_date_alignment detector."""
 
-
 from oraculus_di_auditor.analysis.vote_date_alignment import (
     detect_vote_date_alignment_anomalies,
 )
