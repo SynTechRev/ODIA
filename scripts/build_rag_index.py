@@ -24,10 +24,10 @@ REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT / "config"))
 
-from oraculus_di_auditor.db.models import Analysis, Anomaly, Document
-from oraculus_di_auditor.db.session import get_db, init_db
-from oraculus_di_auditor.embeddings import LocalEmbedder
-from oraculus_di_auditor.retriever import Retriever
+from oraculus_di_auditor.db.models import Analysis, Anomaly, Document  # noqa: E402
+from oraculus_di_auditor.db.session import get_db, init_db  # noqa: E402
+from oraculus_di_auditor.embeddings import LocalEmbedder  # noqa: E402
+from oraculus_di_auditor.retriever import Retriever  # noqa: E402
 
 VECTORS_DIR = REPO_ROOT / "data" / "vectors"
 VECTORS_DIR.mkdir(parents=True, exist_ok=True)
