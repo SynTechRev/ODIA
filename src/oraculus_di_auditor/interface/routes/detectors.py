@@ -165,9 +165,42 @@ DETECTOR_REGISTRY: dict[str, dict[str, Any]] = {
             "admin:misfiled-document",
         ],
     },
+    "grant_funding_trails": {
+        "name": "grant_funding_trails",
+        "description": (
+            "Tracks the federal grant money chain through documents. Flags "
+            "grant amounts without expenditure tracking, pass-through grants "
+            "without federal attribution, JAG awards without BJA award numbers, "
+            "and dollar-amount reconciliation gaps."
+        ),
+        "anomaly_types": [
+            "grant_trail:amount-without-tracking",
+            "grant_trail:passthrough-without-attribution",
+            "grant_trail:no-single-audit-reference",
+            "grant_trail:jag-without-award-number",
+            "grant_trail:amount-reconciliation-gap",
+        ],
+    },
+    "vote_date_alignment": {
+        "name": "vote_date_alignment",
+        "description": (
+            "Flags temporal misalignment between legislative authorization and "
+            "execution: retroactive approvals, urgency designations without "
+            "findings, high-value consent calendar items, execution before "
+            "authorization, and excessive authorization-to-execution gaps."
+        ),
+        "anomaly_types": [
+            "vote_date:retroactive-approval",
+            "vote_date:urgency-without-finding",
+            "vote_date:consent-calendar-high-value",
+            "vote_date:execution-before-authorization",
+            "vote_date:authorization-execution-gap",
+            "vote_date:text-date-ordering-anomaly",
+        ],
+    },
 }
 
-# All 8 detector keys in a stable order
+# All detector keys in a stable order
 _DETECTOR_KEYS = list(DETECTOR_REGISTRY.keys())
 
 
@@ -209,9 +242,11 @@ def _run_single_doc_detectors(doc: dict[str, Any]) -> dict[str, list[dict[str, A
         detect_constitutional_anomalies,
         detect_fiscal_anomalies,
         detect_governance_gap_anomalies,
+        detect_grant_funding_trail_anomalies,
         detect_scope_expansion_anomalies,
         detect_signature_anomalies,
         detect_surveillance_anomalies,
+        detect_vote_date_alignment_anomalies,
     )
 
     results: dict[str, list[dict[str, Any]]] = {}
@@ -223,6 +258,8 @@ def _run_single_doc_detectors(doc: dict[str, Any]) -> dict[str, list[dict[str, A
         ("scope_expansion", detect_scope_expansion_anomalies),
         ("governance_gap", detect_governance_gap_anomalies),
         ("administrative_integrity", detect_administrative_anomalies),
+        ("grant_funding_trails", detect_grant_funding_trail_anomalies),
+        ("vote_date_alignment", detect_vote_date_alignment_anomalies),
     ]:
         try:
             results[name] = fn(doc)
