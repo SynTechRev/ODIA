@@ -20,7 +20,17 @@ from __future__ import annotations
 import logging
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
+
+# Load .env from repo root before any os.getenv() calls so CORS origins,
+# webhook tokens, and other config are available without manual export.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[4] / ".env", override=False)
+except ImportError:
+    pass  # python-dotenv not installed — fall back to environment variables only
 
 # API stub - requires FastAPI to be installed
 # This is a minimal interface to demonstrate the architecture

@@ -38,6 +38,7 @@ dependencies = [
     # consumed by LegalResolver at boot. Without this, /api/v1/legal/status
     # 503s with "No module named 'yaml'" and statute embedding is dead.
     "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
 ]
 authors = [
     {name = "Synthetic Technology Revolution", email = "syntechrev@gmail.com"}
