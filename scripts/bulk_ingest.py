@@ -39,6 +39,33 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger("bulk_ingest")
 
 # ---------------------------------------------------------------------------
+# Text extraction cache — avoids re-reading PDFs/DOCXs on re-runs
+# ---------------------------------------------------------------------------
+
+_CACHE_DIR = _REPO_ROOT / ".text_cache"
+_CACHE_DIR.mkdir(exist_ok=True)
+
+
+def _cache_key(path: Path) -> str:
+    """Stable key: sha256 of (absolute path + file mtime + file size)."""
+    stat = path.stat()
+    raw = f"{path.resolve()}|{stat.st_mtime}|{stat.st_size}"
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _cache_get(path: Path) -> str | None:
+    cache_file = _CACHE_DIR / (_cache_key(path) + ".txt")
+    if cache_file.exists():
+        return cache_file.read_text(encoding="utf-8", errors="replace")
+    return None
+
+
+def _cache_set(path: Path, text: str) -> None:
+    cache_file = _CACHE_DIR / (_cache_key(path) + ".txt")
+    cache_file.write_text(text, encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
 # Jurisdiction slug map — folder prefix → canonical slug
 # ---------------------------------------------------------------------------
 
@@ -133,29 +160,39 @@ def _extract_html(path: Path) -> str:
 
 
 def _extract_text(path: Path) -> str | None:
+    # Check cache first — avoids re-reading PDFs/DOCXs on every re-run
+    cached = _cache_get(path)
+    if cached is not None:
+        return cached or None  # empty string cached means extraction failed
+
     ext = path.suffix.lower()
+    text: str | None = None
     try:
         if ext == ".pdf":
-            return _extract_pdf(path)
+            text = _extract_pdf(path)
         elif ext == ".docx":
-            return _extract_docx(path)
+            text = _extract_docx(path)
         elif ext == ".doc":
-            return _extract_doc(path)
+            text = _extract_doc(path)
         elif ext in (".html", ".htm"):
-            return _extract_html(path)
+            text = _extract_html(path)
         elif ext == ".json":
             data = json.loads(path.read_text(encoding="utf-8"))
             if isinstance(data, dict) and ("raw_text" in data or "sections" in data):
-                return data.get("raw_text") or ""
-            return json.dumps(data, ensure_ascii=False)
+                text = data.get("raw_text") or ""
+            else:
+                text = json.dumps(data, ensure_ascii=False)
         else:
             try:
-                return path.read_text(encoding="utf-8")
+                text = path.read_text(encoding="utf-8")
             except UnicodeDecodeError:
-                return path.read_text(encoding="cp1252", errors="replace")
+                text = path.read_text(encoding="cp1252", errors="replace")
     except Exception as exc:
         logger.debug("Extraction failed for %s: %s", path.name, exc)
-        return None
+
+    # Cache result (empty string = extraction failed, so we skip next time too)
+    _cache_set(path, text or "")
+    return text
 
 
 # ---------------------------------------------------------------------------
