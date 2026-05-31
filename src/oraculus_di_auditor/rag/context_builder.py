@@ -69,22 +69,21 @@ class ContextBuilder:
 
     def format_document_context(self, result: RetrievalResult) -> str:
         """Format a document retrieval result with attribution."""
-        header = (
-            f"[Source: {result.source_id}"
-            f" | Type: document"
-            f" | Score: {result.score:.2f}]"
-        )
+        jurisdiction = result.metadata.get("jurisdiction", "")
+        doc_type = result.metadata.get("document_type", "doc")
+        title = result.metadata.get("title", result.source_id)[:60]
+        label = f"{jurisdiction} / {doc_type}" if jurisdiction else doc_type
+        header = f"[{label} | {title} | Score: {result.score:.2f}]"
         return f"{header}\n{result.content}"
 
     def format_finding_context(self, result: RetrievalResult) -> str:
         """Format a finding retrieval result with attribution."""
         severity = result.metadata.get("severity", "unknown")
         layer = result.metadata.get("layer", "unknown")
-        header = (
-            f"[Finding: {result.source_id}"
-            f" | Severity: {severity}"
-            f" | Detector: {layer}]"
-        )
+        jurisdiction = result.metadata.get("jurisdiction", "")
+        issue = result.metadata.get("issue", result.source_id)[:60]
+        jur_label = f" | {jurisdiction}" if jurisdiction else ""
+        header = f"[{severity.upper()} {layer}{jur_label} | {issue}]"
         return f"{header}\n{result.content}"
 
     def format_analysis_context(self, result: RetrievalResult) -> str:

@@ -58,14 +58,23 @@ class ContextAssembler:
             metadata = result.get("metadata", {})
 
             # Extract relevant fields
-            corpus_id = metadata.get("id", "N/A")
             title = metadata.get("title", "Untitled")
-            source = metadata.get("source", "Unknown")
             text = metadata.get("text", "")
             score = result.get("score", 0)
+            jurisdiction = metadata.get("jurisdiction") or metadata.get("source", "")
+            doc_type = metadata.get("document_type", "")
+            issue = metadata.get("issue", "")
+            layer = metadata.get("layer", "")
 
-            # Format source citation
-            citation = f"[{corpus_id}] {title}"
+            # Build human-readable citation — jurisdiction + type over raw ID
+            if issue and layer:
+                # Anomaly finding — cite by finding type and jurisdiction
+                citation = f"[{layer}:{issue[:60]}] {jurisdiction}"
+            elif jurisdiction:
+                label = f"{doc_type}" if doc_type else "doc"
+                citation = f"{jurisdiction} / {label} / {title[:60]}"
+            else:
+                citation = title[:80]
 
             # Build context entry
             entry = f"\n--- Source: {citation} (relevance: {score:.2f}) ---\n{text}\n"
