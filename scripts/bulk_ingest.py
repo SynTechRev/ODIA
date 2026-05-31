@@ -193,41 +193,50 @@ def _persist(
 ) -> bool:
     doc_id = doc_dict.get("document_id") or _doc_id(path)
 
-    # Skip if already in DB
-    existing = session.query(Document).filter(Document.document_id == doc_id).first()
-    if existing:
+    existing_doc = (
+        session.query(Document).filter(Document.document_id == doc_id).first()
+    )
+    existing_analysis = (
+        session.query(Analysis).filter(Analysis.document_id == doc_id).first()
+        if existing_doc
+        else None
+    )
+
+    # Fully processed already — skip
+    if existing_doc and existing_analysis:
         return False
 
-    doc_row = Document(
-        document_id=doc_id,
-        title=path.stem.replace("_", " ").replace("-", " ").title()[:200],
-        document_type=path.suffix.lstrip(".").lower(),
-        jurisdiction=jurisdiction,
-        created_at=datetime.now(UTC),
-        updated_at=datetime.now(UTC),
-    )
-    session.add(doc_row)
-    session.flush()
+    if not existing_doc:
+        doc_row = Document(
+            document_id=doc_id,
+            title=path.stem.replace("_", " ").replace("-", " ").title()[:200],
+            document_type=path.suffix.lstrip(".").lower(),
+            jurisdiction=jurisdiction,
+            updated_at=datetime.now(UTC),
+        )
+        session.add(doc_row)
+        session.flush()
 
     analysis_row = Analysis(
         document_id=doc_id,
-        scalar_score=1.0 - min(len(findings) * 0.02, 0.5),
-        created_at=datetime.now(UTC),
+        anomaly_count=len(findings),
+        scalar_score=round(1.0 - min(len(findings) * 0.02, 0.5), 4),
+        engine_version="3.6.0",
     )
     session.add(analysis_row)
     session.flush()
 
     for f in findings:
-        anomaly_row = Anomaly(
-            analysis_id=analysis_row.id,
-            anomaly_id=f.get("id", "unknown"),
-            issue=f.get("issue", "")[:500],
-            severity=f.get("severity", "low"),
-            layer=f.get("layer", "unknown"),
-            details_json=json.dumps(f.get("details", {})),
-            created_at=datetime.now(UTC),
+        session.add(
+            Anomaly(
+                analysis_id=analysis_row.id,
+                anomaly_id=f.get("id", "unknown"),
+                issue=f.get("issue", "")[:500],
+                severity=f.get("severity", "low"),
+                layer=f.get("layer", "unknown"),
+                details_json=json.dumps(f.get("details", {})),
+            )
         )
-        session.add(anomaly_row)
 
     session.commit()
     return True
@@ -238,7 +247,7 @@ def _persist(
 # ---------------------------------------------------------------------------
 
 
-def _ingest_folder(
+def _ingest_folder(  # noqa: C901
     folder: Path,
     jurisdiction: str,
     dry_run: bool,
@@ -265,49 +274,52 @@ def _ingest_folder(
 
     logger.info("  %s → '%s': %d files", folder.name, jurisdiction, len(files))
 
-    with get_db() as session:
-        for i, path in enumerate(files, 1):
-            label = f"[{i}/{len(files)}] {path.name[:60]}"
-            print(f"    {label}", end="\r", flush=True)
-
-            raw_text = _extract_text(path)
-            if not raw_text or not raw_text.strip():
-                stats["skipped_empty"] += 1
-                if verbose:
-                    logger.debug("Empty text: %s", path.name)
-                continue
-
-            doc_dict: dict[str, Any] = {
-                "document_id": _doc_id(path),
-                "title": path.stem,
-                "raw_text": raw_text,
-                "jurisdiction": jurisdiction,
-                "sections": [{"section_id": "main", "content": raw_text}],
-            }
-
-            if dry_run:
-                result = analyze_document(doc_dict)
-                n = result.get("count", 0)
+    def _run_one(path: Path, session: Any | None) -> None:
+        print(
+            f"    [{files.index(path) + 1}/{len(files)}] {path.name[:60]}",
+            end="\r",
+            flush=True,
+        )
+        raw_text = _extract_text(path)
+        if not raw_text or not raw_text.strip():
+            stats["skipped_empty"] += 1
+            return
+        doc_dict: dict[str, Any] = {
+            "document_id": _doc_id(path),
+            "title": path.stem,
+            "raw_text": raw_text,
+            "jurisdiction": jurisdiction,
+            "sections": [{"section_id": "main", "content": raw_text}],
+        }
+        result = analyze_document(doc_dict)
+        if dry_run:
+            stats["processed"] += 1
+            stats["findings"] += result.get("count", 0)
+            if verbose:
+                logger.info(
+                    "DRY-RUN %s → %d findings", path.name, result.get("count", 0)
+                )
+            return
+        try:
+            findings = result.get("anomalies", [])
+            if _persist(session, doc_dict, findings, jurisdiction, path):
                 stats["processed"] += 1
-                stats["findings"] += n
-                if verbose:
-                    logger.info("DRY-RUN %s → %d findings", path.name, n)
-                continue
+                stats["findings"] += len(findings)
+            else:
+                stats["skipped_dup"] += 1
+        except Exception as exc:  # noqa: BLE001
+            stats["errors"] += 1
+            logger.warning("Error on %s: %s", path.name, exc)
+            if verbose:
+                traceback.print_exc()
 
-            try:
-                result = analyze_document(doc_dict)
-                findings = result.get("anomalies", [])
-                inserted = _persist(session, doc_dict, findings, jurisdiction, path)
-                if inserted:
-                    stats["processed"] += 1
-                    stats["findings"] += len(findings)
-                else:
-                    stats["skipped_dup"] += 1
-            except Exception as exc:  # noqa: BLE001
-                stats["errors"] += 1
-                logger.warning("Error on %s: %s", path.name, exc)
-                if verbose:
-                    traceback.print_exc()
+    if dry_run:
+        for path in files:
+            _run_one(path, None)
+    else:
+        with get_db() as session:
+            for path in files:
+                _run_one(path, session)
 
     print()  # clear \r line
     return stats
