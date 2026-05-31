@@ -35,59 +35,16 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT / "src"))
 
-from oraculus_di_auditor.analysis import (  # noqa: E402
-    detect_administrative_anomalies,
-    detect_constitutional_anomalies,
-    detect_cross_jurisdiction_refs,
-    detect_fiscal_anomalies,
-    detect_governance_gap_anomalies,
+from oraculus_di_auditor.analysis import (
+    analyze_document,  # noqa: E402
     detect_procurement_timeline_anomalies,
-    detect_scope_expansion_anomalies,
-    detect_signature_anomalies,
-    detect_surveillance_anomalies,
-)
-from oraculus_di_auditor.analysis.text_utils import extract_text_content  # noqa: E402
-from oraculus_di_auditor.config import (
+)  # noqa: E402
+from oraculus_di_auditor.config import (  # noqa: E402
     JurisdictionConfig,
     load_jurisdiction_config,
 )
 
 logger = logging.getLogger("run_audit")
-
-
-def _detect_cross_ref_from_doc(doc: dict[str, Any]) -> list[dict[str, Any]]:
-    """Wrap detect_cross_jurisdiction_refs to accept a doc dict.
-
-    Extracts text content from the doc, calls the detector, and normalizes
-    the output to the standard {id, issue, severity, layer, details} shape.
-    """
-    text = extract_text_content(doc)
-    raw_refs = detect_cross_jurisdiction_refs(text)
-    return [
-        {
-            "id": f"cross_reference:{ref.get('type', 'unknown')}",
-            "issue": ref.get("description", "Cross-jurisdiction reference detected"),
-            "severity": "medium",
-            "layer": "cross_reference",
-            "details": {
-                k: v for k, v in ref.items() if k not in ("description", "severity")
-            },
-        }
-        for ref in raw_refs
-    ]
-
-
-# Ordered list of single-document detectors and the layer they report under
-_SINGLE_DOC_DETECTORS = [
-    ("fiscal", detect_fiscal_anomalies),
-    ("constitutional", detect_constitutional_anomalies),
-    ("surveillance", detect_surveillance_anomalies),
-    ("scope", detect_scope_expansion_anomalies),
-    ("signature", detect_signature_anomalies),
-    ("governance", detect_governance_gap_anomalies),
-    ("administrative", detect_administrative_anomalies),
-    ("cross_reference", _detect_cross_ref_from_doc),
-]
 
 _SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3}
 
@@ -112,7 +69,13 @@ def _build_parser() -> argparse.ArgumentParser:
         "--source",
         required=True,
         metavar="DIR",
-        help="Directory to ingest documents from (PDF, XML, JSON, TXT)",
+        help="Directory to ingest documents from (PDF, XML, JSON, TXT, HTML)",
+    )
+    p.add_argument(
+        "--jurisdiction",
+        default=None,
+        metavar="NAME",
+        help="Jurisdiction tag to apply to all ingested documents (e.g. visalia, porterville)",
     )
     p.add_argument(
         "--output",
@@ -164,7 +127,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def _discover_files(source_dir: Path) -> list[Path]:
     """Return all ingestable files under source_dir, sorted by name."""
-    exts = {".txt", ".json", ".xml", ".pdf"}
+    exts = {".txt", ".json", ".xml", ".pdf", ".html", ".htm"}
     files = sorted(
         f for f in source_dir.rglob("*") if f.is_file() and f.suffix.lower() in exts
     )
@@ -202,6 +165,8 @@ def _ingest_file(path: Path, verbose: bool = False) -> dict[str, Any] | None:
             raw_text = _extract_pdf_text(path, verbose)
             if raw_text is None:
                 return None
+        elif suffix in (".html", ".htm"):
+            raw_text = _extract_html_text(path)
         else:
             return None
 
@@ -249,6 +214,23 @@ def _extract_pdf_text(path: Path, verbose: bool) -> str | None:
     return None
 
 
+def _extract_html_text(path: Path) -> str:
+    """Extract visible text from an HTML file, stripping all tags."""
+    try:
+        from bs4 import BeautifulSoup
+
+        html = path.read_text(encoding="utf-8", errors="replace")
+        soup = BeautifulSoup(html, "html.parser")
+        for tag in soup(["script", "style", "nav", "header", "footer"]):
+            tag.decompose()
+        return soup.get_text(separator=" ", strip=True)
+    except ImportError:
+        import re
+
+        html = path.read_text(encoding="utf-8", errors="replace")
+        return re.sub(r"<[^>]+>", " ", html)
+
+
 # ---------------------------------------------------------------------------
 # Analysis
 # ---------------------------------------------------------------------------
@@ -258,19 +240,20 @@ def _run_detectors_on_doc(
     doc: dict[str, Any],
     verbose: bool = False,
 ) -> list[dict[str, Any]]:
-    """Run all single-document detectors and return combined anomaly list."""
-    all_findings: list[dict[str, Any]] = []
-    for layer, detector in _SINGLE_DOC_DETECTORS:
-        try:
-            findings = detector(doc)
-            all_findings.extend(findings)
-            if verbose and findings:
-                logger.info("  [%s] %d finding(s)", layer, len(findings))
-        except Exception as exc:  # noqa: BLE001
-            logger.warning(
-                "Detector %s failed on %s: %s", layer, doc.get("document_id"), exc
-            )
-    return all_findings
+    """Run all detectors via audit_engine.analyze_document (always up-to-date)."""
+    try:
+        result = analyze_document(doc)
+        findings = result.get("anomalies", [])
+        if verbose and findings:
+            by_layer: dict[str, int] = {}
+            for f in findings:
+                by_layer[f.get("layer", "?")] = by_layer.get(f.get("layer", "?"), 0) + 1
+            for layer, count in sorted(by_layer.items()):
+                logger.info("  [%s] %d finding(s)", layer, count)
+        return findings
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("analyze_document failed on %s: %s", doc.get("document_id"), exc)
+        return []
 
 
 def _run_audit(
@@ -592,6 +575,7 @@ def run_audit(
     output_dir: str | Path,
     verbose: bool = False,
     *,
+    jurisdiction: str | None = None,
     formats: list[str] | None = None,
     template_name: str = "audit_report.md",
     executive: bool = False,
@@ -641,10 +625,12 @@ def run_audit(
     print(f"Found {len(files)} file(s) in {source_dir}")
 
     # 4. Ingest
+    jurisdiction_tag = jurisdiction or jcfg.name or "unknown"
     docs: list[dict[str, Any]] = []
     for path in files:
         doc = _ingest_file(path, verbose=verbose)
         if doc is not None:
+            doc.setdefault("jurisdiction", jurisdiction_tag)
             docs.append(doc)
         else:
             logger.warning("Skipped: %s", path.name)
@@ -804,6 +790,7 @@ def main() -> None:
             source_dir=args.source,
             output_dir=args.output,
             verbose=args.verbose,
+            jurisdiction=args.jurisdiction,
             formats=[f.strip() for f in args.formats.split(",") if f.strip()],
             template_name=args.template,
             executive=args.executive,
