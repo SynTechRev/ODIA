@@ -162,8 +162,9 @@ def test_context_assembler_assemble():
 
     context = assembler.assemble(results)
 
-    assert "doc1" in context
-    assert "doc2" in context
+    # Citations use source path and title, not raw metadata IDs
+    assert "file1.pdf" in context
+    assert "file2.pdf" in context
     assert "Document 1" in context
     assert "Short text content" in context
 

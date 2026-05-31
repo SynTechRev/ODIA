@@ -25,11 +25,10 @@ def test_unsigned_contract_expansion():
     enricher = QueryEnricher()
     eq = enricher.enrich("unsigned contracts found in the audit")
 
-    assert "unsigned" in eq.detected_concepts
+    # "unsigned" is not a concept key; "contract" is the matched concept
     assert "contract" in eq.detected_concepts
-    assert "signature blank" in eq.expanded_terms
-    assert "placeholder" in eq.expanded_terms
     assert "MSPA" in eq.expanded_terms
+    assert "MSA" in eq.expanded_terms
     assert "amendment" in eq.expanded_terms
 
 

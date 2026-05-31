@@ -31,6 +31,8 @@ _ALL_DETECTOR_KEYS = [
     "scope_expansion",
     "governance_gap",
     "administrative_integrity",
+    "grant_funding_trails",
+    "vote_date_alignment",
 ]
 
 
@@ -169,7 +171,7 @@ def test_detailed_no_jurisdiction_key_by_default(client):
 
 
 def test_detectors_lists_all_detectors(client):
-    """GET /detectors must return all 8 registered detectors."""
+    """GET /detectors must return all 10 registered detectors."""
     response = client.get("/detectors")
     assert response.status_code == 200
     data = response.json()

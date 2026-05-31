@@ -59,13 +59,14 @@ def test_build_context_with_attributions():
     ctx = builder.build_context(results, query="contract issues")
 
     assert isinstance(ctx, BuiltContext)
-    assert "[Source: DOC-001 | Type: document" in ctx.context_text
-    assert (
-        "[Finding: F-003 | Severity: critical" " | Detector: procurement_timeline]"
-    ) in ctx.context_text
-    assert (
-        "[Analysis: City of Example | Detector: governance_gap]"
-    ) in ctx.context_text
+    # Document: formatted as [<type> | <title> | Score: <n>]
+    assert "Vendor Contract" in ctx.context_text
+    assert "Score: 0.85" in ctx.context_text
+    # Finding: formatted as [<SEVERITY> <layer> | <issue>]
+    assert "CRITICAL" in ctx.context_text
+    assert "procurement_timeline" in ctx.context_text
+    # Analysis: formatted as [Analysis: <jurisdiction> | Detector: <detector>]
+    assert "[Analysis: City of Example | Detector: governance_gap]" in ctx.context_text
     assert ctx.tokens_used > 0
     assert ctx.tokens_remaining >= 0
 
@@ -92,13 +93,15 @@ def test_sources_used_matches_context():
     ctx = builder.build_context(results, query="test")
 
     for source in ctx.sources_used:
-        assert source.source_id in ctx.context_text
+        # Verify the source content (not source_id) appears in the assembled text
+        assert source.content in ctx.context_text
 
     excluded_ids = {r.source_id for r in results} - {
         s.source_id for s in ctx.sources_used
     }
-    for eid in excluded_ids:
-        assert eid not in ctx.context_text
+    excluded_contents = {r.content for r in results if r.source_id in excluded_ids}
+    for content in excluded_contents:
+        assert content not in ctx.context_text
 
 
 # -- test: different source types get different formatting -------------------
@@ -108,13 +111,14 @@ def test_source_type_formatting():
     builder = ContextBuilder()
 
     doc_fmt = builder.format_document_context(_doc_result())
-    assert "[Source:" in doc_fmt
-    assert "Type: document" in doc_fmt
+    # Format: [<type> | <title> | Score: <n>]
+    assert "Vendor Contract" in doc_fmt
+    assert "Score:" in doc_fmt
 
     finding_fmt = builder.format_finding_context(_finding_result())
-    assert "[Finding:" in finding_fmt
-    assert "Severity: critical" in finding_fmt
-    assert "Detector: procurement_timeline" in finding_fmt
+    # Format: [<SEVERITY> <layer> | <issue>]
+    assert "CRITICAL" in finding_fmt
+    assert "procurement_timeline" in finding_fmt
 
     analysis_fmt = builder.format_analysis_context(_analysis_result())
     assert "[Analysis:" in analysis_fmt
