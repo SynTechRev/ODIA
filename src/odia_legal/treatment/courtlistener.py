@@ -41,9 +41,7 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-_BASE_URL = os.environ.get(
-    "COURTLISTENER_BASE_URL", "https://www.courtlistener.com"
-)
+_BASE_URL = os.environ.get("COURTLISTENER_BASE_URL", "https://www.courtlistener.com")
 _API_ROOT = f"{_BASE_URL}/api/rest/v4"
 
 # Negative treatment keywords from CourtListener citation type codes
@@ -124,7 +122,11 @@ class CourtListenerClient:
         Returns:
             List of opinion dicts from CourtListener, or empty list.
         """
-        params: dict[str, Any] = {"q": query, "page_size": limit, "order_by": "score desc"}
+        params: dict[str, Any] = {
+            "q": query,
+            "page_size": limit,
+            "order_by": "score desc",
+        }
         if court:
             params["court"] = court
         result = self._get("search/", params=params)

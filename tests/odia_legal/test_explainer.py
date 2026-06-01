@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from odia_legal.reports.explainer import generate_explainer, Explainer
+from odia_legal.reports.explainer import Explainer, generate_explainer
 
 _DOC_META = {
     "title": "ALPR Retention Policy 2024",
@@ -161,12 +161,18 @@ def test_what_this_means_label():
 
 def test_community_audience_closing():
     result = generate_explainer(_DOC_META, _FINDINGS, audience="community")
-    assert "public records request" in result.closing.lower() or "muckrock" in result.closing.lower()
+    assert (
+        "public records request" in result.closing.lower()
+        or "muckrock" in result.closing.lower()
+    )
 
 
 def test_council_audience_closing():
     result = generate_explainer(_DOC_META, _FINDINGS, audience="council")
-    assert "council" in result.closing.lower() or "agency counsel" in result.closing.lower()
+    assert (
+        "council" in result.closing.lower()
+        or "agency counsel" in result.closing.lower()
+    )
 
 
 def test_media_audience_closing():

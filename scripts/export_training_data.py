@@ -78,7 +78,9 @@ _INSTR_MEMORANDUM = (
 # ---------------------------------------------------------------------------
 
 
-def _finding_output(anomaly_id: str, issue: str, severity: str, layer: str, details: dict) -> str:
+def _finding_output(
+    anomaly_id: str, issue: str, severity: str, layer: str, details: dict
+) -> str:
     """Format a single finding as structured output text."""
     lines = [
         f"FINDING: {issue}",
@@ -135,13 +137,16 @@ def _memorandum_output(
         "FINDINGS:",
     ]
     for i, (anomaly, details) in enumerate(findings, 1):
-        lines.append(
-            f"\n{i}. [{anomaly.severity.upper()}] {anomaly.issue}"
-        )
+        lines.append(f"\n{i}. [{anomaly.severity.upper()}] {anomaly.issue}")
         if details.get("statute"):
             lines.append(f"   Statute: {details['statute']}")
         if details.get("detail"):
-            wrapped = textwrap.fill(details["detail"], width=76, initial_indent="   ", subsequent_indent="   ")
+            wrapped = textwrap.fill(
+                details["detail"],
+                width=76,
+                initial_indent="   ",
+                subsequent_indent="   ",
+            )
             lines.append(wrapped)
 
     lines.append("\nCONCLUSION:")
@@ -228,8 +233,11 @@ def _export_per_finding(db, fh, mode, layer_filter, severity_filter, limit, max_
 
         if mode == "findings":
             output = _finding_output(
-                anomaly.anomaly_id, anomaly.issue,
-                anomaly.severity, anomaly.layer, details
+                anomaly.anomaly_id,
+                anomaly.issue,
+                anomaly.severity,
+                anomaly.layer,
+                details,
             )
         else:
             output = _explanation_output(anomaly.issue, anomaly.severity, details)

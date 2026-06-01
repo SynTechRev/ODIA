@@ -65,7 +65,9 @@ class LegalCorpus:
                 result = loader.initialize()
                 stats[loader.corpus_id] = result if isinstance(result, dict) else {}
             except Exception as exc:  # noqa: BLE001
-                logger.warning("LegalCorpus: loader %s init failed: %s", loader.corpus_id, exc)  # noqa: E501
+                logger.warning(
+                    "LegalCorpus: loader %s init failed: %s", loader.corpus_id, exc
+                )  # noqa: E501
         self._initialized = True
         return stats
 
@@ -115,7 +117,9 @@ class LegalCorpus:
                 partial = loader.search_text(query, limit=per_loader)
                 results.extend(partial)
             except Exception as exc:  # noqa: BLE001
-                logger.warning("LegalCorpus: loader %s search failed: %s", loader.corpus_id, exc)  # noqa: E501
+                logger.warning(
+                    "LegalCorpus: loader %s search failed: %s", loader.corpus_id, exc
+                )  # noqa: E501
         return results[:limit]
 
     # ------------------------------------------------------------------
@@ -150,7 +154,9 @@ def _build_default_loaders() -> list[Any]:
 
         resolver = get_resolver()
         loaders.extend(resolver._loaders.values())  # noqa: SLF001
-        logger.debug("LegalCorpus: added %d USC loaders from LegalResolver", len(loaders))  # noqa: E501
+        logger.debug(
+            "LegalCorpus: added %d USC loaders from LegalResolver", len(loaders)
+        )  # noqa: E501
     except Exception as exc:  # noqa: BLE001
         logger.warning("LegalCorpus: could not load USC loaders: %s", exc)
 
@@ -161,7 +167,9 @@ def _build_default_loaders() -> list[Any]:
             from odia_legal.corpus.california_loader import CaliforniaCodeLoader
 
             loaders.append(CaliforniaCodeLoader(submodule_path=cal_corpus_path))
-            logger.debug("LegalCorpus: added CaliforniaCodeLoader at %s", cal_corpus_path)  # noqa: E501
+            logger.debug(
+                "LegalCorpus: added CaliforniaCodeLoader at %s", cal_corpus_path
+            )  # noqa: E501
         except Exception as exc:  # noqa: BLE001
             logger.warning("LegalCorpus: CaliforniaCodeLoader failed: %s", exc)
 

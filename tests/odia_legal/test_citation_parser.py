@@ -176,9 +176,7 @@ def test_cal_case_basic():
 
 
 def test_cal_case_app_reporter():
-    results = parse_cal_case(
-        "ACLU v. Superior Court (2011) 202 Cal.App.4th 55"
-    )
+    results = parse_cal_case("ACLU v. Superior Court (2011) 202 Cal.App.4th 55")
     assert results[0].reporter == "Cal.App.4th"
     assert results[0].volume == 202
 

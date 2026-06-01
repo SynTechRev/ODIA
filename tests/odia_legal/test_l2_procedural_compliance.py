@@ -74,9 +74,7 @@ def test_denial_with_basis_no_basis_finding():
 
 
 def test_denial_without_appeal_rights_medium():
-    doc = _doc(
-        "The agency withheld the records. Exemption: 7923.650 applies."
-    )
+    doc = _doc("The agency withheld the records. Exemption: 7923.650 applies.")
     findings = detect(doc)
     appeal = [f for f in findings if "missing_appeal_rights" in f["id"]]
     assert appeal

@@ -3,11 +3,8 @@
 from __future__ import annotations
 
 import importlib.util
-import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
+from unittest.mock import MagicMock
 
 # Load the script as a module (it lives in scripts/, not src/)
 _SCRIPT = Path(__file__).parent.parent / "scripts" / "export_training_data.py"
@@ -31,7 +28,11 @@ _INSTR_MEMORANDUM = _mod._INSTR_MEMORANDUM
 
 def test_finding_output_contains_issue():
     out = _finding_output(
-        "legal:l3:x", "CPRA catch-all without balancing", "high", "l3_exemption_misapplication", {}
+        "legal:l3:x",
+        "CPRA catch-all without balancing",
+        "high",
+        "l3_exemption_misapplication",
+        {},
     )
     assert "CPRA catch-all without balancing" in out
 
@@ -42,25 +43,34 @@ def test_finding_output_severity_uppercased():
 
 
 def test_finding_output_statute_present():
-    out = _finding_output("id", "issue", "high", "l3", {"statute": "Gov. Code § 7922.000"})
+    out = _finding_output(
+        "id", "issue", "high", "l3", {"statute": "Gov. Code § 7922.000"}
+    )
     assert "Gov. Code § 7922.000" in out
 
 
 def test_finding_output_regulation_present():
-    out = _finding_output("id", "issue", "high", "l5", {"regulation": "2 C.F.R. § 200.303"})
+    out = _finding_output(
+        "id", "issue", "high", "l5", {"regulation": "2 C.F.R. § 200.303"}
+    )
     assert "2 C.F.R. § 200.303" in out
 
 
 def test_finding_output_framework_present():
     out = _finding_output(
-        "id", "issue", "medium", "l10",
-        {"framework": "Mathews v. Eldridge (1976) 424 U.S. 319"}
+        "id",
+        "issue",
+        "medium",
+        "l10",
+        {"framework": "Mathews v. Eldridge (1976) 424 U.S. 319"},
     )
     assert "Mathews v. Eldridge" in out
 
 
 def test_finding_output_explanation_present():
-    out = _finding_output("id", "issue", "low", "l1", {"detail": "SB 34 limits retention."})
+    out = _finding_output(
+        "id", "issue", "low", "l1", {"detail": "SB 34 limits retention."}
+    )
     assert "SB 34 limits retention" in out
 
 
@@ -91,7 +101,9 @@ def test_explanation_low_urgency():
 
 
 def test_explanation_includes_detail():
-    out = _explanation_output("issue", "medium", {"detail": "SB 34 imposes 60-day limit."})
+    out = _explanation_output(
+        "issue", "medium", {"detail": "SB 34 imposes 60-day limit."}
+    )
     assert "SB 34" in out
 
 
@@ -147,7 +159,9 @@ def test_memorandum_output_conclusion_soft_for_low_only():
 
 def test_memorandum_statute_in_output():
     a = _mock_anomaly("issue", "high")
-    out = _memorandum_output("Doc", "Agency", [(a, {"statute": "Gov. Code § 7922.000"})])
+    out = _memorandum_output(
+        "Doc", "Agency", [(a, {"statute": "Gov. Code § 7922.000"})]
+    )
     assert "Gov. Code § 7922.000" in out
 
 

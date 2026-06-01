@@ -127,7 +127,9 @@ def test_search_finds_matching_section(loader: CaliforniaCodeLoader):
     results = loader.search_text("withhold")
     assert len(results) >= 1
     titles = [r.title for r in results]
-    assert any("law enforcement" in t.lower() or "balancing" in t.lower() for t in titles)  # noqa: E501
+    assert any(
+        "law enforcement" in t.lower() or "balancing" in t.lower() for t in titles
+    )  # noqa: E501
 
 
 def test_search_returns_empty_for_no_match(loader: CaliforniaCodeLoader):

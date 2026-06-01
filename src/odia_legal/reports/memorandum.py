@@ -28,11 +28,11 @@ from __future__ import annotations
 
 import re
 import textwrap
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date
 from typing import Any
 
-from odia_legal.citations.formatter import format_citation, format_all
+from odia_legal.citations.formatter import format_citation
 from odia_legal.citations.parser import (
     Citation,
     parse_cal_case,
@@ -146,7 +146,11 @@ def _build_toa(citations: list[Citation]) -> str:
 # ---------------------------------------------------------------------------
 
 _SEVERITY_ORDER = ("high", "medium", "low")
-_SEVERITY_LABELS = {"high": "A. High-Severity Findings", "medium": "B. Medium-Severity Findings", "low": "C. Low-Severity Findings"}
+_SEVERITY_LABELS = {
+    "high": "A. High-Severity Findings",
+    "medium": "B. Medium-Severity Findings",
+    "low": "C. Low-Severity Findings",
+}
 
 
 def _fmt_finding(finding: dict[str, Any], index: int) -> str:
@@ -220,69 +224,73 @@ class Memorandum:
 
     def to_text(self) -> str:
         """Render as plain-text memorandum."""
-        return "\n".join([
-            "MEMORANDUM",
-            "",
-            _SECTION_RULE,
-            f"TO:   {self.to_field}",
-            f"FROM: {self.from_field}",
-            f"RE:   {self.re_field}",
-            f"DATE: {self.memo_date}",
-            _SECTION_RULE,
-            "",
-            "I. OVERVIEW",
-            "",
-            self.overview,
-            "",
-            _SECTION_RULE,
-            "",
-            "II. TABLE OF AUTHORITIES",
-            "",
-            self.toa,
-            "",
-            _SECTION_RULE,
-            "",
-            "III. ANALYSIS",
-            "",
-            self.analysis,
-            "",
-            _SECTION_RULE,
-            "",
-            "IV. CONCLUSION",
-            "",
-            self.conclusion,
-            "",
-            _SECTION_RULE,
-        ])
+        return "\n".join(
+            [
+                "MEMORANDUM",
+                "",
+                _SECTION_RULE,
+                f"TO:   {self.to_field}",
+                f"FROM: {self.from_field}",
+                f"RE:   {self.re_field}",
+                f"DATE: {self.memo_date}",
+                _SECTION_RULE,
+                "",
+                "I. OVERVIEW",
+                "",
+                self.overview,
+                "",
+                _SECTION_RULE,
+                "",
+                "II. TABLE OF AUTHORITIES",
+                "",
+                self.toa,
+                "",
+                _SECTION_RULE,
+                "",
+                "III. ANALYSIS",
+                "",
+                self.analysis,
+                "",
+                _SECTION_RULE,
+                "",
+                "IV. CONCLUSION",
+                "",
+                self.conclusion,
+                "",
+                _SECTION_RULE,
+            ]
+        )
 
     def to_markdown(self) -> str:
         """Render as Markdown memorandum."""
-        return "\n".join([
-            "# MEMORANDUM",
-            "",
-            f"**TO:** {self.to_field}  ",
-            f"**FROM:** {self.from_field}  ",
-            f"**RE:** {self.re_field}  ",
-            f"**DATE:** {self.memo_date}  ",
-            "",
-            "---",
-            "",
-            "## I. Overview",
-            "",
-            self.overview,
-            "",
-            "## II. Table of Authorities",
-            "",
-            self.toa,
-            "",
-            "## III. Analysis",
-            "",
-            self.analysis,
-            "",
-            "## IV. Conclusion",
-            "",
-            self.conclusion,
-        ])
+        return "\n".join(
+            [
+                "# MEMORANDUM",
+                "",
+                f"**TO:** {self.to_field}  ",
+                f"**FROM:** {self.from_field}  ",
+                f"**RE:** {self.re_field}  ",
+                f"**DATE:** {self.memo_date}  ",
+                "",
+                "---",
+                "",
+                "## I. Overview",
+                "",
+                self.overview,
+                "",
+                "## II. Table of Authorities",
+                "",
+                self.toa,
+                "",
+                "## III. Analysis",
+                "",
+                self.analysis,
+                "",
+                "## IV. Conclusion",
+                "",
+                self.conclusion,
+            ]
+        )
 
     def __str__(self) -> str:
         return self.to_text()
@@ -332,7 +340,9 @@ def generate_memorandum(
 
     # Counts
     total = len(findings)
-    counts = {s: sum(1 for f in findings if f.get("severity") == s) for s in _SEVERITY_ORDER}
+    counts = {
+        s: sum(1 for f in findings if f.get("severity") == s) for s in _SEVERITY_ORDER
+    }
 
     # Overview
     if total == 0:

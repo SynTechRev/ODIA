@@ -142,13 +142,34 @@ class CitationGraph:
             self.add_node(nid, "statute", label=label)
 
         for nid, label in [
-            ("CBS v. Block (1986) 42 Cal.3d 646", "Burden on agency; liberal construction"),
-            ("City of San Jose v. Superior Court (1974) 12 Cal.3d 447", "Broad public records definition"),
-            ("Times Mirror Co. v. Superior Court (1991) 53 Cal.3d 1325", "Catch-all balancing test"),
-            ("Copley Press v. Superior Court (2006) 39 Cal.4th 1272", "Officer records pre-SB 1421"),
-            ("LA County Board v. Superior Court (2016) 2 Cal.5th 282", "Attorney-client privilege scope"),
-            ("City of San Jose v. Superior Court (2017) 2 Cal.5th 608", "Personal-device rule"),
-            ("ACLU v. Superior Court (2011) 202 Cal.App.4th 55", "ALPR bulk data; particularized showing"),
+            (
+                "CBS v. Block (1986) 42 Cal.3d 646",
+                "Burden on agency; liberal construction",
+            ),
+            (
+                "City of San Jose v. Superior Court (1974) 12 Cal.3d 447",
+                "Broad public records definition",
+            ),
+            (
+                "Times Mirror Co. v. Superior Court (1991) 53 Cal.3d 1325",
+                "Catch-all balancing test",
+            ),
+            (
+                "Copley Press v. Superior Court (2006) 39 Cal.4th 1272",
+                "Officer records pre-SB 1421",
+            ),
+            (
+                "LA County Board v. Superior Court (2016) 2 Cal.5th 282",
+                "Attorney-client privilege scope",
+            ),
+            (
+                "City of San Jose v. Superior Court (2017) 2 Cal.5th 608",
+                "Personal-device rule",
+            ),
+            (
+                "ACLU v. Superior Court (2011) 202 Cal.App.4th 55",
+                "ALPR bulk data; particularized showing",
+            ),
         ]:
             self.add_node(nid, "case", label=label)
 
@@ -160,22 +181,47 @@ class CitationGraph:
 
         # Recodification edges (SB 1439)
         for old_sec in [
-            "Gov. Code § 6250", "Gov. Code § 6254(f)", "Gov. Code § 6255",
+            "Gov. Code § 6250",
+            "Gov. Code § 6254(f)",
+            "Gov. Code § 6255",
         ]:
             self.add_node(old_sec, "statute", label="Pre-2022 CPRA section")
             self.add_edge(
-                "SB 1439 (2021)", old_sec,
+                "SB 1439 (2021)",
+                old_sec,
                 "AMENDS",
                 notes="SB 1439 recodified CPRA effective January 1, 2022",
             )
 
         # Case → statute CITES relationships
-        self.add_edge("CBS v. Block (1986) 42 Cal.3d 646", "Gov. Code § 7920.000", "CITES")
-        self.add_edge("Times Mirror Co. v. Superior Court (1991) 53 Cal.3d 1325", "Gov. Code § 7922.000", "CITES")
-        self.add_edge("Copley Press v. Superior Court (2006) 39 Cal.4th 1272", "Gov. Code § 7923.650", "CITES")
-        self.add_edge("LA County Board v. Superior Court (2016) 2 Cal.5th 282", "Gov. Code § 7923.700", "CITES")
-        self.add_edge("City of San Jose v. Superior Court (2017) 2 Cal.5th 608", "Gov. Code § 7920.540", "CITES")
-        self.add_edge("ACLU v. Superior Court (2011) 202 Cal.App.4th 55", "Gov. Code § 7923.650", "CITES")
+        self.add_edge(
+            "CBS v. Block (1986) 42 Cal.3d 646", "Gov. Code § 7920.000", "CITES"
+        )
+        self.add_edge(
+            "Times Mirror Co. v. Superior Court (1991) 53 Cal.3d 1325",
+            "Gov. Code § 7922.000",
+            "CITES",
+        )
+        self.add_edge(
+            "Copley Press v. Superior Court (2006) 39 Cal.4th 1272",
+            "Gov. Code § 7923.650",
+            "CITES",
+        )
+        self.add_edge(
+            "LA County Board v. Superior Court (2016) 2 Cal.5th 282",
+            "Gov. Code § 7923.700",
+            "CITES",
+        )
+        self.add_edge(
+            "City of San Jose v. Superior Court (2017) 2 Cal.5th 608",
+            "Gov. Code § 7920.540",
+            "CITES",
+        )
+        self.add_edge(
+            "ACLU v. Superior Court (2011) 202 Cal.App.4th 55",
+            "Gov. Code § 7923.650",
+            "CITES",
+        )
 
         # SB 1421 overruling: Copley Press --OVERRULED_BY--> SB 1421
         self.add_edge(
@@ -212,8 +258,12 @@ class CitationGraph:
             self.add_edge(sec, "AB 481 (2021)", "IMPLEMENTS")
 
         # ALPR → CPRA relationship
-        self.add_edge("Civ. Code § 1798.90.55", "Gov. Code § 7923.650", "RELATED_TO",
-                      notes="Both govern access to ALPR records; § 1798.90.55 provides alternative CPRA exemption for SB 34 operators")
+        self.add_edge(
+            "Civ. Code § 1798.90.55",
+            "Gov. Code § 7923.650",
+            "RELATED_TO",
+            notes="Both govern access to ALPR records; § 1798.90.55 provides alternative CPRA exemption for SB 34 operators",
+        )
 
     def add_federal_grant_relationships(self) -> None:
         """Add JAG/Byrne grant compliance relationships."""
@@ -226,13 +276,23 @@ class CitationGraph:
             ("28 C.F.R. § 23.20", "Criminal intelligence — operating principles"),
             ("42 U.S.C. § 1983", "Civil action for rights deprivation"),
         ]:
-            self.add_node(nid, "statute" if "U.S.C." in nid else "regulation", label=label)
+            self.add_node(
+                nid, "statute" if "U.S.C." in nid else "regulation", label=label
+            )
 
         self.add_edge("34 U.S.C. § 10152", "34 U.S.C. § 10101", "CITES")
-        self.add_edge("2 C.F.R. § 200.303", "34 U.S.C. § 10152", "IMPLEMENTS",
-                      notes="Uniform Guidance internal controls apply to JAG grant recipients")
-        self.add_edge("28 C.F.R. § 23.20", "34 U.S.C. § 10152", "IMPLEMENTS",
-                      notes="28 CFR Part 23 governs criminal intelligence systems funded by JAG")
+        self.add_edge(
+            "2 C.F.R. § 200.303",
+            "34 U.S.C. § 10152",
+            "IMPLEMENTS",
+            notes="Uniform Guidance internal controls apply to JAG grant recipients",
+        )
+        self.add_edge(
+            "28 C.F.R. § 23.20",
+            "34 U.S.C. § 10152",
+            "IMPLEMENTS",
+            notes="28 CFR Part 23 governs criminal intelligence systems funded by JAG",
+        )
 
     # ------------------------------------------------------------------
     # Query methods
@@ -303,10 +363,7 @@ class CitationGraph:
         """Export graph as a serializable dict (nodes + edges lists)."""
         if self._g is None:
             return {"nodes": [], "edges": []}
-        nodes = [
-            {"id": nid, **data}
-            for nid, data in self._g.nodes(data=True)
-        ]
+        nodes = [{"id": nid, **data} for nid, data in self._g.nodes(data=True)]
         edges = [
             {"source": src, "target": tgt, **data}
             for src, tgt, data in self._g.edges(data=True)

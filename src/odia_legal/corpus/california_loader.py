@@ -189,6 +189,6 @@ class CaliforniaCodeLoader(CorpusLoader):
     def statistics(self) -> dict[str, int]:
         """Return total and per-code section counts."""
         per_code: dict[str, int] = {}
-        for (corpus_id, _) in self._index:
+        for corpus_id, _ in self._index:
             per_code[corpus_id] = per_code.get(corpus_id, 0) + 1
         return {"total_sections": len(self._index), **per_code}

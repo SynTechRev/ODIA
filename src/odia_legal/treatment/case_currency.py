@@ -231,7 +231,11 @@ def check_document_currency(doc: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         # Extract a distinctive keyword from the case name (first significant word)
         first_party = signal.case_name.lower().split(" v. ")[0].split(",")[0].strip()
-        words = [w for w in first_party.split() if len(w) >= 4 and w not in ("corp", "inc.", "the")]
+        words = [
+            w
+            for w in first_party.split()
+            if len(w) >= 4 and w not in ("corp", "inc.", "the")
+        ]
         distinctive = words[0] if words else first_party
         if distinctive and distinctive in text_lower:
             seen.add(signal.case_id)

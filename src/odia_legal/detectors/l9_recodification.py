@@ -146,9 +146,7 @@ def detect(doc: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         seen_old.add(old_sec)
 
-        is_exemption = old_sec in _EXEMPTION_SECTIONS or old_sec.startswith(
-            "6254"
-        )
+        is_exemption = old_sec in _EXEMPTION_SECTIONS or old_sec.startswith("6254")
 
         if post_sb1439:
             severity = "high" if is_exemption else "medium"

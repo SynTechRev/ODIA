@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from odia_legal.reports.memorandum import generate_memorandum, Memorandum
-
+from odia_legal.reports.memorandum import Memorandum, generate_memorandum
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -149,7 +148,13 @@ def test_toa_deduplicates_citations():
 
 def test_toa_no_citations_fallback():
     findings = [
-        {"id": "x", "issue": "no citation here", "severity": "low", "layer": "l1", "details": {}}
+        {
+            "id": "x",
+            "issue": "no citation here",
+            "severity": "low",
+            "layer": "l1",
+            "details": {},
+        }
     ]
     memo = generate_memorandum(_DOC_META, findings)
     assert "No citations identified" in memo.toa
@@ -197,7 +202,10 @@ def test_analysis_no_findings():
 
 def test_conclusion_high_severity_mentions_litigation():
     memo = generate_memorandum(_DOC_META, _FINDINGS_HIGH)
-    assert "litigation" in memo.conclusion.lower() or "corrective" in memo.conclusion.lower()
+    assert (
+        "litigation" in memo.conclusion.lower()
+        or "corrective" in memo.conclusion.lower()
+    )
 
 
 def test_conclusion_custom_recommended_actions():

@@ -87,9 +87,7 @@ def test_l5_sole_source_with_justification_no_finding():
 
 
 def test_l5_equipment_no_prior_approval_low():
-    doc = _doc(
-        "The department purchased $15,000 in ALPR equipment using JAG funds."
-    )
+    doc = _doc("The department purchased $15,000 in ALPR equipment using JAG funds.")
     findings = detect_l5(doc)
     f = next((x for x in findings if "equipment" in x["id"]), None)
     assert f is not None
@@ -177,7 +175,9 @@ def test_l6_alpr_without_carpenter_high():
         "movements throughout the city."
     )
     findings = detect_l6(doc)
-    f = next((x for x in findings if "carpenter" in x["id"] or "location" in x["id"]), None)
+    f = next(
+        (x for x in findings if "carpenter" in x["id"] or "location" in x["id"]), None
+    )
     assert f is not None
     assert f["severity"] == "high"
 

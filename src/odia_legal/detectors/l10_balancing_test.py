@@ -122,7 +122,9 @@ def _get_text(doc: dict[str, Any]) -> str:
     return ""
 
 
-def _make_finding(rule_id: str, issue: str, severity: str, details: dict[str, Any]) -> dict[str, Any]:
+def _make_finding(
+    rule_id: str, issue: str, severity: str, details: dict[str, Any]
+) -> dict[str, Any]:
     return {
         "id": f"legal:l10:balancing_test:{rule_id}",
         "issue": issue,
@@ -181,7 +183,11 @@ def _check_cpra_balancing(text: str) -> list[dict[str, Any]]:
                 },
             )
         )
-    elif _CPRA_BALANCE_TRIGGER_RE.search(text) and not _CPRA_BALANCE_ADEQUATE_RE.search(text) and not _CPRA_CONCLUSORY_RE.search(text):
+    elif (
+        _CPRA_BALANCE_TRIGGER_RE.search(text)
+        and not _CPRA_BALANCE_ADEQUATE_RE.search(text)
+        and not _CPRA_CONCLUSORY_RE.search(text)
+    ):
         results.append(
             _make_finding(
                 "cpra_balancing_absent",

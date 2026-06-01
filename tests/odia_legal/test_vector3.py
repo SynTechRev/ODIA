@@ -61,6 +61,7 @@ def test_reeval_returns_result_instance():
 def test_run_date_defaults_to_today():
     result = LegalVector3().reeval(_ALPR_DOC, [], prior_run_date="2023-01-01")
     import re
+
     assert re.match(r"\d{4}-\d{2}-\d{2}", result.run_date)
 
 
@@ -129,6 +130,7 @@ def test_unchanged_finding_when_same_id_and_severity():
     evaluator = LegalVector3()
     # First get what the detectors actually produce on this doc
     from odia_legal.vector3 import _run_all_detectors
+
     current = _run_all_detectors(_ALPR_DOC)
     if not current:
         pytest.skip("no detector findings on test doc")
@@ -149,6 +151,7 @@ def test_upgraded_when_severity_increases():
     }
     # The real detector on _ALPR_DOC should produce "high" for this ID
     from odia_legal.vector3 import _run_all_detectors
+
     current = _run_all_detectors(_ALPR_DOC)
     real = next((f for f in current if f["id"] == low_prior["id"]), None)
     if real is None or real.get("severity") == "low":
@@ -168,6 +171,7 @@ def test_downgraded_when_severity_decreases():
         "details": {},
     }
     from odia_legal.vector3 import _run_all_detectors
+
     current = _run_all_detectors(_ALPR_DOC)
     real = next((f for f in current if f["id"] == high_prior["id"]), None)
     if real is None or real.get("severity") == "high":
@@ -231,8 +235,18 @@ def test_summary_contains_doc_id():
 def test_to_dict_keys():
     result = LegalVector3().reeval(_ALPR_DOC, [], prior_run_date="2023-01-01")
     d = result.to_dict()
-    for key in ("doc_id", "run_date", "prior_run_date", "new", "resolved",
-                "upgraded", "downgraded", "unchanged", "currency_changes", "changed_count"):
+    for key in (
+        "doc_id",
+        "run_date",
+        "prior_run_date",
+        "new",
+        "resolved",
+        "upgraded",
+        "downgraded",
+        "unchanged",
+        "currency_changes",
+        "changed_count",
+    ):
         assert key in d
 
 

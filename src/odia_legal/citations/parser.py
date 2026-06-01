@@ -147,9 +147,7 @@ _CAL_REPORTERS = [
     "Cal.",
 ]
 
-_CAL_REPORTER_PATTERN = "|".join(
-    re.escape(r) for r in _CAL_REPORTERS
-)
+_CAL_REPORTER_PATTERN = "|".join(re.escape(r) for r in _CAL_REPORTERS)
 
 # ---------------------------------------------------------------------------
 # Regex patterns
@@ -398,8 +396,5 @@ def parse_citations(text: str) -> list[Citation]:
     should use Citation.raw to detect spans if needed.
     """
     return (
-        parse_usc(text)
-        + parse_cfr(text)
-        + parse_cal_code(text)
-        + parse_cal_case(text)
+        parse_usc(text) + parse_cfr(text) + parse_cal_code(text) + parse_cal_case(text)
     )

@@ -147,7 +147,9 @@ class ReEvaluationResult:
             f"  UNCHANGED : {len(self.unchanged_findings)}",
         ]
         if self.currency_changes:
-            lines.append(f"  STALE LAW : {len(self.currency_changes)} case(s) changed treatment")
+            lines.append(
+                f"  STALE LAW : {len(self.currency_changes)} case(s) changed treatment"
+            )
         return "\n".join(lines)
 
     def to_dict(self) -> dict[str, Any]:

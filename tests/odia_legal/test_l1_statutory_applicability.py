@@ -45,7 +45,9 @@ def test_flock_safety_triggers_alpr():
 
 
 def test_ab481_triggers_on_military_equipment():
-    doc = _doc("The police department requested approval for military equipment acquisition.")
+    doc = _doc(
+        "The police department requested approval for military equipment acquisition."
+    )
     findings = detect(doc)
     statutes = {f["details"]["statute"] for f in findings}
     assert "Gov. Code § 36000" in statutes
@@ -71,7 +73,9 @@ def test_bwc_triggers_ab481():
 
 
 def test_cpra_request_triggers_cpra():
-    doc = _doc("The requester filed a California Public Records Act request for records.")
+    doc = _doc(
+        "The requester filed a California Public Records Act request for records."
+    )
     findings = detect(doc)
     statutes = {f["details"]["statute"] for f in findings}
     assert "Gov. Code § 7920.000" in statutes
@@ -90,14 +94,18 @@ def test_withhold_triggers_law_enforcement_exemption():
 
 
 def test_jag_triggers_34usc():
-    doc = _doc("The department received a JAG grant from the Bureau of Justice Assistance.")
+    doc = _doc(
+        "The department received a JAG grant from the Bureau of Justice Assistance."
+    )
     findings = detect(doc)
     statutes = {f["details"]["statute"] for f in findings}
     assert "34 U.S.C. § 10152" in statutes
 
 
 def test_federal_grant_triggers_uniform_guidance():
-    doc = _doc("The federal grant expenditures must comply with Uniform Guidance requirements.")
+    doc = _doc(
+        "The federal grant expenditures must comply with Uniform Guidance requirements."
+    )
     findings = detect(doc)
     statutes = {f["details"]["statute"] for f in findings}
     assert "2 C.F.R. § 200.303" in statutes
@@ -109,7 +117,9 @@ def test_federal_grant_triggers_uniform_guidance():
 
 
 def test_sb1421_triggers_pen_832_7():
-    doc = _doc("SB 1421 requires disclosure of use of force records for peace officers.")
+    doc = _doc(
+        "SB 1421 requires disclosure of use of force records for peace officers."
+    )
     findings = detect(doc)
     statutes = {f["details"]["statute"] for f in findings}
     assert "Pen. Code § 832.7" in statutes

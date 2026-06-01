@@ -4,16 +4,15 @@ from __future__ import annotations
 
 import pytest
 
-from odia_legal.citations.formatter import format_citation, format_all, Style
+from odia_legal.citations.formatter import format_all, format_citation
 from odia_legal.citations.parser import (
     Citation,
-    parse_citations,
-    parse_cal_code,
     parse_cal_case,
-    parse_usc,
+    parse_cal_code,
     parse_cfr,
+    parse_citations,
+    parse_usc,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -54,7 +53,9 @@ def cfr_part(title: int, part: str) -> Citation:
     )
 
 
-def cal_case(parties: str, year: int, volume: int, reporter: str, page: int) -> Citation:
+def cal_case(
+    parties: str, year: int, volume: int, reporter: str, page: int
+) -> Citation:
     return Citation(
         citation_type="cal_case",
         corpus_id="cal_case_law",
@@ -254,7 +255,9 @@ def test_cal_case_markdown():
 
 
 def test_format_all_default_separator():
-    cites = parse_citations("Gov. Code § 7922.000 and CBS, Inc. v. Block (1986) 42 Cal.3d 646")
+    cites = parse_citations(
+        "Gov. Code § 7922.000 and CBS, Inc. v. Block (1986) 42 Cal.3d 646"
+    )
     if len(cites) >= 2:
         result = format_all(cites, style="cal_style")
         assert "; " in result

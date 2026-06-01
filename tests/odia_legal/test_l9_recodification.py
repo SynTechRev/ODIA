@@ -56,9 +56,7 @@ def test_old_form_catch_all_6255_is_medium_severity():
 
 
 def test_old_form_access_section_is_medium():
-    doc = _doc(
-        "The request was governed by § 6253(c), which allows 10 calendar days."
-    )
+    doc = _doc("The request was governed by § 6253(c), which allows 10 calendar days.")
     findings = detect(doc)
     f = next((x for x in findings if "6253" in x["id"]), None)
     assert f is not None
@@ -181,7 +179,10 @@ def test_finding_id_is_namespaced():
 
 
 def test_date_extracted_from_metadata():
-    doc = {"text": "Request denied under § 6254(f).", "metadata": {"date": "2023-05-10"}}  # noqa: E501
+    doc = {
+        "text": "Request denied under § 6254(f).",
+        "metadata": {"date": "2023-05-10"},
+    }  # noqa: E501
     findings = detect(doc)
     assert findings[0]["details"]["document_date"] == "2023-05-10"
 

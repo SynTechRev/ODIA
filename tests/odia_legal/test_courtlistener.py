@@ -47,7 +47,11 @@ def test_search_opinion_returns_results():
     mock_session.get.return_value = _mock_response(
         {
             "results": [
-                {"cluster_id": 123, "caseName": "Carpenter v. United States", "absolute_url": "/opinion/123/"}
+                {
+                    "cluster_id": 123,
+                    "caseName": "Carpenter v. United States",
+                    "absolute_url": "/opinion/123/",
+                }
             ]
         }
     )
@@ -63,7 +67,9 @@ def test_search_opinion_returns_empty_on_failure():
     client = CourtListenerClient()
     client._session = None
 
-    with patch("odia_legal.treatment.courtlistener.CourtListenerClient._get", return_value=None):
+    with patch(
+        "odia_legal.treatment.courtlistener.CourtListenerClient._get", return_value=None
+    ):
         results = client.search_opinion("test")
     assert results == []
 
@@ -76,7 +82,11 @@ def test_get_negative_treatment_no_opinions_returns_empty():
 
 
 def test_get_negative_treatment_returns_negative_signals():
-    mock_cluster = {"cluster_id": 99, "caseName": "Copley Press", "absolute_url": "/op/99/"}
+    mock_cluster = {
+        "cluster_id": 99,
+        "caseName": "Copley Press",
+        "absolute_url": "/op/99/",
+    }
     mock_citing = [
         {
             "caseName": "SB 1421 Case",
@@ -101,7 +111,11 @@ def test_get_negative_treatment_returns_negative_signals():
 
 
 def test_get_negative_treatment_skips_positive_treatment():
-    mock_cluster = {"cluster_id": 99, "caseName": "Good Case", "absolute_url": "/op/99/"}
+    mock_cluster = {
+        "cluster_id": 99,
+        "caseName": "Good Case",
+        "absolute_url": "/op/99/",
+    }
     mock_citing = [
         {
             "caseName": "Positive Case",
@@ -123,7 +137,13 @@ def test_get_negative_treatment_skips_positive_treatment():
 
 
 def test_enrich_treatment_table_returns_dict():
-    mock_op = {"cluster_id": 42, "caseName": "CBS v. Block", "absolute_url": "/op/42/", "dateFiled": "1986-01-01", "court": "cal"}
+    mock_op = {
+        "cluster_id": 42,
+        "caseName": "CBS v. Block",
+        "absolute_url": "/op/42/",
+        "dateFiled": "1986-01-01",
+        "court": "cal",
+    }
     client = CourtListenerClient()
     with patch.object(client, "search_opinion", return_value=[mock_op]):
         result = client.enrich_treatment_table(["CBS v. Block"])
