@@ -120,8 +120,7 @@ _CHAIN_AUTHORITY_CITED_RE = re.compile(
     r"|\bResolution\s+(?:No\.?\s*)?\d+"
     r"|\bCharter\s+(?:section|art(?:icle)?)\s*\d+"
     # § can appear mid-sentence, no word-boundary needed
-    r"|§\s*\d+"
-    r")",
+    r"|§\s*\d+" r")",
     re.IGNORECASE,
 )
 
@@ -215,7 +214,7 @@ def _check_ultra_vires(text: str) -> list[dict[str, Any]]:
                 {
                     "statute": "Cal. Const., art. XI, § 5; Gov. Code § 53060",
                     "case": "City of Anaheim v. City of Los Angeles (2000) "
-                            "83 Cal.App.4th 1117",
+                    "83 Cal.App.4th 1117",
                     "detail": (
                         "An agency has only those powers expressly granted by the "
                         "legislature or governing body. Action beyond that grant is "

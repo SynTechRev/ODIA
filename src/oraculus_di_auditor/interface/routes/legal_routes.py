@@ -23,7 +23,9 @@ try:
 
     class AnalyzeRequest(BaseModel):
         text: str = Field(..., description="Document text to analyze")
-        document_id: str | None = Field(None, description="Optional document identifier")
+        document_id: str | None = Field(
+            None, description="Optional document identifier"
+        )
         layers: list[str] | None = Field(
             None,
             description=(
@@ -128,6 +130,7 @@ def register_legal_routes(app: Any) -> None:
         corpus_status: dict[str, Any] = {}
         try:
             from oraculus_di_auditor.legal.legal_resolver import get_resolver
+
             resolver = get_resolver()
             corpus_status = resolver.statistics()
         except Exception as exc:  # noqa: BLE001
@@ -239,7 +242,9 @@ def register_legal_routes(app: Any) -> None:
             audience=audience,  # type: ignore[arg-type]
         )
 
-        output = explainer.to_html() if request.format == "html" else explainer.to_text()
+        output = (
+            explainer.to_html() if request.format == "html" else explainer.to_text()
+        )
 
         return {
             "audience": audience,

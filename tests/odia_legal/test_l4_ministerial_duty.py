@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from odia_legal.detectors.l4_ministerial_duty import detect
 
 
@@ -56,9 +54,7 @@ def test_cpra_no_request_no_finding():
 
 
 def test_cpra_month_delay_detected():
-    doc = _doc(
-        "The records request went unanswered for three months."
-    )
+    doc = _doc("The records request went unanswered for three months.")
     findings = detect(doc)
     f = next((x for x in findings if "cpra_response_deadline" in x["id"]), None)
     assert f is not None

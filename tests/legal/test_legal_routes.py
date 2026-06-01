@@ -178,7 +178,11 @@ def test_memorandum_toa_present(client):
 def test_explain_community_audience(client):
     r = client.post(
         "/api/v1/legal/explain",
-        json={"findings": _FINDINGS, "doc_meta": {"title": "ALPR Policy"}, "audience": "community"},
+        json={
+            "findings": _FINDINGS,
+            "doc_meta": {"title": "ALPR Policy"},
+            "audience": "community",
+        },
     )
     assert r.status_code == 200, r.text
     body = r.json()
@@ -199,7 +203,12 @@ def test_explain_council_audience(client):
 def test_explain_html_format(client):
     r = client.post(
         "/api/v1/legal/explain",
-        json={"findings": _FINDINGS, "doc_meta": {}, "audience": "media", "format": "html"},
+        json={
+            "findings": _FINDINGS,
+            "doc_meta": {},
+            "audience": "media",
+            "format": "html",
+        },
     )
     assert r.status_code == 200
     assert "<h1>" in r.json()["output"]

@@ -162,7 +162,9 @@ def test_ordinance_conflicts_with_state_law_high():
         "permits law enforcement to retain ALPR data for five years."
     )
     findings = detect(doc)
-    f = next((x for x in findings if "ordinance_exceeds_state_preemption" in x["id"]), None)
+    f = next(
+        (x for x in findings if "ordinance_exceeds_state_preemption" in x["id"]), None
+    )
     assert f is not None
     assert f["severity"] == "high"
 

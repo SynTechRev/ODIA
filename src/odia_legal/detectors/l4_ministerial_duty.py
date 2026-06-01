@@ -306,7 +306,7 @@ def _check_writ_exposure(text: str) -> list[dict[str, Any]]:
                     "discretion exception applies."
                 ),
                 "case": "Transdyn/Cresci JV v. City and County of San Francisco (1999) "
-                        "72 Cal.App.4th 746",
+                "72 Cal.App.4th 746",
             },
         )
     ]
