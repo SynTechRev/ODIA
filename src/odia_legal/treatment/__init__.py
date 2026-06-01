@@ -7,6 +7,7 @@ from odia_legal.treatment.case_currency import (
     is_good_law,
     treatment_table,
 )
+from odia_legal.treatment.courtlistener import CourtListenerClient
 
 __all__ = [
     "TreatmentSignal",
@@ -14,4 +15,5 @@ __all__ = [
     "is_good_law",
     "treatment_table",
     "check_document_currency",
+    "CourtListenerClient",
 ]
