@@ -157,7 +157,6 @@ def _fmt_finding_plain(finding: dict[str, Any], index: int) -> str:
     severity = finding.get("severity", "low")
     issue = finding.get("issue", "")
     details = finding.get("details", {})
-    layer = finding.get("layer", "")
 
     label = _SEVERITY_PLAIN.get(severity, "NOTE")
     action = _SEVERITY_ACTION.get(severity, "")

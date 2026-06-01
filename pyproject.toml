@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odia"
-version = "3.6.0"
+version = "3.7.0"
 description = "O.D.I.A. — Oraculus Decimus Intellect Analyst: civic accountability intelligence platform for forensic analysis of legal and government documents"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -209,3 +209,14 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "tests/test_upload_routes.py" = ["E402"]
 "tests/test_legistar_to_upload_staging.py" = ["N814"]
 "scripts/fetch_documents.py" = ["E501"]
+"scripts/export_training_data.py" = ["E501"]
+"src/odia_legal/detectors/l10_balancing_test.py" = ["E501"]
+"tests/odia_legal/test_l10_balancing_test.py" = ["E501"]
+"src/odia_legal/citations/formatter.py" = ["E501"]
+"tests/odia_legal/test_citation_formatter.py" = ["E501"]
+"src/odia_legal/reports/memorandum.py" = ["E501"]
+"tests/odia_legal/test_memorandum.py" = ["E501"]
+"src/odia_legal/reports/explainer.py" = ["E501"]
+"tests/odia_legal/test_explainer.py" = ["E501"]
+"src/odia_legal/vector3.py" = ["E501"]
+"tests/odia_legal/test_vector3.py" = ["E501"]
