@@ -21,7 +21,29 @@ corpora:
       with as_of < 2013-01-01 returns text at the earliest available
       commit with a note.
 
-  # Phase 2+: append more entries here without touching code.
+  - id: cal_codes
+    name: "California Codes"
+    enabled: true
+    loader: odia_legal.corpus.california_loader.CaliforniaCodeLoader
+    submodule_path: data/legal_corpora/cal_codes
+    source_url: https://leginfo.legislature.ca.gov
+    citation_patterns:
+      - "Gov. Code"
+      - "Government Code"
+      - "Pen. Code"
+      - "Penal Code"
+      - "Civ. Code"
+      - "Civil Code"
+      - "Veh. Code"
+      - "Welf. & Inst. Code"
+      - "Cal. Gov. Code"
+    notes: |
+      California statute corpus, fetched from leginfo.legislature.ca.gov by
+      scripts/ingest_cal_codes.py. Covers CPRA (§§ 7920–7931), AB 481 (§§ 36000–36010),
+      Pen. Code § 832.7 (officer records), Civ. Code § 1798.90.51–55 (ALPR),
+      Veh. Code § 2413, Welf. & Inst. Code § 827. Re-run ingest script to refresh.
+
+  # Phase 3+: CFR, federal register
   # - id: cfr
   #   enabled: false  # not yet ingested
-  #   loader: oraculus_di_auditor.legal.cfr_loader.CFRLoader
+  #   loader: odia_legal.corpus.cfr_loader.CFRLoader
