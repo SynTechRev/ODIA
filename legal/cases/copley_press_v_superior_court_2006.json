@@ -1,0 +1,53 @@
+{
+  "case_id": "copley_press_v_superior_court_2006",
+  "name": "Copley Press, Inc. v. Superior Court",
+  "citation": "39 Cal.4th 1272 (2006)",
+  "year": 2006,
+  "court": "California Supreme Court",
+  "doctrine": "cpra_peace_officer_records",
+  "secondary_doctrines": [
+    "personnel_records",
+    "law_enforcement_exemption",
+    "sb1421_predicate"
+  ],
+  "summary": "Copley Press sought access to records of disciplinary proceedings against police officers. The California Supreme Court held that pre-SB 1421 (2018), peace officer personnel records — including discipline records — were categorically confidential under Penal Code § 832.7 and the CPRA § 6254(c) personnel file exemption (now § 7923.625). SB 1421 subsequently overruled this holding for specified categories of records.",
+  "holding": "Prior to SB 1421 (2018), Penal Code § 832.7 created a categorical confidentiality rule for peace officer personnel records, including discipline files, that superseded the CPRA's general public-interest balancing test. Records of Internal Affairs investigations were confidential absent a court order. NOTE: SB 1421 (effective January 1, 2019) substantially overruled this holding by making specified categories of officer misconduct records public under Penal Code § 832.7.",
+  "legal_definitions": [
+    {
+      "term": "peace officer personnel records — pre-SB 1421 rule",
+      "definition": "Under the pre-2019 regime, peace officer personnel records were categorically confidential under Pen. Code § 832.7, shielding discipline, complaints, and Internal Affairs records from CPRA disclosure without a court order or statutory exception.",
+      "context": "This rule was fundamentally altered by SB 1421 (2018), which made records of use of force, sexual assault, and dishonesty findings publicly disclosable.",
+      "pinpoint_citation": "39 Cal.4th 1272, 1284",
+      "binding_authority": false,
+      "notes": "Partially overruled by SB 1421 (2018) effective January 1, 2019"
+    }
+  ],
+  "issue_tags": [
+    "cpra",
+    "section_6254_c",
+    "section_7923_625",
+    "peace_officer",
+    "personnel_records",
+    "sb1421",
+    "internal_affairs",
+    "law_enforcement_accountability"
+  ],
+  "constitutional_basis": [],
+  "relevance_to_audit": "Critical for CPRA audits involving law enforcement records requests. Post-SB 1421 (2019), the categorical confidentiality rule no longer applies to use-of-force records, sexual assault findings, and dishonesty findings under Pen. Code § 832.7. Agencies that continue to invoke § 7923.625 to shield all officer records without SB 1421 analysis are misapplying the exemption.",
+  "key_quotes": [
+    {
+      "text": "Penal Code section 832.7 creates a broad, categorical rule of confidentiality for peace officer personnel records that was intended to supersede the balancing test otherwise available under Government Code section 6255.",
+      "pinpoint_citation": "39 Cal.4th 1272, 1283",
+      "context": "Describing the pre-SB 1421 rule; substantially abrogated by legislation effective January 1, 2019."
+    }
+  ],
+  "procedural_posture": "Writ of mandate to compel disclosure; denied",
+  "vote": "6-1",
+  "majority_author": "George, C.J.",
+  "subsequent_treatment": "Partially overruled by SB 1421 (Stats. 2018, ch. 988) which created public right of access to specified peace officer misconduct records effective January 1, 2019",
+  "overruled_by": "SB 1421 (2018), Pen. Code § 832.7 (amended)",
+  "source_url": "https://law.justia.com/cases/california/supreme-court/4th/39/1272.html",
+  "doctrinal_weight": 0.60,
+  "cpra_sections": ["6254(c)", "7923.625"],
+  "penal_code_sections": ["832.7", "832.8"]
+}

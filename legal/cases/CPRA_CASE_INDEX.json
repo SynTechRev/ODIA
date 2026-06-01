@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "description": "Index of California CPRA case law relevant to ODIA forensic audit analysis",
+  "as_of": "2026-05-31",
+  "cases": [
+    {
+      "case_id": "cbs_inc_v_block_1986",
+      "name": "CBS, Inc. v. Block",
+      "citation": "42 Cal.3d 646 (1986)",
+      "court": "California Supreme Court",
+      "year": 1986,
+      "doctrine": "cpra_access",
+      "key_principle": "Agency bears burden of proving exemption applies; liberal construction favoring disclosure",
+      "cpra_sections": ["6250", "7920.000"],
+      "doctrinal_weight": 0.92,
+      "file": "cbs_inc_v_block_1986.json"
+    },
+    {
+      "case_id": "city_of_san_jose_v_superior_court_1974",
+      "name": "City of San Jose v. Superior Court",
+      "citation": "12 Cal.3d 447 (1974)",
+      "court": "California Supreme Court",
+      "year": 1974,
+      "doctrine": "cpra_public_records_definition",
+      "key_principle": "Public record = any writing relating to conduct of public business, regardless of form",
+      "cpra_sections": ["6252(g)", "7920.540"],
+      "doctrinal_weight": 0.90,
+      "file": "city_of_san_jose_v_superior_court_1974.json"
+    },
+    {
+      "case_id": "times_mirror_co_v_superior_court_1991",
+      "name": "Times Mirror Co. v. Superior Court",
+      "citation": "53 Cal.3d 1325 (1991)",
+      "court": "California Supreme Court",
+      "year": 1991,
+      "doctrine": "cpra_deliberative_process",
+      "key_principle": "§ 6255 / § 7922.000: nondisclosure interest must CLEARLY outweigh disclosure interest",
+      "cpra_sections": ["6255", "7922.000"],
+      "doctrinal_weight": 0.91,
+      "file": "times_mirror_co_v_superior_court_1991.json"
+    },
+    {
+      "case_id": "copley_press_v_superior_court_2006",
+      "name": "Copley Press, Inc. v. Superior Court",
+      "citation": "39 Cal.4th 1272 (2006)",
+      "court": "California Supreme Court",
+      "year": 2006,
+      "doctrine": "cpra_peace_officer_records",
+      "key_principle": "Pre-SB 1421: officer records categorically confidential. Post-SB 1421 (2019): specified misconduct records are public.",
+      "cpra_sections": ["6254(c)", "7923.625"],
+      "penal_code_sections": ["832.7"],
+      "doctrinal_weight": 0.60,
+      "overruled_in_part_by": "SB 1421 (2018)",
+      "file": "copley_press_v_superior_court_2006.json"
+    },
+    {
+      "case_id": "los_angeles_county_board_v_superior_court_2016",
+      "name": "Los Angeles County Board of Supervisors v. Superior Court",
+      "citation": "2 Cal.5th 282 (2016)",
+      "court": "California Supreme Court",
+      "year": 2016,
+      "doctrine": "cpra_attorney_client",
+      "key_principle": "§ 6254(k) / § 7923.700 protects bona fide attorney-client communications but not underlying facts",
+      "cpra_sections": ["6254(k)", "7923.700"],
+      "doctrinal_weight": 0.93,
+      "file": "los_angeles_county_board_v_superior_court_2016.json"
+    },
+    {
+      "case_id": "city_of_san_jose_v_superior_court_2017",
+      "name": "City of San Jose v. Superior Court",
+      "citation": "2 Cal.5th 608 (2017)",
+      "court": "California Supreme Court",
+      "year": 2017,
+      "doctrine": "cpra_personal_devices",
+      "key_principle": "Government business conducted on personal devices/accounts is a public record subject to CPRA",
+      "cpra_sections": ["6252(g)", "7920.540"],
+      "doctrinal_weight": 0.94,
+      "file": "city_of_san_jose_v_superior_court_2017.json"
+    },
+    {
+      "case_id": "aclu_v_superior_court_2011_alpr",
+      "name": "ACLU of Northern California v. Superior Court",
+      "citation": "202 Cal.App.4th 55 (2011)",
+      "court": "California Court of Appeal, First District",
+      "year": 2011,
+      "doctrine": "cpra_alpr_records",
+      "key_principle": "§ 6254(f) law enforcement exemption requires particularized showing; bulk ALPR data not automatically exempt",
+      "cpra_sections": ["6254(f)", "7923.650"],
+      "civil_code_sections": ["1798.90.51"],
+      "doctrinal_weight": 0.82,
+      "file": "aclu_v_superior_court_2011_alpr.json"
+    }
+  ],
+  "doctrine_summary": {
+    "access_rights": ["cbs_inc_v_block_1986"],
+    "public_record_definition": ["city_of_san_jose_v_superior_court_1974", "city_of_san_jose_v_superior_court_2017"],
+    "catch_all_balancing": ["times_mirror_co_v_superior_court_1991"],
+    "law_enforcement_exemption": ["aclu_v_superior_court_2011_alpr"],
+    "attorney_client": ["los_angeles_county_board_v_superior_court_2016"],
+    "personnel_records": ["copley_press_v_superior_court_2006"]
+  }
+}

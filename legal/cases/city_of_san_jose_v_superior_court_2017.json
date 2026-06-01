@@ -1,0 +1,51 @@
+{
+  "case_id": "city_of_san_jose_v_superior_court_2017",
+  "name": "City of San Jose v. Superior Court",
+  "citation": "2 Cal.5th 608 (2017)",
+  "year": 2017,
+  "court": "California Supreme Court",
+  "doctrine": "cpra_personal_devices",
+  "secondary_doctrines": [
+    "public_records",
+    "personal_email",
+    "government_business"
+  ],
+  "summary": "A requester sought emails and text messages from city officials' personal devices and accounts relating to city business. The California Supreme Court held that communications about government business are public records subject to CPRA even if sent or stored on personal devices or accounts, rejecting any safe harbor for officials who use personal accounts to conduct government business.",
+  "holding": "A public official's or employee's communications about the conduct of public business are subject to CPRA disclosure even when made using personal devices, personal email accounts, or personal social media accounts. The test is the content of the communication — whether it relates to government business — not the medium used.",
+  "legal_definitions": [
+    {
+      "term": "public record on personal device",
+      "definition": "A communication that relates to the conduct of the public's business is a public record under CPRA regardless of whether it was transmitted or stored on a personal device, personal email account, or through a personal platform rather than a government-issued system.",
+      "context": "The court rejected attempts to evade CPRA through use of private communication channels.",
+      "pinpoint_citation": "2 Cal.5th 608, 624",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "cpra",
+    "personal_devices",
+    "personal_email",
+    "government_business",
+    "public_records",
+    "modern_communication",
+    "evasion"
+  ],
+  "constitutional_basis": [
+    "California Constitution Article I § 3(b)"
+  ],
+  "relevance_to_audit": "Critical for audits involving procurement negotiations, surveillance vendor communications, or budget discussions conducted via personal email, text, or messaging apps. ODIA anomaly detection should flag patterns where public business records are absent from official channels, suggesting possible CPRA evasion.",
+  "key_quotes": [
+    {
+      "text": "A communication created or received by a public official or employee in the conduct of public business is a public record under CPRA, regardless of whether it was sent on a personal or government account.",
+      "pinpoint_citation": "2 Cal.5th 608, 624",
+      "context": "Core holding establishing that the personal/government account distinction does not determine CPRA applicability."
+    }
+  ],
+  "procedural_posture": "Petition for writ of mandate; Court of Appeal denied; reversed",
+  "vote": "7-0",
+  "majority_author": "Corrigan, J.",
+  "subsequent_treatment": "Cited for the personal-device rule; spawned subsequent legislation on preservation obligations for government officials' communications",
+  "source_url": "https://law.justia.com/cases/california/supreme-court/2017/s218066.html",
+  "doctrinal_weight": 0.94,
+  "cpra_sections": ["6252(g)", "7920.540"]
+}

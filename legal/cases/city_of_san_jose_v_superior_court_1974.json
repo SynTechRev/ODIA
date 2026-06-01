@@ -1,0 +1,47 @@
+{
+  "case_id": "city_of_san_jose_v_superior_court_1974",
+  "name": "City of San Jose v. Superior Court",
+  "citation": "12 Cal.3d 447 (1974)",
+  "year": 1974,
+  "court": "California Supreme Court",
+  "doctrine": "cpra_public_records_definition",
+  "secondary_doctrines": [
+    "public_records",
+    "conduct_of_public_business"
+  ],
+  "summary": "The city resisted disclosure of documents relating to municipal litigation settlement negotiations, claiming they were not 'public records.' The California Supreme Court broadly construed the definition of 'public records' to include any writing prepared, used, or retained by a public agency in connection with the conduct of public business, regardless of physical form or whether the document is an official record.",
+  "holding": "A 'public record' under the California Public Records Act includes any writing that relates to the conduct of the public's business, whether prepared by the agency or by a third party, and whether or not it is an 'official' record. The test is whether the content of the document relates to official agency business, not whether the document bears an official label.",
+  "legal_definitions": [
+    {
+      "term": "public record",
+      "definition": "Any writing containing information relating to the conduct of the public's business prepared, owned, used, or retained by any state or local agency regardless of physical form or characteristics.",
+      "context": "Broad construction of Government Code § 6252(e) (now § 7920.540) adopted by the court.",
+      "pinpoint_citation": "12 Cal.3d 447, 458",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "cpra",
+    "public_records",
+    "definition",
+    "conduct_of_business",
+    "litigation_records",
+    "broad_construction"
+  ],
+  "constitutional_basis": [
+    "California Constitution Article I § 3(b)"
+  ],
+  "relevance_to_audit": "Establishes the broad scope of 'public record' — any writing relating to public business is covered, directly applicable when agencies argue that communications, emails, or informal documents are not subject to CPRA.",
+  "key_quotes": [
+    {
+      "text": "The key factor is whether the document relates to the conduct of the public's business, not whether it bears an official designation.",
+      "pinpoint_citation": "12 Cal.3d 447, 458",
+      "context": "Rejecting the city's narrow interpretation that only formally designated official records qualify."
+    }
+  ],
+  "procedural_posture": "Petition for writ of mandate to compel disclosure; granted",
+  "subsequent_treatment": "Cited for the broad definition of public records; foundational for CPRA analysis of what constitutes a 'writing' subject to disclosure",
+  "source_url": "https://law.justia.com/cases/california/supreme-court/3d/12/447.html",
+  "doctrinal_weight": 0.90,
+  "cpra_sections": ["6252", "6252(g)", "7920.500", "7920.540"]
+}

@@ -1,0 +1,54 @@
+{
+  "case_id": "aclu_v_superior_court_2011_alpr",
+  "name": "American Civil Liberties Union of Northern California v. Superior Court",
+  "citation": "202 Cal.App.4th 55 (2011)",
+  "year": 2011,
+  "court": "California Court of Appeal, First District",
+  "doctrine": "cpra_alpr_records",
+  "secondary_doctrines": [
+    "law_enforcement_exemption",
+    "alpr",
+    "mass_surveillance",
+    "public_records"
+  ],
+  "summary": "The ACLU sought ALPR data (license plate reader records) collected by law enforcement agencies. The agencies refused disclosure citing the law enforcement investigative records exemption under § 6254(f) (now § 7923.650). The court examined whether bulk ALPR records — which lack individualized investigative purpose for most plates captured — qualify for the law enforcement exemption.",
+  "holding": "ALPR records collected without individualized suspicion may not automatically qualify for the § 6254(f) law enforcement investigative records exemption. The law enforcement exemption is not a blanket shield for all records possessed by law enforcement agencies; agencies must demonstrate that the specific records relate to a specific investigation and that disclosure would endanger witnesses or reveal confidential investigative techniques. Mass-collected surveillance data requires particularized showing.",
+  "legal_definitions": [
+    {
+      "term": "law enforcement investigative records",
+      "definition": "Under § 6254(f) / § 7923.650, records of investigations conducted by any state or local police agency are exempt from CPRA if disclosure would endanger the safety of a person involved in an investigation, disclose the identity of a confidential informant, or constitute an unwarranted invasion of personal privacy.",
+      "context": "The exemption requires particularized showing, not automatic application to all records held by law enforcement.",
+      "pinpoint_citation": "202 Cal.App.4th 55, 68",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "cpra",
+    "alpr",
+    "license_plate_reader",
+    "law_enforcement",
+    "section_6254_f",
+    "section_7923_650",
+    "mass_surveillance",
+    "public_records",
+    "investigative_records"
+  ],
+  "constitutional_basis": [
+    "California Constitution Article I § 3(b)",
+    "California Constitution Article I § 1 (privacy)"
+  ],
+  "relevance_to_audit": "Directly applicable to CPRA requests for ALPR data in Tulare County and other ODIA audit jurisdictions. Law enforcement agencies that cite § 6254(f) / § 7923.650 to withhold bulk ALPR records must make a particularized showing that disclosure would harm investigations — a blanket § 6254(f) claim for all ALPR data is presumptively insufficient under this case.",
+  "key_quotes": [
+    {
+      "text": "The law enforcement exemption under § 6254(f) requires agencies to show that the specific records at issue relate to a pending or prospective law enforcement investigation, and that disclosure would compromise witness safety, informant identities, or investigative techniques.",
+      "pinpoint_citation": "202 Cal.App.4th 55, 68",
+      "context": "Rejecting a blanket § 6254(f) claim over bulk surveillance records without investigation nexus."
+    }
+  ],
+  "procedural_posture": "Petition for writ of mandate to compel disclosure; granted in part",
+  "subsequent_treatment": "Cited for the proposition that § 6254(f) requires particularized showing; subsequent Civil Code § 1798.90.51-55 (SB 34) enacted to address ALPR data governance",
+  "source_url": "https://law.justia.com/cases/california/court-of-appeal/4th/202/55.html",
+  "doctrinal_weight": 0.82,
+  "cpra_sections": ["6254(f)", "7923.650"],
+  "civil_code_sections": ["1798.90.51", "1798.90.52", "1798.90.53"]
+}

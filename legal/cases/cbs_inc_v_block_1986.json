@@ -1,0 +1,50 @@
+{
+  "case_id": "cbs_inc_v_block_1986",
+  "name": "CBS, Inc. v. Block",
+  "citation": "42 Cal.3d 646 (1986)",
+  "year": 1986,
+  "court": "California Supreme Court",
+  "doctrine": "cpra_access",
+  "secondary_doctrines": [
+    "public_records",
+    "burden_of_proof",
+    "exemption_construction"
+  ],
+  "summary": "CBS sought access to records of police officers involved in use-of-force incidents. The Los Angeles County Sheriff's Department withheld records under the personnel file exemption. The California Supreme Court held that CPRA must be liberally construed in favor of disclosure and that the burden falls on the agency to demonstrate that an exemption applies.",
+  "holding": "Under the California Public Records Act, any exemption from disclosure must be narrowly construed. The agency bears the burden of demonstrating that a specific exemption applies to each withheld record. Courts must conduct in camera review when necessary to resolve claims that records fall within an exemption. The public interest in law enforcement accountability is a factor weighing against nondisclosure.",
+  "legal_definitions": [
+    {
+      "term": "burden of proof in CPRA exemption claims",
+      "definition": "The public agency asserting an exemption bears the burden of demonstrating that the exemption applies to the specific records at issue; the requestor need not prove the records are disclosable.",
+      "context": "Core CPRA procedural rule derived from legislative intent favoring access.",
+      "pinpoint_citation": "42 Cal.3d 646, 651",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "cpra",
+    "public_records",
+    "law_enforcement",
+    "personnel_records",
+    "use_of_force",
+    "burden_of_proof",
+    "liberal_construction"
+  ],
+  "constitutional_basis": [
+    "California Constitution Article I § 3(b)"
+  ],
+  "relevance_to_audit": "Foundational CPRA case establishing burden on agency and liberal construction in favor of disclosure; applicable to all CPRA requests in ODIA audits, especially law enforcement records requests.",
+  "key_quotes": [
+    {
+      "text": "The Legislature has declared that access to information concerning the conduct of the people's business is a fundamental and necessary right of every person in this state.",
+      "pinpoint_citation": "42 Cal.3d 646, 650",
+      "context": "Quoting Government Code section 6250 to establish the liberal construction principle."
+    }
+  ],
+  "procedural_posture": "Writ of mandate; Court of Appeal affirmed denial; reversed",
+  "majority_author": "Grodin, J.",
+  "subsequent_treatment": "Repeatedly cited for the proposition that CPRA exemptions must be narrowly construed and that the burden falls on the agency",
+  "source_url": "https://law.justia.com/cases/california/supreme-court/3d/42/646.html",
+  "doctrinal_weight": 0.92,
+  "cpra_sections": ["6250", "6254", "7920.000", "7923.625"]
+}

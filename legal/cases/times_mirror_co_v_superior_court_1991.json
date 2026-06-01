@@ -1,0 +1,58 @@
+{
+  "case_id": "times_mirror_co_v_superior_court_1991",
+  "name": "Times Mirror Co. v. Superior Court",
+  "citation": "53 Cal.3d 1325 (1991)",
+  "year": 1991,
+  "court": "California Supreme Court",
+  "doctrine": "cpra_deliberative_process",
+  "secondary_doctrines": [
+    "catch_all_exemption",
+    "public_interest_balancing",
+    "deliberative_process_privilege"
+  ],
+  "summary": "The Times Mirror sought access to communications between Governor Deukmejian and his legal counsel relating to pending litigation. The California Supreme Court recognized a common-law deliberative process privilege protecting candid pre-decisional communications and held that § 6255 (now § 7922.000) permits withholding when the public interest in nondisclosure clearly outweighs the public interest in disclosure.",
+  "holding": "Government Code § 6255 (catch-all exemption, now § 7922.000) provides that an agency may refuse to disclose records if the public interest in their nondisclosure clearly outweighs the public interest in disclosure. Pre-decisional deliberative communications are protected by a common law privilege analogous to the federal deliberative process privilege. The exemption requires a specific, particularized showing that disclosure would inhibit frank internal deliberation.",
+  "legal_definitions": [
+    {
+      "term": "deliberative process privilege",
+      "definition": "A common-law privilege protecting pre-decisional, deliberative communications that are part of an agency's decision-making process, when disclosure would inhibit the free exchange of ideas necessary for effective government.",
+      "context": "Recognized as a basis for invoking § 6255 catch-all exemption (now § 7922.000).",
+      "pinpoint_citation": "53 Cal.3d 1325, 1338",
+      "binding_authority": true
+    },
+    {
+      "term": "public interest balancing test",
+      "definition": "Under § 6255 (§ 7922.000), the agency must demonstrate that the public interest served by nondisclosure 'clearly outweighs' the public interest served by disclosure; mere inconvenience or embarrassment is insufficient.",
+      "context": "Standard for § 6255 catch-all exemption invocations.",
+      "pinpoint_citation": "53 Cal.3d 1325, 1342",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "cpra",
+    "section_6255",
+    "section_7922_000",
+    "deliberative_process",
+    "balancing_test",
+    "public_interest",
+    "catch_all_exemption",
+    "attorney_communications"
+  ],
+  "constitutional_basis": [
+    "California Constitution Article I § 3(b)"
+  ],
+  "relevance_to_audit": "Defines the § 6255 / § 7922.000 balancing test; critical when agencies invoke the catch-all exemption. ODIA L-3 (Exemption Misapplication) must apply this standard to evaluate improper § 6255 claims.",
+  "key_quotes": [
+    {
+      "text": "The public interest in nondisclosure must clearly outweigh the public interest in disclosure; it is not sufficient that nondisclosure is merely in the public interest.",
+      "pinpoint_citation": "53 Cal.3d 1325, 1342",
+      "context": "Establishing the high threshold for the catch-all § 6255 exemption."
+    }
+  ],
+  "procedural_posture": "Petition for writ of mandate to compel disclosure; denied in part",
+  "majority_author": "Arabian, J.",
+  "subsequent_treatment": "Leading authority on the § 6255 / § 7922.000 balancing test; applied to deliberative process and other catch-all exemption claims",
+  "source_url": "https://law.justia.com/cases/california/supreme-court/3d/53/1325.html",
+  "doctrinal_weight": 0.91,
+  "cpra_sections": ["6255", "6255(a)", "7922.000"]
+}

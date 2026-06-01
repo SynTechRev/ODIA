@@ -1,0 +1,52 @@
+{
+  "case_id": "los_angeles_county_board_v_superior_court_2016",
+  "name": "Los Angeles County Board of Supervisors v. Superior Court",
+  "citation": "2 Cal.5th 282 (2016)",
+  "year": 2016,
+  "court": "California Supreme Court",
+  "doctrine": "cpra_attorney_client",
+  "secondary_doctrines": [
+    "attorney_client_privilege",
+    "work_product",
+    "cpra_exemption"
+  ],
+  "summary": "The ACLU sought records of the county's settlement payments in police misconduct cases. The county withheld communications between county employees and the county counsel's office, claiming attorney-client privilege under § 6254(k) (now § 7923.700). The California Supreme Court held that the attorney-client privilege protects confidential attorney-client communications from CPRA disclosure, but the government may not use privilege to shield records of its own misconduct.",
+  "holding": "Government Code § 6254(k) (now § 7923.700) incorporates the attorney-client privilege and attorney work-product doctrine as exemptions to CPRA. Confidential communications between a government agency and its attorneys are exempt from disclosure. However, the privilege does not protect facts underlying the representation or documents prepared for purposes other than legal advice.",
+  "legal_definitions": [
+    {
+      "term": "attorney-client privilege under CPRA",
+      "definition": "Section 6254(k) / 7923.700 incorporates the attorney-client privilege, exempting from CPRA disclosure any confidential communication between a client and their lawyer. For government agencies, communications with in-house and outside counsel for the purpose of legal advice are protected.",
+      "context": "The court resolved tension between CPRA access and attorney-client privilege in favor of privilege for bona fide confidential attorney communications.",
+      "pinpoint_citation": "2 Cal.5th 282, 296",
+      "binding_authority": true
+    }
+  ],
+  "issue_tags": [
+    "cpra",
+    "section_6254_k",
+    "section_7923_700",
+    "attorney_client_privilege",
+    "work_product",
+    "police_misconduct",
+    "settlement_records",
+    "government_accountability"
+  ],
+  "constitutional_basis": [
+    "California Constitution Article I § 3(b)"
+  ],
+  "relevance_to_audit": "Defines the scope of § 6254(k) / § 7923.700 attorney-client exemption. Relevant when agencies withhold records claiming attorney-client privilege — ODIA L-3 must verify that the claim applies only to actual confidential attorney communications, not to factual records or business documents routed through counsel.",
+  "key_quotes": [
+    {
+      "text": "Government agencies may invoke the attorney-client privilege to protect confidential communications with their attorneys, but they may not use the privilege as a shield to prevent disclosure of underlying facts or records that would otherwise be subject to CPRA.",
+      "pinpoint_citation": "2 Cal.5th 282, 300",
+      "context": "Limiting the scope of the § 6254(k) exemption to actual attorney-client communications."
+    }
+  ],
+  "procedural_posture": "Writ of mandate; Court of Appeal denied; reversed in part",
+  "vote": "6-1",
+  "majority_author": "Cuéllar, J.",
+  "subsequent_treatment": "Controlling authority on attorney-client privilege under CPRA; widely cited by local agencies and media organizations",
+  "source_url": "https://law.justia.com/cases/california/supreme-court/2016/s226645.html",
+  "doctrinal_weight": 0.93,
+  "cpra_sections": ["6254(k)", "7923.700"]
+}
