@@ -1,12 +1,10 @@
-"""FastAPI routes for the legal-corpus subsystem (v3.3.0).
+"""FastAPI routes for the legal-corpus subsystem (v3.7.1).
 
 Exposes:
-  GET /api/v1/legal/status   — installed corpora + per-corpus stats
-
-The status endpoint is the operator-visible signal that the USC
-submodule loaded correctly and that future resolve() calls will hit
-real text. n8n workflows + the dashboard 'Legal corpus' card consume
-this same payload.
+  GET  /api/v1/legal/status      — installed corpora + detector inventory
+  POST /api/v1/legal/analyze     — run L-1 through L-10 on a document
+  POST /api/v1/legal/memorandum  — generate litigation memorandum from findings
+  POST /api/v1/legal/explain     — generate plain-language explainer
 """
 
 from __future__ import annotations
@@ -16,13 +14,91 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Pydantic models — must be at module level so FastAPI can resolve them
+# ---------------------------------------------------------------------------
+
+try:
+    from pydantic import BaseModel, Field
+
+    class AnalyzeRequest(BaseModel):
+        text: str = Field(..., description="Document text to analyze")
+        document_id: str | None = Field(None, description="Optional document identifier")
+        layers: list[str] | None = Field(
+            None,
+            description=(
+                "Detector layer IDs to run "
+                "(e.g. ['l3_exemption_misapplication']). "
+                "Omit to run all L-1 through L-10 detectors."
+            ),
+        )
+
+    class MemorandumRequest(BaseModel):
+        text: str = Field(..., description="Document text (used for TOA extraction)")
+        findings: list[dict[str, Any]] = Field(
+            ..., description="ODIA finding dicts (id/issue/severity/layer/details)"
+        )
+        doc_meta: dict[str, Any] = Field(
+            default_factory=dict,
+            description="Document metadata: title, agency, date",
+        )
+        to_field: str = Field(
+            "Oversight Body / Responsible Agency",
+            description="Memo recipient line",
+        )
+        recommended_actions: list[str] | None = Field(
+            None, description="Optional bullet list for Conclusion section"
+        )
+        format: str = Field(
+            "text",
+            description="Output format: 'text' (default) or 'markdown'",
+        )
+
+    class ExplainRequest(BaseModel):
+        findings: list[dict[str, Any]] = Field(
+            ..., description="ODIA finding dicts (id/issue/severity/layer/details)"
+        )
+        doc_meta: dict[str, Any] = Field(
+            default_factory=dict,
+            description="Document metadata: title, agency, date",
+        )
+        audience: str = Field(
+            "community",
+            description="Target audience: 'community', 'council', or 'media'",
+        )
+        format: str = Field(
+            "text",
+            description="Output format: 'text' (default) or 'html'",
+        )
+
+except ImportError:
+    BaseModel = object  # type: ignore[assignment,misc]
+    AnalyzeRequest = object  # type: ignore[assignment,misc]
+    MemorandumRequest = object  # type: ignore[assignment,misc]
+    ExplainRequest = object  # type: ignore[assignment,misc]
+
+# ---------------------------------------------------------------------------
+# Detector registry
+# ---------------------------------------------------------------------------
+
+_DETECTOR_MODULES = [
+    "odia_legal.detectors.l1_statutory_applicability",
+    "odia_legal.detectors.l2_procedural_compliance",
+    "odia_legal.detectors.l3_exemption_misapplication",
+    "odia_legal.detectors.l4_ministerial_duty",
+    "odia_legal.detectors.l5_federal_grant_compliance",
+    "odia_legal.detectors.l6_constitutional_implication",
+    "odia_legal.detectors.l7_regulatory_authority",
+    "odia_legal.detectors.l9_recodification",
+    "odia_legal.detectors.l10_balancing_test",
+]
+
 
 def register_legal_routes(app: Any) -> None:
     """Register legal-corpus endpoints on *app*.
 
     Safe to call when FastAPI or the resolver are unavailable —
-    silently does nothing (matches the pattern used by every other
-    register_*_routes function in this package).
+    silently does nothing.
     """
     try:
         from fastapi import APIRouter, HTTPException
@@ -31,29 +107,147 @@ def register_legal_routes(app: Any) -> None:
 
     router = APIRouter(tags=["legal"])
 
+    # ------------------------------------------------------------------
+    # GET /api/v1/legal/status
+    # ------------------------------------------------------------------
+
     @router.get("/api/v1/legal/status")
     async def legal_status() -> dict[str, Any]:
-        """Report on installed legal corpora and their state.
+        """Report on installed legal corpora and detector inventory."""
+        import importlib
 
-        Returns:
-            {
-              "status": "ok",
-              "corpora": {
-                "us-code": {"titles_indexed": 53, "sections_indexed": 52586, ...}
-              }
-            }
-        """
+        detectors: dict[str, str] = {}
+        for mod_path in _DETECTOR_MODULES:
+            layer = mod_path.split(".")[-1]
+            try:
+                importlib.import_module(mod_path)
+                detectors[layer] = "ok"
+            except ImportError as exc:
+                detectors[layer] = f"unavailable: {exc}"
+
+        corpus_status: dict[str, Any] = {}
         try:
             from oraculus_di_auditor.legal.legal_resolver import get_resolver
-
             resolver = get_resolver()
-            return {"status": "ok", "corpora": resolver.statistics()}
+            corpus_status = resolver.statistics()
         except Exception as exc:  # noqa: BLE001
-            # Resolver should be the soft-failure path, not a 500.
-            logger.warning("legal_status: %s", exc)
+            corpus_status = {"error": str(exc)}
+
+        return {
+            "status": "ok",
+            "detectors": detectors,
+            "detectors_available": sum(1 for v in detectors.values() if v == "ok"),
+            "corpora": corpus_status,
+        }
+
+    # ------------------------------------------------------------------
+    # POST /api/v1/legal/analyze
+    # ------------------------------------------------------------------
+
+    @router.post("/api/v1/legal/analyze")
+    async def legal_analyze(request: AnalyzeRequest) -> dict[str, Any]:  # type: ignore[valid-type]
+        """Run L-1 through L-10 legal detectors on a document."""
+        import importlib
+
+        doc = {
+            "text": request.text,
+            "document_id": request.document_id or "",
+        }
+
+        findings: list[dict[str, Any]] = []
+        errors: list[str] = []
+
+        for mod_path in _DETECTOR_MODULES:
+            layer = mod_path.split(".")[-1]
+            if request.layers and layer not in request.layers:
+                continue
+            try:
+                mod = importlib.import_module(mod_path)
+                findings.extend(mod.detect(doc))
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"{layer}: {exc}")
+                logger.warning("legal_analyze: detector %s failed: %s", layer, exc)
+
+        counts = {
+            "high": sum(1 for f in findings if f.get("severity") == "high"),
+            "medium": sum(1 for f in findings if f.get("severity") == "medium"),
+            "low": sum(1 for f in findings if f.get("severity") == "low"),
+            "total": len(findings),
+        }
+
+        return {
+            "document_id": request.document_id,
+            "findings": findings,
+            "counts": counts,
+            "errors": errors,
+        }
+
+    # ------------------------------------------------------------------
+    # POST /api/v1/legal/memorandum
+    # ------------------------------------------------------------------
+
+    @router.post("/api/v1/legal/memorandum")
+    async def legal_memorandum(request: MemorandumRequest) -> dict[str, Any]:  # type: ignore[valid-type]
+        """Generate a litigation-grade memorandum from ODIA legal findings."""
+        try:
+            from odia_legal.reports.memorandum import generate_memorandum
+        except ImportError as exc:
             raise HTTPException(
-                status_code=503, detail=f"legal resolver unavailable: {exc}"
+                status_code=503, detail=f"odia_legal not available: {exc}"
             ) from exc
+
+        memo = generate_memorandum(
+            doc_meta=request.doc_meta,
+            findings=request.findings,
+            to_field=request.to_field,
+            recommended_actions=request.recommended_actions,
+        )
+
+        output = memo.to_markdown() if request.format == "markdown" else memo.to_text()
+
+        return {
+            "format": request.format,
+            "output": output,
+            "finding_count": len(request.findings),
+            "toa_citations": memo.toa,
+        }
+
+    # ------------------------------------------------------------------
+    # POST /api/v1/legal/explain
+    # ------------------------------------------------------------------
+
+    @router.post("/api/v1/legal/explain")
+    async def legal_explain(request: ExplainRequest) -> dict[str, Any]:  # type: ignore[valid-type]
+        """Generate a plain-language explainer for community education."""
+        try:
+            from odia_legal.reports.explainer import generate_explainer
+        except ImportError as exc:
+            raise HTTPException(
+                status_code=503, detail=f"odia_legal not available: {exc}"
+            ) from exc
+
+        audience = request.audience
+        if audience not in ("community", "council", "media"):
+            raise HTTPException(
+                status_code=422,
+                detail=f"Invalid audience '{audience}'. Must be community, council, or media.",
+            )
+
+        explainer = generate_explainer(
+            doc_meta=request.doc_meta,
+            findings=request.findings,
+            audience=audience,  # type: ignore[arg-type]
+        )
+
+        output = explainer.to_html() if request.format == "html" else explainer.to_text()
+
+        return {
+            "audience": audience,
+            "format": request.format,
+            "output": output,
+            "finding_count": len(request.findings),
+            "summary": explainer.summary_table,
+        }
 
     app.include_router(router)
     logger.info("Legal routes registered (/api/v1/legal/*)")
