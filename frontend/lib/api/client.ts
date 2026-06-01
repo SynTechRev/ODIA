@@ -472,6 +472,52 @@ export class APIClient {
     );
     return data;
   }
+
+  // -------------------------------------------------------------------------
+  // Legal analysis (v3.7.1)
+  // -------------------------------------------------------------------------
+
+  async legalAnalyze(
+    text: string,
+    options?: { document_id?: string; layers?: string[] },
+  ): Promise<LegalAnalyzeResponse> {
+    const { data } = await this.http.post<LegalAnalyzeResponse>(
+      '/api/v1/legal/analyze',
+      { text, ...options },
+    );
+    return data;
+  }
+
+  async legalMemorandum(
+    text: string,
+    findings: LegalFinding[],
+    options?: {
+      doc_meta?: Record<string, string>;
+      to_field?: string;
+      format?: 'text' | 'markdown';
+    },
+  ): Promise<LegalMemorandumResponse> {
+    const { data } = await this.http.post<LegalMemorandumResponse>(
+      '/api/v1/legal/memorandum',
+      { text, findings, doc_meta: {}, format: 'markdown', ...options },
+    );
+    return data;
+  }
+
+  async legalExplain(
+    findings: LegalFinding[],
+    options?: {
+      doc_meta?: Record<string, string>;
+      audience?: 'community' | 'council' | 'media';
+      format?: 'text' | 'html';
+    },
+  ): Promise<LegalExplainResponse> {
+    const { data } = await this.http.post<LegalExplainResponse>(
+      '/api/v1/legal/explain',
+      { findings, doc_meta: {}, audience: 'community', format: 'text', ...options },
+    );
+    return data;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -709,4 +755,38 @@ export interface RAGStatusResponse {
   llm_available: boolean;
   llm_provider: string;
   llm_model: string;
+}
+
+// ---------------------------------------------------------------------------
+// Legal analysis types (v3.7.1)
+// ---------------------------------------------------------------------------
+
+export interface LegalFinding {
+  id: string;
+  issue: string;
+  severity: 'low' | 'medium' | 'high';
+  layer: string;
+  details: Record<string, unknown>;
+}
+
+export interface LegalAnalyzeResponse {
+  document_id: string | null;
+  findings: LegalFinding[];
+  counts: { high: number; medium: number; low: number; total: number };
+  errors: string[];
+}
+
+export interface LegalMemorandumResponse {
+  format: string;
+  output: string;
+  finding_count: number;
+  toa_citations: string;
+}
+
+export interface LegalExplainResponse {
+  audience: string;
+  format: string;
+  output: string;
+  finding_count: number;
+  summary: string;
 }
