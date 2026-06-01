@@ -107,20 +107,13 @@ def test_all_prior_findings_not_in_current_become_resolved():
 
 
 def test_new_finding_appears_only_in_new():
-    fresh_finding = {
-        "id": "legal:l99:nonexistent:new_one",
-        "issue": "new finding not in prior",
-        "severity": "medium",
-        "layer": "l99",
-        "details": {},
-    }
-    # Patch: run against empty prior so we know current > prior
+    # Run against empty prior and a doc with no detector triggers —
+    # new_findings must be an empty list (not None or missing)
     result = LegalVector3().reeval(
         {"text": "nothing relevant"},
         [],
         prior_run_date="2023-01-01",
     )
-    # The doc produces no findings, so new_findings should be empty
     assert isinstance(result.new_findings, list)
 
 
