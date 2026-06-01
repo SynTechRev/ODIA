@@ -43,7 +43,17 @@ corpora:
       Pen. Code § 832.7 (officer records), Civ. Code § 1798.90.51–55 (ALPR),
       Veh. Code § 2413, Welf. & Inst. Code § 827. Re-run ingest script to refresh.
 
-  # Phase 3+: CFR, federal register
-  # - id: cfr
-  #   enabled: false  # not yet ingested
-  #   loader: odia_legal.corpus.cfr_loader.CFRLoader
+  - id: cfr
+    name: "Code of Federal Regulations"
+    enabled: true
+    loader: odia_legal.corpus.cfr_loader.CFRLoader
+    submodule_path: data/legal_corpora/cfr
+    source_url: https://www.ecfr.gov
+    citation_patterns:
+      - "C.F.R."
+      - "CFR"
+    notes: |
+      CFR sections fetched from eCFR renderer API (ecfr.gov). Covers:
+        2 CFR Part 200 — Uniform Guidance for federal grants (20 sections)
+        28 CFR Part 23 — Criminal intelligence systems operating policies (4 sections)
+      Re-run scripts/ingest_cfr.py to refresh.

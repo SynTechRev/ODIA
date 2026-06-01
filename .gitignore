@@ -70,6 +70,8 @@ data/vectors/*.pkl
 !data/legal_corpora/
 !data/legal_corpora/cal_codes/
 !data/legal_corpora/cal_codes/*.json
+!data/legal_corpora/cfr/
+!data/legal_corpora/cfr/*.json
 
 # Phase 7: External legal corpus data paths
 /data/legal/
