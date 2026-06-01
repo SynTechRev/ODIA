@@ -44,6 +44,7 @@ _DETECTOR_MODULES = [
     "odia_legal.detectors.l1_statutory_applicability",
     "odia_legal.detectors.l2_procedural_compliance",
     "odia_legal.detectors.l3_exemption_misapplication",
+    "odia_legal.detectors.l4_ministerial_duty",
     "odia_legal.detectors.l5_federal_grant_compliance",
     "odia_legal.detectors.l6_constitutional_implication",
     "odia_legal.detectors.l9_recodification",
