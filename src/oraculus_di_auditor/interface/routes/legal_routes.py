@@ -5,6 +5,7 @@ Exposes:
   POST /api/v1/legal/analyze     — run L-1 through L-10 on a document
   POST /api/v1/legal/memorandum  — generate litigation memorandum from findings
   POST /api/v1/legal/explain     — generate plain-language explainer
+  POST /api/v1/legal/reeval      — Vector 3 temporal re-evaluation of prior findings
 """
 
 from __future__ import annotations
@@ -73,11 +74,22 @@ try:
             description="Output format: 'text' (default) or 'html'",
         )
 
+    class ReevalRequest(BaseModel):
+        document_id: str = Field(..., description="Document ID to re-evaluate")
+        prior_run_date: str = Field(
+            ...,
+            description="ISO date (YYYY-MM-DD) of the previous analysis run",
+        )
+        run_date: str | None = Field(
+            None, description="ISO date of this run; defaults to today"
+        )
+
 except ImportError:
     BaseModel = object  # type: ignore[assignment,misc]
     AnalyzeRequest = object  # type: ignore[assignment,misc]
     MemorandumRequest = object  # type: ignore[assignment,misc]
     ExplainRequest = object  # type: ignore[assignment,misc]
+    ReevalRequest = object  # type: ignore[assignment,misc]
 
 # ---------------------------------------------------------------------------
 # Detector registry
@@ -252,6 +264,113 @@ def register_legal_routes(app: Any) -> None:
             "output": output,
             "finding_count": len(request.findings),
             "summary": explainer.summary_table,
+        }
+
+    # ------------------------------------------------------------------
+    # POST /api/v1/legal/reeval
+    # ------------------------------------------------------------------
+
+    @router.post("/api/v1/legal/reeval")
+    async def legal_reeval(request: ReevalRequest) -> dict[str, Any]:  # type: ignore[valid-type]
+        """Vector 3 temporal re-evaluation of prior findings for a document.
+
+        Fetches the document from the DB, loads its prior legal findings,
+        runs all L-1..L-10 detectors, and diffs against the prior run to
+        surface NEW / RESOLVED / UPGRADED / DOWNGRADED / UNCHANGED findings
+        plus any case-law treatment changes since prior_run_date.
+        """
+        try:
+            from odia_legal.vector3 import LegalVector3
+        except ImportError as exc:
+            raise HTTPException(
+                status_code=503, detail=f"odia_legal not available: {exc}"
+            ) from exc
+
+        try:
+            import json as _json
+
+            from oraculus_di_auditor.db.models import (
+                Analysis,
+                Anomaly,
+                Document,
+            )
+            from oraculus_di_auditor.db.session import get_db, init_db
+
+            init_db()
+            db = next(get_db())
+
+            doc = (
+                db.query(Document)
+                .filter(Document.document_id == request.document_id)
+                .first()
+            )
+            if doc is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Document '{request.document_id}' not found",
+                )
+
+            doc_text = doc.text or ""
+
+            # Load prior legal-layer findings from DB
+            legal_layers = {
+                "l1_statutory_applicability",
+                "l2_procedural_compliance",
+                "l3_exemption_misapplication",
+                "l4_ministerial_duty",
+                "l5_federal_grant_compliance",
+                "l6_constitutional_implication",
+                "l7_regulatory_authority",
+                "l9_recodification",
+                "l10_balancing_test",
+            }
+            prior_findings: list[dict[str, Any]] = []
+            analyses = (
+                db.query(Analysis)
+                .filter(Analysis.document_id == request.document_id)
+                .all()
+            )
+            for analysis in analyses:
+                for anomaly in (
+                    db.query(Anomaly)
+                    .filter(Anomaly.analysis_id == analysis.id)
+                    .filter(Anomaly.layer.in_(legal_layers))
+                    .all()
+                ):
+                    details: dict[str, Any] = {}
+                    if anomaly.details_json:
+                        try:
+                            details = _json.loads(anomaly.details_json)
+                        except Exception:  # noqa: BLE001
+                            pass
+                    prior_findings.append(
+                        {
+                            "id": anomaly.anomaly_id,
+                            "issue": anomaly.issue,
+                            "severity": anomaly.severity,
+                            "layer": anomaly.layer,
+                            "details": details,
+                        }
+                    )
+
+        except HTTPException:
+            raise
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(
+                status_code=503, detail=f"DB unavailable: {exc}"
+            ) from exc
+
+        result = LegalVector3().reeval(
+            doc={"text": doc_text, "document_id": request.document_id},
+            prior_findings=prior_findings,
+            prior_run_date=request.prior_run_date,
+            run_date=request.run_date,
+            doc_id=request.document_id,
+        )
+
+        return {
+            **result.to_dict(),
+            "prior_findings_count": len(prior_findings),
         }
 
     app.include_router(router)

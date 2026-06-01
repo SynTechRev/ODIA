@@ -228,3 +228,27 @@ def test_explain_summary_in_response(client):
         json={"findings": _FINDINGS, "doc_meta": {}, "audience": "community"},
     )
     assert "summary" in r.json()
+
+
+# ===========================================================================
+# POST /api/v1/legal/reeval
+# ===========================================================================
+
+
+def test_reeval_missing_document_404(client):
+    r = client.post(
+        "/api/v1/legal/reeval",
+        json={"document_id": "nonexistent-doc-xyz", "prior_run_date": "2024-01-01"},
+    )
+    # DB may be unavailable (503) or document not found (404) — both are correct
+    assert r.status_code in (404, 503)
+
+
+def test_reeval_missing_fields_422(client):
+    r = client.post("/api/v1/legal/reeval", json={"document_id": "x"})
+    assert r.status_code == 422
+
+
+def test_reeval_missing_document_id_422(client):
+    r = client.post("/api/v1/legal/reeval", json={"prior_run_date": "2024-01-01"})
+    assert r.status_code == 422
