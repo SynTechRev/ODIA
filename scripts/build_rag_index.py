@@ -88,10 +88,41 @@ def build_corpus_index(session) -> tuple[list[str], list[dict]]:
     return texts, metas
 
 
+def _run_legal_detectors(text: str) -> list[dict]:
+    """Run all odia_legal L-1..L-10 detectors on *text*.
+
+    Returns a list of finding dicts. Silently skips any unavailable detector
+    so the index build degrades gracefully if odia_legal isn't installed.
+    """
+    import importlib
+
+    legal_modules = [
+        "odia_legal.detectors.l1_statutory_applicability",
+        "odia_legal.detectors.l2_procedural_compliance",
+        "odia_legal.detectors.l3_exemption_misapplication",
+        "odia_legal.detectors.l4_ministerial_duty",
+        "odia_legal.detectors.l5_federal_grant_compliance",
+        "odia_legal.detectors.l6_constitutional_implication",
+        "odia_legal.detectors.l7_regulatory_authority",
+        "odia_legal.detectors.l9_recodification",
+        "odia_legal.detectors.l10_balancing_test",
+    ]
+    findings = []
+    for mod_path in legal_modules:
+        try:
+            mod = importlib.import_module(mod_path)
+            findings.extend(mod.detect({"text": text}))
+        except Exception:  # noqa: BLE001
+            pass
+    return findings
+
+
 def build_ace_index(session) -> tuple[list[str], list[dict]]:
-    """One entry per anomaly finding."""
+    """One entry per anomaly finding — DB anomalies + live legal-layer findings."""
     anomalies = session.query(Anomaly).all()
     texts, metas = [], []
+
+    # --- existing DB-stored anomalies (fiscal, constitutional, etc.) ---
     for a in anomalies:
         analysis = session.query(Analysis).filter(Analysis.id == a.analysis_id).first()
         doc = None
@@ -125,6 +156,63 @@ def build_ace_index(session) -> tuple[list[str], list[dict]]:
                 "jurisdiction": jur,
             }
         )
+
+    # --- live legal-layer findings (L-1 through L-10) ---
+    # Run odia_legal detectors against each document's stored text so that
+    # legal findings are searchable via RAG even before the full analysis
+    # pipeline persists them to the Anomaly table.
+    seen_legal_ids: set[str] = set()
+    docs_with_text = (
+        session.query(Document)
+        .filter(Document.text.isnot(None))
+        .filter(Document.text != "")
+        .all()
+    )
+    legal_count = 0
+    for doc in docs_with_text:
+        doc_text = doc.text or ""
+        if not doc_text.strip():
+            continue
+        jur = doc.jurisdiction or "unknown"
+        doc_title = doc.title or "Untitled"
+        for finding in _run_legal_detectors(doc_text):
+            # Deduplicate: same finding ID on the same document
+            dedup_key = f"{doc.document_id}:{finding['id']}"
+            if dedup_key in seen_legal_ids:
+                continue
+            seen_legal_ids.add(dedup_key)
+
+            details_str = " ".join(
+                str(v)
+                for v in finding.get("details", {}).values()
+                if isinstance(v, str)
+            )[:500]
+            text = (
+                f"[{finding['severity'].upper()}] {finding['issue']} | "
+                f"Detector: {finding['layer']} | "
+                f"Jurisdiction: {jur} | "
+                f"Document: {doc_title} | "
+                f"Details: {details_str}"
+            )
+            texts.append(text)
+            metas.append(
+                {
+                    "id": finding["id"],
+                    "title": f"{jur} / {doc_title}",
+                    "text": text,
+                    "issue": finding["issue"],
+                    "severity": finding["severity"],
+                    "layer": finding["layer"],
+                    "document_id": doc.document_id,
+                    "jurisdiction": jur,
+                    "source": "legal_detector",
+                }
+            )
+            legal_count += 1
+
+    if legal_count:
+        print(f"  + {legal_count} legal-layer entries (L-1..L-10) added to ace index")
+
     return texts, metas
 
 
@@ -224,7 +312,7 @@ def main() -> None:
         embedder = LocalEmbedder(max_features=4096)
         fit_and_save("collection", corpus_texts, corpus_metas, embedder)
 
-        print("\n[2/3] Building ACE anomaly index (one entry per finding)…")
+        print("\n[2/3] Building ACE anomaly index (DB findings + L-1..L-10 legal)…")
         ace_texts, ace_metas = build_ace_index(session)
         ace_embedder = LocalEmbedder(max_features=4096)
         fit_and_save("ace_collection", ace_texts, ace_metas, ace_embedder)
