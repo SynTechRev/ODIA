@@ -5,8 +5,12 @@ parse_usc(text)       → list[Citation]   # 34 U.S.C. § 10152
 parse_cfr(text)       → list[Citation]   # 2 C.F.R. § 200.303
 parse_cal_code(text)  → list[Citation]   # Gov. Code § 6254(f)
 parse_cal_case(text)  → list[Citation]   # ACLU v. Superior Court (2011) 202 Cal.App.4th 55
+
+CitationGraph         — CITES/AMENDS/IMPLEMENTS/OVERRULED_BY graph (NetworkX)
+build_default_graph() → CitationGraph    # pre-wired CPRA + ALPR + federal grants
 """
 
+from odia_legal.citations.graph import CitationGraph, build_default_graph
 from odia_legal.citations.parser import (
     Citation,
     parse_cal_case,
@@ -23,4 +27,6 @@ __all__ = [
     "parse_cfr",
     "parse_cal_code",
     "parse_cal_case",
+    "CitationGraph",
+    "build_default_graph",
 ]
