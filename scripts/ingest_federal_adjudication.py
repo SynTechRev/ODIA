@@ -127,7 +127,13 @@ MSPB_DECISIONS = [
         "title": "Adverse Action Following Objection to JAG Grant Misuse",
         "docket": "AT-0752-22-0100-I-1",
         "date": "2022-11-08",
-        "topics": ["jag", "federal grant", "2 cfr 200", "adverse action", "retaliation"],
+        "topics": [
+            "jag",
+            "federal grant",
+            "2 cfr 200",
+            "adverse action",
+            "retaliation",
+        ],
         "holding": (
             "Employee who reported concerns about JAG grant fund misuse (supplanting "
             "local funds in violation of 2 CFR § 200.306) was subject to a prohibited "

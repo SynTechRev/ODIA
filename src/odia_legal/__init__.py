@@ -13,4 +13,4 @@ Milestone: v3.0.0 — Sunshine Dragnet deadline 2028-07-02
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
