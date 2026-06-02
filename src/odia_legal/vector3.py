@@ -29,53 +29,19 @@ Usage::
 
 from __future__ import annotations
 
-import importlib
 from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
 
+from odia_legal.pipeline import run_legal_detectors
 from odia_legal.treatment.case_currency import check_document_currency
-
-# ---------------------------------------------------------------------------
-# Detector registry — all L-n modules that expose detect(doc) -> list[dict]
-# ---------------------------------------------------------------------------
-
-_DETECTOR_MODULES = [
-    "odia_legal.detectors.l1_statutory_applicability",
-    "odia_legal.detectors.l2_procedural_compliance",
-    "odia_legal.detectors.l3_exemption_misapplication",
-    "odia_legal.detectors.l4_ministerial_duty",
-    "odia_legal.detectors.l5_federal_grant_compliance",
-    "odia_legal.detectors.l6_constitutional_implication",
-    "odia_legal.detectors.l7_regulatory_authority",
-    "odia_legal.detectors.l9_recodification",
-    "odia_legal.detectors.l10_balancing_test",
-]
 
 _SEVERITY_RANK = {"low": 0, "medium": 1, "high": 2}
 
 
-def _load_detectors() -> list[Any]:
-    """Import and return the detect() callables for all registered detectors."""
-    detectors = []
-    for mod_path in _DETECTOR_MODULES:
-        try:
-            mod = importlib.import_module(mod_path)
-            detectors.append(mod.detect)
-        except (ImportError, AttributeError):
-            pass
-    return detectors
-
-
 def _run_all_detectors(doc: dict[str, Any]) -> list[dict[str, Any]]:
     """Run every registered detector on *doc* and return merged findings."""
-    findings: list[dict[str, Any]] = []
-    for detect_fn in _load_detectors():
-        try:
-            findings.extend(detect_fn(doc))
-        except Exception:  # noqa: BLE001  # one bad detector must not abort
-            pass
-    return findings
+    return run_legal_detectors(doc)
 
 
 def _findings_index(findings: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:

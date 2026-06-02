@@ -45,6 +45,13 @@ from .surveillance import detect_surveillance_anomalies
 from .text_utils import extract_text_content
 from .vote_date_alignment import detect_vote_date_alignment_anomalies
 
+try:
+    from odia_legal.pipeline import run_legal_detectors as _run_legal_detectors
+
+    _LEGAL_AVAILABLE = True
+except ImportError:
+    _LEGAL_AVAILABLE = False
+
 
 def analyze_document(doc: dict[str, Any]) -> dict[str, Any]:
     """Run all anomaly detectors against a normalized document.
@@ -75,6 +82,12 @@ def analyze_document(doc: dict[str, Any]) -> dict[str, Any]:
     anomalies.extend(detect_grant_compliance_anomalies(doc))
     anomalies.extend(detect_grant_funding_trail_anomalies(doc))
     anomalies.extend(detect_vote_date_alignment_anomalies(doc))
+
+    # Legal reasoning layer (L-1 through L-10) — persists to Anomaly table
+    # alongside fiscal/constitutional/surveillance findings so Vector 3
+    # reeval, RAG queries, and training export all see the full picture.
+    if _LEGAL_AVAILABLE:
+        anomalies.extend(_run_legal_detectors(doc))
 
     # detect_cross_jurisdiction_refs takes raw text and returns a different shape;
     # normalize each ref into the standard anomaly dict before appending.

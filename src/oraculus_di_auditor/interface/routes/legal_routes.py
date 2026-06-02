@@ -92,10 +92,13 @@ except ImportError:
     ReevalRequest = object  # type: ignore[assignment,misc]
 
 # ---------------------------------------------------------------------------
-# Detector registry
+# Detector registry — imported from single source of truth in odia_legal
 # ---------------------------------------------------------------------------
 
-_DETECTOR_MODULES = [
+try:
+    from odia_legal.pipeline import LEGAL_DETECTOR_MODULES as _DETECTOR_MODULES
+except ImportError:
+    _DETECTOR_MODULES = [  # type: ignore[assignment]
     "odia_legal.detectors.l1_statutory_applicability",
     "odia_legal.detectors.l2_procedural_compliance",
     "odia_legal.detectors.l3_exemption_misapplication",
@@ -105,7 +108,7 @@ _DETECTOR_MODULES = [
     "odia_legal.detectors.l7_regulatory_authority",
     "odia_legal.detectors.l9_recodification",
     "odia_legal.detectors.l10_balancing_test",
-]
+]  # fallback only; normally overridden by pipeline import above
 
 
 def register_legal_routes(app: Any) -> None:

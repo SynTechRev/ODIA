@@ -91,30 +91,15 @@ def build_corpus_index(session) -> tuple[list[str], list[dict]]:
 def _run_legal_detectors(text: str) -> list[dict]:
     """Run all odia_legal L-1..L-10 detectors on *text*.
 
-    Returns a list of finding dicts. Silently skips any unavailable detector
-    so the index build degrades gracefully if odia_legal isn't installed.
+    Delegates to odia_legal.pipeline.run_legal_detectors; degrades
+    gracefully if odia_legal isn't installed.
     """
-    import importlib
+    try:
+        from odia_legal.pipeline import run_legal_detectors
 
-    legal_modules = [
-        "odia_legal.detectors.l1_statutory_applicability",
-        "odia_legal.detectors.l2_procedural_compliance",
-        "odia_legal.detectors.l3_exemption_misapplication",
-        "odia_legal.detectors.l4_ministerial_duty",
-        "odia_legal.detectors.l5_federal_grant_compliance",
-        "odia_legal.detectors.l6_constitutional_implication",
-        "odia_legal.detectors.l7_regulatory_authority",
-        "odia_legal.detectors.l9_recodification",
-        "odia_legal.detectors.l10_balancing_test",
-    ]
-    findings = []
-    for mod_path in legal_modules:
-        try:
-            mod = importlib.import_module(mod_path)
-            findings.extend(mod.detect({"text": text}))
-        except Exception:  # noqa: BLE001
-            pass
-    return findings
+        return run_legal_detectors({"text": text})
+    except Exception:  # noqa: BLE001
+        return []
 
 
 def build_ace_index(session) -> tuple[list[str], list[dict]]:
