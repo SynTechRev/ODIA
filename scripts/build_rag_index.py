@@ -88,26 +88,16 @@ def build_corpus_index(session) -> tuple[list[str], list[dict]]:
     return texts, metas
 
 
-def _run_legal_detectors(text: str) -> list[dict]:
-    """Run all odia_legal L-1..L-10 detectors on *text*.
-
-    Delegates to odia_legal.pipeline.run_legal_detectors; degrades
-    gracefully if odia_legal isn't installed.
-    """
-    try:
-        from odia_legal.pipeline import run_legal_detectors
-
-        return run_legal_detectors({"text": text})
-    except Exception:  # noqa: BLE001
-        return []
-
-
 def build_ace_index(session) -> tuple[list[str], list[dict]]:
-    """One entry per anomaly finding — DB anomalies + live legal-layer findings."""
+    """One entry per anomaly finding (all layers including L-1..L-10 legal).
+
+    Legal-layer findings are included automatically once they have been
+    persisted to the Anomaly table — either through the wired analyze_document()
+    pipeline (v3.8.0+) or via scripts/backfill_legal_findings.py.
+    """
     anomalies = session.query(Anomaly).all()
     texts, metas = [], []
 
-    # --- existing DB-stored anomalies (fiscal, constitutional, etc.) ---
     for a in anomalies:
         analysis = session.query(Analysis).filter(Analysis.id == a.analysis_id).first()
         doc = None
@@ -142,61 +132,11 @@ def build_ace_index(session) -> tuple[list[str], list[dict]]:
             }
         )
 
-    # --- live legal-layer findings (L-1 through L-10) ---
-    # Run odia_legal detectors against each document's stored text so that
-    # legal findings are searchable via RAG even before the full analysis
-    # pipeline persists them to the Anomaly table.
-    seen_legal_ids: set[str] = set()
-    docs_with_text = (
-        session.query(Document)
-        .filter(Document.text.isnot(None))
-        .filter(Document.text != "")
-        .all()
+    legal_count = sum(
+        1 for a in anomalies if a.layer.startswith("l") and "_" in a.layer
     )
-    legal_count = 0
-    for doc in docs_with_text:
-        doc_text = doc.text or ""
-        if not doc_text.strip():
-            continue
-        jur = doc.jurisdiction or "unknown"
-        doc_title = doc.title or "Untitled"
-        for finding in _run_legal_detectors(doc_text):
-            # Deduplicate: same finding ID on the same document
-            dedup_key = f"{doc.document_id}:{finding['id']}"
-            if dedup_key in seen_legal_ids:
-                continue
-            seen_legal_ids.add(dedup_key)
-
-            details_str = " ".join(
-                str(v)
-                for v in finding.get("details", {}).values()
-                if isinstance(v, str)
-            )[:500]
-            text = (
-                f"[{finding['severity'].upper()}] {finding['issue']} | "
-                f"Detector: {finding['layer']} | "
-                f"Jurisdiction: {jur} | "
-                f"Document: {doc_title} | "
-                f"Details: {details_str}"
-            )
-            texts.append(text)
-            metas.append(
-                {
-                    "id": finding["id"],
-                    "title": f"{jur} / {doc_title}",
-                    "text": text,
-                    "issue": finding["issue"],
-                    "severity": finding["severity"],
-                    "layer": finding["layer"],
-                    "document_id": doc.document_id,
-                    "jurisdiction": jur,
-                    "source": "legal_detector",
-                }
-            )
-            legal_count += 1
-
     if legal_count:
-        print(f"  + {legal_count} legal-layer entries (L-1..L-10) added to ace index")
+        print(f"  {legal_count} legal-layer findings (L-1..L-10) included in ace index")
 
     return texts, metas
 
