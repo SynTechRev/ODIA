@@ -1,7 +1,7 @@
 """L-1 Statutory Applicability detector.
 
-Identifies which California and federal statutes apply to a public-agency
-document based on its content, metadata, and detected document type.
+Identifies which California, federal, and multi-state statutes apply to a
+public-agency document based on its content, metadata, and detected document type.
 
 Applicability mapping logic:
   - Documents containing ALPR / license plate reader references
@@ -279,6 +279,125 @@ _RULES: list[ApplicabilityRule] = [
             "privacy",
             "42 usc 1983",
             "42 u.s.c. 1983",
+        ),
+    ),
+    # ------------------------------------------------------------------
+    # Multi-state public records laws (Phase 6)
+    # ------------------------------------------------------------------
+    ApplicabilityRule(
+        rule_id="oregon_pub_records_ors192",
+        statute="ORS § 192.314",
+        corpus_id="or_pub_records",
+        section_title="Oregon Public Records Law — right to inspect",
+        relevance=(
+            "Oregon's Public Records Law (ORS Ch. 192) grants the public the right "
+            "to inspect and copy public records. Response required within 5 business "
+            "days. Document references Oregon agency or ORS citation."
+        ),
+        triggers=(
+            "oregon public records",
+            "ors 192",
+            "ors ch. 192",
+            "oregon records request",
+            "oregon department",
+            "oregon agency",
+            "oregon police",
+            "oregon sheriff",
+        ),
+    ),
+    ApplicabilityRule(
+        rule_id="oregon_pub_records_law_enforcement",
+        statute="ORS § 192.345",
+        corpus_id="or_pub_records",
+        section_title="Oregon Public Records Law — law enforcement exemption",
+        relevance=(
+            "ORS 192.345 exempts investigatory law enforcement information only "
+            "where disclosure would interfere with enforcement proceedings or "
+            "endanger law enforcement personnel."
+        ),
+        triggers=(
+            "ors 192.345",
+            "oregon law enforcement records",
+            "oregon investigative records",
+        ),
+    ),
+    ApplicabilityRule(
+        rule_id="washington_pub_records_rcw4256",
+        statute="RCW § 42.56.070",
+        corpus_id="wa_pub_records",
+        section_title="Washington Public Records Act — access and response",
+        relevance=(
+            "Washington's Public Records Act (RCW 42.56) requires agencies to "
+            "respond to public records requests within 5 business days. "
+            "Exemptions are narrowly construed. Penalties up to $100/day for "
+            "violations (RCW 42.56.565)."
+        ),
+        triggers=(
+            "washington public records",
+            "rcw 42.56",
+            "washington records request",
+            "washington state agency",
+            "washington state police",
+            "washington state sheriff",
+            "wa public records act",
+            "pra request",
+        ),
+    ),
+    ApplicabilityRule(
+        rule_id="washington_pub_records_law_enforcement",
+        statute="RCW § 42.56.240",
+        corpus_id="wa_pub_records",
+        section_title="Washington Public Records Act — law enforcement exemptions",
+        relevance=(
+            "RCW 42.56.240 exempts specific law enforcement investigative records "
+            "only where nondisclosure is essential to effective law enforcement. "
+            "The exemption must be narrowly applied."
+        ),
+        triggers=(
+            "rcw 42.56.240",
+            "washington law enforcement records",
+            "washington investigative records",
+        ),
+    ),
+    ApplicabilityRule(
+        rule_id="texas_pub_info_gc552",
+        statute="Tex. Gov't Code § 552.221",
+        corpus_id="tx_pub_info",
+        section_title="Texas Public Information Act — request and response",
+        relevance=(
+            "Texas's Public Information Act (Gov. Code Ch. 552) requires agencies "
+            "to respond within 10 business days. Unique: agency must request an "
+            "AG opinion before withholding records (§ 552.301). Failure to disclose "
+            "is a Class B misdemeanor (§ 552.353)."
+        ),
+        triggers=(
+            "texas public information",
+            "texas open records",
+            "gov. code 552",
+            "gov't code 552",
+            "texas records request",
+            "texas agency",
+            "texas police department",
+            "texas sheriff",
+            "tpia",
+        ),
+    ),
+    ApplicabilityRule(
+        rule_id="texas_pub_info_ag_opinion",
+        statute="Tex. Gov't Code § 552.301",
+        corpus_id="tx_pub_info",
+        section_title="Texas Public Information Act — AG opinion required before withholding",
+        relevance=(
+            "Texas uniquely requires agencies to request an AG opinion before "
+            "withholding information. Failure to timely seek an AG opinion "
+            "waives the right to withhold."
+        ),
+        triggers=(
+            "texas attorney general opinion",
+            "ag opinion",
+            "texas ag",
+            "gov't code 552.301",
+            "gov. code 552.301",
         ),
     ),
 ]
