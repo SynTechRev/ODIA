@@ -258,7 +258,7 @@ def _persist(
         document_id=doc_id,
         anomaly_count=len(findings),
         scalar_score=round(1.0 - min(len(findings) * 0.02, 0.5), 4),
-        engine_version="3.6.0",
+        engine_version="3.8.0",
     )
     session.add(analysis_row)
     session.flush()
