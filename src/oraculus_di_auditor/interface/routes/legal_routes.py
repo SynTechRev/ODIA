@@ -99,16 +99,16 @@ try:
     from odia_legal.pipeline import LEGAL_DETECTOR_MODULES as _DETECTOR_MODULES
 except ImportError:
     _DETECTOR_MODULES = [  # type: ignore[assignment]
-    "odia_legal.detectors.l1_statutory_applicability",
-    "odia_legal.detectors.l2_procedural_compliance",
-    "odia_legal.detectors.l3_exemption_misapplication",
-    "odia_legal.detectors.l4_ministerial_duty",
-    "odia_legal.detectors.l5_federal_grant_compliance",
-    "odia_legal.detectors.l6_constitutional_implication",
-    "odia_legal.detectors.l7_regulatory_authority",
-    "odia_legal.detectors.l9_recodification",
-    "odia_legal.detectors.l10_balancing_test",
-]  # fallback only; normally overridden by pipeline import above
+        "odia_legal.detectors.l1_statutory_applicability",
+        "odia_legal.detectors.l2_procedural_compliance",
+        "odia_legal.detectors.l3_exemption_misapplication",
+        "odia_legal.detectors.l4_ministerial_duty",
+        "odia_legal.detectors.l5_federal_grant_compliance",
+        "odia_legal.detectors.l6_constitutional_implication",
+        "odia_legal.detectors.l7_regulatory_authority",
+        "odia_legal.detectors.l9_recodification",
+        "odia_legal.detectors.l10_balancing_test",
+    ]  # fallback only; normally overridden by pipeline import above
 
 
 def register_legal_routes(app: Any) -> None:
