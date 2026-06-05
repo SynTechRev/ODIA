@@ -30,6 +30,17 @@ from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "src"))
+sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+
+# OCR support — optional; gracefully absent if pytesseract/fitz not installed
+try:
+    from ocr_engine import is_available as _ocr_available  # type: ignore[import]
+    from ocr_engine import ocr_full_pdf as _ocr_full_pdf  # type: ignore[import]
+
+    _OCR_READY = _ocr_available()
+except Exception:
+    _OCR_READY = False
+    _ocr_full_pdf = None  # type: ignore[assignment]
 
 from oraculus_di_auditor.analysis import analyze_document  # noqa: E402
 from oraculus_di_auditor.db.models import Analysis, Anomaly, Document  # noqa: E402
@@ -44,6 +55,24 @@ logger = logging.getLogger("bulk_ingest")
 
 _CACHE_DIR = _REPO_ROOT / ".text_cache"
 _CACHE_DIR.mkdir(exist_ok=True)
+
+
+def _wipe_empty_cache() -> int:
+    """Delete cache entries where text extraction previously returned nothing.
+
+    These are image-PDFs that were cached as empty strings before OCR was
+    available. Wiping them forces a re-extraction with the OCR fallback.
+    Returns the number of entries removed.
+    """
+    removed = 0
+    for cache_file in _CACHE_DIR.glob("*.txt"):
+        try:
+            if not cache_file.read_text(encoding="utf-8", errors="replace").strip():
+                cache_file.unlink()
+                removed += 1
+        except Exception:
+            pass
+    return removed
 
 
 def _cache_key(path: Path) -> str:
@@ -103,22 +132,32 @@ _SUPPORTED_EXTS = {".pdf", ".docx", ".doc", ".txt", ".json", ".xml", ".html", ".
 
 
 def _extract_pdf(path: Path) -> str | None:
+    # Pass 1 — standard text-layer extraction
+    text: str | None = None
     for lib in ("pdfplumber", "pypdf", "PyPDF2"):
         try:
             if lib == "pdfplumber":
                 import pdfplumber  # type: ignore[import]
 
                 with pdfplumber.open(path) as pdf:
-                    return "\n".join(p.extract_text() or "" for p in pdf.pages)
+                    text = "\n".join(p.extract_text() or "" for p in pdf.pages)
             else:
                 mod = __import__(lib)
                 reader = mod.PdfReader(str(path))
-                return "\n".join(p.extract_text() or "" for p in reader.pages)
+                text = "\n".join(p.extract_text() or "" for p in reader.pages)
+            break
         except ImportError:
             continue
         except Exception:
             return None
-    return None
+
+    # Pass 2 — OCR fallback for image-embedded PDFs (text layer absent or minimal)
+    if _OCR_READY and _ocr_full_pdf is not None and len((text or "").strip()) < 100:
+        ocr_text = _ocr_full_pdf(path)
+        if ocr_text and len(ocr_text.strip()) > len((text or "").strip()):
+            return ocr_text
+
+    return text
 
 
 def _extract_docx(path: Path) -> str | None:
@@ -400,6 +439,15 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print per-file detail",
     )
+    p.add_argument(
+        "--wipe-empty-cache",
+        action="store_true",
+        help=(
+            "Delete cached empty-extraction entries before running. "
+            "Use after installing OCR support to force re-extraction of "
+            "image-embedded PDFs that were previously skipped."
+        ),
+    )
     return p
 
 
@@ -410,9 +458,23 @@ def main() -> None:
     if not corpus_root.exists():
         sys.exit(f"ERROR: corpus path not found: {corpus_root}")
 
+    if getattr(args, "wipe_empty_cache", False):
+        removed = _wipe_empty_cache()
+        logger.info(
+            "Wiped %d empty cache entries — image-PDFs will be re-extracted with OCR",
+            removed,
+        )
+
     if not args.dry_run:
         init_db()
         logger.info("Database initialised.")
+
+    if _OCR_READY:
+        logger.info(
+            "OCR ready (Tesseract + pymupdf) — image-embedded PDFs will be processed"
+        )
+    else:
+        logger.info("OCR not available — image-embedded PDFs will be skipped")
 
     mode = "DRY-RUN" if args.dry_run else "LIVE"
     logger.info("bulk_ingest %s — corpus: %s", mode, corpus_root)

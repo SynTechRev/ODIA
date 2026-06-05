@@ -1,101 +1,202 @@
-#!/usr/bin/env python3
+"""OCR Engine — Optical Character Recognition for image-embedded PDFs.
+
+Uses pymupdf (fitz) for PDF-to-image rendering and pytesseract for text
+extraction. No Poppler dependency required.
+
+Tesseract must be installed:
+  Windows: https://github.com/UB-Mannheim/tesseract/wiki
+           (default: %LOCALAPPDATA%\\Programs\\Tesseract-OCR)
+  macOS:   brew install tesseract
+  Linux:   apt install tesseract-ocr
 """
-OCR Engine - Optical Character Recognition for scanned documents.
 
-This module provides OCR capabilities for processing scanned PDF pages.
-In production, this would integrate with Tesseract OCR or similar tools.
+from __future__ import annotations
 
-Author: GitHub Copilot Agent
-Date: 2025-12-08
-"""
-
-import sys
+import io
+import shutil
 from pathlib import Path
 
-# Add paths for imports
-_script_dir = Path(__file__).parent
-_repo_root = _script_dir.parent
-sys.path.insert(0, str(_repo_root / "src"))
-sys.path.insert(0, str(_repo_root))
+_MIN_TEXT_CHARS_PER_PAGE = 50  # pages with fewer chars are treated as image-only
 
 
-def ocr_pdf_page(pdf_path: Path, page_num: int) -> str:
-    """
-    Perform OCR on a single PDF page.
-
-    Args:
-        pdf_path: Path to PDF file
-        page_num: Page number to process
-
-    Returns:
-        OCR extracted text
-
-    Note:
-        This is a stub implementation. Production deployment requires:
-        - pytesseract (pip install pytesseract)
-        - Tesseract OCR engine (system package)
-        - pdf2image for converting PDF pages to images
-        - Proper language data files for Tesseract
-    """
-    # OCR stub - would use pytesseract in production
-    # Example production code:
-    # from PIL import Image
-    # import pytesseract
-    # from pdf2image import convert_from_path
-    # images = convert_from_path(pdf_path, first_page=page_num, last_page=page_num)
-    # return pytesseract.image_to_string(images[0])
-    return f"[OCR text from {pdf_path.name} page {page_num}]"
+# ---------------------------------------------------------------------------
+# Tesseract discovery and configuration
+# ---------------------------------------------------------------------------
 
 
-def ocr_full_pdf(pdf_path: Path) -> str:
-    """
-    Perform OCR on entire PDF document.
+def _tesseract_cmd() -> str | None:
+    """Find the tesseract executable — PATH first, then Windows default."""
+    found = shutil.which("tesseract")
+    if found:
+        return found
+    win_path = (
+        Path.home()
+        / "AppData"
+        / "Local"
+        / "Programs"
+        / "Tesseract-OCR"
+        / "tesseract.exe"
+    )
+    return str(win_path) if win_path.exists() else None
 
-    Args:
-        pdf_path: Path to PDF file
 
-    Returns:
-        Complete OCR extracted text
+def _configure() -> bool:
+    """Point pytesseract at the tesseract binary. Returns True if ready."""
+    try:
+        import pytesseract
 
-    Note:
-        This is a stub implementation. Production deployment requires:
-        - pytesseract (pip install pytesseract)
-        - Tesseract OCR engine (system package)
-        - pdf2image for converting PDF pages to images
-        - Proper language data files for Tesseract
-    """
-    # OCR stub - would process all pages in production
-    # Example production code:
-    # from PIL import Image
-    # import pytesseract
-    # from pdf2image import convert_from_path
-    # images = convert_from_path(pdf_path)
-    # return '\n\n'.join(pytesseract.image_to_string(img) for img in images)
-    return f"[Full OCR text from {pdf_path.name}]"
+        cmd = _tesseract_cmd()
+        if cmd is None:
+            return False
+        pytesseract.pytesseract.tesseract_cmd = cmd
+        return True
+    except ImportError:
+        return False
+
+
+def is_available() -> bool:
+    """Return True when the full OCR stack is ready (pytesseract + fitz + Tesseract)."""
+    if not _configure():
+        return False
+    try:
+        import fitz  # noqa: F401
+        from PIL import Image  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
+# ---------------------------------------------------------------------------
+# Page detection
+# ---------------------------------------------------------------------------
 
 
 def detect_scanned_pages(pdf_path: Path) -> list[int]:
+    """Return 1-based page numbers that appear to be image-only.
+
+    Uses pdfplumber to measure extracted-text density per page.
+    Pages with fewer than _MIN_TEXT_CHARS_PER_PAGE characters are flagged.
+    Falls back to marking all pages if pdfplumber cannot open the file.
     """
-    Detect which pages in PDF require OCR.
+    try:
+        import pdfplumber  # type: ignore[import]
 
-    Args:
-        pdf_path: Path to PDF file
+        scanned: list[int] = []
+        with pdfplumber.open(pdf_path) as pdf:
+            for i, page in enumerate(pdf.pages, start=1):
+                text = page.extract_text() or ""
+                if len(text.strip()) < _MIN_TEXT_CHARS_PER_PAGE:
+                    scanned.append(i)
+        return scanned
+    except Exception:
+        pass
 
-    Returns:
-        List of page numbers that appear to be scanned
+    # Fallback: use pymupdf page count and flag everything
+    try:
+        import fitz
+
+        doc = fitz.open(str(pdf_path))
+        return list(range(1, len(doc) + 1))
+    except Exception:
+        return []
+
+
+# ---------------------------------------------------------------------------
+# OCR functions
+# ---------------------------------------------------------------------------
+
+
+def ocr_pdf_page(pdf_path: Path, page_num: int) -> str:
+    """OCR a single page (1-based). Returns extracted text or empty string."""
+    if not _configure():
+        return ""
+    try:
+        import fitz
+        import pytesseract
+        from PIL import Image
+
+        doc = fitz.open(str(pdf_path))
+        page = doc[page_num - 1]
+        # 300 DPI gives reliable accuracy for government document fonts
+        mat = fitz.Matrix(300 / 72, 300 / 72)
+        pix = page.get_pixmap(matrix=mat, alpha=False)
+        img = Image.open(io.BytesIO(pix.tobytes("png")))
+        return pytesseract.image_to_string(img, lang="eng")
+    except Exception:
+        return ""
+
+
+def ocr_full_pdf(pdf_path: Path) -> str:
+    """OCR all pages of a PDF. Returns concatenated text from all pages.
+
+    Renders each page at 300 DPI via pymupdf (no Poppler required),
+    then extracts text via pytesseract.
     """
-    # Stub - would analyze text density and image content
-    return []
+    if not _configure():
+        return ""
+    try:
+        import fitz
+        import pytesseract
+        from PIL import Image
+
+        doc = fitz.open(str(pdf_path))
+        mat = fitz.Matrix(300 / 72, 300 / 72)
+        pages: list[str] = []
+        for page in doc:
+            pix = page.get_pixmap(matrix=mat, alpha=False)
+            img = Image.open(io.BytesIO(pix.tobytes("png")))
+            page_text = pytesseract.image_to_string(img, lang="eng")
+            if page_text.strip():
+                pages.append(page_text)
+        return "\n\n".join(pages)
+    except Exception:
+        return ""
 
 
-def main():
-    """Main entry point for OCR engine."""
-    print("OCR Engine module initialized")
-    print("Use ocr_full_pdf(path) to extract text via OCR")
-    print(
-        "Note: This is a stub implementation. "
-        "Production would use Tesseract or similar."
+# ---------------------------------------------------------------------------
+# CLI — for standalone use and testing
+# ---------------------------------------------------------------------------
+
+
+def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="OCR a PDF file via Tesseract + pymupdf"
     )
+    parser.add_argument("pdf", nargs="?", default=None, help="Path to PDF file")
+    parser.add_argument(
+        "--page", type=int, default=None, help="Single page to OCR (1-based)"
+    )
+    parser.add_argument(
+        "--check", action="store_true", help="Check OCR stack availability and exit"
+    )
+    args = parser.parse_args()
+
+    if args.check:
+        if is_available():
+            print(f"OCR ready — tesseract at: {_tesseract_cmd()}")
+        else:
+            print("OCR NOT ready. Install: pip install pymupdf pytesseract Pillow")
+            print(
+                "Then install Tesseract: https://github.com/UB-Mannheim/tesseract/wiki"
+            )
+        return
+
+    path = Path(args.pdf)
+    if not path.exists():
+        print(f"File not found: {path}")
+        return
+
+    if not is_available():
+        print("OCR stack not ready. Run with --check for details.")
+        return
+
+    if args.page:
+        print(ocr_pdf_page(path, args.page))
+    else:
+        print(ocr_full_pdf(path))
 
 
 if __name__ == "__main__":
