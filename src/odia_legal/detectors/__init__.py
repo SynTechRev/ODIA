@@ -7,6 +7,7 @@ L-4:  detect(doc) — Ministerial Duty Analysis (mandatory duty, writ of mandate
 L-5:  detect(doc) — Federal Grant Compliance (JAG/Byrne, 2 CFR Part 200)
 L-6:  detect(doc) — Constitutional Implication (Fourth Amendment, Carpenter)
 L-7:  detect(doc) — Regulatory Authority Chains (ultra vires, delegation gaps)
+L-8:  detect(doc) — Case-Law Currency (overruled/limited authority; CourtListener opt-in)
 L-9:  detect(doc) — Recodification Translation (CPRA § 6250 → § 7920.000)
 L-10: detect(doc) — Balancing Test Analyzer (Mathews, CPRA § 7922.000, Carpenter mosaic)
 """
@@ -32,6 +33,9 @@ from odia_legal.detectors.l6_constitutional_implication import (
 from odia_legal.detectors.l7_regulatory_authority import (
     detect as detect_l7_regulatory_authority,
 )
+from odia_legal.detectors.l8_case_law_currency import (
+    detect as detect_l8_case_law_currency,
+)
 from odia_legal.detectors.l9_recodification import detect as detect_l9_recodification
 from odia_legal.detectors.l10_balancing_test import (
     detect as detect_l10_balancing_test,
@@ -45,6 +49,7 @@ __all__ = [
     "detect_l5_federal_grant_compliance",
     "detect_l6_constitutional_implication",
     "detect_l7_regulatory_authority",
+    "detect_l8_case_law_currency",
     "detect_l9_recodification",
     "detect_l10_balancing_test",
 ]
