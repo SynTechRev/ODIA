@@ -268,8 +268,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Feature
               icon={<AnalysisIcon size={18} />}
-              title="9-Detector Analysis Engine"
-              body="Fiscal, constitutional, surveillance, procurement, signature, scope, governance, administrative, and grant-compliance integrity detection — all executed locally."
+              title="10-Detector Analysis Engine"
+              body="Fiscal, constitutional, surveillance, procurement, signature, scope, governance, administrative, grant-compliance, and legal-currency integrity detection — all executed locally."
             />
             <Feature
               icon={<OrchestratorIcon size={18} />}

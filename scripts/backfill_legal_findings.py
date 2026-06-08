@@ -52,10 +52,50 @@ def _cache_key(path: Path) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-def _bulk_ingest_doc_id(path: Path) -> str:
-    """Compute document_id using the same algorithm as bulk_ingest.py."""
-    h = hashlib.sha256(str(path).encode()).hexdigest()[:12]
-    return f"{path.stem[:40]}_{h}"
+def _build_filename_map(db) -> dict[str, str]:
+    """Build {filename: document_id} lookup from all DB documents.
+
+    Two ID formats exist in the corpus:
+      - Old (pre-git): document_id = "{hash8}_{stem}", title = "{hash8}_{stem}.ext"
+        Filename extracted by stripping the 8-char hash prefix from title.
+      - New (scraper/engine): document_id = 64-char SHA-256, title = raw filename
+        Filename is the title directly.
+    Both filename (with ext) and stem (without ext) are indexed so the lookup
+    survives files whose extension changed or was stripped.
+    Stores document_id strings (not ORM objects) so the map outlives the session.
+    """
+    rows = db.query(Document.document_id, Document.title).all()
+    fname_map: dict[str, str] = {}
+    for doc_id, title in rows:
+        has_underscore_prefix = (
+            doc_id is not None
+            and len(doc_id) < 64
+            and "_" in doc_id
+            and len(doc_id.split("_", 1)[0]) == 8
+        )
+        if has_underscore_prefix and title:
+            # Old format: title = "{hash8}_{original_filename.ext}"
+            parts = title.split("_", 1)
+            fname = parts[1] if len(parts) == 2 else title
+        else:
+            # New format: title = raw filename
+            fname = title or ""
+
+        # Index by full filename and by stem (extension-agnostic fallback)
+        if fname:
+            fname_map.setdefault(fname, doc_id)
+            stem = Path(fname).stem
+            fname_map.setdefault(stem, doc_id)
+
+    return fname_map
+
+
+def _find_matching_doc(fname_map: dict[str, str], file_path: Path) -> str | None:
+    """O(1) filename lookup; returns document_id string or None."""
+    doc_id = fname_map.get(file_path.name)
+    if doc_id is not None:
+        return doc_id
+    return fname_map.get(file_path.stem)
 
 
 def _has_legal_findings(db, analysis_id: int) -> bool:
@@ -66,37 +106,6 @@ def _has_legal_findings(db, analysis_id: int) -> bool:
         .first()
         is not None
     )
-
-
-def _find_matching_doc(db, file_path: Path) -> Document | None:
-    """Find the DB Document matching this file.
-
-    Priority:
-    1. document_id computed from file path (matches bulk_ingest exactly)
-    2. Normalized title match (bulk_ingest stores "Stem Words Title-Cased")
-    3. LIKE fallback on first 30 chars of normalized stem
-    """
-    # 1. Exact document_id match — most reliable when corpus paths are identical
-    doc_id = _bulk_ingest_doc_id(file_path)
-    doc = db.query(Document).filter(Document.document_id == doc_id).first()
-    if doc is not None:
-        return doc
-
-    # 2. Normalized title (bulk_ingest: stem.replace("_"," ").replace("-"," ").title())
-    stem_norm = file_path.stem.replace("_", " ").replace("-", " ").title()
-    doc = db.query(Document).filter(Document.title == stem_norm).first()
-    if doc is not None:
-        return doc
-
-    # 3. LIKE fallback on the raw stem and normalized stem
-    stem_raw = file_path.stem
-    for pattern in (stem_norm[:40], stem_raw[:40], file_path.name):
-        doc = (
-            db.query(Document).filter(Document.title.like(f"%{pattern[:30]}%")).first()
-        )
-        if doc is not None:
-            return doc
-    return None
 
 
 def _extract_text(file_path: Path) -> str | None:
@@ -129,6 +138,13 @@ def backfill(  # noqa: C901
         sys.exit(1)
 
     init_db()
+
+    # Pre-load the entire filename->doc map in one query — avoids N per-file
+    # DB round-trips and is the only reliable strategy since the document_id
+    # hash formula from the original ingest is no longer recoverable.
+    with get_db() as db:
+        fname_map = _build_filename_map(db)
+
     stats = {
         "files_found": 0,
         "files_no_db_match": 0,
@@ -148,20 +164,21 @@ def backfill(  # noqa: C901
     stats["files_found"] = len(source_files)
     if verbose:
         print(f"Found {len(source_files)} source files in {corpus_dir}")
+        print(f"DB filename map: {len(fname_map)} entries")
         if dry_run:
-            print("DRY RUN — no changes will be written.")
+            print("DRY RUN -- no changes will be written.")
         print()
 
     for i, file_path in enumerate(source_files, 1):
-        with get_db() as db:
-            doc = _find_matching_doc(db, file_path)
-            if doc is None:
-                stats["files_no_db_match"] += 1
-                continue
+        doc_id = _find_matching_doc(fname_map, file_path)
+        if doc_id is None:
+            stats["files_no_db_match"] += 1
+            continue
 
+        with get_db() as db:
             analysis = (
                 db.query(Analysis)
-                .filter(Analysis.document_id == doc.document_id)
+                .filter(Analysis.document_id == doc_id)
                 .order_by(Analysis.analysis_timestamp.desc())
                 .first()
             )
@@ -172,6 +189,8 @@ def backfill(  # noqa: C901
             if not force and _has_legal_findings(db, analysis.id):
                 stats["files_skipped_already_done"] += 1
                 continue
+
+            analysis_id = analysis.id
 
         text = _extract_text(file_path)
         if not text or not text.strip():
@@ -190,7 +209,7 @@ def backfill(  # noqa: C901
             with get_db() as db:
                 for finding in findings:
                     anomaly = Anomaly(
-                        analysis_id=analysis.id,
+                        analysis_id=analysis_id,
                         anomaly_id=finding.get("id", "unknown"),
                         issue=finding.get("issue", ""),
                         severity=finding.get("severity", "low"),
@@ -206,7 +225,7 @@ def backfill(  # noqa: C901
         if verbose and (i % 100 == 0 or i == len(source_files)):
             print(
                 f"  [{i}/{len(source_files)}] {file_path.name!r} "
-                f"— {len(findings)} findings"
+                f"-- {len(findings)} findings"
                 f"{' (dry run)' if dry_run else ''}"
             )
 
@@ -265,7 +284,7 @@ def main() -> None:
     if stats["errors"]:
         print(f"  Errors                    : {stats['errors']}")
     if args.dry_run:
-        print("  (dry run — nothing written)")
+        print("  (dry run -- nothing written)")
 
 
 if __name__ == "__main__":
