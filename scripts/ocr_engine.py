@@ -17,6 +17,7 @@ import shutil
 from pathlib import Path
 
 _MIN_TEXT_CHARS_PER_PAGE = 50  # pages with fewer chars are treated as image-only
+_MAX_OCR_PIXELS = 30_000_000  # ~5477×5477px — images above this are downsampled
 
 
 # ---------------------------------------------------------------------------
@@ -68,6 +69,29 @@ def is_available() -> bool:
 
 
 # ---------------------------------------------------------------------------
+# Image helpers
+# ---------------------------------------------------------------------------
+
+
+def _cap_image(img: object) -> object:
+    """Downsample img to _MAX_OCR_PIXELS if it exceeds the cap.
+
+    A letter page at 300 DPI is ~8.4 MP — well under the cap, no change.
+    A 150 MP large-format scan is reduced to ~30 MP — still legible for
+    Tesseract, but processing time drops from many minutes to seconds.
+    """
+    from PIL import Image  # type: ignore[import]
+
+    w, h = img.size  # type: ignore[attr-defined]
+    if w * h <= _MAX_OCR_PIXELS:
+        return img
+    scale = (_MAX_OCR_PIXELS / (w * h)) ** 0.5
+    return img.resize(  # type: ignore[return-value]
+        (max(1, int(w * scale)), max(1, int(h * scale))), Image.LANCZOS
+    )
+
+
+# ---------------------------------------------------------------------------
 # Page detection
 # ---------------------------------------------------------------------------
 
@@ -116,12 +140,13 @@ def ocr_pdf_page(pdf_path: Path, page_num: int) -> str:
         import pytesseract
         from PIL import Image
 
+        Image.MAX_IMAGE_PIXELS = None  # cap managed by _cap_image
         doc = fitz.open(str(pdf_path))
         page = doc[page_num - 1]
         # 300 DPI gives reliable accuracy for government document fonts
         mat = fitz.Matrix(300 / 72, 300 / 72)
         pix = page.get_pixmap(matrix=mat, alpha=False)
-        img = Image.open(io.BytesIO(pix.tobytes("png")))
+        img = _cap_image(Image.open(io.BytesIO(pix.tobytes("png"))))
         return pytesseract.image_to_string(img, lang="eng")
     except Exception:
         return ""
@@ -140,12 +165,13 @@ def ocr_full_pdf(pdf_path: Path) -> str:
         import pytesseract
         from PIL import Image
 
+        Image.MAX_IMAGE_PIXELS = None  # cap managed by _cap_image
         doc = fitz.open(str(pdf_path))
         mat = fitz.Matrix(300 / 72, 300 / 72)
         pages: list[str] = []
         for page in doc:
             pix = page.get_pixmap(matrix=mat, alpha=False)
-            img = Image.open(io.BytesIO(pix.tobytes("png")))
+            img = _cap_image(Image.open(io.BytesIO(pix.tobytes("png"))))
             page_text = pytesseract.image_to_string(img, lang="eng")
             if page_text.strip():
                 pages.append(page_text)
