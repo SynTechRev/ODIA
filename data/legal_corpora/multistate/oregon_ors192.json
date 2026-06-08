@@ -1,0 +1,57 @@
+{
+  "state": "oregon",
+  "code_id": "or_pub_records",
+  "code_name": "Oregon Public Records Law (ORS Chapter 192)",
+  "source_url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html",
+  "as_of": "2025-01-01",
+  "sections": [
+    {
+      "section": "192.311",
+      "title": "Definitions",
+      "text": "As used in ORS 192.311 to 192.478: (1) 'Public body' means the state, any regional council, county, city or district, or any municipal or public corporation, or any board, department, commission, council, bureau, committee or subcommittee of or created by a public body. (2) 'Public record' includes any writing containing information relating to the conduct of the public's business, including but not limited to court records, mortgages, and deed records, prepared, owned, used or retained by a public body regardless of physical form or characteristics.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    },
+    {
+      "section": "192.314",
+      "title": "Right to inspect public records; copies",
+      "text": "Every person has the right to inspect any public record of a public body in this state, except as otherwise expressly provided by ORS 192.311 to 192.478. A person may request a copy of a public record and the public body shall provide the copy. A public body may charge a reasonable fee for providing copies.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    },
+    {
+      "section": "192.324",
+      "title": "Response to public records request; time limits",
+      "text": "(1) A public body shall acknowledge receipt of a written public records request within five business days after receiving the request. (2) A public body shall either complete the request or provide a written explanation of the reasons for denial within a reasonable time, not to exceed 15 business days after receiving the request unless an extension is established by rule or statute. (3) The public body may extend the 15-business-day period once by an additional 15 business days if the public body provides written notice to the requester before the initial deadline expires stating the reason for the extension.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    },
+    {
+      "section": "192.338",
+      "title": "Applicability of exemptions",
+      "text": "The following public records are exempt from disclosure under ORS 192.314: (1) Communications within a public body or between public bodies that fall within the scope of the attorney-client privilege. (2) Information submitted to or compiled by the Oregon Health Authority for the purposes of credentialing health care providers. (3) Public records exempt from disclosure under other Oregon statutes.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    },
+    {
+      "section": "192.345",
+      "title": "Exemption for law enforcement records",
+      "text": "The following public records are exempt from disclosure under ORS 192.314: (1) Investigatory information compiled for criminal law enforcement purposes where disclosure would interfere with enforcement proceedings, deprive a person of a right to a fair trial, constitute an unwarranted invasion of personal privacy, disclose the identity of a confidential source, or endanger the life or physical safety of law enforcement personnel. (2) Records of the identity of individuals who have provided information to a law enforcement agency on a confidential basis.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    },
+    {
+      "section": "192.355",
+      "title": "Exemption for personal information",
+      "text": "The following public records are exempt from disclosure under ORS 192.314 if disclosure would constitute an unreasonable invasion of privacy: (1) Personnel records of current, former, and prospective public employees except when the disclosure is consistent with applicable civil service laws. (2) Medical, psychiatric, psychological, and similar records relating to an individual. (3) Home addresses, personal telephone numbers, and personal email addresses of current and former public employees.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    },
+    {
+      "section": "192.411",
+      "title": "Fees for copies of public records",
+      "text": "(1) A public body may charge a fee reasonably calculated to reimburse the public body for its actual cost of making public records available, which may include: the cost of materials used to make the copy; the cost of labor involved in making the copy; the cost of mechanical equipment used to make the copy. (2) A public body may not charge a fee for inspection of records. (3) A public body may waive fees if the requester is a news media organization or if the requester demonstrates that the information is primarily for public benefit.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    },
+    {
+      "section": "192.431",
+      "title": "Judicial enforcement of right to inspect",
+      "text": "(1) Any person denied the right to inspect or to receive a copy of a public record may petition the Circuit Court of the county where the record is located for an order requiring the public body to make the record available. (2) The court shall award reasonable attorney fees and litigation costs to the prevailing plaintiff in any action brought under this section unless the court finds that the public body acted with substantial justification or that special circumstances exist.",
+      "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors192.html"
+    }
+  ]
+}

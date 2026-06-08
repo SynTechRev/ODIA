@@ -1,0 +1,63 @@
+{
+  "state": "texas",
+  "code_id": "tx_pub_info",
+  "code_name": "Texas Public Information Act (Gov. Code Chapter 552)",
+  "source_url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm",
+  "as_of": "2025-01-01",
+  "sections": [
+    {
+      "section": "552.001",
+      "title": "Policy; construction",
+      "text": "(a) Under the fundamental philosophy of the American constitutional form of representative government that adheres to the principle that government is the servant and not the master of the people, it is the policy of this state that each person is entitled, unless otherwise expressly provided by law, at all times to complete information about the affairs of government and the official acts of public officials and employees. (b) The provisions of this chapter shall be liberally construed in favor of granting a request for information.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.003",
+      "title": "Definitions",
+      "text": "In this chapter: (1) 'Governmental body' means: (A) a board, commission, department, committee, institution, agency, or office that is within or is created by the executive or legislative branch of state government and that is directed by one or more elected or appointed members; (B) a county commissioners court in the state; (C) a municipal governing body. (7) 'Public information' means information that is written, produced, collected, assembled, or maintained under a law or ordinance or in connection with the transaction of official business by a governmental body.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.021",
+      "title": "Availability of public information",
+      "text": "Public information is available to the public at a minimum during the normal business hours of the governmental body. A governmental body shall make public information available for inspection and copying on request for inspection or duplication of the information. A governmental body may not assess a charge for making information available for inspection or duplication unless the charge is authorized by this chapter.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.101",
+      "title": "Exception: confidential information",
+      "text": "Information is excepted from the requirements of Section 552.021 if it is information considered to be confidential by law, either constitutional, statutory, or by judicial decision.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.108",
+      "title": "Exception: certain law enforcement information",
+      "text": "(a) Information held by a law enforcement agency or prosecutor that deals with the detection, investigation, or prosecution of crime is excepted from the requirements of Section 552.021 if: (1) release of the information would interfere with the detection, investigation, or prosecution of crime; (2) it is information that deals with the detection, investigation, or prosecution of crime only in relation to an investigation that did not result in conviction or deferred adjudication.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.221",
+      "title": "Application for public information; response; failure to respond",
+      "text": "(a) An officer for public information of a governmental body shall promptly produce public information for inspection, duplication, or both on application by any person to the officer. (b) An officer for public information who has not responded to a request for information by the 10th business day after the date of receiving the written request is considered to have refused the request. If the governmental body needs additional time to produce the information it shall notify the requestor.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.228",
+      "title": "Charges for providing copies of public information",
+      "text": "(a) An officer for public information may charge for providing a copy of public information. Except as provided by Subsection (b), the charges must be established by rules of the attorney general. (b) A governmental body may establish reasonable charges not to exceed those established by attorney general rules.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.301",
+      "title": "Governmental body must request attorney general decision",
+      "text": "(a) A governmental body that receives a written request for information and that wishes to withhold information from disclosure shall, not later than the 10th business day after the date of receiving the request, submit a written request to the attorney general asking for a decision about whether the information is within one of the exceptions to disclosure. This requirement is unique to Texas — the AG opinions process is mandatory before withholding information.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    },
+    {
+      "section": "552.353",
+      "title": "Penalty for failure to disclose or promptly release information",
+      "text": "(a) An officer for public information, or the officer's agent, commits an offense if the officer or the officer's agent knowingly fails or refuses to give access to, or knowingly fails to promptly release, public information to any person who requests the information. (b) An offense under this section is a Class B misdemeanor.",
+      "url": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.552.htm"
+    }
+  ]
+}

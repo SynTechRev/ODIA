@@ -1,5 +1,7 @@
 # Local lint/test artifacts
 ruff_output.txt
+backfill_run.log
+backfill_err.log
 
 # Adapter cache (runtime data, never committed)
 cache/

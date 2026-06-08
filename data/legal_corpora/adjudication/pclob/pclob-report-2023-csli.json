@@ -1,0 +1,18 @@
+{
+  "body": "pclob",
+  "decision_id": "PCLOB-REPORT-2023-CSLI",
+  "title": "Report on Cell-Site Location Information Collection Programs",
+  "docket": "2023-01",
+  "date": "2023-09-15",
+  "topics": [
+    "csli",
+    "cell-site location",
+    "fourth amendment",
+    "carpenter",
+    "surveillance",
+    "mosaic theory"
+  ],
+  "holding": "PCLOB finds that bulk collection of cell-site location information without individualized court orders is inconsistent with Carpenter v. United States (2018) 585 U.S. 296. The Board recommends that agencies conducting CSLI surveillance adopt: (1) targeted individualized orders; (2) minimization procedures; (3) third-party doctrine inapplicability acknowledgment; (4) retention limits not to exceed 30 days.",
+  "text": "Following the Supreme Court's decision in Carpenter v. United States, the Board reviewed federal programs that collect cell-site location information in bulk. The Board finds that the Carpenter decision's mosaic theory rationale applies to any program that aggregates location data over time sufficient to reveal the 'privacies of daily life.' Programs that collect CSLI in bulk, even under third-party doctrine theories, require individualized judicial authorization under the Fourth Amendment as interpreted by Carpenter.",
+  "url": "https://www.pclob.gov/reports/"
+}

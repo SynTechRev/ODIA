@@ -1,0 +1,17 @@
+{
+  "body": "eeoc",
+  "decision_id": "EEOC-2023-FACIAL-RECOGNITION-001",
+  "title": "Disparate Impact of Facial Recognition Technology in Hiring",
+  "docket": "2023-00123456",
+  "date": "2023-08-14",
+  "topics": [
+    "facial recognition",
+    "disparate impact",
+    "title vii",
+    "42 usc 2000e",
+    "fourth amendment"
+  ],
+  "holding": "The use of facial recognition technology in employee screening that produces statistically significant disparate rejection rates for Black and Hispanic applicants violates Title VII's disparate impact standard (42 U.S.C. § 2000e-2(k)). The employer failed to demonstrate business necessity sufficient to justify the discriminatory impact. Employer ordered to cease use of facial recognition in hiring and to provide make-whole relief to affected applicants.",
+  "text": "Charging parties filed complaints alleging that Respondent's use of an automated facial recognition screening tool resulted in significantly higher rejection rates for Black and Hispanic job applicants. Statistical analysis showed rejection rates were 2.3x higher for Black applicants and 1.8x higher for Hispanic applicants compared to white applicants. Under the Uniform Guidelines on Employee Selection Procedures (29 C.F.R. Part 1607), this disparity establishes a prima facie case of adverse impact.",
+  "url": "https://www.eeoc.gov/decisions/"
+}

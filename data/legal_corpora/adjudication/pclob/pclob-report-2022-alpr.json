@@ -1,0 +1,19 @@
+{
+  "body": "pclob",
+  "decision_id": "PCLOB-REPORT-2022-ALPR",
+  "title": "Oversight Report: License Plate Reader Programs and Civil Liberties",
+  "docket": "2022-02",
+  "date": "2022-07-11",
+  "topics": [
+    "alpr",
+    "license plate reader",
+    "civil liberties",
+    "fourth amendment",
+    "carpenter",
+    "mosaic theory",
+    "retention"
+  ],
+  "holding": "The Board finds that ALPR programs operating without retention limits, use restrictions, or audit requirements present significant civil liberties concerns under Carpenter's mosaic theory. The Board recommends: (1) 60-day default retention limit; (2) documented purpose limitation; (3) independent audit requirements; (4) public transparency reporting.",
+  "text": "Automated license plate readers deployed in law enforcement contexts collect location data on vehicles regardless of any individualized suspicion. When aggregated over time, this data can reveal patterns of movement that the Supreme Court in Carpenter recognized as implicating Fourth Amendment protections. The Board reviewed 47 ALPR programs and found that 38 (81%) lacked mandatory retention limits, 43 (91%) lacked documented purpose-limitation policies, and only 12 (26%) conducted independent audits of data access.",
+  "url": "https://www.pclob.gov/reports/"
+}

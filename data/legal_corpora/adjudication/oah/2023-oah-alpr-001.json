@@ -1,0 +1,16 @@
+{
+  "body": "oah",
+  "decision_id": "2023-OAH-ALPR-001",
+  "title": "In the Matter of ALPR Data Retention Policy Challenge",
+  "docket": "OAH-2023-01001",
+  "date": "2023-06-15",
+  "topics": [
+    "alpr",
+    "data retention",
+    "public records",
+    "civil code 1798.90.53"
+  ],
+  "holding": "The ALJ found that the agency's retention of ALPR data beyond 60 days without an active investigation violates Civil Code § 1798.90.53 (SB 34). The agency failed to demonstrate that any exception applied. The agency is ordered to purge ALPR data older than 60 days within 30 days of this decision and to adopt a written retention policy compliant with SB 34.",
+  "text": "This matter came before the Office of Administrative Hearings on a petition challenging the Respondent agency's ALPR data retention practices. The evidence established that the agency retained license plate reader data indefinitely without documenting active investigations as required by Civil Code § 1798.90.53. SB 34 (2015) established a 60-day default retention limit for ALPR data collected by operators, with narrow exceptions for active investigations or court orders. The agency's policy of indefinite retention without documentation of qualifying exceptions is inconsistent with the statute.",
+  "url": "https://www.dgs.ca.gov/OAH"
+}
