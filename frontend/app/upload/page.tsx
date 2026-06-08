@@ -525,7 +525,7 @@ export default function UploadPage() {
               />
               <HeroMetricTile
                 label="Detector modules"
-                value={9}
+                value={10}
                 tone="emerald"
               />
             </div>

@@ -199,7 +199,7 @@ export default function Home() {
             >
               <InlineFeature label="100% local processing" />
               <InlineFeature label="SHA-256 provenance" />
-              <InlineFeature label="9-detector pipeline" />
+              <InlineFeature label="10-detector pipeline" />
               <InlineFeature label="No outbound network" />
             </div>
           </div>
