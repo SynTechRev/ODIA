@@ -91,7 +91,9 @@ def _find_matching_doc(db, file_path: Path) -> Document | None:
     # 3. LIKE fallback on the raw stem and normalized stem
     stem_raw = file_path.stem
     for pattern in (stem_norm[:40], stem_raw[:40], file_path.name):
-        doc = db.query(Document).filter(Document.title.like(f"%{pattern[:30]}%")).first()
+        doc = (
+            db.query(Document).filter(Document.title.like(f"%{pattern[:30]}%")).first()
+        )
         if doc is not None:
             return doc
     return None
