@@ -22,6 +22,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -39,7 +40,22 @@ from oraculus_di_auditor.ingestion.engine import ingest_document  # noqa: E402
 
 LEGAL_LAYERS = {m.split(".")[-1] for m in LEGAL_DETECTOR_MODULES}
 
-SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".html", ".htm", ".xml"}
+SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".html", ".htm", ".xml", ".docx", ".doc"}
+
+# Reuse bulk_ingest's text cache — avoids re-extracting all 9k+ PDFs
+_CACHE_DIR = REPO_ROOT / ".text_cache"
+
+
+def _cache_key(path: Path) -> str:
+    stat = path.stat()
+    raw = f"{path.resolve()}|{stat.st_mtime}|{stat.st_size}"
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _bulk_ingest_doc_id(path: Path) -> str:
+    """Compute document_id using the same algorithm as bulk_ingest.py."""
+    h = hashlib.sha256(str(path).encode()).hexdigest()[:12]
+    return f"{path.stem[:40]}_{h}"
 
 
 def _has_legal_findings(db, analysis_id: int) -> bool:
@@ -53,18 +69,43 @@ def _has_legal_findings(db, analysis_id: int) -> bool:
 
 
 def _find_matching_doc(db, file_path: Path) -> Document | None:
-    """Find the DB Document whose title matches the file's stem or name."""
-    name = file_path.name
-    stem = file_path.stem
-    # Try exact filename match first, then stem
-    doc = db.query(Document).filter(Document.title == name).first()
-    if doc is None:
-        doc = db.query(Document).filter(Document.title.like(f"%{stem}%")).first()
-    return doc
+    """Find the DB Document matching this file.
+
+    Priority:
+    1. document_id computed from file path (matches bulk_ingest exactly)
+    2. Normalized title match (bulk_ingest stores "Stem Words Title-Cased")
+    3. LIKE fallback on first 30 chars of normalized stem
+    """
+    # 1. Exact document_id match — most reliable when corpus paths are identical
+    doc_id = _bulk_ingest_doc_id(file_path)
+    doc = db.query(Document).filter(Document.document_id == doc_id).first()
+    if doc is not None:
+        return doc
+
+    # 2. Normalized title (bulk_ingest: stem.replace("_"," ").replace("-"," ").title())
+    stem_norm = file_path.stem.replace("_", " ").replace("-", " ").title()
+    doc = db.query(Document).filter(Document.title == stem_norm).first()
+    if doc is not None:
+        return doc
+
+    # 3. LIKE fallback on the raw stem and normalized stem
+    stem_raw = file_path.stem
+    for pattern in (stem_norm[:40], stem_raw[:40], file_path.name):
+        doc = db.query(Document).filter(Document.title.like(f"%{pattern[:30]}%")).first()
+        if doc is not None:
+            return doc
+    return None
 
 
 def _extract_text(file_path: Path) -> str | None:
-    """Extract text from a source file using the ingestion engine."""
+    """Return text for file_path, using bulk_ingest's cache when available."""
+    # Fast path — reuse already-extracted cache from bulk_ingest
+    cache_file = _CACHE_DIR / (_cache_key(file_path) + ".txt")
+    if cache_file.exists():
+        text = cache_file.read_text(encoding="utf-8", errors="replace")
+        return text.strip() or None
+
+    # Slow path — call ingestion engine (re-extracts from source)
     try:
         doc = ingest_document(str(file_path))
         return doc.get("text") or doc.get("content") or ""
