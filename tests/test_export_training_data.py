@@ -91,7 +91,10 @@ def test_fmt_details_skips_none_and_empty():
 
 def test_fmt_details_list_truncated_at_five():
     result = _fmt_details(json.dumps({"items": list(range(10))}))
-    assert "5" not in result.split("Items: ")[1].split(";")[0].split(",")[-1].strip() or True
+    assert (
+        "5" not in result.split("Items: ")[1].split(";")[0].split(",")[-1].strip()
+        or True
+    )
 
 
 def test_fmt_details_invalid_json_returns_empty():
