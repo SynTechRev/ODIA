@@ -13,6 +13,7 @@ from __future__ import annotations
 import os
 from collections.abc import Generator
 from contextlib import contextmanager
+from pathlib import Path
 
 try:
     from sqlalchemy import create_engine
@@ -25,8 +26,12 @@ except ImportError:
     sessionmaker = None  # type: ignore
     Session = None  # type: ignore
 
-# Default to SQLite in the project root
-DEFAULT_DATABASE_URL = "sqlite:///./oraculus_audit.db"
+# Absolute path to the repo-root DB — resolved from this file's location so
+# the path is correct regardless of the process working directory.
+# session.py lives at src/oraculus_di_auditor/db/session.py → 4 levels up = repo root.
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_DEFAULT_DB_PATH = _REPO_ROOT / "oraculus_audit.db"
+DEFAULT_DATABASE_URL = f"sqlite:///{_DEFAULT_DB_PATH}"
 
 # Get database URL from environment or use default
 DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)

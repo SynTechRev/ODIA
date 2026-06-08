@@ -191,7 +191,10 @@ class RAGService:
 
         import numpy as np
 
-        vectors_dir = Path("data/vectors")
+        # Absolute path — rag_service.py lives at src/oraculus_di_auditor/rag/
+        # so repo root is 3 levels up.
+        _repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        vectors_dir = _repo_root / "data" / "vectors"
 
         def _count(name: str) -> int:
             path = vectors_dir / f"{name}_vectors.npy"
