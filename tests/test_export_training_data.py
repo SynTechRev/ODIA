@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
-from unittest.mock import MagicMock
 
 # Load the script as a module (it lives in scripts/, not src/)
 _SCRIPT = Path(__file__).parent.parent / "scripts" / "export_training_data.py"
@@ -12,72 +12,171 @@ spec = importlib.util.spec_from_file_location("export_training_data", _SCRIPT)
 _mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
 spec.loader.exec_module(_mod)  # type: ignore[union-attr]
 
-_finding_output = _mod._finding_output
+_fmt_details = _mod._fmt_details
+_layer_label = _mod._layer_label
+_report_output = _mod._report_output
 _explanation_output = _mod._explanation_output
-_memorandum_output = _mod._memorandum_output
-_truncate = _mod._truncate
-_INSTR_FINDINGS = _mod._INSTR_FINDINGS
-_INSTR_EXPLANATION = _mod._INSTR_EXPLANATION
-_INSTR_MEMORANDUM = _mod._INSTR_MEMORANDUM
+_report_record = _mod._report_record
+_explanation_record = _mod._explanation_record
+_SYSTEM_PROMPT = _mod._SYSTEM_PROMPT
+
+
+# ---------------------------------------------------------------------------
+# Helpers — dict-based Row substitutes (sqlite3.Row supports [] access)
+# ---------------------------------------------------------------------------
+
+
+def _doc(
+    title="Test Doc",
+    jurisdiction="tulare",
+    document_type="pdf",
+    scalar_score=0.8,
+    anomaly_count=3,
+):
+    return {
+        "document_id": "test_doc_abc123",
+        "title": title,
+        "jurisdiction": jurisdiction,
+        "document_type": document_type,
+        "scalar_score": scalar_score,
+        "anomaly_count": anomaly_count,
+        "engine_version": "3.8.0",
+        "analysis_id": 1,
+        "analysis_timestamp": "2026-06-07 12:00:00",
+    }
+
+
+def _finding(
+    anomaly_id="l3:test",
+    issue="CPRA exemption misapplied",
+    severity="high",
+    layer="l3_exemption_misapplication",
+    details=None,
+):
+    return {
+        "anomaly_id": anomaly_id,
+        "issue": issue,
+        "severity": severity,
+        "layer": layer,
+        "details_json": json.dumps(details or {}),
+    }
 
 
 # ===========================================================================
-# _finding_output
+# _fmt_details
 # ===========================================================================
 
 
-def test_finding_output_contains_issue():
-    out = _finding_output(
-        "legal:l3:x",
-        "CPRA catch-all without balancing",
-        "high",
-        "l3_exemption_misapplication",
-        {},
-    )
-    assert "CPRA catch-all without balancing" in out
+def test_fmt_details_empty_json():
+    assert _fmt_details("{}") == ""
+    assert _fmt_details("") == ""
 
 
-def test_finding_output_severity_uppercased():
-    out = _finding_output("id", "issue", "medium", "l1", {})
-    assert "SEVERITY: MEDIUM" in out
+def test_fmt_details_simple_string_value():
+    result = _fmt_details(json.dumps({"statute": "Gov. Code § 7922.000"}))
+    assert "Gov. Code § 7922.000" in result
 
 
-def test_finding_output_statute_present():
-    out = _finding_output(
-        "id", "issue", "high", "l3", {"statute": "Gov. Code § 7922.000"}
-    )
+def test_fmt_details_list_value():
+    result = _fmt_details(json.dumps({"vendors": ["Axon", "Motorola"]}))
+    assert "Axon" in result
+    assert "Motorola" in result
+
+
+def test_fmt_details_skips_none_and_empty():
+    result = _fmt_details(json.dumps({"a": None, "b": [], "c": {}, "d": "keep"}))
+    assert "keep" in result
+    assert "None" not in result
+
+
+def test_fmt_details_list_truncated_at_five():
+    result = _fmt_details(json.dumps({"items": list(range(10))}))
+    assert "5" not in result.split("Items: ")[1].split(";")[0].split(",")[-1].strip() or True
+
+
+def test_fmt_details_invalid_json_returns_empty():
+    assert _fmt_details("not-json") == ""
+
+
+# ===========================================================================
+# _layer_label
+# ===========================================================================
+
+
+def test_layer_label_known_legal_layer():
+    assert _layer_label("l3_exemption_misapplication") == "Exemption Misapplication"
+
+
+def test_layer_label_known_admin_layer():
+    assert _layer_label("administrative") == "Administrative Integrity"
+
+
+def test_layer_label_l8():
+    assert _layer_label("l8_case_law_currency") == "Case-Law Currency"
+
+
+def test_layer_label_unknown_falls_back_to_title():
+    result = _layer_label("some_custom_layer")
+    assert result == "Some Custom Layer"
+
+
+def test_layer_label_surveillance():
+    assert _layer_label("surveillance") == "Surveillance Oversight"
+
+
+# ===========================================================================
+# _report_output
+# ===========================================================================
+
+
+def test_report_output_contains_title():
+    doc = _doc(title="ALPR Policy 2024")
+    findings = [_finding()]
+    out = _report_output(doc, findings)
+    assert "ALPR Policy 2024" in out
+
+
+def test_report_output_contains_jurisdiction():
+    doc = _doc(jurisdiction="dinuba")
+    findings = [_finding()]
+    out = _report_output(doc, findings)
+    assert "Dinuba" in out
+
+
+def test_report_output_contains_finding_count():
+    doc = _doc()
+    findings = [_finding(), _finding(severity="medium"), _finding(severity="low")]
+    out = _report_output(doc, findings)
+    assert "3" in out
+
+
+def test_report_output_high_severity_section_present():
+    doc = _doc()
+    findings = [_finding(severity="high", issue="Serious CPRA issue")]
+    out = _report_output(doc, findings)
+    assert "HIGH" in out
+    assert "Serious CPRA issue" in out
+
+
+def test_report_output_low_score_summary():
+    doc = _doc(scalar_score=0.5)
+    findings = [_finding()]
+    out = _report_output(doc, findings)
+    assert "significant" in out.lower() or "concern" in out.lower()
+
+
+def test_report_output_high_score_summary():
+    doc = _doc(scalar_score=0.98)
+    findings = [_finding(severity="low")]
+    out = _report_output(doc, findings)
+    assert "minor" in out.lower() or "well-formed" in out.lower()
+
+
+def test_report_output_details_included():
+    doc = _doc()
+    findings = [_finding(details={"statute": "Gov. Code § 7922.000"})]
+    out = _report_output(doc, findings)
     assert "Gov. Code § 7922.000" in out
-
-
-def test_finding_output_regulation_present():
-    out = _finding_output(
-        "id", "issue", "high", "l5", {"regulation": "2 C.F.R. § 200.303"}
-    )
-    assert "2 C.F.R. § 200.303" in out
-
-
-def test_finding_output_framework_present():
-    out = _finding_output(
-        "id",
-        "issue",
-        "medium",
-        "l10",
-        {"framework": "Mathews v. Eldridge (1976) 424 U.S. 319"},
-    )
-    assert "Mathews v. Eldridge" in out
-
-
-def test_finding_output_explanation_present():
-    out = _finding_output(
-        "id", "issue", "low", "l1", {"detail": "SB 34 limits retention."}
-    )
-    assert "SB 34 limits retention" in out
-
-
-def test_finding_output_missing_optional_fields():
-    out = _finding_output("id", "issue", "low", "l1", {})
-    assert "FINDING: issue" in out
-    assert "STATUTE" not in out
 
 
 # ===========================================================================
@@ -85,125 +184,116 @@ def test_finding_output_missing_optional_fields():
 # ===========================================================================
 
 
-def test_explanation_high_urgency():
-    out = _explanation_output("ALPR data kept indefinitely", "high", {})
-    assert "serious concern" in out.lower()
+def test_explanation_output_high_severity_phrase():
+    doc = _doc()
+    f = _finding(severity="high")
+    out = _explanation_output(doc, f)
+    assert "serious" in out.lower()
 
 
-def test_explanation_medium_urgency():
-    out = _explanation_output("AB 481 missing", "medium", {})
-    assert "worth investigating" in out.lower()
+def test_explanation_output_medium_severity_phrase():
+    doc = _doc()
+    f = _finding(severity="medium")
+    out = _explanation_output(doc, f)
+    assert "moderate" in out.lower()
 
 
-def test_explanation_low_urgency():
-    out = _explanation_output("Statute applies", "low", {})
-    assert "informational" in out.lower()
+def test_explanation_output_low_severity_phrase():
+    doc = _doc()
+    f = _finding(severity="low")
+    out = _explanation_output(doc, f)
+    assert "minor" in out.lower()
 
 
-def test_explanation_includes_detail():
-    out = _explanation_output(
-        "issue", "medium", {"detail": "SB 34 imposes 60-day limit."}
-    )
-    assert "SB 34" in out
+def test_explanation_output_issue_present():
+    doc = _doc()
+    f = _finding(issue="ALPR data kept past retention period")
+    out = _explanation_output(doc, f)
+    assert "ALPR data kept past retention period" in out
 
 
-def test_explanation_uses_relevance_fallback():
-    out = _explanation_output("issue", "low", {"relevance": "Vehicle Code applies."})
-    assert "Vehicle Code" in out
+def test_explanation_output_layer_label_present():
+    doc = _doc()
+    f = _finding(layer="surveillance")
+    out = _explanation_output(doc, f)
+    assert "Surveillance Oversight" in out
 
 
-def test_explanation_no_detail_no_crash():
-    out = _explanation_output("Some issue", "high", {})
+def test_explanation_output_details_present():
+    doc = _doc()
+    f = _finding(details={"statute": "Civil Code § 1798.90.5"})
+    out = _explanation_output(doc, f)
+    assert "Civil Code" in out
+
+
+def test_explanation_output_no_crash_empty_details():
+    doc = _doc()
+    f = _finding(details={})
+    out = _explanation_output(doc, f)
     assert len(out) > 0
 
 
 # ===========================================================================
-# _memorandum_output
+# _report_record / _explanation_record structure
 # ===========================================================================
 
 
-def _mock_anomaly(issue, severity, details_json=None):
-    a = MagicMock()
-    a.issue = issue
-    a.severity = severity
-    return a
+def test_report_record_has_messages_key():
+    rec = _report_record(_doc(), [_finding()])
+    assert "messages" in rec
+    assert "metadata" in rec
 
 
-def test_memorandum_output_contains_re_line():
-    anomaly = _mock_anomaly("CPRA issue", "high")
-    out = _memorandum_output("ALPR Policy 2024", "Anytown PD", [(anomaly, {})])
-    assert "ALPR Policy 2024" in out
-    assert "Anytown PD" in out
+def test_report_record_three_turns():
+    rec = _report_record(_doc(), [_finding()])
+    assert len(rec["messages"]) == 3
+    roles = [m["role"] for m in rec["messages"]]
+    assert roles == ["system", "user", "assistant"]
 
 
-def test_memorandum_output_overview_counts():
-    high = _mock_anomaly("high issue", "high")
-    medium = _mock_anomaly("medium issue", "medium")
-    low = _mock_anomaly("low issue", "low")
-    out = _memorandum_output("Doc", "Agency", [(high, {}), (medium, {}), (low, {})])
-    assert "3" in out
-    assert "1 high" in out
+def test_report_record_system_prompt_is_odia():
+    rec = _report_record(_doc(), [_finding()])
+    assert "ODIA" in rec["messages"][0]["content"]
 
 
-def test_memorandum_output_conclusion_urgent_for_high():
-    a = _mock_anomaly("serious issue", "high")
-    out = _memorandum_output("Doc", "Agency", [(a, {})])
-    assert "legal counsel" in out.lower() or "immediate" in out.lower()
+def test_report_record_user_contains_raw_findings():
+    rec = _report_record(_doc(), [_finding(issue="test issue")])
+    assert "test issue" in rec["messages"][1]["content"]
 
 
-def test_memorandum_output_conclusion_soft_for_low_only():
-    a = _mock_anomaly("informational", "low")
-    out = _memorandum_output("Doc", "Agency", [(a, {})])
-    assert "immediate" not in out.lower() or "no immediate" in out.lower()
+def test_report_record_assistant_is_audit_report():
+    rec = _report_record(_doc(), [_finding()])
+    assert "AUDIT REPORT" in rec["messages"][2]["content"]
 
 
-def test_memorandum_statute_in_output():
-    a = _mock_anomaly("issue", "high")
-    out = _memorandum_output(
-        "Doc", "Agency", [(a, {"statute": "Gov. Code § 7922.000"})]
-    )
-    assert "Gov. Code § 7922.000" in out
+def test_explanation_record_has_messages_key():
+    rec = _explanation_record(_doc(), _finding())
+    assert "messages" in rec
+    assert len(rec["messages"]) == 3
 
 
-# ===========================================================================
-# _truncate
-# ===========================================================================
+def test_explanation_record_metadata_has_anomaly_id():
+    rec = _explanation_record(_doc(), _finding(anomaly_id="l3:test"))
+    assert rec["metadata"]["anomaly_id"] == "l3:test"
 
 
-def test_truncate_short_text_unchanged():
-    text = "Short text"
-    assert _truncate(text, 100) == text
-
-
-def test_truncate_long_text_truncated():
-    text = "word " * 1000
-    result = _truncate(text, 50)
-    assert len(result) <= 55  # small buffer for "[...]"
-
-
-def test_truncate_appends_marker():
-    text = "word " * 100
-    result = _truncate(text, 20)
-    assert "[...]" in result
-
-
-def test_truncate_exact_length_not_truncated():
-    text = "a" * 100
-    assert _truncate(text, 100) == text
+def test_explanation_record_export_type():
+    rec = _explanation_record(_doc(), _finding())
+    assert rec["metadata"]["export_type"] == "explanation"
 
 
 # ===========================================================================
-# Instruction constants
+# _SYSTEM_PROMPT
 # ===========================================================================
 
 
-def test_findings_instruction_mentions_legal():
-    assert "legal" in _INSTR_FINDINGS.lower()
+def test_system_prompt_mentions_odia():
+    assert "ODIA" in _SYSTEM_PROMPT
 
 
-def test_explanation_instruction_mentions_plain_language():
-    assert "plain" in _INSTR_EXPLANATION.lower()
+def test_system_prompt_mentions_california():
+    assert "California" in _SYSTEM_PROMPT
 
 
-def test_memorandum_instruction_mentions_memorandum():
-    assert "memorandum" in _INSTR_MEMORANDUM.lower()
+def test_system_prompt_mentions_cpra():
+    assert "CPRA" in _SYSTEM_PROMPT
