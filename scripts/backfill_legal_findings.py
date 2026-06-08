@@ -72,7 +72,7 @@ def _extract_text(file_path: Path) -> str | None:
         return None
 
 
-def backfill(
+def backfill(  # noqa: C901
     corpus_dir: Path,
     *,
     dry_run: bool = False,
