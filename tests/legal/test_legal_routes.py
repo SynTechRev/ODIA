@@ -238,7 +238,11 @@ def test_explain_summary_in_response(client):
 def test_reeval_missing_document_404(client):
     r = client.post(
         "/api/v1/legal/reeval",
-        json={"document_id": "nonexistent-doc-xyz", "prior_run_date": "2024-01-01"},
+        json={
+            "document_id": "nonexistent-doc-xyz",
+            "text": "sample document text for re-evaluation",
+            "prior_run_date": "2024-01-01",
+        },
     )
     # DB may be unavailable (503) or document not found (404) — both are correct
     assert r.status_code in (404, 503)

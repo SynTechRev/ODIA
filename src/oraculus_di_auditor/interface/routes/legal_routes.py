@@ -76,6 +76,13 @@ try:
 
     class ReevalRequest(BaseModel):
         document_id: str = Field(..., description="Document ID to re-evaluate")
+        text: str = Field(
+            ...,
+            description=(
+                "Raw document text to re-analyze. Required because the DB "
+                "stores only metadata and findings, not the original text."
+            ),
+        )
         prior_run_date: str = Field(
             ...,
             description="ISO date (YYYY-MM-DD) of the previous analysis run",
@@ -106,6 +113,7 @@ except ImportError:
         "odia_legal.detectors.l5_federal_grant_compliance",
         "odia_legal.detectors.l6_constitutional_implication",
         "odia_legal.detectors.l7_regulatory_authority",
+        "odia_legal.detectors.l8_case_law_currency",
         "odia_legal.detectors.l9_recodification",
         "odia_legal.detectors.l10_balancing_test",
     ]  # fallback only; normally overridden by pipeline import above
@@ -313,7 +321,7 @@ def register_legal_routes(app: Any) -> None:
                     detail=f"Document '{request.document_id}' not found",
                 )
 
-            doc_text = doc.text or ""
+            doc_text = request.text
 
             # Load prior legal-layer findings from DB
             legal_layers = {
@@ -324,6 +332,7 @@ def register_legal_routes(app: Any) -> None:
                 "l5_federal_grant_compliance",
                 "l6_constitutional_implication",
                 "l7_regulatory_authority",
+                "l8_case_law_currency",
                 "l9_recodification",
                 "l10_balancing_test",
             }
