@@ -91,7 +91,9 @@ def _cache_get(path: Path) -> str | None:
 
 def _cache_set(path: Path, text: str) -> None:
     cache_file = _CACHE_DIR / (_cache_key(path) + ".txt")
-    cache_file.write_text(text, encoding="utf-8")
+    # Strip lone surrogates produced by some PDF codecs — they're illegal in UTF-8
+    clean = text.encode("utf-8", errors="ignore").decode("utf-8")
+    cache_file.write_text(clean, encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -198,7 +200,7 @@ def _extract_html(path: Path) -> str:
         return re.sub(r"<[^>]+>", " ", html)
 
 
-def _extract_text(path: Path) -> str | None:
+def _extract_text(path: Path) -> str | None:  # noqa: C901
     # Check cache first — avoids re-reading PDFs/DOCXs on every re-run
     cached = _cache_get(path)
     if cached is not None:
@@ -229,7 +231,9 @@ def _extract_text(path: Path) -> str | None:
     except Exception as exc:
         logger.debug("Extraction failed for %s: %s", path.name, exc)
 
-    # Cache result (empty string = extraction failed, so we skip next time too)
+    # Strip lone surrogates before caching and returning (some PDF codecs produce them)
+    if text:
+        text = text.encode("utf-8", errors="ignore").decode("utf-8")
     _cache_set(path, text or "")
     return text
 
