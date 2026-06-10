@@ -227,6 +227,14 @@ export const MapPinIcon: React.FC<IconProps> = (p) => (
   </IconBase>
 );
 
+export const LegalIcon: React.FC<IconProps> = (p) => (
+  <IconBase {...p}>
+    <path d="M12 2L3 7l9 5 9-5-9-5z" />
+    <path d="M3 12l9 5 9-5" />
+    <path d="M3 17l9 5 9-5" />
+  </IconBase>
+);
+
 // ---------------------------------------------------------------------------
 // O.D.I.A. brand mark — the Oraculus gold swirl.
 //

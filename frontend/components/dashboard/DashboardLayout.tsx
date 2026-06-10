@@ -21,6 +21,7 @@ import {
   AnomaliesIcon,
   SynthesisIcon,
   RAGIcon,
+  LegalIcon,
   OrchestratorIcon,
   AutomationIcon,
   SettingsIcon,
@@ -60,6 +61,7 @@ const sidebarNav: NavItem[] = [
   { name: 'Anomalies',     href: '/anomalies',     Icon: AnomaliesIcon,    group: 'Evidence' },
   { name: 'Synthesis',     href: '/synthesis',     Icon: SynthesisIcon,    group: 'Evidence' },
   { name: 'RAG Query',     href: '/rag',            Icon: RAGIcon,          group: 'Evidence' },
+  { name: 'Legal',         href: '/legal',          Icon: LegalIcon,        group: 'Evidence' },
 
   { name: 'Orchestrator',  href: '/orchestrator',  Icon: OrchestratorIcon, group: 'System' },
   { name: 'Automation',    href: '/automation',    Icon: AutomationIcon,   group: 'System' },
@@ -85,7 +87,7 @@ type BackendState = 'checking' | 'connected' | 'disconnected';
 // v2.7.3 V2: fallback when /api/v1/health doesn't return odia_version
 // (older backends) or when the check hasn't completed yet. Updated on
 // every release.
-const ODIA_VERSION_FALLBACK = 'v3.3.0';
+const ODIA_VERSION_FALLBACK = 'v3.8.0';
 
 function useBackendStatus(): {
   state: BackendState;
