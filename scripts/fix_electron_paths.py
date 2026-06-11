@@ -55,7 +55,9 @@ def fix(out_dir: str = "out") -> int:
             if is_root:
                 fixed = fixed.replace("autostatic/chunks/", "./_next/static/chunks/")
             else:
-                fixed = fixed.replace("autostatic/chunks/", rel + "/_next/static/chunks/")
+                fixed = fixed.replace(
+                    "autostatic/chunks/", rel + "/_next/static/chunks/"
+                )
 
             if fixed != text:
                 with open(fpath, "w", encoding="utf-8") as f:
