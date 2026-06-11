@@ -154,7 +154,11 @@ def register_query_routes(app: Any) -> None:  # noqa: C901 — route registrar
                     .join(Analysis, Analysis.id == Anomaly.analysis_id)
                     .join(Document, Document.document_id == Analysis.document_id)
                     .filter(
-                        *([Document.jurisdiction == jurisdiction] if jurisdiction else []),
+                        *(
+                            [Document.jurisdiction == jurisdiction]
+                            if jurisdiction
+                            else []
+                        ),
                         *(
                             [Document.document_type == document_type]
                             if document_type
