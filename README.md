@@ -5,12 +5,17 @@
 
 **A civic accountability intelligence platform for forensic analysis of legal and government documents.**
 
-[![Version](https://img.shields.io/badge/version-v3.8.1-00ff9d?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/releases/tag/v3.8.1)
+[![Version](https://img.shields.io/badge/version-v3.8.3-00ff9d?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/releases/tag/v3.8.3)
 [![Python](https://img.shields.io/badge/python-3.11%2B-d8b13c?style=flat-square&labelColor=0e0e14)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-00ff9d?style=flat-square&labelColor=0e0e14)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-d8b13c?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/releases/latest)
 [![Tests](https://img.shields.io/badge/tests-3400%2B%20passing-00ff9d?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/actions)
 [![Local First](https://img.shields.io/badge/local--first-no%20cloud%20required-d8b13c?style=flat-square&labelColor=0e0e14)](#privacy--security)
+
+<br>
+
+### [⬇ &nbsp; Download Latest Release &nbsp; →](https://github.com/SynTechRev/ODIA/releases/latest)
+**[All Releases & Changelogs](https://github.com/SynTechRev/ODIA/releases)**
 
 </div>
 
@@ -28,14 +33,16 @@ Standalone installer — no Python, Docker, or command line required.
 
 | Platform | Installer | Architecture |
 |---|---|---|
-| **Windows** | [ODIA-Setup-3.8.1.exe](https://github.com/SynTechRev/ODIA/releases/download/v3.8.1/ODIA-Setup-3.8.1.exe) | x64 |
-| **macOS (Apple Silicon)** | [ODIA-3.8.1-arm64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.8.1/ODIA-3.8.1-arm64.dmg) | arm64 (M1/M2/M3/M4) |
-| **macOS (Intel)** | [ODIA-3.8.1-x64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.8.1/ODIA-3.8.1-x64.dmg) | x64 |
-| **Linux** | [ODIA-3.8.1.AppImage](https://github.com/SynTechRev/ODIA/releases/download/v3.8.1/ODIA-3.8.1.AppImage) | x64 |
+| **Windows** | [ODIA-Setup-3.8.3.exe](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-Setup-3.8.3.exe) | x64 |
+| **macOS (Apple Silicon)** | [ODIA-3.8.3-arm64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-3.8.3-arm64.dmg) | arm64 (M1/M2/M3/M4) |
+| **macOS (Intel)** | [ODIA-3.8.3-x64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-3.8.3-x64.dmg) | x64 |
+| **Linux** | [ODIA-3.8.3.AppImage](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-3.8.3.AppImage) | x64 |
 
 **System requirements:** Windows 10 x64 · macOS 10.15+ · Ubuntu 18.04+ (requires `libfuse2`)
 
 > First-time setup: [docs/AUTOMATION_SETUP.md](docs/AUTOMATION_SETUP.md) — written for non-developers.
+
+> **Upgrading from v3.8.2 or earlier?** Run `python scripts/migrate_db_to_userdata.py` once after install to move your audit corpus to the new persistent storage location.
 
 ### Other Install Methods
 
@@ -97,6 +104,31 @@ pytest
 ---
 
 ## What's New
+
+### v3.8.3 — Version Badge Fix · ODIA_VERSION Injection
+> [Release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.8.3)
+
+Corrects the version badge shown in the desktop app's status bar. PyInstaller bundles built from editable installs (`pip install -e .`) lack a traditional dist-info directory, so `importlib.metadata.version("odia")` could surface stale metadata from a prior install. Starting with this release, `backend.js` injects `ODIA_VERSION` from `desktop/package.json` into the backend process environment and `api.py` checks that variable first — the status bar now always reflects the installed package version exactly.
+
+- **`backend.js`** now passes `ODIA_VERSION: <package.json version>` to every backend process spawn
+- **`api.py`** checks `ODIA_VERSION` env var before falling back to `importlib.metadata`
+- Desktop hero and status bar version strings are now in guaranteed agreement
+
+---
+
+### v3.8.2 — Desktop DB Path · Documents Stat Tiles · Migration Script
+> [Release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.8.2)
+
+Resolved the root cause of missing corpus data in the desktop app and fixed the Documents page stat tiles that showed 0/0/0 for corpora where all documents carry a null jurisdiction.
+
+- **Desktop DB path fixed** — `backend.js` now routes the database to `app.getPath("userData")` (`%APPDATA%\ODIA\` on Windows; `~/Library/Application Support/ODIA/` on macOS) instead of the PyInstaller bundle directory, so the database survives reinstalls and is never overwritten by an upgrade
+- **Documents stat tiles fixed** — `/api/v1/documents` now returns `total_anomaly_count` across all matched documents; the Documents page uses this field directly so totals are correct even when no jurisdiction tags are set
+- **`scripts/migrate_db_to_userdata.py`** — one-time migration utility that copies the dev/source corpus to the new userData path. Run once after upgrading from v3.8.1 or earlier:
+  ```powershell
+  python scripts/migrate_db_to_userdata.py
+  ```
+
+---
 
 ### v3.8.1 — Desktop Tab-Navigation Fix
 > [Release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.8.1)
@@ -223,20 +255,30 @@ Full changelog: [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
-## Empirical State (live as of v3.8.0)
+## Empirical State (live as of v3.8.3)
 
-ODIA has been live-run across 5 California jurisdictions on 4 distinct CMS platforms:
+ODIA has ingested and fully analyzed **9,546 documents across 13 California jurisdictions** on 4 distinct CMS platforms, surfacing **47,251 findings** with a full cross-jurisdiction RAIA synthesis:
 
-| Jurisdiction | CMS | Docs | Anomalies | Critical | Avg Score |
-|---|---|---|---|---|---|
-| TCDA (DA narratives) | WordPress | 660 | 102 | 0 | 0.989 |
-| Tulare County (BOS) | Questys CMX + Drupal | 95 | 119 | 8 | 0.909 |
-| Visalia | CivicPlus | 85 | 80 | 5 | 0.932 |
-| **Dinuba** | Upload audit | **62** | **277** | **49** | — |
-| Porterville | Revize | 8 | 23 | 2 | 0.766 |
-| **TOTAL** | **4 CMS + upload** | **910** | **601** | **64** | — |
+| Jurisdiction | Findings | Critical | Notes |
+|---|---|---|---|
+| Tulare | 9,907 | — | Questys CMX + Drupal |
+| Dinuba | 14,011 | — | Highest anomaly density |
+| Farmersville | 7,805 | — | CivicPlus |
+| Exeter | 5,247 | — | — |
+| Lindsay | 5,170 | — | — |
+| Visalia PD | 1,699 | — | — |
+| Porterville | 1,792 | — | Revize |
+| TCSO | 362 | — | — |
+| Woodlake | 821 | — | — |
+| Visalia | 80 | — | — |
+| Tulare County | 119 | — | BOS |
+| TCDA | 102 | 0 | DA narratives, WordPress |
+| Multi-jurisdiction | 136 | — | Cross-entity references |
+| **TOTAL** | **47,251** | **3,234** | **9,546 docs · 13 jurisdictions** |
 
-Cross-jurisdiction RAIA synthesis surfaces **1 universal pattern at 1.00 confidence** (`admin:missing-final-action` — present in all 5 jurisdictions) and a growing shared-pattern registry: `signature:unsigned-instrument`, `scope:significant-expansion`, `vendor-convergence:sole-source`, `governance:sole-source-without-justification`, `fiscal:amount-without-appropriation`, `procurement:sole-source-without-gov-code-citation`. Tulare County critical findings (`grant:jag-without-anti-supplanting` citing 34 U.S.C. § 10152, `admin:retroactive-authorization` × 29) include embedded statute text via the USC legal resolver.
+**Severity breakdown:** Critical 3,234 (6.8%) · High 14,316 (30.3%) · Medium 19,011 (40.2%) · Low 10,690 (22.6%)
+
+Cross-jurisdiction RAIA synthesis surfaces universal patterns including `admin:missing-final-action` (present across all jurisdictions), `signature:unsigned-instrument`, `scope:significant-expansion`, `vendor-convergence:sole-source`, `governance:sole-source-without-justification`, `fiscal:amount-without-appropriation`, and `procurement:sole-source-without-gov-code-citation`. Tulare County critical findings include `grant:jag-without-anti-supplanting` citing 34 U.S.C. § 10152 and `admin:retroactive-authorization` × 29.
 
 ---
 
