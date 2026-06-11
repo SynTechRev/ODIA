@@ -20,6 +20,8 @@ import pickle
 import sys
 from pathlib import Path
 
+import os
+
 REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT / "config"))
@@ -29,7 +31,10 @@ from oraculus_di_auditor.db.session import get_db, init_db  # noqa: E402
 from oraculus_di_auditor.embeddings import LocalEmbedder  # noqa: E402
 from oraculus_di_auditor.retriever import Retriever  # noqa: E402
 
-VECTORS_DIR = REPO_ROOT / "data" / "vectors"
+# ODIA_VECTORS_DIR lets the script write directly to the desktop app's userData
+# path when building an index for the installed app. Falls back to repo default.
+_env_vectors = os.environ.get("ODIA_VECTORS_DIR")
+VECTORS_DIR = Path(_env_vectors) if _env_vectors else REPO_ROOT / "data" / "vectors"
 VECTORS_DIR.mkdir(parents=True, exist_ok=True)
 
 

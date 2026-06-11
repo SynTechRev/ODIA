@@ -61,17 +61,22 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 # Vector Index Paths
 # ============================================================================
 
+# ODIA_VECTORS_DIR is injected by desktop/src/backend.js for packaged builds,
+# pointing to a stable userData path that survives reinstalls. Falls back to the
+# repo-relative path for dev server usage.
+_VECTORS_BASE = os.getenv("ODIA_VECTORS_DIR", "data/vectors")
+
 # Default vector index paths for different collections
 VECTOR_INDICES = {
-    "corpus": "data/vectors/collection",  # Main corpus (extracted PDF text)
-    "ace": "data/vectors/ace_collection",  # Anomaly reports (ACE)
-    "vicfm": "data/vectors/vicfm_collection",  # Vendor influence (VICFM)
-    "jim": "data/vectors/jim_collection",  # Legal correlations (JIM)
-    "lexicon": "data/vectors/lexicon_collection",  # Legal dictionary
+    "corpus": f"{_VECTORS_BASE}/collection",
+    "ace": f"{_VECTORS_BASE}/ace_collection",
+    "vicfm": f"{_VECTORS_BASE}/vicfm_collection",
+    "jim": f"{_VECTORS_BASE}/jim_collection",
+    "lexicon": f"{_VECTORS_BASE}/lexicon_collection",
 }
 
 # Default vocabulary file path
-DEFAULT_VOCAB_PATH = "data/vectors/collection_vocab.pkl"
+DEFAULT_VOCAB_PATH = f"{_VECTORS_BASE}/collection_vocab.pkl"
 
 # ============================================================================
 # Feature Flags
