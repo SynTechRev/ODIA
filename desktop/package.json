@@ -1,6 +1,6 @@
 {
   "name": "odia-desktop",
-  "version": "3.8.0",
+  "version": "3.8.1",
   "description": "O.D.I.A. Desktop — Local document analysis for legal and government documents",
   "main": "src/main.js",
   "author": "Synthetic Technology Revolution <syntechrev@gmail.com>",
