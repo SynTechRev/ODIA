@@ -72,11 +72,20 @@ function startBackend() {
   const { command, args } = getBackendCommand();
   log.info(`Starting backend: ${command} ${args.join(" ")}`);
 
+  // Resolve a stable, per-user DB path that survives reinstalls.
+  // Packaged: %APPDATA%\ODIA\oraculus_audit.db (Windows) or ~/Library/…/ODIA (macOS)
+  // Dev:      repo-root/oraculus_audit.db  (two levels up from desktop/src/)
+  const dbDir = app.isPackaged
+    ? app.getPath("userData")
+    : path.join(__dirname, "..", "..");
+  const dbPath = path.join(dbDir, "oraculus_audit.db");
+
   const env = {
     ...process.env,
     ODIA_OFFLINE_MODE: "1",
     ORACULUS_CORS_ORIGINS: `http://${BACKEND_HOST}:${BACKEND_PORT}`,
     PYTHONUNBUFFERED: "1",
+    DATABASE_URL: `sqlite:///${dbPath}`,
   };
 
   backendProcess = spawn(command, args, {

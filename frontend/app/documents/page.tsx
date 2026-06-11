@@ -27,6 +27,7 @@ import type {
   DocumentRow,
   JurisdictionRollup,
   PagedResponse,
+  DocumentsPagedResponse,
 } from '@/lib/api/client';
 
 const PAGE_SIZE = 50;
@@ -35,7 +36,7 @@ export default function DocumentsPage() {
   const nav = useAppNavigate();
   const client = useMemo(() => getAPIClient(), []);
 
-  const [data, setData] = useState<PagedResponse<DocumentRow> | null>(null);
+  const [data, setData] = useState<DocumentsPagedResponse | null>(null);
   const [jurisdictions, setJurisdictions] = useState<JurisdictionRollup[]>([]);
   const [jurisdictionFilter, setJurisdictionFilter] = useState<string>('');
   const [page, setPage] = useState(1);
@@ -70,7 +71,7 @@ export default function DocumentsPage() {
         per_page: PAGE_SIZE,
         jurisdiction: jurisdictionFilter || undefined,
       })
-      .then((r) => {
+      .then((r: DocumentsPagedResponse) => {
         if (!cancelled) {
           setData(r);
           setLoading(false);
@@ -95,8 +96,12 @@ export default function DocumentsPage() {
   const rows = data?.items ?? [];
   const total = data?.total ?? 0;
   const hasMore = data?.has_more ?? false;
-  const totalDocs = jurisdictions.reduce((s, j) => s + j.document_count, 0);
-  const totalAnomalies = jurisdictions.reduce((s, j) => s + j.anomaly_count, 0);
+  // Use counts from the paged response — jurisdictions[] excludes null-jurisdiction
+  // documents so the jurisdiction-reduce approach always returns 0 for untagged corpora.
+  const totalDocs = data?.total ?? jurisdictions.reduce((s, j) => s + j.document_count, 0);
+  const totalAnomalies =
+    data?.total_anomaly_count ??
+    jurisdictions.reduce((s, j) => s + j.anomaly_count, 0);
 
   if (loading && rows.length === 0 && page === 1) {
     return (

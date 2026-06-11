@@ -391,8 +391,8 @@ export class APIClient {
   // -------------------------------------------------------------------------
 
   /** GET /api/v1/documents — paginated Document rows with anomaly counts. */
-  async listDocuments(params: ListDocumentsParams = {}): Promise<PagedResponse<DocumentRow>> {
-    const { data } = await this.http.get<PagedResponse<DocumentRow>>(
+  async listDocuments(params: ListDocumentsParams = {}): Promise<DocumentsPagedResponse> {
+    const { data } = await this.http.get<DocumentsPagedResponse>(
       '/api/v1/documents',
       { params },
     );
@@ -554,6 +554,11 @@ export interface PagedResponse<T> {
   page: number;
   per_page: number;
   has_more: boolean;
+}
+
+/** Extended paged response for /api/v1/documents — includes cross-page anomaly total. */
+export interface DocumentsPagedResponse extends PagedResponse<DocumentRow> {
+  total_anomaly_count: number;
 }
 
 export interface ListDocumentsParams {

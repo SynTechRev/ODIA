@@ -147,6 +147,24 @@ def register_query_routes(app: Any) -> None:  # noqa: C901 — route registrar
                     base = base.filter(Document.document_type == document_type)
 
                 total = base.count()
+
+                # Total anomaly count across ALL matched documents (not just the page).
+                total_anomaly_count = (
+                    session.query(func.count(Anomaly.id))
+                    .join(Analysis, Analysis.id == Anomaly.analysis_id)
+                    .join(Document, Document.document_id == Analysis.document_id)
+                    .filter(
+                        *([Document.jurisdiction == jurisdiction] if jurisdiction else []),
+                        *(
+                            [Document.document_type == document_type]
+                            if document_type
+                            else []
+                        ),
+                    )
+                    .scalar()
+                    or 0
+                )
+
                 rows = (
                     base.order_by(Document.created_at.desc())
                     .offset((page - 1) * per_page)
@@ -217,6 +235,7 @@ def register_query_routes(app: Any) -> None:  # noqa: C901 — route registrar
         return {
             "items": items,
             "total": int(total),
+            "total_anomaly_count": int(total_anomaly_count),
             "page": page,
             "per_page": per_page,
             "has_more": (page * per_page) < int(total),
