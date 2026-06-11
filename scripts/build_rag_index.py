@@ -16,11 +16,10 @@ The indices land in data/vectors/ and are immediately usable by OracRAG.
 from __future__ import annotations
 
 import json
+import os
 import pickle
 import sys
 from pathlib import Path
-
-import os
 
 REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
