@@ -5,6 +5,7 @@ const path = require("path");
 const http = require("http");
 const { app } = require("electron");
 const log = require("electron-log");
+const { version: PACKAGE_VERSION } = require("../package.json");
 
 /** @type {import('child_process').ChildProcess | null} */
 let backendProcess = null;
@@ -82,6 +83,7 @@ function startBackend() {
 
   const env = {
     ...process.env,
+    ODIA_VERSION: PACKAGE_VERSION,
     ODIA_OFFLINE_MODE: "1",
     ORACULUS_CORS_ORIGINS: `http://${BACKEND_HOST}:${BACKEND_PORT}`,
     PYTHONUNBUFFERED: "1",

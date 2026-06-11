@@ -42,20 +42,21 @@ logger = logging.getLogger(__name__)
 def _resolve_odia_version() -> str:
     """Return the installed ODIA release version.
 
-    Reads the version declared in ``pyproject.toml`` via
-    ``importlib.metadata``; falls back to ``ODIA_VERSION`` env var
-    (set by installers) or to the compiled-in default. Used by
-    ``/api/v1/health`` so the frontend pill can render the live
-    version instead of a hardcoded literal.
+    Priority: ODIA_VERSION env var (set by desktop backend.js) →
+    importlib.metadata (dev installs) → compiled-in default.
+    The env var takes precedence so the desktop app always reports the
+    version baked into the Electron package, not whatever dist-info the
+    PyInstaller bundle happens to surface.
     """
+    env_ver = os.environ.get("ODIA_VERSION")
+    if env_ver:
+        return env_ver
     try:
         from importlib.metadata import PackageNotFoundError, version
-    except ImportError:
-        return os.environ.get("ODIA_VERSION", "3.3.1")
-    try:
+
         return version("odia")
-    except PackageNotFoundError:
-        return os.environ.get("ODIA_VERSION", "3.3.1")
+    except (ImportError, Exception):
+        return "3.3.1"
 
 
 ODIA_VERSION = _resolve_odia_version()
