@@ -1,0 +1,93 @@
+TERMS OF SERVICE -- SYNTHETIC REFERENCE CONTRACT G-05
+(REMEDY FORECLOSURE, ENFORCEMENT ASYMMETRY, AND DARK PATTERNS)
+
+This document is a synthetic test fixture designed to trigger L-18, L-19,
+and L-20 C.O.N.T.R.A. detectors.  All entity names, figures, and facts are
+fictional.
+
+--------------------------------------------------------------------------------
+SECTION 1. LIMITATION OF LIABILITY AND REMEDIES
+
+THE TOTAL LIABILITY OF THE COMPANY TO YOU FOR ANY CLAIMS ARISING OUT OF OR
+RELATING TO THESE TERMS OR YOUR USE OF THE SERVICES SHALL NOT EXCEED THE
+AMOUNT PAID BY YOU IN THE TWELVE MONTHS PRECEDING THE CLAIM OR FIFTY DOLLARS
+($50), WHICHEVER IS LESS.
+
+IN NO EVENT SHALL THE COMPANY BE LIABLE FOR ANY CONSEQUENTIAL, INCIDENTAL,
+SPECIAL, OR INDIRECT DAMAGES.  THE COMPANY DISCLAIMS ALL LIABILITY FOR
+EXEMPLARY AND PUNITIVE DAMAGES.  Punitive damages are hereby waived and shall
+not be available in any proceeding arising under these Terms.
+
+YOU AGREE THAT ANY CLAIM MUST BE BROUGHT WITHIN ONE YEAR OF THE DATE THE CLAIM
+AROSE OR THE DATE YOU DISCOVERED THE BASIS FOR THE CLAIM, WHICHEVER IS EARLIER.
+Any legal action or suit not filed within one year is permanently barred.
+
+BY AGREEING TO THESE TERMS YOU WAIVE YOUR RIGHT TO A JURY TRIAL.
+
+You may not seek injunctive relief or any equitable remedy against the Company.
+No equitable relief, preliminary injunction, or temporary restraining order
+shall be granted or available in any proceeding under these Terms.
+
+Representative PAGA actions and collective actions under the Private Attorneys
+General Act are prohibited and waived to the maximum extent permitted by law.
+
+THE SERVICES ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.  THE COMPANY
+DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  Third parties providing
+services integrated with our platform are not liable for any claims, and we are
+not responsible for their conduct.
+
+--------------------------------------------------------------------------------
+SECTION 2. DISPUTE RESOLUTION AND ENFORCEMENT
+
+All disputes shall be resolved by binding mandatory arbitration.  Any dispute
+not resolved by informal negotiation shall be submitted to arbitration
+administered by a private arbitration administrator.
+
+If the arbitrator finds in favor of the Company and the Company is the
+prevailing party, the Company shall be entitled to recover its attorney fees
+and all arbitration costs from the losing party.  The prevailing party is
+entitled to collect reasonable legal fees from the other party.
+
+You agree to pay all filing fees, administrative fees, and arbitrator fees
+associated with the arbitration proceeding.  Arbitration fees and costs are
+your sole responsibility.
+
+You agree not to disparage, defame, or make any negative or disparaging
+statements, comments, or reviews about the Company, its products, employees,
+or services in any public forum, including social media.  Non-disparagement
+obligations survive termination of these Terms.
+
+Discovery in arbitration is limited to a document exchange only.  No
+depositions, no interrogatories, and no document requests beyond a single
+exchange of relevant documents are permitted.
+
+The outcome, award, decision, and all proceedings in arbitration are
+confidential.  You agree to maintain the arbitration outcome as strictly
+confidential and shall not disclose the award or settlement to any third party.
+
+Any disputes shall be submitted to binding arbitration under the rules of a
+private arbitration administrator.
+
+--------------------------------------------------------------------------------
+SECTION 3. CONSENT AND INTERFACE DESIGN
+
+By clicking "I Agree" or "Accept" or "Continue" you accept these Terms.
+Scrolling past this notice also constitutes acceptance of these Terms.
+
+By accepting these Terms you also agree to our Privacy Policy, Data Sharing
+Agreement, Supplemental Terms, and all policies linked or referenced therein.
+
+LIMITED TIME OFFER: You must accept these Terms within 24 hours to maintain
+access to your account.  Act now -- this offer expires immediately.
+
+Unless you opt out or uncheck the pre-selected option, you are automatically
+opted in by default to receive marketing communications and third-party offers.
+
+This agreement is available in English only.  English version shall control
+in all circumstances.  Any translations provided are for convenience only and
+do not have legal effect.
+
+See footnote 1 for important limitations that govern your rights to seek
+remedies.  In smaller font: footnote 1 applies to all claims under these
+terms.

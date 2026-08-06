@@ -109,3 +109,46 @@ L15_RETENTION_DURATION = PromptVersion(
     ),
     user_template="CONTRACT/PRIVACY NOTICE TEXT:\n\n{doc_excerpt}",
 )
+
+# ---------------------------------------------------------------------------
+# L-17 ML Training Scope — characterize training grant breadth
+# ---------------------------------------------------------------------------
+
+L17_TRAINING_SCOPE = PromptVersion(
+    prompt_id="contra.l17.training_scope",
+    version="1.0",
+    system_prompt=(
+        "You are an AI governance analyst reviewing consumer contracts for "
+        "machine-learning training grants. Identify whether the contract grants "
+        "the company the right to use consumer data for AI or ML training. "
+        "For each grant found: classify the modalities covered (text, image, audio, "
+        "video, biometric, other), whether the grant is perpetual, whether it is "
+        "irrevocable, and whether an opt-out mechanism is provided. "
+        "Return JSON: [{\"modalities\": [str], \"perpetual\": bool, "
+        "\"irrevocable\": bool, \"opt_out_available\": bool, "
+        "\"excerpt\": str (<=15 words)}]. Return [] if no training grant found."
+    ),
+    user_template="CONTRACT TEXT:\n\n{doc_excerpt}",
+)
+
+# ---------------------------------------------------------------------------
+# L-20 Dark Pattern Structure — structural AEC assessment
+# ---------------------------------------------------------------------------
+
+L20_DARK_PATTERN_STRUCTURE = PromptVersion(
+    prompt_id="contra.l20.dark_pattern_structure",
+    version="1.0",
+    system_prompt=(
+        "You are a consumer protection analyst trained in the Ring Order Automated "
+        "Engagement Check (AEC) framework. Review the following contract text for "
+        "dark patterns that impede informed consent. Classify each dark pattern "
+        "found using these types: pre_checked_consent, nested_acceptance, "
+        "scroll_to_accept, fine_print_exclusion, urgency_pressure, "
+        "confusing_language, hidden_cost, forced_action. "
+        "For each finding return: the type, the severity (low/medium/high/critical), "
+        "and a verbatim excerpt (<=15 words) anchored to the problematic text. "
+        "Return JSON: [{\"pattern_type\": str, \"severity\": str, "
+        "\"excerpt\": str}]. Return [] if no dark patterns found."
+    ),
+    user_template="CONTRACT TEXT:\n\n{doc_excerpt}",
+)

@@ -13,6 +13,11 @@ from .l12_choice_of_law_forum import L12ChoiceOfLawForum
 from .l13_unilateral_modification import L13UnilateralModification
 from .l14_data_collection_depth import L14DataCollectionDepth
 from .l15_data_retention import L15DataRetention
+from .l16_onward_transfer import L16OnwardTransfer
+from .l17_ml_ai_training import L17MlAiTraining
+from .l18_remedy_foreclosure import L18RemedyForeclosure
+from .l19_enforcement_asymmetry import L19EnforcementAsymmetry
+from .l20_dark_pattern import L20DarkPattern
 
 __all__ = [
     "Detector",
@@ -24,4 +29,9 @@ __all__ = [
     "L13UnilateralModification",
     "L14DataCollectionDepth",
     "L15DataRetention",
+    "L16OnwardTransfer",
+    "L17MlAiTraining",
+    "L18RemedyForeclosure",
+    "L19EnforcementAsymmetry",
+    "L20DarkPattern",
 ]

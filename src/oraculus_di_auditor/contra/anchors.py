@@ -59,6 +59,12 @@ CCP_338 = "Cal. Code Civ. Proc. section 338"
 # CCPA Non-Waivability
 CCPA_192 = "Cal. Civ. Code section 1798.192"
 
+# California Silenced No More Act
+CCP_1001 = "Cal. Code Civ. Proc. section 1001"
+
+# California Punitive Damages
+CIVCODE_3294 = "Cal. Civ. Code section 3294"
+
 # FTC Enforcement — Dark Pattern / Consent Definition
 RING_ORDER = (
     "United States v. Ring, LLC, No. 1:23-cv-01549 (D.D.C. entered June 16, 2023)"
@@ -105,7 +111,9 @@ ALL_ANCHORS: frozenset[str] = frozenset(
         CCP_1281_98,
         CCP_337,
         CCP_338,
+        CCP_1001,
         CCPA_192,
+        CIVCODE_3294,
         RING_ORDER,
         YEUNG_2019,
         EU_EXPERT_2019,

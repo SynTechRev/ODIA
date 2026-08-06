@@ -1,0 +1,63 @@
+TERMS OF SERVICE AND PRIVACY NOTICE -- SYNTHETIC REFERENCE CONTRACT G-04
+(ONWARD TRANSFER AND ML/AI TRAINING USE)
+
+This document is a synthetic test fixture designed to trigger L-16 and L-17
+C.O.N.T.R.A. detectors.  All entity names, figures, and facts are fictional.
+
+--------------------------------------------------------------------------------
+SECTION 1. DATA SHARING AND SALE
+
+We may sell your personal information to third parties for purposes consistent
+with our business objectives.  We also share your personal information for
+cross-context behavioral advertising and targeted advertising with our
+advertising partners.
+
+We share your personal data with service providers and contractors who process
+personal information on our behalf to support platform operations.
+
+Our affiliates and subsidiaries may access your personal information as part of
+our corporate family operations.  We do not impose substantive limitations on
+affiliate use beyond internal policy guidelines.
+
+We are registered as a data broker with the California Privacy Protection Agency.
+Personal information is sold and transferred to data broker networks for
+resale to marketing firms.
+
+We may disclose your personal information to government entities if we determine
+disclosure is appropriate to protect our interests or cooperate with
+investigations, whether or not legally required.
+
+In the event of a merger, acquisition, sale of the company, or transfer of
+business assets, your personal information will be transferred to the acquiring
+entity.  The successor entity may use your personal information according to its
+own policies.  Your personal information will be assigned to the acquirer as a
+business asset.
+
+--------------------------------------------------------------------------------
+SECTION 2. MACHINE LEARNING AND ARTIFICIAL INTELLIGENCE TRAINING
+
+By using our platform you grant us a perpetual, irrevocable, worldwide,
+royalty-free, non-exclusive license to use, reproduce, modify, and distribute
+any content you submit, upload, or generate through our services.
+
+We use your personal information, content, and data to train, fine-tune, and
+improve our artificial intelligence and machine learning models.  This includes
+training large language models, deep learning neural networks, generative AI
+systems, and AI algorithms using text, image, audio, and video data you provide.
+
+Model training across all modalities and all types of data you submit to our
+platform improves our AI systems over time.  Any data or information you provide,
+including across all formats and types of content, may be incorporated into
+model training datasets.
+
+We collect biometric identifiers including facial recognition data and voice
+prints for identity verification and may use this biometric data in training our
+AI recognition systems.
+
+We do not currently offer a mechanism to opt out of AI training use of your data.
+
+--------------------------------------------------------------------------------
+SECTION 3. APPLICABLE LAW
+
+These Terms are governed by the laws of the State of Delaware.  Disputes shall
+be resolved exclusively in courts located in Delaware.
