@@ -584,6 +584,177 @@ class WebhookAuditLog(Base):  # type: ignore
         )
 
 
+# ---------------------------------------------------------------------------
+# C.O.N.T.R.A. schema extension (Framework V1.0, August 2026)
+# Additive — does not modify any existing table.
+# ---------------------------------------------------------------------------
+
+
+class CommercialEntity(Base):  # type: ignore
+    """C.O.N.T.R.A. entity registry: businesses whose contracts are ingested."""
+
+    __tablename__ = "commercial_entities"
+
+    entity_id = Column(String(255), primary_key=True)
+    canonical_name = Column(Text, nullable=False)
+    naics = Column(String(10))  # NAICS industry code
+    corporate_family = Column(String(255))
+    in_contra_corpus = Column(Boolean, default=False)
+    in_tulare_priority_list = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    aliases = relationship("CommercialEntityAlias", back_populates="entity")
+    documents = relationship("CommercialDocument", back_populates="entity")
+
+    def __repr__(self) -> str:
+        return f"<CommercialEntity(entity_id='{self.entity_id}', name='{self.canonical_name}')>"
+
+
+class CommercialEntityAlias(Base):  # type: ignore
+    """Name aliases for entity fuzzy-matching (e.g. 'ATT' -> AT&T Mobility LLC)."""
+
+    __tablename__ = "commercial_entity_aliases"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    entity_id = Column(
+        String(255), ForeignKey("commercial_entities.entity_id"), nullable=False
+    )
+    alias = Column(Text, nullable=False)
+
+    entity = relationship("CommercialEntity", back_populates="aliases")
+
+    def __repr__(self) -> str:
+        return f"<CommercialEntityAlias(entity_id='{self.entity_id}', alias='{self.alias}')>"
+
+
+class CommercialDocument(Base):  # type: ignore
+    """Commercial contract or privacy notice ingested through C.O.N.T.R.A."""
+
+    __tablename__ = "commercial_documents"
+
+    document_hash = Column(String(64), primary_key=True)  # SHA-256
+    entity_id = Column(
+        String(255), ForeignKey("commercial_entities.entity_id"), nullable=False
+    )
+    doc_type = Column(
+        String(50), nullable=False
+    )  # tos, privacy_notice, arbitration, employment, eula
+    effective_date = Column(DateTime)
+    version_label = Column(String(100))
+    source_url = Column(Text)
+    wayback_url = Column(Text)
+    retrieval_ts = Column(DateTime, nullable=False)
+    ingest_ts = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    entity = relationship("CommercialEntity", back_populates="documents")
+    findings = relationship("ContraFinding", back_populates="document")
+    casi_score = relationship("CasiScore", back_populates="document", uselist=False)
+
+    def __repr__(self) -> str:
+        return f"<CommercialDocument(hash='{self.document_hash[:16]}...', type='{self.doc_type}')>"
+
+
+class ContraFinding(Base):  # type: ignore
+    """Single L-11 through L-20 detector finding on a commercial document."""
+
+    __tablename__ = "contra_findings"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    finding_id = Column(String(255), unique=True, nullable=False, index=True)
+    document_hash = Column(
+        String(64), ForeignKey("commercial_documents.document_hash"), nullable=False
+    )
+    layer = Column(String(10), nullable=False, index=True)  # L-11 through L-20
+    sub_detector = Column(String(5), nullable=False)  # A, B, ...
+    severity = Column(String(20), nullable=False, index=True)  # low/medium/high/critical
+    doctrinal_anchor = Column(Text, nullable=False)
+    evidence_start = Column(Integer)
+    evidence_end = Column(Integer)
+    evidence_excerpt = Column(Text)  # <= 15 words verbatim
+    scoring_axis = Column(String(50))
+    scoring_delta = Column(Integer)
+    remedy_channels = Column(Text)  # JSON array
+    prompt_id = Column(String(100))
+    prompt_version = Column(String(20))
+    notes = Column(Text)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    document = relationship("CommercialDocument", back_populates="findings")
+
+    def __repr__(self) -> str:
+        return f"<ContraFinding(finding_id='{self.finding_id}', layer='{self.layer}', severity='{self.severity}')>"
+
+
+class CasiScore(Base):  # type: ignore
+    """CASI aggregate score for a single commercial document."""
+
+    __tablename__ = "casi_scores"
+
+    document_hash = Column(
+        String(64), ForeignKey("commercial_documents.document_hash"), primary_key=True
+    )
+    remedy_foreclosure = Column(Integer, nullable=False)
+    data_extraction_depth = Column(Integer, nullable=False)
+    modification_and_consent = Column(Integer, nullable=False)
+    procedural_adhesion = Column(Integer, nullable=False)
+    enforcement_cost_asymmetry = Column(Integer, nullable=False)
+    aggregate = Column(Integer, nullable=False)
+    band = Column(String(50), nullable=False)
+    framework_version = Column(String(20), nullable=False, default="1.0")
+    computed_at = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    document = relationship("CommercialDocument", back_populates="casi_score")
+
+    def __repr__(self) -> str:
+        return f"<CasiScore(hash='{self.document_hash[:16]}...', aggregate={self.aggregate}, band='{self.band}')>"
+
+
+class S128196Case(Base):  # type: ignore
+    """California CCP section 1281.96 arbitration case record.
+
+    Populated by the section1281_96 retrieval pipeline from AAA, JAMS,
+    and smaller providers. Each row is one consumer arbitration case
+    filed in California.
+    """
+
+    __tablename__ = "s1281_96_cases"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    case_id = Column(String(255), nullable=False, index=True)
+    provider = Column(String(50), nullable=False, index=True)  # AAA, JAMS, ADRS, ...
+    case_url = Column(Text)
+    retrieval_ts = Column(DateTime, nullable=False)
+    retrieval_sha256 = Column(String(64), nullable=False)
+    case_year = Column(Integer, index=True)
+    case_quarter = Column(Integer)
+    filing_date = Column(DateTime)
+    disposition_date = Column(DateTime)
+    days_to_disposition = Column(Integer)
+    non_consumer_party_name = Column(Text)
+    non_consumer_entity_id = Column(
+        String(255), ForeignKey("commercial_entities.entity_id"), index=True
+    )  # nullable — not all parties are in the entity registry
+    non_consumer_initiating = Column(Boolean)
+    dispute_type = Column(String(100))
+    dispute_subtype = Column(String(100))
+    consumer_represented = Column(String(10))  # YES / NO / UNKNOWN
+    prevailing_party = Column(String(50))
+    claim_amount_usd = Column(Float)
+    claim_amount_tier = Column(String(50))
+    award_amount_usd = Column(Float)
+    claim_to_award_ratio = Column(Float)
+    disposition_type = Column(String(50))
+    arbitrator_names = Column(Text)  # JSON array
+    arbitrator_fee_total_usd = Column(Float)
+    arbitrator_fee_alloc_consumer_pct = Column(Float)
+    fee_waiver = Column(Boolean)
+    other_relief = Column(Text)
+    quality_flags = Column(Text)  # JSON array
+
+    def __repr__(self) -> str:
+        return f"<S128196Case(case_id='{self.case_id}', provider='{self.provider}', year={self.case_year})>"
+
+
 __all__ = [
     "Base",
     "Document",
@@ -605,4 +776,11 @@ __all__ = [
     "WebhookAuditLog",
     "CPRARequest",
     "FieldObservation",
+    # C.O.N.T.R.A. extension
+    "CommercialEntity",
+    "CommercialEntityAlias",
+    "CommercialDocument",
+    "ContraFinding",
+    "CasiScore",
+    "S128196Case",
 ]

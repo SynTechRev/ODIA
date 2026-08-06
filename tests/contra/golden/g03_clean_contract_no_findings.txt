@@ -1,0 +1,29 @@
+TERMS OF SERVICE -- SYNTHETIC REFERENCE CONTRACT G-03 (CLEAN / BASELINE)
+
+This document is a synthetic test fixture representing a consumer-favorable contract
+that should produce minimal or zero findings across all L-11 through L-15 detectors.
+
+SECTION 1. DISPUTE RESOLUTION
+
+If you have a concern about our services, we encourage you to contact us first so we can
+try to resolve the issue informally. Either party may seek remedies in small claims court
+for matters within that court's jurisdiction.
+
+California law governs these Terms. Any disputes not resolved informally shall be subject
+to the jurisdiction of courts located in California.
+
+You may bring claims within the time period provided by applicable California law.
+
+SECTION 2. CHANGES TO TERMS
+
+We will provide you with at least 30 days advance email notice before any material changes
+to these Terms take effect. If you disagree with the updated Terms, you may close your account
+and stop using our services before the changes take effect.
+
+SECTION 3. DATA PRACTICES
+
+We collect only your name and email address for account creation purposes. Our data collection
+is limited to what is strictly necessary to provide the service.
+
+We retain your information for no more than two years after account closure. Upon your request,
+we will delete your data within 30 days in accordance with applicable law.

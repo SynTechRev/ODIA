@@ -1,0 +1,229 @@
+{
+  "_comment": "C.O.N.T.R.A. Tier 1 entity seed list — commercial entities whose contracts are analyzed for the pilot corpus. Source: C.O.N.T.R.A. Framework V1.0 Section VII.2. Do NOT add audit findings, dollar amounts, or personnel names here.",
+  "entities": [
+    {
+      "canonical_name": "Southern California Edison Company",
+      "naics": "2211",
+      "corporate_family": "Edison International",
+      "in_tulare_priority_list": true,
+      "aliases": ["SCE", "Southern California Edison", "SoCal Edison"]
+    },
+    {
+      "canonical_name": "Pacific Gas and Electric Company",
+      "naics": "2211",
+      "corporate_family": "PG&E Corporation",
+      "in_tulare_priority_list": false,
+      "aliases": ["PG&E", "Pacific Gas & Electric", "PGE"]
+    },
+    {
+      "canonical_name": "Southern California Gas Company",
+      "naics": "2212",
+      "corporate_family": "Sempra Energy",
+      "in_tulare_priority_list": true,
+      "aliases": ["SoCal Gas", "Southern California Gas", "SoCalGas"]
+    },
+    {
+      "canonical_name": "California Water Service Company",
+      "naics": "2213",
+      "corporate_family": "California Water Service Group",
+      "in_tulare_priority_list": true,
+      "aliases": ["Cal Water", "CalWater", "California Water Service"]
+    },
+    {
+      "canonical_name": "Comcast Cable Communications LLC",
+      "naics": "5172",
+      "corporate_family": "Comcast Corporation",
+      "in_tulare_priority_list": true,
+      "aliases": ["Comcast", "Comcast Xfinity", "Xfinity"]
+    },
+    {
+      "canonical_name": "AT&T Mobility LLC",
+      "naics": "5172",
+      "corporate_family": "AT&T Inc",
+      "in_tulare_priority_list": true,
+      "aliases": ["AT&T", "ATT", "AT&T Wireless", "AT&T Broadband", "AT&T Internet"]
+    },
+    {
+      "canonical_name": "Cellco Partnership",
+      "naics": "5172",
+      "corporate_family": "Verizon Communications Inc",
+      "in_tulare_priority_list": true,
+      "aliases": ["Verizon", "Verizon Wireless", "Verizon Communications"]
+    },
+    {
+      "canonical_name": "T-Mobile USA Inc",
+      "naics": "5172",
+      "corporate_family": "T-Mobile US Inc",
+      "in_tulare_priority_list": true,
+      "aliases": ["T-Mobile", "TMobile", "Sprint", "MetroPCS"]
+    },
+    {
+      "canonical_name": "JPMorgan Chase Bank NA",
+      "naics": "5221",
+      "corporate_family": "JPMorgan Chase & Co",
+      "in_tulare_priority_list": true,
+      "aliases": ["Chase", "Chase Bank", "JP Morgan Chase", "JPMorgan Chase"]
+    },
+    {
+      "canonical_name": "Bank of America NA",
+      "naics": "5221",
+      "corporate_family": "Bank of America Corporation",
+      "in_tulare_priority_list": true,
+      "aliases": ["Bank of America", "BofA", "B of A"]
+    },
+    {
+      "canonical_name": "Wells Fargo Bank NA",
+      "naics": "5221",
+      "corporate_family": "Wells Fargo & Company",
+      "in_tulare_priority_list": true,
+      "aliases": ["Wells Fargo", "WellsFargo"]
+    },
+    {
+      "canonical_name": "Kaiser Foundation Health Plan Inc",
+      "naics": "5241",
+      "corporate_family": "Kaiser Permanente",
+      "in_tulare_priority_list": true,
+      "aliases": ["Kaiser Permanente", "Kaiser", "KP", "Kaiser Foundation"]
+    },
+    {
+      "canonical_name": "California Physicians Service",
+      "naics": "5241",
+      "corporate_family": "Blue Shield of California",
+      "in_tulare_priority_list": true,
+      "aliases": ["Blue Shield of California", "Blue Shield", "Blue Shield CA"]
+    },
+    {
+      "canonical_name": "Anthem Blue Cross of California",
+      "naics": "5241",
+      "corporate_family": "Elevance Health Inc",
+      "in_tulare_priority_list": true,
+      "aliases": ["Anthem Blue Cross", "Anthem", "Anthem Inc", "Blue Cross"]
+    },
+    {
+      "canonical_name": "UnitedHealthcare of California Inc",
+      "naics": "5241",
+      "corporate_family": "UnitedHealth Group Inc",
+      "in_tulare_priority_list": true,
+      "aliases": ["United Health Care", "UnitedHealthcare", "UHC", "UnitedHealth"]
+    },
+    {
+      "canonical_name": "State Farm Mutual Automobile Insurance Company",
+      "naics": "5241",
+      "corporate_family": "State Farm Group",
+      "in_tulare_priority_list": true,
+      "aliases": ["State Farm", "StateFarm"]
+    },
+    {
+      "canonical_name": "Farmers Insurance Exchange",
+      "naics": "5241",
+      "corporate_family": "Farmers Group Inc",
+      "in_tulare_priority_list": true,
+      "aliases": ["Farmers Insurance", "Farmers", "Farmers Group"]
+    },
+    {
+      "canonical_name": "Allstate Insurance Company",
+      "naics": "5241",
+      "corporate_family": "Allstate Corporation",
+      "in_tulare_priority_list": false,
+      "aliases": ["Allstate", "Allstate Corp"]
+    },
+    {
+      "canonical_name": "GEICO General Insurance Company",
+      "naics": "5241",
+      "corporate_family": "Berkshire Hathaway Inc",
+      "in_tulare_priority_list": false,
+      "aliases": ["GEICO", "Government Employees Insurance Company"]
+    },
+    {
+      "canonical_name": "Progressive Casualty Insurance Company",
+      "naics": "5241",
+      "corporate_family": "Progressive Corporation",
+      "in_tulare_priority_list": false,
+      "aliases": ["Progressive", "Progressive Insurance"]
+    },
+    {
+      "canonical_name": "Kaweah Health Medical Center",
+      "naics": "6221",
+      "corporate_family": null,
+      "in_tulare_priority_list": true,
+      "aliases": ["Kaweah Health", "Kaweah Delta Medical Center", "KDHCD"]
+    },
+    {
+      "canonical_name": "Adventist Health Tulare",
+      "naics": "6221",
+      "corporate_family": "Adventist Health",
+      "in_tulare_priority_list": true,
+      "aliases": ["Adventist Health", "Tulare Regional Medical Center", "TRMC"]
+    },
+    {
+      "canonical_name": "Sierra View District Hospital",
+      "naics": "6221",
+      "corporate_family": null,
+      "in_tulare_priority_list": true,
+      "aliases": ["Sierra View", "Sierra View Medical Center"]
+    },
+    {
+      "canonical_name": "Dollar General Corporation",
+      "naics": "4523",
+      "corporate_family": null,
+      "in_tulare_priority_list": false,
+      "aliases": ["Dollar General", "DG"]
+    },
+    {
+      "canonical_name": "Dollar Tree Stores Inc",
+      "naics": "4523",
+      "corporate_family": "Dollar Tree Inc",
+      "in_tulare_priority_list": false,
+      "aliases": ["Dollar Tree", "Family Dollar"]
+    },
+    {
+      "canonical_name": "Walmart Inc",
+      "naics": "4523",
+      "corporate_family": null,
+      "in_tulare_priority_list": false,
+      "aliases": ["Walmart", "Wal-Mart", "Wal-Mart Stores"]
+    },
+    {
+      "canonical_name": "Target Corporation",
+      "naics": "4523",
+      "corporate_family": null,
+      "in_tulare_priority_list": false,
+      "aliases": ["Target"]
+    },
+    {
+      "canonical_name": "Amazon.com Inc",
+      "naics": "4541",
+      "corporate_family": "Amazon.com Inc",
+      "in_tulare_priority_list": false,
+      "aliases": ["Amazon", "Amazon.com", "AWS", "Amazon Web Services"]
+    },
+    {
+      "canonical_name": "Uber Technologies Inc",
+      "naics": "4853",
+      "corporate_family": null,
+      "in_tulare_priority_list": true,
+      "aliases": ["Uber", "Uber Eats"]
+    },
+    {
+      "canonical_name": "Apple Inc",
+      "naics": "5179",
+      "corporate_family": null,
+      "in_tulare_priority_list": false,
+      "aliases": ["Apple", "Apple Computer"]
+    },
+    {
+      "canonical_name": "Meta Platforms Inc",
+      "naics": "5179",
+      "corporate_family": null,
+      "in_tulare_priority_list": false,
+      "aliases": ["Meta", "Facebook", "Instagram", "WhatsApp", "Facebook Inc"]
+    },
+    {
+      "canonical_name": "Google LLC",
+      "naics": "5179",
+      "corporate_family": "Alphabet Inc",
+      "in_tulare_priority_list": false,
+      "aliases": ["Google", "Alphabet", "Google Inc", "YouTube"]
+    }
+  ]
+}

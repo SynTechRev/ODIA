@@ -1,0 +1,49 @@
+PRIVACY NOTICE -- SYNTHETIC REFERENCE CONTRACT G-02
+
+This document is a synthetic test fixture covering L-14 (data collection) and L-15 (retention).
+
+INFORMATION WE COLLECT
+
+We collect the following categories of personal information about you:
+
+Identifiers: We collect your name, email address, phone number, postal address, IP address,
+device identifier, and account number when you register for or use our services.
+
+Personal Records: We collect financial information including credit card numbers, bank account
+information, credit history, health information relating to your use of wellness features,
+and employment history for identity verification purposes.
+
+Protected Classifications: We may collect information about your age, gender identity, race,
+ethnicity, national origin, and disability status where you voluntarily provide it.
+
+Commercial Information: We collect your purchase history, transaction records, and information
+about products and services you have ordered or considered.
+
+Biometric Information: We collect biometric identifiers including fingerprint data and facial
+recognition templates to enable biometric authentication features. This biometric information
+is stored on our secure servers.
+
+Internet Activity: We collect browsing history, search history, search queries, and information
+about your interactions with our website, including pages visited, links clicked, and time spent
+on each page.
+
+Geolocation Data: We collect precise geolocation data, GPS coordinates, location history,
+and real-time location information to provide location-based services.
+
+Inferences: We create profiles about you based on your usage data, building predictive models
+and inferences about your preferences, likelihood to purchase, and propensity to respond to
+various offers.
+
+RETENTION
+
+We retain your personal information for as long as necessary to fulfill the purposes described
+in this notice and as required by applicable law. Financial account information is retained for
+our standard business purposes.
+
+After termination or closure of your account, we may retain your personal information for
+fraud prevention and legal compliance purposes.
+
+We share your personal information with third-party partners and vendors who retain data
+according to their own data retention policies and practices.
+
+We also sell consumer personal data to data broker partners for marketing and analytics purposes.

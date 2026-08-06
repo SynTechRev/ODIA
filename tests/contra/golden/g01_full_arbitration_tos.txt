@@ -1,0 +1,53 @@
+TERMS OF SERVICE -- SYNTHETIC REFERENCE CONTRACT G-01
+
+This document is a synthetic test fixture for the C.O.N.T.R.A. Phase C detector test suite.
+It contains deliberately constructed clauses covering all L-11 sub-detectors.
+
+SECTION 1. ARBITRATION AGREEMENT
+
+ANY DISPUTE, CLAIM, OR CONTROVERSY ARISING OUT OF OR RELATING TO THESE TERMS SHALL BE
+RESOLVED EXCLUSIVELY BY BINDING MANDATORY ARBITRATION administered by JAMS pursuant to its
+Comprehensive Arbitration Rules and Procedures. THE FEDERAL ARBITRATION ACT (9 U.S.C. sections
+1-16) GOVERNS THE INTERPRETATION AND ENFORCEMENT OF THIS ARBITRATION AGREEMENT.
+
+YOU AND THE COMPANY EACH WAIVE ANY RIGHT TO PARTICIPATE IN A CLASS ACTION, CLASS-WIDE
+ARBITRATION, COLLECTIVE ACTION, OR REPRESENTATIVE ACTION. You may not bring or participate in
+any class action lawsuit or class arbitration.
+
+The arbitration shall be conducted in New York, New York. You and the Company shall split the
+arbitration costs equally, with the claimant paying the initial filing fee.
+
+Discovery shall be limited to document requests and one deposition per party. No interrogatories
+or requests for admission shall be permitted without leave of the arbitrator.
+
+All arbitration proceedings, awards, and related matters shall be kept confidential and may not
+be disclosed to any third party.
+
+If the arbitrator finds in favor of the Company, the losing party shall pay all arbitration
+costs, including the Company's attorney fees and legal costs incurred in the proceeding.
+
+The arbitrator's decision shall be final and binding. No appeal of the arbitration award shall
+be available in any court except as expressly provided by 9 U.S.C. section 10.
+
+SECTION 2. GOVERNING LAW AND FORUM
+
+These Terms are governed by the laws of the State of Delaware, without regard to conflict of law
+principles. Any disputes not subject to arbitration shall be brought exclusively in the courts
+located in the State of Delaware.
+
+You agree that any legal action must be brought within one (1) year of the event giving rise to
+the claim, notwithstanding any longer limitations period provided by applicable law.
+
+You waive any rights you may have under the California Consumer Privacy Act (CCPA) to the extent
+such rights conflict with this Agreement.
+
+This Agreement constitutes the entire agreement between you and the Company and supersedes all
+prior agreements, representations, warranties, and understandings.
+
+SECTION 3. CHANGES TO TERMS
+
+We reserve the right to modify these Terms at any time. We will notify you of changes by posting
+the updated Terms on our website. Continued use of the Service constitutes your acceptance of the
+modified Terms. We may apply modifications retroactively to any pending claims or disputes.
+
+No opt-out rights are provided upon modification of these Terms.
