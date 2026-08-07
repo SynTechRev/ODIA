@@ -7,7 +7,7 @@ v3.8.2 changed the desktop backend to store its database at:
   Linux:   ~/.config/ODIA/oraculus_audit.db
 
 Previously, the database was created adjacent to the PyInstaller bundle at:
-  Windows: C:\Users\<user>\AppData\Local\Programs\ODIA\oraculus_audit.db
+  Windows: C:\\Users\\<user>\\AppData\\Local\\Programs\\ODIA\\oraculus_audit.db
 
 This script merges the dev/source database (which holds the full audit corpus)
 with the old install database (which may have recent upload audits), writing
@@ -35,6 +35,7 @@ from pathlib import Path
 # Path helpers
 # ---------------------------------------------------------------------------
 
+
 def _repo_root() -> Path:
     return Path(__file__).resolve().parent.parent
 
@@ -52,7 +53,13 @@ def _default_dest() -> Path:
         if appdata:
             return Path(appdata) / "ODIA" / "oraculus_audit.db"
     elif system == "Darwin":
-        return Path.home() / "Library" / "Application Support" / "ODIA" / "oraculus_audit.db"
+        return (
+            Path.home()
+            / "Library"
+            / "Application Support"
+            / "ODIA"
+            / "oraculus_audit.db"
+        )
     else:
         xdg = os.environ.get("XDG_CONFIG_HOME", "")
         base = Path(xdg) if xdg else Path.home() / ".config"
@@ -91,6 +98,7 @@ def _stats(path: Path) -> str:
 # or natural key) so no data is overwritten or duplicated.
 # ---------------------------------------------------------------------------
 
+
 def _merge(src_path: Path, dest_path: Path, dry_run: bool) -> None:
     print(f"\nSource:      {src_path}")
     print(f"  {_stats(src_path)}")
@@ -116,7 +124,9 @@ def _merge(src_path: Path, dest_path: Path, dry_run: bool) -> None:
         return
 
     # Both exist — merge: attach src to dest and INSERT OR IGNORE.
-    print("\nBoth databases exist — merging (INSERT OR IGNORE by document_id / sha256)…")
+    print(
+        "\nBoth databases exist — merging (INSERT OR IGNORE by document_id / sha256)…"
+    )
 
     dest_conn = sqlite3.connect(dest_path)
     dest_conn.execute("PRAGMA journal_mode=WAL")
@@ -125,20 +135,21 @@ def _merge(src_path: Path, dest_path: Path, dry_run: bool) -> None:
     dest_conn.execute(f"ATTACH DATABASE '{src_abs}' AS src")
 
     tables = [
-        ("documents",          "document_id"),
-        ("analyses",           None),   # no unique natural key — skip merging
-        ("anomalies",          None),   # tied to analysis IDs — skip merging
-        ("mesh_execution_jobs","job_id"),
+        ("documents", "document_id"),
+        ("analyses", None),  # no unique natural key — skip merging
+        ("anomalies", None),  # tied to analysis IDs — skip merging
+        ("mesh_execution_jobs", "job_id"),
     ]
 
     for table, natural_key in tables:
         if natural_key is None:
-            print(f"  {table}: skipped (no stable natural key — run a fresh audit to populate)")
+            print(
+                f"  {table}: skipped (no stable natural key — run a fresh audit to populate)"
+            )
             continue
         try:
             dest_conn.execute(
-                f"INSERT OR IGNORE INTO {table} "
-                f"SELECT * FROM src.{table}"
+                f"INSERT OR IGNORE INTO {table} " f"SELECT * FROM src.{table}"
             )
             dest_conn.commit()
             after = _count(dest_conn, table)
@@ -162,6 +173,7 @@ def _merge(src_path: Path, dest_path: Path, dry_run: bool) -> None:
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)

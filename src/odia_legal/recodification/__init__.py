@@ -8,10 +8,10 @@ Planned:
 """
 
 from odia_legal.recodification.cpra_crosswalk import (
+    RECODIFICATION_DATE,
     CPRACrosswalk,
     CrosswalkEntry,
     TranslationResult,
-    RECODIFICATION_DATE,
 )
 
 __all__ = [

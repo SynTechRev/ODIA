@@ -10,6 +10,7 @@ Date: 2025-12-18
 """
 
 import logging
+import os
 from pathlib import Path
 from typing import Any
 
@@ -19,11 +20,18 @@ from ..rag_context import ContextAssembler
 from ..rag_prompts import get_prompt_for_query
 from ..retriever import Retriever
 
+# Absolute fallback for vectors directory — works regardless of process CWD.
+# Path: orac_rag.py -> rag/ -> oraculus_di_auditor/ -> src/ -> repo_root
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+_DEFAULT_VECTORS_DIR = Path(
+    os.getenv("ODIA_VECTORS_DIR", str(_REPO_ROOT / "data" / "vectors"))
+)
+
 # Import config
 try:
     import sys
 
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "config"))
+    sys.path.insert(0, str(_REPO_ROOT / "config"))
     from rag_config import (
         DEFAULT_VOCAB_PATH,
         RAG_LLM_MODEL,
@@ -36,16 +44,40 @@ try:
     )
 except ImportError:
     # Fallback defaults if config not available
-    RAG_LLM_PROVIDER = "openai"
-    RAG_LLM_MODEL = "gpt-4o-mini"
+    RAG_LLM_PROVIDER = "ollama"
+    RAG_LLM_MODEL = "odia-v1"
     RAG_TEMPERATURE = 0.1
     RAG_TOP_K = 5
     RAG_SIMILARITY_THRESHOLD = 0.3
     RAG_MAX_CONTEXT_TOKENS = 4000
-    VECTOR_INDICES = {"corpus": "data/vectors/collection"}
-    DEFAULT_VOCAB_PATH = "data/vectors/collection_vocab.pkl"
+    VECTOR_INDICES = {"corpus": str(_DEFAULT_VECTORS_DIR / "collection")}
+    DEFAULT_VOCAB_PATH = str(_DEFAULT_VECTORS_DIR / "collection_vocab.pkl")
 
 logger = logging.getLogger(__name__)
+
+# odia-v1 was fine-tuned to output full ODIA report templates, so it regenerates
+# the template header before the actual analysis text. Strip the echoed prefix.
+_CUE_MARKERS = (
+    "Your anomaly analysis:",
+    "Your audit analysis:",
+    "Your compliance analysis:",
+    "Your vendor analysis:",
+    "Your answer:",
+)
+
+
+def _strip_prompt_echo(text: str) -> str:
+    """Return only the generated content after the last cue marker, if present."""
+    best_idx = -1
+    best_marker_len = 0
+    for marker in _CUE_MARKERS:
+        idx = text.rfind(marker)
+        if idx > best_idx:
+            best_idx = idx
+            best_marker_len = len(marker)
+    if best_idx != -1:
+        return text[best_idx + best_marker_len :].strip()
+    return text.strip()
 
 
 class OracRAG:
@@ -69,8 +101,12 @@ class OracRAG:
             vectors_dir: Directory containing vector indices
         """
         self.embedder = embedder or LocalEmbedder(max_features=2048)
-        self.retriever = retriever or Retriever(vectors_dir=vectors_dir)
+        self.retriever = retriever or Retriever(
+            vectors_dir=vectors_dir or _DEFAULT_VECTORS_DIR
+        )
         self.context_assembler = ContextAssembler(max_tokens=RAG_MAX_CONTEXT_TOKENS)
+        # Extra (embedder, retriever, name) tuples for multi-index queries.
+        self._extra_indexes: list[tuple[LocalEmbedder, Retriever, str]] = []
 
         # Initialize LLM provider
         self.llm_provider_name = llm_provider
@@ -109,6 +145,34 @@ class OracRAG:
         self.is_index_loaded = True
         logger.info(f"Loaded vector index: {index_name}")
 
+    def extend_index(self, index_name: str, vocab_path: str) -> int:
+        """Load an additional collection alongside the primary corpus.
+
+        Each extra collection gets its own embedder + retriever because
+        collections have different TF-IDF vocabularies.
+
+        Args:
+            index_name: Base filename of the additional index (e.g. "ace_collection")
+            vocab_path: Absolute path to the vocabulary pickle for this collection
+
+        Returns:
+            Number of vectors loaded from the extra collection
+        """
+        vocab_file = Path(vocab_path)
+        if not vocab_file.exists():
+            raise FileNotFoundError(f"Vocab not found: {vocab_path}")
+
+        extra_embedder = LocalEmbedder()
+        extra_embedder.load_vocabulary(vocab_file)
+
+        extra_retriever = Retriever(vectors_dir=self.retriever.vectors_dir)
+        extra_retriever.load(index_name)
+
+        count = len(extra_retriever.vectors)
+        self._extra_indexes.append((extra_embedder, extra_retriever, index_name))
+        logger.info("Extended RAG with %s (%d vectors)", index_name, count)
+        return count
+
     def query(
         self,
         question: str,
@@ -145,14 +209,32 @@ class OracRAG:
             query_vector = self.embedder.embed(question)
             logger.debug(f"Embedded query: {question[:50]}...")
 
-            # Step 2: Retrieve relevant documents
+            # Step 2: Retrieve from primary index
             raw_results = self.retriever.search(query_vector, top_k=top_k)
-
-            # Convert to dict format
             results = [
                 {"index": idx, "score": score, "metadata": metadata}
                 for idx, score, metadata in raw_results
             ]
+
+            # Retrieve from extra indexes (ace, jim, etc.) and merge
+            for extra_embedder, extra_retriever, idx_name in self._extra_indexes:
+                try:
+                    extra_vector = extra_embedder.embed(question)
+                    extra_raw = extra_retriever.search(extra_vector, top_k=top_k)
+                    for idx, score, metadata in extra_raw:
+                        results.append(
+                            {
+                                "index": idx,
+                                "score": score,
+                                "metadata": {**metadata, "_source_index": idx_name},
+                            }
+                        )
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("Extra index %s search failed: %s", idx_name, exc)
+
+            # Sort merged results by score descending, keep top_k
+            results.sort(key=lambda r: r["score"], reverse=True)
+            results = results[:top_k]
 
             # Filter by threshold
             results = [r for r in results if r["score"] >= threshold]
@@ -178,6 +260,7 @@ class OracRAG:
                     prompt=prompt,
                     context="",  # Already in prompt
                 )
+                answer = _strip_prompt_echo(answer)
             else:
                 # Fallback: return context without LLM generation
                 logger.warning("LLM not available, returning context only")

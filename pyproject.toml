@@ -239,3 +239,20 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 # module-wide alias; E501: doctrinal citation strings and notes exceed 88 chars
 "src/oraculus_di_auditor/contra/l*.py" = ["N812", "E501"]
 "tests/contra/test_detectors_l16_l20.py" = ["E501"]
+# odia_legal __init__ docstrings contain legal citations and statute references
+# that exceed 88 chars and cannot be shortened without losing information
+"src/odia_legal/citations/__init__.py" = ["E501"]
+"src/odia_legal/detectors/__init__.py" = ["E501"]
+"src/odia_legal/recodification/__init__.py" = ["E501"]
+# analytical_card.py uses OOXML camelCase names (rPr, rFonts) per the ECMA-376
+# spec — renaming would diverge from the standard's naming
+"src/oraculus_di_auditor/cards/analytical_card.py" = ["N806", "E501"]
+# db/models.py column definitions and SQLAlchemy field strings exceed 88 chars
+"src/oraculus_di_auditor/db/models.py" = ["E501"]
+"src/oraculus_di_auditor/entity/__init__.py" = ["E501"]
+# api.py _register_routes is an intentional monolithic route registrar — same
+# rationale as the other route files already listed above
+"src/oraculus_di_auditor/interface/api.py" = ["C901"]
+# C.O.N.T.R.A. shared test infrastructure — assertion strings exceed 88 chars
+"tests/contra/test_base.py" = ["E501"]
+"tests/contra/test_detectors_l11_l15.py" = ["E501"]

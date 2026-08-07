@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import hashlib
 import re
-from typing import List, Optional
 
 from .base import EvidenceSpan, Finding, Severity
 
@@ -29,10 +28,10 @@ def make_finding(
     anchor: str,
     axis: str,
     delta: int,
-    remedy_channels: List[str],
-    notes: Optional[str] = None,
-    prompt_id: Optional[str] = None,
-    prompt_version: Optional[str] = None,
+    remedy_channels: list[str],
+    notes: str | None = None,
+    prompt_id: str | None = None,
+    prompt_version: str | None = None,
 ) -> Finding:
     """Build a Finding from a regex match position."""
     excerpt = _excerpt(text, match_start)
@@ -70,12 +69,12 @@ def scan_pattern(
     anchor: str,
     axis: str,
     delta: int,
-    remedy_channels: List[str],
-    notes: Optional[str] = None,
+    remedy_channels: list[str],
+    notes: str | None = None,
     flags: int = 0,
-) -> List[Finding]:
+) -> list[Finding]:
     """Run a compiled pattern on text and return one Finding per match."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     for m in pattern.finditer(text.lower()):
         findings.append(
             make_finding(
