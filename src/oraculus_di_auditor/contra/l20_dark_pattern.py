@@ -138,6 +138,7 @@ _FK_THRESHOLD = 12.0
 _LENGTH_TIME_RATIO_THRESHOLD = (
     0.5  # reading time > 50 % of stated notice period in same units
 )
+_P_DAYS = re.compile(r"\b(\d+)\s+days?\b")
 
 
 class L20DarkPattern:
@@ -241,8 +242,6 @@ class L20DarkPattern:
 
         # F: length-time asymmetry
         reading_time_min = _words_per_minute_reading_time_minutes(doc_text)
-        # Look for "X days" notice windows in the modification / effective date language
-        _P_DAYS = re.compile(r"\b(\d+)\s+days?\b")
         notice_windows = [int(m.group(1)) for m in _P_DAYS.finditer(text_lower)]
         if notice_windows:
             shortest_window_days = min(notice_windows)

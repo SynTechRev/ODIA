@@ -235,3 +235,7 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "tests/odia_legal/test_federal_adjudication_loader.py" = ["E501"]
 "scripts/ingest_federal_adjudication.py" = ["E501"]
 "tests/legal/test_legal_routes.py" = ["E501"]
+# C.O.N.T.R.A. detector files — N812: anchors as A is the established
+# module-wide alias; E501: doctrinal citation strings and notes exceed 88 chars
+"src/oraculus_di_auditor/contra/l*.py" = ["N812", "E501"]
+"tests/contra/test_detectors_l16_l20.py" = ["E501"]
