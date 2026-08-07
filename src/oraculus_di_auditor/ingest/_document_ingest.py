@@ -1,8 +1,8 @@
-"""Document ingestion module for Oraculus DI Auditor.
+"""Legacy document folder ingestion helpers (pre-C.O.N.T.R.A.).
 
-Author: Marcus A. Sanchez
-Date: 2025-11-12
-Updated: 2025-11-13 (GitHub Copilot Agent - Phase 6)
+Preserved for backward compatibility: oraculus_di_auditor.ingest.ingest_folder
+was previously served by a top-level ingest.py module. The C.O.N.T.R.A. Phase G
+work promoted `ingest` to a package; this file carries the legacy implementation.
 """
 
 import hashlib
@@ -13,27 +13,10 @@ from typing import Any
 
 
 def sha256_text(text: str) -> str:
-    """Generate SHA-256 hash of text for provenance tracking.
-
-    Args:
-        text: Input text to hash
-
-    Returns:
-        Hexadecimal SHA-256 hash string
-    """
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def normalize_text_file(path: Path, jurisdiction: str = "unknown") -> dict:
-    """Normalize a text file into canonical legal document format.
-
-    Args:
-        path: Path to the text file
-        jurisdiction: Legal jurisdiction (e.g., 'federal', 'california')
-
-    Returns:
-        Normalized document dictionary conforming to legal_schema.json
-    """
     text = path.read_text(encoding="utf-8")
     doc_id = f"{path.stem}"
 
@@ -61,16 +44,7 @@ def normalize_text_file(path: Path, jurisdiction: str = "unknown") -> dict:
 def ingest_folder(
     src_dir: str, out_dir: str = "data/cases", jurisdiction: str = "unknown"
 ):
-    """Ingest documents from a folder and save as normalized JSON.
-
-    Args:
-        src_dir: Source directory containing documents to ingest
-        out_dir: Output directory for normalized JSON documents
-        jurisdiction: Legal jurisdiction for the documents
-
-    Returns:
-        Number of documents processed
-    """
+    """Ingest documents from a folder and save as normalized JSON."""
     src = Path(src_dir)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -88,13 +62,10 @@ def ingest_folder(
             processed += 1
             print(f"Ingested: {f.name} -> {output_path.name}")
         elif f.is_file() and f.suffix.lower() == ".json":
-            # If already JSON, validate and potentially enhance with provenance
             try:
                 j = json.loads(f.read_text(encoding="utf-8"))
-                # Ensure required fields exist
                 if "id" in j and "text" in j:
                     doc = j
-                    # Add missing provenance fields if needed
                     if "checksum" not in doc and "text" in doc:
                         doc["checksum"] = sha256_text(doc["text"])
                     if "ingest_timestamp" not in doc:

@@ -159,6 +159,70 @@ def _cmd_fetch(args: argparse.Namespace) -> int:
     return subprocess.call(cmd, cwd=str(_REPO_ROOT))
 
 
+def _cmd_contra_ingest(args: argparse.Namespace) -> int:
+    """Ingest a commercial document through the C.O.N.T.R.A. pipeline."""
+    from datetime import UTC, datetime
+
+    source = Path(args.source)
+    if not source.exists():
+        print(f"[ERROR] Source file not found: {source}")
+        return 1
+
+    effective_date = None
+    if args.effective_date:
+        try:
+            effective_date = datetime.strptime(args.effective_date, "%Y-%m-%d").replace(tzinfo=UTC)
+        except ValueError:
+            print(f"[ERROR] --effective-date must be YYYY-MM-DD, got: {args.effective_date}")
+            return 1
+
+    output_dir = Path(args.output) if args.output else _REPO_ROOT / "reports" / "contra"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        from sqlalchemy import create_engine
+        from sqlalchemy.orm import sessionmaker
+
+        db_path = _REPO_ROOT / "oraculus_audit.db"
+        engine = create_engine(f"sqlite:///{db_path}")
+        SessionFactory = sessionmaker(bind=engine)  # noqa: N806
+        session = SessionFactory()
+
+        from oraculus_di_auditor.ingest.commercial import ingest_commercial_document
+
+        result = ingest_commercial_document(
+            source_path=source,
+            entity_name=args.entity,
+            doc_type=args.doc_type,
+            session=session,
+            effective_date=effective_date,
+            version_label=args.version_label,
+            source_url=args.source_url,
+            output_dir=output_dir,
+        )
+        session.close()
+
+        print(f"Ingestion complete: {result.document_hash[:16]}...")
+        print(f"  Entity:     {result.entity_name} ({result.entity_id or 'unresolved'})")
+        print(f"  Doc type:   {result.doc_type}")
+        print(f"  Text:       {result.text_length:,} chars via {result.extraction_method}")
+        print(f"  Findings:   L1-L10={result.l1_l10_findings}  L11-L20={result.l11_l20_findings}")
+        print(f"  CASI:       {result.casi_aggregate} ({result.casi_band})")
+        if result.wayback_url:
+            print(f"  Wayback:    {result.wayback_url}")
+        if result.analytical_card_path:
+            print(f"  Card:       {result.analytical_card_path}")
+        if result.warnings:
+            for w in result.warnings:
+                print(f"  [WARN] {w}")
+        if result.skipped_duplicate:
+            print("  (duplicate — already in DB)")
+        return 0
+    except Exception as exc:
+        print(f"[ERROR] Ingestion failed: {exc}")
+        return 1
+
+
 def _cmd_query(args: argparse.Namespace) -> int:
     """Run a natural-language RAG query."""
     script = _SCRIPTS / "rag_query.py"
@@ -256,6 +320,49 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     query_p.add_argument("query", metavar="QUERY", help="Question to ask")
 
+    # contra-ingest
+    ci_p = sub.add_parser(
+        "contra-ingest",
+        help="Ingest a commercial document through the C.O.N.T.R.A. pipeline",
+    )
+    ci_p.add_argument(
+        "--source", required=True, metavar="FILE", help="Path to document (PDF or text)"
+    )
+    ci_p.add_argument(
+        "--entity", required=True, metavar="NAME", help="Canonical entity / company name"
+    )
+    ci_p.add_argument(
+        "--doc-type",
+        required=True,
+        dest="doc_type",
+        metavar="TYPE",
+        choices=["tos", "privacy_notice", "arbitration", "employment", "eula"],
+        help="Document type: tos | privacy_notice | arbitration | employment | eula",
+    )
+    ci_p.add_argument(
+        "--effective-date",
+        dest="effective_date",
+        metavar="DATE",
+        help="Document effective date YYYY-MM-DD",
+    )
+    ci_p.add_argument(
+        "--version-label",
+        dest="version_label",
+        metavar="LABEL",
+        help="Human-readable version label (e.g. 'v2024-01')",
+    )
+    ci_p.add_argument(
+        "--source-url",
+        dest="source_url",
+        metavar="URL",
+        help="Canonical URL where the document was retrieved",
+    )
+    ci_p.add_argument(
+        "--output",
+        metavar="DIR",
+        help="Output directory for Analytical Card DOCX (default: reports/contra/)",
+    )
+
     return parser
 
 
@@ -275,6 +382,7 @@ def main(argv: list[str] | None = None) -> int:
         "serve": _cmd_serve,
         "fetch": _cmd_fetch,
         "query": _cmd_query,
+        "contra-ingest": _cmd_contra_ingest,
     }
 
     if args.command is None:

@@ -269,3 +269,14 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "src/oraculus_di_auditor/analytics/section1281_96/report.py" = ["C901", "E501"]
 # test_report.py: importorskip must precede the module import it gates (E402)
 "tests/analytics/section1281_96/test_report.py" = ["E402"]
+# T.C.A.M.S. and C.C.C.E.A. cards: long line heuristic strings and structural layout functions;
+# N806 rPr/rFonts are python-docx OxmlElement API convention (mirrors analytical_card.py)
+"src/oraculus_di_auditor/cards/tcams.py" = ["E501", "C901", "N806"]
+"src/oraculus_di_auditor/cards/ccceak.py" = ["E501", "C901", "N806"]
+# commercial.py: 12-step pipeline function; structural complexity (12 sequential steps)
+"src/oraculus_di_auditor/ingest/commercial.py" = ["C901", "E501"]
+# test_tcams.py / test_ccceak.py: importorskip must precede module-level imports (E402)
+"tests/cards/test_tcams.py" = ["E402"]
+"tests/cards/test_ccceak.py" = ["E402"]
+# test_commercial.py: importorskip must precede module-level imports (E402)
+"tests/ingest/test_commercial.py" = ["E402"]
