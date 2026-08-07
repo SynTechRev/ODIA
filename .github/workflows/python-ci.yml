@@ -14,6 +14,10 @@ on:
       - copilot/initiate-full-ingestion
       - ingestion-clean
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   pull-requests: write
@@ -61,7 +65,7 @@ jobs:
             echo "Skipping auto-push: detached HEAD (likely PR SHA)."
           else
             git add .
-            git commit -m "auto-fix: formatting corrections (Black/Ruff/Pre-Commit)" || echo "No changes to commit."
+            git commit -m "auto-fix: formatting corrections (Black/Ruff/Pre-Commit) [skip ci]" || echo "No changes to commit."
             git push origin "$CURRENT_BRANCH"
           fi
 
