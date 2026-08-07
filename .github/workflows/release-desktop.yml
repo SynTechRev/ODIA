@@ -206,12 +206,9 @@ jobs:
 
       - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/v') || inputs.tag
-        uses: softprogs/action-gh-release@v2
-        with:
-          tag_name: ${{ inputs.tag || github.ref_name }}
-          files: desktop/dist/${{ matrix.artifact }}
-          draft: false
-          prerelease: false
-          generate_release_notes: false
+        shell: bash
+        run: |
+          TAG="${{ inputs.tag || github.ref_name }}"
+          gh release upload "$TAG" desktop/dist/${{ matrix.artifact }} --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
