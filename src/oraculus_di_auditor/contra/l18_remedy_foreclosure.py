@@ -21,10 +21,9 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.8, Handoff Spec V1.0 Section 5.8
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
-from ._utils import make_finding, scan_pattern
+from ._utils import scan_pattern
 from .base import Finding, Severity
 
 _LAYER = "L-18"
@@ -123,7 +122,12 @@ _P_H = re.compile(
 _REMEDY_CAP = ["demand_letter", "CPPA_complaint", "AG_complaint"]
 _REMEDY_WAIVER = ["demand_letter", "CPPA_complaint", "AG_complaint", "class_action"]
 _REMEDY_JURY = ["demand_letter", "GRAFTON_PARTNERS_challenge"]
-_REMEDY_EQUITABLE = ["demand_letter", "CPPA_complaint", "AG_complaint", "Armendariz_challenge"]
+_REMEDY_EQUITABLE = [
+    "demand_letter",
+    "CPPA_complaint",
+    "AG_complaint",
+    "Armendariz_challenge",
+]
 _REMEDY_PAGA = ["PAGA_action", "AG_complaint", "demand_letter"]
 
 
@@ -135,47 +139,111 @@ class L18RemedyForeclosure:
     def __init__(self) -> None:
         pass
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
-        findings: List[Finding] = []
+        findings: list[Finding] = []
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.HIGH, doc_hash,
-            A.ARMENDARIZ, "remedy_foreclosure", 4, _REMEDY_CAP,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.HIGH,
+            doc_hash,
+            A.ARMENDARIZ,
+            "remedy_foreclosure",
+            4,
+            _REMEDY_CAP,
             notes="Aggregate damages cap -- recovery limited to nominal amount paid.",
         )
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.HIGH, doc_hash,
-            A.ARMENDARIZ, "remedy_foreclosure", 4, _REMEDY_WAIVER,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.HIGH,
+            doc_hash,
+            A.ARMENDARIZ,
+            "remedy_foreclosure",
+            4,
+            _REMEDY_WAIVER,
             notes="Consequential/incidental/special damages waiver -- eliminates real-world harm recovery.",
         )
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.HIGH, doc_hash,
-            A.CIVCODE_3294, "remedy_foreclosure", 4, _REMEDY_WAIVER,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.HIGH,
+            doc_hash,
+            A.CIVCODE_3294,
+            "remedy_foreclosure",
+            4,
+            _REMEDY_WAIVER,
             notes="Punitive damages waiver -- California courts disfavor this in consumer adhesion contracts.",
         )
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.HIGH, doc_hash,
-            A.CCP_337, "remedy_foreclosure", 4, _REMEDY_CAP,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.HIGH,
+            doc_hash,
+            A.CCP_337,
+            "remedy_foreclosure",
+            4,
+            _REMEDY_CAP,
             notes="Shortened statute of limitations -- reduces time below California statutory baseline.",
         )
         findings += scan_pattern(
-            _P_E, doc_text, _LAYER, "E", Severity.HIGH, doc_hash,
-            A.GRAFTON_PARTNERS, "remedy_foreclosure", 4, _REMEDY_JURY,
+            _P_E,
+            doc_text,
+            _LAYER,
+            "E",
+            Severity.HIGH,
+            doc_hash,
+            A.GRAFTON_PARTNERS,
+            "remedy_foreclosure",
+            4,
+            _REMEDY_JURY,
             notes="Jury trial waiver -- Grafton Partners bars pre-dispute waivers in California.",
         )
         findings += scan_pattern(
-            _P_F, doc_text, _LAYER, "F", Severity.CRITICAL, doc_hash,
-            A.ARMENDARIZ, "remedy_foreclosure", 7, _REMEDY_EQUITABLE,
+            _P_F,
+            doc_text,
+            _LAYER,
+            "F",
+            Severity.CRITICAL,
+            doc_hash,
+            A.ARMENDARIZ,
+            "remedy_foreclosure",
+            7,
+            _REMEDY_EQUITABLE,
             notes="Equitable relief waiver -- forecloses injunction even when damages are inadequate remedy.",
         )
         findings += scan_pattern(
-            _P_G, doc_text, _LAYER, "G", Severity.CRITICAL, doc_hash,
-            A.VIKING_RIVER, "remedy_foreclosure", 7, _REMEDY_PAGA,
+            _P_G,
+            doc_text,
+            _LAYER,
+            "G",
+            Severity.CRITICAL,
+            doc_hash,
+            A.VIKING_RIVER,
+            "remedy_foreclosure",
+            7,
+            _REMEDY_PAGA,
             notes="PAGA waiver -- Viking River permits individual PAGA waivers but not representative waivers.",
         )
         findings += scan_pattern(
-            _P_H, doc_text, _LAYER, "H", Severity.MEDIUM, doc_hash,
-            A.ARMENDARIZ, "remedy_foreclosure", 2, _REMEDY_CAP,
+            _P_H,
+            doc_text,
+            _LAYER,
+            "H",
+            Severity.MEDIUM,
+            doc_hash,
+            A.ARMENDARIZ,
+            "remedy_foreclosure",
+            2,
+            _REMEDY_CAP,
             notes="As-is / third-party warranty disclaimer -- shifts liability to consumer for partner conduct.",
         )
         return findings

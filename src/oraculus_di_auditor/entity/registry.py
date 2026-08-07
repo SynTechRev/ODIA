@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from rapidfuzz import fuzz as _fuzz
 
@@ -28,9 +28,9 @@ class Entity:
 
     entity_id: str
     canonical_name: str
-    aliases: List[str] = field(default_factory=list)
-    naics: Optional[str] = None
-    corporate_family: Optional[str] = None
+    aliases: list[str] = field(default_factory=list)
+    naics: str | None = None
+    corporate_family: str | None = None
     in_contra_corpus: bool = False
     in_tulare_priority_list: bool = False
 
@@ -38,12 +38,12 @@ class Entity:
     def new(
         cls,
         canonical_name: str,
-        naics: Optional[str] = None,
-        corporate_family: Optional[str] = None,
+        naics: str | None = None,
+        corporate_family: str | None = None,
         in_contra_corpus: bool = True,
         in_tulare_priority_list: bool = False,
-        aliases: Optional[List[str]] = None,
-    ) -> "Entity":
+        aliases: list[str] | None = None,
+    ) -> Entity:
         return cls(
             entity_id=str(uuid.uuid4()),
             canonical_name=canonical_name,
@@ -68,7 +68,7 @@ class EntityRegistry:
     fuzzy_match() normalizes both sides before scoring.
     """
 
-    def __init__(self, db_session: Optional["Session"] = None) -> None:
+    def __init__(self, db_session: Session | None = None) -> None:
         self._db = db_session
         # In-memory store — also used as a read-through cache for DB mode
         self._by_id: dict[str, Entity] = {}
@@ -82,7 +82,7 @@ class EntityRegistry:
     # Public resolution interface
     # ------------------------------------------------------------------
 
-    def resolve(self, name: str) -> Optional[Entity]:
+    def resolve(self, name: str) -> Entity | None:
         """Resolve a name to an Entity, exact match first then fuzzy.
 
         Returns None if no entity matches at the 0.88 threshold.
@@ -102,9 +102,7 @@ class EntityRegistry:
         # 3. Fuzzy fallback
         return self.fuzzy_match(name)
 
-    def fuzzy_match(
-        self, name: str, threshold: float = 0.88
-    ) -> Optional[Entity]:
+    def fuzzy_match(self, name: str, threshold: float = 0.88) -> Entity | None:
         """Fuzzy match name against all canonical names and aliases.
 
         Uses the max of token_sort_ratio (handles word-order variations)
@@ -115,7 +113,7 @@ class EntityRegistry:
         threshold_pct = threshold * 100  # rapidfuzz uses 0-100
 
         best_score = 0.0
-        best_entity_id: Optional[str] = None
+        best_entity_id: str | None = None
 
         all_keys = list(self._by_name.items()) + list(self._by_alias.items())
         for norm_key, eid in all_keys:
@@ -159,10 +157,10 @@ class EntityRegistry:
         if self._db is not None:
             self._persist_alias(entity_id, alias)
 
-    def get_by_id(self, entity_id: str) -> Optional[Entity]:
+    def get_by_id(self, entity_id: str) -> Entity | None:
         return self._by_id.get(entity_id)
 
-    def get_by_canonical_name(self, canonical_name: str) -> Optional[Entity]:
+    def get_by_canonical_name(self, canonical_name: str) -> Entity | None:
         """Exact normalized lookup by canonical name — no fuzzy fallback.
 
         Use this for deduplication during seeding where the input is
@@ -226,9 +224,7 @@ class EntityRegistry:
             )
             self._db.add(row)  # type: ignore[union-attr]
         for alias in entity.aliases:
-            alias_row = CommercialEntityAlias(
-                entity_id=entity.entity_id, alias=alias
-            )
+            alias_row = CommercialEntityAlias(entity_id=entity.entity_id, alias=alias)
             self._db.add(alias_row)  # type: ignore[union-attr]
         self._db.commit()  # type: ignore[union-attr]
 

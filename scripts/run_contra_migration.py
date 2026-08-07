@@ -18,7 +18,7 @@ from pathlib import Path
 # Make the src package importable from the scripts directory
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from sqlalchemy import create_engine, inspect, text  # noqa: E402
+from sqlalchemy import create_engine, inspect  # noqa: E402
 
 from oraculus_di_auditor.db.models import (  # noqa: E402
     Base,
@@ -50,9 +50,7 @@ def run_migration(db_url: str) -> None:
 
     # create_all with tables= only touches the specified tables
     target_tables = [
-        Base.metadata.tables[name]
-        for name in CONTRA_TABLES
-        if name not in existing
+        Base.metadata.tables[name] for name in CONTRA_TABLES if name not in existing
     ]
 
     if not target_tables:
@@ -69,14 +67,18 @@ def run_migration(db_url: str) -> None:
     after = set(inspector2.get_table_names())
     missing = set(CONTRA_TABLES) - after
     if missing:
-        print(f"WARNING: tables still missing after migration: {missing}", file=sys.stderr)
+        print(
+            f"WARNING: tables still missing after migration: {missing}", file=sys.stderr
+        )
         sys.exit(1)
 
     print("Migration complete. C.O.N.T.R.A. schema is ready.")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Apply C.O.N.T.R.A. DB schema extension")
+    parser = argparse.ArgumentParser(
+        description="Apply C.O.N.T.R.A. DB schema extension"
+    )
     parser.add_argument(
         "--db-url",
         default=DEFAULT_DATABASE_URL,

@@ -43,8 +43,8 @@ L11_CLAUSE_EXTRACT = PromptVersion(
         "(binding_mandatory, class_waiver, fee_allocation, administrator, "
         "confidentiality, discovery_limit, venue, appeal_waiver, faa_invocation, "
         "other), and whether it applies to BOTH parties or only to the consumer. "
-        "Respond in JSON: [{\"excerpt\": str, \"clause_type\": str, "
-        "\"bilateral\": bool}]. If no arbitration clauses exist, return []."
+        'Respond in JSON: [{"excerpt": str, "clause_type": str, '
+        '"bilateral": bool}]. If no arbitration clauses exist, return [].'
     ),
     user_template="CONTRACT TEXT:\n\n{doc_excerpt}",
 )
@@ -64,7 +64,7 @@ L13_MODIFICATION_NOTICE = PromptVersion(
         "'website_posting_only' (website or in-app posting without direct notice), "
         "'email_simultaneous' (email sent at same time as change takes effect), "
         "'no_notice_mechanism' (no notice described), or 'other'. "
-        "Return JSON: {\"notice_type\": str, \"excerpt\": str (<=15 words)}."
+        'Return JSON: {"notice_type": str, "excerpt": str (<=15 words)}.'
     ),
     user_template="CONTRACT TEXT:\n\n{doc_excerpt}",
 )
@@ -85,7 +85,7 @@ L14_CCPA_CATEGORY = PromptVersion(
         "G (geolocation), H (sensory/audio/visual), I (professional/employment), "
         "J (education), K (inferences), SPI (sensitive personal information per "
         "Cal. Civ. Code 1798.121). "
-        "Return JSON: [{\"category\": str, \"excerpt\": str (<=15 words)}]. "
+        'Return JSON: [{"category": str, "excerpt": str (<=15 words)}]. '
         "Include only categories with clear textual evidence."
     ),
     user_template="PRIVACY NOTICE TEXT:\n\n{doc_excerpt}",
@@ -104,8 +104,8 @@ L15_RETENTION_DURATION = PromptVersion(
         "identify the stated retention period (if any). If no period is stated, "
         "note 'undefined'. If vague language is used (e.g. 'as long as necessary', "
         "'for our business purposes'), note 'vague'. "
-        "Return JSON: [{\"data_category\": str, \"retention_stated\": str, "
-        "\"excerpt\": str (<=15 words)}]."
+        'Return JSON: [{"data_category": str, "retention_stated": str, '
+        '"excerpt": str (<=15 words)}].'
     ),
     user_template="CONTRACT/PRIVACY NOTICE TEXT:\n\n{doc_excerpt}",
 )
@@ -124,9 +124,9 @@ L17_TRAINING_SCOPE = PromptVersion(
         "For each grant found: classify the modalities covered (text, image, audio, "
         "video, biometric, other), whether the grant is perpetual, whether it is "
         "irrevocable, and whether an opt-out mechanism is provided. "
-        "Return JSON: [{\"modalities\": [str], \"perpetual\": bool, "
-        "\"irrevocable\": bool, \"opt_out_available\": bool, "
-        "\"excerpt\": str (<=15 words)}]. Return [] if no training grant found."
+        'Return JSON: [{"modalities": [str], "perpetual": bool, '
+        '"irrevocable": bool, "opt_out_available": bool, '
+        '"excerpt": str (<=15 words)}]. Return [] if no training grant found.'
     ),
     user_template="CONTRACT TEXT:\n\n{doc_excerpt}",
 )
@@ -147,8 +147,8 @@ L20_DARK_PATTERN_STRUCTURE = PromptVersion(
         "confusing_language, hidden_cost, forced_action. "
         "For each finding return: the type, the severity (low/medium/high/critical), "
         "and a verbatim excerpt (<=15 words) anchored to the problematic text. "
-        "Return JSON: [{\"pattern_type\": str, \"severity\": str, "
-        "\"excerpt\": str}]. Return [] if no dark patterns found."
+        'Return JSON: [{"pattern_type": str, "severity": str, '
+        '"excerpt": str}]. Return [] if no dark patterns found.'
     ),
     user_template="CONTRACT TEXT:\n\n{doc_excerpt}",
 )

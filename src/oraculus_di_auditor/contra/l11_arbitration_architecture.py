@@ -23,11 +23,10 @@ Source: C.O.N.T.R.A. Framework V1.0 Detector Specification Section 4.1,
 from __future__ import annotations
 
 import re
-from typing import List, Optional
 
 from . import anchors as A
-from ._utils import make_finding, scan_pattern
-from .base import EvidenceSpan, Finding, Severity
+from ._utils import scan_pattern
+from .base import Finding, Severity
 
 _LAYER = "L-11"
 
@@ -140,66 +139,136 @@ class L11ArbitrationArchitecture:
     def __init__(self, llm_client=None) -> None:
         self._llm = llm_client
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
-        findings: List[Finding] = []
+        findings: list[Finding] = []
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.HIGH, doc_hash,
-            A.ARMENDARIZ, "procedural_adhesion", 4,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.HIGH,
+            doc_hash,
+            A.ARMENDARIZ,
+            "procedural_adhesion",
+            4,
             _REMEDY_ARB,
             notes="Binding arbitration clause detected.",
         )
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.CRITICAL, doc_hash,
-            A.CONCEPCION, "remedy_foreclosure", 7,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.CRITICAL,
+            doc_hash,
+            A.CONCEPCION,
+            "remedy_foreclosure",
+            7,
             _REMEDY_CLASS,
             notes="Class/representative action waiver detected.",
         )
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.MEDIUM, doc_hash,
-            A.CONCEPCION, "procedural_adhesion", 2,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CONCEPCION,
+            "procedural_adhesion",
+            2,
             _REMEDY_GENERAL,
             notes="FAA preemption invocation -- limits California unconscionability ceiling.",
         )
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.LOW, doc_hash,
-            A.CCP_1281_96, "procedural_adhesion", 1,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.LOW,
+            doc_hash,
+            A.CCP_1281_96,
+            "procedural_adhesion",
+            1,
             ["CCP_1281_96_disclosure_request"],
             notes="Named arbitration administrator triggers 1281.96 disclosure obligation.",
         )
         findings += scan_pattern(
-            _P_E, doc_text, _LAYER, "E", Severity.HIGH, doc_hash,
-            A.ARMENDARIZ, "enforcement_cost_asymmetry", 4,
+            _P_E,
+            doc_text,
+            _LAYER,
+            "E",
+            Severity.HIGH,
+            doc_hash,
+            A.ARMENDARIZ,
+            "enforcement_cost_asymmetry",
+            4,
             _REMEDY_FEE,
             notes="Fee allocation asymmetric against consumer.",
         )
         findings += scan_pattern(
-            _P_F, doc_text, _LAYER, "F", Severity.MEDIUM, doc_hash,
-            A.ARMENDARIZ, "procedural_adhesion", 2,
+            _P_F,
+            doc_text,
+            _LAYER,
+            "F",
+            Severity.MEDIUM,
+            doc_hash,
+            A.ARMENDARIZ,
+            "procedural_adhesion",
+            2,
             _REMEDY_GENERAL,
             notes="Non-California arbitration venue may violate Armendariz proximity rule.",
         )
         findings += scan_pattern(
-            _P_G, doc_text, _LAYER, "G", Severity.CRITICAL, doc_hash,
-            A.ARMENDARIZ, "enforcement_cost_asymmetry", 7,
+            _P_G,
+            doc_text,
+            _LAYER,
+            "G",
+            Severity.CRITICAL,
+            doc_hash,
+            A.ARMENDARIZ,
+            "enforcement_cost_asymmetry",
+            7,
             _REMEDY_ARB,
             notes="Loser-pays / cost-shifting prohibited by Armendariz.",
         )
         findings += scan_pattern(
-            _P_H, doc_text, _LAYER, "H", Severity.MEDIUM, doc_hash,
-            A.ARMENDARIZ, "remedy_foreclosure", 2,
+            _P_H,
+            doc_text,
+            _LAYER,
+            "H",
+            Severity.MEDIUM,
+            doc_hash,
+            A.ARMENDARIZ,
+            "remedy_foreclosure",
+            2,
             _REMEDY_GENERAL,
             notes="Discovery limitations may impair ability to vindicate statutory rights.",
         )
         findings += scan_pattern(
-            _P_I, doc_text, _LAYER, "I", Severity.LOW, doc_hash,
-            A.ARMENDARIZ, "procedural_adhesion", 1,
+            _P_I,
+            doc_text,
+            _LAYER,
+            "I",
+            Severity.LOW,
+            doc_hash,
+            A.ARMENDARIZ,
+            "procedural_adhesion",
+            1,
             _REMEDY_GENERAL,
             notes="One-sided confidentiality can factor into unconscionability analysis.",
         )
         findings += scan_pattern(
-            _P_J, doc_text, _LAYER, "J", Severity.HIGH, doc_hash,
-            A.ARMENDARIZ, "remedy_foreclosure", 4,
+            _P_J,
+            doc_text,
+            _LAYER,
+            "J",
+            Severity.HIGH,
+            doc_hash,
+            A.ARMENDARIZ,
+            "remedy_foreclosure",
+            4,
             _REMEDY_ARB,
             notes="No-appeal / final-binding waiver limits judicial oversight.",
         )

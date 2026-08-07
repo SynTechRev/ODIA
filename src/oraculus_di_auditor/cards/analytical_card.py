@@ -12,26 +12,24 @@ Source: C.O.N.T.R.A. Framework V1.0 Section VIII, Handoff Specification V1.0 Sec
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 if TYPE_CHECKING:
     from ..contra.base import Finding
-    from ..entity.registry import Entity
     from ..scoring.casi import CasiAxes
 
 # Palette
 _MALACHITE = RGBColor(0x1D, 0x6B, 0x44)  # #1D6B44 — section headings
-_TAN = RGBColor(0xC8, 0xA8, 0x82)         # #C8A882 — sub-headings
+_TAN = RGBColor(0xC8, 0xA8, 0x82)  # #C8A882 — sub-headings
 _BLACK = RGBColor(0x00, 0x00, 0x00)
 
 _FONT_BODY = "Garamond"
@@ -52,17 +50,17 @@ class AnalyticalCardInput:
     """Input bundle for build_analytical_card()."""
 
     entity_name: str
-    entity_id: Optional[str]
+    entity_id: str | None
     doc_type: str
-    effective_date: Optional[str]
-    version_label: Optional[str]
+    effective_date: str | None
+    version_label: str | None
     document_hash: str
-    source_url: Optional[str]
-    wayback_url: Optional[str]
-    findings: List["Finding"] = field(default_factory=list)
-    casi_axes: Optional["CasiAxes"] = None
+    source_url: str | None
+    wayback_url: str | None
+    findings: list[Finding] = field(default_factory=list)
+    casi_axes: CasiAxes | None = None
     framework_version: str = "1.0"
-    ingestion_date: Optional[str] = None
+    ingestion_date: str | None = None
 
     def __post_init__(self) -> None:
         if self.ingestion_date is None:
@@ -156,7 +154,7 @@ def _add_page_of_total_footer(doc: Document) -> None:
     run2._r.append(fld_end2)
 
 
-def _add_casi_table(doc: Document, axes: "CasiAxes") -> None:
+def _add_casi_table(doc: Document, axes: CasiAxes) -> None:
     table = doc.add_table(rows=1, cols=3)
     table.style = "Table Grid"
     hdr = table.rows[0].cells
@@ -184,7 +182,7 @@ def _add_casi_table(doc: Document, axes: "CasiAxes") -> None:
     _set_run_font(band_run, bold=True)
 
 
-def _add_findings_table(doc: Document, findings: "List[Finding]") -> None:
+def _add_findings_table(doc: Document, findings: list[Finding]) -> None:
     if not findings:
         _add_body_para(doc, "No findings for this document.")
         return
@@ -199,13 +197,15 @@ def _add_findings_table(doc: Document, findings: "List[Finding]") -> None:
 
     for f in findings:
         row = table.add_row().cells
-        _set_run_font(
-            row[0].paragraphs[0].add_run(f"{f.layer}.{f.sub_detector}")
-        )
+        _set_run_font(row[0].paragraphs[0].add_run(f"{f.layer}.{f.sub_detector}"))
         sev_run = row[1].paragraphs[0].add_run(f.severity.value.upper())
         _set_run_font(sev_run, bold=(f.severity.value == "critical"))
         # Truncate anchor to fit cell
-        short_anchor = f.doctrinal_anchor[:60] + "..." if len(f.doctrinal_anchor) > 60 else f.doctrinal_anchor
+        short_anchor = (
+            f.doctrinal_anchor[:60] + "..."
+            if len(f.doctrinal_anchor) > 60
+            else f.doctrinal_anchor
+        )
         _set_run_font(row[2].paragraphs[0].add_run(short_anchor))
         _set_run_font(row[3].paragraphs[0].add_run(f.evidence_span.verbatim_excerpt))
 
@@ -223,8 +223,7 @@ def build_analytical_card(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     safe_name = "".join(
-        c if c.isalnum() or c in "-_" else "_"
-        for c in input_data.entity_name[:40]
+        c if c.isalnum() or c in "-_" else "_" for c in input_data.entity_name[:40]
     )
     filename = f"contra_card_{safe_name}_{input_data.document_hash[:12]}.docx"
     output_path = output_dir / filename
@@ -278,7 +277,9 @@ def build_analytical_card(
     # Block 3: Detector Findings
     _add_section_heading(doc, "III. DETECTOR FINDINGS (L-11 through L-20)")
     finding_count = len(input_data.findings)
-    critical_count = sum(1 for f in input_data.findings if f.severity.value == "critical")
+    critical_count = sum(
+        1 for f in input_data.findings if f.severity.value == "critical"
+    )
     _add_kv(doc, "Total Findings", str(finding_count))
     _add_kv(doc, "CRITICAL", str(critical_count))
     doc.add_paragraph()

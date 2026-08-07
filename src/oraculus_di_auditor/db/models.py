@@ -666,7 +666,9 @@ class ContraFinding(Base):  # type: ignore
     )
     layer = Column(String(10), nullable=False, index=True)  # L-11 through L-20
     sub_detector = Column(String(5), nullable=False)  # A, B, ...
-    severity = Column(String(20), nullable=False, index=True)  # low/medium/high/critical
+    severity = Column(
+        String(20), nullable=False, index=True
+    )  # low/medium/high/critical
     doctrinal_anchor = Column(Text, nullable=False)
     evidence_start = Column(Integer)
     evidence_end = Column(Integer)

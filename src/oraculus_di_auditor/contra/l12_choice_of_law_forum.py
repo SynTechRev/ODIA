@@ -17,10 +17,9 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.2, Handoff Spec V1.0 Section 5.2
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
-from ._utils import make_finding, scan_pattern
+from ._utils import scan_pattern
 from .base import Finding, Severity
 
 _LAYER = "L-12"
@@ -108,36 +107,71 @@ class L12ChoiceOfLawForum:
     def __init__(self) -> None:
         pass
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
-        findings: List[Finding] = []
+        findings: list[Finding] = []
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.MEDIUM, doc_hash,
-            A.SANCHEZ_VALENCIA, "procedural_adhesion", 2,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.MEDIUM,
+            doc_hash,
+            A.SANCHEZ_VALENCIA,
+            "procedural_adhesion",
+            2,
             _REMEDY_GOV_LAW,
             notes="Non-California governing law -- California unconscionability doctrine still applies.",
         )
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.MEDIUM, doc_hash,
-            A.ARMENDARIZ, "procedural_adhesion", 2,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.MEDIUM,
+            doc_hash,
+            A.ARMENDARIZ,
+            "procedural_adhesion",
+            2,
             _REMEDY_FORUM,
             notes="Exclusive out-of-state forum selection against California consumers.",
         )
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.HIGH, doc_hash,
-            A.CCP_337, "remedy_foreclosure", 4,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.HIGH,
+            doc_hash,
+            A.CCP_337,
+            "remedy_foreclosure",
+            4,
             _REMEDY_SOL,
             notes="Contractual limitation period shorter than California statutory minimum.",
         )
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.CRITICAL, doc_hash,
-            A.CCPA_192, "remedy_foreclosure", 7,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.CRITICAL,
+            doc_hash,
+            A.CCPA_192,
+            "remedy_foreclosure",
+            7,
             _REMEDY_WAIVER,
             notes="CCPA/CPRA rights are non-waivable by contract (Cal. Civ. Code 1798.192).",
         )
         findings += scan_pattern(
-            _P_E, doc_text, _LAYER, "E", Severity.LOW, doc_hash,
-            A.RING_ORDER, "modification_and_consent", 1,
+            _P_E,
+            doc_text,
+            _LAYER,
+            "E",
+            Severity.LOW,
+            doc_hash,
+            A.RING_ORDER,
+            "modification_and_consent",
+            1,
             _REMEDY_INTEGRATION,
             notes="Integration clause may erase prior privacy disclosures or material representations.",
         )

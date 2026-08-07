@@ -17,7 +17,6 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.3, Handoff Spec V1.0 Section 5.3
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
 from ._utils import scan_pattern
@@ -90,30 +89,58 @@ class L13UnilateralModification:
     def __init__(self, llm_client=None) -> None:
         self._llm = llm_client
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
-        findings: List[Finding] = []
+        findings: list[Finding] = []
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.HIGH, doc_hash,
-            A.DOUGLAS_USDC, "modification_and_consent", 4,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.HIGH,
+            doc_hash,
+            A.DOUGLAS_USDC,
+            "modification_and_consent",
+            4,
             _REMEDY_MOD,
             notes="Drafter reserves unilateral right to modify terms.",
         )
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.MEDIUM, doc_hash,
-            A.RING_ORDER, "modification_and_consent", 2,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.MEDIUM,
+            doc_hash,
+            A.RING_ORDER,
+            "modification_and_consent",
+            2,
             _REMEDY_CONSENT,
             notes="Website-posting-only notice is insufficient for material changes.",
         )
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.CRITICAL, doc_hash,
-            A.OTO_KHO, "modification_and_consent", 7,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.CRITICAL,
+            doc_hash,
+            A.OTO_KHO,
+            "modification_and_consent",
+            7,
             _REMEDY_CONSENT,
             notes="Continued use = acceptance eliminates meaningful consent.",
         )
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.HIGH, doc_hash,
-            A.SANCHEZ_VALENCIA, "modification_and_consent", 4,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.HIGH,
+            doc_hash,
+            A.SANCHEZ_VALENCIA,
+            "modification_and_consent",
+            4,
             _REMEDY_MOD,
             notes="Retroactive modification application denies ability to reject changed terms.",
         )
@@ -125,6 +152,7 @@ class L13UnilateralModification:
             m = _P_E_MOD.search(text_lower)
             if m:
                 from ._utils import make_finding
+
                 findings.append(
                     make_finding(
                         layer=_LAYER,

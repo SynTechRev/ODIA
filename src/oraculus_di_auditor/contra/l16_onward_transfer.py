@@ -21,7 +21,6 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.6, Handoff Spec V1.0 Section 5.6
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
 from ._utils import make_finding, scan_pattern
@@ -60,7 +59,9 @@ _P_D = re.compile(
 _P_E = re.compile(
     r"\b(?:affiliates?|subsidiaries|subsidiary|related\s+companies?"
     r"|parent\s+company|corporate\s+family)\b.{0,200}"
-    r"\b(?:share|transfer|provide|disclose|access|receive)\w*\b.{0,100}\b" + _DATA + r"\b"
+    r"\b(?:share|transfer|provide|disclose|access|receive)\w*\b.{0,100}\b"
+    + _DATA
+    + r"\b"
     r"|\b" + _DATA + r"\b.{0,200}"
     r"\b(?:affiliates?|subsidiaries|related\s+companies?|parent\s+company)\b",
     re.DOTALL,
@@ -112,37 +113,85 @@ class L16OnwardTransfer:
     def __init__(self) -> None:
         pass
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
-        findings: List[Finding] = []
+        findings: list[Finding] = []
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.HIGH, doc_hash,
-            A.CCPA_140, "data_extraction_depth", 4, _REMEDY_TRANSFER,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.HIGH,
+            doc_hash,
+            A.CCPA_140,
+            "data_extraction_depth",
+            4,
+            _REMEDY_TRANSFER,
             notes="Sale of personal information; CCPA 1798.140(ad) broad definition triggers opt-out.",
         )
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.HIGH, doc_hash,
-            A.CCPA_140, "data_extraction_depth", 4, _REMEDY_TRANSFER + ["CCPA_opt_out"],
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.HIGH,
+            doc_hash,
+            A.CCPA_140,
+            "data_extraction_depth",
+            4,
+            _REMEDY_TRANSFER + ["CCPA_opt_out"],
             notes="Sharing for cross-context behavioral advertising (CCPA 1798.140(ah)) triggers separate opt-out.",
         )
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.LOW, doc_hash,
-            A.CCPA_140, "data_extraction_depth", 1, _REMEDY_TRANSFER,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.LOW,
+            doc_hash,
+            A.CCPA_140,
+            "data_extraction_depth",
+            1,
+            _REMEDY_TRANSFER,
             notes="Service provider transfer -- CCPA allows but imposes contractual restrictions.",
         )
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.MEDIUM, doc_hash,
-            A.CCPA_140, "data_extraction_depth", 2, _REMEDY_TRANSFER,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_140,
+            "data_extraction_depth",
+            2,
+            _REMEDY_TRANSFER,
             notes="Contractor transfer per CCPA 1798.140(j) -- verify contractual restrictions.",
         )
         findings += scan_pattern(
-            _P_E, doc_text, _LAYER, "E", Severity.MEDIUM, doc_hash,
-            A.CCPA_135, "data_extraction_depth", 2, _REMEDY_TRANSFER,
+            _P_E,
+            doc_text,
+            _LAYER,
+            "E",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_135,
+            "data_extraction_depth",
+            2,
+            _REMEDY_TRANSFER,
             notes="Affiliate transfer with no substantive limitation -- corporate structure used as data-laundering vector.",
         )
         findings += scan_pattern(
-            _P_F, doc_text, _LAYER, "F", Severity.HIGH, doc_hash,
-            A.DELETE_ACT, "data_extraction_depth", 4, _REMEDY_BROKER,
+            _P_F,
+            doc_text,
+            _LAYER,
+            "F",
+            Severity.HIGH,
+            doc_hash,
+            A.DELETE_ACT,
+            "data_extraction_depth",
+            4,
+            _REMEDY_BROKER,
             notes="Data broker transfer triggers California Delete Act registration and deletion obligations.",
         )
         # G: government disclosure -- narrow (required by law) vs broad (voluntary)
@@ -154,9 +203,16 @@ class L16OnwardTransfer:
             if m:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="G", sev=Severity.MEDIUM, doc_hash=doc_hash,
-                        text=doc_text, match_start=m.start(), match_end=m.end(),
-                        anchor=A.CCPA_130, axis="data_extraction_depth", delta=2,
+                        layer=_LAYER,
+                        sub="G",
+                        sev=Severity.MEDIUM,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=m.start(),
+                        match_end=m.end(),
+                        anchor=A.CCPA_130,
+                        axis="data_extraction_depth",
+                        delta=2,
                         remedy_channels=_REMEDY_GOV,
                         notes="Discretionary (not legally-compelled) government disclosure.",
                     )
@@ -166,16 +222,31 @@ class L16OnwardTransfer:
             if m:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="G", sev=Severity.LOW, doc_hash=doc_hash,
-                        text=doc_text, match_start=m.start(), match_end=m.end(),
-                        anchor=A.CCPA_130, axis="data_extraction_depth", delta=1,
+                        layer=_LAYER,
+                        sub="G",
+                        sev=Severity.LOW,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=m.start(),
+                        match_end=m.end(),
+                        anchor=A.CCPA_130,
+                        axis="data_extraction_depth",
+                        delta=1,
                         remedy_channels=_REMEDY_GOV,
                         notes="Government disclosure limited to legal process -- standard practice.",
                     )
                 )
         findings += scan_pattern(
-            _P_H, doc_text, _LAYER, "H", Severity.LOW, doc_hash,
-            A.CCPA_130, "data_extraction_depth", 1, _REMEDY_TRANSFER,
+            _P_H,
+            doc_text,
+            _LAYER,
+            "H",
+            Severity.LOW,
+            doc_hash,
+            A.CCPA_130,
+            "data_extraction_depth",
+            1,
+            _REMEDY_TRANSFER,
             notes="M&A transfer disclosed -- standard but data may pass to successor without renewed consent.",
         )
         return findings

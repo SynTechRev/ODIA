@@ -9,9 +9,6 @@ Tests are organized in three tiers:
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List
-
-import pytest
 
 from oraculus_di_auditor.contra import (
     Finding,
@@ -38,19 +35,19 @@ def _load_golden(filename: str) -> str:
     return (_GOLDEN / filename).read_text(encoding="utf-8")
 
 
-def _has_sub(findings: List[Finding], sub: str) -> bool:
+def _has_sub(findings: list[Finding], sub: str) -> bool:
     return any(f.sub_detector == sub for f in findings)
 
 
-def _get_sub(findings: List[Finding], sub: str) -> List[Finding]:
+def _get_sub(findings: list[Finding], sub: str) -> list[Finding]:
     return [f for f in findings if f.sub_detector == sub]
 
 
-def _anchors_valid(findings: List[Finding]) -> bool:
+def _anchors_valid(findings: list[Finding]) -> bool:
     return all(f.doctrinal_anchor in ALL_ANCHORS for f in findings)
 
 
-def _excerpts_valid(findings: List[Finding]) -> bool:
+def _excerpts_valid(findings: list[Finding]) -> bool:
     return all(len(f.evidence_span.verbatim_excerpt.split()) <= 15 for f in findings)
 
 
@@ -65,6 +62,7 @@ def _l11() -> L11ArbitrationArchitecture:
 
 def test_l11_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l11(), Detector)
     assert _l11().layer == "L-11"
 
@@ -136,7 +134,9 @@ def test_l11h_discovery_limits() -> None:
 
 
 def test_l11i_confidentiality() -> None:
-    text = "All arbitration proceedings shall be kept confidential. The award is private."
+    text = (
+        "All arbitration proceedings shall be kept confidential. The award is private."
+    )
     findings = _l11().scan(text, _META)
     assert _has_sub(findings, "I")
 
@@ -170,7 +170,9 @@ def test_l11_golden_g01_excerpts_valid() -> None:
 def test_l11_clean_g03_no_findings() -> None:
     text = _load_golden("g03_clean_contract_no_findings.txt")
     findings = _l11().scan(text, _META)
-    assert findings == [], f"Expected no L-11 findings on G-03, got {len(findings)}: {[f.sub_detector for f in findings]}"
+    assert (
+        findings == []
+    ), f"Expected no L-11 findings on G-03, got {len(findings)}: {[f.sub_detector for f in findings]}"
 
 
 def test_l11_finding_id_unique() -> None:
@@ -191,6 +193,7 @@ def _l12() -> L12ChoiceOfLawForum:
 
 def test_l12_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l12(), Detector)
     assert _l12().layer == "L-12"
 
@@ -263,6 +266,7 @@ def _l13() -> L13UnilateralModification:
 
 def test_l13_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l13(), Detector)
     assert _l13().layer == "L-13"
 
@@ -285,18 +289,14 @@ def test_l13b_website_only_notice() -> None:
 
 
 def test_l13c_continued_use_acceptance() -> None:
-    text = (
-        "Continued use of the Service constitutes your acceptance of the modified Terms."
-    )
+    text = "Continued use of the Service constitutes your acceptance of the modified Terms."
     findings = _l13().scan(text, _META)
     assert _has_sub(findings, "C")
     assert _get_sub(findings, "C")[0].severity == Severity.CRITICAL
 
 
 def test_l13d_retroactive_modification() -> None:
-    text = (
-        "Modifications shall apply retroactively to any prior claims or disputes."
-    )
+    text = "Modifications shall apply retroactively to any prior claims or disputes."
     findings = _l13().scan(text, _META)
     assert _has_sub(findings, "D")
     assert _get_sub(findings, "D")[0].severity == Severity.HIGH
@@ -314,7 +314,9 @@ def test_l13e_no_fire_when_optout_present() -> None:
     text = "We may update these Terms. If you disagree, you may opt-out by closing your account."
     findings = _l13().scan(text, _META)
     # A fires but E should NOT fire (opt-out present)
-    assert not _has_sub(findings, "E"), "E should not fire when opt-out mechanism is present"
+    assert not _has_sub(
+        findings, "E"
+    ), "E should not fire when opt-out mechanism is present"
 
 
 def test_l13_golden_g01_all_subs_present() -> None:
@@ -344,6 +346,7 @@ def _l14() -> L14DataCollectionDepth:
 
 def test_l14_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l14(), Detector)
     assert _l14().layer == "L-14"
 
@@ -394,7 +397,9 @@ def test_l14g_geolocation() -> None:
 
 
 def test_l14h_inferences() -> None:
-    text = "We create profiles about you and build predictive models of your preferences."
+    text = (
+        "We create profiles about you and build predictive models of your preferences."
+    )
     findings = _l14().scan(text, _META)
     assert _has_sub(findings, "H")
 
@@ -405,7 +410,9 @@ def test_l14i_spi_aggregate_multiple_categories() -> None:
         "We also collect precise geolocation data."
     )
     findings = _l14().scan(text, _META)
-    assert _has_sub(findings, "I"), "L-14I (SPI aggregate) should fire with 2 SPI sub-types"
+    assert _has_sub(
+        findings, "I"
+    ), "L-14I (SPI aggregate) should fire with 2 SPI sub-types"
     assert _get_sub(findings, "I")[0].severity == Severity.CRITICAL
 
 
@@ -441,9 +448,13 @@ def test_l14_clean_g03_minimal_findings() -> None:
     findings = _l14().scan(text, _META)
     # G-03 mentions name and email only -- may fire A (identifiers)
     critical_findings = [f for f in findings if f.severity == Severity.CRITICAL]
-    assert not critical_findings, f"No CRITICAL findings expected on G-03: {critical_findings}"
+    assert (
+        not critical_findings
+    ), f"No CRITICAL findings expected on G-03: {critical_findings}"
     for sub in "BCEFGHI":
-        assert not _has_sub(findings, sub), f"L-14{sub} should not fire on clean contract G-03"
+        assert not _has_sub(
+            findings, sub
+        ), f"L-14{sub} should not fire on clean contract G-03"
 
 
 # ===========================================================================
@@ -457,6 +468,7 @@ def _l15() -> L15DataRetention:
 
 def test_l15_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l15(), Detector)
     assert _l15().layer == "L-15"
 
@@ -464,7 +476,9 @@ def test_l15_is_detector_protocol() -> None:
 def test_l15a_no_retention_period() -> None:
     text = "We collect your name, email address, and usage data."
     findings = _l15().scan(text, _META)
-    assert _has_sub(findings, "A"), "L-15A should fire when collection present but no retention period"
+    assert _has_sub(
+        findings, "A"
+    ), "L-15A should fire when collection present but no retention period"
     assert _get_sub(findings, "A")[0].severity == Severity.HIGH
 
 
@@ -474,11 +488,15 @@ def test_l15a_no_fire_when_retention_defined() -> None:
         "We retain your information for no more than two years after account closure."
     )
     findings = _l15().scan(text, _META)
-    assert not _has_sub(findings, "A"), "L-15A should not fire when retention period is defined"
+    assert not _has_sub(
+        findings, "A"
+    ), "L-15A should not fire when retention period is defined"
 
 
 def test_l15b_vague_retention() -> None:
-    text = "We retain your information for as long as necessary for our business purposes."
+    text = (
+        "We retain your information for as long as necessary for our business purposes."
+    )
     findings = _l15().scan(text, _META)
     assert _has_sub(findings, "B")
     assert _get_sub(findings, "B")[0].severity == Severity.MEDIUM
@@ -511,7 +529,9 @@ def test_l15d_post_termination_retention() -> None:
 
 
 def test_l15e_data_broker_trigger() -> None:
-    text = "We sell consumer personal data to data broker partners for marketing purposes."
+    text = (
+        "We sell consumer personal data to data broker partners for marketing purposes."
+    )
     findings = _l15().scan(text, _META)
     assert _has_sub(findings, "E")
     assert _get_sub(findings, "E")[0].severity == Severity.HIGH
@@ -530,7 +550,9 @@ def test_l15f_no_fire_when_biometric_has_deletion_limit() -> None:
         "Biometric data is purged within 90 days of collection."
     )
     findings = _l15().scan(text, _META)
-    assert not _has_sub(findings, "F"), "L-15F should not fire when deletion limit exists"
+    assert not _has_sub(
+        findings, "F"
+    ), "L-15F should not fire when deletion limit exists"
 
 
 def test_l15_golden_g02_all_subs() -> None:
@@ -563,14 +585,27 @@ def test_l15_clean_g03_no_findings() -> None:
 
 def test_all_detectors_implement_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
-    for cls in [L11ArbitrationArchitecture, L12ChoiceOfLawForum,
-                L13UnilateralModification, L14DataCollectionDepth, L15DataRetention]:
-        assert isinstance(cls(), Detector), f"{cls.__name__} does not implement Detector protocol"
+
+    for cls in [
+        L11ArbitrationArchitecture,
+        L12ChoiceOfLawForum,
+        L13UnilateralModification,
+        L14DataCollectionDepth,
+        L15DataRetention,
+    ]:
+        assert isinstance(
+            cls(), Detector
+        ), f"{cls.__name__} does not implement Detector protocol"
 
 
 def test_all_detectors_return_list_of_findings_on_empty_text() -> None:
-    for cls in [L11ArbitrationArchitecture, L12ChoiceOfLawForum,
-                L13UnilateralModification, L14DataCollectionDepth, L15DataRetention]:
+    for cls in [
+        L11ArbitrationArchitecture,
+        L12ChoiceOfLawForum,
+        L13UnilateralModification,
+        L14DataCollectionDepth,
+        L15DataRetention,
+    ]:
         result = cls().scan("", _META)
         assert isinstance(result, list), f"{cls.__name__}.scan() did not return a list"
         assert result == [], f"{cls.__name__}.scan('') should return empty list"
@@ -584,7 +619,13 @@ def test_prompt_version_dataclass() -> None:
         L15_RETENTION_DURATION,
         PromptVersion,
     )
-    for pv in [L11_CLAUSE_EXTRACT, L13_MODIFICATION_NOTICE, L14_CCPA_CATEGORY, L15_RETENTION_DURATION]:
+
+    for pv in [
+        L11_CLAUSE_EXTRACT,
+        L13_MODIFICATION_NOTICE,
+        L14_CCPA_CATEGORY,
+        L15_RETENTION_DURATION,
+    ]:
         assert isinstance(pv, PromptVersion)
         assert pv.prompt_id
         assert pv.version
@@ -594,5 +635,6 @@ def test_prompt_version_dataclass() -> None:
 
 def test_prompt_version_render_user() -> None:
     from oraculus_di_auditor.llm.contra_prompts import L11_CLAUSE_EXTRACT
+
     rendered = L11_CLAUSE_EXTRACT.render_user(doc_excerpt="sample clause text here")
     assert "sample clause text here" in rendered

@@ -22,7 +22,6 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.5, Handoff Spec V1.0 Section 5.5
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
 from ._utils import make_finding, scan_pattern
@@ -107,9 +106,7 @@ _P_F_RETENTION_LIMIT = re.compile(
 )
 
 _REMEDY_RETENTION = ["CCPA_delete_request", "CPPA_complaint", "AG_complaint"]
-_REMEDY_BROKER = [
-    "California_Delete_Act_DROP", "CPPA_complaint", "AG_complaint"
-]
+_REMEDY_BROKER = ["California_Delete_Act_DROP", "CPPA_complaint", "AG_complaint"]
 _REMEDY_BIO = ["CPPA_complaint", "AG_complaint", "CCPA_delete_request"]
 
 
@@ -121,10 +118,10 @@ class L15DataRetention:
     def __init__(self, llm_client=None) -> None:
         self._llm = llm_client
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
         text_lower = doc_text.lower()
-        findings: List[Finding] = []
+        findings: list[Finding] = []
 
         # A: data collected but no defined retention period
         has_collection = bool(_P_COLLECT.search(text_lower))
@@ -151,29 +148,61 @@ class L15DataRetention:
 
         # B: vague retention language
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.MEDIUM, doc_hash,
-            A.CCPA_105, "data_extraction_depth", 2, _REMEDY_RETENTION,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_105,
+            "data_extraction_depth",
+            2,
+            _REMEDY_RETENTION,
             notes="Vague retention language fails CCPA 1798.105 specificity standard.",
         )
 
         # C: third-party retention grants without consumer deletion path
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.HIGH, doc_hash,
-            A.CCPA_105, "data_extraction_depth", 4, _REMEDY_RETENTION,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.HIGH,
+            doc_hash,
+            A.CCPA_105,
+            "data_extraction_depth",
+            4,
+            _REMEDY_RETENTION,
             notes="Data shared with third parties under their own retention policies.",
         )
 
         # D: post-termination retention
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.MEDIUM, doc_hash,
-            A.CCPA_105, "data_extraction_depth", 2, _REMEDY_RETENTION,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_105,
+            "data_extraction_depth",
+            2,
+            _REMEDY_RETENTION,
             notes="Post-termination data retention disclosed without consumer consent.",
         )
 
         # E: California Delete Act trigger
         findings += scan_pattern(
-            _P_E, doc_text, _LAYER, "E", Severity.HIGH, doc_hash,
-            A.DELETE_ACT, "data_extraction_depth", 4, _REMEDY_BROKER,
+            _P_E,
+            doc_text,
+            _LAYER,
+            "E",
+            Severity.HIGH,
+            doc_hash,
+            A.DELETE_ACT,
+            "data_extraction_depth",
+            4,
+            _REMEDY_BROKER,
             notes="Data broker indicators -- California Delete Act obligations may apply.",
         )
 

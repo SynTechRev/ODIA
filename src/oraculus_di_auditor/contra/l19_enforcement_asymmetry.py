@@ -21,7 +21,6 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.9, Handoff Spec V1.0 Section 5.9
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
 from ._utils import make_finding, scan_pattern
@@ -105,15 +104,16 @@ _P_F = re.compile(
 )
 
 # G: arbitration present but no mention of CCP 1281.97 / 1281.98
-_P_G_ARB = re.compile(
-    r"\b(?:arbitration|arbitrator\w*|arbitrate)\b"
-)
+_P_G_ARB = re.compile(r"\b(?:arbitration|arbitrator\w*|arbitrate)\b")
 
-_P_G_1281 = re.compile(
-    r"\b(?:1281\.97|1281\.98|sb\s*707|senate\s+bill\s+707)\b"
-)
+_P_G_1281 = re.compile(r"\b(?:1281\.97|1281\.98|sb\s*707|senate\s+bill\s+707)\b")
 
-_REMEDY_FEE = ["demand_letter", "CPPA_complaint", "AG_complaint", "Armendariz_challenge"]
+_REMEDY_FEE = [
+    "demand_letter",
+    "CPPA_complaint",
+    "AG_complaint",
+    "Armendariz_challenge",
+]
 _REMEDY_GAG = ["CCP_1001_challenge", "AG_complaint", "demand_letter"]
 _REMEDY_COST = ["demand_letter", "CPPA_complaint", "Armendariz_challenge"]
 _REMEDY_DISCOVERY = ["demand_letter", "Armendariz_challenge"]
@@ -129,22 +129,38 @@ class L19EnforcementAsymmetry:
     def __init__(self) -> None:
         pass
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
         text_lower = doc_text.lower()
-        findings: List[Finding] = []
+        findings: list[Finding] = []
 
         # A: one-way fee-shifting
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.CRITICAL, doc_hash,
-            A.ARMENDARIZ, "enforcement_cost_asymmetry", 7, _REMEDY_FEE,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.CRITICAL,
+            doc_hash,
+            A.ARMENDARIZ,
+            "enforcement_cost_asymmetry",
+            7,
+            _REMEDY_FEE,
             notes="One-way attorney fee-shifting -- drafter recovers fees consumer cannot.",
         )
 
         # B: mutual fee-shifting
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.MEDIUM, doc_hash,
-            A.ARMENDARIZ, "enforcement_cost_asymmetry", 2, _REMEDY_FEE,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.MEDIUM,
+            doc_hash,
+            A.ARMENDARIZ,
+            "enforcement_cost_asymmetry",
+            2,
+            _REMEDY_FEE,
             notes="Mutual fee-shifting -- nominally symmetric but asymmetric when party resources diverge.",
         )
 
@@ -156,9 +172,16 @@ class L19EnforcementAsymmetry:
             if m:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="C", sev=Severity.HIGH, doc_hash=doc_hash,
-                        text=doc_text, match_start=m.start(), match_end=m.end(),
-                        anchor=A.ARMENDARIZ, axis="enforcement_cost_asymmetry", delta=4,
+                        layer=_LAYER,
+                        sub="C",
+                        sev=Severity.HIGH,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=m.start(),
+                        match_end=m.end(),
+                        anchor=A.ARMENDARIZ,
+                        axis="enforcement_cost_asymmetry",
+                        delta=4,
                         remedy_channels=_REMEDY_COST,
                         notes="Consumer bears arbitration costs with no company payment commitment.",
                     )
@@ -166,22 +189,46 @@ class L19EnforcementAsymmetry:
 
         # D: non-disparagement / gag clause
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.HIGH, doc_hash,
-            A.CCP_1001, "enforcement_cost_asymmetry", 4, _REMEDY_GAG,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.HIGH,
+            doc_hash,
+            A.CCP_1001,
+            "enforcement_cost_asymmetry",
+            4,
+            _REMEDY_GAG,
             notes="Gag/non-disparagement clause -- Cal. Code Civ. Proc. 1001 bans consumer NDAs in settlements.",
         )
 
         # E: discovery limitation
         findings += scan_pattern(
-            _P_E, doc_text, _LAYER, "E", Severity.MEDIUM, doc_hash,
-            A.ARMENDARIZ, "enforcement_cost_asymmetry", 2, _REMEDY_DISCOVERY,
+            _P_E,
+            doc_text,
+            _LAYER,
+            "E",
+            Severity.MEDIUM,
+            doc_hash,
+            A.ARMENDARIZ,
+            "enforcement_cost_asymmetry",
+            2,
+            _REMEDY_DISCOVERY,
             notes="Discovery limitation -- Armendariz requires adequate discovery for effective vindication.",
         )
 
         # F: arbitration outcome confidentiality on consumer
         findings += scan_pattern(
-            _P_F, doc_text, _LAYER, "F", Severity.MEDIUM, doc_hash,
-            A.ARMENDARIZ, "enforcement_cost_asymmetry", 2, _REMEDY_CONF,
+            _P_F,
+            doc_text,
+            _LAYER,
+            "F",
+            Severity.MEDIUM,
+            doc_hash,
+            A.ARMENDARIZ,
+            "enforcement_cost_asymmetry",
+            2,
+            _REMEDY_CONF,
             notes="Confidentiality on arbitration outcome imposed on consumer -- suppresses public signal.",
         )
 
@@ -193,9 +240,16 @@ class L19EnforcementAsymmetry:
             if m:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="G", sev=Severity.HIGH, doc_hash=doc_hash,
-                        text=doc_text, match_start=m.start(), match_end=m.end(),
-                        anchor=A.CCP_1281_97, axis="enforcement_cost_asymmetry", delta=4,
+                        layer=_LAYER,
+                        sub="G",
+                        sev=Severity.HIGH,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=m.start(),
+                        match_end=m.end(),
+                        anchor=A.CCP_1281_97,
+                        axis="enforcement_cost_asymmetry",
+                        delta=4,
                         remedy_channels=_REMEDY_1281,
                         notes="Arbitration clause present with no CCP 1281.97/98 fee-payment acknowledgment.",
                     )

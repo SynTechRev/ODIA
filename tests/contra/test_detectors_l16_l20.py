@@ -10,9 +10,6 @@ Tests are organized in three tiers:
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List
-
-import pytest
 
 from oraculus_di_auditor.contra import (
     Finding,
@@ -45,19 +42,19 @@ def _load_golden(filename: str) -> str:
     return (_GOLDEN / filename).read_text(encoding="utf-8")
 
 
-def _has_sub(findings: List[Finding], sub: str) -> bool:
+def _has_sub(findings: list[Finding], sub: str) -> bool:
     return any(f.sub_detector == sub for f in findings)
 
 
-def _get_sub(findings: List[Finding], sub: str) -> List[Finding]:
+def _get_sub(findings: list[Finding], sub: str) -> list[Finding]:
     return [f for f in findings if f.sub_detector == sub]
 
 
-def _anchors_valid(findings: List[Finding]) -> bool:
+def _anchors_valid(findings: list[Finding]) -> bool:
     return all(f.doctrinal_anchor in ALL_ANCHORS for f in findings)
 
 
-def _excerpts_valid(findings: List[Finding]) -> bool:
+def _excerpts_valid(findings: list[Finding]) -> bool:
     return all(len(f.evidence_span.verbatim_excerpt.split()) <= 15 for f in findings)
 
 
@@ -72,6 +69,7 @@ def _l16() -> L16OnwardTransfer:
 
 def test_l16_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l16(), Detector)
     assert _l16().layer == "L-16"
 
@@ -193,6 +191,7 @@ def _l17() -> L17MlAiTraining:
 
 def test_l17_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l17(), Detector)
     assert _l17().layer == "L-17"
 
@@ -306,6 +305,7 @@ def _l18() -> L18RemedyForeclosure:
 
 def test_l18_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l18(), Detector)
     assert _l18().layer == "L-18"
 
@@ -321,7 +321,9 @@ def test_l18a_damages_cap() -> None:
 
 
 def test_l18b_consequential_damages_waiver() -> None:
-    text = "The Company shall not be liable for any consequential or incidental damages."
+    text = (
+        "The Company shall not be liable for any consequential or incidental damages."
+    )
     findings = _l18().scan(text, _META)
     assert _has_sub(findings, "B")
     assert _get_sub(findings, "B")[0].severity == Severity.HIGH
@@ -414,6 +416,7 @@ def _l19() -> L19EnforcementAsymmetry:
 
 def test_l19_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l19(), Detector)
     assert _l19().layer == "L-19"
 
@@ -536,6 +539,7 @@ def _l20() -> L20DarkPattern:
 
 def test_l20_is_detector_protocol() -> None:
     from oraculus_di_auditor.contra import Detector
+
     assert isinstance(_l20(), Detector)
     assert _l20().layer == "L-20"
 
@@ -597,7 +601,9 @@ def test_l20e_simple_text_no_finding() -> None:
     )
     findings = _l20().scan(simple_text, _META)
     e_findings = _get_sub(findings, "E")
-    assert e_findings == [], f"L-20E should not fire for simple text (FK grade likely below 9)"
+    assert (
+        e_findings == []
+    ), "L-20E should not fire for simple text (FK grade likely below 9)"
 
 
 def test_l20g_english_only_clause() -> None:
@@ -651,11 +657,18 @@ def test_casi_deterministic_same_doc_twice() -> None:
     """compute_casi must be deterministic: same document yields identical scores."""
     text = _load_golden("g05_remedy_enforcement_dark_pattern.txt")
     all_detectors = [
-        L11ArbitrationArchitecture(), L12ChoiceOfLawForum(), L13UnilateralModification(),
-        L14DataCollectionDepth(), L15DataRetention(), L16OnwardTransfer(),
-        L17MlAiTraining(), L18RemedyForeclosure(), L19EnforcementAsymmetry(), L20DarkPattern(),
+        L11ArbitrationArchitecture(),
+        L12ChoiceOfLawForum(),
+        L13UnilateralModification(),
+        L14DataCollectionDepth(),
+        L15DataRetention(),
+        L16OnwardTransfer(),
+        L17MlAiTraining(),
+        L18RemedyForeclosure(),
+        L19EnforcementAsymmetry(),
+        L20DarkPattern(),
     ]
-    all_findings: List[Finding] = []
+    all_findings: list[Finding] = []
     for det in all_detectors:
         all_findings.extend(det.scan(text, _META))
 
@@ -669,43 +682,62 @@ def test_casi_aggregate_equals_sum_of_axes() -> None:
     """CASI aggregate score must equal sum of clamped axis scores."""
     text = _load_golden("g05_remedy_enforcement_dark_pattern.txt")
     all_detectors = [
-        L11ArbitrationArchitecture(), L12ChoiceOfLawForum(), L13UnilateralModification(),
-        L14DataCollectionDepth(), L15DataRetention(), L16OnwardTransfer(),
-        L17MlAiTraining(), L18RemedyForeclosure(), L19EnforcementAsymmetry(), L20DarkPattern(),
+        L11ArbitrationArchitecture(),
+        L12ChoiceOfLawForum(),
+        L13UnilateralModification(),
+        L14DataCollectionDepth(),
+        L15DataRetention(),
+        L16OnwardTransfer(),
+        L17MlAiTraining(),
+        L18RemedyForeclosure(),
+        L19EnforcementAsymmetry(),
+        L20DarkPattern(),
     ]
-    all_findings: List[Finding] = []
+    all_findings: list[Finding] = []
     for det in all_detectors:
         all_findings.extend(det.scan(text, _META))
 
     score = compute_casi(all_findings)
-    axis_sum = sum([
-        score["remedy_foreclosure"],
-        score["data_extraction_depth"],
-        score["modification_and_consent"],
-        score["procedural_adhesion"],
-        score["enforcement_cost_asymmetry"],
-    ])
-    assert score["aggregate"] == axis_sum, (
-        f"CASI aggregate {score['aggregate']} != axis sum {axis_sum}"
+    axis_sum = sum(
+        [
+            score["remedy_foreclosure"],
+            score["data_extraction_depth"],
+            score["modification_and_consent"],
+            score["procedural_adhesion"],
+            score["enforcement_cost_asymmetry"],
+        ]
     )
+    assert (
+        score["aggregate"] == axis_sum
+    ), f"CASI aggregate {score['aggregate']} != axis sum {axis_sum}"
 
 
 def test_casi_axes_clamped_0_to_20() -> None:
     """Each CASI axis must be in [0, 20]."""
     text = _load_golden("g05_remedy_enforcement_dark_pattern.txt")
     all_detectors = [
-        L11ArbitrationArchitecture(), L12ChoiceOfLawForum(), L13UnilateralModification(),
-        L14DataCollectionDepth(), L15DataRetention(), L16OnwardTransfer(),
-        L17MlAiTraining(), L18RemedyForeclosure(), L19EnforcementAsymmetry(), L20DarkPattern(),
+        L11ArbitrationArchitecture(),
+        L12ChoiceOfLawForum(),
+        L13UnilateralModification(),
+        L14DataCollectionDepth(),
+        L15DataRetention(),
+        L16OnwardTransfer(),
+        L17MlAiTraining(),
+        L18RemedyForeclosure(),
+        L19EnforcementAsymmetry(),
+        L20DarkPattern(),
     ]
-    all_findings: List[Finding] = []
+    all_findings: list[Finding] = []
     for det in all_detectors:
         all_findings.extend(det.scan(text, _META))
 
     score = compute_casi(all_findings)
     axes = [
-        "remedy_foreclosure", "data_extraction_depth", "modification_and_consent",
-        "procedural_adhesion", "enforcement_cost_asymmetry",
+        "remedy_foreclosure",
+        "data_extraction_depth",
+        "modification_and_consent",
+        "procedural_adhesion",
+        "enforcement_cost_asymmetry",
     ]
     for axis in axes:
         assert 0 <= score[axis] <= 20, f"Axis {axis}={score[axis]} outside [0, 20]"
@@ -715,16 +747,25 @@ def test_casi_aggregate_clamped_0_to_100() -> None:
     """CASI aggregate must be in [0, 100]."""
     text = _load_golden("g05_remedy_enforcement_dark_pattern.txt")
     all_detectors = [
-        L11ArbitrationArchitecture(), L12ChoiceOfLawForum(), L13UnilateralModification(),
-        L14DataCollectionDepth(), L15DataRetention(), L16OnwardTransfer(),
-        L17MlAiTraining(), L18RemedyForeclosure(), L19EnforcementAsymmetry(), L20DarkPattern(),
+        L11ArbitrationArchitecture(),
+        L12ChoiceOfLawForum(),
+        L13UnilateralModification(),
+        L14DataCollectionDepth(),
+        L15DataRetention(),
+        L16OnwardTransfer(),
+        L17MlAiTraining(),
+        L18RemedyForeclosure(),
+        L19EnforcementAsymmetry(),
+        L20DarkPattern(),
     ]
-    all_findings: List[Finding] = []
+    all_findings: list[Finding] = []
     for det in all_detectors:
         all_findings.extend(det.scan(text, _META))
 
     score = compute_casi(all_findings)
-    assert 0 <= score["aggregate"] <= 100, f"Aggregate {score['aggregate']} outside [0, 100]"
+    assert (
+        0 <= score["aggregate"] <= 100
+    ), f"Aggregate {score['aggregate']} outside [0, 100]"
 
 
 def test_casi_clean_g03_all_axes_near_zero() -> None:
@@ -732,12 +773,19 @@ def test_casi_clean_g03_all_axes_near_zero() -> None:
     text = _load_golden("g03_clean_contract_no_findings.txt")
     hostile_text = _load_golden("g05_remedy_enforcement_dark_pattern.txt")
     all_detectors = [
-        L11ArbitrationArchitecture(), L12ChoiceOfLawForum(), L13UnilateralModification(),
-        L14DataCollectionDepth(), L15DataRetention(), L16OnwardTransfer(),
-        L17MlAiTraining(), L18RemedyForeclosure(), L19EnforcementAsymmetry(), L20DarkPattern(),
+        L11ArbitrationArchitecture(),
+        L12ChoiceOfLawForum(),
+        L13UnilateralModification(),
+        L14DataCollectionDepth(),
+        L15DataRetention(),
+        L16OnwardTransfer(),
+        L17MlAiTraining(),
+        L18RemedyForeclosure(),
+        L19EnforcementAsymmetry(),
+        L20DarkPattern(),
     ]
-    all_findings_clean: List[Finding] = []
-    all_findings_hostile: List[Finding] = []
+    all_findings_clean: list[Finding] = []
+    all_findings_hostile: list[Finding] = []
     for det in all_detectors:
         all_findings_clean.extend(det.scan(text, _META))
         all_findings_hostile.extend(det.scan(hostile_text, _META))
@@ -749,23 +797,30 @@ def test_casi_clean_g03_all_axes_near_zero() -> None:
         f"hostile CASI ({hostile_score['aggregate']})"
     )
     # High-scoring axes (remedy_foreclosure, enforcement_cost_asymmetry) must be zero on G-03
-    assert clean_score["remedy_foreclosure"] == 0, (
-        f"G-03 remedy_foreclosure={clean_score['remedy_foreclosure']} should be 0"
-    )
-    assert clean_score["enforcement_cost_asymmetry"] == 0, (
-        f"G-03 enforcement_cost_asymmetry={clean_score['enforcement_cost_asymmetry']} should be 0"
-    )
+    assert (
+        clean_score["remedy_foreclosure"] == 0
+    ), f"G-03 remedy_foreclosure={clean_score['remedy_foreclosure']} should be 0"
+    assert (
+        clean_score["enforcement_cost_asymmetry"] == 0
+    ), f"G-03 enforcement_cost_asymmetry={clean_score['enforcement_cost_asymmetry']} should be 0"
 
 
 def test_casi_finding_ids_unique_across_all_detectors() -> None:
     """No two findings from any detector should share a finding_id on the same document."""
     text = _load_golden("g05_remedy_enforcement_dark_pattern.txt")
     all_detectors = [
-        L11ArbitrationArchitecture(), L12ChoiceOfLawForum(), L13UnilateralModification(),
-        L14DataCollectionDepth(), L15DataRetention(), L16OnwardTransfer(),
-        L17MlAiTraining(), L18RemedyForeclosure(), L19EnforcementAsymmetry(), L20DarkPattern(),
+        L11ArbitrationArchitecture(),
+        L12ChoiceOfLawForum(),
+        L13UnilateralModification(),
+        L14DataCollectionDepth(),
+        L15DataRetention(),
+        L16OnwardTransfer(),
+        L17MlAiTraining(),
+        L18RemedyForeclosure(),
+        L19EnforcementAsymmetry(),
+        L20DarkPattern(),
     ]
-    all_findings: List[Finding] = []
+    all_findings: list[Finding] = []
     for det in all_detectors:
         all_findings.extend(det.scan(text, _META))
 

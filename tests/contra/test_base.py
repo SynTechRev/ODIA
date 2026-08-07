@@ -13,14 +13,11 @@ from oraculus_di_auditor.contra.anchors import ALL_ANCHORS, ARMENDARIZ, CCP_1281
 from oraculus_di_auditor.contra.base import Detector, EvidenceSpan, Finding, Severity
 from oraculus_di_auditor.scoring.casi import (
     AXIS_DATA_EXTRACTION_DEPTH,
-    AXIS_ENFORCEMENT_COST_ASYMMETRY,
     AXIS_MODIFICATION_AND_CONSENT,
-    AXIS_PROCEDURAL_ADHESION,
     AXIS_REMEDY_FORECLOSURE,
     CasiAxes,
     compute_casi,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -247,9 +244,18 @@ def test_casi_band_foreclosure_regime() -> None:
 
 def test_compute_casi_deterministic_three_runs() -> None:
     findings = [
-        _make_finding(axis=AXIS_REMEDY_FORECLOSURE, delta=7, severity=Severity.CRITICAL),
-        _make_finding(axis=AXIS_DATA_EXTRACTION_DEPTH, delta=4, severity=Severity.HIGH, sub="B"),
-        _make_finding(axis=AXIS_MODIFICATION_AND_CONSENT, delta=2, severity=Severity.MEDIUM, sub="C"),
+        _make_finding(
+            axis=AXIS_REMEDY_FORECLOSURE, delta=7, severity=Severity.CRITICAL
+        ),
+        _make_finding(
+            axis=AXIS_DATA_EXTRACTION_DEPTH, delta=4, severity=Severity.HIGH, sub="B"
+        ),
+        _make_finding(
+            axis=AXIS_MODIFICATION_AND_CONSENT,
+            delta=2,
+            severity=Severity.MEDIUM,
+            sub="C",
+        ),
     ]
     results = [compute_casi(findings) for _ in range(3)]
     assert results[0] == results[1] == results[2]

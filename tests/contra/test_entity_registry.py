@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import tempfile
 from pathlib import Path
 
@@ -11,28 +10,33 @@ import pytest
 from oraculus_di_auditor.entity.normalize import normalize_corporate_suffix
 from oraculus_di_auditor.entity.registry import Entity, EntityRegistry
 
-
 # ---------------------------------------------------------------------------
 # normalize_corporate_suffix
 # ---------------------------------------------------------------------------
 
 
 def test_normalize_llc_variants() -> None:
-    assert normalize_corporate_suffix("AT&T Mobility LLC") == normalize_corporate_suffix(
-        "AT&T Mobility L.L.C."
-    )
-    assert normalize_corporate_suffix("Foo Limited Liability Company") == normalize_corporate_suffix(
-        "Foo LLC"
-    )
+    assert normalize_corporate_suffix(
+        "AT&T Mobility LLC"
+    ) == normalize_corporate_suffix("AT&T Mobility L.L.C.")
+    assert normalize_corporate_suffix(
+        "Foo Limited Liability Company"
+    ) == normalize_corporate_suffix("Foo LLC")
 
 
 def test_normalize_inc_variants() -> None:
-    assert normalize_corporate_suffix("Acme Inc") == normalize_corporate_suffix("Acme Incorporated")
-    assert normalize_corporate_suffix("Acme Inc.") == normalize_corporate_suffix("Acme Inc")
+    assert normalize_corporate_suffix("Acme Inc") == normalize_corporate_suffix(
+        "Acme Incorporated"
+    )
+    assert normalize_corporate_suffix("Acme Inc.") == normalize_corporate_suffix(
+        "Acme Inc"
+    )
 
 
 def test_normalize_corp_variants() -> None:
-    assert normalize_corporate_suffix("Foo Corp") == normalize_corporate_suffix("Foo Corporation")
+    assert normalize_corporate_suffix("Foo Corp") == normalize_corporate_suffix(
+        "Foo Corporation"
+    )
 
 
 def test_normalize_strips_punctuation() -> None:
@@ -181,7 +185,9 @@ def test_get_by_canonical_name_no_fuzzy_fallback(registry: EntityRegistry) -> No
     assert found is None
 
 
-def test_get_by_canonical_name_similar_names_not_confused(registry: EntityRegistry) -> None:
+def test_get_by_canonical_name_similar_names_not_confused(
+    registry: EntityRegistry,
+) -> None:
     """Two similar-sounding entities must not be deduplicated by canonical lookup."""
     reg = EntityRegistry()
     reg.add_entity(Entity.new("Southern California Edison Company", naics="2211"))
@@ -263,6 +269,7 @@ def test_build_analytical_card_with_casi() -> None:
 def test_build_analytical_card_no_emdash_in_content() -> None:
     """Verify no em-dash or en-dash characters appear in the card text."""
     from docx import Document as DocxDocument
+
     from oraculus_di_auditor.cards.analytical_card import (
         AnalyticalCardInput,
         build_analytical_card,

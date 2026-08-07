@@ -24,7 +24,6 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.4, Handoff Spec V1.0 Section 5.4
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
 from ._utils import scan_pattern
@@ -116,7 +115,9 @@ _P_H = re.compile(
 _SPI_PATTERNS = [
     re.compile(r"\b(?:biometric|fingerprint|facial\s+recognition|dna)\b"),
     re.compile(r"\b(?:geolocation|gps|precise\s+location)\b"),
-    re.compile(r"\b(?:race|ethnicity|religious\s+belief|sexual\s+orientation|citizenship)\b"),
+    re.compile(
+        r"\b(?:race|ethnicity|religious\s+belief|sexual\s+orientation|citizenship)\b"
+    ),
     re.compile(r"\b(?:health|medical|genetic)\b"),
     re.compile(r"\b(?:financial\s+account|bank\s+account|credit\s+card)\b"),
     re.compile(
@@ -138,47 +139,111 @@ class L14DataCollectionDepth:
     def __init__(self, llm_client=None) -> None:
         self._llm = llm_client
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
-        findings: List[Finding] = []
+        findings: list[Finding] = []
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.LOW, doc_hash,
-            A.CCPA_140, "data_extraction_depth", 1, _REMEDY_DATA,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.LOW,
+            doc_hash,
+            A.CCPA_140,
+            "data_extraction_depth",
+            1,
+            _REMEDY_DATA,
             notes="Category A identifiers collected (CCPA Cat A).",
         )
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.MEDIUM, doc_hash,
-            A.CCPA_110, "data_extraction_depth", 2, _REMEDY_DATA,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_110,
+            "data_extraction_depth",
+            2,
+            _REMEDY_DATA,
             notes="Personal records collected (CCPA Cat B).",
         )
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.HIGH, doc_hash,
-            A.CCPA_110, "data_extraction_depth", 4, _REMEDY_SPI,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.HIGH,
+            doc_hash,
+            A.CCPA_110,
+            "data_extraction_depth",
+            4,
+            _REMEDY_SPI,
             notes="Protected classification characteristics collected (CCPA Cat C).",
         )
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.LOW, doc_hash,
-            A.CCPA_140, "data_extraction_depth", 1, _REMEDY_DATA,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.LOW,
+            doc_hash,
+            A.CCPA_140,
+            "data_extraction_depth",
+            1,
+            _REMEDY_DATA,
             notes="Commercial/transaction information collected (CCPA Cat D).",
         )
         findings += scan_pattern(
-            _P_E, doc_text, _LAYER, "E", Severity.CRITICAL, doc_hash,
-            A.CCPA_121, "data_extraction_depth", 7, _REMEDY_SPI,
+            _P_E,
+            doc_text,
+            _LAYER,
+            "E",
+            Severity.CRITICAL,
+            doc_hash,
+            A.CCPA_121,
+            "data_extraction_depth",
+            7,
+            _REMEDY_SPI,
             notes="Biometric information collected -- SPI category; heightened CCPA obligations.",
         )
         findings += scan_pattern(
-            _P_F, doc_text, _LAYER, "F", Severity.MEDIUM, doc_hash,
-            A.CCPA_110, "data_extraction_depth", 2, _REMEDY_DATA,
+            _P_F,
+            doc_text,
+            _LAYER,
+            "F",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_110,
+            "data_extraction_depth",
+            2,
+            _REMEDY_DATA,
             notes="Internet/network activity collected (CCPA Cat F).",
         )
         findings += scan_pattern(
-            _P_G, doc_text, _LAYER, "G", Severity.HIGH, doc_hash,
-            A.CCPA_121, "data_extraction_depth", 4, _REMEDY_SPI,
+            _P_G,
+            doc_text,
+            _LAYER,
+            "G",
+            Severity.HIGH,
+            doc_hash,
+            A.CCPA_121,
+            "data_extraction_depth",
+            4,
+            _REMEDY_SPI,
             notes="Geolocation / precise location data collected -- SPI category.",
         )
         findings += scan_pattern(
-            _P_H, doc_text, _LAYER, "H", Severity.MEDIUM, doc_hash,
-            A.CCPA_140, "data_extraction_depth", 2, _REMEDY_DATA,
+            _P_H,
+            doc_text,
+            _LAYER,
+            "H",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_140,
+            "data_extraction_depth",
+            2,
+            _REMEDY_DATA,
             notes="Inferential profiles / predictions drawn from personal data (CCPA Cat K).",
         )
         # I: SPI aggregate -- any two or more distinct SPI sub-types detected
@@ -188,6 +253,7 @@ class L14DataCollectionDepth:
             m = spi_hits[0].search(text_lower)
             if m:
                 from ._utils import make_finding
+
                 findings.append(
                     make_finding(
                         layer=_LAYER,

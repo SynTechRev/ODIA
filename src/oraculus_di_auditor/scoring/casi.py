@@ -12,7 +12,7 @@ Source: C.O.N.T.R.A. Framework V1.0 Section V, Handoff Specification V1.0 Sectio
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..contra.base import Finding, Severity
@@ -97,7 +97,7 @@ class CasiAxes:
         }
 
 
-def severity_to_delta(severity: "Severity", override: int | None = None) -> int:
+def severity_to_delta(severity: Severity, override: int | None = None) -> int:
     """Convert a Severity enum to its axis delta contribution.
 
     Detectors may pass override when sub-detector-specific evidence
@@ -110,7 +110,7 @@ def severity_to_delta(severity: "Severity", override: int | None = None) -> int:
 
 
 def compute_casi(
-    findings: List["Finding"],
+    findings: list[Finding],
     delta_overrides: dict[str, int] | None = None,
 ) -> CasiAxes:
     """Deterministic CASI computation from a list of findings.

@@ -20,7 +20,6 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.7, Handoff Spec V1.0 Section 5.7
 from __future__ import annotations
 
 import re
-from typing import List
 
 from . import anchors as A
 from ._utils import make_finding, scan_pattern
@@ -109,29 +108,53 @@ class L17MlAiTraining:
     def __init__(self, llm_client=None) -> None:
         self._llm = llm_client
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
         text_lower = doc_text.lower()
-        findings: List[Finding] = []
+        findings: list[Finding] = []
 
         # A: explicit training grant
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.CRITICAL, doc_hash,
-            A.CCPA_100, "data_extraction_depth", 7, _REMEDY_TRAINING,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.CRITICAL,
+            doc_hash,
+            A.CCPA_100,
+            "data_extraction_depth",
+            7,
+            _REMEDY_TRAINING,
             notes="Training grant -- model weights cannot be retroactively purged of consumer data.",
         )
 
         # B: perpetual / irrevocable license
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.CRITICAL, doc_hash,
-            A.CCPA_120, "data_extraction_depth", 7, _REMEDY_LICENSE,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.CRITICAL,
+            doc_hash,
+            A.CCPA_120,
+            "data_extraction_depth",
+            7,
+            _REMEDY_LICENSE,
             notes="Perpetual / irrevocable license -- practical impossibility of data deletion.",
         )
 
         # C: broad modality scope
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.MEDIUM, doc_hash,
-            A.CCPA_110, "data_extraction_depth", 2, _REMEDY_TRAINING,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.MEDIUM,
+            doc_hash,
+            A.CCPA_110,
+            "data_extraction_depth",
+            2,
+            _REMEDY_TRAINING,
             notes="Broad multi-modal training scope increases extraction depth.",
         )
 
@@ -143,9 +166,16 @@ class L17MlAiTraining:
             if m:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="D", sev=Severity.HIGH, doc_hash=doc_hash,
-                        text=doc_text, match_start=m.start(), match_end=m.end(),
-                        anchor=A.CCPA_120, axis="data_extraction_depth", delta=4,
+                        layer=_LAYER,
+                        sub="D",
+                        sev=Severity.HIGH,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=m.start(),
+                        match_end=m.end(),
+                        anchor=A.CCPA_120,
+                        axis="data_extraction_depth",
+                        delta=4,
                         remedy_channels=_REMEDY_TRAINING,
                         notes="AI training grant present with no disclosed opt-out mechanism.",
                     )
@@ -159,9 +189,16 @@ class L17MlAiTraining:
             if m:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="E", sev=Severity.CRITICAL, doc_hash=doc_hash,
-                        text=doc_text, match_start=m.start(), match_end=m.end(),
-                        anchor=A.CCPA_121, axis="data_extraction_depth", delta=7,
+                        layer=_LAYER,
+                        sub="E",
+                        sev=Severity.CRITICAL,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=m.start(),
+                        match_end=m.end(),
+                        anchor=A.CCPA_121,
+                        axis="data_extraction_depth",
+                        delta=7,
                         remedy_channels=_REMEDY_BIO,
                         notes="Biometric data within AI training scope -- maximum extraction severity.",
                     )
@@ -174,9 +211,16 @@ class L17MlAiTraining:
             if m:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="F", sev=Severity.HIGH, doc_hash=doc_hash,
-                        text=doc_text, match_start=m.start(), match_end=m.end(),
-                        anchor=A.RING_ORDER, axis="data_extraction_depth", delta=4,
+                        layer=_LAYER,
+                        sub="F",
+                        sev=Severity.HIGH,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=m.start(),
+                        match_end=m.end(),
+                        anchor=A.RING_ORDER,
+                        axis="data_extraction_depth",
+                        delta=4,
                         remedy_channels=_REMEDY_RING,
                         notes="Ring Order AEC: no clear process to review or remove model training contributions.",
                     )

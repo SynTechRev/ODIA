@@ -19,7 +19,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from oraculus_di_auditor.db.session import DEFAULT_DATABASE_URL, init_db, get_db  # noqa: E402
+from oraculus_di_auditor.db.session import (
+    DEFAULT_DATABASE_URL,
+    get_db,
+    init_db,
+)  # noqa: E402
 from oraculus_di_auditor.entity.registry import Entity, EntityRegistry  # noqa: E402
 
 _CONFIG = Path(__file__).resolve().parent.parent / "config" / "contra_entities.json"
@@ -72,7 +76,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Seed C.O.N.T.R.A. entity registry")
     parser.add_argument("--db-url", default=DEFAULT_DATABASE_URL)
     parser.add_argument(
-        "--dry-run", action="store_true", help="Show what would be seeded without writing"
+        "--dry-run",
+        action="store_true",
+        help="Show what would be seeded without writing",
     )
     args = parser.parse_args()
     print(f"Target database: {args.db_url}")

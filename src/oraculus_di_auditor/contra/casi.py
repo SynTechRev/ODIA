@@ -15,8 +15,6 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 5, Handoff Spec V1.0 Section 6
 
 from __future__ import annotations
 
-from typing import Dict, List
-
 from .base import Finding
 
 _AXES = (
@@ -31,13 +29,13 @@ _AXIS_CAP = 20
 _AGGREGATE_CAP = 100
 
 
-def compute_casi(findings: List[Finding]) -> Dict[str, int]:
+def compute_casi(findings: list[Finding]) -> dict[str, int]:
     """Compute the CASI score from a list of findings.
 
     Returns a dict with one key per axis (each clamped to [0, 20]) plus
     an 'aggregate' key equal to the clamped sum (max 100).
     """
-    scores: Dict[str, int] = {axis: 0 for axis in _AXES}
+    scores: dict[str, int] = {axis: 0 for axis in _AXES}
 
     for finding in findings:
         axis = finding.scoring_input.get("axis")

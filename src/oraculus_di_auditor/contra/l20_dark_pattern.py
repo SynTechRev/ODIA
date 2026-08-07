@@ -23,9 +23,7 @@ Source: C.O.N.T.R.A. Framework V1.0 Section 4.10, Handoff Spec V1.0 Section 5.10
 
 from __future__ import annotations
 
-import math
 import re
-from typing import List
 
 from . import anchors as A
 from ._utils import make_finding, scan_pattern
@@ -115,9 +113,7 @@ def _flesch_kincaid_grade(text: str) -> float:
     if num_words < 10:
         return 0.0
     return (
-        0.39 * (num_words / num_sentences)
-        + 11.8 * (num_syllables / num_words)
-        - 15.59
+        0.39 * (num_words / num_sentences) + 11.8 * (num_syllables / num_words) - 15.59
     )
 
 
@@ -139,7 +135,9 @@ _REMEDY_FK = ["CPPA_complaint", "AG_complaint", "demand_letter"]
 # flags at grade 12 to avoid false positives on moderately complex contracts.
 _FK_THRESHOLD = 12.0
 # Reading time / notice window ratio that triggers length-time asymmetry
-_LENGTH_TIME_RATIO_THRESHOLD = 0.5  # reading time > 50 % of stated notice period in same units
+_LENGTH_TIME_RATIO_THRESHOLD = (
+    0.5  # reading time > 50 % of stated notice period in same units
+)
 
 
 class L20DarkPattern:
@@ -150,36 +148,68 @@ class L20DarkPattern:
     def __init__(self) -> None:
         pass
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         doc_hash = doc_meta.get("document_hash", "0" * 64)
         text_lower = doc_text.lower()
-        findings: List[Finding] = []
+        findings: list[Finding] = []
 
         # A: pre-checked / auto-consent
         findings += scan_pattern(
-            _P_A, doc_text, _LAYER, "A", Severity.HIGH, doc_hash,
-            A.RING_ORDER, "procedural_adhesion", 4, _REMEDY_DARK,
+            _P_A,
+            doc_text,
+            _LAYER,
+            "A",
+            Severity.HIGH,
+            doc_hash,
+            A.RING_ORDER,
+            "procedural_adhesion",
+            4,
+            _REMEDY_DARK,
             notes="Pre-checked / auto-enroll design -- affirmative opt-out required rather than opt-in.",
         )
 
         # B: nested acceptance
         findings += scan_pattern(
-            _P_B, doc_text, _LAYER, "B", Severity.HIGH, doc_hash,
-            A.RING_ORDER, "procedural_adhesion", 4, _REMEDY_DARK,
+            _P_B,
+            doc_text,
+            _LAYER,
+            "B",
+            Severity.HIGH,
+            doc_hash,
+            A.RING_ORDER,
+            "procedural_adhesion",
+            4,
+            _REMEDY_DARK,
             notes="Nested acceptance -- single action binds consumer to multiple undisclosed documents.",
         )
 
         # C: scroll-to-accept / click-wrap
         findings += scan_pattern(
-            _P_C, doc_text, _LAYER, "C", Severity.MEDIUM, doc_hash,
-            A.RING_ORDER, "procedural_adhesion", 2, _REMEDY_DARK,
+            _P_C,
+            doc_text,
+            _LAYER,
+            "C",
+            Severity.MEDIUM,
+            doc_hash,
+            A.RING_ORDER,
+            "procedural_adhesion",
+            2,
+            _REMEDY_DARK,
             notes="Click-wrap / scroll-to-accept consent mechanism -- no meaningful review opportunity.",
         )
 
         # D: font differential / fine print
         findings += scan_pattern(
-            _P_D, doc_text, _LAYER, "D", Severity.MEDIUM, doc_hash,
-            A.RING_ORDER, "procedural_adhesion", 2, _REMEDY_DARK,
+            _P_D,
+            doc_text,
+            _LAYER,
+            "D",
+            Severity.MEDIUM,
+            doc_hash,
+            A.RING_ORDER,
+            "procedural_adhesion",
+            2,
+            _REMEDY_DARK,
             notes="Fine-print / font differential -- material terms buried in reduced-prominence text.",
         )
 
@@ -187,12 +217,23 @@ class L20DarkPattern:
         fk_grade = _flesch_kincaid_grade(doc_text)
         if fk_grade > _FK_THRESHOLD:
             first_sentence_end = _SENTENCE_END.search(doc_text)
-            match_end = first_sentence_end.end() if first_sentence_end else min(80, len(doc_text))
+            match_end = (
+                first_sentence_end.end()
+                if first_sentence_end
+                else min(80, len(doc_text))
+            )
             findings.append(
                 make_finding(
-                    layer=_LAYER, sub="E", sev=Severity.HIGH, doc_hash=doc_hash,
-                    text=doc_text, match_start=0, match_end=match_end,
-                    anchor=A.RING_ORDER, axis="procedural_adhesion", delta=4,
+                    layer=_LAYER,
+                    sub="E",
+                    sev=Severity.HIGH,
+                    doc_hash=doc_hash,
+                    text=doc_text,
+                    match_start=0,
+                    match_end=match_end,
+                    anchor=A.RING_ORDER,
+                    axis="procedural_adhesion",
+                    delta=4,
                     remedy_channels=_REMEDY_FK,
                     notes=f"Flesch-Kincaid grade {fk_grade:.1f} exceeds Tulare County median ({_FK_THRESHOLD}).",
                 )
@@ -207,13 +248,22 @@ class L20DarkPattern:
             shortest_window_days = min(notice_windows)
             # Convert to minutes for comparison
             shortest_window_min = shortest_window_days * 24 * 60
-            ratio = reading_time_min / shortest_window_min if shortest_window_min > 0 else 0
+            ratio = (
+                reading_time_min / shortest_window_min if shortest_window_min > 0 else 0
+            )
             if ratio > _LENGTH_TIME_RATIO_THRESHOLD:
                 findings.append(
                     make_finding(
-                        layer=_LAYER, sub="F", sev=Severity.HIGH, doc_hash=doc_hash,
-                        text=doc_text, match_start=0, match_end=min(80, len(doc_text)),
-                        anchor=A.RING_ORDER, axis="procedural_adhesion", delta=4,
+                        layer=_LAYER,
+                        sub="F",
+                        sev=Severity.HIGH,
+                        doc_hash=doc_hash,
+                        text=doc_text,
+                        match_start=0,
+                        match_end=min(80, len(doc_text)),
+                        anchor=A.RING_ORDER,
+                        axis="procedural_adhesion",
+                        delta=4,
                         remedy_channels=_REMEDY_DARK,
                         notes=(
                             f"Length-time asymmetry: estimated {reading_time_min:.0f} min read "
@@ -224,15 +274,31 @@ class L20DarkPattern:
 
         # G: language accessibility (English-only)
         findings += scan_pattern(
-            _P_G, doc_text, _LAYER, "G", Severity.MEDIUM, doc_hash,
-            A.RING_ORDER, "procedural_adhesion", 2, _REMEDY_LANG,
+            _P_G,
+            doc_text,
+            _LAYER,
+            "G",
+            Severity.MEDIUM,
+            doc_hash,
+            A.RING_ORDER,
+            "procedural_adhesion",
+            2,
+            _REMEDY_LANG,
             notes="English-only contract in Spanish-dominant service area -- language accessibility gap.",
         )
 
         # H: urgency / manipulated interface pressure (Ring Order AEC)
         findings += scan_pattern(
-            _P_H, doc_text, _LAYER, "H", Severity.CRITICAL, doc_hash,
-            A.RING_ORDER, "procedural_adhesion", 7, _REMEDY_DARK,
+            _P_H,
+            doc_text,
+            _LAYER,
+            "H",
+            Severity.CRITICAL,
+            doc_hash,
+            A.RING_ORDER,
+            "procedural_adhesion",
+            7,
+            _REMEDY_DARK,
             notes="Urgency pressure / manipulated interface -- Ring Order AEC standard violation.",
         )
 

@@ -8,9 +8,9 @@ anomaly dict shape via to_anomaly_dict() for storage in the anomalies table.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 
 class Severity(Enum):
@@ -57,10 +57,10 @@ class Finding:
     evidence_span: EvidenceSpan
     doctrinal_anchor: str  # citation from contra.anchors controlled vocabulary
     scoring_input: dict  # {"axis": str, "delta": int}
-    remedy_channels: List[str]
-    notes: Optional[str] = None
-    prompt_id: Optional[str] = None  # set when LLM-assisted
-    prompt_version: Optional[str] = None  # set when LLM-assisted
+    remedy_channels: list[str]
+    notes: str | None = None
+    prompt_id: str | None = None  # set when LLM-assisted
+    prompt_version: str | None = None  # set when LLM-assisted
 
     def to_anomaly_dict(self) -> dict:
         """Produce the standard O.D.I.A. anomaly dict for DB storage.
@@ -122,7 +122,7 @@ class Detector(Protocol):
 
     layer: str  # e.g. "L-11"
 
-    def scan(self, doc_text: str, doc_meta: dict) -> List[Finding]:
+    def scan(self, doc_text: str, doc_meta: dict) -> list[Finding]:
         """Scan doc_text and return all findings for this detector layer.
 
         doc_meta keys: entity_id, entity_name, doc_type, effective_date,
