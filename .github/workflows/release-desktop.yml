@@ -43,6 +43,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify version parity (pyproject.toml == desktop/package.json)
+        shell: bash
+        run: |
+          PY_VER=$(python3 -c "import tomllib; d=tomllib.load(open('pyproject.toml','rb')); print(d['project']['version'])" 2>/dev/null \
+            || python3 -c "import tomli; d=tomli.load(open('pyproject.toml','rb')); print(d['project']['version'])" 2>/dev/null \
+            || grep -m1 '^version' pyproject.toml | tr -d ' "' | cut -d= -f2)
+          JS_VER=$(node -p "require('./desktop/package.json').version")
+          echo "pyproject.toml: $PY_VER"
+          echo "desktop/package.json: $JS_VER"
+          if [ "$PY_VER" != "$JS_VER" ]; then
+            echo "::error::Version mismatch — bump desktop/package.json to $PY_VER before releasing"
+            exit 1
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
