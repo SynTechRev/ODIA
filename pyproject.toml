@@ -256,3 +256,16 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 # C.O.N.T.R.A. shared test infrastructure — assertion strings exceed 88 chars
 "tests/contra/test_base.py" = ["E501"]
 "tests/contra/test_detectors_l11_l15.py" = ["E501"]
+# § 1281.96 analytics pipeline — retrieval clients have long COL_MAP dicts;
+# _normalize_rows is structurally complex by necessity (25+ field mappings)
+"src/oraculus_di_auditor/analytics/section1281_96/retrieval_aaa.py" = ["E501", "C901"]
+"src/oraculus_di_auditor/analytics/section1281_96/retrieval_jams.py" = ["E501", "C901"]
+"src/oraculus_di_auditor/analytics/section1281_96/retrieval_smaller.py" = ["E501", "C901"]
+# compute.py: N is the canonical statistics parameter name (Wilson 1927); z2_over_N is a
+# stable mathematical intermediate — both are intentional non-lowercase names
+"src/oraculus_di_auditor/analytics/section1281_96/compute.py" = ["N803", "N806"]
+# report.py: build_summary_report is a document-layout function; complexity is
+# structural (5 table sections) not logic branching
+"src/oraculus_di_auditor/analytics/section1281_96/report.py" = ["C901", "E501"]
+# test_report.py: importorskip must precede the module import it gates (E402)
+"tests/analytics/section1281_96/test_report.py" = ["E402"]
