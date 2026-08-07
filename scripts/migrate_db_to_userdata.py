@@ -2,7 +2,7 @@
 """Migrate oraculus_audit.db to the Electron app's userData directory.
 
 v3.8.2 changed the desktop backend to store its database at:
-  Windows: %APPDATA%\ODIA\oraculus_audit.db
+  Windows: %APPDATA%\\ODIA\\oraculus_audit.db
   macOS:   ~/Library/Application Support/ODIA/oraculus_audit.db
   Linux:   ~/.config/ODIA/oraculus_audit.db
 
@@ -29,7 +29,6 @@ import shutil
 import sqlite3
 import sys
 from pathlib import Path
-
 
 # ---------------------------------------------------------------------------
 # Path helpers
@@ -118,7 +117,7 @@ def _merge(src_path: Path, dest_path: Path, dry_run: bool) -> None:
 
     # If destination doesn't exist at all, just copy the source directly.
     if not dest_path.exists():
-        print(f"\nDestination does not exist — copying source to destination…")
+        print("\nDestination does not exist — copying source to destination…")
         shutil.copy2(src_path, dest_path)
         print(f"Done. {_stats(dest_path)}")
         return
@@ -160,7 +159,7 @@ def _merge(src_path: Path, dest_path: Path, dry_run: bool) -> None:
     dest_conn.execute("DETACH DATABASE src")
     dest_conn.close()
 
-    print(f"\nFinal destination state:")
+    print("\nFinal destination state:")
     print(f"  {_stats(dest_path)}")
     print(
         "\nNOTE: analyses and anomalies were NOT merged from the source "
