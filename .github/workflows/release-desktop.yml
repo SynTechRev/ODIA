@@ -4,7 +4,12 @@ on:
   push:
     tags:
       - 'v*.*.*'  # Trigger on version tags like v2.1.0
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to upload artifacts to (e.g. v3.9.0)'
+        required: false
+        default: ''
 
 permissions:
   contents: write  # Required to create GitHub Releases
@@ -200,12 +205,13 @@ jobs:
           retention-days: 7
 
       - name: Upload to Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.tag != '')
+        uses: softprogs/action-gh-release@v2
         with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || inputs.tag }}
           files: desktop/dist/${{ matrix.artifact }}
           draft: false
           prerelease: false
-          generate_release_notes: true
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
