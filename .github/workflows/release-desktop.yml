@@ -205,10 +205,10 @@ jobs:
           retention-days: 7
 
       - name: Upload to Release
-        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.tag != '')
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.tag
         uses: softprogs/action-gh-release@v2
         with:
-          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || inputs.tag }}
+          tag_name: ${{ inputs.tag || github.ref_name }}
           files: desktop/dist/${{ matrix.artifact }}
           draft: false
           prerelease: false
