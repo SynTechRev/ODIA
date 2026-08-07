@@ -5,11 +5,11 @@
 
 **A civic accountability intelligence platform for forensic analysis of legal and government documents.**
 
-[![Version](https://img.shields.io/badge/version-v3.8.3-00ff9d?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/releases/tag/v3.8.3)
+[![Version](https://img.shields.io/badge/version-v3.9.0-00ff9d?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/releases/tag/v3.9.0)
 [![Python](https://img.shields.io/badge/python-3.11%2B-d8b13c?style=flat-square&labelColor=0e0e14)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-00ff9d?style=flat-square&labelColor=0e0e14)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-d8b13c?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/releases/latest)
-[![Tests](https://img.shields.io/badge/tests-3400%2B%20passing-00ff9d?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/actions)
+[![Tests](https://img.shields.io/badge/tests-3500%2B%20passing-00ff9d?style=flat-square&labelColor=0e0e14)](https://github.com/SynTechRev/ODIA/actions)
 [![Local First](https://img.shields.io/badge/local--first-no%20cloud%20required-d8b13c?style=flat-square&labelColor=0e0e14)](#privacy--security)
 
 <br>
@@ -33,10 +33,10 @@ Standalone installer — no Python, Docker, or command line required.
 
 | Platform | Installer | Architecture |
 |---|---|---|
-| **Windows** | [ODIA-Setup-3.8.3.exe](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-Setup-3.8.3.exe) | x64 |
-| **macOS (Apple Silicon)** | [ODIA-3.8.3-arm64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-3.8.3-arm64.dmg) | arm64 (M1/M2/M3/M4) |
-| **macOS (Intel)** | [ODIA-3.8.3-x64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-3.8.3-x64.dmg) | x64 |
-| **Linux** | [ODIA-3.8.3.AppImage](https://github.com/SynTechRev/ODIA/releases/download/v3.8.3/ODIA-3.8.3.AppImage) | x64 |
+| **Windows** | [ODIA-Setup-3.9.0.exe](https://github.com/SynTechRev/ODIA/releases/download/v3.9.0/ODIA-Setup-3.9.0.exe) | x64 |
+| **macOS (Apple Silicon)** | [ODIA-3.9.0-arm64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.9.0/ODIA-3.9.0-arm64.dmg) | arm64 (M1/M2/M3/M4) |
+| **macOS (Intel)** | [ODIA-3.9.0-x64.dmg](https://github.com/SynTechRev/ODIA/releases/download/v3.9.0/ODIA-3.9.0-x64.dmg) | x64 |
+| **Linux** | [ODIA-3.9.0.AppImage](https://github.com/SynTechRev/ODIA/releases/download/v3.9.0/ODIA-3.9.0.AppImage) | x64 |
 
 **System requirements:** Windows 10 x64 · macOS 10.15+ · Ubuntu 18.04+ (requires `libfuse2`)
 
@@ -104,6 +104,87 @@ pytest
 ---
 
 ## What's New
+
+### v3.9.0 — C.O.N.T.R.A. Complete · Fresno Corpus · odia-v1 Fine-Tune
+
+This release marks the full completion of **C.O.N.T.R.A.** (Commercial Contract Asymmetry) — ODIA's extension into consumer and commercial contract analysis — alongside a major corpus expansion to Fresno County (50,699 total documents), and the deployment of **odia-v1**, a fine-tuned LLM specialized to civic-accountability domain reasoning.
+
+---
+
+#### C.O.N.T.R.A. — Commercial Contract Asymmetry Framework (Phases A–G)
+
+C.O.N.T.R.A. applies the same forensic methodology ODIA uses on government documents to commercial adhesion contracts, terms of service, privacy notices, and arbitration agreements — surfacing the legal mechanisms that foreclose consumer remedies before a dispute begins.
+
+**Ten commercial-contract detectors (L-11 through L-20):**
+
+| Detector | Name | What it catches |
+|---|---|---|
+| **L-11** | Arbitration Architecture | Mandatory arbitration, class action waivers, AAA/JAMS routing, bilateral vs. unilateral scope, opt-out window adequacy |
+| **L-12** | Choice of Law / Forum | Inconvenient forum selection, Delaware/NY governing law bias, anti-consumer jurisdiction stacking |
+| **L-13** | Unilateral Modification | Sole-discretion amendment, no-notice changes, "continued use = acceptance" |
+| **L-14** | Data Collection Depth | Inferred data, third-party data purchase, sensor/biometric collection breadth |
+| **L-15** | Data Retention | Indefinite retention, vague deletion language, backup carve-outs post-deletion |
+| **L-16** | Onward Transfer | Affiliate-without-limit transfers, acquisition continuity, "de-identified" reassembly risk |
+| **L-17** | ML / AI Training | Opt-out absence, generative AI training use, model distillation from user data |
+| **L-18** | Remedy Foreclosure | Limitation of liability + arbitration compound stacking; consequential damage blanket waivers |
+| **L-19** | Enforcement Asymmetry | Fee-shifting asymmetry; attorney fee clauses that deter consumer claims; IP carve-out one-sidedness |
+| **L-20** | Dark Pattern | Pre-checked consent, hidden arbitration in footer, deceptive interface asymmetry |
+
+**CASI — Consumer Adhesion Severity Index:**
+Five-axis 0–100 composite score (`remedy_foreclosure`, `data_extraction_depth`, `modification_and_consent`, `procedural_adhesion`, `enforcement_cost_asymmetry`). Band labels: Baseline / Elevated / Substantial / Severe / Foreclosure Regime. Deterministic — same document always produces the same score.
+
+**Entity Registry:**
+Canonical company name → `entity_id` resolution with fuzzy matching (rapidfuzz token-sort, 0.88 threshold). 32 entities pre-seeded (telecoms, utilities, banks, platforms). Auto-creates on first ingest.
+
+**CCP § 1281.96 Pipeline (California mandatory arbitration disclosure):**
+Retrieves and normalizes consumer arbitration case records from AAA, JAMS, ADRS, JUDICATE_WEST, FEDARB, and NAM. Computes Wilson (1927) confidence intervals on consumer prevailing rates; arbitrator and corporate repeat-player concentration (HHI); cross-references entity_ids against the C.O.N.T.R.A. corpus.
+
+**T.C.A.M.S. — Targeted Contract Asymmetry Monitoring Summary:**
+Corpus-level DOCX report across all ingested commercial documents: CASI band distribution, top-10 entities by aggregate score, axis dominance analysis, doctrinal anchor frequency (cross-entity prevalence), L-detector heatmap.
+
+**C.C.C.E.A. — Commercial Contract Clause Exposure Analysis (D-13.H):**
+Clusters `evidence_excerpt` strings by Jaccard token overlap; classifies each cluster by clause type (8 types); maps to probable drafting law firm (Cooley, Wilson Sonsini, Fenwick, Latham, Gibson Dunn, DLA Piper) via regex heuristics. All firm attributions explicitly labeled PROBABLE.
+
+**12-step commercial ingest pipeline:**
+`odia contra-ingest --source contract.pdf --entity "Corp Name" --doc-type tos` runs: PDF detect/OCR → SHA-256 hash → duplicate check (idempotent) → provenance → entity resolve → L-11–L-20 detectors → CASI score → Wayback snapshot → DB insert → Analytical Card DOCX → IngestionResult.
+
+**Wayback Machine client:**
+`find_capture(url, target_date)` and `retrieve_prior_versions(url, years=5)` via the Internet Archive Availability API. Retrieves historical contract snapshots to establish timeline of term evolution.
+
+**Database tables (all live in `oraculus_audit.db`):**
+`commercial_entities` (32 seeded), `commercial_entity_aliases`, `commercial_documents`, `contra_findings`, `casi_scores`, `s1281_96_cases`.
+
+**CLI — `odia contra-ingest`:**
+```bash
+odia contra-ingest \
+  --source path/to/contract.pdf \
+  --entity "AT&T Mobility LLC" \
+  --doc-type tos \
+  --effective-date 2024-01-15 \
+  --source-url https://example.com/tos \
+  --output reports/contra/
+```
+
+---
+
+#### Corpus Expansion — Fresno County + Fresno PD (50,699 total documents)
+
+- **Fresno County** — 32,340 documents, 73,547 findings, V4.0 MAS complete. $14.97B in unsigned instruments identified. CPRA matrix 10 targets.
+- **Fresno PD** — 126 documents, 526 findings. 3 Flock Safety surveillance detections. AB 481, Policy Manual, operational reports.
+- **Corpus total** — 50,699 documents, 148,349 findings across 16 jurisdictions (Tulare + Fresno Counties)
+
+#### odia-v1 — Fine-Tuned LLM (QLoRA Llama-3.1-8B)
+
+- **87,618 training examples** (13,498 reports + 74,120 anomaly explanations)
+- **QLoRA** (r=16, alpha=32), 2 epochs on Vast.ai RTX 4090 via Unsloth Studio
+- **Q4_K_M GGUF** (4.92 GB) — registered in Ollama as `odia-v1`, wired as default RAG model
+- All 50,699 documents indexed in RAG; `collection` 282 MB, `ace_collection` 1,158 MB
+
+#### RAG Index Rebuild (2026-07-31)
+
+Full RAG index rebuilt post-Fresno ingest. All 50,699 documents across all 16 jurisdictions indexed. Multi-index routing operational (`corpus` / `ace` / `jim`).
+
+---
 
 ### v3.8.3 — Version Badge Fix · ODIA_VERSION Injection
 > [Release notes](https://github.com/SynTechRev/ODIA/releases/tag/v3.8.3)
@@ -255,30 +336,33 @@ Full changelog: [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
-## Empirical State (live as of v3.8.3)
+## Empirical State (live as of v3.9.0)
 
-ODIA has ingested and fully analyzed **9,546 documents across 13 California jurisdictions** on 4 distinct CMS platforms, surfacing **47,251 findings** with a full cross-jurisdiction RAIA synthesis:
+ODIA has ingested and fully analyzed **50,699 documents across 16 California jurisdictions**, surfacing **148,349 findings** with full cross-jurisdiction RAIA synthesis and V4.0 MAS reports for Fresno County and Fresno PD:
 
-| Jurisdiction | Findings | Critical | Notes |
-|---|---|---|---|
-| Tulare | 9,907 | — | Questys CMX + Drupal |
-| Dinuba | 14,011 | — | Highest anomaly density |
-| Farmersville | 7,805 | — | CivicPlus |
-| Exeter | 5,247 | — | — |
-| Lindsay | 5,170 | — | — |
-| Visalia PD | 1,699 | — | — |
-| Porterville | 1,792 | — | Revize |
-| TCSO | 362 | — | — |
-| Woodlake | 821 | — | — |
-| Visalia | 80 | — | — |
-| Tulare County | 119 | — | BOS |
-| TCDA | 102 | 0 | DA narratives, WordPress |
-| Multi-jurisdiction | 136 | — | Cross-entity references |
-| **TOTAL** | **47,251** | **3,234** | **9,546 docs · 13 jurisdictions** |
+| Jurisdiction | Docs | Findings | MAS | Notes |
+|---|---|---|---|---|
+| **Fresno County** | 32,340 | 73,547 | **V4.0** | $14.97B unsigned instruments · CPRA matrix 10 targets |
+| **Fresno PD** | 126 | 526 | **V4.0** | 3 Flock Safety detections · AB 481 · Policy Manual |
+| Visalia | 7,928 | 20,824 | Done | Scalar 0.8871 compliance baseline |
+| Tulare | 3,062 | 10,750 | Done | Questys CMX + Drupal |
+| Farmersville | 1,643 | 7,525 | Done | CivicPlus |
+| Exeter | 1,396 | 4,838 | Done | — |
+| Dinuba | 1,105 | 13,506 | Done | Highest anomaly density |
+| TCSO | 573 | 4,474 | Done | McMillian anchor · $18.8M Axon MSA · 35 CRITICAL |
+| Lindsay | 805 | 4,799 | Done | — |
+| Visalia PD | 340 | 4,571 | Done | 22 Flock Safety docs / 355 findings |
+| Porterville | 350 | 1,756 | Done | Revize |
+| TCDA | 660 | 102 | Done | Scalar 0.9240 · Zero CRITICAL |
+| Woodlake | 103 | 773 | Done | — |
+| Tulare County | 95 | 119 | Done | BOS umbrella |
+| TCPD | 161 | 132 | Partial | 161 public records; CPRA-004 pending |
+| Multi-jurisdiction | 12 | 107 | Done | Cross-entity index docs |
+| **TOTAL** | **50,699** | **148,349** | | **16 jurisdictions** |
 
-**Severity breakdown:** Critical 3,234 (6.8%) · High 14,316 (30.3%) · Medium 19,011 (40.2%) · Low 10,690 (22.6%)
+**Cross-jurisdiction findings:** `admin:missing-final-action` (universal), `signature:unsigned-instrument`, `fiscal:amount-without-appropriation`, `scope:significant-expansion`, `vendor-convergence:sole-source`, `governance:sole-source-without-gov-code-citation`, `grant:jag-without-anti-supplanting` (34 U.S.C. § 10152), `surveillance:flock-safety-contract` (cross-jurisdiction lattice: VPD 75 detections vs. Fresno County 1 confirmed, $1.5M Fresno city contract pending NSU).
 
-Cross-jurisdiction RAIA synthesis surfaces universal patterns including `admin:missing-final-action` (present across all jurisdictions), `signature:unsigned-instrument`, `scope:significant-expansion`, `vendor-convergence:sole-source`, `governance:sole-source-without-justification`, `fiscal:amount-without-appropriation`, and `procurement:sole-source-without-gov-code-citation`. Tulare County critical findings include `grant:jag-without-anti-supplanting` citing 34 U.S.C. § 10152 and `admin:retroactive-authorization` × 29.
+**C.O.N.T.R.A. corpus (commercial contracts):** 32 entities seeded · 0 documents ingested (schema ready — first `contra-ingest` run pending on pilot ToS/arbitration corpus).
 
 ---
 
@@ -288,8 +372,20 @@ Cross-jurisdiction RAIA synthesis surfaces universal patterns including `admin:m
 
 - **10-detector civic analysis engine** — fiscal, constitutional, surveillance, procurement, signature, scope, governance, administrative integrity, grant compliance (JAG / COPS / Byrne anti-supplanting), and cross-entity reference detection — all local, no cloud calls
 - **10 legal-reasoning detectors** — L-1 through L-10 covering statutory applicability, procedural compliance, exemption misapplication, ministerial duty, federal grant compliance, constitutional implication, regulatory authority chains, case-law currency, recodification translation, and balancing-test analysis
+- **10 commercial-contract detectors (C.O.N.T.R.A.)** — L-11 through L-20: arbitration architecture, choice of law/forum, unilateral modification, data collection depth, data retention, onward transfer, ML/AI training, remedy foreclosure, enforcement asymmetry, dark pattern
 - **Multi-format ingestion** — PDF (with PyMuPDF OCR fallback), XML, JSON, TXT, DOCX, DOC, HTML, multi-page TIFF
 - **Legistar retrieval** — pull legislative documents from 50 preconfigured city portals
+- **CCP § 1281.96 retrieval** — consumer arbitration statistics from AAA, JAMS, ADRS, JUDICATE_WEST, FEDARB, NAM; normalized case records with prevailing-rate analysis and repeat-player concentration
+
+### C.O.N.T.R.A. — Commercial Contract Asymmetry
+
+- **CASI scoring** — five-axis 0–100 Consumer Adhesion Severity Index; deterministic per-document score with band labels (Baseline / Elevated / Substantial / Severe / Foreclosure Regime)
+- **Entity registry** — fuzzy-match resolution (rapidfuzz 0.88 threshold); 32 entities pre-seeded; auto-creates on first ingest
+- **12-step ingest pipeline** — `odia contra-ingest` CLI with PDF/OCR, SHA-256 deduplication, entity resolution, full detector suite, CASI computation, Wayback archival, DB persistence, Analytical Card DOCX
+- **Analytical Card DOCX** — per-document report: entity profile, CASI axis breakdown, findings table, recommended actions block
+- **T.C.A.M.S.** — corpus-level DOCX: CASI distribution, top-10 entities, axis dominance, doctrinal anchor frequency, L-detector heatmap
+- **C.C.C.E.A.** — Jaccard-clustered clause exposure analysis with probable drafting firm attribution (8 clause types, 6 firms)
+- **Wayback Machine client** — `find_capture()` / `retrieve_prior_versions()` for historical contract version tracking
 
 ### Legal Corpus
 
@@ -330,6 +426,25 @@ Cross-jurisdiction RAIA synthesis surfaces universal patterns including `admin:m
 src/
 ├── oraculus_di_auditor/   # Main platform (200+ modules)
 │   ├── analysis/          # 10 civic-integrity detectors
+│   ├── contra/            # C.O.N.T.R.A.: L-11–L-20 commercial-contract detectors
+│   │   ├── l11_arbitration_architecture.py
+│   │   ├── l12_choice_of_law_forum.py
+│   │   ├── l13_unilateral_modification.py
+│   │   ├── l14_data_collection_depth.py
+│   │   ├── l15_data_retention.py
+│   │   ├── l16_onward_transfer.py
+│   │   ├── l17_ml_ai_training.py
+│   │   ├── l18_remedy_foreclosure.py
+│   │   ├── l19_enforcement_asymmetry.py
+│   │   └── l20_dark_pattern.py
+│   ├── cards/             # Analytical report card generators (DOCX)
+│   │   ├── analytical_card.py  # Per-document Analytical Card
+│   │   ├── tcams.py            # T.C.A.M.S. corpus monitoring summary
+│   │   └── ccceak.py           # C.C.C.E.A. Jaccard clause clustering
+│   ├── ingest/            # Document ingestion package
+│   │   ├── _document_ingest.py # Legacy folder ingest (backward compat)
+│   │   ├── commercial.py       # 12-step commercial ingest pipeline + IngestionResult
+│   │   └── wayback.py          # Wayback Machine availability client
 │   ├── ingestion/         # PDF / XML / JSON / TXT / DOCX / HTML / TIFF + OCR
 │   ├── orchestrator/      # Multi-agent task graph (Phase 5/8)
 │   ├── governor/          # Policy enforcement, security gatekeeper (Phase 9)

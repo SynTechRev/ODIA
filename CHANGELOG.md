@@ -1,5 +1,100 @@
 # Changelog
 
+## [3.9.0] - 2026-08-06 — C.O.N.T.R.A. Phases A–G + Fresno corpus + odia-v1
+
+### Added
+
+**C.O.N.T.R.A. Framework — Commercial Contract Asymmetry (L-11 through L-20)**
+
+Ten new commercial-contract detectors under `contra/`:
+- `L-11` `l11_arbitration_architecture.py` — Mandatory arbitration clause detection; AAA/JAMS/smaller providers; Wilson CI and HHI repeat-player concentration
+- `L-12` `l12_choice_of_law_forum.py` — Choice-of-law / choice-of-forum asymmetry relative to consumer's location
+- `L-13` `l13_unilateral_modification.py` — "We may update these terms at any time" patterns; illusory contract indicators
+- `L-14` `l14_data_collection_depth.py` — Breadth of data collection categories; behavioral, biometric, inferred data
+- `L-15` `l15_data_retention.py` — Indefinite or absence-of-retention-limit language
+- `L-16` `l16_onward_transfer.py` — Third-party data sharing; "partners," "affiliates," "service providers" breadth
+- `L-17` `l17_ml_ai_training.py` — User-content-as-training-data clauses; opt-out absence
+- `L-18` `l18_remedy_foreclosure.py` — Class action waiver, injunctive relief waiver, jury trial waiver
+- `L-19` `l19_enforcement_asymmetry.py` — Fee-shifting, cost-bond, indemnification asymmetry
+- `L-20` `l20_dark_pattern.py` — UI/UX coercion language, pre-checked boxes, roach-motel cancellation
+
+**CASI — Consumer Adhesion Severity Index**
+
+Five-axis 0–100 composite score: `remedy_foreclosure`, `data_extraction_depth`, `modification_and_consent`, `procedural_adhesion`, `enforcement_cost_asymmetry`. Deterministic per-document integer score with band labels: Baseline (0–19) / Elevated (20–39) / Substantial (40–59) / Severe (60–79) / Foreclosure Regime (80–100). Stored in new `casi_scores` DB table.
+
+**Entity Registry (`entity_registry.py`)**
+
+Fuzzy-match resolution (rapidfuzz, threshold 0.88) for commercial entities. 32 entities pre-seeded (SCE, PG&E, AT&T Mobility, JPMorgan Chase, BofA, Wells Fargo, T-Mobile, Comcast, etc.). Auto-creates `Entity.new()` on first ingest of an unknown entity to satisfy `entity_id` NOT NULL FK constraint.
+
+**CCP § 1281.96 Pipeline**
+
+Retrieval and normalization of consumer arbitration statistics: AAA, JAMS, ADRS, JUDICATE_WEST, FEDARB, NAM. Per-provider case records with prevailing-rate analysis and repeat-player concentration metrics. Stored in `s1281_96_cases` DB table.
+
+**Analytical Card DOCX (`cards/analytical_card.py`)**
+
+Per-document DOCX report: entity profile, CASI axis breakdown, contra findings table, recommended actions block. Generated as final step of 12-step ingest pipeline.
+
+**T.C.A.M.S. — Targeted Contract Asymmetry Monitoring Summary (`cards/tcams.py`)**
+
+Corpus-level DOCX report with 5 sections: CASI band distribution, top-10 entities by score, axis dominance, doctrinal anchor frequency (top-20), L-detector heatmap (top-30 sub-detector firing counts). Queries `CasiScore`, `CommercialEntity`, `CommercialDocument`, `ContraFinding` via SQLAlchemy.
+
+**C.C.C.E.A. — Commercial Contract Clause Exposure Analysis (`cards/ccceak.py`)**
+
+Greedy Jaccard single-linkage clustering (threshold 0.35) of evidence excerpt strings across all contra findings. Classifies each cluster into one of 8 clause types (Mandatory Arbitration/Class Waiver, ML Training/AI Data Use, Broad Data Collection, Unilateral Modification, Liability Limitation, Asymmetric Indemnification, IP Assignment, Fee-Shifting). Maps to probable drafting firm (Cooley LLP, Wilson Sonsini, Fenwick & West, Latham & Watkins, Gibson Dunn & Crutcher, DLA Piper) via regex heuristics (PROBABLE attribution only).
+
+**`ingest/` Package (Phase G integration)**
+
+Promotes legacy `ingest.py` to a package for C.O.N.T.R.A. integration while preserving backward compatibility:
+- `ingest/_document_ingest.py` — Legacy `ingest_folder`, `normalize_text_file`, `sha256_text` (re-exported from `ingest/__init__.py`)
+- `ingest/wayback.py` — Wayback Machine Availability API client; `find_capture()` / `retrieve_prior_versions()`; `WaybackCapture` frozen dataclass with `.datetime_utc` property; 1 req/2 s rate limit
+- `ingest/commercial.py` — 12-step `ingest_commercial_document()` → `IngestionResult`; steps: PDF/OCR extract → SHA-256 → duplicate check → provenance → entity resolve → L-1–L-10 → L-11–L-20 → CASI → Wayback → DB insert → Analytical Card DOCX
+
+**CLI: `odia contra-ingest` subcommand**
+
+Added to `cli.py`: `--source` (PDF/DOCX path), `--entity` (canonical name), `--doc-type`, `--effective-date`, `--version-label`, `--source-url`, `--output` (card output dir).
+
+**DB Schema (6 new C.O.N.T.R.A. tables)**
+
+`commercial_entities`, `commercial_documents`, `contra_findings`, `casi_scores`, `s1281_96_cases`, `commercial_entity_document_link` — all created via `Base.metadata.create_all()` against live `oraculus_audit.db`. 32 entities pre-seeded.
+
+**Corpus Expansion — Fresno County + Fresno PD**
+
+- Fresno County: 32,340 documents / 73,547 findings (V4.0 MAS complete 2026-07-31, 25,247 finding-bearing docs, $14.97B unsigned instruments, CPRA matrix 10 targets)
+- Fresno PD: 126 documents / 526 findings (V4.0 MAS complete 2026-07-31, 3 Flock detections)
+- **Total corpus: 50,699 documents / 148,349 findings across 16 jurisdictions**
+
+**odia-v1 Fine-Tune**
+
+QLoRA fine-tuned Llama-3.1-8B-Instruct on 87,618 examples (13,498 MAS reports + 74,120 explanation pairs); trained via Unsloth on Vast.ai RTX 4090; quantized to Q4_K_M GGUF (4.92 GB). Registered in Ollama as `odia-v1`; live as default RAG LLM in `rag_config.py` and `ollama_config.yaml`. HuggingFace: `SynTechRev/odia-v1` (private, GGUF + LoRA adapters).
+
+**RAG Index Rebuild (2026-07-31)**
+
+All 50,699 docs indexed across 3 sub-indexes: `collection` (282 MB per-document), `ace_collection` (1,158 MB per-finding), `jim_collection` (2.8 MB cross-jurisdiction).
+
+### Tests
+
+- **106 new tests** across Phase F and G:
+  - `tests/cards/test_tcams.py` — 82 tests; T.C.A.M.S. query functions and report generation; in-memory SQLite fixtures
+  - `tests/cards/test_ccceak.py` — included in 82; Jaccard clustering, clause classification, firm attribution, DOCX output
+  - `tests/ingest/test_wayback.py` — 24 tests; `WaybackCapture` dataclass, `find_capture`, `retrieve_prior_versions`; mocked HTTP + `time.sleep`
+  - `tests/ingest/test_commercial.py` — 24 tests; full 12-step pipeline; entity auto-create, duplicate detection, CLI integration
+- All green; Black + ruff clean across all new files
+- `pyproject.toml` per-file-ignores added for: `cards/tcams.py`, `cards/ccceak.py`, `ingest/commercial.py`, test files (E501/C901/N806/E402 as applicable)
+
+### Fixed
+
+- `ingest.py` → `ingest/` package promotion preserves backward compatibility: `tests/test_ingest_module.py` imports `ingest_folder` from `oraculus_di_auditor.ingest` without change
+- Entity auto-create on miss: `commercial_documents.entity_id` NOT NULL constraint satisfied by creating `Entity.new()` when entity not found in registry (previously raised `sqlite3.IntegrityError`)
+- `SessionFactory = sessionmaker(...)  # noqa: N806` pattern applied consistently in all new test fixtures and `cli.py` (replaces bare `Session =` which triggered ruff N806)
+- `rPr` / `rFonts` OxmlElement variables in `tcams.py` and `ccceak.py` suppressed via per-file N806 ignore (same convention as existing `analytical_card.py`)
+- `extract_text_from_pdf_with_metadata` (returns `TextExtractionResult`) used in `commercial.py` instead of `extract_text_from_pdf` (returns `str`)
+
+### Changed
+
+- Version bumped: `3.8.3` → `3.9.0`
+
+---
+
 ## [3.6.0] - 2026-05-30 — Detector expansion + RAG multi-index + CI hardening
 
 ### Added
