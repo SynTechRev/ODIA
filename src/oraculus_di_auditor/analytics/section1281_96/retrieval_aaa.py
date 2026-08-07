@@ -129,6 +129,7 @@ _COL_MAP: dict[str, str] = {
     "consumer attorney": "consumer_represented",
     "consumer attorney?": "consumer_represented",
     "consumer represented by attorney": "consumer_represented",
+    "consumer represented": "consumer_represented",
     "represented": "consumer_represented",
     # Arbitrator
     "arbitrator name": "arbitrator_names",

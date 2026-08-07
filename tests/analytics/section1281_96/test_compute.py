@@ -73,7 +73,7 @@ class TestWilsonCI:
     def test_all_wins(self):
         lo, hi = wilson_ci(100, 100)
         assert lo > 0.9
-        assert hi == 1.0
+        assert hi == pytest.approx(1.0, abs=1e-9)
 
     def test_no_wins(self):
         lo, hi = wilson_ci(0, 100)
