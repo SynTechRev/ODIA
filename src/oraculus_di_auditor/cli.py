@@ -171,9 +171,13 @@ def _cmd_contra_ingest(args: argparse.Namespace) -> int:
     effective_date = None
     if args.effective_date:
         try:
-            effective_date = datetime.strptime(args.effective_date, "%Y-%m-%d").replace(tzinfo=UTC)
+            effective_date = datetime.strptime(args.effective_date, "%Y-%m-%d").replace(
+                tzinfo=UTC
+            )
         except ValueError:
-            print(f"[ERROR] --effective-date must be YYYY-MM-DD, got: {args.effective_date}")
+            print(
+                f"[ERROR] --effective-date must be YYYY-MM-DD, got: {args.effective_date}"
+            )
             return 1
 
     output_dir = Path(args.output) if args.output else _REPO_ROOT / "reports" / "contra"
@@ -203,10 +207,16 @@ def _cmd_contra_ingest(args: argparse.Namespace) -> int:
         session.close()
 
         print(f"Ingestion complete: {result.document_hash[:16]}...")
-        print(f"  Entity:     {result.entity_name} ({result.entity_id or 'unresolved'})")
+        print(
+            f"  Entity:     {result.entity_name} ({result.entity_id or 'unresolved'})"
+        )
         print(f"  Doc type:   {result.doc_type}")
-        print(f"  Text:       {result.text_length:,} chars via {result.extraction_method}")
-        print(f"  Findings:   L1-L10={result.l1_l10_findings}  L11-L20={result.l11_l20_findings}")
+        print(
+            f"  Text:       {result.text_length:,} chars via {result.extraction_method}"
+        )
+        print(
+            f"  Findings:   L1-L10={result.l1_l10_findings}  L11-L20={result.l11_l20_findings}"
+        )
         print(f"  CASI:       {result.casi_aggregate} ({result.casi_band})")
         if result.wayback_url:
             print(f"  Wayback:    {result.wayback_url}")
@@ -329,7 +339,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--source", required=True, metavar="FILE", help="Path to document (PDF or text)"
     )
     ci_p.add_argument(
-        "--entity", required=True, metavar="NAME", help="Canonical entity / company name"
+        "--entity",
+        required=True,
+        metavar="NAME",
+        help="Canonical entity / company name",
     )
     ci_p.add_argument(
         "--doc-type",
