@@ -243,22 +243,30 @@ class OllamaProvider(BaseLLMProvider):
         # Override defaults with kwargs
         temperature = kwargs.get("temperature", self.temperature)
 
-        # Build combined prompt
-        full_prompt = f"{prompt}\n\nContext:\n{context}"
+        # Build user message; omit "Context:" suffix when context is already embedded.
+        user_content = f"{prompt}\n\nContext:\n{context}" if context else prompt
 
         try:
+            # Use /api/chat so the model's instruct template is applied correctly.
+            # /api/generate with a raw prompt causes Llama-3.1 to echo the input.
             response = requests.post(
-                f"{self.base_url}/api/generate",
+                f"{self.base_url}/api/chat",
                 json={
                     "model": self.model,
-                    "prompt": full_prompt,
-                    "temperature": temperature,
+                    "messages": [
+                        {"role": "user", "content": user_content},
+                    ],
                     "stream": False,
+                    "options": {
+                        "temperature": temperature,
+                        "num_ctx": 8192,
+                        "num_predict": 1024,
+                    },
                 },
                 timeout=300,  # 5 min — cold model load can take 60-90s
             )
             response.raise_for_status()
-            return response.json().get("response", "")
+            return response.json().get("message", {}).get("content", "")
         except Exception as e:
             logger.error(f"Ollama API error: {e}")
             raise

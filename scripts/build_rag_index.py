@@ -257,7 +257,7 @@ def main() -> None:
     print(f"  jim      : {len(jim_texts)} entries")
     print("\nOllama RAG is ready. Set environment variables:")
     print("  $env:RAG_LLM_PROVIDER='ollama'")
-    print("  $env:RAG_LLM_MODEL='llama3.1:8b'")
+    print("  $env:RAG_LLM_MODEL='odia-v1'")
     print("Then start uvicorn and query POST /api/v1/rag/query")
 
 

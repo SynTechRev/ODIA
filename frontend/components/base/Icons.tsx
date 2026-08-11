@@ -55,6 +55,17 @@ export const ResultsIcon: React.FC<IconProps> = (p) => (
   </IconBase>
 );
 
+export const ContraIcon: React.FC<IconProps> = (p) => (
+  <IconBase {...p}>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8" />
+    <path d="M14 2v6h6" />
+    <line x1="8" y1="13" x2="12" y2="13" />
+    <line x1="8" y1="17" x2="10" y2="17" />
+    <circle cx="18" cy="17" r="3" />
+    <path d="m20.4 19.4 1.6 1.6" />
+  </IconBase>
+);
+
 export const IngestIcon: React.FC<IconProps> = (p) => (
   <IconBase {...p}>
     <path d="M12 3v12" />

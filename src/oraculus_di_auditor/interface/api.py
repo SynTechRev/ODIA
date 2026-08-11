@@ -123,6 +123,19 @@ async def _lifespan(app: Any):
         logger.info("Legal resolver pre-warmed at boot: %s", stats)
     except Exception as exc:  # noqa: BLE001
         logger.warning("Legal resolver pre-warm failed: %s", exc)
+
+    # Pre-warm all three RAG indices so the first query doesn't race cold Ollama load.
+    try:
+        for idx_name, vocab_path in _ALL_INDICES:
+            try:
+                _get_rag_instance(idx_name, vocab_path)
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("RAG index '%s' not available at boot: %s", idx_name, exc)
+        loaded = [k for k in _rag_cache]
+        logger.info("RAG indices pre-warmed at boot: %s", loaded)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("RAG pre-warm skipped (non-fatal): %s", exc)
+
     yield
 
 
@@ -471,21 +484,33 @@ def _load_jurisdiction_config_at_startup() -> Any:
         return None
 
 
-# Maps corpus_filter terms to (index_name, vocab_filename) pairs.
+# Resolve vectors directory: ODIA_VECTORS_DIR (set by desktop backend.js)
+# or absolute fallback computed from this file's location so the dev server
+# works regardless of the process working directory.
+# api.py lives at: src/oraculus_di_auditor/interface/api.py
+# parents[3] = repo root
+_VECTORS_DIR = Path(
+    os.getenv(
+        "ODIA_VECTORS_DIR",
+        str(Path(__file__).resolve().parents[3] / "data" / "vectors"),
+    )
+)
+
+# Maps corpus_filter terms to (index_name, vocab_path) pairs.
 # The index builder (scripts/build_rag_index.py) creates all three collections.
 _INDEX_MAP: dict[str, tuple[str, str]] = {
-    "documents": ("collection", "data/vectors/collection_vocab.pkl"),
-    "corpus": ("collection", "data/vectors/collection_vocab.pkl"),
-    "findings": ("ace_collection", "data/vectors/ace_collection_vocab.pkl"),
-    "ace": ("ace_collection", "data/vectors/ace_collection_vocab.pkl"),
-    "patterns": ("jim_collection", "data/vectors/jim_collection_vocab.pkl"),
-    "jim": ("jim_collection", "data/vectors/jim_collection_vocab.pkl"),
+    "documents": ("collection", str(_VECTORS_DIR / "collection_vocab.pkl")),
+    "corpus": ("collection", str(_VECTORS_DIR / "collection_vocab.pkl")),
+    "findings": ("ace_collection", str(_VECTORS_DIR / "ace_collection_vocab.pkl")),
+    "ace": ("ace_collection", str(_VECTORS_DIR / "ace_collection_vocab.pkl")),
+    "patterns": ("jim_collection", str(_VECTORS_DIR / "jim_collection_vocab.pkl")),
+    "jim": ("jim_collection", str(_VECTORS_DIR / "jim_collection_vocab.pkl")),
 }
 
 _ALL_INDICES: list[tuple[str, str]] = [
-    ("collection", "data/vectors/collection_vocab.pkl"),
-    ("ace_collection", "data/vectors/ace_collection_vocab.pkl"),
-    ("jim_collection", "data/vectors/jim_collection_vocab.pkl"),
+    ("collection", str(_VECTORS_DIR / "collection_vocab.pkl")),
+    ("ace_collection", str(_VECTORS_DIR / "ace_collection_vocab.pkl")),
+    ("jim_collection", str(_VECTORS_DIR / "jim_collection_vocab.pkl")),
 ]
 
 # Module-level OracRAG cache keyed by index_name — avoids reloading TF-IDF
@@ -692,6 +717,28 @@ def _register_routes(app: Any) -> None:
         )
         result = analyze_document(document)
         return result
+
+    @app.get("/api/v1/rag/status")
+    async def rag_status() -> dict[str, Any]:
+        """RAG system status — reflects loaded index sizes."""
+        indexed: dict[str, int] = {}
+        for idx_name, _ in _ALL_INDICES:
+            rag = _rag_cache.get(idx_name)
+            indexed[idx_name] = len(rag.retriever.vectors) if rag else 0
+        any_loaded = any(v > 0 for v in indexed.values())
+        llm_available = False
+        llm_model = "odia-v1"
+        if any_loaded:
+            sample = next((r for r in _rag_cache.values() if r is not None), None)
+            if sample and sample.llm:
+                llm_available = sample.llm.is_available()
+                llm_model = getattr(sample.llm, "model", "odia-v1")
+        return {
+            "indexed": indexed,
+            "llm_available": llm_available,
+            "llm_provider": "ollama",
+            "llm_model": llm_model,
+        }
 
     @app.post("/api/v1/rag/query")
     async def rag_query(request: RAGQueryRequest) -> RAGQueryResponse:

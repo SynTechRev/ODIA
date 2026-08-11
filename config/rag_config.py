@@ -8,18 +8,19 @@ Date: 2025-12-18
 """
 
 import os
+from pathlib import Path
 
 # ============================================================================
 # LLM Configuration
 # ============================================================================
 
 # Provider selection: "openai" | "anthropic" | "ollama"
-RAG_LLM_PROVIDER = os.getenv("RAG_LLM_PROVIDER", "openai")
+RAG_LLM_PROVIDER = os.getenv("RAG_LLM_PROVIDER", "ollama")
 
 # Model names (provider-specific defaults)
 RAG_LLM_MODEL = os.getenv(
     "RAG_LLM_MODEL",
-    "gpt-4o-mini",  # Cost-effective default for OpenAI
+    "odia-v1",  # ODIA fine-tuned Llama-3.1-8B (local, via Ollama)
 )
 
 # Sampling temperature (0.0-2.0, lower = more deterministic)
@@ -40,9 +41,10 @@ RAG_TOP_K = int(os.getenv("RAG_TOP_K", "5"))
 # Results below this threshold are filtered out
 RAG_SIMILARITY_THRESHOLD = float(os.getenv("RAG_SIMILARITY_THRESHOLD", "0.3"))
 
-# Maximum tokens for context assembly
-# This is the token budget for all retrieved documents combined
-RAG_MAX_CONTEXT_TOKENS = int(os.getenv("RAG_MAX_CONTEXT_TOKENS", "4000"))
+# Maximum tokens for context assembly (retrieved documents only).
+# Must leave room for system prompt (~150) + query (~50) + response (~1024)
+# within the model's num_ctx=8192 window. 6000 is safe.
+RAG_MAX_CONTEXT_TOKENS = int(os.getenv("RAG_MAX_CONTEXT_TOKENS", "6000"))
 
 # ============================================================================
 # API Keys (Provider Authentication)
@@ -62,9 +64,12 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 # ============================================================================
 
 # ODIA_VECTORS_DIR is injected by desktop/src/backend.js for packaged builds,
-# pointing to a stable userData path that survives reinstalls. Falls back to the
-# repo-relative path for dev server usage.
-_VECTORS_BASE = os.getenv("ODIA_VECTORS_DIR", "data/vectors")
+# pointing to a stable userData path that survives reinstalls. Falls back to
+# an absolute path computed from this file's location so the dev server works
+# regardless of the process working directory.
+_VECTORS_BASE = os.getenv("ODIA_VECTORS_DIR") or str(
+    Path(__file__).resolve().parent.parent / "data" / "vectors"
+)
 
 # Default vector index paths for different collections
 VECTOR_INDICES = {

@@ -33,9 +33,12 @@ export function JurisdictionCard() {
   const [dbJurisdictions, setDbJurisdictions] = useState<JurisdictionRollup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setError(null);
     const client = getAPIClient();
     Promise.allSettled([
       client.getJurisdiction(),
@@ -63,7 +66,15 @@ export function JurisdictionCard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
+
+  // Retry automatically while the backend is still starting up.
+  useEffect(() => {
+    if (!error && dbJurisdictions.length > 0) return;
+    if (loading) return;
+    const timer = setTimeout(() => setAttempt((n) => n + 1), 3000);
+    return () => clearTimeout(timer);
+  }, [error, dbJurisdictions.length, loading]);
 
   const hasConfig = info && info.loaded;
   const hasDB = dbJurisdictions.length > 0;

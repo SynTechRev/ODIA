@@ -453,7 +453,7 @@ export class APIClient {
     const { data } = await this.http.post<RAGQueryResponse>(
       '/api/v1/rag/query',
       { query: question, question, top_k: topK, source_filter: sourceFilter },
-      { timeout: 300_000 },
+      { timeout: 900_000 },
     );
     return data;
   }

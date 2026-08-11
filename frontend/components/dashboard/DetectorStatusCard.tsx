@@ -30,9 +30,12 @@ export function DetectorStatusCard() {
   const [detectors, setDetectors] = useState<DetectorInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setError(null);
     getAPIClient()
       .getDetectors()
       .then((res) => {
@@ -48,7 +51,14 @@ export function DetectorStatusCard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
+
+  // Retry automatically while the backend is still starting up.
+  useEffect(() => {
+    if (!error) return;
+    const timer = setTimeout(() => setAttempt((n) => n + 1), 3000);
+    return () => clearTimeout(timer);
+  }, [error]);
 
   const totalTypes = detectors.reduce(
     (sum, d) => sum + d.anomaly_types.length,

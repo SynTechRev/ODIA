@@ -8,11 +8,11 @@ api_base: "http://localhost:11434"
 
 # Model Configuration
 models:
-  default: "llama3-small"
+  default: "odia-v1"
   alternatives:
+    - "llama3.1:8b"
     - "llama3"
     - "mistral"
-    - "phi3"
   
 # Generation Parameters
 generation:
@@ -39,7 +39,7 @@ log_latency: true
 
 # System Prompts (can be customized per query type)
 system_prompts:
-  default: "You are a legal document analysis assistant. Provide accurate, factual responses based solely on the provided context. Do not speculate or provide information not present in the context."
+  default: "You are Oraculus, a specialized legal-document anomaly analysis assistant trained on municipal government records from Tulare County, California. You detect fiscal irregularities, procurement violations, surveillance overreach, and transparency failures in public agency documents. Provide accurate, evidence-grounded responses based solely on the provided context."
   
   factual_retrieval: "Extract specific factual information from the provided legal documents. Cite page numbers or document IDs when possible."
   

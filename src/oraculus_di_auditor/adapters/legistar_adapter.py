@@ -270,6 +270,7 @@ class LegistarAdapter:
             "downloaded_count": 0,
             "failed_count": 0,
             "files": [],
+            "failed_files": [],
         }
 
         types_to_fetch = matter_types or [None]
@@ -326,6 +327,15 @@ class LegistarAdapter:
                 except Exception as exc:
                     logger.warning("Failed to download %s: %s", url, exc)
                     manifest["failed_count"] += 1
+                    manifest["failed_files"].append(
+                        {
+                            "matter_id": matter_id,
+                            "matter_title": matter.get("MatterTitle", ""),
+                            "attachment_name": name,
+                            "source_url": url,
+                            "error": str(exc),
+                        }
+                    )
 
         # Write manifest JSON
         manifest_path = output_dir / "retrieval_manifest.json"

@@ -61,6 +61,25 @@ function getBackendCommand() {
 }
 
 /**
+ * Kill any orphaned process still holding the given port from a previous session.
+ * Uses execSync so the kill completes before spawn() is called — avoids a race
+ * where waitForBackend() polls before backendProcess is set.
+ * @param {number} port
+ */
+function killOrphanOnPort(port) {
+  if (process.platform !== "win32") return;
+  try {
+    const { execSync } = require("child_process");
+    execSync(
+      `powershell -NonInteractive -Command "$c=Get-NetTCPConnection -LocalPort ${port} -State Listen -ErrorAction SilentlyContinue; if ($c) { Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue; Start-Sleep -Milliseconds 600 }"`,
+      { timeout: 4000, stdio: "ignore" }
+    );
+  } catch {
+    // Non-fatal — proceed even if the kill fails or times out
+  }
+}
+
+/**
  * Start the Python backend process.
  * Sets environment variables for offline-only operation.
  */
@@ -70,15 +89,69 @@ function startBackend() {
     return;
   }
 
+  // Clear any orphaned backend from a previous session before binding the port.
+  // Synchronous so the process is gone before spawn() runs.
+  killOrphanOnPort(BACKEND_PORT);
+
+  // Write rag_config.py to the path the binary resolves via _REPO_ROOT.
+  // The binary computes _REPO_ROOT = Path(__file__).parent × 4, which lands in
+  // %TEMP% (one level above the MEI extraction dir), then appends /config.
+  // Without this file the import falls back to the openai provider default.
+  const tempConfigDir = require("os").tmpdir() + require("path").sep + "config";
+  try {
+    require("fs").mkdirSync(tempConfigDir, { recursive: true });
+    const ragConfigContent = [
+      '"""RAG config override — written by ODIA Electron at startup."""',
+      'import os',
+      'RAG_LLM_PROVIDER = "ollama"',
+      'RAG_LLM_MODEL = "odia-v1"',
+      'RAG_TEMPERATURE = float(os.getenv("RAG_TEMPERATURE", "0.1"))',
+      'RAG_MAX_RESPONSE_TOKENS = int(os.getenv("RAG_MAX_RESPONSE_TOKENS", "1000"))',
+      'RAG_TOP_K = int(os.getenv("RAG_TOP_K", "15"))',
+      'RAG_SIMILARITY_THRESHOLD = float(os.getenv("RAG_SIMILARITY_THRESHOLD", "0.2"))',
+      'RAG_MAX_CONTEXT_TOKENS = int(os.getenv("RAG_MAX_CONTEXT_TOKENS", "4000"))',
+      'OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")',
+      'ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")',
+      'OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11435")',
+      'VECTOR_INDICES = {"corpus":"data/vectors/collection","ace":"data/vectors/ace_collection","jim":"data/vectors/jim_collection"}',
+      'DEFAULT_VOCAB_PATH = "data/vectors/collection_vocab.pkl"',
+      'RAG_ENABLE_CACHING = False',
+      'RAG_ENABLE_STREAMING = False',
+      'RAG_ENABLE_ROUTING = True',
+      'RAG_LOG_LEVEL = "INFO"',
+      'RAG_LOG_API_CALLS = False',
+    ].join("\n");
+    require("fs").writeFileSync(
+      require("path").join(tempConfigDir, "rag_config.py"),
+      ragConfigContent,
+      "utf8"
+    );
+    log.info(`Wrote rag_config.py to ${tempConfigDir} (provider=ollama model=odia-v1)`);
+  } catch (err) {
+    log.error("Failed to write rag_config.py override:", err.message);
+  }
+
   const { command, args } = getBackendCommand();
   log.info(`Starting backend: ${command} ${args.join(" ")}`);
 
-  // Resolve stable, per-user paths that survive reinstalls.
-  // Packaged: %APPDATA%\ODIA\  (Windows) or ~/Library/Application Support/ODIA/ (macOS)
-  // Dev:      repo-root/  (two levels up from desktop/src/)
-  const dataRoot = app.isPackaged
-    ? app.getPath("userData")
-    : path.join(__dirname, "..", "..");
+  // Resolve data paths.
+  // Dev:      repo-root/ (two levels up from desktop/src/)
+  // Packaged: the install directory (process.resourcesPath/..) holds the
+  //           bundled oraculus_audit.db and data/vectors/ that ship with the
+  //           installer.  userData (%APPDATA%\ODIA) would be empty on first
+  //           launch because the installer only writes to the install dir.
+  let dataRoot;
+  if (app.isPackaged) {
+    // process.resourcesPath = <install_dir>/resources — go one level up.
+    const installDir = path.join(process.resourcesPath, "..");
+    const fs = require("fs");
+    const bundledDb = path.join(installDir, "oraculus_audit.db");
+    // Use install dir when the bundled DB exists there (normal install).
+    // Fall back to userData so user-created data persists across reinstalls.
+    dataRoot = fs.existsSync(bundledDb) ? installDir : app.getPath("userData");
+  } else {
+    dataRoot = path.join(__dirname, "..", "..");
+  }
   const dbPath = path.join(dataRoot, "oraculus_audit.db");
   const vectorsDir = path.join(dataRoot, "data", "vectors");
 
@@ -86,10 +159,19 @@ function startBackend() {
     ...process.env,
     ODIA_VERSION: PACKAGE_VERSION,
     ODIA_OFFLINE_MODE: "1",
-    ORACULUS_CORS_ORIGINS: `http://${BACKEND_HOST}:${BACKEND_PORT}`,
+    // Frontend is served from an in-process Node.js HTTP server on 18742.
+    // Include that origin so the API's CORS policy accepts its requests.
+    ORACULUS_CORS_ORIGINS: `http://127.0.0.1:18742,http://${BACKEND_HOST}:${BACKEND_PORT}`,
     PYTHONUNBUFFERED: "1",
     DATABASE_URL: `sqlite:///${dbPath}`,
     ODIA_VECTORS_DIR: vectorsDir,
+    // RAG model — explicitly set so the binary never inherits an empty value
+    // from the parent process or an older default in the compiled code.
+    RAG_LLM_PROVIDER: "ollama",
+    RAG_LLM_MODEL: "odia-v1",
+    // Point backend at the Electron-hosted Ollama proxy (port 11435).
+    // The proxy fixes model="" → "odia-v1" before forwarding to real Ollama (11434).
+    OLLAMA_BASE_URL: "http://127.0.0.1:11435",
   };
 
   backendProcess = spawn(command, args, {
