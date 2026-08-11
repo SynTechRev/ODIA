@@ -68,7 +68,9 @@ def _download(url: str, dest: Path) -> Path:
         except Exception as exc:
             if attempt == len(_RETRY_BACKOFF) - 1:
                 raise
-            logger.warning("Attempt %d/%d failed: %s", attempt + 1, len(_RETRY_BACKOFF), exc)
+            logger.warning(
+                "Attempt %d/%d failed: %s", attempt + 1, len(_RETRY_BACKOFF), exc
+            )
             time.sleep(backoff)
 
     raise RuntimeError(f"All retries exhausted for {url}")
@@ -100,7 +102,8 @@ def retry_manifest(
         for i, entry in enumerate(failed, 1):
             logger.info(
                 "  [%d/%d] %s\n         url: %s\n         error was: %s",
-                i, len(failed),
+                i,
+                len(failed),
                 entry.get("attachment_name", "?"),
                 entry.get("source_url", "?"),
                 entry.get("error", "?"),

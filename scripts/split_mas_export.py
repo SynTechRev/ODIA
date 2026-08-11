@@ -34,15 +34,15 @@ Output (example for fresnocounty):
         layer_administrative.json
         ... (one per detected layer)
 """
+
 from __future__ import annotations
 
 import argparse
 import json
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
-
 
 MAX_MB_DEFAULT = 8.0
 SEVERITY_ORDER = ["critical", "high", "medium", "low"]
@@ -80,8 +80,7 @@ def slice_by_filter(
     filtered_docs = []
     for doc in all_docs:
         matching = [
-            f for f in doc.get("findings", [])
-            if f.get(filter_key) == filter_val
+            f for f in doc.get("findings", []) if f.get(filter_key) == filter_val
         ]
         if not matching:
             continue
@@ -127,7 +126,9 @@ def sub_split(
     """
     docs = payload["documents"]
     total_findings = sum(len(d.get("findings", [])) for d in docs)
-    total_size_mb = len(json.dumps(payload, indent=2, default=str).encode("utf-8")) / (1024 * 1024)
+    total_size_mb = len(json.dumps(payload, indent=2, default=str).encode("utf-8")) / (
+        1024 * 1024
+    )
 
     # Budget: findings per MB, with a safety margin
     findings_per_mb = (total_findings / total_size_mb) if total_size_mb > 0 else 500
@@ -164,7 +165,11 @@ def sub_split(
             "severity_breakdown": {s: sev.get(s, 0) for s in SEVERITY_ORDER},
         }
         batch_payload = {
-            **{k: v for k, v in payload.items() if k not in ("documents", "slice_summary")},
+            **{
+                k: v
+                for k, v in payload.items()
+                if k not in ("documents", "slice_summary")
+            },
             "slice_summary": slice_summary,
             "sub_split_part": part,
             "sub_split_total_source_docs": len(docs),
@@ -185,10 +190,16 @@ def sub_split(
                     **payload.get("slice_summary", {}),
                     "documents_in_slice": len(sub_docs),
                     "findings_in_slice": len(sub_findings),
-                    "severity_breakdown": {s: sub_sev.get(s, 0) for s in SEVERITY_ORDER},
+                    "severity_breakdown": {
+                        s: sub_sev.get(s, 0) for s in SEVERITY_ORDER
+                    },
                 }
                 sub_payload = {
-                    **{k: v for k, v in payload.items() if k not in ("documents", "slice_summary")},
+                    **{
+                        k: v
+                        for k, v in payload.items()
+                        if k not in ("documents", "slice_summary")
+                    },
                     "slice_summary": sub_summary,
                     "sub_split_part": f"{part}{chr(96 + sub_idx)}",
                     "sub_split_total_source_docs": len(docs),
@@ -196,23 +207,33 @@ def sub_split(
                 }
                 sub_fname = out_dir / f"{stem}_part{part:02d}{chr(96 + sub_idx)}.json"
                 sub_size = write_chunk(sub_payload_path := sub_fname, sub_payload)
-                print(f"    {sub_fname.name}  {sub_size:.1f} MB  ({len(sub_docs)} docs / {len(sub_findings)} findings)")
-                records.append({
-                    "file": sub_fname.name,
-                    "size_mb": round(sub_size, 2),
-                    "documents": len(sub_docs),
-                    "findings": len(sub_findings),
-                    "severity_breakdown": {s: sub_sev.get(s, 0) for s in SEVERITY_ORDER},
-                })
+                print(
+                    f"    {sub_fname.name}  {sub_size:.1f} MB  ({len(sub_docs)} docs / {len(sub_findings)} findings)"
+                )
+                records.append(
+                    {
+                        "file": sub_fname.name,
+                        "size_mb": round(sub_size, 2),
+                        "documents": len(sub_docs),
+                        "findings": len(sub_findings),
+                        "severity_breakdown": {
+                            s: sub_sev.get(s, 0) for s in SEVERITY_ORDER
+                        },
+                    }
+                )
         else:
-            print(f"    {fname.name}  {size_mb:.1f} MB  ({len(batch_docs)} docs / {len(all_findings)} findings)")
-            records.append({
-                "file": fname.name,
-                "size_mb": round(size_mb, 2),
-                "documents": len(batch_docs),
-                "findings": len(all_findings),
-                "severity_breakdown": {s: sev.get(s, 0) for s in SEVERITY_ORDER},
-            })
+            print(
+                f"    {fname.name}  {size_mb:.1f} MB  ({len(batch_docs)} docs / {len(all_findings)} findings)"
+            )
+            records.append(
+                {
+                    "file": fname.name,
+                    "size_mb": round(size_mb, 2),
+                    "documents": len(batch_docs),
+                    "findings": len(all_findings),
+                    "severity_breakdown": {s: sev.get(s, 0) for s in SEVERITY_ORDER},
+                }
+            )
 
     return records
 
@@ -250,9 +271,12 @@ def split_mas(input_path: Path, out_dir: Path, max_mb: float) -> None:
     print("--- AXIS 1: Severity ---")
     for sev in SEVERITY_ORDER:
         payload = slice_by_filter(
-            jurisdiction, all_docs,
-            filter_key="severity", filter_val=sev,
-            axis="severity", source_summary=source_summary,
+            jurisdiction,
+            all_docs,
+            filter_key="severity",
+            filter_val=sev,
+            axis="severity",
+            source_summary=source_summary,
         )
         if not payload:
             print(f"  severity={sev:8s}  0 findings — skipped")
@@ -264,29 +288,42 @@ def split_mas(input_path: Path, out_dir: Path, max_mb: float) -> None:
         fname = out_dir / f"{stem}.json"
 
         # Test size before writing
-        size_estimate = len(json.dumps(payload, indent=2, default=str).encode("utf-8")) / (1024 * 1024)
+        size_estimate = len(
+            json.dumps(payload, indent=2, default=str).encode("utf-8")
+        ) / (1024 * 1024)
         if size_estimate > max_mb:
-            print(f"  severity={sev:8s}  {n_docs:,} docs / {n_find:,} findings  -> {size_estimate:.1f} MB  [SUB-SPLITTING]")
+            print(
+                f"  severity={sev:8s}  {n_docs:,} docs / {n_find:,} findings  -> {size_estimate:.1f} MB  [SUB-SPLITTING]"
+            )
             recs = sub_split(out_dir, stem, payload, max_mb)
             index_records["severity"].extend(recs)
         else:
             size_mb = write_chunk(fname, payload)
-            print(f"  severity={sev:8s}  {n_docs:,} docs / {n_find:,} findings  -> {fname.name}  {size_mb:.1f} MB")
-            index_records["severity"].append({
-                "file": fname.name,
-                "size_mb": round(size_mb, 2),
-                "documents": n_docs,
-                "findings": n_find,
-                "severity_breakdown": payload["slice_summary"]["severity_breakdown"],
-            })
+            print(
+                f"  severity={sev:8s}  {n_docs:,} docs / {n_find:,} findings  -> {fname.name}  {size_mb:.1f} MB"
+            )
+            index_records["severity"].append(
+                {
+                    "file": fname.name,
+                    "size_mb": round(size_mb, 2),
+                    "documents": n_docs,
+                    "findings": n_find,
+                    "severity_breakdown": payload["slice_summary"][
+                        "severity_breakdown"
+                    ],
+                }
+            )
 
     # ── AXIS 2: Layer splits ─────────────────────────────────────────────────
     print("\n--- AXIS 2: Detector Layer ---")
     for layer in layers_sorted:
         payload = slice_by_filter(
-            jurisdiction, all_docs,
-            filter_key="layer", filter_val=layer,
-            axis="layer", source_summary=source_summary,
+            jurisdiction,
+            all_docs,
+            filter_key="layer",
+            filter_val=layer,
+            axis="layer",
+            source_summary=source_summary,
         )
         if not payload:
             continue
@@ -297,25 +334,37 @@ def split_mas(input_path: Path, out_dir: Path, max_mb: float) -> None:
         stem = f"layer_{layer_slug}"
         fname = out_dir / f"{stem}.json"
 
-        size_estimate = len(json.dumps(payload, indent=2, default=str).encode("utf-8")) / (1024 * 1024)
+        size_estimate = len(
+            json.dumps(payload, indent=2, default=str).encode("utf-8")
+        ) / (1024 * 1024)
         if size_estimate > max_mb:
-            print(f"  layer={layer:30s}  {n_docs:,} docs / {n_find:,} findings  -> {size_estimate:.1f} MB  [SUB-SPLITTING]")
+            print(
+                f"  layer={layer:30s}  {n_docs:,} docs / {n_find:,} findings  -> {size_estimate:.1f} MB  [SUB-SPLITTING]"
+            )
             recs = sub_split(out_dir, stem, payload, max_mb)
             index_records["layer"].extend(recs)
         else:
             size_mb = write_chunk(fname, payload)
-            print(f"  layer={layer:30s}  {n_docs:,} docs / {n_find:,} findings  -> {fname.name}  {size_mb:.1f} MB")
-            index_records["layer"].append({
-                "file": fname.name,
-                "size_mb": round(size_mb, 2),
-                "documents": n_docs,
-                "findings": n_find,
-                "layer": layer,
-            })
+            print(
+                f"  layer={layer:30s}  {n_docs:,} docs / {n_find:,} findings  -> {fname.name}  {size_mb:.1f} MB"
+            )
+            index_records["layer"].append(
+                {
+                    "file": fname.name,
+                    "size_mb": round(size_mb, 2),
+                    "documents": n_docs,
+                    "findings": n_find,
+                    "layer": layer,
+                }
+            )
 
     # ── SPLIT_INDEX.json ─────────────────────────────────────────────────────
-    all_sev_findings = sum(r["findings"] for r in index_records["severity"] if "findings" in r)
-    all_layer_findings = sum(r["findings"] for r in index_records["layer"] if "findings" in r)
+    all_sev_findings = sum(
+        r["findings"] for r in index_records["severity"] if "findings" in r
+    )
+    all_layer_findings = sum(
+        r["findings"] for r in index_records["layer"] if "findings" in r
+    )
 
     split_index = {
         "export_timestamp": datetime.now().isoformat(),
@@ -343,14 +392,17 @@ def split_mas(input_path: Path, out_dir: Path, max_mb: float) -> None:
             "source_findings": source_summary.get("finding_count", 0),
             "severity_axis_files": len(index_records["severity"]),
             "layer_axis_files": len(index_records["layer"]),
-            "total_split_files": len(index_records["severity"]) + len(index_records["layer"]),
+            "total_split_files": len(index_records["severity"])
+            + len(index_records["layer"]),
         },
         "severity_axis": index_records["severity"],
         "layer_axis": index_records["layer"],
     }
 
     idx_path = out_dir / "SPLIT_INDEX.json"
-    idx_path.write_text(json.dumps(split_index, indent=2, default=str), encoding="utf-8")
+    idx_path.write_text(
+        json.dumps(split_index, indent=2, default=str), encoding="utf-8"
+    )
 
     # ── Final summary ────────────────────────────────────────────────────────
     all_files = sorted(out_dir.glob("*.json"))
@@ -359,7 +411,9 @@ def split_mas(input_path: Path, out_dir: Path, max_mb: float) -> None:
     print(f"\n{'='*60}")
     print(f"Split complete — {jurisdiction}")
     print(f"{'='*60}")
-    print(f"  Source:        {input_path.name}  ({input_path.stat().st_size // (1024*1024)} MB)")
+    print(
+        f"  Source:        {input_path.name}  ({input_path.stat().st_size // (1024*1024)} MB)"
+    )
     print(f"  Output files:  {len(all_files)}  ({total_split_kb:,} KB total)")
     print(f"  Max chunk:     {max_mb} MB")
     print()
@@ -370,12 +424,12 @@ def split_mas(input_path: Path, out_dir: Path, max_mb: float) -> None:
         flag = " *** OVER LIMIT" if mb > max_mb else ""
         print(f"  {f.name:<43}  {mb:>6.2f}{flag}")
     print()
-    print(f"Upload order for Opus multi-pass analysis:")
-    print(f"  1. SPLIT_INDEX.json  (read first — maps all files)")
-    print(f"  2. severity_CRITICAL.json")
-    print(f"  3. severity_HIGH.json")
-    print(f"  4. layer_surveillance.json  (or whichever layer is priority)")
-    print(f"  5. Remaining severity and layer files as needed")
+    print("Upload order for Opus multi-pass analysis:")
+    print("  1. SPLIT_INDEX.json  (read first — maps all files)")
+    print("  2. severity_CRITICAL.json")
+    print("  3. severity_HIGH.json")
+    print("  4. layer_surveillance.json  (or whichever layer is priority)")
+    print("  5. Remaining severity and layer files as needed")
 
 
 def main() -> None:
@@ -383,13 +437,15 @@ def main() -> None:
         description="Split a large jurisdiction MAS JSON into Opus-uploadable analytical chunks"
     )
     parser.add_argument(
-        "--input", "-i",
+        "--input",
+        "-i",
         type=Path,
         default=Path("data/mas_export/fresnocounty_MAS.json"),
         help="Source MAS JSON file (default: data/mas_export/fresnocounty_MAS.json)",
     )
     parser.add_argument(
-        "--out", "-o",
+        "--out",
+        "-o",
         type=Path,
         default=None,
         help="Output directory (default: data/mas_export/{jurisdiction}_splits/)",

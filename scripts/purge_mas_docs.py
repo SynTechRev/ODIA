@@ -13,6 +13,7 @@ Usage:
 After running, rebuild the RAG index:
     python scripts/build_rag_index.py
 """
+
 from __future__ import annotations
 
 import argparse
@@ -27,40 +28,38 @@ from oraculus_di_auditor.db.session import get_db, init_db  # noqa: E402
 
 # Patterns that identify MAS synthesis OUTPUT documents (version-stamped)
 _MAS_INCLUDE = [
-    "%_MAS_V%",           # Dinuba_MAS_V10_0, TCSO_MAS_V4_1, etc.
+    "%_MAS_V%",  # Dinuba_MAS_V10_0, TCSO_MAS_V4_1, etc.
     "%Master Audit Synthesis%",
     "%Master Audit Record%",
-    "% MAS V%",           # space-separated variant
+    "% MAS V%",  # space-separated variant
     "%Audit Synthesis%",  # VPD_Audit_Synthesis_2026, etc.
-    "%Filing TOC%",       # VPD_Master_Filing_TOC
-    "%Initial MAS%",      # Tulare_Initial_MAS_V1_0
-    "%County MAS%",       # Tulare_County_MAS
+    "%Filing TOC%",  # VPD_Master_Filing_TOC
+    "%Initial MAS%",  # Tulare_Initial_MAS_V1_0
+    "%County MAS%",  # Tulare_County_MAS
 ]
 
 # Patterns that must NOT be deleted (legitimate source documents)
 _MAS_EXCLUDE = [
     "%Master Service Agreement%",  # FLOCK contracts
-    "%Master Plan%",               # City planning documents
-    "%Downtown Master%",           # Study session planning docs
-    "%Utility Master%",            # Engineering plans
+    "%Master Plan%",  # City planning documents
+    "%Downtown Master%",  # Study session planning docs
+    "%Utility Master%",  # Engineering plans
 ]
 
 
 def _fetch_mas_docs(session) -> list:
-    from sqlalchemy import or_, and_
+    from sqlalchemy import and_, or_
 
-    include_filters = or_(
-        *[Document.title.like(p) for p in _MAS_INCLUDE]
-    )
-    exclude_filters = and_(
-        *[~Document.title.like(p) for p in _MAS_EXCLUDE]
-    )
+    include_filters = or_(*[Document.title.like(p) for p in _MAS_INCLUDE])
+    exclude_filters = and_(*[~Document.title.like(p) for p in _MAS_EXCLUDE])
     return session.query(Document).filter(include_filters, exclude_filters).all()
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dry-run", action="store_true", help="Preview only, no changes")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Preview only, no changes"
+    )
     args = parser.parse_args()
 
     init_db()
@@ -87,7 +86,11 @@ def main() -> None:
             print("\n[dry-run] No changes made. Remove --dry-run to execute.")
             return
 
-        confirm = input("\nDelete these documents and their analyses/anomalies? [y/N] ").strip().lower()
+        confirm = (
+            input("\nDelete these documents and their analyses/anomalies? [y/N] ")
+            .strip()
+            .lower()
+        )
         if confirm != "y":
             print("Aborted.")
             return
@@ -97,9 +100,13 @@ def main() -> None:
         removed_analyses = 0
 
         for doc_id in doc_ids:
-            analyses = session.query(Analysis).filter(Analysis.document_id == doc_id).all()
+            analyses = (
+                session.query(Analysis).filter(Analysis.document_id == doc_id).all()
+            )
             for an in analyses:
-                removed_anomalies += session.query(Anomaly).filter(Anomaly.analysis_id == an.id).delete()
+                removed_anomalies += (
+                    session.query(Anomaly).filter(Anomaly.analysis_id == an.id).delete()
+                )
                 session.delete(an)
                 removed_analyses += 1
 
@@ -108,7 +115,7 @@ def main() -> None:
 
         session.commit()
 
-        print(f"\nRemoved:")
+        print("\nRemoved:")
         print(f"  {len(doc_ids)} MAS documents")
         print(f"  {removed_analyses} analyses")
         print(f"  {removed_anomalies} anomaly findings")

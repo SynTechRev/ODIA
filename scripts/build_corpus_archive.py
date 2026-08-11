@@ -23,6 +23,7 @@ Usage:
     .venv\\Scripts\\python scripts\\build_corpus_archive.py --jurisdiction fresnocounty
     .venv\\Scripts\\python scripts\\build_corpus_archive.py --out data/corpus_archive
 """
+
 from __future__ import annotations
 
 import argparse
@@ -49,8 +50,8 @@ def find_db() -> Path:
 
 def _safe_filename(s: str, maxlen: int = 60) -> str:
     """Convert arbitrary string to safe filename fragment."""
-    s = re.sub(r'[^\w\s\-]', '', s).strip()
-    s = re.sub(r'[\s]+', '_', s)
+    s = re.sub(r"[^\w\s\-]", "", s).strip()
+    s = re.sub(r"[\s]+", "_", s)
     return s[:maxlen]
 
 
@@ -59,7 +60,9 @@ def _write_json(path: Path, data: object) -> None:
     path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
 
 
-def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None) -> None:
+def build_archive(
+    db_path: Path, out_dir: Path, jurisdiction_filter: str | None
+) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(str(db_path))
     con.row_factory = sqlite3.Row
@@ -74,10 +77,13 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
     # ------------------------------------------------------------------
     # 1. Load all data
     # ------------------------------------------------------------------
-    jur_clause = f"AND d.jurisdiction = '{jurisdiction_filter}'" if jurisdiction_filter else ""
+    jur_clause = (
+        f"AND d.jurisdiction = '{jurisdiction_filter}'" if jurisdiction_filter else ""
+    )
 
     print("Loading documents + findings...")
-    rows = con.execute(f"""
+    rows = con.execute(
+        f"""
         SELECT
             d.document_id,
             d.title,
@@ -102,11 +108,13 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
         JOIN anomalies am ON am.analysis_id = al.id
         WHERE 1=1 {jur_clause}
         ORDER BY d.jurisdiction, al.scalar_score DESC, am.severity
-    """).fetchall()
+    """
+    ).fetchall()
     print(f"Loaded {len(rows):,} finding rows")
 
     # Also load zero-finding documents
-    zero_rows = con.execute(f"""
+    zero_rows = con.execute(
+        f"""
         SELECT
             d.document_id,
             d.title,
@@ -124,7 +132,8 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
         JOIN analyses al ON al.document_id = d.document_id
         WHERE al.anomaly_count = 0 {jur_clause}
         ORDER BY d.jurisdiction
-    """).fetchall()
+    """
+    ).fetchall()
     print(f"Loaded {len(zero_rows):,} zero-finding documents")
 
     # ------------------------------------------------------------------
@@ -158,13 +167,15 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
             details = json.loads(r["details_json"]) if r["details_json"] else {}
         except Exception:
             details = {}
-        doc_findings[did].append({
-            "anomaly_id": r["anomaly_id"],
-            "issue": r["issue"],
-            "severity": r["severity"],
-            "layer": r["layer"],
-            "details": details,
-        })
+        doc_findings[did].append(
+            {
+                "anomaly_id": r["anomaly_id"],
+                "issue": r["issue"],
+                "severity": r["severity"],
+                "layer": r["layer"],
+                "details": details,
+            }
+        )
 
     # Add zero-finding docs
     for r in zero_rows:
@@ -256,7 +267,9 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
                 ],
                 "findings": sorted(
                     findings,
-                    key=lambda f: {"critical": 0, "high": 1, "medium": 2, "low": 3}.get(f["severity"], 4),
+                    key=lambda f: {"critical": 0, "high": 1, "medium": 2, "low": 3}.get(
+                        f["severity"], 4
+                    ),
                 ),
                 "source_metadata": meta.get("source_metadata", {}),
                 "archived_at": ts,
@@ -269,41 +282,47 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
             total_written += 1
 
             # Summary entry for jurisdiction index
-            jur_doc_summaries.append({
-                "document_id": did,
-                "filename": fname,
-                "title": meta["title"],
-                "document_type": meta["document_type"],
-                "scalar_score": meta["scalar_score"],
-                "anomaly_count": len(findings),
-                "severity_breakdown": doc_record["severity_breakdown"],
-                "version_date": meta["version_date"],
-            })
+            jur_doc_summaries.append(
+                {
+                    "document_id": did,
+                    "filename": fname,
+                    "title": meta["title"],
+                    "document_type": meta["document_type"],
+                    "scalar_score": meta["scalar_score"],
+                    "anomaly_count": len(findings),
+                    "severity_breakdown": doc_record["severity_breakdown"],
+                    "version_date": meta["version_date"],
+                }
+            )
 
             # Track for cross-finding index
             for f in findings:
                 aid = f["anomaly_id"]
-                finding_occurrences[aid].append({
-                    "document_id": did,
-                    "title": meta["title"],
-                    "jurisdiction": jur,
-                    "document_type": meta["document_type"],
-                    "version_date": meta["version_date"],
-                    "scalar_score": meta["scalar_score"],
-                    "severity": f["severity"],
-                    "layer": f["layer"],
-                    "issue": f["issue"],
-                    "details": f["details"],
-                })
-                severity_occurrences[f["severity"]].append({
-                    "document_id": did,
-                    "title": meta["title"],
-                    "jurisdiction": jur,
-                    "anomaly_id": aid,
-                    "issue": f["issue"],
-                    "layer": f["layer"],
-                    "scalar_score": meta["scalar_score"],
-                })
+                finding_occurrences[aid].append(
+                    {
+                        "document_id": did,
+                        "title": meta["title"],
+                        "jurisdiction": jur,
+                        "document_type": meta["document_type"],
+                        "version_date": meta["version_date"],
+                        "scalar_score": meta["scalar_score"],
+                        "severity": f["severity"],
+                        "layer": f["layer"],
+                        "issue": f["issue"],
+                        "details": f["details"],
+                    }
+                )
+                severity_occurrences[f["severity"]].append(
+                    {
+                        "document_id": did,
+                        "title": meta["title"],
+                        "jurisdiction": jur,
+                        "anomaly_id": aid,
+                        "issue": f["issue"],
+                        "layer": f["layer"],
+                        "scalar_score": meta["scalar_score"],
+                    }
+                )
 
         # Sort doc summaries by scalar_score desc
         jur_doc_summaries.sort(key=lambda d: d["scalar_score"] or 0, reverse=True)
@@ -319,7 +338,9 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
             "document_count": len(doc_ids),
             "finding_count": sum(len(doc_findings[d]) for d in doc_ids),
             "avg_scalar_score": round(
-                sum((doc_meta[d]["scalar_score"] or 0) for d in doc_ids) / max(len(doc_ids), 1), 4
+                sum((doc_meta[d]["scalar_score"] or 0) for d in doc_ids)
+                / max(len(doc_ids), 1),
+                4,
             ),
             "severity_breakdown": {
                 "critical": sev_counts.get("critical", 0),
@@ -345,7 +366,9 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
     # ------------------------------------------------------------------
     # 5. by_finding index — one file per anomaly_id
     # ------------------------------------------------------------------
-    print(f"\nBuilding by_finding index ({len(finding_occurrences)} unique finding types)...")
+    print(
+        f"\nBuilding by_finding index ({len(finding_occurrences)} unique finding types)..."
+    )
     finding_dir = out_dir / "by_finding"
     finding_dir.mkdir(parents=True, exist_ok=True)
 
@@ -370,24 +393,29 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
         fname = _safe_filename(aid) + ".json"
         _write_json(finding_dir / fname, finding_record)
 
-        finding_index_entries.append({
-            "anomaly_id": aid,
-            "filename": fname,
-            "total_occurrences": len(occurrences),
-            "jurisdiction_count": len(jurs_present),
-            "jurisdictions": jurs_present,
-            "severity_distribution": dict(sev_dist.most_common()),
-            "sample_issue": occurrences[0]["issue"] if occurrences else "",
-            "layer": occurrences[0]["layer"] if occurrences else "",
-        })
+        finding_index_entries.append(
+            {
+                "anomaly_id": aid,
+                "filename": fname,
+                "total_occurrences": len(occurrences),
+                "jurisdiction_count": len(jurs_present),
+                "jurisdictions": jurs_present,
+                "severity_distribution": dict(sev_dist.most_common()),
+                "sample_issue": occurrences[0]["issue"] if occurrences else "",
+                "layer": occurrences[0]["layer"] if occurrences else "",
+            }
+        )
 
     # Sort finding index by occurrence count desc
     finding_index_entries.sort(key=lambda e: e["total_occurrences"], reverse=True)
-    _write_json(finding_dir / "FINDING_INDEX.json", {
-        "archived_at": ts,
-        "unique_finding_types": len(finding_index_entries),
-        "findings": finding_index_entries,
-    })
+    _write_json(
+        finding_dir / "FINDING_INDEX.json",
+        {
+            "archived_at": ts,
+            "unique_finding_types": len(finding_index_entries),
+            "findings": finding_index_entries,
+        },
+    )
 
     # ------------------------------------------------------------------
     # 6. by_severity index
@@ -397,12 +425,15 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
     sev_dir.mkdir(parents=True, exist_ok=True)
     for sev, occurrences in severity_occurrences.items():
         occurrences.sort(key=lambda o: o.get("scalar_score") or 0, reverse=True)
-        _write_json(sev_dir / f"{sev}.json", {
-            "archived_at": ts,
-            "severity": sev,
-            "total_occurrences": len(occurrences),
-            "occurrences": occurrences,
-        })
+        _write_json(
+            sev_dir / f"{sev}.json",
+            {
+                "archived_at": ts,
+                "severity": sev,
+                "total_occurrences": len(occurrences),
+                "occurrences": occurrences,
+            },
+        )
 
     # ------------------------------------------------------------------
     # 7. MASTER_INDEX.json
@@ -451,7 +482,7 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
 
     print()
     print("=" * 60)
-    print(f"Archive complete")
+    print("Archive complete")
     print("=" * 60)
     print(f"Documents archived:     {total_written:,}")
     print(f"Unique finding types:   {len(finding_occurrences):,}")
@@ -460,18 +491,21 @@ def build_archive(db_path: Path, out_dir: Path, jurisdiction_filter: str | None)
     print(f"Archive root:           {out_dir.resolve()}")
     print()
     print("Navigation entry points:")
-    print(f"  MASTER_INDEX.json                — start here")
-    print(f"  by_finding/FINDING_INDEX.json    — browse by finding type")
-    print(f"  by_severity/critical.json        — all critical findings")
-    print(f"  {{jurisdiction}}/index.json        — per-jurisdiction document list")
+    print("  MASTER_INDEX.json                — start here")
+    print("  by_finding/FINDING_INDEX.json    — browse by finding type")
+    print("  by_severity/critical.json        — all critical findings")
+    print("  {jurisdiction}/index.json        — per-jurisdiction document list")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build ODIA corpus archive index")
     parser.add_argument("--db", type=Path, default=None)
     parser.add_argument("--out", type=Path, default=ARCHIVE_ROOT)
-    parser.add_argument("--jurisdiction", default=None,
-                        help="Only archive one jurisdiction (e.g. fresnocounty)")
+    parser.add_argument(
+        "--jurisdiction",
+        default=None,
+        help="Only archive one jurisdiction (e.g. fresnocounty)",
+    )
     args = parser.parse_args()
 
     db_path = args.db or find_db()

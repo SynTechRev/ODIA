@@ -32,7 +32,6 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
-
 # ---------------------------------------------------------------------------
 # DB path defaults
 # ---------------------------------------------------------------------------
@@ -56,6 +55,7 @@ def find_db() -> Path:
 # Core export logic
 # ---------------------------------------------------------------------------
 
+
 def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(str(db_path))
@@ -71,7 +71,8 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     # ------------------------------------------------------------------
     print("Loading findings...")
     if jurisdiction:
-        rows = con.execute("""
+        rows = con.execute(
+            """
             SELECT
                 d.jurisdiction,
                 d.document_id,
@@ -93,9 +94,12 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
             JOIN documents  d  ON d.document_id    = al.document_id
             WHERE d.jurisdiction = ?
             ORDER BY al.scalar_score DESC, am.severity
-        """, (jurisdiction,)).fetchall()
+        """,
+            (jurisdiction,),
+        ).fetchall()
     else:
-        rows = con.execute("""
+        rows = con.execute(
+            """
             SELECT
                 d.jurisdiction,
                 d.document_id,
@@ -116,13 +120,17 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
             JOIN analyses   al ON al.id            = am.analysis_id
             JOIN documents  d  ON d.document_id    = al.document_id
             ORDER BY d.jurisdiction, al.scalar_score DESC, am.severity
-        """).fetchall()
+        """
+        ).fetchall()
 
     print(f"Loaded {len(rows):,} finding rows")
     if jurisdiction and len(rows) == 0:
-        available = [r[0] for r in con.execute(
-            "SELECT DISTINCT jurisdiction FROM documents ORDER BY jurisdiction"
-        ).fetchall()]
+        available = [
+            r[0]
+            for r in con.execute(
+                "SELECT DISTINCT jurisdiction FROM documents ORDER BY jurisdiction"
+            ).fetchall()
+        ]
         print(f"ERROR: No findings for jurisdiction {jurisdiction!r}.")
         print(f"Available jurisdictions: {', '.join(available)}")
         con.close()
@@ -140,7 +148,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     # ------------------------------------------------------------------
     sev_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
     jurisdiction_summaries = []
-    cross_jur_pattern_counts: Counter = Counter()   # anomaly_id -> set of jurs
+    cross_jur_pattern_counts: Counter = Counter()  # anomaly_id -> set of jurs
     cross_jur_pattern_jurs: dict[str, set] = defaultdict(set)
 
     for jur, findings in sorted(by_jur.items()):
@@ -184,13 +192,15 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
                 except (json.JSONDecodeError, TypeError):
                     details = {"raw": f["details_json"]}
 
-            doc_map[did]["findings"].append({
-                "anomaly_id": f["anomaly_id"],
-                "issue": f["issue"],
-                "severity": f["severity"],
-                "layer": f["layer"],
-                "details": details,
-            })
+            doc_map[did]["findings"].append(
+                {
+                    "anomaly_id": f["anomaly_id"],
+                    "issue": f["issue"],
+                    "severity": f["severity"],
+                    "layer": f["layer"],
+                    "details": details,
+                }
+            )
 
         # Sort documents by scalar_score desc
         documents = sorted(
@@ -210,9 +220,9 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
             "avg_scalar_score": avg_score,
             "severity_breakdown": {
                 "critical": sev_counts.get("critical", 0),
-                "high":     sev_counts.get("high",     0),
-                "medium":   sev_counts.get("medium",   0),
-                "low":      sev_counts.get("low",      0),
+                "high": sev_counts.get("high", 0),
+                "medium": sev_counts.get("medium", 0),
+                "low": sev_counts.get("low", 0),
             },
             "layer_breakdown": dict(layer_counts.most_common()),
             "top_anomaly_types": top_anomaly_types,
@@ -229,7 +239,9 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         fname = out_dir / f"{jur.lower().replace(' ', '_').replace('/', '-')}_MAS.json"
         fname.write_text(json.dumps(out, indent=2, default=str), encoding="utf-8")
         size_kb = fname.stat().st_size // 1024
-        print(f"  [{jur}] {len(unique_docs):,} docs / {len(findings):,} findings -> {fname.name} ({size_kb} KB)")
+        print(
+            f"  [{jur}] {len(unique_docs):,} docs / {len(findings):,} findings -> {fname.name} ({size_kb} KB)"
+        )
 
     # ------------------------------------------------------------------
     # 4. Corpus-wide files — skipped when --jurisdiction is set
@@ -237,14 +249,17 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     if jurisdiction:
         con.close()
         print(f"\n{'-'*60}")
-        print(f"Single-jurisdiction export complete")
+        print("Single-jurisdiction export complete")
         print(f"{'-'*60}")
-        fname = out_dir / f"{jurisdiction.lower().replace(' ', '_').replace('/', '-')}_MAS.json"
+        fname = (
+            out_dir
+            / f"{jurisdiction.lower().replace(' ', '_').replace('/', '-')}_MAS.json"
+        )
         size_kb = fname.stat().st_size // 1024 if fname.exists() else 0
         print(f"  {fname.name}  ({size_kb:,} KB)")
-        print(f"\nNote: CORPUS_INDEX, SEVERITY_MATRIX, CROSS_JURISDICTION_PATTERNS")
-        print(f"      not regenerated (they span all jurisdictions).")
-        print(f"      Run without --jurisdiction to rebuild corpus-wide files.")
+        print("\nNote: CORPUS_INDEX, SEVERITY_MATRIX, CROSS_JURISDICTION_PATTERNS")
+        print("      not regenerated (they span all jurisdictions).")
+        print("      Run without --jurisdiction to rebuild corpus-wide files.")
         return
 
     # ------------------------------------------------------------------
@@ -252,7 +267,9 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     # ------------------------------------------------------------------
     total_docs = sum(s["document_count"] for s in jurisdiction_summaries)
     total_findings = sum(s["finding_count"] for s in jurisdiction_summaries)
-    total_critical = sum(s["severity_breakdown"]["critical"] for s in jurisdiction_summaries)
+    total_critical = sum(
+        s["severity_breakdown"]["critical"] for s in jurisdiction_summaries
+    )
     total_high = sum(s["severity_breakdown"]["high"] for s in jurisdiction_summaries)
 
     # Sort jurisdictions by finding_count desc for the index
@@ -278,14 +295,17 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     }
 
     idx_path = out_dir / "CORPUS_INDEX.json"
-    idx_path.write_text(json.dumps(corpus_index, indent=2, default=str), encoding="utf-8")
+    idx_path.write_text(
+        json.dumps(corpus_index, indent=2, default=str), encoding="utf-8"
+    )
     print(f"\nCorpus index -> {idx_path.name} ({idx_path.stat().st_size // 1024} KB)")
 
     # ------------------------------------------------------------------
     # 5. SEVERITY_MATRIX.json — severity × layer heatmap
     # ------------------------------------------------------------------
     print("Building severity matrix...")
-    sev_layer_rows = con.execute("""
+    sev_layer_rows = con.execute(
+        """
         SELECT
             d.jurisdiction,
             am.severity,
@@ -296,7 +316,8 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         JOIN documents d  ON d.document_id = al.document_id
         GROUP BY d.jurisdiction, am.severity, am.layer
         ORDER BY d.jurisdiction, am.severity, am.layer
-    """).fetchall()
+    """
+    ).fetchall()
 
     matrix: dict[str, dict] = defaultdict(lambda: defaultdict(dict))
     all_layers: set = set()
@@ -316,7 +337,9 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     }
 
     mat_path = out_dir / "SEVERITY_MATRIX.json"
-    mat_path.write_text(json.dumps(sev_matrix_out, indent=2, default=str), encoding="utf-8")
+    mat_path.write_text(
+        json.dumps(sev_matrix_out, indent=2, default=str), encoding="utf-8"
+    )
     print(f"Severity matrix -> {mat_path.name} ({mat_path.stat().st_size // 1024} KB)")
 
     # ------------------------------------------------------------------
@@ -334,14 +357,17 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     # For each multi-jur pattern, get the canonical issue text and per-jur counts
     pattern_details = []
     for aid, jurs in sorted(multi_jur.items(), key=lambda x: -len(x[1])):
-        row = con.execute("""
+        row = con.execute(
+            """
             SELECT am.issue, am.severity, am.layer, COUNT(*) as total_count
             FROM anomalies am
             WHERE am.anomaly_id = ?
             GROUP BY am.issue, am.severity, am.layer
             ORDER BY total_count DESC
             LIMIT 1
-        """, (aid,)).fetchone()
+        """,
+            (aid,),
+        ).fetchone()
 
         if not row:
             continue
@@ -349,28 +375,35 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         # Per-jurisdiction count
         per_jur = {}
         for jur in jurs:
-            cnt_row = con.execute("""
+            cnt_row = con.execute(
+                """
                 SELECT COUNT(*) as cnt
                 FROM anomalies am
                 JOIN analyses al ON al.id = am.analysis_id
                 JOIN documents d  ON d.document_id = al.document_id
                 WHERE am.anomaly_id = ? AND d.jurisdiction = ?
-            """, (aid, jur)).fetchone()
+            """,
+                (aid, jur),
+            ).fetchone()
             per_jur[jur] = cnt_row["cnt"] if cnt_row else 0
 
-        pattern_details.append({
-            "anomaly_id": aid,
-            "issue": row["issue"],
-            "severity": row["severity"],
-            "layer": row["layer"],
-            "jurisdiction_count": len(jurs),
-            "jurisdictions": jurs,
-            "per_jurisdiction_count": per_jur,
-            "total_occurrences": sum(per_jur.values()),
-        })
+        pattern_details.append(
+            {
+                "anomaly_id": aid,
+                "issue": row["issue"],
+                "severity": row["severity"],
+                "layer": row["layer"],
+                "jurisdiction_count": len(jurs),
+                "jurisdictions": jurs,
+                "per_jurisdiction_count": per_jur,
+                "total_occurrences": sum(per_jur.values()),
+            }
+        )
 
     # Sort by (jurisdiction_count desc, total_occurrences desc)
-    pattern_details.sort(key=lambda p: (-p["jurisdiction_count"], -p["total_occurrences"]))
+    pattern_details.sort(
+        key=lambda p: (-p["jurisdiction_count"], -p["total_occurrences"])
+    )
 
     cross_jur_out = {
         "export_timestamp": datetime.now().isoformat(),
@@ -384,8 +417,12 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     }
 
     cj_path = out_dir / "CROSS_JURISDICTION_PATTERNS.json"
-    cj_path.write_text(json.dumps(cross_jur_out, indent=2, default=str), encoding="utf-8")
-    print(f"Cross-jurisdiction patterns -> {cj_path.name} ({cj_path.stat().st_size // 1024} KB)")
+    cj_path.write_text(
+        json.dumps(cross_jur_out, indent=2, default=str), encoding="utf-8"
+    )
+    print(
+        f"Cross-jurisdiction patterns -> {cj_path.name} ({cj_path.stat().st_size // 1024} KB)"
+    )
 
     # ------------------------------------------------------------------
     # 7. Final summary
@@ -413,8 +450,11 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Export ODIA audit DB for Opus MAS synthesis")
+    parser = argparse.ArgumentParser(
+        description="Export ODIA audit DB for Opus MAS synthesis"
+    )
     parser.add_argument(
         "--db",
         type=Path,

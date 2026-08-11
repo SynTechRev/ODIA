@@ -30,6 +30,7 @@ Usage:
 
 NSU PROTOCOL: No date range or keyword filter by default. Full corpus.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -53,18 +54,18 @@ WEBHOOK_PATH = "/api/v1/webhook/ingest-and-analyze"
 CACHE_ROOT = _REPO_ROOT / "cache"
 
 # Pacing — be polite to the public API
-PAUSE_BETWEEN_MATTERS = 1.0      # seconds between attachment-list API calls
-PAUSE_LONG_EVERY_N = 100         # long pause every N matters
-PAUSE_LONG_SEC = 30.0            # long pause duration
-PAUSE_BETWEEN_DOWNLOADS = 0.5    # seconds between file downloads
-CHECKPOINT_EVERY_N = 50          # save progress.json every N matters
+PAUSE_BETWEEN_MATTERS = 1.0  # seconds between attachment-list API calls
+PAUSE_LONG_EVERY_N = 100  # long pause every N matters
+PAUSE_LONG_SEC = 30.0  # long pause duration
+PAUSE_BETWEEN_DOWNLOADS = 0.5  # seconds between file downloads
+CHECKPOINT_EVERY_N = 50  # save progress.json every N matters
 
 # File size limits
-MAX_FILE_BYTES = 50 * 1024 * 1024   # 50 MB — skip anything larger
-MIN_FILE_BYTES = 1_000               # < 1 KB = challenge/redirect page
+MAX_FILE_BYTES = 50 * 1024 * 1024  # 50 MB — skip anything larger
+MIN_FILE_BYTES = 1_000  # < 1 KB = challenge/redirect page
 
-API_TIMEOUT = 30    # Legistar API request timeout
-DL_TIMEOUT = 120    # file download timeout
+API_TIMEOUT = 30  # Legistar API request timeout
+DL_TIMEOUT = 120  # file download timeout
 WEBHOOK_TIMEOUT = 300
 
 
@@ -94,14 +95,16 @@ def _legistar_get(url: str, params: dict | None = None) -> list | dict:
                 continue
             r.raise_for_status()
             return r.json()
-        except Exception as exc:
+        except Exception:
             if attempt == 2:
                 raise
-            time.sleep(2 ** attempt)
+            time.sleep(2**attempt)
     return []
 
 
-def _list_all_matters(client: str, start_date: str | None, end_date: str | None) -> list[dict]:
+def _list_all_matters(
+    client: str, start_date: str | None, end_date: str | None
+) -> list[dict]:
     """Paginate through all matters, optionally filtered by date range."""
     base = LEGISTAR_API.format(client=client)
     url = base + "matters"
@@ -125,7 +128,9 @@ def _list_all_matters(client: str, start_date: str | None, end_date: str | None)
         if not batch:
             break
         all_matters.extend(batch)
-        print(f"  Fetched page {page}: {len(batch)} matters (total so far: {len(all_matters)})")
+        print(
+            f"  Fetched page {page}: {len(batch)} matters (total so far: {len(all_matters)})"
+        )
         if len(batch) < 1000:
             break
         skip += 1000
@@ -156,7 +161,9 @@ def _download(url: str, dest: Path) -> bool:
                 f.write(chunk)
                 total += len(chunk)
                 if total > MAX_FILE_BYTES:
-                    print(f"\n  [skip] {dest.name} exceeds {MAX_FILE_BYTES // 1024 // 1024} MB cap")
+                    print(
+                        f"\n  [skip] {dest.name} exceeds {MAX_FILE_BYTES // 1024 // 1024} MB cap"
+                    )
                     dest.unlink(missing_ok=True)
                     return False
         if total < MIN_FILE_BYTES:
@@ -174,17 +181,23 @@ def _post_to_webhook(file_path: Path, jurisdiction: str, token: str, port: int) 
     file_bytes = file_path.read_bytes()
     mime = mimetypes.guess_type(str(file_path))[0] or "application/pdf"
     body = (
-        f"--{boundary}\r\n"
-        f'Content-Disposition: form-data; name="jurisdiction_id"\r\n\r\n'
-        f"{jurisdiction}\r\n"
-        f"--{boundary}\r\n"
-        f'Content-Disposition: form-data; name="file"; filename="{file_path.name}"\r\n'
-        f"Content-Type: {mime}\r\n\r\n"
-    ).encode() + file_bytes + f"\r\n--{boundary}--\r\n".encode()
+        (
+            f"--{boundary}\r\n"
+            f'Content-Disposition: form-data; name="jurisdiction_id"\r\n\r\n'
+            f"{jurisdiction}\r\n"
+            f"--{boundary}\r\n"
+            f'Content-Disposition: form-data; name="file"; filename="{file_path.name}"\r\n'
+            f"Content-Type: {mime}\r\n\r\n"
+        ).encode()
+        + file_bytes
+        + f"\r\n--{boundary}--\r\n".encode()
+    )
 
     conn = http.client.HTTPConnection("127.0.0.1", port, timeout=WEBHOOK_TIMEOUT)
     conn.request(
-        "POST", WEBHOOK_PATH, body=body,
+        "POST",
+        WEBHOOK_PATH,
+        body=body,
         headers={
             "Content-Type": f"multipart/form-data; boundary={boundary}",
             "Content-Length": str(len(body)),
@@ -232,22 +245,48 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Ingest full Legistar corpus into ODIA (NSU protocol — no filters)"
     )
-    parser.add_argument("--client", default="fresnocounty",
-                        help="Legistar client ID (default: fresnocounty)")
-    parser.add_argument("--jurisdiction", default=None,
-                        help="ODIA jurisdiction_id (default: same as --client)")
-    parser.add_argument("--port", type=int, default=WEBHOOK_PORT,
-                        help=f"Backend port (default {WEBHOOK_PORT}; use 8000 for dev server)")
-    parser.add_argument("--start", default=None,
-                        help="Start date filter ISO8601 e.g. 2020-01-01 (NSU: omit for full corpus)")
-    parser.add_argument("--end", default=None,
-                        help="End date filter ISO8601 (NSU: omit for full corpus)")
-    parser.add_argument("--max-matters", type=int, default=None,
-                        help="Stop after N matters (for testing)")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="List matters only — no downloads or webhook posts")
-    parser.add_argument("--keep-files", action="store_true",
-                        help="Keep downloaded files in cache after POSTing (default: delete after POST)")
+    parser.add_argument(
+        "--client",
+        default="fresnocounty",
+        help="Legistar client ID (default: fresnocounty)",
+    )
+    parser.add_argument(
+        "--jurisdiction",
+        default=None,
+        help="ODIA jurisdiction_id (default: same as --client)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=WEBHOOK_PORT,
+        help=f"Backend port (default {WEBHOOK_PORT}; use 8000 for dev server)",
+    )
+    parser.add_argument(
+        "--start",
+        default=None,
+        help="Start date filter ISO8601 e.g. 2020-01-01 (NSU: omit for full corpus)",
+    )
+    parser.add_argument(
+        "--end",
+        default=None,
+        help="End date filter ISO8601 (NSU: omit for full corpus)",
+    )
+    parser.add_argument(
+        "--max-matters",
+        type=int,
+        default=None,
+        help="Stop after N matters (for testing)",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="List matters only — no downloads or webhook posts",
+    )
+    parser.add_argument(
+        "--keep-files",
+        action="store_true",
+        help="Keep downloaded files in cache after POSTing (default: delete after POST)",
+    )
     args = parser.parse_args()
 
     client = args.client.lower().strip()
@@ -258,7 +297,7 @@ def main() -> None:
     progress_path = cache_dir / "progress.json"
     log_path = cache_dir / "ingest.log"
 
-    print(f"Legistar ingest — NSU protocol")
+    print("Legistar ingest — NSU protocol")
     print(f"Client:       {client}")
     print(f"Jurisdiction: {jurisdiction}")
     print(f"Cache:        {cache_dir}")
@@ -266,7 +305,7 @@ def main() -> None:
     if args.start or args.end:
         print(f"Date filter:  {args.start or '*'} -> {args.end or '*'}")
     else:
-        print(f"Date filter:  NONE (full corpus)")
+        print("Date filter:  NONE (full corpus)")
     print()
 
     # Load or init progress
@@ -276,7 +315,9 @@ def main() -> None:
 
     if processed_ids:
         print(f"Resuming: {len(processed_ids)} matters already processed.")
-        print(f"  New: {stats['files_new']}  Seen: {stats['files_already_seen']}  Failed: {stats['files_failed']}")
+        print(
+            f"  New: {stats['files_new']}  Seen: {stats['files_already_seen']}  Failed: {stats['files_failed']}"
+        )
         print()
 
     # Fetch matter list
@@ -285,7 +326,9 @@ def main() -> None:
     print(f"\nTotal matters available: {len(matters)}")
 
     # Filter already-processed
-    pending = [m for m in matters if (m.get("MatterId") or m.get("Id")) not in processed_ids]
+    pending = [
+        m for m in matters if (m.get("MatterId") or m.get("Id")) not in processed_ids
+    ]
     print(f"Already processed:       {len(matters) - len(pending)}")
     print(f"Remaining:               {len(pending)}")
 
@@ -294,7 +337,7 @@ def main() -> None:
         print(f"[--max-matters={args.max_matters}] capped to {len(pending)}")
 
     if args.dry_run:
-        print(f"\n[dry-run] Sample of pending matters:")
+        print("\n[dry-run] Sample of pending matters:")
         for m in pending[:20]:
             mid = m.get("MatterId") or m.get("Id")
             title = (m.get("MatterTitle") or "?")[:80]
@@ -325,7 +368,9 @@ def main() -> None:
 
     print(f"\nStarting ingest — {len(pending)} matters remaining.")
     print(f"Log: {log_path}")
-    print(f"Estimated time: {len(pending) * 1.5 / 3600:.1f}+ hours (varies by attachment count)")
+    print(
+        f"Estimated time: {len(pending) * 1.5 / 3600:.1f}+ hours (varies by attachment count)"
+    )
     print()
 
     matters_this_session = 0
@@ -356,12 +401,15 @@ def main() -> None:
 
         for att in attachments:
             url = att.get("MatterAttachmentHyperlink") or att.get("Hyperlink") or ""
-            att_name = att.get("MatterAttachmentName") or att.get("Name") or "attachment"
+            att_name = (
+                att.get("MatterAttachmentName") or att.get("Name") or "attachment"
+            )
             if not url:
                 continue
 
             # Derive filename
             from urllib.parse import urlparse as _up
+
             url_path = _up(url).path
             fname = Path(url_path).name or f"matter_{matter_id}_att.pdf"
             if not Path(fname).suffix:
@@ -414,9 +462,11 @@ def main() -> None:
         if matters_this_session % CHECKPOINT_EVERY_N == 0:
             progress["processed_matter_ids"] = list(processed_ids)
             _save_progress(progress_path, progress)
-            print(f"  [checkpoint] {matters_this_session} matters this session | "
-                  f"new={stats['files_new']} seen={stats['files_already_seen']} "
-                  f"failed={stats['files_failed']}")
+            print(
+                f"  [checkpoint] {matters_this_session} matters this session | "
+                f"new={stats['files_new']} seen={stats['files_already_seen']} "
+                f"failed={stats['files_failed']}"
+            )
 
         # Long pause every 100 matters
         if matters_this_session % PAUSE_LONG_EVERY_N == 0:
@@ -432,7 +482,7 @@ def main() -> None:
 
     print()
     print("=" * 60)
-    print(f"Session complete")
+    print("Session complete")
     print("=" * 60)
     print(f"Matters processed (this session): {matters_this_session}")
     print(f"Total processed (all sessions):   {stats['matters_processed']}")
@@ -444,10 +494,10 @@ def main() -> None:
     print()
     if stats["files_new"] > 0:
         print("Next steps:")
-        print(f"  1. Rebuild RAG index:")
-        print(f"     .venv\\Scripts\\python scripts\\build_rag_index.py")
-        print(f"  2. Re-export MAS corpus:")
-        print(f"     .venv\\Scripts\\python scripts\\export_mas_corpus.py")
+        print("  1. Rebuild RAG index:")
+        print("     .venv\\Scripts\\python scripts\\build_rag_index.py")
+        print("  2. Re-export MAS corpus:")
+        print("     .venv\\Scripts\\python scripts\\export_mas_corpus.py")
 
 
 if __name__ == "__main__":

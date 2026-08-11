@@ -16,12 +16,11 @@ Output: data/mas/{jurisdiction}_mas_{timestamp}.md
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import sqlite3
 import sys
 from collections import Counter, defaultdict
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -140,7 +139,7 @@ def _render(
     for d in docs:
         row = None
         try:
-            import sqlite3 as _s
+            pass
         except Exception:
             pass
     # re-query scores cleanly
@@ -154,15 +153,15 @@ def _render(
     lines += [
         f"# Master Audit Summary — {display}",
         f"**Generated:** {ts}  ",
-        f"**ODIA Version:** 3.8.x  ",
+        "**ODIA Version:** 3.8.x  ",
         f"**Minimum Severity Filter:** {min_severity.upper()}  ",
         "",
         "---",
         "",
         "## Executive Summary",
         "",
-        f"| Metric | Value |",
-        f"|--------|-------|",
+        "| Metric | Value |",
+        "|--------|-------|",
         f"| Documents Audited | {len(docs):,} |",
         f"| Total Findings | {len(anomalies):,} |",
         f"| High Severity | {sev_counts.get('high', 0):,} |",
@@ -388,6 +387,7 @@ def main() -> None:
 
     if args.stats_only:
         from collections import Counter
+
         sev = Counter(r["severity"] for r in anomalies)
         layer = Counter(r["layer"] for r in anomalies)
         print(f"\nDocs: {len(docs):,}  |  Findings: {len(anomalies):,}")
