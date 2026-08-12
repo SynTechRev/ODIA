@@ -13,7 +13,7 @@ from oraculus_di_auditor.retriever import Retriever
 def test_retriever_initialization():
     """Test retriever initialization."""
     retriever = Retriever()
-    assert retriever.vectors == []
+    assert retriever.vectors is None
     assert retriever.metadata == []
 
 
