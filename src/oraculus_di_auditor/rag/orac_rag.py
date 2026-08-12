@@ -65,9 +65,30 @@ _CUE_MARKERS = (
     "Your answer:",
 )
 
+# odia-v1's training system prompt is echoed at the start of every completion
+# before the actual findings. Detect and strip it by its unique opening phrase.
+_ODIA_V1_PREAMBLE_PREFIX = (
+    "You are Oraculus, a specialized legal-document anomaly analysis assistant"
+)
+
 
 def _strip_prompt_echo(text: str) -> str:
-    """Return only the generated content after the last cue marker, if present."""
+    """Return only the generated content, stripping known prompt echo patterns.
+
+    Handles two echo patterns:
+    1. odia-v1 training preamble — a paragraph starting with _ODIA_V1_PREAMBLE_PREFIX
+       that the model echoes before every answer; ends at the first blank line.
+    2. Prompt cue markers (e.g. "Your audit analysis:") from rag_prompts templates.
+    """
+    text = text.strip()
+
+    # Strip odia-v1 training preamble if present at the start.
+    if text.startswith(_ODIA_V1_PREAMBLE_PREFIX):
+        double_nl = text.find("\n\n")
+        if double_nl != -1:
+            text = text[double_nl:].strip()
+
+    # Strip rag_prompts cue markers (covers non-odia-v1 providers).
     best_idx = -1
     best_marker_len = 0
     for marker in _CUE_MARKERS:
@@ -76,8 +97,9 @@ def _strip_prompt_echo(text: str) -> str:
             best_idx = idx
             best_marker_len = len(marker)
     if best_idx != -1:
-        return text[best_idx + best_marker_len :].strip()
-    return text.strip()
+        text = text[best_idx + best_marker_len :].strip()
+
+    return text
 
 
 class OracRAG:
