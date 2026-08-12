@@ -5,7 +5,8 @@ from a city's public Legistar portal for use with the O.D.I.A. audit pipeline.
 
 Usage (non-interactive):
     python scripts/fetch_documents.py --city visalia --start 2024-01-01 --end 2024-12-31
-    python scripts/fetch_documents.py --city chicago --state IL --types Contract Resolution
+    python scripts/fetch_documents.py --city chicago --state IL \
+        --types Contract Resolution
 
 Interactive mode (no --city argument):
     python scripts/fetch_documents.py

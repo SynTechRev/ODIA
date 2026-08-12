@@ -12,7 +12,7 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 try:
-    from fastapi import Depends, HTTPException, status
+    from fastapi import HTTPException, status
     from fastapi.security import OAuth2PasswordBearer
 
     _oauth2_scheme = OAuth2PasswordBearer(
@@ -74,7 +74,7 @@ def get_current_user(token: str | None = None) -> dict[str, Any]:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=str(exc),
                 headers={"WWW-Authenticate": "Bearer"},
-            )
+            ) from exc
         return ANONYMOUS_USER
 
 

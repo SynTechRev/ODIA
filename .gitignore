@@ -21,6 +21,8 @@ lib/
 lib64/
 # Allow frontend/lib/ (Next.js source — not a Python virtualenv)
 !frontend/lib/
+# Allow mobile/lib/ (React Native source)
+!mobile/lib/
 parts/
 sdist/
 var/
@@ -87,6 +89,15 @@ data/ledger.db
 # OS
 .DS_Store
 Thumbs.db
+
+# Mobile / React Native
+mobile/node_modules/
+mobile/.expo/
+mobile/ios/
+mobile/android/
+mobile/dist/
+mobile/coverage/
+mobile/.env*.local
 
 # Frontend / Node.js
 frontend/node_modules/
