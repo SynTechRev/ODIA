@@ -724,7 +724,8 @@ def _register_routes(app: Any) -> None:
         indexed: dict[str, int] = {}
         for idx_name, _ in _ALL_INDICES:
             rag = _rag_cache.get(idx_name)
-            indexed[idx_name] = len(rag.retriever.vectors) if rag else 0
+            vecs = rag.retriever.vectors if rag else None
+            indexed[idx_name] = len(vecs) if vecs is not None else 0
         any_loaded = any(v > 0 for v in indexed.values())
         llm_available = False
         llm_model = "odia-v1"

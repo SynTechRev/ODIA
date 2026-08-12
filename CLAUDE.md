@@ -9,18 +9,18 @@ ODIA is a **general-purpose legal document ingestion, normalization, and anomaly
 
 ## Current State (as of 2026-08-11)
 
-- **Version**: 3.9.1 (active development, master branch)
+- **Version**: 3.9.2 (active development, master branch)
 - **Python**: 3.11+ required (tested on 3.14)
 - **Tests**: 4339 passing, 15 skipped (data-dependent corpus/transparency tests)
 - **Working core**: Ingestion, analysis, orchestration, governance, compliance, auth, RAG, C.O.N.T.R.A. commercial analysis — all functional and tested
 - **Higher phases** (12–20): Architectural scaffolding exists — experimental/theoretical
 - **Frontend**: Next.js 14 production app in `frontend/` — Upload, Results History, Synthesis/RAIA, RAG Query, Compliance, Legal, C.O.N.T.R.A., Config
 - **API**: FastAPI backend in `src/oraculus_di_auditor/interface/api.py` + modular routes in `interface/routes/`
-- **Desktop**: Electron app ships via GitHub Actions (`Build and Release Desktop Apps` workflow). v3.9.1 CI build triggered 2026-08-11. v3.9.0 installer on-disk pending replacement.
+- **Desktop**: Electron app ships via GitHub Actions (`Build and Release Desktop Apps` workflow). v3.9.2 CI build triggered 2026-08-11. v3.9.1 installer on GitHub Release.
 - **LLM**: `odia-v1` — QLoRA fine-tuned Llama-3.1-8B (87,618 examples, Q4_K_M GGUF, 4.92 GB). Registered in Ollama. Live in RAG pipeline as default LLM. Artifacts: `D:\ODIA\models\odia-v1.q4_k_m.gguf` (local) + HuggingFace `SynTechRev/odia-v1` (private).
-- **RAG**: `OracRAG` class loads TF-IDF index from disk at startup (`collection`, `ace_collection`, `jim_collection`). Default: provider=ollama, model=odia-v1. Config: `config/rag_config.py` + `config/ollama_config.yaml`. Desktop backend now reads ODIA_VECTORS_DIR from installDir (fixed from Roaming/ODIA bug in v3.9.0).
+- **RAG**: `OracRAG` class loads TF-IDF index from disk at startup (`collection`, `ace_collection`, `jim_collection`). Default: provider=ollama, model=odia-v1. Config: `config/rag_config.py` + `config/ollama_config.yaml`. Desktop backend reads ODIA_VECTORS_DIR from installDir (fixed v3.9.1). Similarity threshold fixed 0.3→0.05 (v3.9.2). Retriever `.tolist()` perf bug fixed (v3.9.2).
 - **DB**: SQLAlchemy + SQLite (`oraculus_audit.db`) — **50,699 documents / 148,349 anomaly findings** across 16 jurisdictions (Tulare + Fresno Counties). Finding-bearing docs only: ~43,606 (remainder have zero anomalies).
-- **RAG Index**: Rebuilding 2026-08-11 against production DB (50,699 docs). Previous Tulare-only partial index (18,074 docs) replaced. Full rebuild ETA ~30 min.
+- **RAG Index**: Full production index built 2026-08-11 (50,699 corpus / 148,349 ACE / 3,066 JIM). Copied to install dir `C:\Users\yahua\AppData\Local\Programs\ODIA\data\vectors\`.
 
 ## Corpus Status (Tulare + Fresno Counties)
 
@@ -99,14 +99,15 @@ All original priorities are complete. Active work:
 11. ~~Desktop RAG pipeline wired to odia-v1~~ — Done. Proxy + rag_config.py fix in v3.8.0. dataRoot bug fixed in v3.9.1.
 12. ~~C.O.N.T.R.A. Phases A–G~~ — Done 2026-08-07. L-11–L-20 detectors, CASI, entity registry, §1281.96 pipeline, T.C.A.M.S., C.C.C.E.A., 12-step commercial ingest, Wayback client, 6 DB tables, CLI. v3.9.0 released.
 13. ~~C.O.N.T.R.A. frontend nav tab~~ — Done 2026-08-11. /contra page live in v3.9.1. Detector registry, entity registry, CASI status tiles.
+14. ~~RAG pipeline end-to-end fix~~ — Done 2026-08-11. vectors copied to install dir, similarity threshold 0.3→0.05, retriever perf bug fixed. v3.9.2.
 
 **Active next steps**:
-- ~~RAG index rebuild~~ — Done 2026-07-31 (full). Partial Tulare-only rebuild 2026-08-11 (wrong DB), full rebuild in progress with production DB.
+- ~~RAG index rebuild~~ — Done 2026-08-11. Full production index: 50,699 corpus / 148,349 ACE / 3,066 JIM. Copied to install dir.
 - ~~split_mas_export.py~~ — Done 2026-07-31. 28 files, all under 8 MB, in `data/mas_export/fresnocounty_splits/`.
 - ~~Fresno County + Fresno PD MAS via Opus~~ — Done 2026-07-31. V4.0 Full-Scope Comprehensive Synthesis complete.
 - ~~C.O.N.T.R.A. framework~~ — Done 2026-08-07. 10 detectors, CASI, 12-step ingest pipeline. v3.9.0.
-- ~~v3.9.1 CI build~~ — Triggered 2026-08-11. Tag v3.9.1 pushed to SynTechRev/ODIA.
-- **P0**: RAG index copy to install dir after rebuild: copy `data/vectors/` → `C:\Users\yahua\AppData\Local\Programs\ODIA\data\vectors\`; restart ODIA
+- ~~v3.9.1 CI build~~ — Done 2026-08-11. All 4 platform installers on GitHub Release.
+- ~~v3.9.2 CI build~~ — Triggered 2026-08-11. RAG threshold fix + retriever perf fix + CONTRA nav.
 - **P0**: City of Fresno NSU ingest: delete `cache\fresno_legistar\progress.json`, then `python scripts/ingest_legistar.py --client fresno` with backend running (Flock $1.5M + TASER sole-source + JAG not yet in corpus)
 - **P0**: Fresno MAS V2.0 via Opus — after city Legistar ingest + CPRA returns
 - **P0**: First `odia contra-ingest` pilot run on actual commercial contract PDFs (DB has 32 entities seeded, schema ready)
