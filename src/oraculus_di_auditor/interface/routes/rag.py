@@ -73,7 +73,7 @@ def _get_service():
             svc.load_index("collection")
             logger.info(
                 "RAG corpus index loaded (%d vectors)",
-                len(svc.retriever.vectors),
+                len(svc.retriever.vectors) if svc.retriever.vectors is not None else 0,
             )
 
             # Extend with anomaly-findings (ace) and legal-inference (jim) collections.
@@ -157,7 +157,8 @@ def register_rag_routes(app: Any) -> None:
                 llm_model="odia-v1",
             )
         retriever = svc.retriever
-        indexed_count = len(retriever.vectors) if hasattr(retriever, "vectors") else 0
+        vecs = getattr(retriever, "vectors", None)
+        indexed_count = len(vecs) if vecs is not None else 0
         llm_available = svc.llm is not None and svc.llm.is_available()
         model_name = (
             getattr(svc.llm, "model", svc.llm_provider_name) if svc.llm else "none"

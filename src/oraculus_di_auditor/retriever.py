@@ -20,7 +20,7 @@ class Retriever:
         """
         self.vectors_dir = vectors_dir or Path("data/vectors")
         self.vectors_dir.mkdir(parents=True, exist_ok=True)
-        self.vectors: list[np.ndarray] = []
+        self.vectors: np.ndarray | None = None
         self.metadata: list[dict] = []
 
     def add_vector(self, vector: np.ndarray, metadata: dict):
@@ -30,7 +30,8 @@ class Retriever:
             vector: Embedding vector
             metadata: Associated metadata (id, text, etc.)
         """
-        self.vectors.append(vector)
+        v = vector.reshape(1, -1)
+        self.vectors = v if self.vectors is None else np.vstack([self.vectors, v])
         self.metadata.append(metadata)
 
     def search(
@@ -45,18 +46,16 @@ class Retriever:
         Returns:
             List of (index, similarity_score, metadata) tuples
         """
-        if not self.vectors:
+        if self.vectors is None or len(self.vectors) == 0:
             return []
-
-        vectors_array = np.array(self.vectors)
 
         # Normalize query vector
         query_norm = np.linalg.norm(query_vector)
         if query_norm > 0:
             query_vector = query_vector / query_norm
 
-        # Compute cosine similarities
-        similarities = np.dot(vectors_array, query_vector)
+        # Compute cosine similarities — vectors is already a numpy array
+        similarities = np.dot(self.vectors, query_vector)
 
         # Get top-k indices
         top_indices = np.argsort(similarities)[::-1][:top_k]
@@ -90,5 +89,7 @@ class Retriever:
         metadata_path = self.vectors_dir / f"{filename}_metadata.npy"
 
         if vectors_path.exists() and metadata_path.exists():
-            self.vectors = np.load(vectors_path).tolist()
+            # Keep as numpy array — converting to list then back on every search
+            # is catastrophically slow for large corpora (148k × 2048 vectors).
+            self.vectors = np.load(vectors_path)
             self.metadata = np.load(metadata_path, allow_pickle=True).tolist()
