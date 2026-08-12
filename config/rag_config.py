@@ -39,7 +39,7 @@ RAG_TOP_K = int(os.getenv("RAG_TOP_K", "5"))
 
 # Minimum similarity threshold (0.0-1.0)
 # Results below this threshold are filtered out
-RAG_SIMILARITY_THRESHOLD = float(os.getenv("RAG_SIMILARITY_THRESHOLD", "0.3"))
+RAG_SIMILARITY_THRESHOLD = float(os.getenv("RAG_SIMILARITY_THRESHOLD", "0.05"))
 
 # Maximum tokens for context assembly (retrieved documents only).
 # Must leave room for system prompt (~150) + query (~50) + response (~1024)

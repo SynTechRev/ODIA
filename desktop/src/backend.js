@@ -172,6 +172,9 @@ function startBackend() {
     // Point backend at the Electron-hosted Ollama proxy (port 11435).
     // The proxy fixes model="" → "odia-v1" before forwarding to real Ollama (11434).
     OLLAMA_BASE_URL: "http://127.0.0.1:11435",
+    // TF-IDF cosine similarity for NL queries is typically 0.05-0.15;
+    // the compiled default of 0.3 filters every result. Use 0.05.
+    RAG_SIMILARITY_THRESHOLD: "0.05",
   };
 
   backendProcess = spawn(command, args, {
