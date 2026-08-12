@@ -223,6 +223,14 @@ jobs:
         shell: bash
         run: |
           TAG="${{ inputs.tag || github.ref_name }}"
+          # Create release if it doesn't exist yet (handles first push before any job creates it).
+          # The || true absorbs the "release already exists" error from parallel matrix jobs.
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" 2>/dev/null || \
+            gh release create "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "$TAG" \
+              --generate-notes \
+              --latest || true
           gh release upload "$TAG" desktop/dist/${{ matrix.artifact }} --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
