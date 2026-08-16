@@ -181,8 +181,14 @@ def _persist(
     legal_findings: list[Any],
     contra_findings: list[Any],
     casi_axes: Any,
+    provenance_kwargs: dict,
 ) -> None:
-    from ..db.models import CasiScore, CommercialDocument, ContraFinding
+    from ..db.models import (
+        CasiScore,
+        CommercialDocument,
+        CommercialDocumentProvenance,
+        ContraFinding,
+    )
 
     doc = CommercialDocument(
         document_hash=document_hash,
@@ -197,6 +203,8 @@ def _persist(
     )
     session.add(doc)
     session.flush()
+
+    session.add(CommercialDocumentProvenance(**provenance_kwargs))
 
     all_findings = list(legal_findings) + list(contra_findings)
     for finding in all_findings:
@@ -238,6 +246,7 @@ def ingest_commercial_document(
     fetch_wayback: bool = True,
     wayback_years: int = 3,
     entity_registry: Any | None = None,
+    source_tier: str = "manual",
 ) -> IngestionResult:
     """Ingest a commercial document through the full C.O.N.T.R.A. pipeline.
 
@@ -306,12 +315,25 @@ def ingest_commercial_document(
     retrieval_ts = datetime.now(UTC)
 
     # ------------------------------------------------------------------
-    # Step 4: Provenance record (in-memory only; no Provenance table for commercial docs)
+    # Step 4: Provenance record — persisted to DB at Step 10 (V2.0-A-1)
     # ------------------------------------------------------------------
-    provenance_note = (
-        f"sha256:{document_hash} size:{len(raw_bytes)} method:{extraction_method}"
+    normalized_text_sha256 = _sha256(doc_text.encode("utf-8"))
+    provenance_kwargs: dict = {
+        "document_hash": document_hash,
+        "retrieval_ts": retrieval_ts,
+        "source_url": source_url or str(source_path),
+        "source_tier": source_tier,
+        "raw_body_sha256": document_hash,  # SHA-256 of raw_bytes IS document_hash
+        "normalized_text_sha256": normalized_text_sha256,
+        "retrieval_user_agent": "ODIA-CONTRA-IngestPipeline",
+        "retrieval_script_version": "G.1",
+    }
+    log.debug(
+        "Provenance: sha256=%s size=%d method=%s",
+        document_hash[:16],
+        len(raw_bytes),
+        extraction_method,
     )
-    log.debug("Provenance: %s", provenance_note)
 
     # ------------------------------------------------------------------
     # Step 5: Entity resolution
@@ -373,6 +395,7 @@ def ingest_commercial_document(
             )
             if capture:
                 wayback_url = capture.snapshot_url
+                provenance_kwargs["wayback_capture_url"] = wayback_url
         except Exception as exc:
             warnings.append(f"Wayback lookup failed: {exc}")
 
@@ -392,6 +415,7 @@ def ingest_commercial_document(
         legal_findings=legal_findings,
         contra_findings=contra_findings,
         casi_axes=casi_axes,
+        provenance_kwargs=provenance_kwargs,
     )
 
     # ------------------------------------------------------------------

@@ -20,7 +20,7 @@ Ten new commercial-contract detectors under `contra/`:
 
 **CASI — Consumer Adhesion Severity Index**
 
-Five-axis 0–100 composite score: `remedy_foreclosure`, `data_extraction_depth`, `modification_and_consent`, `procedural_adhesion`, `enforcement_cost_asymmetry`. Deterministic per-document integer score with band labels: Baseline (0–19) / Elevated (20–39) / Substantial (40–59) / Severe (60–79) / Foreclosure Regime (80–100). Stored in new `casi_scores` DB table.
+Five-axis 0–100 composite score: `remedy_foreclosure`, `data_extraction_depth`, `modification_and_consent`, `procedural_adhesion`, `enforcement_cost_asymmetry`. Deterministic per-document integer score with band labels: Baseline (0–20) / Elevated (21–40) / Substantial (41–60) / Severe (61–80) / Foreclosure Regime (81–100). Stored in new `casi_scores` DB table.
 
 **Entity Registry (`entity_registry.py`)**
 

@@ -1,51 +1,50 @@
-"""CASI — Commercial Adhesion Severity Index scoring engine.
+"""C.O.N.T.R.A. CASI — thin re-export of scoring.casi (V2.0-A-6).
 
-Aggregates findings from L-11 through L-20 detectors into a five-axis
-score (each axis 0–20, clamped) and a 0–100 aggregate.
+The canonical CASI engine lives in scoring/casi.py.  This module exists
+only for backward-compatible import paths:
 
-Axes:
-  remedy_foreclosure          -- L-11B/G/H/J, L-12C/D, L-15A/C/F, L-18A-G
-  data_extraction_depth       -- L-14A-I, L-15A-F, L-16A-H, L-17A-F
-  modification_and_consent    -- L-13A-E
-  procedural_adhesion         -- L-11A/C/D/F/I, L-12A/B/E, L-20A-H
-  enforcement_cost_asymmetry  -- L-11E/G, L-19A-G
+    from oraculus_di_auditor.contra.casi import compute_casi  # legacy
+    from oraculus_di_auditor.scoring.casi import compute_casi  # canonical
 
-Source: C.O.N.T.R.A. Framework V1.0 Section 5, Handoff Spec V1.0 Section 6
+The local compute_casi() wraps the canonical CasiAxes-returning engine
+and converts to a plain dict so existing callers continue to work.
 """
 
 from __future__ import annotations
 
-from .base import Finding
+from typing import TYPE_CHECKING
 
-_AXES = (
-    "remedy_foreclosure",
-    "data_extraction_depth",
-    "modification_and_consent",
-    "procedural_adhesion",
-    "enforcement_cost_asymmetry",
+from oraculus_di_auditor.scoring.casi import (
+    AXIS_DATA_EXTRACTION_DEPTH,
+    AXIS_ENFORCEMENT_COST_ASYMMETRY,
+    AXIS_MODIFICATION_AND_CONSENT,
+    AXIS_PROCEDURAL_ADHESION,
+    AXIS_REMEDY_FORECLOSURE,
+    CasiAxes,
+    compute_casi as _compute_casi,
+    severity_to_delta,
 )
 
-_AXIS_CAP = 20
-_AGGREGATE_CAP = 100
+if TYPE_CHECKING:
+    from oraculus_di_auditor.contra.base import Finding
 
 
-def compute_casi(findings: list[Finding]) -> dict[str, int]:
-    """Compute the CASI score from a list of findings.
+def compute_casi(findings: list[Finding]) -> dict[str, int | str]:
+    """Compute CASI — delegates to scoring.casi.compute_casi.
 
-    Returns a dict with one key per axis (each clamped to [0, 20]) plus
-    an 'aggregate' key equal to the clamped sum (max 100).
+    Returns a flat dict for callers predating the CasiAxes dataclass.
+    New code should import from scoring.casi and use CasiAxes directly.
     """
-    scores: dict[str, int] = {axis: 0 for axis in _AXES}
+    return _compute_casi(findings).to_dict()
 
-    for finding in findings:
-        axis = finding.scoring_input.get("axis")
-        delta = finding.scoring_input.get("delta", 0)
-        if axis in scores:
-            scores[axis] += delta
 
-    # Clamp axes
-    for axis in _AXES:
-        scores[axis] = min(_AXIS_CAP, max(0, scores[axis]))
-
-    scores["aggregate"] = min(_AGGREGATE_CAP, sum(scores[axis] for axis in _AXES))
-    return scores
+__all__ = [
+    "AXIS_DATA_EXTRACTION_DEPTH",
+    "AXIS_ENFORCEMENT_COST_ASYMMETRY",
+    "AXIS_MODIFICATION_AND_CONSENT",
+    "AXIS_PROCEDURAL_ADHESION",
+    "AXIS_REMEDY_FORECLOSURE",
+    "CasiAxes",
+    "compute_casi",
+    "severity_to_delta",
+]

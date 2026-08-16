@@ -649,6 +649,9 @@ class CommercialDocument(Base):  # type: ignore
     entity = relationship("CommercialEntity", back_populates="documents")
     findings = relationship("ContraFinding", back_populates="document")
     casi_score = relationship("CasiScore", back_populates="document", uselist=False)
+    provenance = relationship(
+        "CommercialDocumentProvenance", back_populates="document", uselist=False
+    )
 
     def __repr__(self) -> str:
         return f"<CommercialDocument(hash='{self.document_hash[:16]}...', type='{self.doc_type}')>"
@@ -757,6 +760,115 @@ class S128196Case(Base):  # type: ignore
         return f"<S128196Case(case_id='{self.case_id}', provider='{self.provider}', year={self.case_year})>"
 
 
+class CommercialDocumentProvenance(Base):  # type: ignore
+    """Retrieval provenance chain for every commercial document (V2.0-A-1).
+
+    Spec: Handoff Spec V2.0 §7.1 — cryptographically-linked provenance record
+    persisted to the DB on every ingest (not held in-memory only).
+    """
+
+    __tablename__ = "commercial_document_provenance"
+
+    document_hash = Column(
+        String(64),
+        ForeignKey("commercial_documents.document_hash"),
+        primary_key=True,
+    )
+    retrieval_ts = Column(DateTime, nullable=False)
+    source_url = Column(Text, nullable=False)
+    source_tier = Column(String(20), nullable=False)  # T1–T8 or "manual"
+    raw_body_sha256 = Column(String(64), nullable=False)
+    normalized_text_sha256 = Column(String(64), nullable=False)
+    http_last_modified = Column(Text)
+    http_etag = Column(Text)
+    http_content_type = Column(Text)
+    retrieval_user_agent = Column(Text, nullable=False)
+    retrieval_script_version = Column(String(20), nullable=False)
+    wayback_capture_url = Column(Text)
+    wayback_capture_ts = Column(DateTime)
+    human_review_ts = Column(DateTime)
+    human_reviewer = Column(Text)
+    notes = Column(Text)
+
+    document = relationship("CommercialDocument", back_populates="provenance")
+
+    def __repr__(self) -> str:
+        return (
+            f"<CommercialDocumentProvenance("
+            f"hash='{self.document_hash[:16]}...', "
+            f"tier='{self.source_tier}')>"
+        )
+
+
+class CommercialDocumentVersionChain(Base):  # type: ignore
+    """Links successive versions of the same commercial document."""
+
+    __tablename__ = "commercial_document_version_chain"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    document_hash = Column(
+        String(64),
+        ForeignKey("commercial_documents.document_hash"),
+        nullable=False,
+        index=True,
+    )
+    predecessor_hash = Column(
+        String(64),
+        ForeignKey("commercial_documents.document_hash"),
+        nullable=True,
+        index=True,
+    )
+    successor_hash = Column(
+        String(64),
+        ForeignKey("commercial_documents.document_hash"),
+        nullable=True,
+        index=True,
+    )
+    change_summary = Column(Text)
+    linked_at = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    document = relationship("CommercialDocument", foreign_keys=[document_hash])
+    predecessor = relationship("CommercialDocument", foreign_keys=[predecessor_hash])
+    successor = relationship("CommercialDocument", foreign_keys=[successor_hash])
+
+    def __repr__(self) -> str:
+        return (
+            f"<CommercialDocumentVersionChain("
+            f"hash='{self.document_hash[:16]}...', "
+            f"pred='{(self.predecessor_hash or '')[:16]}')>"
+        )
+
+
+class TosdrClassification(Base):  # type: ignore
+    """ToS;DR (Terms of Service; Didn't Read) classification data for an entity."""
+
+    __tablename__ = "tosdr_classification"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    entity_id = Column(
+        String(255),
+        ForeignKey("commercial_entities.entity_id"),
+        nullable=False,
+        index=True,
+    )
+    tosdr_service_id = Column(String(100), index=True)
+    tosdr_grade = Column(String(5))  # A, B, C, D, E
+    tosdr_score = Column(Integer)
+    tosdr_points_json = Column(Text)  # JSON array of ToS;DR point classifications
+    retrieval_ts = Column(DateTime, nullable=False)
+    source_url = Column(Text)
+
+    entity = relationship("CommercialEntity")
+
+    def __repr__(self) -> str:
+        return (
+            f"<TosdrClassification("
+            f"entity_id='{self.entity_id}', "
+            f"grade='{self.tosdr_grade}', "
+            f"score={self.tosdr_score})>"
+        )
+
+
 __all__ = [
     "Base",
     "Document",
@@ -785,4 +897,7 @@ __all__ = [
     "ContraFinding",
     "CasiScore",
     "S128196Case",
+    "CommercialDocumentProvenance",
+    "CommercialDocumentVersionChain",
+    "TosdrClassification",
 ]
