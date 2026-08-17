@@ -141,7 +141,7 @@ def _run_batch(
         entity_name = entry["entity_name"]
         doc_type = entry["doc_type"]
 
-        prefix = f"[{i:>3}/{total}] {entity_name} — {file_path.name[:55]}"
+        prefix = f"[{i:>3}/{total}] {entity_name} - {file_path.name[:55]}"
 
         if not file_path.exists():
             print(f"  SKIP (file missing): {prefix}")
@@ -150,7 +150,7 @@ def _run_batch(
 
         if dry_run:
             date_str = entry.get("effective_date") or ""
-            print(f"  DRY   {prefix} → {doc_type} {date_str}")
+            print(f"  DRY   {prefix} -> {doc_type} {date_str}")
             results["ok"] += 1
             continue
 
@@ -175,11 +175,11 @@ def _run_batch(
                 band = result.casi_band
                 agg = result.casi_aggregate
                 findings = result.total_findings
-                print(f"  OK    {prefix} → CASI {agg} [{band}] | {findings} findings")
+                print(f"  OK    {prefix} -> CASI {agg} [{band}] | {findings} findings")
                 results["ok"] += 1
 
         except Exception as exc:
-            print(f"  ERR   {prefix} → {exc}")
+            print(f"  ERR   {prefix} -> {exc}")
             results["errors"] += 1
             results["error_details"].append(
                 {"file": str(file_path), "error": str(exc)}
@@ -258,7 +258,7 @@ def main() -> None:
     output_dir = Path(args.output_dir) if args.output_dir else None
 
     if args.dry_run:
-        print(f"\nDRY RUN — target DB would be: {db_path}\n")
+        print(f"\nDRY RUN - target DB would be: {db_path}\n")
     else:
         print(f"\nTarget DB: {db_path}")
         if not db_path.parent.exists():
@@ -290,7 +290,7 @@ def main() -> None:
     results = _run_batch(manifest, session, entity_id_map, args.dry_run, output_dir)
 
     elapsed = time.monotonic() - t0
-    print(f"\n── Results ({'DRY RUN ' if args.dry_run else ''}{elapsed:.1f}s) ──")
+    print(f"\n-- Results ({'DRY RUN ' if args.dry_run else ''}{elapsed:.1f}s) --")
     print(f"  OK:               {results['ok']}")
     print(f"  Duplicate (skip): {results['skipped_duplicate']}")
     print(f"  Missing file:     {results['skipped_missing_file']}")

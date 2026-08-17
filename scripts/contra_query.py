@@ -33,7 +33,7 @@ def _summary(session) -> None:
         ("contra_findings",                 "Findings"),
         ("casi_scores",                     "CASI scores"),
     ]
-    print("\n── CONTRA DB Summary ──")
+    print("\n-- CONTRA DB Summary --")
     for table, label in rows:
         try:
             n = session.execute(text(f"SELECT COUNT(*) FROM {table}")).scalar()
@@ -43,7 +43,7 @@ def _summary(session) -> None:
 
     # CASI band distribution
     from oraculus_di_auditor.db.models import CasiScore
-    print("\n── CASI Band Distribution ──")
+    print("\n-- CASI Band Distribution --")
     from sqlalchemy import func
     bands = session.query(CasiScore.band, func.count()).group_by(CasiScore.band).all()
     for band, count in sorted(bands, key=lambda x: x[1], reverse=True):
@@ -63,7 +63,7 @@ def _entity_detail(session, entity_name: str) -> None:
         print(f"Entity not found: {entity_name}")
         return
 
-    print(f"\n── Entity: {entity.canonical_name} ({entity.entity_id}) ──")
+    print(f"\n-- Entity: {entity.canonical_name} ({entity.entity_id}) --")
     print(f"  Corporate family: {entity.corporate_family}")
 
     docs = session.query(CommercialDocument).filter_by(entity_id=entity.entity_id).all()
@@ -83,7 +83,7 @@ def _top_casi(session, n: int) -> None:
         CasiScore, CommercialDocument, CommercialEntity,
     )
 
-    print(f"\n── Top {n} Documents by CASI Score ──")
+    print(f"\n-- Top {n} Documents by CASI Score --")
     results = (
         session.query(CasiScore, CommercialDocument, CommercialEntity)
         .join(CommercialDocument, CasiScore.document_hash == CommercialDocument.document_hash)
@@ -113,7 +113,7 @@ def _version_chain(session, entity_name: str) -> None:
         .order_by(CommercialDocument.effective_date)
         .all()
     )
-    print(f"\n── Version Chain: {entity_name} ──")
+    print(f"\n-- Version Chain: {entity_name} --")
     for doc in docs:
         dt = doc.effective_date.strftime("%Y-%m-%d") if doc.effective_date else "no date"
         score = doc.casi_score
