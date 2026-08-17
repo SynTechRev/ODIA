@@ -1,0 +1,717 @@
+================================================================================
+C.O.N.T.R.A. CORPUS — INITIAL ASSESSMENT
+Commercial Obligation & Non-Transparency Risk Analysis
+================================================================================
+
+Document ID     : CONTRA-ASSESS-001
+Version         : 1.0
+Date            : 2026-08-17
+System          : ODIA v3.9.2 / C.O.N.T.R.A. Pipeline v2.0
+Corpus snapshot : contra_corpus.db (sealed 2026-08-17)
+Prepared for    : Opus synthesis / PDF and Google Doc publication
+
+This document is the authoritative plaintext source record for the initial
+C.O.N.T.R.A. corpus assessment. All derivative formats (PDF, Google Doc)
+must trace to this file as source-of-truth. Update this file first; then
+regenerate all derivatives.
+
+================================================================================
+SECTION 1 — CORPUS METADATA
+================================================================================
+
+1.1 Acquisition
+---------------
+PDFs manually retrieved from entity-published legal portals and "terms of
+service" disclosure pages. Collection period: prior to 2026-08-17. Retrieval
+tier: T1 (direct entity download; no intermediary or archive source).
+
+Source entities targeted per the corporate-family principle: any entity with a
+direct operational, ownership, or payment-integration relationship to the
+primary subject was included. This produced 6 founding entities across 3
+corporate families and 1 payments-infrastructure consortium.
+
+1.2 Ingestion Statistics
+------------------------
+  Total PDFs collected     : 178
+  Passed review filter     : 146  (32 flagged needs_review, pending correction)
+  Ingested OK              : 144  (2 legitimate SHA-256 duplicates auto-deduped)
+  Total CONTRA findings    : 5,536
+  Total CASI score records : 144
+  Total provenance records : 144
+  Ingest runtime           : 84.1 seconds
+  Database                 : D:\CONTRA Contract Corpus\contra_corpus.db
+
+1.3 Entity Roster
+-----------------
+  Entity                  Corporate Family                    Docs   Findings
+  -------                 ----------------                    ----   --------
+  AT&T Mobility           AT&T Inc.                            29    1,057
+  Comcast / Xfinity       Comcast Corporation                  39    1,044
+  Google LLC              Google LLC / Alphabet Inc.           56    2,853
+  JPMorgan Chase          JPMorgan Chase & Co.                 11      793
+  Kaiser Permanente       Kaiser Foundation Health Plan         4      230
+  Zelle                   Early Warning Services LLC            5      113
+
+  NOTE: Zelle is operationally embedded in the Chase corpus. Chase integrates
+  Zelle natively into its Digital Services Agreement. The Zelle entity data
+  (Early Warning Services LLC) represents the network-operator layer beneath
+  the bank-facing consumer surface.
+
+1.4 Document Type Distribution (144 ingested)
+---------------------------------------------
+  Terms of Service (tos)         103 documents
+  Privacy Notice (privacy_notice) 32 documents
+  EULA                             6 documents
+  Arbitration / Dispute Form       3 documents
+
+================================================================================
+SECTION 2 — CASI SCORING FRAMEWORK
+================================================================================
+
+The Commercial Adhesion Severity Index (CASI) is ODIA's quantitative asymmetry
+measure for consumer contracts. It aggregates five axes, each scored 0-20:
+
+  Axis 1 — Procedural Adhesion          (P)
+    Degree to which the consumer has no meaningful ability to negotiate terms.
+    Indicators: take-it-or-leave-it language, e-sign-only execution, no
+    paper alternative, auto-acceptance on continued use.
+
+  Axis 2 — Modification and Consent     (M)
+    Unilateral modification rights held by the entity without consumer consent
+    other than continued use. Indicators: "we may change at any time" clauses,
+    no notice requirement, retroactive applicability.
+
+  Axis 3 — Enforcement Cost Asymmetry   (E)
+    Structural imbalance in dispute resolution costs. Indicators: mandatory
+    arbitration, class-action waiver, fee-shifting against consumers, choice-
+    of-law clauses designating advantageous jurisdictions.
+
+  Axis 4 — Remedy Foreclosure           (R)
+    Contractual elimination of consumer remedies. Indicators: damages caps,
+    consequential-damage waivers, indemnification of entity by consumer,
+    injunctive-relief-only limitations.
+
+  Axis 5 — Data Extraction Depth        (D)
+    Scope and permanence of data collection, retention, and third-party
+    sharing rights. Indicators: broad collection grants, indefinite retention,
+    sale/sharing to undefined third parties, cross-service data pooling.
+
+CASI Aggregate = sum of five axes (0-100).
+
+  Band                Aggregate Range    Interpretation
+  ----                ---------------    --------------
+  Baseline Adhesion       0 - 20         Standard commercial adhesion; consumer
+                                         rights largely intact.
+  Elevated Asymmetry     21 - 40         Notable power imbalance; specific
+                                         clauses merit individual scrutiny.
+  Substantial Asymmetry  41 - 60         Systematic asymmetry across multiple
+                                         axes; consumer remedies materially
+                                         constrained.
+  Severe Asymmetry       61 - 80         Compounding asymmetry; multiple
+                                         foreclosure mechanisms active
+                                         simultaneously.
+  Foreclosure Regime     81 - 100        Near-total remedy foreclosure.
+                                         Consumer contractual rights
+                                         functionally eliminated.
+
+================================================================================
+SECTION 3 — CORPUS-WIDE BAND DISTRIBUTION
+================================================================================
+
+  Band                    Count    Pct
+  ----                    -----    ---
+  Substantial Asymmetry      57    39.6%
+  Baseline Adhesion          46    31.9%
+  Elevated Asymmetry         32    22.2%
+  Foreclosure Regime          6     4.2%
+  Severe Asymmetry            3     2.1%
+                            ---   -----
+  TOTAL                     144   100.0%
+
+  Combined Substantial + Severe + Foreclosure: 66 documents (45.8% of corpus).
+
+  Interpretation: Nearly half the corpus scores at Substantial Asymmetry or
+  above, meaning consumer remedy rights are materially constrained in close
+  to half of all agreements reviewed in this initial set. The 6 Foreclosure
+  Regime documents (4.2%) represent agreements where contractual consumer
+  rights are functionally eliminated — these are the highest-priority targets
+  for legal analysis and public disclosure.
+
+================================================================================
+SECTION 4 — FORECLOSURE REGIME DOCUMENTS (CASI 81-100)
+================================================================================
+
+These 6 documents represent the apex tier — near-total remedy foreclosure.
+
+  CASI  Entity                Document
+  ----  ------                --------
+   88   Comcast / Xfinity     Xfinity Web Services Terms of Service
+                              74 findings. Highest CASI in corpus.
+                              Note: "Web Services" scope covers all digital
+                              Comcast/Xfinity interactions including account
+                              management, streaming, and device control.
+
+   86   AT&T Mobility         Terms of Service (Legal Policy Center) — 2022
+                              213 findings. The 2022 revision represents the
+                              current-generation AT&T consumer agreement.
+                              Scored 2 points higher than the predecessor
+                              (CASI 84), indicating the revision hardened
+                              rather than moderated the terms.
+
+   84   AT&T Mobility         Terms of Service — (undated / current)
+                              248 findings. Highest finding count in the
+                              AT&T entity. This is the master ToS document
+                              from the AT&T Legal Policy Center applicable
+                              to all AT&T retail consumer accounts.
+
+   84   AT&T Mobility         Quantum Fiber from AT&T Subscriber Agreement
+                              138 findings. AT&T's fiber ISP product line
+                              uses the same structural asymmetry framework
+                              as its wireless ToS despite being a distinct
+                              regulatory category (broadband vs. CMRS).
+
+   84   AT&T Mobility         U-Verse TV and Phone Terms of Service
+                              65 findings. Legacy product line; still active
+                              for existing subscribers. Scores identically
+                              to the current master ToS.
+
+   84   JPMorgan Chase        Digital Services Agreement
+                              529 findings — corpus apex for finding count.
+                              This is the primary consumer agreement governing
+                              all Chase digital banking. The volume of
+                              findings reflects the document's scope: it
+                              incorporates online banking, mobile app, bill
+                              pay, Zelle integration, card management, and
+                              cross-product data sharing in a single instrument.
+
+  Observation: AT&T accounts for 4 of the 6 Foreclosure Regime documents.
+  Three of those 4 score identically at CASI 84, suggesting a deliberate
+  structural template is applied across product lines rather than each
+  agreement being independently drafted.
+
+================================================================================
+SECTION 5 — ENTITY ANALYSES
+================================================================================
+
+5.1 AT&T Mobility (AT&T Inc.) — 29 documents, 1,057 findings
+-------------------------------------------------------------
+
+CASI range:   0 (fee schedule) — 86 (2022 ToS)
+Median CASI:  ~26 (Elevated Asymmetry)
+
+  Document Type   Count   Notes
+  -------------   -----   -----
+  tos              20     Widest range: 0-86. Template asymmetry visible
+                          across all product lines.
+  eula              4     Range 26-62. eBonding EULA scores Severe (62) —
+                          atypical for a B2B-facing document.
+  privacy_notice    3     Range 16-26. Comparatively restrained.
+  arbitration       2     Range 2-10. Arbitration forms themselves score
+                          Baseline — the foreclosure mechanism is embedded
+                          in the ToS, not the forms.
+
+  Notable documents:
+  - ATT Connected Life Program Terms: CASI 64 (Severe) — 36 findings.
+    Connected Life encompasses IoT device integration, smart home services,
+    and continuous telemetry. High D-axis (data extraction) expected.
+  - eBonding Application EULA: CASI 62 (Severe) — 32 findings.
+    Enterprise-facing EULA with consumer-standard asymmetry. If AT&T
+    resells eBonding-enabled services to consumers downstream, this
+    propagates.
+  - Wi-Fi Terms of Service: CASI 61 (Severe) — 32 findings.
+    Public Wi-Fi hotspot access conditions carrying Severe designation.
+    Consumers connecting to AT&T Wi-Fi accept near-Foreclosure terms.
+
+  Corporate family note: Cricket Wireless is catalogued but not yet
+  ingested (entity directory empty). Cricket is AT&T's prepaid brand
+  targeting lower-income consumers — a high-priority next acquisition
+  given the price-point / contractual-risk inversion hypothesis.
+
+5.2 Comcast / Xfinity (Comcast Corporation) — 39 documents, 1,044 findings
+---------------------------------------------------------------------------
+
+CASI range:   4 (warranty/limited docs) — 88 (Web Services ToS)
+Median CASI:  ~18 (Baseline to Elevated boundary)
+
+  Document Type   Count   Notes
+  -------------   -----   -----
+  tos              27     Wide bimodal distribution: majority Baseline (0-18),
+                          with a upper cluster in Substantial-Foreclosure.
+  privacy_notice    9     Range 6-49. Xfinity Privacy Policy (156 findings)
+                          is the highest-finding privacy document in the
+                          Comcast entity.
+  eula              2     4 and 47. The Software License Agreement (47,
+                          Substantial) is notably asymmetric for a standard
+                          EULA format.
+  arbitration       1     Not present in scanned set; may be embedded in
+                          Subscriber Agreement.
+
+  Notable documents:
+  - Xfinity Web Services ToS: CASI 88 (Foreclosure Regime) — 74 findings.
+    Highest single-document CASI in the entire corpus. Governs all digital
+    interaction with the Comcast/Xfinity product ecosystem.
+  - Comcast Xfinity Privacy Policy: CASI 49 (Substantial) — 156 findings.
+    High finding count relative to its CASI score suggests axis scoring is
+    concentrated rather than distributed — likely D-axis (data extraction)
+    dominance. The finding volume reflects the breadth of Comcast's data
+    practices across cable, internet, mobile, and smart home products.
+  - Xfinity Subscriber Agreement (Universal): CASI 58 (Substantial) — 57.
+    The "Universal" designation indicates this is the base agreement across
+    all Comcast markets. A jurisdiction-specific variant (Pennsylvania) also
+    scored 54.
+
+  Structural pattern: Comcast's baseline agreements (billing, payment, e-sign,
+  paperless, warranty) cluster in the 4-18 range — consistent with regulatory
+  disclosure-form requirements. The asymmetry concentrates in the web services,
+  subscriber, and software license layers, suggesting those instruments carry
+  the structural load of the foreclosure architecture.
+
+5.3 Google LLC (Google LLC / Alphabet Inc.) — 56 documents, 2,853 findings
+---------------------------------------------------------------------------
+
+Largest entity by document count (38.9% of corpus). The longitudinal record
+extends from September 1999 to 2026 — 27 years of continuous documentation.
+
+CASI range:   14 (1999 ToS) — 50 (current ToS)
+Privacy CASI: 18 (2001) — 44 (2008-2026, stable plateau)
+ToS CASI:     14 (1999) — 50 (2020-2024)
+
+  Version Chain Summary — Privacy Policy (chronological):
+  --------------------------------------------------------
+  1999    Privacy Notice: No dedicated policy found in this corpus.
+          Earliest: September 1999 ToS (CASI 14, Baseline)
+  2001    Privacy Policy: CASI 18 (Baseline) — 6 findings
+  2004    Privacy Policy: CASI 38 (Elevated) — 16 findings
+          First major asymmetry jump. Google began incorporating
+          broader data use language following its IPO-year reorg.
+  2008    Privacy Policy: CASI 44 (Substantial) — 26 findings
+          Reached the 44-point level that then persisted for 18 years.
+  2009    Privacy Policy: CASI 44 — two distinct versions in same year
+  2010    Privacy Policy: CASI 41
+  2011    Privacy Policy: CASI 41
+  2012    Privacy Policy: CASI 44 — 46 findings
+  2013    Privacy Policy: CASI 44 — 3 distinct versions, all 44
+  2014    Privacy Policy: CASI 44 — 53 findings
+  2015    Privacy Policy: CASI 44 — 25 findings
+  2018    Privacy Policy: CASI 44 — 68 findings (May 2018)
+  2019    Privacy Policy: CASI 44 — versions in Jan, Oct, Dec
+  2020    Privacy Policy: CASI 44 — versions in Mar, Jul, Aug, Sep
+  2021    Privacy Policy: CASI 44 — versions in Feb, Jul
+  2022    Privacy Policy: CASI 44 — versions in Oct, Dec
+  2023    Privacy Policy: CASI 44 — versions in Jul, Oct, Nov
+  2024    Privacy Policy: CASI 44 — versions in Jan, Feb, Mar, Sep
+  2025    Privacy Policy: CASI 44 — versions in [year], Jul
+  2026    Privacy Policy: CASI 44 — [year]
+
+  Key finding — The CASI 44 Lock:
+  Google's privacy policy has scored identically at CASI 44 for every
+  version from 2008 through 2026 — 18 consecutive years and approximately
+  30 distinct policy revisions. The finding count per revision has increased
+  substantially (26 in 2008, 117 in 2026), but the aggregate CASI score has
+  not changed. This indicates the structural asymmetry was established in
+  2008 and subsequent revisions have added complexity (more clauses, more
+  data uses, more third-party categories) without altering the fundamental
+  power distribution between Google and its users.
+
+  The 2004-2008 jump (38->44) corresponds to two events: (1) Google's
+  2004 IPO and associated monetization pressure on user data assets, and
+  (2) the 2007 acquisition of DoubleClick, which integrated third-party
+  ad-tracking infrastructure into Google's data model.
+
+  Version Chain Summary — Terms of Service (chronological):
+  ----------------------------------------------------------
+  1999 (Sep) : CASI 14 (Baseline) — 5 findings
+  2001        : CASI 18-20 (Baseline) — multiple versions
+  2007        : CASI 29 (Elevated) — 9 findings — first significant jump
+  2012-2017   : CASI 40 (Elevated) — 16-18 findings, stable
+  2020        : CASI 48 (Substantial) — 15 findings
+  2022        : CASI 50 (Substantial) — 16 findings
+  2024        : CASI 50 (Substantial) — 17 findings
+
+  The ToS trajectory is more graduated than the privacy policy and shows
+  three distinct eras: pre-2007 Baseline, 2007-2017 Elevated, 2020+ Substantial.
+  Unlike the privacy policy which plateaued at 44, the ToS is still trending
+  upward and has not reached a stable ceiling.
+
+5.4 JPMorgan Chase (JPMorgan Chase & Co.) — 11 documents, 793 findings
+----------------------------------------------------------------------
+
+CASI range:   20 (CCPA Annual Report) — 84 (Digital Services Agreement)
+Privacy CASI: 20 — 44 (concentrated in Substantial tier)
+
+  Document Type   Count   Notes
+  -------------   -----   -----
+  tos               1     Digital Services Agreement only. CASI 84,
+                          529 findings. This single document carries 66.7%
+                          of Chase's total finding volume.
+  privacy_notice   10     Range 20-44. Includes CCPA, children's privacy,
+                          EMEA, GPC, merchant services, global privacy code
+                          (EEA and UK variants).
+
+  Notable documents:
+  - Digital Services Agreement: CASI 84 (Foreclosure Regime) — 529 findings.
+    This is the definitive Chase consumer agreement for digital banking.
+    529 findings is the single highest finding count in the entire corpus.
+    The document governs: online account access, mobile banking, bill pay,
+    Zelle integration (see 5.5), credit/debit card management, investment
+    account access, document delivery, and cross-product data aggregation.
+    Its Foreclosure Regime score reflects the compounding of all five CASI
+    axes within a single instrument.
+
+  - Chase Children's Privacy Policy: CASI 40 (Elevated) — 21 findings.
+    Notable because a children's privacy policy scoring Elevated rather
+    than Baseline indicates asymmetric data practices are maintained even
+    in the COPPA-adjacent context, where heightened scrutiny applies.
+
+  - CCPA Annual Report: CASI 20 (Baseline) — 5 findings.
+    Regulatory disclosure document; predictably low score.
+
+  - EMEA Privacy Policy: CASI 44 (Substantial) — 35 findings.
+    Chase applies a Substantial-level privacy regime to its GDPR-governed
+    European user base. The GDPR context makes this notable: GDPR compliance
+    does not appear to have reduced the asymmetry score to Baseline.
+
+  - Global Privacy Code (EEA) and (UK/ADA): both CASI 32 (Elevated).
+    The UK variant's lower finding count (17 vs 20 for EEA) may reflect
+    post-Brexit policy divergence rather than a material rights difference.
+
+5.5 Zelle (Early Warning Services LLC) — 5 documents, 113 findings
+------------------------------------------------------------------
+
+CASI range:   1 (Subpoena Processing) — 58 (Site Terms of Use)
+
+  Document Type   Count   Notes
+  -------------   -----   -----
+  privacy_notice    4     Range 1-40. Three cluster at 40 (Elevated).
+  tos               1     Site Terms of Use: CASI 58 (Substantial) — 25 findings.
+
+  Structural context:
+  Zelle is not a bank. It is a payment network operated by Early Warning
+  Services LLC, a consortium owned by Bank of America, Capital One, JPMorgan
+  Chase, PNC, Truist, U.S. Bank, and Wells Fargo. When a consumer uses Zelle
+  through Chase, they are simultaneously bound by:
+  (1) Chase Digital Services Agreement (CASI 84) — the bank layer
+  (2) Zelle Privacy Notice (CASI 40) — the network layer
+  (3) Zelle E-Sign Disclosure (CASI 26) — the consent mechanism
+  (4) Zelle Site Terms of Use (CASI 58) — the web interface layer
+
+  The stacking of these instruments means the effective asymmetry exposure
+  for a Zelle-via-Chase user is not 84 or 58 in isolation, but the union
+  of all applicable instruments. Cross-instrument stacking analysis is a
+  planned Phase 2 capability.
+
+  - Zelle Privacy Notice: CASI 40 (Elevated) — 63 findings.
+    High finding count relative to its aggregate score. The 63 findings
+    on a 40-point document indicates concentrated asymmetry in fewer axes,
+    likely D-axis (data sharing across the bank consortium that owns Early
+    Warning Services).
+
+  - Zelle Subpoena Processing: CASI 1 (Baseline) — 1 finding.
+    This is Zelle's internal procedure for responding to law-enforcement
+    subpoenas. Its near-zero score is expected — it is not a consumer-facing
+    agreement. Its presence in the corpus confirms Zelle's subpoena practices
+    are transparent at the policy level; the substance of those practices is
+    a separate analytical question.
+
+5.6 Kaiser Permanente (Kaiser Foundation Health Plan) — 4 documents, 230 findings
+---------------------------------------------------------------------------------
+
+CASI range:   20 (Nondiscrimination Notice) — 52 (Privacy Practices summary)
+
+  Document Type   Count   Notes
+  -------------   -----   -----
+  privacy_notice    3     Range 20-52.
+  tos               1     Terms & Conditions for Websites/Mobile: CASI 48.
+
+  Notable documents:
+  - Notice of Privacy Practices (NCAL/EN): CASI 48 (Substantial) — 116 findings.
+    This is Kaiser's HIPAA Notice of Privacy Practices for Northern California.
+    A HIPAA-mandated disclosure scoring Substantial Asymmetry is significant
+    because HIPAA Notice of Privacy Practices are regulated disclosures with
+    mandatory content requirements. The CASI 48 score indicates Kaiser's
+    HIPAA notice includes language beyond the regulatory minimum that
+    expands the organization's data use rights.
+
+  - Privacy Practices (general/web): CASI 52 (Substantial) — 45 findings.
+    The general website privacy policy. Scores 4 points higher than the
+    HIPAA-specific notice, suggesting the web-privacy layer adds additional
+    asymmetric provisions on top of the baseline health-privacy framework.
+
+  - Nondiscrimination Notice: CASI 20 (Baseline) — 11 findings.
+    ACA Section 1557 nondiscrimination disclosure. Baseline score is expected
+    for a regulatory compliance document.
+
+  Corpus gap: Kaiser's member agreement (Evidence of Coverage / EOC) was not
+  retrieved. The EOC is the primary consumer-facing health plan contract and
+  likely the highest-CASI document in the Kaiser entity. It should be a
+  priority acquisition for the next corpus expansion.
+
+================================================================================
+SECTION 6 — CROSS-ENTITY PATTERNS
+================================================================================
+
+6.1 The Foreclosure Architecture
+---------------------------------
+Six documents achieve Foreclosure Regime status (CASI 81-100). All six are
+ToS-type instruments. None are privacy notices. This pattern is consistent
+with the hypothesis that the arbitration-and-waiver foreclosure mechanism
+is embedded in the service agreement layer, while the privacy notice layer
+operates at a lower (Substantial/Elevated) asymmetry level by handling a
+different foreclosure function: data extraction rights.
+
+The full foreclosure model therefore operates in two layers:
+  Layer 1 (ToS)          — Forecloses dispute resolution and remedies
+  Layer 2 (Privacy)      — Forecloses data sovereignty rights
+
+Both layers operate simultaneously. A consumer who signs an AT&T master ToS
+(CASI 84) and is subject to AT&T's privacy practices (CASI 25-26) faces
+compounding foreclosure across both layers.
+
+6.2 The Regulatory Compliance Baseline
+---------------------------------------
+The corpus consistently shows that documents produced primarily for regulatory
+compliance purposes (CCPA annual reports, HIPAA notices, nondiscrimination
+notices, e-sign disclosures, arbitration initiation forms, subpoena processing
+policies) cluster in the Baseline Adhesion band (CASI 0-20). This is the
+expected result and serves as an internal calibration point: the CASI scoring
+system correctly distinguishes between regulatory-compliance documents and
+operative consumer agreements.
+
+6.3 The EULA Asymmetry Inversion
+----------------------------------
+EULAs — historically considered the archetype of take-it-or-leave-it consumer
+agreements — score in the mid-Elevated to Severe range in this corpus (26-62),
+not in the Foreclosure tier. The highest-scoring EULA (AT&T eBonding, CASI 62)
+is a business-to-business-facing instrument. Consumer EULAs score 26-28. This
+inversion suggests the EULA format, while structurally adhesive, does not
+commonly incorporate the full remedies-foreclosure stack (mandatory arbitration
++ class waiver + damages cap + indemnification) that drives ToS documents
+into the Foreclosure Regime.
+
+6.4 Data Volume vs. CASI Score Divergence
+-------------------------------------------
+The Chase Digital Services Agreement (529 findings, CASI 84) and Google's
+current Privacy Policy (119 findings, CASI 44) illustrate that finding count
+and CASI score are related but distinct measures:
+  - High CASI + High findings: Chase DSA — pervasive asymmetry, broad scope
+  - Moderate CASI + High findings: Google Privacy — concentrated asymmetry,
+    very broad scope with extensive data-use cataloguing
+  - High CASI + Moderate findings: Comcast Web Services ToS (74 findings,
+    CASI 88) — efficient foreclosure architecture; fewer clauses, each more
+    extreme
+
+The Google privacy policy finding-count increase from 26 (2008) to 117 (2026)
+without a corresponding CASI increase suggests that Google has expanded the
+scope of its data practices (more services, more categories, more third parties)
+while maintaining the same structural power distribution established in 2008.
+This is consistent with growth of the Alphabet product portfolio rather than
+any change in the foundational privacy architecture.
+
+6.5 Corporate Family Interconnection Map
+-----------------------------------------
+The 6 founding entities span 3 corporate families plus 1 consortium:
+
+  AT&T Inc.
+    AT&T Mobility (ingested)
+    Cricket Wireless (catalogued, not yet ingested)
+    [DirecTV — should be added]
+    [FirstNet — public safety broadband, should be added]
+
+  Comcast Corporation
+    Comcast / Xfinity (ingested)
+    NBCUniversal (media) — ToS for Peacock, NBC.com, etc. not yet ingested
+    [Sky Group (UK/EU) — international extension]
+
+  JPMorgan Chase & Co.
+    JPMorgan Chase (ingested)
+    Zelle / Early Warning Services (ingested)
+    [J.P. Morgan (institutional) — distinct from Chase consumer]
+
+  Google LLC / Alphabet Inc.
+    Google LLC (ingested)
+    [YouTube LLC — catalogued, not yet ingested]
+    [Waymo — data practices relevant to physical-world surveillance]
+    [DeepMind — UK-based, GDPR-governed data practices]
+
+  Kaiser Foundation Health Plan
+    Kaiser Permanente (ingested)
+    [Permanente Medical Groups — distinct legal entities per region]
+
+  Note: YouTube is already in the entity catalogue. It should be prioritized
+  because YouTube's ToS governs a distinct data monetization model (creator
+  contracts, content licensing, ad-revenue sharing) that would produce
+  different CASI axis distribution than the core Google services agreement.
+
+================================================================================
+SECTION 7 — PRIORITY GAPS AND NEXT ACQUISITION TARGETS
+================================================================================
+
+7.1 Immediate Priority (next corpus expansion)
+----------------------------------------------
+These entities are already catalogued in the system but directories are empty:
+
+  Entity                  Corporate Family        Priority     Rationale
+  ------                  ----------------        --------     ---------
+  YouTube LLC             Google / Alphabet       HIGH         Creator contract +
+                                                               distinct ad-data model
+  Cricket Wireless        AT&T Inc.               HIGH         Prepaid/low-income
+                                                               demographic; ToS
+                                                               asymmetry on price-
+                                                               sensitive consumers
+  Meta Platforms          Meta Inc.               HIGH         Largest data-extraction
+                                                               operation not yet in corpus
+  T-Mobile USA            T-Mobile US Inc.        HIGH         Third major carrier;
+                                                               needed for telecoms
+                                                               comparative analysis
+  Verizon Communications  Verizon Comm. Inc.      HIGH         Completes carrier triad
+                                                               with AT&T and Comcast
+  Apple Inc.              Apple Inc.              MEDIUM       App Store EULA distinct
+                                                               model; privacy-as-brand
+  Microsoft Corporation   Microsoft Corp.         MEDIUM       Azure/M365 ToS;
+                                                               enterprise-consumer
+                                                               overlap
+
+7.2 Missing Documents Within Ingested Entities
+----------------------------------------------
+  AT&T — Wireless Customer Agreement (primary retail wireless contract)
+  Comcast — Xfinity Mobile Customer Agreement (distinct from web services ToS)
+  Chase — Deposit Account Agreement (primary deposit banking agreement;
+           separate from Digital Services Agreement)
+  Kaiser — Evidence of Coverage / Member Agreement (primary health plan contract)
+  Kaiser — Group Agreement (employer-facing; proxy for member rights)
+
+7.3 Version Gaps
+----------------
+  Google ToS: 2002-2006 not in corpus (pre-IPO era; 4-year gap in timeline)
+  Google Privacy: 2016-2017 not in corpus (gap between 2015 and 2018)
+  AT&T ToS: No versions between 2017 and 2022 found
+
+================================================================================
+SECTION 8 — ANALYTICAL FLAGS FOR OPUS ASSESSMENT
+================================================================================
+
+The following observations are presented as hypotheses for Opus to assess,
+refute, or develop. They are derived from the quantitative CASI data and
+structured findings but require legal-reasoning and contextual analysis
+beyond what the automated pipeline produces.
+
+Flag 1 — AT&T Template Propagation
+  Three AT&T ToS documents score CASI 84 (master ToS, Quantum Fiber, U-Verse).
+  A fourth (2022 version) scores CASI 86. The identical scores across legally
+  distinct product agreements (wireless, broadband, TV) suggest a shared
+  drafting template rather than independent instruments. If confirmed, this
+  means a single template decision propagates maximum asymmetry across all
+  AT&T product lines simultaneously. Question for Opus: Is there a basis for
+  a single-document challenge to cover all AT&T products, or does the product-
+  line separation require separate proceedings?
+
+Flag 2 — Google CASI 44 Lock and GDPR
+  Google's privacy policy has maintained CASI 44 through GDPR implementation
+  (May 2018 onward). The May 2018 version (CASI 44) is post-GDPR. This either
+  means: (a) GDPR's consent requirements were absorbed without reducing the
+  structural asymmetry measured by CASI, (b) CASI does not capture GDPR-
+  relevant dimensions adequately, or (c) Google's GDPR compliance operates
+  primarily through the cookie consent mechanism rather than through changes
+  to the core privacy policy architecture. Question for Opus: Does the CASI
+  44 stability post-GDPR represent a genuine finding about GDPR's consumer-
+  protection reach, or a limitation of the CASI methodology?
+
+Flag 3 — Chase DSA and Zelle Instrument Stacking
+  A consumer who opens a Chase checking account and uses Zelle is simultaneously
+  bound by: Chase Digital Services Agreement (CASI 84, 529 findings), Zelle
+  Privacy Notice (CASI 40, 63 findings), Zelle E-Sign Disclosure (CASI 26,
+  8 findings), and Zelle Site Terms (CASI 58, 25 findings). The consumer's
+  effective asymmetry exposure is not the maximum of these scores but the
+  union of all distinct foreclosure mechanisms across all instruments. No
+  single CASI score captures this. Question for Opus: How should stacked-
+  instrument total exposure be characterized in legal terms — is it an
+  additive burden or a categorical one?
+
+Flag 4 — Kaiser HIPAA Notice Scoring Substantial
+  A HIPAA-mandated disclosure document scoring CASI 48 (Substantial Asymmetry)
+  merits specific attention. HIPAA's Notice of Privacy Practices has regulated
+  content requirements, but the Substantial score suggests Kaiser has added
+  material beyond the minimum. Specifically relevant: what language in Kaiser's
+  NCAL HIPAA notice drives the score above the regulatory-baseline threshold
+  that CCPA annual reports and nondiscrimination notices score at? Question for
+  Opus: What is the likely regulatory basis for challenging non-mandatory
+  language in a HIPAA-required disclosure, and does the HIPAA "minimum
+  necessary" standard apply to the notice itself?
+
+Flag 5 — Comcast Privacy Policy Finding Density
+  Comcast's Xfinity Privacy Policy scored 156 findings against CASI 49. The
+  finding-to-score ratio (approximately 3.2 findings per CASI point) is the
+  highest in the corpus. This suggests the privacy policy contains many
+  individual disclosures of asymmetric practices that collectively score
+  Substantial but individually each is modest. This pattern is consistent
+  with a "hiding in plain sight" data-practice architecture — extensive data
+  use disclosed in granular detail, each piece defensible alone, the aggregate
+  structurally imbalanced. Question for Opus: Does disclosure of comprehensive
+  data practices — even in granular form — satisfy the spirit of CCPA/CPRA
+  transparency requirements when the aggregate effect is structural asymmetry?
+
+================================================================================
+SECTION 9 — METHODOLOGY NOTES
+================================================================================
+
+9.1 Detector Suite
+------------------
+Each document was processed through the full C.O.N.T.R.A. detector pipeline:
+L-11 through L-20 (10 commercial-contract detectors). All detectors are pure
+functions; results are deterministic given identical input text.
+
+9.2 Text Extraction
+-------------------
+PDF text extracted via pdfplumber (primary) with pypdf fallback. Some PDFs
+produced "Ignoring wrong pointing object" warnings from malformed internal
+PDF structure (specifically AT&T and Comcast documents with non-conformant
+cross-reference tables). Text extraction succeeded for all 144 documents
+despite these warnings — the warnings are from the PDF parser's object
+resolution, not from text extraction itself.
+
+9.3 Deduplication
+-----------------
+Two documents were deduplicated at ingest time via SHA-256 hash:
+  - Comcast Acceptable Use Policy (1).pdf = Comcast Acceptable Use Policy.pdf
+  - google_terms_of_service_en_us_second.pdf = duplicate of another Google ToS
+  Both were caught correctly. 32 additional documents are flagged needs_review
+  due to low doc-type inference confidence; these require manual classification
+  before inclusion.
+
+9.4 Source Tier
+---------------
+All 144 ingested documents are T1 (direct entity-published source). No Wayback
+Machine captures were used in this initial ingest (fetch_wayback=False during
+batch run, disabled for speed). Wayback capture for historical versions can be
+enabled on a per-document basis in subsequent runs.
+
+9.5 Limitations
+---------------
+  - No jurisdiction-specific analysis in this assessment. CASI scores do not
+    reflect California-specific consumer protections (CCPA/CPRA, Cal. Civ.
+    Code 1750 et seq.) that may modify the effective asymmetry for California-
+    resident users.
+  - No cross-instrument stacking analysis performed. Individual document scores
+    do not capture the compounding effect of multiple simultaneous agreements.
+  - Document set is initial corpus only. 31 of 36 catalogued entity directories
+    remain empty. Scores will shift as the corpus grows.
+  - Version-chain linkage has not been implemented. Documents with the same
+    entity and document type are not yet explicitly linked as predecessor/
+    successor. The version_label and effective_date fields enable this linking
+    in future analysis.
+
+================================================================================
+SECTION 10 — RECORD
+================================================================================
+
+  Pipeline commit            : 466eea6 (Unicode fix) / 43675a9 (scan/ingest/query)
+  V2.0-A implementation      : 7d2f9da (models, ingest, CASI re-export, CHANGELOG)
+  Corpus scan produced       : contra_manifest.json (178 entries)
+  Live ingest completed      : 2026-08-17, 84.1 seconds
+  Database location          : D:\CONTRA Contract Corpus\contra_corpus.db
+  Assessment author          : ODIA C.O.N.T.R.A. pipeline + MARS/SynTechRev
+  Next assessment version    : CONTRA-ASSESS-002 (post Opus synthesis)
+
+================================================================================
+END OF DOCUMENT — CONTRA-ASSESS-001 v1.0
+================================================================================
