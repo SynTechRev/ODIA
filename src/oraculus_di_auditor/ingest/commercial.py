@@ -213,7 +213,7 @@ def _persist(
         row = ContraFinding(**db_dict)
         session.add(row)
 
-    _finding_count = len(findings)
+    _finding_count = len(all_findings)
     _agg = casi_axes.aggregate
     _fdr = round(_finding_count / _agg, 3) if _agg > 0 else None
     # RCD applies to regulated-disclosure doc types above the CASI-30 empirical floor
