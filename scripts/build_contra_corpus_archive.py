@@ -61,8 +61,12 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
         findings_by_doc[f.document_hash].append({
             "finding_id": f.finding_id,
             "layer": f.layer,
+            "sub_detector": f.sub_detector,
             "severity": f.severity,
-            "issue": f.issue,
+            "issue": f.doctrinal_anchor,
+            "evidence_excerpt": f.evidence_excerpt,
+            "scoring_axis": f.scoring_axis,
+            "scoring_delta": f.scoring_delta,
         })
 
     master: list[dict] = []
