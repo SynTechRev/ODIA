@@ -1,0 +1,819 @@
+================================================================================
+C.O.N.T.R.A. INITIAL ASSESSMENT RESPONSE AND RETRIEVAL OPTIMIZATION
+SPECIFICATION V1.0
+================================================================================
+
+Analytical Engagement with CONTRA-ASSESS-001, Methodology Enhancements,
+and Fresno-Pattern Script Suite
+
+Version         : 1.0
+Date            : August 2026
+Prepared by     : Mars (Marco Anthony Ramon Sanchez)
+                  In Propria Persona, Sui Juris, All Rights Reserved,
+                  Without Prejudice
+Organization    : SynTechRev / Polymathic Technology
+In response to  : CONTRA-ASSESS-001 (docs/CONTRA_Initial_Assessment_v1.txt)
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+CONTRA-ASSESS-001 (dated 2026-08-17) ingested 144 commercial contract documents
+across six entities in three corporate families plus one payments-infrastructure
+consortium, producing 5,536 C.O.N.T.R.A. findings. The assessment reported 45.8
+percent of the corpus at Substantial Asymmetry or above, six Foreclosure Regime
+documents (CASI 81 through 88) all of which are Terms of Service or Subscriber
+Agreements rather than Privacy Notices, and posed five specific analytical flags
+for substantive response.
+
+This Report engages each flag substantively, identifies structural cross-corpus
+findings the assessment surfaced but did not fully develop, specifies four
+methodology enhancements the empirical evidence justifies, ports the Fresno
+Legistar acquisition pattern to twelve C.O.N.T.R.A. scripts sequenced across
+three implementation tranches, grounds the corpus expansion priorities in the
+analytical evidence rather than in prior assumptions, and consolidates the
+concrete engineering deliverables as a handoff to Claude Code.
+
+Principal analytical conclusions:
+
+  (Flag 1) The AT&T template propagation across three distinct regulatory
+  service categories is the private-sector analog to the Sunshine Dragnet
+  Woodlake Method finding and strengthens rather than weakens the case for
+  enterprise-level regulatory referral.
+
+  (Flag 2) The Google CASI 44 lock spanning 18 years and 30 policy revisions
+  is a genuine empirical finding about how the largest technology enterprises
+  implemented GDPR through parallel consent infrastructure rather than through
+  substantive policy revision and constitutes publication-grade material for a
+  top-tier law journal.
+
+  (Flag 3) The Chase-Zelle stacking pattern is neither purely additive nor
+  purely categorical but a foreclosure vector union that requires a new metric
+  (Cross-Instrument Foreclosure Union, CIFU) to characterize.
+
+  (Flag 4) The Kaiser HIPAA notice at CASI 48 has discretionary content above
+  the regulatory floor of CASI 30 that the empirically-observed calibration
+  cluster establishes.
+
+  (Flag 5) Granular disclosure aggregating to structural asymmetry is
+  challengeable under the CPPA dark patterns regulations at 11 CCR 7004(a)
+  and under the FTC information-overload dark pattern category identified in
+  the 2022 staff report.
+
+Principal methodology enhancements:
+
+  Implement the Cross-Instrument Foreclosure Union (CIFU) metric.
+  Implement the Finding-Density Ratio (FDR) diagnostic that distinguishes
+  concentrated-asymmetry from granular-disclosure documents at equal CASI
+  aggregate.
+  Implement the Regulated-Content Delta (RCD) diagnostic that identifies
+  discretionary asymmetric content in regulated-disclosure documents above
+  the empirical baseline of CASI 30.
+  Defer to V3.0 unless publication requires it earlier: provisional L-21
+  Consent Architecture Depth detector.
+
+Principal engineering deliverables:
+
+  Twelve-script suite modeled on the Fresno Legistar pattern:
+    discover_entity_urls.py
+    ingest_commercial_entity.py
+    wayback_backfill.py
+    retry_failed_commercial.py
+    needs_review_processor.py
+    build_contra_corpus_archive.py
+    tosdr_import.py
+    sec_edgar_material_contracts.py
+    cfpb_complaint_import.py
+    corporate_family_expander.py
+    export_contra_corpus.py
+    split_contra_export.py
+
+  Sequenced across three implementation tranches totaling approximately eight
+  working weeks. Tranche 1 (four scripts) converts the current manual PDF
+  retrieval into a repeatable workflow. Tranche 2 (three scripts) enables
+  version-chain analysis and systematic corpus expansion. Tranche 3 (five
+  scripts) enables Tier 4 through Tier 8 acquisition and bulk-export workflows.
+
+================================================================================
+SECTION I — ANALYTICAL RESPONSE TO CONTRA-ASSESS-001
+================================================================================
+
+1.1 What the Initial Six-Entity Corpus Establishes
+---------------------------------------------------
+The initial assessment ingested 144 documents across six entities in three
+corporate families plus one payments-infrastructure consortium. 5,536
+C.O.N.T.R.A. findings were produced. 45.8 percent of the corpus scored
+Substantial Asymmetry or above (66 of 144 documents), 4.2 percent scored
+Foreclosure Regime (6 of 144), and only 31.9 percent scored Baseline Adhesion.
+
+This distribution, taken from six of the largest consumer-facing enterprises
+in the United States, is the first empirical measurement against the empirically
+falsifiable claim the C.O.N.T.R.A. Framework V1.0 Closing statement offered:
+that the majority of transactions operate at or above the Substantial Asymmetry
+band. The direction is confirmed. The magnitude is not yet at the majority
+threshold the Framework predicted.
+
+Three readings of that gap are possible:
+
+  First, the corpus is composed of six enterprises whose regulatory-compliance
+  documents (CCPA reports, HIPAA notices, nondiscrimination notices, e-sign
+  disclosures) score in the Baseline band and were included in the corpus by
+  design. When a corpus is restricted to operative consumer agreements (ToS,
+  EULA, member agreements, subscriber agreements) the Substantial-plus
+  percentage rises sharply.
+
+  Second, the six entities selected are large mature enterprises with
+  well-resourced compliance functions. Smaller and mid-market entities may
+  score higher on average because their standard-form contracts are often
+  copied from templates without the moderating effect of specialized
+  compliance counsel.
+
+  Third, the corpus is limited to documents accessible without account
+  creation. Contracts that are only visible to account holders (Chase Deposit
+  Account Agreement, Kaiser Evidence of Coverage) are systematically absent
+  from Tier 1 acquisition, and those instruments typically score higher than
+  the publicly-posted documents that stand in for them.
+
+The strongest supported finding from the initial assessment is not the 45.8
+percent number. It is the confirmation that the two-layer foreclosure
+architecture the Framework was designed to detect is empirically real and
+structurally consistent across entities.
+
+1.2 The Two-Layer Foreclosure Architecture as Confirmed Empirical Finding
+-------------------------------------------------------------------------
+All six Foreclosure Regime documents in the initial corpus are Terms of Service
+or Subscriber Agreements. None are Privacy Notices. Privacy Notices in the same
+corpus cluster in the Substantial to Elevated range (CASI 26 through 52). This
+is not a coincidence and it is not a scoring artifact. It is a confirmed
+empirical measurement of what the C.O.N.T.R.A. Framework Section III called the
+two-layer foreclosure architecture:
+
+  Dispute resolution and remedies are foreclosed at the ToS layer through
+  mandatory arbitration, class-action waiver, damages cap, and choice-of-law
+  selection.
+
+  Data sovereignty rights are foreclosed at the Privacy layer through broad
+  collection grants, indefinite retention, and third-party sharing.
+
+Both layers operate simultaneously on the same consumer. Neither layer in
+isolation reaches Foreclosure Regime because neither in isolation covers the
+full range of what the enterprise wants to foreclose. Together, they do.
+
+This is the private-sector analog to the Sunshine Dragnet public-sector finding
+that surveillance procurement flows through warrant registers, bundled budget
+amendments, and consent-calendar adoption rather than through standalone council
+authorizations. In both contexts, the mechanism that would attract scrutiny if
+concentrated in one document is dispersed across two or more documents that each
+individually appear defensible.
+
+A structural corollary follows immediately. If the foreclosure architecture
+requires both layers to be complete, then a challenge to either layer disrupts
+the architecture. A successful challenge to the arbitration clause of a ToS
+scoring CASI 84 does not automatically lower the CASI score of the accompanying
+Privacy Notice, but it eliminates the dispute-resolution foreclosure that gives
+the Privacy Notice its enforcement asymmetry. The two-layer architecture creates
+two litigation targets per entity, with each target being separately actionable
+but structurally interdependent.
+
+1.3 Response to Flag 1: AT&T Template Propagation
+--------------------------------------------------
+The assessment observes that three AT&T ToS documents (master consumer ToS,
+Quantum Fiber subscriber agreement, U-Verse TV and phone ToS) score identically
+at CASI 84 and a fourth (the 2022 revision) scores CASI 86. The four documents
+cover three distinct regulatory categories: CMRS wireless service under Title
+III of the Communications Act, broadband internet service under Title I
+following the 2017 reclassification, and multichannel video programming under
+Title VI. Regulatory law treats these three service categories as distinct with
+different applicable consumer-protection frameworks. AT&T's contracting practice
+treats them identically.
+
+The answer to whether a single-document challenge can cover all product lines
+depends on which enforcement channel is contemplated:
+
+  Individual consumer arbitration: per-contract. No cross-product preclusion.
+
+  Class action / UCL representative action: The California Unfair Competition
+  Law (Business and Professions Code section 17200) permits challenges to a
+  "business practice" rather than to a single contract. If AT&T's practice is
+  applying the same structural asymmetry template across product lines that
+  regulatory law treats differently, the practice itself is challengeable as a
+  unit. Class certification under Rule 23 / CCP section 382 benefits from
+  the template uniformity: commonality is easier to establish when identical
+  asymmetric language appears across all class members' contracts.
+
+  Regulatory enforcement: FTC Section 5, California AG under UCL/CLRA, and
+  CPPA enforcement under CPRA section 1798.199.55 all target the enterprise,
+  not the individual contract. The AT&T template propagation is not an
+  obstacle — it is evidence of a systematic business practice.
+
+Practical recommendation: the AT&T template propagation strengthens rather than
+weakens the case for enterprise-level regulatory referral. A CPPA complaint, a
+California Attorney General referral under UCL, or an FTC Section 5 complaint
+that documents the template application across wireless, broadband, and video
+services carries more evidentiary weight than a per-product complaint. The
+template is the practice.
+
+1.4 Response to Flag 2: Google CASI 44 Lock and GDPR
+-----------------------------------------------------
+The most likely reading of the GDPR-stability finding is a combination of the
+first and third hypotheses offered in the assessment, with a methodological
+observation for the second.
+
+GDPR's substantive requirements (Article 5 principles, Article 6 lawful basis,
+Articles 12-22 data subject rights) are stated in the privacy policy text as
+rights the user holds but are implemented through parallel infrastructure: the
+consent banner, the Ads Preferences page, the Privacy Sandbox APIs, the Data
+Hub for advertiser query access. Google's privacy policy did not need to change
+structurally to accommodate GDPR because the compliance surface was built
+alongside the policy rather than into it. The CASI 44 score correctly identifies
+that the underlying contract terms did not change. The parallel infrastructure
+is not measured by CASI because CASI is a contract-text instrument.
+
+This is not a limitation of CASI. It is a genuine empirical finding about how
+the largest technology enterprises implemented GDPR: through consent-architecture
+layers rather than through substantive contract revision. The CASI 44 stability
+is the observable trace of that implementation strategy.
+
+The 2004-to-2008 CASI jump from 38 to 44 is worth naming as a discrete
+historical finding. It coincides with the 2004 IPO and the 2007 DoubleClick
+acquisition. The IPO created sustained shareholder pressure for revenue growth;
+the DoubleClick acquisition integrated third-party ad-tracking infrastructure
+into the Google data model. The privacy policy revision that followed established
+the CASI 44 structural configuration that has persisted for 18 years. This is
+the "informational capitalism" thesis (Cohen, 2019) observed in longitudinal
+empirical form across a single entity's policy record.
+
+Methodological extension worth considering: a provisional L-21 Consent
+Architecture Depth detector that reads the consent banner HTML, the preferences
+page structure, and per-cookie granularity separately. Findings from L-21 could
+feed a parallel CASI axis (Consent Complexity Depth). Deferred to V3.0.
+
+================================================================================
+SECTION II — RESPONSES TO FLAGS 3, 4, AND 5
+================================================================================
+
+2.1 Response to Flag 3: Chase-Zelle Instrument Stacking
+--------------------------------------------------------
+The correct characterization is neither purely additive nor purely categorical.
+It is a foreclosure vector union. Each instrument opens a separate foreclosure
+vector along one or more of the CASI axes:
+
+  Chase DSA (CASI 84, 529 findings): opens vectors along all five axes.
+  Zelle Privacy Notice (CASI 40, 63 findings): additional data-extraction
+    vector into the Early Warning Services consortium data pool (seven bank
+    co-owners).
+  Zelle Site Terms (CASI 58, 25 findings): additional procedural adhesion
+    vector for consumers who access Zelle through the website.
+  Zelle E-Sign Disclosure (CASI 26, 8 findings): additional consent-modification
+    vector establishing electronic signature as operative execution mechanism.
+
+The consumer does not face the maximum (84) or the sum (208). The consumer
+faces the union of the foreclosure vectors each instrument opens. The legal
+analog closest to this structural pattern is cross-collateralization in secured
+lending. California has statutory protections against certain cross-
+collateralization abuses in real property (CCP section 726; anti-deficiency
+statutes at sections 580b and 580d). No analogous statutory protection exists
+for stacked service contracts. This is a doctrinal gap the empirical CONTRA
+finding surfaces and that could be addressed through legislative recommendation.
+
+The provisional metric name is Cross-Instrument Foreclosure Union (CIFU). CIFU
+is not an average or a sum; it is the count of distinct foreclosure vectors
+active on the consumer across all applicable instruments. For the Chase-Zelle
+consumer, vectors include: mandatory arbitration, class waiver, damages cap,
+unilateral modification (two instruments), data sale to affiliates, data sharing
+to Early Warning Services consortium, indefinite retention, electronic-execution-
+only, continued-use consent (all four). Approximately nine distinct vectors.
+
+CIFU implementation is specified in Section IV below.
+
+2.2 Response to Flag 4: Kaiser HIPAA Notice Scoring Substantial
+----------------------------------------------------------------
+The regulatory basis for challenging non-mandatory language in a HIPAA-required
+disclosure runs through three sources:
+
+  First, HIPAA at 45 CFR 164.502(b) applies a "minimum necessary" standard
+  to uses and disclosures of PHI, though that standard applies to the amount
+  of PHI rather than to the notice content itself.
+
+  Second, HIPAA prohibits the notice from misrepresenting the covered entity's
+  practices. If Kaiser's notice authorizes uses that Kaiser does not in practice
+  make, the notice is misleading.
+
+  Third and most consequential for California residents: CMIA (Civil Code
+  sections 56-56.37) provides additional protections beyond HIPAA. Where a
+  HIPAA notice includes language that would authorize a use that CMIA restricts,
+  the notice may be attempting to contract around CMIA protections that are
+  non-waivable under California law.
+
+The empirically-observed ceiling for regulatory-compliance-only content in this
+corpus is CASI 30. Kaiser at CASI 48 is 18 points above the compliance ceiling.
+Approximately half the asymmetric content in the notice is discretionary rather
+than regulatory. That discretionary content is what warrants clause-by-clause
+comparison against the HIPAA regulatory minimum and the CMIA baseline.
+
+General observation: any healthcare covered entity whose NPP scores above
+CASI 30 warrants a similar comparison. The Regulated-Content Delta (RCD)
+metric proposed in Section IV automates this identification.
+
+2.3 Response to Flag 5: Comcast Privacy Policy Finding Density
+--------------------------------------------------------------
+The CCPA and CPRA transparency requirements (Civil Code sections 1798.100,
+1798.110, 1798.115, 1798.120, 1798.130) require that consumers be "informed"
+of categories of personal information collected, sources, purposes, and
+third-party recipients. The letter of the requirement is satisfied by granular
+disclosure. The letter is not the only authority.
+
+Two additional sources speak to the aggregate obfuscation question:
+
+  CCPA at Civil Code section 1798.130(a)(5)(A) requires disclosures be
+  provided in a "readily useable format." The CPPA has interpretive authority
+  to define what constitutes "readily useable."
+
+  CPPA dark patterns regulations at 11 CCR section 7004(a) prohibit "a user
+  interface designed or manipulated with the substantial effect of subverting
+  or impairing user autonomy, decision-making, or choice." Section 7004(a)(4)
+  specifically identifies "confusing language or interactive elements" as a
+  dark pattern. If the aggregate cognitive load of processing the disclosure
+  impairs the consumer's ability to make an informed decision, the disclosure
+  is a dark pattern regardless of whether each individual sentence is truthful.
+
+  FTC's September 2022 staff report "Bringing Dark Patterns to Light"
+  explicitly identifies "information overload" as a dark pattern category
+  (Report Section III.C, page 15). Comcast's Xfinity Privacy Policy at 156
+  findings is a paradigmatic case of information overload in the FTC's taxonomy.
+
+Answer: granular disclosure does not satisfy CCPA transparency when the aggregate
+effect is structural. The regulatory hook is the dark patterns framework. Comcast
+is a strong candidate for a CPPA complaint under 11 CCR 7004(a).
+
+Methodological corollary: the finding-count-per-CASI-point ratio (FDR) is itself
+a diagnostic metric. Ratios above 3.0 indicate the granular-disclosure pattern.
+Ratios below 1.0 indicate the concentrated-asymmetry pattern. FDR specification
+appears in Section IV below.
+
+================================================================================
+SECTION III — CROSS-CORPUS STRUCTURAL FINDINGS
+================================================================================
+
+3.1 The Regulatory-Compliance-Baseline Calibration
+---------------------------------------------------
+The corpus produces a consistent Baseline Adhesion cluster (CASI 0-20) for
+documents whose function is primarily regulatory compliance rather than operative
+contracting:
+
+  Chase CCPA Annual Report: CASI 20, 5 findings
+  Kaiser Nondiscrimination Notice: CASI 20, 11 findings
+  Zelle Subpoena Processing: CASI 1, 1 finding
+  AT&T fee schedule: CASI 0
+  Zelle E-Sign: CASI 26 (upper end of Baseline)
+
+The consistency across six unrelated enterprises is the empirical calibration
+proof that the C.O.N.T.R.A. detector suite correctly distinguishes regulatory-
+compliance documents from operative consumer agreements. The same instrument that
+scored CASI 84 on the Chase DSA scored CASI 1 on the Zelle subpoena procedure.
+
+Implication: any regulated-content document scoring above CASI 30 has content
+beyond the regulatory minimum. A corpus-wide search for regulated documents
+above CASI 30 identifies instruments where enterprises have added discretionary
+asymmetry to mandatory disclosures.
+
+3.2 The EULA Asymmetry Inversion
+----------------------------------
+EULAs in the initial corpus (6 documents) score in the mid-Elevated to Severe
+range (CASI 26-62) rather than the Foreclosure Regime. The foreclosure
+architecture has migrated from the EULA to the ToS. Today, most software is
+delivered as a service through a ToS that carries the mandatory arbitration,
+class-action waiver, and unilateral modification provisions. The EULA has become
+a residual document handling narrower software-specific rights.
+
+Implication: the analytical target for challenge is the ToS not the EULA, and
+the strategic focus of consumer counsel and regulatory enforcement should be
+recalibrated accordingly. The C.O.N.T.R.A. detector suite already emphasizes ToS
+documents in its L-11 through L-20 taxonomy — the observation confirms the
+correct emphasis.
+
+3.3 The AT&T Template Propagation as Private-Sector Woodlake Method Analog
+---------------------------------------------------------------------------
+The Sunshine Dragnet corpus documented a systematic pattern in which the
+Woodlake Method (checking audited financial GASB footnotes for undisclosed
+contracts) revealed surveillance procurement invisible in legislative records.
+The methodological insight was that regulatory compliance can be measured by
+comparing the compliance profile of comparable entities.
+
+AT&T's template propagation across wireless (CMRS Title III), broadband (Title I
+following 2017 reclassification), and cable (Title VI) is the private-sector
+analog. Federal communications law treats these three service categories as
+distinct regulatory regimes with different applicable consumer protections.
+AT&T's contracting practice treats them identically at CASI 84.
+
+The comparable-entities baseline exists inside AT&T's own portfolio: the
+regulatory framework would predict three different contract architectures
+reflecting three different regulatory regimes; the empirical evidence shows one
+architecture applied across all three.
+
+The Phase 2 acquisition question for every multi-line enterprise: does the
+enterprise operate in more than one regulatory category; if so, does it apply
+distinct contract architectures per category or a single template; and where
+template propagation is found, what is the CASI delta between the template score
+and the regulatory-baseline expectation for the affected categories.
+
+Comcast (cable Title VI, broadband Title I, wireless MVNO through Xfinity Mobile)
+and Verizon (wireless CMRS, broadband, video) are the immediate comparables.
+T-Mobile is the wireless-only baseline against which the multi-line propagation
+can be measured.
+
+3.4 The Google Longitudinal Record as Standalone Publication
+-------------------------------------------------------------
+The 27-year Google longitudinal record (September 1999 through 2026) is the
+strongest single asset in the initial corpus:
+
+  Approximately 30 privacy policy revisions with CASI 44 stability across
+  18 consecutive years from 2008 forward.
+  Approximately 14 Terms of Service revisions showing the graduated trajectory
+  from CASI 14 in 1999 through CASI 50 in 2020 forward.
+  The discrete 38-to-44 CASI jump in the 2004 IPO / 2007 DoubleClick window.
+  The 2007 first-major-jump in the ToS trajectory (14 to 29).
+  The 2020 second-major-jump in the ToS trajectory (40 to 48).
+
+No comparable longitudinal record exists in the public academic literature for
+any single technology enterprise.
+
+Article target: a top-tier law journal that publishes empirical legal scholarship.
+  Harvard Journal of Law and Technology (natural home — published Scherer 2016
+  in the same subject area)
+  Yale Law Journal Online
+  Berkeley Technology Law Journal
+  Stanford Law Review Online
+
+Article title candidate: "The CASI 44 Lock: Eighteen Years of Structural
+Stability in Google's Privacy Policy Notwithstanding GDPR, CCPA, and CPRA."
+
+Central empirical claim: comprehensive privacy regulation adopted after 2008 has
+not moved the structural asymmetry of a paradigmatic technology enterprise's
+privacy policy, and the compliance surface these regulations produced runs
+parallel to the privacy policy rather than through it.
+
+3.5 The Chase Digital Services Agreement as Analytical Card Case Study
+----------------------------------------------------------------------
+Chase DSA (CASI 84, 529 findings) is the natural first target for a complete
+Analytical Card walkthrough. The document governs: online account access, mobile
+banking, bill pay, Zelle integration, credit/debit card management, investment
+account access, document delivery, and cross-product data aggregation.
+
+The Chase DSA Analytical Card becomes:
+  (a) Primary exhibit for the Chapter 29 anchor of "When the Machine Serves
+      Itself"
+  (b) Sample output for the S.A.G.E. Skool cohort curriculum
+  (c) Case study for commercial-launch marketing surface
+  (d) Reference deliverable for the ABA Journal of Labor and Employment Law
+      article on Chase's Digital Services Agreement as a case study in consumer-
+      financial-services adhesion contracting
+
+================================================================================
+SECTION IV — METHODOLOGICAL ENHANCEMENTS
+================================================================================
+
+4.1 Cross-Instrument Foreclosure Union (CIFU)
+---------------------------------------------
+Implementation requires:
+  (a) Table linking documents that apply to the same consumer relationship
+      (existing commercial_entity_document_link table extended)
+  (b) Foreclosure-vector taxonomy that each detector emits alongside its finding
+  (c) Per-consumer or per-entity aggregation counting unique vectors across all
+      linked documents
+
+Estimated implementation: 3-5 days.
+Priority: HIGH — necessary for Chase-Zelle case study and Chapter 29 anchor.
+
+4.2 Finding-Density Ratio (FDR)
+--------------------------------
+FDR = finding_count / CASI_aggregate.
+Ratios above 3.0: granular-disclosure pattern (Comcast-type).
+Ratios below 1.0: concentrated-asymmetry pattern (fewer clauses, each extreme).
+Ratios 1.0-3.0: balanced.
+
+Implementation: add fdr as a computed column in casi_scores table and expose
+in Analytical Card output. Estimated: 4-8 hours. Priority: MEDIUM.
+
+4.3 Regulated-Content Delta (RCD)
+-----------------------------------
+Empirical ceiling for regulated-content-only in this corpus: CASI 30.
+RCD = CASI_aggregate - 30 for documents whose function is primarily regulated
+disclosure.
+
+Implementation: add regulatory_baseline_expected field to commercial_documents
+with per-doc-type defaults; compute RCD as a view or computed field.
+Estimated: 4-8 hours. Priority: MEDIUM.
+
+4.4 Provisional L-21 Consent Architecture Depth Detector
+---------------------------------------------------------
+Reads consent banner HTML, preferences page structure, and per-cookie granularity
+separately. Findings feed a new CASI axis (Consent Complexity Depth).
+Estimated: 2-3 weeks including detector, sub-detector taxonomy, CASI axis
+integration. Priority: LOW — defer to V3.0 unless Google longitudinal paper
+requires it before publication.
+
+4.5 Version-Chain Linkage Implementation
+-----------------------------------------
+The commercial_document_version_chain table is specified and the model exists.
+It needs to be populated during ingest. The Google longitudinal record and AT&T
+template propagation analysis both depend on this. Priority: HIGH in V2.0-C.
+
+4.6 Needs-Review Queue Workflow
+---------------------------------
+32 of 178 collected PDFs are flagged needs_review. At Phase 2 scale (150-300
+docs), approximately 27-54 documents will accumulate. A queue processor is
+required: scripts/needs_review_processor.py that reads the queue, presents each
+flagged document with inferred doc_type and confidence, offers correct-doc-type
+or reject dispositions, and requeues corrected documents for ingest.
+Estimated: 1-2 days. Priority: HIGH before Phase 2 acquisition begins.
+
+================================================================================
+SECTION V — SCRIPT SUITE (FRESNO-PATTERN PORT)
+================================================================================
+
+5.1 Twelve-Script Suite Overview
+---------------------------------
+
+  Script                           Function                              Priority
+  ------                           --------                              --------
+  discover_entity_urls.py          Per-entity URL discovery: probes      HIGH
+                                   standard paths (/terms, /privacy,
+                                   /legal, /policies), parses sitemap,
+                                   scans footer anchors. Outputs
+                                   cache/{entity_id}/discovered_urls.json
+
+  ingest_commercial_entity.py      Per-entity ingest driver: reads       HIGH
+                                   discovered_urls.json, fetches each
+                                   URL, hashes, calls ingest pipeline.
+                                   Checkpoints to progress.json.
+                                   Resumable.
+
+  needs_review_processor.py        Human-review queue processor for      HIGH
+                                   documents flagged during ingest.
+
+  build_contra_corpus_archive.py   MASTER_INDEX.json + by_entity/,       HIGH
+                                   by_doc_type/, by_casi_band/,
+                                   by_finding_type/ navigable JSON tree.
+
+  wayback_backfill.py              Tier 2 historical retrieval: year-    HIGH
+                                   mark captures from Wayback for each
+                                   entity+doc_type combination. Populates
+                                   version chains.
+
+  retry_failed_commercial.py       Exponential-backoff retry for items   MEDIUM
+                                   in cache/commercial_acquisition/
+                                   failed.json.
+
+  corporate_family_expander.py     Walks corporate-family relation to    MEDIUM
+                                   identify unseen subsidiaries via SEC
+                                   EDGAR + opencorporates.
+
+  tosdr_import.py                  ToS;DR API import. Weekly. Companion  MEDIUM
+                                   cross-validation baseline for detector
+                                   outputs.
+
+  sec_edgar_material_contracts.py  EDGAR Exhibit 10 filing retrieval     MEDIUM
+                                   for public reporting companies.
+
+  cfpb_complaint_import.py         CFPB Consumer Complaint Database      MEDIUM
+                                   import. Enables R.A.I.A. Pass 8.
+
+  export_contra_corpus.py          Bulk export for research release,     LOW
+                                   S.A.G.E. cohort distribution, peer-
+                                   review reproducibility archive.
+
+  split_contra_export.py           Splits bulk export by entity,         LOW
+                                   doc_type, or casi_band for targeted
+                                   distribution.
+
+5.2 Eight Design Elements (Ported from Fresno)
+-----------------------------------------------
+Every script follows the same design pattern established by ingest_legistar.py:
+
+  1. Progress checkpointing to cache/{scope}/progress.json every N items.
+     N is script-specific; small enough that a crash loses under one minute.
+
+  2. Resume support: on restart, already-processed items are read from
+     progress.json and skipped. No flag required; resume is the default.
+
+  3. SHA-256 deduplication at the ingest layer. Scripts do not maintain
+     independent deduplication.
+
+  4. Polite pacing: one request per three seconds per host; thirty-second
+     pause every one hundred items. Adjustable per source.
+
+  5. Failure logging to cache/{scope}/failed.json with error class. Failures
+     do not halt the script; they accumulate for retry.
+
+  6. Standard CLI shape: --dry-run, --max-items, source-specific parameters
+     (--entity, --tier, --doc-type as applicable).
+
+  7. User-Agent identification: every HTTP request sends a descriptive
+     User-Agent identifying the request source (ODIA platform version,
+     research purpose, contact URL).
+
+  8. Call ingest pipeline rather than direct database access. Scripts are
+     producers; ingestion is a platform capability. Preserves validation,
+     chain-of-custody, and detector pipeline as single source of truth.
+
+5.3 Implementation Sequencing
+-------------------------------
+Tranche 1 (weeks 1-3): discover_entity_urls.py, ingest_commercial_entity.py,
+  needs_review_processor.py, build_contra_corpus_archive.py.
+  Combined estimate: 8-12 working days.
+
+Tranche 2 (weeks 4-7): wayback_backfill.py, retry_failed_commercial.py,
+  corporate_family_expander.py.
+  Combined estimate: 6-9 working days.
+
+Tranche 3 (weeks 15-18): tosdr_import.py, sec_edgar_material_contracts.py,
+  cfpb_complaint_import.py, export_contra_corpus.py, split_contra_export.py.
+  Combined estimate: 10-14 working days.
+
+================================================================================
+SECTION VI — CORPUS EXPANSION PRIORITIES
+================================================================================
+
+6.1 Immediate Priority: Completing the Telecom Triad
+------------------------------------------------------
+AT&T and Comcast are in the corpus. Verizon and T-Mobile are not. Without them,
+the AT&T template propagation finding stands alone and cannot be placed against
+a comparative baseline.
+
+  Verizon: wireless CMRS + broadband + video (FiOS spinoff historical).
+           Estimated: 15-25 documents.
+  T-Mobile: wireless-only baseline for multi-line vs. single-line comparison.
+             Estimated: 10-20 documents.
+
+Combined analytical output: definitive answer to whether AT&T template
+propagation is an AT&T-specific practice or an industry template.
+
+6.2 High Priority: Cricket Wireless
+-------------------------------------
+Cricket is AT&T's prepaid brand targeting lower-income consumers. The hypothesis
+(Bar-Gill "Seduction by Contract"; Kim "Wrap Contracts"): price-sensitive
+consumers face higher asymmetry because they have less bargaining power.
+Cricket vs. AT&T Mobility is a controlled comparison within a single corporate
+family. Either outcome is analytically valuable.
+Estimated: 8-15 documents.
+
+6.3 High Priority: Meta Platforms
+-----------------------------------
+Largest data-extraction consumer platform not in corpus. Meta's Privacy Policy
+governs approximately three billion global users. Meta's CASI scores placed
+against Google's become the first cross-enterprise comparative baseline for the
+tech-sector privacy architecture. Wayback record: 15-20 years of Facebook
+privacy policy evolution comparable to the Google record.
+Estimated: 20-35 documents across four core service lines.
+
+6.4 Medium Priority: Missing Documents Within Ingested Entities
+----------------------------------------------------------------
+  AT&T Wireless Customer Agreement (primary retail wireless contract)
+  Comcast Xfinity Mobile Customer Agreement
+  Chase Deposit Account Agreement (Tier 5 via CourtListener litigation exhibits)
+  Kaiser Evidence of Coverage (Tier 4 via EDGAR material contract filings)
+  Kaiser Group Agreement
+
+6.5 Version-Chain Backfill Priorities
+---------------------------------------
+For the Google longitudinal publication:
+  Google ToS 2002-2006 (pre-IPO era; covers the CASI 14-to-29 inflection)
+  Google Privacy 2016-2017 (gap between 2015 and 2018 versions)
+  AT&T ToS 2017-2022 (gap between 2017 and 2022 versions)
+
+Estimated: 8-15 additional documents via wayback_backfill.py first execution.
+
+================================================================================
+SECTION VII — LITIGATION, REGULATORY, AND PUBLICATION IMPLICATIONS
+================================================================================
+
+7.1 Six Foreclosure Regime Documents as Litigation Targets
+-----------------------------------------------------------
+Each of the six warrants a per-document memorandum analyzing the specific
+clauses that drive the Foreclosure Regime score against the California
+unconscionability framework (Armendariz factors, OTO v. Kho presentation
+factors, Sanchez v. Valencia substantive-procedural sliding scale) and
+identifying specific enforcement channels (individual arbitration where accepted,
+CPPA and FTC regulatory referral, class/PAGA representative action).
+
+The six memoranda are natural products of the Analytical Card generator once
+CIFU and FDR metrics are added. They become reference exhibits for S.A.G.E.
+Skool cohort curriculum and for CPPA, FTC, and California AG referrals.
+
+7.2 AT&T Template Propagation as Regulatory Referral
+------------------------------------------------------
+Three natural referral targets:
+  CPPA complaint under 11 CCR 7004(a) — dark patterns framework
+  California AG referral under UCL section 17200 — systematic asymmetric practice
+  FCC complaint — contracting practice fails to reflect category-specific
+    consumer protections under CMRS, broadband, and cable regimes
+
+The referral packages benefit substantially from completion of the telecom triad
+(Section 6.1). Once Verizon and T-Mobile are in the corpus, the referral
+packages can characterize the AT&T pattern against the industry baseline.
+
+7.3 Google Longitudinal Record as Academic Publication
+------------------------------------------------------
+Article drafting begins after Yale Law Student's Toolkit completion and after
+the version-chain backfill (Section 6.5) closes the 2002-2006 gap.
+Draft: 12,000-18,000 words plus appendices.
+Estimated draft-to-submission timeline: 3-4 months from Yale Toolkit completion.
+
+7.4 Chase-Zelle Stacking as Novel Empirical Contribution
+---------------------------------------------------------
+Target: Berkeley Journal of Consumer Law or Loyola Consumer Law Review.
+Draft length: 6,000-9,000 words.
+Can be drafted independently of Yale Toolkit.
+Estimated draft-to-submission timeline: 6-10 weeks starting after CIFU
+implementation.
+
+7.5 Kaiser HIPAA Notice as CMIA-Specific Advocacy
+---------------------------------------------------
+Output: CMIA-specific advocacy memorandum for submission to the California
+Department of Managed Health Care (DMHC) or the California AG Health Care
+Rights and Access Section.
+Work needed: clause-by-clause comparison of Kaiser NCAL NPP against HIPAA
+regulatory floor and CMIA baseline. No additional corpus growth required.
+
+================================================================================
+SECTION VIII — HANDOFF TO CLAUDE CODE
+================================================================================
+
+8.1 Immediate Development Tranche (weeks 1-3)
+----------------------------------------------
+  Implement scripts/discover_entity_urls.py (Section 5.1)
+  Implement scripts/ingest_commercial_entity.py (Section 5.1 + 5.2)
+  Implement scripts/needs_review_processor.py (Section 4.6)
+  Implement scripts/build_contra_corpus_archive.py (Section 5.1)
+
+8.2 Methodology Enhancement Tranche (weeks 2-4, concurrent)
+-------------------------------------------------------------
+  Implement Finding-Density Ratio (FDR) in casi_scores table and Analytical Card
+  Implement Regulated-Content Delta (RCD) with per-doc-type regulatory baselines
+  Implement Cross-Instrument Foreclosure Union (CIFU) with foreclosure-vector
+    taxonomy in each detector — enabling deliverable for Chase-Zelle case study
+
+8.3 Corpus Expansion Tranche (weeks 4-7)
+------------------------------------------
+  Execute discover+ingest pipeline against Verizon and T-Mobile
+  Execute pipeline against Cricket Wireless
+  Execute pipeline against Meta Platforms (four service lines)
+  Implement wayback_backfill.py and execute: Google ToS 2002-2006,
+    Google Privacy 2016-2017, AT&T ToS 2017-2022
+
+8.4 Publication Preparation Tranche (weeks 6-12)
+-------------------------------------------------
+  Generate Analytical Cards for all six Foreclosure Regime documents
+  Draft CMIA advocacy memorandum for Kaiser NCAL NPP
+  Draft Chase-Zelle stacking article using CIFU framework
+  Draft Google longitudinal article after Toolkit completion + backfill
+
+8.5 Testing and Validation Requirements
+-----------------------------------------
+  Per-script unit tests: normal path, empty-input, rate-limit, resume-from-
+    checkpoint, robots.txt-disallow.
+  CIFU golden test case: Chase-Zelle instrument stack; expected output
+    documented in Analytical Card for Chase DSA and Zelle documents.
+  FDR and RCD unit tests against initial assessment corpus (144 documents);
+    expected values computable from CASI aggregate and finding count in DB.
+
+================================================================================
+CLOSING
+================================================================================
+
+The C.O.N.T.R.A. Initial Assessment CONTRA-ASSESS-001 has produced the first
+empirical measurement against the analytical claims the Framework V1.0
+articulated. The measurement confirms the two-layer foreclosure architecture as
+an empirical reality across six unrelated enterprises. The measurement establishes
+the regulatory-compliance-baseline calibration that validates the CASI methodology
+as an instrument. The measurement produces discrete empirical findings each of
+which supports a specific enforcement or publication action. The measurement
+identifies specific methodological enhancements that would strengthen the
+instrument.
+
+The manual PDF retrieval workflow that produced the 144-document initial corpus
+was sufficient to bootstrap the analytical instrument. It is not sufficient for
+Phase 2 through Phase 5 corpus growth. The script suite specified in Section V
+above ports the Fresno Legistar pattern to the C.O.N.T.R.A. commercial
+acquisition workflow and preserves the same eight design elements that made the
+public-sector ingest operational at 25,247-document scale.
+
+The next work product is Tranche 1 execution: discover_entity_urls.py,
+ingest_commercial_entity.py, needs_review_processor.py, and
+build_contra_corpus_archive.py. The four scripts turn the current one-off manual
+PDF retrieval into a repeatable workflow. Once Tranche 1 is complete, Verizon,
+T-Mobile, Cricket, and Meta enter the corpus in sequence, the telecom triad
+closes, the price-sensitive-consumer hypothesis is tested, and the second
+tech-sector data point (Meta alongside Google) becomes available.
+
+================================================================================
+Mars (Marco Anthony Ramon Sanchez)
+In Propria Persona, Sui Juris
+All Rights Reserved, Without Prejudice
+SynTechRev / Polymathic Technology
+O.D.I.A. Framework: Sunshine Dragnet
+github.com/SynTechRev/ODIA (MIT License)
+================================================================================
+END OF DOCUMENT — CONTRA-ASSESSMENT-RESPONSE-V1.0
+================================================================================

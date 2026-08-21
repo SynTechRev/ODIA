@@ -74,8 +74,10 @@ def _entity_detail(session, entity_name: str) -> None:
         findings_count = len(doc.findings)
         band = score.band if score else "no score"
         agg = score.aggregate if score else "-"
+        fdr = f" FDR={score.finding_density_ratio:.1f}" if score and score.finding_density_ratio else ""
+        rcd = f" RCD=+{score.regulated_content_delta}" if score and score.regulated_content_delta else ""
         vl = doc.version_label or ""
-        print(f"    [{doc.doc_type:<16}] {vl:<15} CASI={agg:<4} [{band}] | {findings_count} findings")
+        print(f"    [{doc.doc_type:<16}] {vl:<15} CASI={agg:<4} [{band}] | {findings_count} findings{fdr}{rcd}")
 
 
 def _top_casi(session, n: int) -> None:

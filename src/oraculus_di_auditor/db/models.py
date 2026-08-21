@@ -707,6 +707,9 @@ class CasiScore(Base):  # type: ignore
     band = Column(String(50), nullable=False)
     framework_version = Column(String(20), nullable=False, default="1.0")
     computed_at = Column(DateTime, default=lambda: datetime.now(UTC))
+    # V2.0-B metrics
+    finding_density_ratio = Column(Float, nullable=True)   # findings / aggregate; >3.0 = granular-disclosure pattern
+    regulated_content_delta = Column(Integer, nullable=True)  # aggregate - 30 for regulated-disclosure docs
 
     document = relationship("CommercialDocument", back_populates="casi_score")
 

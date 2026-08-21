@@ -213,6 +213,13 @@ def _persist(
         row = ContraFinding(**db_dict)
         session.add(row)
 
+    _finding_count = len(findings)
+    _agg = casi_axes.aggregate
+    _fdr = round(_finding_count / _agg, 3) if _agg > 0 else None
+    # RCD applies to regulated-disclosure doc types above the CASI-30 empirical floor
+    _REGULATED_TYPES = {"privacy_notice"}
+    _rcd = (_agg - 30) if doc_type in _REGULATED_TYPES and _agg > 30 else None
+
     score = CasiScore(
         document_hash=document_hash,
         remedy_foreclosure=casi_axes.remedy_foreclosure,
@@ -220,10 +227,12 @@ def _persist(
         modification_and_consent=casi_axes.modification_and_consent,
         procedural_adhesion=casi_axes.procedural_adhesion,
         enforcement_cost_asymmetry=casi_axes.enforcement_cost_asymmetry,
-        aggregate=casi_axes.aggregate,
+        aggregate=_agg,
         band=casi_axes.band,
         framework_version="1.0",
         computed_at=datetime.now(UTC),
+        finding_density_ratio=_fdr,
+        regulated_content_delta=_rcd,
     )
     session.add(score)
     session.commit()
