@@ -19,6 +19,11 @@ from ..llm_providers import get_provider
 from ..rag_context import ContextAssembler
 from ..rag_prompts import get_prompt_for_query
 from ..retriever import Retriever
+from ..security.jailbreak_filter import (
+    JAILBREAK_REFUSAL,
+    SECURITY_GUARD_SYSTEM_PROMPT,
+    check_output,
+)
 
 # Absolute fallback for vectors directory — works regardless of process CWD.
 # Path: orac_rag.py -> rag/ -> oraculus_di_auditor/ -> src/ -> repo_root
@@ -281,8 +286,20 @@ class OracRAG:
                 answer = self.llm.generate(
                     prompt=prompt,
                     context="",  # Already in prompt
+                    system_prompt=SECURITY_GUARD_SYSTEM_PROMPT,
                 )
                 answer = _strip_prompt_echo(answer)
+
+                # M-2: Output filter -- blocks any DAN compliance that slips through
+                jb = check_output(answer)
+                if jb.is_jailbreak:
+                    logger.error(
+                        "Jailbreak output blocked after generation. "
+                        "category=%s matched=%r",
+                        jb.category,
+                        jb.matched_text,
+                    )
+                    answer = JAILBREAK_REFUSAL
             else:
                 # Fallback: return context without LLM generation
                 logger.warning("LLM not available, returning context only")

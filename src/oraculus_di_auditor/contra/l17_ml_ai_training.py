@@ -53,10 +53,19 @@ _P_B = re.compile(
 )
 
 _P_C = re.compile(
-    r"\b(?:text(?:\s+and\s+image)?|image(?:\s+and\s+text)?|audio|video|multimodal|"
-    r"across\s+(?:all\s+)?(?:modalities?|formats?|types?\s+of\s+(?:data|content))|"
-    r"all\s+(?:types?\s+of\s+)?(?:data|content|information)\s+(?:you\s+)?(?:submit|upload|"
-    r"provide|share|post)|any\s+(?:data|content|information)\s+you\s+(?:provide|submit|"
+    # Scope-of-training-grant indicators — must be paired with a training-context gate.
+    # Original pattern included bare "text|image|audio|video" which fired on ~50% of all
+    # documents (6,477 false positives). Those terms are replaced by tightly scoped
+    # modality phrases that cannot fire without training context already established.
+    r"\b(?:multimodal"
+    r"|text\s+and\s+(?:image|audio|video|other)"
+    r"|image\s+and\s+(?:text|audio|video|other)"
+    r"|audio\s+and\s+(?:text|image|video|other)"
+    r"|video\s+and\s+(?:text|image|audio|other)"
+    r"|across\s+(?:all\s+)?(?:modalities?|formats?|types?\s+of\s+(?:data|content))"
+    r"|all\s+(?:types?\s+of\s+)?(?:data|content|information)\s+(?:you\s+)?(?:submit|upload|"
+    r"provide|share|post)"
+    r"|any\s+(?:data|content|information)\s+you\s+(?:provide|submit|"
     r"upload|share|generate|create))\b",
     re.DOTALL,
 )
@@ -143,23 +152,27 @@ class L17MlAiTraining:
             notes="Perpetual / irrevocable license -- practical impossibility of data deletion.",
         )
 
-        # C: broad modality scope
-        findings += scan_pattern(
-            _P_C,
-            doc_text,
-            _LAYER,
-            "C",
-            Severity.MEDIUM,
-            doc_hash,
-            A.CCPA_110,
-            "data_extraction_depth",
-            2,
-            _REMEDY_TRAINING,
-            notes="Broad multi-modal training scope increases extraction depth.",
-        )
+        # Compute training-context gate before C, D, E, F — all require confirmed ML/AI context.
+        has_train = bool(_P_D_TRAIN.search(text_lower))
+
+        # C: broad modality scope — only meaningful when training context is confirmed.
+        # Gated to prevent bare "text|image|audio|video" from firing on non-AI documents.
+        if has_train:
+            findings += scan_pattern(
+                _P_C,
+                doc_text,
+                _LAYER,
+                "C",
+                Severity.MEDIUM,
+                doc_hash,
+                A.CCPA_110,
+                "data_extraction_depth",
+                2,
+                _REMEDY_TRAINING,
+                notes="Broad multi-modal training scope increases extraction depth.",
+            )
 
         # D: training present but no opt-out path (negative detection)
-        has_train = bool(_P_D_TRAIN.search(text_lower))
         has_optout = bool(_P_D_OPTOUT.search(text_lower))
         if has_train and not has_optout:
             m = _P_D_TRAIN.search(text_lower)
@@ -182,9 +195,8 @@ class L17MlAiTraining:
                 )
 
         # E: biometric in training scope (CRITICAL)
-        has_train2 = bool(_P_A.search(text_lower))
         has_bio = bool(_P_E_BIO.search(text_lower))
-        if has_train2 and has_bio:
+        if has_train and has_bio:
             m = _P_E_BIO.search(text_lower)
             if m:
                 findings.append(

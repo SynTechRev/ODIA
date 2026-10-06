@@ -13,7 +13,7 @@ models:
     - "llama3.1:8b"
     - "llama3"
     - "mistral"
-  
+
 # Generation Parameters
 generation:
   temperature: 0.1  # Low temperature for consistent, factual responses
@@ -40,18 +40,27 @@ log_latency: true
 # System Prompts (can be customized per query type)
 system_prompts:
   default: "You are Oraculus, a specialized legal-document anomaly analysis assistant trained on municipal government records from Tulare County, California. You detect fiscal irregularities, procurement violations, surveillance overreach, and transparency failures in public agency documents. Provide accurate, evidence-grounded responses based solely on the provided context."
-  
+
   factual_retrieval: "Extract specific factual information from the provided legal documents. Cite page numbers or document IDs when possible."
-  
+
   contradiction_detection: "Analyze the provided documents for contradictions, inconsistencies, or conflicting statements. List each contradiction with supporting evidence."
-  
+
   irb_consent_check: "Review the documents for compliance with IRB (Institutional Review Board) requirements under 28 C.F.R. Part 46. Check for informed consent, review board approval, and subject protections."
-  
+
   infrastructure_concern: "Identify infrastructure-related concerns, including procurement issues, contractor relationships, and facility compliance."
-  
+
   grant_incentive_detection: "Identify federal grant incentives, funding mechanisms, and potential conflicts of interest related to financial incentives."
-  
+
   executive_summary: "Generate a concise executive summary of the audit findings, highlighting critical issues, key patterns, and recommended actions."
+
+# Security -- A.R.C.A.D.E. Layer 13 (garak 2026-10-04: 100% DAN susceptibility)
+# SECURITY_GUARD_SYSTEM_PROMPT is defined in security/jailbreak_filter.py and
+# injected as a system-role message by OracRAG.query() on every Ollama call.
+# The text here is for documentation; the authoritative source is the Python module.
+security:
+  jailbreak_filter_enabled: true
+  # output_filter_enabled: controls M-2 post-generation scanning (always true in code)
+  output_filter_enabled: true
 
 # Response Validation
 validation:

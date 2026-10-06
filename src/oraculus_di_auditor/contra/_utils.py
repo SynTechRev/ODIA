@@ -10,6 +10,34 @@ import re
 
 from .base import EvidenceSpan, Finding, Severity
 
+# Module-level lazy singleton -- avoids per-call import overhead
+_CPRA_LOADER = None
+
+
+def _cpra():
+    global _CPRA_LOADER
+    if _CPRA_LOADER is None:
+        from oraculus_di_auditor.legal.cpra_corpus import CPRACorpusLoader
+        _CPRA_LOADER = CPRACorpusLoader()
+    return _CPRA_LOADER
+
+
+def extract_cal_citations(text: str) -> list[str]:
+    """Extract California statutory citation strings from contract text.
+
+    Returns canonical citation strings (e.g. "Cal. Civ. Code § 1798.121")
+    that can be passed to LegalResolver.resolve() or CPRACorpusLoader.resolve_citation().
+
+    Used by L-detectors to surface California law references embedded in
+    contract documents — arbitration clauses sometimes cite the statutes
+    they are attempting to waive.
+    """
+    try:
+        from oraculus_di_auditor.legal.statute_citation import parse_cal_citations
+        return [c.canonical for c in parse_cal_citations(text)]
+    except ImportError:
+        return []
+
 
 def _excerpt(text: str, start: int, max_words: int = 15) -> str:
     """Return up to max_words words starting at character offset start."""
@@ -35,6 +63,14 @@ def make_finding(
 ) -> Finding:
     """Build a Finding from a regex match position."""
     excerpt = _excerpt(text, match_start)
+    # CPRA crosswalk: resolve anchor to statutory title for enriched reporting
+    try:
+        lt = _cpra().resolve_citation(anchor)
+        if lt is not None:
+            tag = f"CPRA crosswalk: {lt.title}"
+            notes = f"{notes} | {tag}" if notes else tag
+    except Exception:  # noqa: BLE001
+        pass
     return Finding(
         finding_id=f"contra:{layer}:{sub}:{doc_hash[:8]}:{match_start:08x}",
         layer=layer,

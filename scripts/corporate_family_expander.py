@@ -16,6 +16,7 @@ Usage:
     python scripts/corporate_family_expander.py --dry-run
     python scripts/corporate_family_expander.py --report-only
 """
+
 from __future__ import annotations
 
 import argparse
@@ -28,7 +29,9 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO_ROOT / "src"))
 
 _DEFAULT_DB = r"D:\CONTRA Contract Corpus\contra_corpus.db"
-_USER_AGENT = "ODIA-CONTRA-Expander/3.9 (SynTechRev research; contact codicalcalculus@gmail.com)"
+_USER_AGENT = (
+    "ODIA-CONTRA-Expander/3.9 (SynTechRev research; contact codicalcalculus@gmail.com)"
+)
 _EDGAR_COMPANY_SEARCH = "https://efts.sec.gov/LATEST/search-index?q={name}&dateRange=custom&startdt=2020-01-01&forms=10-K"
 _EDGAR_SUBMISSIONS = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 _PAUSE = 1.5
@@ -37,18 +40,19 @@ _PAUSE = 1.5
 _KNOWN_FAMILIES: dict[str, str] = {
     "AT&T Inc.": "AT&T",
     "AT&T": "AT&T",
-    "Cricket Wireless": "AT&T",              # AT&T subsidiary
+    "Cricket Wireless": "AT&T",  # AT&T subsidiary
     "AT&T Mobility": "AT&T",
     "DIRECTV": "AT&T",
     "Comcast Corporation": "Comcast",
     "Comcast": "Comcast",
+    "Comcast / Xfinity": "Comcast",
     "Xfinity": "Comcast",
     "NBCUniversal": "Comcast",
     "JPMorgan Chase & Co.": "JPMorgan Chase",
     "JPMorgan Chase": "JPMorgan Chase",
     "Chase Bank": "JPMorgan Chase",
     "Chase": "JPMorgan Chase",
-    "Zelle": "JPMorgan Chase",               # operated by Early Warning Services (consortium)
+    "Zelle": "JPMorgan Chase",  # operated by Early Warning Services (consortium)
     "Google LLC": "Alphabet",
     "Google": "Alphabet",
     "Alphabet Inc.": "Alphabet",
@@ -61,24 +65,59 @@ _KNOWN_FAMILIES: dict[str, str] = {
     "T-Mobile USA": "T-Mobile",
     "T-Mobile US": "T-Mobile",
     "T-Mobile": "T-Mobile",
-    "Sprint": "T-Mobile",                    # T-Mobile merger 2020
+    "Sprint": "T-Mobile",  # T-Mobile merger 2020
     "Meta Platforms": "Meta",
     "Meta": "Meta",
     "Facebook": "Meta",
     "Instagram": "Meta",
     "WhatsApp": "Meta",
+    # ── Uber ecosystem ─────────────────────────────────────────────────────────
+    "Uber Technologies Inc.": "Uber",
+    "Uber": "Uber",
+    "Portier LLC": "Uber",  # Uber Eats delivery legal entity
+    # Identity verification vendors (private companies)
+    "Jumio Inc.": "Jumio",
+    "Jumio Corporation": "Jumio",
+    "Socure Inc.": "Socure",
+    "Veriff Inc.": "Veriff",
+    "Veriff OÜ": "Veriff",
+    # Compliance automation vendors (private)
+    "Vanta Inc.": "Vanta",
+    "Drata Inc.": "Drata",
+    "Sprinto Inc.": "Sprinto",
+    "Sprinto HQ Inc.": "Sprinto",
+    # Data / payment vendors (private)
+    "Plaid Inc.": "Plaid",
+    "Dwolla Inc.": "Dwolla",
+    "Modulr FS Limited": "Modulr",
+    "Upside Commerce Group": "Upside",
+    # Tag management / advertising (private or public)
+    "Tealium Inc.": "Tealium",
+    "TrustArc Inc.": "TrustArc",  # formerly TrustE
+    "Microsoft Corporation": "Microsoft",
+    "Microsoft": "Microsoft",
+    "NextRoll Inc.": "NextRoll",  # formerly AdRoll Group
+    "AdRoll Group": "NextRoll",
+    "Pinterest Inc.": "Pinterest",
+    "Fullstory Inc.": "Fullstory",
+    # Telematics
+    "Cambridge Mobile Telematics": "Cambridge Mobile Telematics",
 }
 
 
 def _engine(db_path: str):
     from sqlalchemy import create_engine
-    return create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False})
+
+    return create_engine(
+        f"sqlite:///{db_path}", connect_args={"check_same_thread": False}
+    )
 
 
 def _edgar_cik_lookup(name: str) -> str | None:
     """Look up SEC CIK for a company name via EDGAR full-text search."""
     try:
         import requests
+
         resp = requests.get(
             "https://efts.sec.gov/LATEST/search-index",
             params={"q": f'"{name}"', "forms": "10-K"},
@@ -98,6 +137,7 @@ def _opencorporates_lookup(name: str) -> dict | None:
     """Query OpenCorporates for top company match. Returns company dict or None."""
     try:
         import requests
+
         resp = requests.get(
             "https://api.opencorporates.com/v0.4/companies/search",
             params={"q": name, "jurisdiction_code": "us", "per_page": 1},
@@ -119,8 +159,8 @@ def expand(
     dry_run: bool,
     report_only: bool,
 ) -> None:
-    from sqlalchemy.orm import sessionmaker
     from oraculus_di_auditor.db.models import CommercialEntity
+    from sqlalchemy.orm import sessionmaker
 
     engine = _engine(db_path)
     Session = sessionmaker(bind=engine)
@@ -159,14 +199,17 @@ def expand(
                 time.sleep(_PAUSE)
                 if oc:
                     resolved_family = oc.get("company_type") and name
-                    print(f"    OC match: {oc.get('name', '?')} ({oc.get('jurisdiction_code', '?')})")
+                    print(
+                        f"    OC match: {oc.get('name', '?')} ({oc.get('jurisdiction_code', '?')})"
+                    )
 
         entry = {
             "entity_id": entity.entity_id,
             "canonical_name": name,
             "current_family": current_family,
             "resolved_family": resolved_family,
-            "changed": resolved_family is not None and resolved_family != current_family,
+            "changed": resolved_family is not None
+            and resolved_family != current_family,
         }
         report.append(entry)
 
@@ -191,9 +234,9 @@ def expand(
     out.write_text(
         json.dumps(
             {
-                "generated_at": __import__("datetime").datetime.now(
-                    __import__("datetime").timezone.utc
-                ).isoformat(),
+                "generated_at": __import__("datetime")
+                .datetime.now(__import__("datetime").timezone.utc)
+                .isoformat(),
                 "total_entities": len(report),
                 "entities": report,
             },
@@ -203,11 +246,13 @@ def expand(
         encoding="utf-8",
     )
 
-    print(f"\n-- Corporate Family Expander Results --")
+    print("\n-- Corporate Family Expander Results --")
     print(f"  Entities processed : {len(entities)}")
     changed = [e for e in report if e["changed"]]
     print(f"  Families resolved  : {len(changed)}")
-    print(f"  DB rows updated    : {updated if not dry_run and not report_only else '(dry run)'}")
+    print(
+        f"  DB rows updated    : {updated if not dry_run and not report_only else '(dry run)'}"
+    )
     print(f"  Report written to  : {out.resolve()}")
 
 
@@ -216,8 +261,12 @@ def main() -> None:
         description="Expand CONTRA corporate family relationships via EDGAR + OpenCorporates"
     )
     parser.add_argument("--db-path", default=_DEFAULT_DB)
-    parser.add_argument("--entity", default=None, help="Restrict to one canonical entity name")
-    parser.add_argument("--dry-run", action="store_true", help="Show changes without writing")
+    parser.add_argument(
+        "--entity", default=None, help="Restrict to one canonical entity name"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show changes without writing"
+    )
     parser.add_argument(
         "--report-only",
         action="store_true",

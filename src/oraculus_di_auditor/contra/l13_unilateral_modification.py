@@ -29,10 +29,13 @@ _LAYER = "L-13"
 # ---------------------------------------------------------------------------
 
 _P_A = re.compile(
-    r"\b(?:we\s+(?:may|reserve\s+the\s+right\s+to|can|will)"
-    r"|(?:company|service\s+provider|we)\s+(?:may|reserves?|can)\s+(?:at\s+any\s+time\s+)?"
+    # Requires a modification verb AND a terms/policy object — "we may" alone is not enough.
+    # The original first alternative (bare "we may|can|will") produced 4,090 false positives
+    # on logistics phrases, termination clauses, and equipment notices.
+    r"\b(?:company|service\s+provider|we)\s+(?:may|reserves?\s+the\s+right\s+to|can)\s+"
+    r"(?:at\s+any\s+time\s+)?"
     r"(?:modify|change|update|revise|amend|alter)\s+"
-    r"(?:these\s+)?(?:terms?|agreement|policy|conditions?|provisions?))\b"
+    r"(?:these\s+)?(?:terms?|agreement|policy|conditions?|provisions?)\b"
 )
 
 _P_B = re.compile(

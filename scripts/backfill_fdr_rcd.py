@@ -9,6 +9,7 @@ Usage:
     python scripts/backfill_fdr_rcd.py --db-path "D:/CONTRA Contract Corpus/contra_corpus.db"
     python scripts/backfill_fdr_rcd.py --dry-run
 """
+
 from __future__ import annotations
 
 import argparse
@@ -24,18 +25,20 @@ _REGULATED_TYPES = {"privacy_notice"}
 
 def _engine(db_path: str):
     from sqlalchemy import create_engine
-    return create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False})
+
+    return create_engine(
+        f"sqlite:///{db_path}", connect_args={"check_same_thread": False}
+    )
 
 
 def backfill(db_path: str, dry_run: bool = False) -> None:
-    from sqlalchemy import func
-    from sqlalchemy.orm import sessionmaker
-
     from oraculus_di_auditor.db.models import (
         CasiScore,
         CommercialDocument,
         ContraFinding,
     )
+    from sqlalchemy import func
+    from sqlalchemy.orm import sessionmaker
 
     engine = _engine(db_path)
     Session = sessionmaker(bind=engine)
@@ -43,9 +46,7 @@ def backfill(db_path: str, dry_run: bool = False) -> None:
 
     # Rows missing FDR (i.e., ingested before V2.0-B)
     null_rows = (
-        session.query(CasiScore)
-        .filter(CasiScore.finding_density_ratio.is_(None))
-        .all()
+        session.query(CasiScore).filter(CasiScore.finding_density_ratio.is_(None)).all()
     )
     print(f"Rows needing backfill: {len(null_rows)}")
 
@@ -56,9 +57,11 @@ def backfill(db_path: str, dry_run: bool = False) -> None:
 
     # Pre-load finding counts per document
     finding_counts: dict[str, int] = {}
-    for doc_hash, count in session.query(
-        ContraFinding.document_hash, func.count(ContraFinding.id)
-    ).group_by(ContraFinding.document_hash).all():
+    for doc_hash, count in (
+        session.query(ContraFinding.document_hash, func.count(ContraFinding.id))
+        .group_by(ContraFinding.document_hash)
+        .all()
+    ):
         finding_counts[doc_hash] = count
 
     # Pre-load doc_type per document
@@ -77,12 +80,10 @@ def backfill(db_path: str, dry_run: bool = False) -> None:
         finding_count = finding_counts.get(h, 0)
         doc_type = doc_types.get(h, "")
 
-        fdr = round(finding_count / agg, 3) if agg > 0 else None
+        # agg=0 is a valid scored state (all five axes returned 0).
+        # FDR is 0.0 (no base score → no density); RCD does not apply.
+        fdr = round(finding_count / agg, 3) if agg > 0 else 0.0
         rcd = (agg - 30) if doc_type in _REGULATED_TYPES and agg > 30 else None
-
-        if fdr is None and rcd is None:
-            skipped += 1
-            continue
 
         if dry_run:
             print(

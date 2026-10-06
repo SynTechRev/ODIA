@@ -22,6 +22,42 @@ logger = logging.getLogger(__name__)
 try:
     from pydantic import BaseModel, Field
 
+    class DetectRequest(BaseModel):
+        text: str = Field(..., description="Raw document text to analyze")
+        document_id: str = Field(
+            "", description="Stable document identifier (used for finding IDs)"
+        )
+        document_hash: str | None = Field(
+            None,
+            description=(
+                "SHA-256 hex of document content. "
+                "If omitted, the document_id is used as a surrogate."
+            ),
+        )
+        document_type: str = Field(
+            "unknown",
+            description=(
+                "Document type: 'resolution', 'policy', 'contract', "
+                "'agenda', 'minutes', 'response', 'report', 'other'"
+            ),
+        )
+        jurisdiction: str = Field(
+            "",
+            description="Jurisdiction slug (e.g. 'fresnocounty', 'fresno')",
+        )
+        authority: str | None = Field(
+            None,
+            description="Issuing authority (agency, department, or officer)",
+        )
+        detectors: list[str] | None = Field(
+            None,
+            description=(
+                "Optional allow-list of detector IDs to run "
+                "(e.g. ['l1-statutory-applicability', 'l10-balancing-test']). "
+                "Omit to run all Phase 2 detectors."
+            ),
+        )
+
     class AnalyzeRequest(BaseModel):
         text: str = Field(..., description="Document text to analyze")
         document_id: str | None = Field(
@@ -93,6 +129,7 @@ try:
 
 except ImportError:
     BaseModel = object  # type: ignore[assignment,misc]
+    DetectRequest = object  # type: ignore[assignment,misc]
     AnalyzeRequest = object  # type: ignore[assignment,misc]
     MemorandumRequest = object  # type: ignore[assignment,misc]
     ExplainRequest = object  # type: ignore[assignment,misc]
@@ -164,6 +201,95 @@ def register_legal_routes(app: Any) -> None:
             "detectors": detectors,
             "detectors_available": sum(1 for v in detectors.values() if v == "ok"),
             "corpora": corpus_status,
+        }
+
+    # ------------------------------------------------------------------
+    # POST /api/v1/legal/detect  (Phase 2 native -- no odia_legal dependency)
+    # ------------------------------------------------------------------
+
+    @router.post("/api/v1/legal/detect")
+    async def legal_detect(request: DetectRequest) -> dict[str, Any]:  # type: ignore[valid-type]
+        """Run Phase 2 L-detectors (L-1 through L-10) on a single document.
+
+        Unlike /analyze, this endpoint wires directly to PHASE2_DETECTORS
+        in oraculus_di_auditor.legal.detectors and has no dependency on the
+        external odia_legal submodule.
+
+        Returns findings in anomaly dict format compatible with the standard
+        ODIA anomaly schema.
+        """
+
+        try:
+            from oraculus_di_auditor.legal.detectors import (
+                PHASE2_DETECTORS,
+                DocContext,
+            )
+        except ImportError as exc:
+            raise HTTPException(
+                status_code=503,
+                detail=f"Legal detector package unavailable: {exc}",
+            ) from exc
+
+        doc_hash = request.document_hash or request.document_id or "unknown"
+
+        ctx = DocContext(
+            document_id=request.document_id,
+            document_hash=doc_hash,
+            document_type=request.document_type,
+            jurisdiction=request.jurisdiction,
+            authority=request.authority,
+            version_date=None,
+            text=request.text,
+        )
+
+        resolver = None
+        try:
+            from oraculus_di_auditor.legal.legal_resolver import LegalResolver
+
+            resolver = LegalResolver()
+            resolver.initialize()
+        except Exception:  # noqa: BLE001
+            pass  # proceed without resolver
+
+        findings: list[dict[str, Any]] = []
+        errors: list[str] = []
+
+        allow_list = set(request.detectors) if request.detectors else None
+
+        for detector in PHASE2_DETECTORS:
+            if allow_list and detector.detector_id not in allow_list:
+                continue
+            try:
+                for f in detector.detect(ctx, resolver):
+                    findings.append(f.to_anomaly_dict())
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"{detector.detector_id}: {exc}")
+                logger.warning(
+                    "legal_detect: detector %s failed: %s",
+                    detector.detector_id,
+                    exc,
+                )
+
+        severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+        findings.sort(key=lambda f: severity_order.get(f.get("severity", "low"), 4))
+
+        counts: dict[str, int] = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+        for f in findings:
+            sev = f.get("severity", "low")
+            counts[sev] = counts.get(sev, 0) + 1
+        counts["total"] = len(findings)
+
+        return {
+            "document_id": request.document_id,
+            "document_hash": doc_hash,
+            "findings": findings,
+            "counts": counts,
+            "errors": errors,
+            "detectors_run": [
+                d.detector_id
+                for d in PHASE2_DETECTORS
+                if allow_list is None or d.detector_id in allow_list
+            ],
         }
 
     # ------------------------------------------------------------------

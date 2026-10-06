@@ -36,39 +36,49 @@ CFPB_2015 = "CFPB Section 1028 Arbitration Study (March 2015)"
 COLVIN_2011 = "Colvin, 8 J. Empirical Legal Studies 1 (2011)"
 
 # California Privacy Statutes — CCPA/CPRA
-CCPA_140 = "Cal. Civ. Code section 1798.140"
-CCPA_100 = "Cal. Civ. Code section 1798.100"
-CCPA_105 = "Cal. Civ. Code section 1798.105"
-CCPA_106 = "Cal. Civ. Code section 1798.106"
-CCPA_110 = "Cal. Civ. Code section 1798.110"
-CCPA_120 = "Cal. Civ. Code section 1798.120"
-CCPA_121 = "Cal. Civ. Code section 1798.121"
-CCPA_130 = "Cal. Civ. Code section 1798.130"
-CCPA_135 = "Cal. Civ. Code section 1798.135"
-DELETE_ACT = "Cal. Civ. Code section 1798.99.80 et seq."
+CCPA_140 = "Cal. Civ. Code §1798.140"
+CCPA_100 = "Cal. Civ. Code §1798.100"
+CCPA_105 = "Cal. Civ. Code §1798.105"
+CCPA_106 = "Cal. Civ. Code §1798.106"
+CCPA_110 = "Cal. Civ. Code §1798.110"
+CCPA_120 = "Cal. Civ. Code §1798.120"
+CCPA_121 = "Cal. Civ. Code §1798.121"
+CCPA_130 = "Cal. Civ. Code §1798.130"
+CCPA_135 = "Cal. Civ. Code §1798.135"
+DELETE_ACT = "Cal. Civ. Code §1798.99.80 et seq."
 
 # California Arbitration Fee and Timing Statutes (SB 707)
-CCP_1281_96 = "Cal. Code Civ. Proc. section 1281.96"
-CCP_1281_97 = "Cal. Code Civ. Proc. section 1281.97"
-CCP_1281_98 = "Cal. Code Civ. Proc. section 1281.98"
+CCP_1281_96 = "Cal. Code Civ. Proc. §1281.96"
+CCP_1281_97 = "Cal. Code Civ. Proc. §1281.97"
+CCP_1281_98 = "Cal. Code Civ. Proc. §1281.98"
 
 # California Statutes of Limitations
-CCP_337 = "Cal. Code Civ. Proc. section 337"
-CCP_338 = "Cal. Code Civ. Proc. section 338"
+CCP_337 = "Cal. Code Civ. Proc. §337"
+CCP_338 = "Cal. Code Civ. Proc. §338"
 
 # CCPA Non-Waivability
-CCPA_192 = "Cal. Civ. Code section 1798.192"
+CCPA_192 = "Cal. Civ. Code §1798.192"
 
 # California Silenced No More Act
-CCP_1001 = "Cal. Code Civ. Proc. section 1001"
+CCP_1001 = "Cal. Code Civ. Proc. §1001"
 
 # California Punitive Damages
-CIVCODE_3294 = "Cal. Civ. Code section 3294"
+CIVCODE_3294 = "Cal. Civ. Code §3294"
 
 # FTC Enforcement — Dark Pattern / Consent Definition
 RING_ORDER = (
     "United States v. Ring, LLC, No. 1:23-cv-01549 (D.D.C. entered June 16, 2023)"
 )
+
+# Illinois Biometric Information Privacy Act (BIPA) — 740 ILCS 14
+BIPA_15 = "740 ILCS 14/15 (Biometric Information Privacy Act, §15)"
+BIPA_20 = (
+    "740 ILCS 14/20 (Biometric Information Privacy Act, §20 — private right of action)"
+)
+
+# Federal Consumer Financial Protection (Plaid-specific instruments)
+FCRA_616 = "15 U.S.C. § 1681n (Fair Credit Reporting Act — civil liability for willful noncompliance)"
+PLAID_FTC = "In re Plaid Inc., FTC File No. 2023169 (Consent Order, Aug. 2022)"
 
 # Academic Doctrinal Sources
 YEUNG_2019 = "Council of Europe MSI-AUT DGI(2019)05 (Yeung, Rapporteur)"
@@ -115,6 +125,10 @@ ALL_ANCHORS: frozenset[str] = frozenset(
         CCPA_192,
         CIVCODE_3294,
         RING_ORDER,
+        BIPA_15,
+        BIPA_20,
+        FCRA_616,
+        PLAID_FTC,
         YEUNG_2019,
         EU_EXPERT_2019,
         SCHERER_2016,

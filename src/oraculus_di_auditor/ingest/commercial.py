@@ -215,7 +215,7 @@ def _persist(
 
     _finding_count = len(all_findings)
     _agg = casi_axes.aggregate
-    _fdr = round(_finding_count / _agg, 3) if _agg > 0 else None
+    _fdr = round(_finding_count / _agg, 3) if _agg > 0 else 0.0
     # RCD applies to regulated-disclosure doc types above the CASI-30 empirical floor
     _REGULATED_TYPES = {"privacy_notice"}
     _rcd = (_agg - 30) if doc_type in _REGULATED_TYPES and _agg > 30 else None

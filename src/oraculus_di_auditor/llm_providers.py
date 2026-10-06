@@ -220,9 +220,12 @@ class OllamaProvider(BaseLLMProvider):
         """Generate response using local Ollama.
 
         Args:
-            prompt: System prompt
-            context: Retrieved context
-            **kwargs: Additional parameters
+            prompt: User/task prompt (already contains context inline)
+            context: Retrieved context (appended to user message when non-empty)
+            **kwargs: Additional parameters. Recognized keys:
+                system_prompt (str): Content for a system-role message prepended
+                    before the user turn. Used by OracRAG to deliver the security
+                    guard constraint where the model sees it before any user input.
 
         Returns:
             Generated response text
@@ -242,9 +245,15 @@ class OllamaProvider(BaseLLMProvider):
 
         # Override defaults with kwargs
         temperature = kwargs.get("temperature", self.temperature)
+        system_prompt: str | None = kwargs.get("system_prompt")
 
         # Build user message; omit "Context:" suffix when context is already embedded.
         user_content = f"{prompt}\n\nContext:\n{context}" if context else prompt
+
+        messages: list[dict[str, str]] = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": user_content})
 
         try:
             # Use /api/chat so the model's instruct template is applied correctly.
@@ -253,9 +262,7 @@ class OllamaProvider(BaseLLMProvider):
                 f"{self.base_url}/api/chat",
                 json={
                     "model": self.model,
-                    "messages": [
-                        {"role": "user", "content": user_content},
-                    ],
+                    "messages": messages,
                     "stream": False,
                     "options": {
                         "temperature": temperature,

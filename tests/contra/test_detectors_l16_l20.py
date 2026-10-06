@@ -217,9 +217,11 @@ def test_l17b_perpetual_irrevocable_license() -> None:
 
 
 def test_l17c_broad_modality_scope() -> None:
+    # Sub-C requires confirmed training context (gate: _P_D_TRAIN) to avoid false positives
+    # on non-AI documents that mention text/image/audio. Test text includes explicit ML context.
     text = (
-        "All types of data you submit, including text, image, audio, and video "
-        "across all modalities, may be used to improve our services."
+        "We use your data for model training purposes across all modalities, "
+        "including text, image, audio, and video content you submit."
     )
     findings = _l17().scan(text, _META)
     assert _has_sub(findings, "C")

@@ -93,7 +93,10 @@ class LegalResolver:
         module_name, class_name = loader_dotted.rsplit(".", 1)
         module = importlib.import_module(module_name)
         cls = getattr(module, class_name)
-        submodule_path = Path(entry["submodule_path"])
+        raw_path = entry.get("submodule_path")
+        if raw_path is None:
+            return cls()
+        submodule_path = Path(raw_path)
         if not submodule_path.is_absolute():
             submodule_path = self._config_path.resolve().parent.parent / submodule_path
         return cls(submodule_path=submodule_path)

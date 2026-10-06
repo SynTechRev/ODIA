@@ -119,6 +119,34 @@ _P_H = re.compile(
     re.DOTALL,
 )
 
+# Sub-detector I — Biometric / account-data claim release clause
+# Plaid-pattern: "by connecting your account / providing biometric data you release all claims"
+# Triggers when the act of data submission itself constitutes a prospective waiver of
+# statutory rights (BIPA, CCPA § 1798.121, FCRA). CRITICAL because it forecloses
+# claims before harm is ascertainable — the most aggressive foreclosure architecture in corpus.
+_P_I = re.compile(
+    r"\b(?:"
+    # pattern A: "by [providing/submitting/sharing] [biometric/financial/account] [data/information]"
+    # followed by release/waiver language within 300 chars
+    r"(?:by\s+(?:providing|submitting|sharing|connecting|linking|authorizing|granting)"
+    r"\w{0,4}\s+(?:your\s+)?(?:biometric|financial|bank|account|personal|facial|payment)"
+    r"\s+(?:data|information|credentials?|identif\w+))\b.{0,300}"
+    r"\b(?:releas\w+|waiv\w+|disclaim\w+|relinquish\w+|forever\s+waiv\w+|irrevocably\s+waiv\w+"
+    r"|you\s+(?:release|waive|relinquish))"
+    r"\b.{0,200}\b(?:claim|action|right|suit|cause\s+of\s+action|damage|liability)"
+    # pattern B: explicit "release of claims" tied to data provision
+    r"|\breleas\w+\s+(?:of\s+)?(?:all\s+)?(?:claims?|rights?|causes?\s+of\s+action)\b"
+    r".{0,300}\b(?:biometric|bank\s+account|financial\s+information|account\s+credentials?"
+    r"|routing\s+number|account\s+number|plaid|yodlee|finicity|mx\s+technologies?)\b"
+    # pattern C: "you release [platform] from any claims arising from [data access]"
+    r"|\byou\s+(?:hereby\s+)?releas\w+\b.{0,100}"
+    r"\b(?:from\s+any|from\s+all|all\s+claims?|any\s+and\s+all)\b.{0,200}"
+    r"\b(?:biometric|bank\s+account|financial\s+data|account\s+information|data\s+access"
+    r"|data\s+aggregat\w+|data\s+retrieval|credential\s+shar\w+)\b"
+    r")\b",
+    re.DOTALL,
+)
+
 _REMEDY_CAP = ["demand_letter", "CPPA_complaint", "AG_complaint"]
 _REMEDY_WAIVER = ["demand_letter", "CPPA_complaint", "AG_complaint", "class_action"]
 _REMEDY_JURY = ["demand_letter", "GRAFTON_PARTNERS_challenge"]
@@ -245,5 +273,29 @@ class L18RemedyForeclosure:
             2,
             _REMEDY_CAP,
             notes="As-is / third-party warranty disclaimer -- shifts liability to consumer for partner conduct.",
+        )
+        findings += scan_pattern(
+            _P_I,
+            doc_text,
+            _LAYER,
+            "I",
+            Severity.CRITICAL,
+            doc_hash,
+            A.CCPA_121,
+            "remedy_foreclosure",
+            8,
+            [
+                "demand_letter",
+                "CPPA_complaint",
+                "AG_complaint",
+                "BIPA_action",
+                "class_action",
+            ],
+            notes=(
+                "Biometric/account-data claim release clause -- data submission itself constitutes "
+                "prospective waiver of BIPA, CCPA §1798.121, and FCRA claims before harm is "
+                "ascertainable. Plaid-pattern: connecting bank account releases all data-access claims. "
+                "Most aggressive foreclosure architecture observed in corpus."
+            ),
         )
         return findings

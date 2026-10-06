@@ -43,6 +43,27 @@ corpora:
       Pen. Code § 832.7 (officer records), Civ. Code § 1798.90.51–55 (ALPR),
       Veh. Code § 2413, Welf. & Inst. Code § 827. Re-run ingest script to refresh.
 
+  - id: cpra
+    name: "California Privacy Rights Act / CCPA Corpus"
+    enabled: true
+    loader: oraculus_di_auditor.legal.cpra_corpus.CPRACorpusLoader
+    submodule_path: null
+    source_url: https://leginfo.legislature.ca.gov
+    citation_patterns:
+      - "Cal. Civ. Code"
+      - "Civil Code"
+      - "§ 1798."
+      - "CCPA"
+      - "CPRA"
+      - "CCP §"
+      - "Lab. Code §"
+    notes: |
+      Embedded CPRA/CCPA corpus — no submodule required. Covers 13 provisions:
+      Cal. Civ. Code §§ 1798.100, .110, .115, .120, .121, .125, .135, .150;
+      CCP §§ 1281.97, 1281.98, 1670.5; Lab. Code § 2699 (PAGA); Gov. Code § 12953 (AB 51).
+      Also resolves CONTRA doctrinal_anchor IDs (CCPA_121, CCP_1281_97, etc.) directly.
+      Effective date: 2023-01-01 (CPRA operative). Updated in source — no re-ingest needed.
+
   - id: cfr
     name: "Code of Federal Regulations"
     enabled: true

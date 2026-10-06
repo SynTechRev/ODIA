@@ -10,7 +10,6 @@ pytest.importorskip("fastapi")
 pytest.importorskip("httpx")
 
 from fastapi.testclient import TestClient  # noqa: E402
-
 from oraculus_di_auditor.legal import legal_resolver as _resolver_mod  # noqa: E402
 
 
@@ -256,3 +255,120 @@ def test_reeval_missing_fields_422(client):
 def test_reeval_missing_document_id_422(client):
     r = client.post("/api/v1/legal/reeval", json={"prior_run_date": "2024-01-01"})
     assert r.status_code == 422
+
+
+# ===========================================================================
+# POST /api/v1/legal/detect  (Phase 2 native route)
+# ===========================================================================
+
+_CPRA_DENIAL_TEXT = (
+    "The department denies the CPRA request under Government Code section 7922.000. "
+    "No balancing analysis was provided."
+)
+
+_ALPR_POLICY_TEXT = (
+    "The department operates ALPR cameras under AB 481 and collects license plate data. "
+    "No retention limit or geographic scope has been established."
+)
+
+_PREDICTIVE_POLICING_TEXT = (
+    "An algorithmic risk score system generates detention recommendations based on "
+    "predictive threat assessment scores. No human review process is documented."
+)
+
+
+def test_detect_returns_200(client):
+    r = client.post("/api/v1/legal/detect", json={"text": _CPRA_DENIAL_TEXT})
+    assert r.status_code == 200, r.text
+
+
+def test_detect_returns_required_keys(client):
+    r = client.post("/api/v1/legal/detect", json={"text": _CPRA_DENIAL_TEXT})
+    body = r.json()
+    assert "findings" in body
+    assert "counts" in body
+    assert "errors" in body
+    assert "detectors_run" in body
+
+
+def test_detect_cpra_bare_denial_fires(client):
+    """BT-2 from L-10 (or EX-2 from L-3) should fire on bare catch-all denial."""
+    r = client.post("/api/v1/legal/detect", json={"text": _CPRA_DENIAL_TEXT})
+    body = r.json()
+    assert body["counts"]["total"] >= 1
+
+
+def test_detect_alpr_fires_multiple_detectors(client):
+    """ALPR + AB 481 text without scope/cost-benefit triggers L-10 BT-4 and BT-5."""
+    r = client.post("/api/v1/legal/detect", json={"text": _ALPR_POLICY_TEXT})
+    body = r.json()
+    assert body["counts"]["total"] >= 2
+
+
+def test_detect_findings_sorted_by_severity(client):
+    """Findings should be returned sorted critical > high > medium > low."""
+    r = client.post("/api/v1/legal/detect", json={"text": _PREDICTIVE_POLICING_TEXT})
+    body = r.json()
+    severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+    sevs = [severity_order.get(f["severity"], 4) for f in body["findings"]]
+    assert sevs == sorted(sevs), "Findings should be sorted by descending severity"
+
+
+def test_detect_finding_structure(client):
+    """Each finding must have all ODIA anomaly dict keys."""
+    r = client.post("/api/v1/legal/detect", json={"text": _CPRA_DENIAL_TEXT})
+    for f in r.json()["findings"]:
+        assert "id" in f
+        assert "issue" in f
+        assert f["severity"] in ("low", "medium", "high", "critical")
+        assert f["layer"] == "legal"
+        assert "details" in f
+        assert "sub_detector" in f["details"]
+
+
+def test_detect_document_id_propagated(client):
+    """document_id in request should be echoed in the response."""
+    r = client.post(
+        "/api/v1/legal/detect",
+        json={"text": _CPRA_DENIAL_TEXT, "document_id": "test-doc-999"},
+    )
+    assert r.json()["document_id"] == "test-doc-999"
+
+
+def test_detect_detector_allow_list(client):
+    """detectors allow-list should restrict which detectors run."""
+    r = client.post(
+        "/api/v1/legal/detect",
+        json={
+            "text": _CPRA_DENIAL_TEXT,
+            "detectors": ["l10-balancing-test"],
+        },
+    )
+    body = r.json()
+    assert body["detectors_run"] == ["l10-balancing-test"]
+    for f in body["findings"]:
+        assert f["details"]["sub_detector"] == "l10-balancing-test"
+
+
+def test_detect_empty_text_returns_200(client):
+    """Empty text should not raise an error (L-1 baseline may still fire)."""
+    r = client.post("/api/v1/legal/detect", json={"text": ""})
+    assert r.status_code == 200
+    body = r.json()
+    assert "errors" in body
+    assert body["errors"] == []
+
+
+def test_detect_missing_text_422(client):
+    """Request without required 'text' field should return 422."""
+    r = client.post("/api/v1/legal/detect", json={"document_id": "x"})
+    assert r.status_code == 422
+
+
+def test_detect_counts_add_up(client):
+    """Sum of per-severity counts should equal total."""
+    r = client.post("/api/v1/legal/detect", json={"text": _ALPR_POLICY_TEXT})
+    body = r.json()
+    counts = body["counts"]
+    per_sev = counts["critical"] + counts["high"] + counts["medium"] + counts["low"]
+    assert per_sev == counts["total"]

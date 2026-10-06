@@ -86,6 +86,13 @@ ocr = [
 legal = [
     "networkx>=3.0",
 ]
+# S.A.B.E.R. post-quantum optional dependency (ELECT-4 Pillar 4 ML-DSA-65)
+# Install with: pip install "odia[saber-pq]"
+# Enables FIPS 204 / ML-DSA-65 secondary signing alongside Ed25519 primary.
+# Ed25519-only mode is fully functional without this extra.
+saber-pq = [
+    "liboqs-python>=0.9.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -274,9 +281,63 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "src/oraculus_di_auditor/cards/tcams.py" = ["E501", "C901", "N806"]
 "src/oraculus_di_auditor/cards/ccceak.py" = ["E501", "C901", "N806"]
 # commercial.py: 12-step pipeline function; structural complexity (12 sequential steps)
-"src/oraculus_di_auditor/ingest/commercial.py" = ["C901", "E501"]
+# N806: _REGULATED_TYPES is a module-level constant assigned inside a function for lazy init
+"src/oraculus_di_auditor/ingest/commercial.py" = ["C901", "E501", "N806"]
 # test_tcams.py / test_ccceak.py: importorskip must precede module-level imports (E402)
 "tests/cards/test_tcams.py" = ["E402"]
 "tests/cards/test_ccceak.py" = ["E402"]
 # test_commercial.py: importorskip must precede module-level imports (E402)
 "tests/ingest/test_commercial.py" = ["E402"]
+# S.A.B.E.R. scripts use sys.path.insert for standalone execution (E402)
+"scripts/saber_keygen.py" = ["E402"]
+"scripts/saber_migrate_phase1.py" = ["E402", "C901", "E501"]
+"scripts/saber_verify.py" = ["E402", "C901"]
+"scripts/saber_upgrade_key.py" = ["E402"]
+"scripts/run_legal_detectors.py" = ["E501", "C901"]
+# odia_legal source -- legal citation strings and statute text exceed 88 chars
+"src/oraculus_di_auditor/legal/cpra_corpus.py" = ["E501"]
+"src/oraculus_di_auditor/legal/statute_citation.py" = ["E501"]
+"src/oraculus_di_auditor/legal/detectors/*.py" = ["E501"]
+"src/oraculus_di_auditor/legal/saber/signing.py" = ["E501"]
+"src/oraculus_di_auditor/legal/saber/audit_log.py" = ["E501"]
+"src/oraculus_di_auditor/legal/saber/content_store.py" = ["E501"]
+# security guard prompt is a verbatim LLM system-role text -- line wrapping
+# would change tokenization; E501 is intentional throughout
+"src/oraculus_di_auditor/security/jailbreak_filter.py" = ["E501"]
+# contra/anchors.py doctrinal citation strings exceed 88 chars
+"src/oraculus_di_auditor/contra/anchors.py" = ["E501"]
+# odia_legal test fixtures contain full legal citation strings (E501); F841:
+# `ids` is assigned for readability / future assertions in some tests; E741: `l`
+# is a conventional loader abbreviation; B007: bare loop counter is idiomatic
+"tests/legal/detectors/*.py" = ["E501", "F841"]
+"tests/legal/saber/test_audit_log.py" = ["B007"]
+"tests/legal/saber/test_signing.py" = ["E501"]
+"tests/legal/test_cal_citation_parser.py" = ["E501"]
+"tests/legal/test_cpra_corpus.py" = ["E501", "E741"]
+"tests/test_jailbreak_filter.py" = ["E501"]
+"tests/test_orac_rag_security.py" = ["E501"]
+# Operational scripts — E501: long doctrinal/URL strings; C901: sequential
+# pipeline steps; N806: SQLAlchemy Session is intentionally uppercase; E402:
+# sys.path inserts for standalone execution; E701: inline one-liners in runners
+"scripts/arcade_l14_backup.py" = ["E501", "E701"]
+"scripts/backfill_fdr_rcd.py" = ["E501", "N806"]
+"scripts/build_manifest_uber_ecosystem.py" = ["E501", "C901"]
+"scripts/compute_cifu.py" = ["E501", "C901", "N806", "F841", "B007"]
+"scripts/contra_chain_compare.py" = ["E501", "C901", "B023", "F841"]
+"scripts/contra_corpus_gap.py" = ["E501", "C901", "B007"]
+"scripts/contra_entity_deep.py" = ["E501", "C901"]
+"scripts/contra_gig_harvest.py" = ["E501", "C901", "N806", "E701"]
+"scripts/contra_new_pdf_finder.py" = ["E501", "C901"]
+"scripts/contra_pipeline.py" = ["E501", "C901"]
+"scripts/contra_targeted_harvest.py" = ["E501", "C901", "F841"]
+"scripts/contra_training_exporter.py" = ["E501", "C901", "N806"]
+"scripts/corporate_family_expander.py" = ["E501", "N806"]
+"scripts/fix_uber_entity_merge.py" = ["E501", "E402"]
+"scripts/ingest_local_fresno_pd.py" = ["E501", "C901"]
+"scripts/ingest_local_tcpd.py" = ["E501", "C901"]
+"scripts/ingest_tcpd.py" = ["E501", "C901"]
+"scripts/needs_review_processor.py" = ["E501", "C901"]
+"scripts/post_large_packets.py" = ["E501"]
+"scripts/rescore_commercial.py" = ["E501", "C901", "N806"]
+"scripts/visalia_scrape.py" = ["E501", "C901"]
+"scripts/_check_mas.py" = ["E501", "C901", "E402"]

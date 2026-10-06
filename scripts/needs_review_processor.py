@@ -14,18 +14,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
 _VALID_DOC_TYPES = ["tos", "privacy_notice", "eula", "arbitration", "reject"]
 
 _DOC_TYPE_LABELS = {
-    "tos":             "Terms of Service / Subscriber / Customer Agreement",
-    "privacy_notice":  "Privacy Notice / Policy / HIPAA NPP / CCPA disclosure",
-    "eula":            "End-User License Agreement / Software License",
-    "arbitration":     "Arbitration / Dispute Form",
-    "reject":          "REJECT (remove from corpus entirely)",
+    "tos": "Terms of Service / Subscriber / Customer Agreement",
+    "privacy_notice": "Privacy Notice / Policy / HIPAA NPP / CCPA disclosure",
+    "eula": "End-User License Agreement / Software License",
+    "arbitration": "Arbitration / Dispute Form",
+    "reject": "REJECT (remove from corpus entirely)",
 }
 
 _CHECKPOINT_FILE = Path("cache/needs_review_checkpoint.json")
@@ -61,17 +60,22 @@ def _show_queue(entries: list[dict]) -> None:
 def _prompt_classification(entry: dict, idx: int, total: int) -> str | None:
     """Prompt user to classify one document. Returns new doc_type, 'skip', or 'quit'."""
     path = Path(entry["file_path"])
+    inferred = entry["doc_type"]
+    conf = entry.get("doc_type_confidence", 0)
+
     print(f"\n{'='*70}")
     print(f"  [{idx}/{total}] {entry['entity_name']}")
     print(f"  File : {path.name}")
-    print(f"  Inferred : {entry['doc_type']} (confidence={entry.get('doc_type_confidence', 0):.2f})")
+    print(f"  Inferred : {inferred} (confidence={conf:.2f})")
     print()
     for key, label in _DOC_TYPE_LABELS.items():
-        marker = " <-- inferred" if key == entry["doc_type"] else ""
+        marker = " <-- inferred (Enter to confirm)" if key == inferred else ""
         print(f"    {key:<16}  {label}{marker}")
     print()
-    print("  Options: tos | privacy_notice | eula | arbitration | reject")
-    print("           s=skip (keep needs_review=True) | q=quit")
+    print(
+        "  Enter=confirm inferred | tos | privacy_notice | eula | arbitration | reject"
+    )
+    print("  s=skip (keep needs_review=True) | q=quit")
     print()
 
     while True:
@@ -82,17 +86,24 @@ def _prompt_classification(entry: dict, idx: int, total: int) -> str | None:
 
         if raw in ("q", "quit"):
             return "quit"
-        if raw in ("s", "skip", ""):
+        if raw in ("s", "skip"):
             return "skip"
+        if raw == "":
+            # Enter confirms the inferred type
+            print(f"  Confirmed: {inferred}")
+            return inferred
         if raw in _VALID_DOC_TYPES:
             return raw
-        print(f"  Invalid choice '{raw}'. Enter one of: tos, privacy_notice, eula, arbitration, reject, s, q")
+        print(
+            f"  Invalid choice '{raw}'. Enter one of: tos, privacy_notice, eula, arbitration, reject, s, q"
+        )
 
 
 def process_queue(
     manifest_path: Path,
     auto_reject_low: bool = False,
     show_only: bool = False,
+    confirm_all: bool = False,
 ) -> None:
     manifest: list[dict] = json.loads(manifest_path.read_text(encoding="utf-8"))
     needs_review = [e for e in manifest if e.get("needs_review")]
@@ -129,6 +140,17 @@ def process_queue(
         if auto_reject_low and entry.get("doc_type_confidence", 1.0) < 0.2:
             print(f"  AUTO-REJECT (conf<0.2): {Path(file_path).name}")
             rejects.add(file_path)
+            checkpoint.add(file_path)
+            _save_checkpoint(checkpoint)
+            continue
+
+        # Auto-confirm inferred type for all entries
+        if confirm_all:
+            inferred = entry["doc_type"]
+            print(
+                f"  AUTO-CONFIRM [{i:>2}/{len(remaining)}] {entry['entity_name']} - {Path(file_path).name[:55]} -> {inferred}"
+            )
+            corrections[file_path] = inferred
             checkpoint.add(file_path)
             _save_checkpoint(checkpoint)
             continue
@@ -174,18 +196,19 @@ def process_queue(
         encoding="utf-8",
     )
 
-    print(f"\n-- Queue Processor Results --")
+    print("\n-- Queue Processor Results --")
     print(f"  Corrected : {corrected_count}")
     print(f"  Rejected  : {rejected_count}")
     print(f"  Skipped   : {len(needs_review) - corrected_count - rejected_count}")
     print(f"\nReviewed manifest written to: {out_path}")
-    print("Feed this manifest to: python scripts/contra_batch_ingest.py --manifest", out_path)
+    print(
+        "Feed this manifest to: python scripts/contra_batch_ingest.py --manifest",
+        out_path,
+    )
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="CONTRA needs-review queue processor"
-    )
+    parser = argparse.ArgumentParser(description="CONTRA needs-review queue processor")
     parser.add_argument("--manifest", default="contra_manifest.json")
     parser.add_argument(
         "--show-queue",
@@ -197,6 +220,11 @@ def main() -> None:
         action="store_true",
         help="Automatically reject entries with doc_type_confidence < 0.2",
     )
+    parser.add_argument(
+        "--confirm-all",
+        action="store_true",
+        help="Auto-confirm every entry's inferred doc_type without prompting (fastest path)",
+    )
     args = parser.parse_args()
 
     manifest_path = Path(args.manifest)
@@ -204,7 +232,12 @@ def main() -> None:
         print(f"ERROR: manifest not found: {manifest_path}", file=sys.stderr)
         sys.exit(1)
 
-    process_queue(manifest_path, auto_reject_low=args.auto_reject_low, show_only=args.show_queue)
+    process_queue(
+        manifest_path,
+        auto_reject_low=args.auto_reject_low,
+        show_only=args.show_queue,
+        confirm_all=args.confirm_all,
+    )
 
 
 if __name__ == "__main__":

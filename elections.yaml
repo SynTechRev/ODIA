@@ -1,0 +1,199 @@
+# S.A.B.E.R. Seven Elections
+# Security Asymmetry Balance Equalization Record
+# Per Corpus Strategic Architecture Specification (formerly C.O.D.E.X. V1.1 Part VIII)
+# Mars (Marco Anthony Ramon Sanchez), Architect
+# In Propria Persona, Sui Juris, All Rights Reserved, Without Prejudice
+# SynTechRev | Polymathic Technology
+# Elected: 2026-10-04
+
+saber:
+  version: "1.0"
+  elections_date: "2026-10-04"
+  document_reference: "C.O.D.E.X. Strategic Architecture V1.1 Part VIII"
+
+  ELECT_1_working_name:
+    name: S.A.B.E.R.
+    expansion: Security Asymmetry Balance Equalization Record
+    rationale: >
+      Elected by Architect in propria persona. Replaces the proposed C.O.D.E.X.
+      working name. S.A.B.E.R. reflects the operative mandate: balancing the
+      security asymmetry between the architecture of harm (offensive capability
+      concentrated in few hands) and the vulnerable population's defensive
+      infrastructure (currently zero). The Record component anchors the
+      capability to its chain-of-custody and evidentiary purpose.
+    naming_note: >
+      Continues the Latin-rooted naming tradition of the platform:
+      A.R.C.A. (arca, sacred container), A.R.C.A.D.E. (arcus, the arch),
+      S.A.B.E.R. (sabre, the blade of defensive purpose).
+
+  ELECT_2_namespace:
+    choice: odia_legal_expansion
+    module_path: src/oraculus_di_auditor/legal/saber
+    import_path: oraculus_di_auditor.legal.saber
+    rationale: >
+      Expanding within odia_legal minimizes refactoring cost and keeps the
+      S.A.B.E.R. integrity layer adjacent to the CPRACorpusLoader, CalCitation
+      parser, and LegalResolver infrastructure it serves. The saber/ subpackage
+      is a sibling to corpus_base.py, cpra_corpus.py, and legal_resolver.py.
+
+  ELECT_3_signing_key_custody:
+    choice: hsm_architect_sole_control
+    phase_1_implementation: key_file_at_env_path
+    key_env_var: SABER_SIGNING_KEY_PATH
+    key_default_path: "~/.odia/saber/signing.key"
+    migration_target: YubiHSM_2
+    guardian_group_transition: at_phase_6_federation
+    rationale: >
+      Multi-party threshold custody depends on Coalition technical partners
+      who are not yet operationally present. Architect sole control via a
+      key file (SoftHSM2 or YubiHSM 2 at hardware migration) is the only
+      path that does not gate Phase 1 on external parties. The crypto-agile
+      Pillar 4 architecture permits migration to threshold custody without
+      re-architecting the store.
+    phase_1_note: >
+      Phase 1 generates an Ed25519 + ML-DSA-65 (when liboqs available) key
+      pair stored in a directory at SABER_SIGNING_KEY_PATH. The key directory
+      contains ed25519.pem (PKCS8), ml_dsa.bin (raw secret, if liboqs),
+      and public.json (public key bundle for distribution to verifiers).
+
+  ELECT_4_audit_publication:
+    channels:
+      - public_git_syntechrev
+    repository: "https://github.com/SynTechRev/saber-audit-log"
+    publication_frequency: daily
+    checkpoint_format: "saber-audit-{corpus_id}-{YYYYMMDD}-{root_hash_prefix}.json"
+    future_channel_noted: OpenTimestamps_blockchain_anchoring
+    rationale: >
+      Public Git under SynTechRev is immediately deployable at zero cost and
+      permits any party with git access to verify the Merkle root hash sequence
+      independently. OpenTimestamps (Bitcoin blockchain anchoring, free) is
+      noted for future addition to provide timestamped non-repudiation that
+      survives deletion of the Git repository.
+
+  ELECT_5_phase_1_migration_sequence:
+    choice: all_four_parallel
+    corpora:
+      - id: cpra
+        priority: 1
+        note: "Most immediately operative. 13 embedded provisions. Supports active writ proceeding."
+      - id: cal_codes
+        priority: 2
+        note: "California statutory. Directly supports CPRA fee doctrine research track."
+      - id: us_code
+        priority: 3
+        note: "Largest corpus. Exercises full infrastructure depth. May be stub if submodule absent."
+      - id: cfr
+        priority: 4
+        note: "Federal regulatory. Completes the four-corpus Phase 1 set."
+    rationale: >
+      Parallel migration validates cross-corpus integrity from day 1 and
+      exercises all four infrastructure paths simultaneously. All four corpora
+      implement the CorpusLoader interface, so parallel migration adds no
+      architectural risk. Empty corpora (us_code, cfr absent submodule data)
+      produce valid zero-provision manifests that exercise the infrastructure
+      without failing the migration.
+
+  ELECT_6_open_source_posture:
+    current_election: MIT
+    assessment: >
+      MIT is sufficient for all current use cases and maintains consistency
+      with the existing ODIA platform license. The specific gap: MIT does not
+      include an explicit patent grant. Apache 2.0 adds (1) an explicit
+      royalty-free patent license from every contributor covering their patent
+      claims on the software and (2) patent retaliation termination (any party
+      that initiates patent litigation against the project loses their Apache
+      license). For a security and cryptographic platform serving vulnerable
+      populations who cannot litigate patent claims, Apache 2.0 is the
+      structurally stronger choice for the saber/ subpackage specifically.
+      The security tools S.A.B.E.R. integrates with (Sigstore, SLSA, in-toto,
+      OpenSSF Scorecard, SPIFFE/SPIRE) are all Apache 2.0 for exactly this
+      reason. Apache 2.0 is MIT-compatible: Apache-licensed components can be
+      included in MIT-licensed projects. The recommended path is MIT for the
+      existing ODIA platform (no breaking change) and Apache 2.0 for the
+      saber/ subpackage at Phase 1 delivery. Election deferred to Phase 1
+      delivery for final confirmation.
+    gpl_agpl_assessment: >
+      GPL and AGPL require derivative works to remain open source. While this
+      aligns with the defense-only mandate, it limits adoption by Coalition
+      partner organizations that may operate proprietary internal systems and
+      cannot open-source all derivative work. MIT or Apache 2.0 maximizes
+      reachability to the vulnerable populations the platform serves.
+    carve_outs_pending_assessment: false
+    final_election_target: "Phase 1 delivery"
+    final_election: "Apache-2.0"
+    elected_at: "2026-10-04"
+    elected_scope: "saber/ subpackage only (oraculus_di_auditor.legal.saber)"
+    odia_platform_license: "MIT (unchanged)"
+
+  ELECT_7_agent_numbering:
+    scheme: c_series_by_tier
+    rationale: >
+      C-series by tier maintains architectural consistency with the established
+      L-series (L-1 through L-20 detectors). The full platform detector and
+      agent library will span L-series (legal and commercial detectors),
+      C-series (corpus agents), and future series as elected. The C-series
+      anchors the corpus tier in this taxonomy and supports the eventual
+      library architecture the platform is building toward.
+    tiers:
+      tier_1:
+        range: "C-1 to C-5"
+        scope: "Federal Primary Statutory"
+        agents:
+          C-1: "United States Constitution"
+          C-2: "United States Code (54 titles)"
+          C-3: "Code of Federal Regulations (50 titles)"
+          C-4: "Public Laws (session laws)"
+          C-5: "Treaties and International Agreements"
+      tier_2:
+        range: "C-6 to C-10"
+        scope: "Federal Procedural"
+        agents:
+          C-6: "Federal Rules of Civil Procedure"
+          C-7: "Federal Rules of Criminal Procedure"
+          C-8: "Federal Rules of Evidence"
+          C-9: "Federal Rules of Appellate Procedure"
+          C-10: "Federal Rules of Bankruptcy Procedure"
+      tier_3:
+        range: "C-11 to C-15"
+        scope: "Federal Judicial"
+        agents:
+          C-11: "United States Supreme Court"
+          C-12: "United States Courts of Appeals (13 circuits)"
+          C-13: "United States District Courts"
+          C-14: "Specialty Federal Courts"
+          C-15: "Executive Orders and Presidential Proclamations"
+      tier_4:
+        range: "C-16 to C-20"
+        scope: "California Statutory (pilot state)"
+        agents:
+          C-16: "California Constitution"
+          C-17: "California Codes (29 codes)"
+          C-18: "California Code of Regulations"
+          C-19: "California Rules of Court"
+          C-20: "California Attorney General Opinions"
+      tier_5:
+        range: "C-21 to C-25"
+        scope: "California Procedural and Judicial"
+        agents:
+          C-21: "California Supreme Court"
+          C-22: "California Courts of Appeal (6 districts)"
+          C-23: "Judicial Council Forms and Standards"
+          C-24: "California Administrative Decisions"
+          C-25: "Reserved"
+      tier_6:
+        range: "C-26 to C-30"
+        scope: "Local Jurisdictions (16 Sunshine Dragnet + expansion)"
+        agents:
+          C-26: "Municipal Codes"
+          C-27: "County Ordinances"
+          C-28: "Special District Rules"
+          C-29: "Charter Cities"
+          C-30: "Reserved"
+      tier_7:
+        range: "C-31+"
+        scope: "Multi-State Replication"
+        note: "One agent per state, using California build as template"
+      tier_8:
+        range: "C-100+"
+        scope: "Secondary and Specialized"
+        note: "Restatements, Model Codes, Legal Literature, License Frameworks"
