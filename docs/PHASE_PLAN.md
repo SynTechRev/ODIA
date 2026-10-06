@@ -216,11 +216,25 @@
 
 **odia_legal Phase 2 COMPLETE -- all 10 detectors live (L-1 through L-10)**
 
-### Phases 3-6 -- Not started
+### Phase 3 -- Case law corpus integration (CourtListener) -- GROUNDWORK DONE 2026-10-05
+
+| Item | Status |
+|---|---|
+| `courtlistener_client.py` — CourtListenerClient (v4 REST API wrapper) | DONE 2026-10-05 |
+| `courtlistener_corpus.py` — CourtListenerCorpusLoader (CorpusLoader impl) | DONE 2026-10-05 |
+| `scripts/build_courtlistener_corpus.py` — harvest script (12 query sets) | DONE 2026-10-05 |
+| Tests (39 offline unit tests) | DONE 2026-10-05 |
+| Initial corpus harvest (run script) | PENDING -- set COURTLISTENER_API_KEY, run script |
+| Wire CourtListenerCorpusLoader into legal_resolver | PENDING |
+
+ODIA_HARVEST_QUERIES covers: cpra, surveillance, probation, federal_grants, ab481, open_meetings, privacy
+
+To populate: `COURTLISTENER_API_KEY=<free key> python scripts/build_courtlistener_corpus.py`
+
+### Phases 4-6 -- Not started
 
 | Phase | Scope |
 |---|---|
-| Phase 3 | Case law corpus integration (Westlaw / CourtListener pipeline) |
 | Phase 4 | LLM-augmented legal reasoning (odia-v2 legal fine-tune) |
 | Phase 5 | Cross-jurisdiction precedent mapping |
 | Phase 6 | Litigation-grade output (memoranda, demand letters, TOA) |
