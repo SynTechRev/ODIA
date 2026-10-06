@@ -74,7 +74,8 @@
 
 - [ ] City of Fresno NSU ingest -- in progress (15,044 matters est.)
 - [ ] Fresno MAS V2.0 via Opus -- after city ingest + CPRA returns
-- [ ] TCPD Questys harvest -- `python scripts/ingest_tcpd.py`
+- [ ] TCPD PrimeGov harvest -- `python scripts/ingest_tcpd.py --dry-run` then full run
+  - **2026-10-05: Portal migration confirmed.** Questys CMX at `publicdocs.co.tulare.ca.us` is dead (Drupal 10 redirect). New system: PrimeGov at `tularecounty.primegov.com` (Granicus). BOS committee ID = 25. API: `/api/v2/PublicPortal/ListArchivedMeetingsByCommitteeId?year=N&committeeId=25` returns meeting list with compiled file IDs. `/api/Meeting/getcompiledfiledownloadurl?compiledFileId=N` returns signed Azure Blob SAS URL. PDF download confirmed (228KB, Oct 6 2026 BOS agenda). Archives go back to 2006 (21 years, ~700+ meetings est.). `primegov_adapter.py` written and `ingest_tcpd.py` updated.
 
 ---
 
@@ -162,8 +163,10 @@
 - [x] Re-run promptinject (3 probes, 256×5=1280 evals/probe) -- DONE 2026-10-05
   - **CRITICAL**: 77–80% vulnerable to data-embedded injection; M-1/M-2 holds for DAN but not promptinject
   - M-1 enhanced 2026-10-05: rule 7 added to SECURITY_GUARD_SYSTEM_PROMPT (data injection defense); 53/53 tests
+  - **M-1 R7 re-run result 2026-10-05: 77.1% vulnerable (HijackHateHumans, 170 outputs) — no significant improvement**
+  - Conclusion: promptinject is a training-time gap; system prompt cannot fix base model behavior
   - Analysis: data/saber/ai-defense/arcade-l13-analysis-promptinject-20261005.md
-  - M-3 (adversarial training for odia-v2) remains the permanent fix -- pending Vast.ai credits
+  - M-3 (adversarial training for odia-v2) is the required fix -- pending Vast.ai credits
 
 ### Layer 14 -- Backup and Recovery (restic 3-2-1-1-0)
 
