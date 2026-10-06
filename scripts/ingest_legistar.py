@@ -154,7 +154,6 @@ def _download(url: str, dest: Path) -> bool:
     try:
         r = _requests.get(url, timeout=DL_TIMEOUT, stream=True)
         r.raise_for_status()
-        ct = r.headers.get("content-type", "")
         total = 0
         with open(dest, "wb") as f:
             for chunk in r.iter_content(chunk_size=16384):
@@ -174,6 +173,70 @@ def _download(url: str, dest: Path) -> bool:
         dest.unlink(missing_ok=True)
         print(f"\n  [dl-error] {url[:60]}: {exc}")
         return False
+
+
+def _backend_is_alive(port: int) -> bool:
+    """Return True if the backend health endpoint responds."""
+    try:
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+        conn.request("GET", "/health")
+        r = conn.getresponse()
+        r.read()
+        return r.status < 500
+    except Exception:
+        return False
+
+
+def _notify_windows(title: str, message: str) -> None:
+    """Best-effort Windows balloon-tip notification. Never raises."""
+    try:
+        import subprocess as _sp
+
+        ps = (
+            "Add-Type -AssemblyName System.Windows.Forms; "
+            "$n = New-Object System.Windows.Forms.NotifyIcon; "
+            "$n.Icon = [System.Drawing.SystemIcons]::Warning; "
+            "$n.Visible = $true; "
+            f'$n.ShowBalloonTip(20000, "{title}", "{message}", '
+            "[System.Windows.Forms.ToolTipIcon]::Warning); "
+            "Start-Sleep -Seconds 20; $n.Dispose()"
+        )
+        _sp.Popen(
+            ["powershell", "-WindowStyle", "Hidden", "-NonInteractive", "-Command", ps],
+            stdout=_sp.DEVNULL,
+            stderr=_sp.DEVNULL,
+        )
+    except Exception:
+        pass
+
+
+def _wait_for_backend(port: int, log_fn, max_wait_min: int = 30) -> bool:
+    """Block until backend recovers or max_wait_min expires. Returns True if recovered."""
+    _notify_windows(
+        "ODIA Ingest Paused",
+        f"Backend offline on port {port}. Waiting up to {max_wait_min}min for recovery.",
+    )
+    deadline = time.time() + max_wait_min * 60
+    attempt = 0
+    while time.time() < deadline:
+        attempt += 1
+        time.sleep(30)
+        if _backend_is_alive(port):
+            msg = f"Backend recovered after {attempt * 30}s. Resuming."
+            print(f"\n[backend-recovery] {msg}", flush=True)
+            log_fn(f"BACKEND_RECOVERED | attempt={attempt}")
+            _notify_windows("ODIA Ingest Resumed", msg)
+            return True
+        print(
+            f"\n[backend-down] {attempt * 30}s elapsed — still offline on :{port}...",
+            flush=True,
+        )
+    log_fn(f"BACKEND_DOWN_TIMEOUT | waited {max_wait_min}min — stopping")
+    _notify_windows(
+        "ODIA Ingest Stopped",
+        f"Backend offline for {max_wait_min}min. Progress saved — re-run when backend is up.",
+    )
+    return False
 
 
 def _post_to_webhook(file_path: Path, jurisdiction: str, token: str, port: int) -> dict:
@@ -354,6 +417,22 @@ def main() -> None:
 
     token = _read_token()
 
+    # Pre-flight: fail fast if backend is not reachable
+    if not args.dry_run:
+        print(f"Checking backend on port {webhook_port}...", end=" ", flush=True)
+        if not _backend_is_alive(webhook_port):
+            print("OFFLINE")
+            print(f"\nERROR: Backend is not responding on port {webhook_port}.")
+            print("Start the backend first, e.g.:")
+            print(
+                f"  .venv\\Scripts\\python -m uvicorn oraculus_di_auditor.interface.api:app --port {webhook_port}"
+            )
+            print(
+                "Or run the watchdog:  .venv\\Scripts\\python scripts\\watch_backend.py"
+            )
+            sys.exit(1)
+        print("OK")
+
     # Open log file
     log_f = open(log_path, "a", encoding="utf-8")
 
@@ -374,6 +453,9 @@ def main() -> None:
     print()
 
     matters_this_session = 0
+    consecutive_post_errors = 0
+    backend_down_threshold = 3  # consecutive POST_ERR before assuming backend is dead
+
     for i, matter in enumerate(pending, 1):
         matter_id = matter.get("MatterId") or matter.get("Id")
         title = (matter.get("MatterTitle") or "?")[:70]
@@ -398,6 +480,9 @@ def main() -> None:
             continue
 
         print(f"  {len(attachments)} attachment(s)", end="", flush=True)
+
+        matter_posts_attempted = 0
+        matter_posts_succeeded = 0  # ok + already_seen
 
         for att in attachments:
             url = att.get("MatterAttachmentHyperlink") or att.get("Hyperlink") or ""
@@ -427,25 +512,47 @@ def main() -> None:
                 time.sleep(PAUSE_BETWEEN_DOWNLOADS)
 
             # POST to webhook
+            matter_posts_attempted += 1
             try:
                 resp = _post_to_webhook(local, jurisdiction, token, webhook_port)
             except Exception as exc:
                 print(" E", end="", flush=True)
                 log(f"POST_ERR {matter_id} | {att_name[:50]} | {exc}")
                 stats["files_failed"] += 1
+                consecutive_post_errors += 1
+                if consecutive_post_errors >= backend_down_threshold:
+                    log(
+                        f"BACKEND_DOWN detected after {consecutive_post_errors} consecutive errors"
+                    )
+                    print(
+                        f"\n[backend-down] {consecutive_post_errors} consecutive POST errors — pausing",
+                        flush=True,
+                    )
+                    recovered = _wait_for_backend(webhook_port, log)
+                    if not recovered:
+                        print(
+                            "Backend did not recover. Progress saved — re-run to resume."
+                        )
+                    # Stop ingest regardless; matter not marked done → will retry
+                    log_f.close()
+                    sys.exit(2)
                 continue
             finally:
                 if not args.keep_files and local.exists():
                     local.unlink(missing_ok=True)
 
+            consecutive_post_errors = 0  # reset on any successful response
+
             if resp.get("already_seen"):
                 print(" .", end="", flush=True)
                 stats["files_already_seen"] += 1
+                matter_posts_succeeded += 1
                 log(f"SEEN {matter_id} | {att_name[:50]}")
             elif resp.get("status") == "ok":
                 count = (resp.get("findings") or {}).get("count", "?")
                 print(f" +{count}", end="", flush=True)
                 stats["files_new"] += 1
+                matter_posts_succeeded += 1
                 log(f"OK {matter_id} | {count} findings | {att_name[:50]}")
             else:
                 print(" F", end="", flush=True)
@@ -454,8 +561,20 @@ def main() -> None:
 
         print()  # newline after attachment dots
 
-        processed_ids.add(matter_id)
-        stats["matters_processed"] += 1
+        # Only mark done if no files were attempted OR at least one succeeded.
+        # If every POST failed (backend was down), leave this matter out of
+        # progress so it is retried on the next run.
+        all_posts_failed = matter_posts_attempted > 0 and matter_posts_succeeded == 0
+        if all_posts_failed:
+            log(
+                f"MATTER_NOT_DONE {matter_id} | {matter_posts_attempted} POSTs all failed — will retry"
+            )
+            print(
+                f"  [not marking done — {matter_posts_attempted} POST(s) all failed, will retry]"
+            )
+        else:
+            processed_ids.add(matter_id)
+            stats["matters_processed"] += 1
         matters_this_session += 1
 
         # Checkpoint every N matters
