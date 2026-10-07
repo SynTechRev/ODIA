@@ -10,12 +10,26 @@ Usage:
     .venv\\Scripts\\python scripts\\watch_backend.py
     .venv\\Scripts\\python scripts\\watch_backend.py --port 8000
     .venv\\Scripts\\python scripts\\watch_backend.py --check-interval 15
+
+Liveness model
+--------------
+TCP socket check is the primary liveness signal.  A TCP connect succeeds
+as long as *something* is bound to the port — even when the backend is
+busy processing a large PDF and can't respond to HTTP within the usual
+5-second window.  Three consecutive TCP failures (90 s at the default
+30-second interval) are required before the watchdog concludes the
+backend is truly dead and issues a restart.
+
+Before spawning a new process the watchdog kills any process still
+holding the port via Get-NetTCPConnection / Stop-Process, preventing the
+WinError 10048 "address already in use" crash loop.
 """
 
 from __future__ import annotations
 
 import argparse
 import http.client
+import socket
 import subprocess
 import sys
 import time
@@ -26,21 +40,68 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 
 DEFAULT_PORT = 18741
 DEFAULT_CHECK_INTERVAL = 30  # seconds
+FAIL_THRESHOLD = 3  # consecutive TCP failures before restart
 
 
 def _ts() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def _backend_alive(port: int) -> bool:
+def _port_is_open(port: int) -> bool:
+    """TCP-level liveness check: is anything listening on the port?
+
+    Returns True even when the backend is busy and HTTP would time out.
+    This is the primary signal used by the monitor loop.
+    """
     try:
-        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(3)
+        result = s.connect_ex(("127.0.0.1", port))
+        s.close()
+        return result == 0
+    except Exception:
+        return False
+
+
+def _http_alive(port: int, timeout: int = 20) -> bool:
+    """HTTP health check — used only to confirm a fresh process came up."""
+    try:
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=timeout)
         conn.request("GET", "/health")
         r = conn.getresponse()
         r.read()
         return r.status < 500
     except Exception:
         return False
+
+
+def _kill_port(port: int) -> None:
+    """Kill any process currently bound to *port*.  Best-effort, never raises.
+
+    Prevents WinError 10048 when the old process hasn't released the port
+    before the watchdog spawns a new one.
+    """
+    try:
+        subprocess.run(
+            [
+                "powershell",
+                "-NonInteractive",
+                "-Command",
+                (
+                    f"$c = Get-NetTCPConnection -LocalPort {port} -State Listen "
+                    f"-ErrorAction SilentlyContinue; "
+                    f"if ($c) {{ "
+                    f"  Stop-Process -Id $c.OwningProcess -Force "
+                    f"  -ErrorAction SilentlyContinue; "
+                    f"  Start-Sleep -Milliseconds 1500 "
+                    f"}}"
+                ),
+            ],
+            timeout=8,
+            capture_output=True,
+        )
+    except Exception:
+        pass
 
 
 def _notify(title: str, message: str) -> None:
@@ -65,6 +126,9 @@ def _notify(title: str, message: str) -> None:
 
 
 def _start_backend(port: int, log_path: Path) -> subprocess.Popen:
+    """Kill anything on the port, then spawn a fresh uvicorn process."""
+    _kill_port(port)
+
     python = _REPO_ROOT / ".venv" / "Scripts" / "python.exe"
     if not python.exists():
         python = _REPO_ROOT / ".venv" / "bin" / "python"
@@ -111,24 +175,31 @@ def main() -> None:
     backend_log = logs_dir / "backend.log"
 
     print("ODIA Backend Watchdog")
-    print(f"  Port:           {port}")
-    print(f"  Check interval: {interval}s")
-    print(f"  Backend log:    {backend_log}")
+    print(f"  Port:              {port}")
+    print(f"  Check interval:    {interval}s")
+    print(
+        f"  Fail threshold:    {FAIL_THRESHOLD} consecutive misses (~{FAIL_THRESHOLD * interval}s)"
+    )
+    print(f"  Backend log:       {backend_log}")
     print("  Ctrl+C to stop\n")
+    print(
+        "  Liveness: TCP socket (succeeds even when backend is busy with large PDFs)\n"
+    )
 
     backend_proc: subprocess.Popen | None = None
     restarts = 0
+    consecutive_failures = 0
 
-    # Initial state
-    if not _backend_alive(port):
+    # Initial state — adopt a running backend, or start one
+    if not _port_is_open(port):
         print(f"[{_ts()}] Backend not running — starting...")
         backend_proc = _start_backend(port, backend_log)
-        # Wait up to 15s for startup
-        for _ in range(3):
+        # Wait up to 30s for startup (HTTP confirms it's actually serving)
+        for _ in range(6):
             time.sleep(5)
-            if _backend_alive(port):
+            if _port_is_open(port):
                 break
-        if _backend_alive(port):
+        if _port_is_open(port):
             print(f"[{_ts()}] Backend started OK (PID {backend_proc.pid})")
             _notify("ODIA Watchdog", f"Backend started on port {port}.")
         else:
@@ -136,29 +207,44 @@ def main() -> None:
                 f"[{_ts()}] Backend started but not yet responding — continuing to monitor"
             )
     else:
-        print(f"[{_ts()}] Backend already running on port {port} — monitoring")
+        print(
+            f"[{_ts()}] Backend already running on port {port} — adopting (no restart)"
+        )
+        _notify("ODIA Watchdog", f"Monitoring backend on port {port}.")
 
     # Monitor loop
     while True:
         time.sleep(interval)
 
-        if _backend_alive(port):
-            # Quiet tick — overwrite the same line
+        if _port_is_open(port):
+            consecutive_failures = 0
             print(f"[{_ts()}] OK :{port}", end="\r", flush=True)
-            # If our managed process exited cleanly, clear the reference
+            # Clear stale reference if our process exited (backend was restarted externally)
             if backend_proc is not None and backend_proc.poll() is not None:
                 backend_proc = None
             continue
 
-        # Backend is down
+        # TCP connect failed
+        consecutive_failures += 1
+        remaining = FAIL_THRESHOLD - consecutive_failures
+        if remaining > 0:
+            print(
+                f"\n[{_ts()}] TCP miss #{consecutive_failures}/{FAIL_THRESHOLD} "
+                f"— waiting for {remaining} more before restart",
+                flush=True,
+            )
+            continue
+
+        # FAIL_THRESHOLD consecutive misses — truly dead
+        consecutive_failures = 0
         restarts += 1
-        print(f"\n[{_ts()}] BACKEND DOWN — restart #{restarts}")
+        print(f"\n[{_ts()}] BACKEND DOWN (confirmed) — restart #{restarts}")
         _notify(
             "ODIA Backend Restarted",
-            f"Backend went offline and was restarted (#{restarts}). Ingest will resume automatically.",
+            f"Backend went offline (restart #{restarts}). Ingest will resume automatically.",
         )
 
-        # Terminate stale managed process if we own it
+        # Terminate any stale managed process
         if backend_proc is not None and backend_proc.poll() is None:
             try:
                 backend_proc.terminate()
@@ -168,17 +254,17 @@ def main() -> None:
         backend_proc = _start_backend(port, backend_log)
         print(f"[{_ts()}] Waiting for backend to come up (PID {backend_proc.pid})...")
 
-        # Wait up to 60s for it to respond
+        # Wait up to 60s for TCP to open
         came_up = False
         for _ in range(12):
             time.sleep(5)
-            if _backend_alive(port):
+            if _port_is_open(port):
                 came_up = True
                 break
 
         if came_up:
             print(
-                f"[{_ts()}] Backend back online (PID {backend_proc.pid}) after restart #{restarts}"
+                f"[{_ts()}] Backend back online (PID {backend_proc.pid}) — restart #{restarts}"
             )
             _notify(
                 "ODIA Backend Online",
