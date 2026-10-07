@@ -38,8 +38,11 @@ import http.client
 import json
 import mimetypes
 import os
+import socket
 import sys
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
@@ -58,7 +61,13 @@ PAUSE_BETWEEN_MATTERS = 1.0  # seconds between attachment-list API calls
 PAUSE_LONG_EVERY_N = 100  # long pause every N matters
 PAUSE_LONG_SEC = 30.0  # long pause duration
 PAUSE_BETWEEN_DOWNLOADS = 0.5  # seconds between file downloads
-CHECKPOINT_EVERY_N = 50  # save progress.json every N matters
+CHECKPOINT_EVERY_N = 10  # save progress.json every N matters (was 50)
+
+# Concurrency
+ATTACHMENT_WORKERS = 4  # parallel download+POST workers per matter
+# Caps concurrent Legistar downloads — be polite to the public API even
+# when multiple attachment workers are running in parallel.
+_DOWNLOAD_SEM = threading.Semaphore(2)
 
 # File size limits
 MAX_FILE_BYTES = 50 * 1024 * 1024  # 50 MB — skip anything larger
@@ -176,13 +185,18 @@ def _download(url: str, dest: Path) -> bool:
 
 
 def _backend_is_alive(port: int) -> bool:
-    """Return True if the backend health endpoint responds."""
+    """TCP-level check: returns True if anything is listening on the port.
+
+    Uses a socket connect rather than HTTP so the check succeeds even when
+    the backend is mid-analysis and cannot respond to HTTP within a short
+    timeout — the same approach the watchdog uses to avoid false restarts.
+    """
     try:
-        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
-        conn.request("GET", "/health")
-        r = conn.getresponse()
-        r.read()
-        return r.status < 500
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(3)
+        result = s.connect_ex(("127.0.0.1", port))
+        s.close()
+        return result == 0
     except Exception:
         return False
 
@@ -273,6 +287,74 @@ def _post_to_webhook(file_path: Path, jurisdiction: str, token: str, port: int) 
         return json.loads(raw)
     except Exception:
         return {"error": raw[:200], "http_status": resp.status}
+
+
+def _process_one_attachment(
+    att: dict,
+    att_idx: int,
+    matter_id: int | str,
+    cache_dir: Path,
+    jurisdiction: str,
+    token: str,
+    webhook_port: int,
+    keep_files: bool,
+    log_fn,
+) -> tuple[str, str]:
+    """Download and POST one attachment. Called from a thread-pool worker.
+
+    Returns (outcome, detail) where outcome is one of:
+        'new'   — ingested for the first time; detail = findings count str
+        'seen'  — backend dedup hit; detail = ''
+        'skip'  — download failed or file too small/large; detail = ''
+        'error' — POST raised an exception (backend unreachable); detail = ''
+        'fail'  — POST returned an unexpected response; detail = ''
+
+    Thread-safety: _DOWNLOAD_SEM limits concurrent Legistar downloads.
+    Unique per-thread filenames prevent workers clobbering each other.
+    """
+    from urllib.parse import urlparse as _up
+
+    url = att.get("MatterAttachmentHyperlink") or att.get("Hyperlink") or ""
+    att_name = att.get("MatterAttachmentName") or att.get("Name") or "attachment"
+    if not url:
+        return "skip", ""
+
+    url_path = _up(url).path
+    base_name = Path(url_path).name or f"m{matter_id}_att{att_idx}"
+    if not Path(base_name).suffix:
+        base_name += ".pdf"
+
+    # Unique filename: matter + index prevents concurrent workers from
+    # writing to the same file when two attachments share a URL basename.
+    local = cache_dir / f"tmp_{matter_id}_{att_idx}_{base_name}"
+
+    with _DOWNLOAD_SEM:
+        if not local.exists():
+            ok = _download(url, local)
+            if not ok:
+                log_fn(f"SKIP {matter_id} | {att_name[:50]} | {url[:80]}")
+                return "skip", ""
+            time.sleep(PAUSE_BETWEEN_DOWNLOADS)
+
+    try:
+        resp = _post_to_webhook(local, jurisdiction, token, webhook_port)
+    except Exception as exc:
+        log_fn(f"POST_ERR {matter_id} | {att_name[:50]} | {exc}")
+        return "error", ""
+    finally:
+        if not keep_files and local.exists():
+            local.unlink(missing_ok=True)
+
+    if resp.get("already_seen"):
+        log_fn(f"SEEN {matter_id} | {att_name[:50]}")
+        return "seen", ""
+    elif resp.get("status") == "ok":
+        count = str((resp.get("findings") or {}).get("count", "?"))
+        log_fn(f"OK {matter_id} | {count} findings | {att_name[:50]}")
+        return "new", count
+    else:
+        log_fn(f"FAIL {matter_id} | {resp} | {att_name[:50]}")
+        return "fail", ""
 
 
 def _load_progress(progress_path: Path) -> dict:
@@ -453,13 +535,16 @@ def main() -> None:
     print()
 
     matters_this_session = 0
-    consecutive_post_errors = 0
-    backend_down_threshold = 3  # consecutive POST_ERR before assuming backend is dead
+    # Count consecutive matters where every POST failed (backend-down signal).
+    # Using matter-level rather than attachment-level granularity is safer with
+    # parallel workers — multiple concurrent errors from one matter would
+    # otherwise trigger a false backend-down alarm.
+    consecutive_matter_failures = 0
+    backend_down_matter_threshold = 2  # 2 fully-failed matters → backend down
 
     for i, matter in enumerate(pending, 1):
         matter_id = matter.get("MatterId") or matter.get("Id")
         title = (matter.get("MatterTitle") or "?")[:70]
-        mtype = matter.get("MatterTypeName", "?")
 
         print(f"[{i}/{len(pending)}] id={matter_id} | {title}")
 
@@ -472,7 +557,6 @@ def main() -> None:
             processed_ids.add(matter_id)
             stats["matters_processed"] += 1
             matters_this_session += 1
-            # Checkpoint
             if matters_this_session % CHECKPOINT_EVERY_N == 0:
                 progress["processed_matter_ids"] = list(processed_ids)
                 _save_progress(progress_path, progress)
@@ -482,102 +566,83 @@ def main() -> None:
         print(f"  {len(attachments)} attachment(s)", end="", flush=True)
 
         matter_posts_attempted = 0
-        matter_posts_succeeded = 0  # ok + already_seen
+        matter_posts_succeeded = 0
 
-        for att in attachments:
-            url = att.get("MatterAttachmentHyperlink") or att.get("Hyperlink") or ""
-            att_name = (
-                att.get("MatterAttachmentName") or att.get("Name") or "attachment"
-            )
-            if not url:
-                continue
-
-            # Derive filename
-            from urllib.parse import urlparse as _up
-
-            url_path = _up(url).path
-            fname = Path(url_path).name or f"matter_{matter_id}_att.pdf"
-            if not Path(fname).suffix:
-                fname += ".pdf"
-            local = cache_dir / fname
-
-            # Download
-            if not local.exists():
-                ok = _download(url, local)
-                if not ok:
+        # Process all attachments for this matter concurrently.
+        # _DOWNLOAD_SEM (inside _process_one_attachment) caps simultaneous
+        # Legistar downloads at 2 regardless of worker count.
+        with ThreadPoolExecutor(max_workers=ATTACHMENT_WORKERS) as pool:
+            futures = {
+                pool.submit(
+                    _process_one_attachment,
+                    att,
+                    idx,
+                    matter_id,
+                    cache_dir,
+                    jurisdiction,
+                    token,
+                    webhook_port,
+                    args.keep_files,
+                    log,
+                ): idx
+                for idx, att in enumerate(attachments)
+            }
+            for future in as_completed(futures):
+                outcome, detail = future.result()
+                if outcome == "new":
+                    stats["files_new"] += 1
+                    matter_posts_attempted += 1
+                    matter_posts_succeeded += 1
+                    print(f" +{detail}", end="", flush=True)
+                elif outcome == "seen":
+                    stats["files_already_seen"] += 1
+                    matter_posts_attempted += 1
+                    matter_posts_succeeded += 1
+                    print(" .", end="", flush=True)
+                elif outcome == "skip":
                     stats["files_skipped"] += 1
                     print(" S", end="", flush=True)
-                    log(f"SKIP {matter_id} | {att_name[:50]} | {url[:80]}")
-                    continue
-                time.sleep(PAUSE_BETWEEN_DOWNLOADS)
-
-            # POST to webhook
-            matter_posts_attempted += 1
-            try:
-                resp = _post_to_webhook(local, jurisdiction, token, webhook_port)
-            except Exception as exc:
-                print(" E", end="", flush=True)
-                log(f"POST_ERR {matter_id} | {att_name[:50]} | {exc}")
-                stats["files_failed"] += 1
-                consecutive_post_errors += 1
-                if consecutive_post_errors >= backend_down_threshold:
-                    log(
-                        f"BACKEND_DOWN detected after {consecutive_post_errors} consecutive errors"
-                    )
-                    print(
-                        f"\n[backend-down] {consecutive_post_errors} consecutive POST errors — pausing",
-                        flush=True,
-                    )
-                    recovered = _wait_for_backend(webhook_port, log)
-                    if not recovered:
-                        print(
-                            "Backend did not recover. Progress saved — re-run to resume."
-                        )
-                    # Stop ingest regardless; matter not marked done → will retry
-                    log_f.close()
-                    sys.exit(2)
-                continue
-            finally:
-                if not args.keep_files and local.exists():
-                    local.unlink(missing_ok=True)
-
-            consecutive_post_errors = 0  # reset on any successful response
-
-            if resp.get("already_seen"):
-                print(" .", end="", flush=True)
-                stats["files_already_seen"] += 1
-                matter_posts_succeeded += 1
-                log(f"SEEN {matter_id} | {att_name[:50]}")
-            elif resp.get("status") == "ok":
-                count = (resp.get("findings") or {}).get("count", "?")
-                print(f" +{count}", end="", flush=True)
-                stats["files_new"] += 1
-                matter_posts_succeeded += 1
-                log(f"OK {matter_id} | {count} findings | {att_name[:50]}")
-            else:
-                print(" F", end="", flush=True)
-                stats["files_failed"] += 1
-                log(f"FAIL {matter_id} | {resp} | {att_name[:50]}")
+                elif outcome in ("error", "fail"):
+                    stats["files_failed"] += 1
+                    matter_posts_attempted += 1
+                    print(" E", end="", flush=True)
 
         print()  # newline after attachment dots
 
-        # Only mark done if no files were attempted OR at least one succeeded.
-        # If every POST failed (backend was down), leave this matter out of
-        # progress so it is retried on the next run.
-        all_posts_failed = matter_posts_attempted > 0 and matter_posts_succeeded == 0
-        if all_posts_failed:
+        # Backend-down detection: if every POST for this matter failed,
+        # increment the consecutive counter. Two fully-failed matters in a row
+        # signals the backend is down — pause and wait for it to recover.
+        matter_all_failed = matter_posts_attempted > 0 and matter_posts_succeeded == 0
+        if matter_all_failed:
+            consecutive_matter_failures += 1
             log(
-                f"MATTER_NOT_DONE {matter_id} | {matter_posts_attempted} POSTs all failed — will retry"
+                f"MATTER_NOT_DONE {matter_id} | {matter_posts_attempted} POSTs all failed "
+                f"({consecutive_matter_failures}/{backend_down_matter_threshold}) — will retry"
             )
             print(
-                f"  [not marking done — {matter_posts_attempted} POST(s) all failed, will retry]"
+                f"  [not marking done — all {matter_posts_attempted} POST(s) failed, will retry]"
             )
+            if consecutive_matter_failures >= backend_down_matter_threshold:
+                log(
+                    f"BACKEND_DOWN detected after {consecutive_matter_failures} fully-failed matters"
+                )
+                print(
+                    f"\n[backend-down] {consecutive_matter_failures} consecutive fully-failed matters — pausing",
+                    flush=True,
+                )
+                recovered = _wait_for_backend(webhook_port, log)
+                if not recovered:
+                    print("Backend did not recover. Progress saved — re-run to resume.")
+                log_f.close()
+                sys.exit(2)
         else:
+            consecutive_matter_failures = 0
             processed_ids.add(matter_id)
             stats["matters_processed"] += 1
+
         matters_this_session += 1
 
-        # Checkpoint every N matters
+        # Checkpoint every N matters (default 10) so progress.json stays fresh.
         if matters_this_session % CHECKPOINT_EVERY_N == 0:
             progress["processed_matter_ids"] = list(processed_ids)
             _save_progress(progress_path, progress)

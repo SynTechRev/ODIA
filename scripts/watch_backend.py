@@ -75,6 +75,53 @@ def _http_alive(port: int, timeout: int = 20) -> bool:
         return False
 
 
+def _get_mem_mb(pid: int) -> float | None:
+    """Return process WorkingSet in MB. Best-effort; returns None on failure."""
+    try:
+        import psutil
+
+        return psutil.Process(pid).memory_info().rss / (1024 * 1024)
+    except Exception:
+        pass
+    try:
+        r = subprocess.run(
+            [
+                "powershell",
+                "-NonInteractive",
+                "-Command",
+                f"$p = Get-Process -Id {pid} -ErrorAction SilentlyContinue; "
+                f"if ($p) {{ [math]::Round($p.WorkingSet / 1MB, 1) }}",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        val = r.stdout.strip()
+        if val:
+            return float(val)
+    except Exception:
+        pass
+    return None
+
+
+def _set_below_normal_priority(pid: int) -> None:
+    """Lower the process to BELOW_NORMAL CPU priority. Best-effort."""
+    try:
+        subprocess.run(
+            [
+                "powershell",
+                "-NonInteractive",
+                "-Command",
+                f"(Get-Process -Id {pid} -ErrorAction SilentlyContinue)"
+                f".PriorityClass = 'BelowNormal'",
+            ],
+            capture_output=True,
+            timeout=5,
+        )
+    except Exception:
+        pass
+
+
 def _kill_port(port: int) -> None:
     """Kill any process currently bound to *port*.  Best-effort, never raises.
 
@@ -174,12 +221,15 @@ def main() -> None:
     logs_dir.mkdir(exist_ok=True)
     backend_log = logs_dir / "backend.log"
 
+    mem_restart_mb = 1500  # restart backend if WorkingSet exceeds this
+
     print("ODIA Backend Watchdog")
     print(f"  Port:              {port}")
     print(f"  Check interval:    {interval}s")
     print(
         f"  Fail threshold:    {FAIL_THRESHOLD} consecutive misses (~{FAIL_THRESHOLD * interval}s)"
     )
+    print(f"  Memory ceiling:    {mem_restart_mb} MB")
     print(f"  Backend log:       {backend_log}")
     print("  Ctrl+C to stop\n")
     print(
@@ -187,28 +237,55 @@ def main() -> None:
     )
 
     backend_proc: subprocess.Popen | None = None
+    backend_pid: int | None = None  # PID of the live backend (owned or adopted)
     restarts = 0
     consecutive_failures = 0
+
+    def _adopt_port_pid() -> int | None:
+        """Return the PID of whatever process currently holds the port."""
+        try:
+            r = subprocess.run(
+                [
+                    "powershell",
+                    "-NonInteractive",
+                    "-Command",
+                    f"(Get-NetTCPConnection -LocalPort {port} -State Listen "
+                    f"-ErrorAction SilentlyContinue).OwningProcess",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            val = r.stdout.strip()
+            return int(val) if val else None
+        except Exception:
+            return None
 
     # Initial state — adopt a running backend, or start one
     if not _port_is_open(port):
         print(f"[{_ts()}] Backend not running — starting...")
         backend_proc = _start_backend(port, backend_log)
-        # Wait up to 30s for startup (HTTP confirms it's actually serving)
+        backend_pid = backend_proc.pid
+        _set_below_normal_priority(backend_pid)
+        # Wait up to 30s for startup
         for _ in range(6):
             time.sleep(5)
             if _port_is_open(port):
                 break
         if _port_is_open(port):
-            print(f"[{_ts()}] Backend started OK (PID {backend_proc.pid})")
+            print(f"[{_ts()}] Backend started OK (PID {backend_pid})")
             _notify("ODIA Watchdog", f"Backend started on port {port}.")
         else:
             print(
                 f"[{_ts()}] Backend started but not yet responding — continuing to monitor"
             )
     else:
+        backend_pid = _adopt_port_pid()
+        if backend_pid:
+            _set_below_normal_priority(backend_pid)
         print(
-            f"[{_ts()}] Backend already running on port {port} — adopting (no restart)"
+            f"[{_ts()}] Backend already running on port {port} "
+            f"(PID {backend_pid}) — adopting (no restart)"
         )
         _notify("ODIA Watchdog", f"Monitoring backend on port {port}.")
 
@@ -218,10 +295,39 @@ def main() -> None:
 
         if _port_is_open(port):
             consecutive_failures = 0
-            print(f"[{_ts()}] OK :{port}", end="\r", flush=True)
             # Clear stale reference if our process exited (backend was restarted externally)
             if backend_proc is not None and backend_proc.poll() is not None:
                 backend_proc = None
+                backend_pid = _adopt_port_pid()
+
+            # Memory guard: if the backend is leaking, restart before OOM.
+            if backend_pid is not None:
+                mem = _get_mem_mb(backend_pid)
+                if mem is not None and mem > mem_restart_mb:
+                    print(
+                        f"\n[{_ts()}] MEMORY {mem:.0f} MB > {mem_restart_mb} MB ceiling — restarting",
+                        flush=True,
+                    )
+                    _notify(
+                        "ODIA Backend Memory Restart",
+                        f"Backend at {mem:.0f} MB — restarting to reclaim RAM.",
+                    )
+                    if backend_proc is not None and backend_proc.poll() is None:
+                        try:
+                            backend_proc.terminate()
+                        except Exception:
+                            pass
+                    restarts += 1
+                    backend_proc = _start_backend(port, backend_log)
+                    backend_pid = backend_proc.pid
+                    _set_below_normal_priority(backend_pid)
+                    print(
+                        f"[{_ts()}] Backend restarted (PID {backend_pid}) — restart #{restarts}"
+                    )
+                    _notify("ODIA Backend Online", f"Backend restarted on port {port}.")
+                    continue
+
+            print(f"[{_ts()}] OK :{port}", end="\r", flush=True)
             continue
 
         # TCP connect failed
@@ -252,7 +358,9 @@ def main() -> None:
                 pass
 
         backend_proc = _start_backend(port, backend_log)
-        print(f"[{_ts()}] Waiting for backend to come up (PID {backend_proc.pid})...")
+        backend_pid = backend_proc.pid
+        _set_below_normal_priority(backend_pid)
+        print(f"[{_ts()}] Waiting for backend to come up (PID {backend_pid})...")
 
         # Wait up to 60s for TCP to open
         came_up = False
@@ -264,7 +372,7 @@ def main() -> None:
 
         if came_up:
             print(
-                f"[{_ts()}] Backend back online (PID {backend_proc.pid}) — restart #{restarts}"
+                f"[{_ts()}] Backend back online (PID {backend_pid}) — restart #{restarts}"
             )
             _notify(
                 "ODIA Backend Online",

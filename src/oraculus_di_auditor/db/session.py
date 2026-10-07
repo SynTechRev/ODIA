@@ -72,6 +72,19 @@ def init_db(database_url: str | None = None) -> None:
     # Create all tables
     Base.metadata.create_all(bind=_engine)
 
+    # WAL mode lets multiple reader threads proceed while a writer commits,
+    # which is critical when the webhook processes files concurrently.
+    # synchronous=NORMAL is safe for WAL (data survives OS crash) and removes
+    # the per-commit fsync bottleneck. 64 MB page cache reduces repeated I/O
+    # on the 100k-row anomaly table.
+    if url.startswith("sqlite"):
+        from sqlalchemy import text as _t
+
+        with _engine.begin() as _conn:
+            _conn.execute(_t("PRAGMA journal_mode=WAL"))
+            _conn.execute(_t("PRAGMA synchronous=NORMAL"))
+            _conn.execute(_t("PRAGMA cache_size=-65536"))
+
     # v2.9.3 Track A.2 — additive idempotent column migration. SQLAlchemy's
     # create_all() skips tables that already exist, which means new
     # columns added to existing models never reach a previously-created

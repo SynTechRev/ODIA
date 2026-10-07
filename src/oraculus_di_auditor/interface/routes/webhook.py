@@ -48,14 +48,26 @@ Provenance:
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import hmac
 import logging
 import os
 import secrets
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
+
+# Cap concurrent Tier-1 pipeline runs to 2. Each run loads the PDF into RAM,
+# runs all detectors, and writes to SQLite — bounding concurrency prevents OOM
+# and keeps the DB write queue short. Two slots lets a second file start while
+# the first is mid-analysis rather than blocking end-to-end.
+_ANALYSIS_CONCURRENCY = 2
+_ANALYSIS_POOL = ThreadPoolExecutor(
+    max_workers=_ANALYSIS_CONCURRENCY,
+    thread_name_prefix="tier1-analysis",
+)
 
 logger = logging.getLogger(__name__)
 
@@ -512,10 +524,16 @@ def register_webhook_routes(app: Any) -> None:
             }
 
         try:
-            result = _run_tier1_pipeline(
-                file_bytes=data,
-                filename=file.filename or "unknown",
-                jurisdiction_id=jurisdiction_id,
+            # run_in_executor releases the event loop while the CPU-bound
+            # pipeline runs in _ANALYSIS_POOL, allowing uvicorn to accept
+            # the next POST immediately instead of queuing behind this one.
+            loop = asyncio.get_event_loop()
+            result = await loop.run_in_executor(
+                _ANALYSIS_POOL,
+                _run_tier1_pipeline,
+                data,
+                file.filename or "unknown",
+                jurisdiction_id,
             )
         except Exception as exc:  # noqa: BLE001
             logger.exception("webhook ingest-and-analyze failed")
@@ -635,9 +653,7 @@ def register_webhook_routes(app: Any) -> None:
         }
         try:
             req = urllib.request.Request(url, headers=browser_headers)
-            with urllib.request.urlopen(
-                req, timeout=120
-            ) as response:  # noqa: S310 — validated http(s) prefix above
+            with urllib.request.urlopen(req, timeout=120) as response:  # noqa: S310 — validated http(s) prefix above
                 file_bytes = response.read()
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
             _record_webhook_call(
@@ -1073,9 +1089,7 @@ def _fetch_url(url: str, *, timeout: int = 120) -> bytes:
     tier1_error: Exception | None = None
     try:
         req = urllib.request.Request(url, headers=_BROWSER_HEADERS)
-        with urllib.request.urlopen(
-            req, timeout=timeout
-        ) as response:  # noqa: S310 — caller validated http(s) prefix
+        with urllib.request.urlopen(req, timeout=timeout) as response:  # noqa: S310 — caller validated http(s) prefix
             return response.read()
     except urllib.error.HTTPError as exc:
         if exc.code not in _TIER1_FALLBACK_HTTP_CODES:
