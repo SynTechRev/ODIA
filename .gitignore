@@ -74,6 +74,9 @@ data/vectors/*.pkl
 !data/legal_corpora/cal_codes/*.json
 !data/legal_corpora/cfr/
 !data/legal_corpora/cfr/*.json
+# CPRA investigative letters -- track all drafts
+!data/cpra_letters/
+
 # S.A.B.E.R. -- track the checklist; exclude runtime store/audit/manifest/checkpoint dirs
 !data/saber/
 data/saber/store/

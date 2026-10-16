@@ -1,0 +1,231 @@
+October 16, 2026
+
+Public Records Coordinator
+Fresno County Sheriff's Office
+2200 Fresno Street
+Fresno, CA 93721
+
+Submitted via: Fresno County Sheriff's Office Records Bureau
+
+Re: California Public Records Act Request — Surveillance Technology Records,
+    Federal Grant Compliance, and Law Enforcement Technology Governance
+    Gov. Code §§ 7920.000 et seq.
+
+Dear Public Records Coordinator:
+
+Pursuant to the California Public Records Act (CPRA), Government Code §§ 7920.000
+et seq., I respectfully request the following public records from the Fresno County
+Sheriff's Office (FCSO). This request arises from a review of Fresno County Board
+of Supervisors records — a corpus of 32,340 legislative documents — identifying
+surveillance technology deployments and federal grant activities that lack required
+statutory compliance documentation under current California law.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 1 — ALPR SYSTEM (SB 524 / Civil Code § 1798.90.5)
+           [20 critical + 20 high documents — ALPR without statutory citation]
+────────────────────────────────────────────────────────────────────────────────
+
+Twenty or more documents in BOS records reference Fresno County's use of or access
+to Automated License Plate Reader (ALPR) technology without citation to the SB 524
+AI-transparency impact assessment, and twenty without citation to a Civil Code
+§ 1798.90.5 ALPR usage and privacy policy. One document references Flock Safety
+specifically as an ALPR vendor.
+
+Please provide:
+
+  1a. All contracts, purchase orders, amendments, and data-sharing agreements
+      related to any ALPR system used by or accessible to FCSO, including
+      agreements with vendors such as Flock Safety, Vigilant Solutions,
+      or any county-wide or regional ALPR network, from January 1, 2018 through
+      the date of this request.
+
+  1b. FCSO's Civil Code § 1798.90.5 ALPR usage and privacy policy, including
+      the date of adoption and any public-facing posting location.
+
+  1c. The SB 524 (Stats. 2023, ch. 833) AI-transparency impact assessment, or
+      equivalent documentation, prepared before FCSO deployed or accessed any
+      ALPR system or AI-assisted surveillance tool.
+
+  1d. Any data-sharing agreements between FCSO and federal agencies (including
+      ICE, DEA, FBI, or HSI) providing access to ALPR data or FCSO surveillance
+      records.
+
+  1e. FCSO's ALPR audit logs for calendar year 2025, including query counts,
+      hit rates, and authorized access records, to the extent disclosable
+      under Civil Code § 1798.90.5.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 2 — BODY-WORN CAMERA AND AXON PROGRAM (CJIS COMPLIANCE)
+           [76 documents with Axon Enterprise reference; 71 BWC/CJIS gap docs]
+────────────────────────────────────────────────────────────────────────────────
+
+Seventy-six Board documents reference Axon Enterprise Inc. as a vendor for
+body-worn cameras, Tasers, or cloud analytics services, and 71 reference a
+body-worn camera program without citation to FBI Criminal Justice Information
+Services (CJIS) Security Policy compliance.
+
+Please provide:
+
+  2a. All contracts, purchase orders, amendments, and service orders with Axon
+      Enterprise, Inc. for body-worn cameras, Taser devices, Evidence.com cloud
+      storage, Draft One AI report-writing, Fleet vehicle cameras, or any other
+      Axon product or service, from January 1, 2015 through the date of this
+      request.
+
+  2b. FCSO's current body-worn camera policy, including data retention, access
+      controls, evidentiary upload procedures, and any reference to CJIS
+      Security Policy compliance.
+
+  2c. The most recent CJIS Security Policy compliance audit, assessment, or
+      self-certification applicable to FCSO's BWC data storage, Evidence.com
+      access, and any cloud-hosted law enforcement data.
+
+  2d. FCSO's SB 524 AI-transparency documentation (or equivalent) for any
+      AI-assisted tool in the Axon ecosystem, including Axon Draft One
+      AI report-writing software.
+
+  2e. FCSO's current Axon Draft One usage policy, including officer-verification
+      requirements before submission of AI-generated report content.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 3 — FACIAL RECOGNITION (AB 1215)
+           [8 documents with facial recognition / AB 1215 findings]
+────────────────────────────────────────────────────────────────────────────────
+
+Eight documents in BOS records reference facial recognition technology in
+connection with FCSO activities. AB 1215 (Gov. Code § 832.19) prohibited the use
+of facial recognition technology in connection with body-worn cameras from
+January 1, 2020 through January 1, 2023. Subsequent legislation governs any
+post-2022 use.
+
+Please provide:
+
+  3a. All contracts, MOUs, or data-sharing agreements related to facial recognition
+      technology, facial matching systems, or biometric identification systems
+      used by or accessible to FCSO, from January 1, 2018 through the date
+      of this request.
+
+  3b. FCSO's written policy on the use of facial recognition technology,
+      including any restrictions, approval requirements, and audit logging.
+
+  3c. Any records of FCSO's use of facial recognition technology or biometric
+      identification systems in operational law enforcement activities, including
+      any use connected with body-worn cameras, from January 1, 2020 through
+      the date of this request.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 4 — DRONE / UAS PROGRAM (AB 481)
+           [12 documents with drone/UAS without AB 481 language]
+────────────────────────────────────────────────────────────────────────────────
+
+Twelve documents in BOS records reference FCSO drone or UAS operations without
+citation to an AB 481 Militarized Equipment Use Policy or annual report.
+
+Please provide:
+
+  4a. FCSO's current drone/UAS Militarized Equipment Use Policy under AB 481
+      (Gov. Code § 7070 et seq.), including BOS approval date.
+
+  4b. FCSO's AB 481 annual reports for fiscal years 2022-23, 2023-24, 2024-25,
+      and 2025-26, together with the BOS resolutions approving each.
+
+  4c. All FAA authorizations (Certificates of Authorization or Part 107 waivers)
+      and all contracts for drone/UAS hardware, software, or maintenance,
+      from January 1, 2018 through the date of this request.
+
+  4d. Any logs or records of drone/UAS operations conducted by FCSO, including
+      mission type, duration, and geographic area, for calendar year 2025.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 5 — JAG/EDWARD BYRNE GRANT COMPLIANCE (34 U.S.C. § 10152)
+           [FCSO component of 190 total JAG-deficient BOS documents]
+────────────────────────────────────────────────────────────────────────────────
+
+Board records identified 190 or more documents referencing JAG funds for County
+law enforcement activities — including FCSO procurements — without the anti-
+supplanting certification required under 34 U.S.C. § 10152(a)(1)(G). Nineteen of
+those documents also reference surveillance vendors alongside JAG funding, raising
+an additional JAG-funded technology itemization issue.
+
+Please provide:
+
+  5a. All JAG award letters, sub-award agreements, and MOUs under which FCSO
+      has received or administered JAG funds, for grant years 2006 through 2026.
+
+  5b. The anti-supplanting certification submitted with or alongside each FCSO
+      JAG award acceptance.
+
+  5c. All itemized lists of equipment, technology, or personnel funded wholly
+      or partially with JAG funds, including any surveillance or ALPR technology,
+      for grant years 2006 through 2026.
+
+  5d. Any BJA monitoring reports, audit findings, or corrective action plans
+      applicable to FCSO's JAG activities.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 6 — LEXIPOL POLICY PLATFORM (94 documents)
+────────────────────────────────────────────────────────────────────────────────
+
+Ninety-four documents in BOS records reference the Lexipol California State Master
+policy platform as the source or template for FCSO policies — including use-of-force,
+surveillance, and technology policies. Lexipol is a vendor-supplied boilerplate;
+BOS approval of "policy updates" without specifying the substantive changes creates
+a governance gap.
+
+Please provide:
+
+  6a. FCSO's most recent Lexipol California State Master policy manual or policy
+      library, in full, as currently in effect.
+
+  6b. All BOS agenda items, staff reports, and resolutions approving or ratifying
+      FCSO policy updates (including Lexipol quarterly or annual policy bundles)
+      for fiscal years 2018-19 through 2025-26.
+
+  6c. Any internal FCSO analysis, legal review, or deviation documentation
+      showing where FCSO policy departs from the Lexipol California template
+      for surveillance, use-of-force, or data-retention provisions.
+
+────────────────────────────────────────────────────────────────────────────────
+FORMAT AND TIMELINE
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide records in electronic format (PDF, XLSX, or searchable text) where
+available. Acknowledgment is required within 10 calendar days per Gov. Code
+§ 7922.535. Records may be provided on a rolling basis as they are identified.
+
+To the extent records are withheld, please provide a written index identifying
+each withheld record, the specific statutory exemption claimed, and the factual
+basis for the exemption per Gov. Code § 7923.000 et seq.
+
+If any fee estimate will exceed $50.00, please notify me before incurring costs.
+
+Sincerely,
+
+[REQUESTER NAME]
+[ADDRESS]
+[CITY, STATE ZIP]
+[EMAIL]
+[PHONE]
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT LOG (internal reference — do not include in submission)
+  Generated:    2026-10-16
+  Corpus:       fresnocounty_MAS.json — 32,340 docs / 73,547 findings
+  Anchoring findings (FCSO-relevant):
+    - 1 doc:     Flock Safety ALPR (critical surveillance)
+    - 20 docs:   ALPR without SB 524 (critical)
+    - 20 docs:   ALPR without Civil Code §1798.90.5 usage policy (critical)
+    - 76 docs:   Axon Enterprise BWC reference (critical/high)
+    - 71 docs:   BWC without CJIS Security Policy reference (critical/high)
+    - 12 docs:   Drone/UAS without AB 481 annual-report language (high)
+    - 8 docs:    Facial recognition / AB 1215 restrictions (high)
+    - 94 docs:   Lexipol policy boilerplate reference (medium)
+    - 190 docs:  JAG without anti-supplanting (critical) [county-wide]
+    - 19 docs:   JAG + surveillance vendor co-reference (high)
+  Detector layers: surveillance, grant_compliance, governance
+  CPRA statutory basis: Gov. Code §§ 7920.000, 7922.535, 7923.000 et seq.
+  Surveillance law: Civil Code §1798.90.5 (ALPR); SB 524 (AI transparency);
+                    AB 481 (militarized equipment); AB 1215 (facial recognition);
+                    FBI CJIS Security Policy (BWC data)
+  Federal basis: 34 U.S.C. §10152(a)(1)(G) (JAG anti-supplanting)
+────────────────────────────────────────────────────────────────────────────────

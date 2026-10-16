@@ -1,0 +1,200 @@
+October 16, 2026
+
+Clerk of the Board of Supervisors
+County of Fresno
+Hall of Records, Room 301
+2281 Tulare Street
+Fresno, CA 93721
+
+Submitted via: Fresno County Public Records Request Portal
+
+Re: California Public Records Act Request — Contract Execution Records,
+    Federal Grant Compliance, Procurement Governance, and Unsigned Instruments
+    Gov. Code §§ 7920.000 et seq.
+
+Dear Clerk of the Board:
+
+Pursuant to the California Public Records Act (CPRA), Government Code §§ 7920.000
+et seq., I respectfully request the following public records. This request arises
+from a review of Fresno County Board of Supervisors agenda packets, staff reports,
+and attachments — a corpus of 32,340 legislative documents — in which significant
+and recurring compliance gaps were identified in contract execution, federal grant
+certification, and procurement governance.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 1 — UNSIGNED OR INCOMPLETELY EXECUTED CONTRACTS AND AGREEMENTS
+           [4,120 documents identified — CRITICAL priority, ~$14.97B total value]
+────────────────────────────────────────────────────────────────────────────────
+
+A systematic review of Fresno County BOS legislative records identified 4,120 or
+more documents referencing financial instruments — including contracts, professional
+services agreements, memoranda of understanding, grant agreements, sole-source
+authorizations, and capital expenditure instruments — in which signature execution
+appeared absent, incomplete, or unverifiable from the public record. The aggregate
+value of these instruments is approximately $14.97 billion across fiscal years
+reviewed.
+
+Under California Public Contract Code §§ 20160–20175, Government Code § 25502.5,
+and the County's own contract execution policies, all contracts obligating public
+funds require proper authorization, co-execution by both parties, and posting to
+the public record.
+
+Please provide:
+
+  1a. All contracts, professional services agreements, and MOUs executed by or
+      on behalf of Fresno County in which the final, fully executed version
+      bearing all required signatures (Board Chair or CAO, as applicable, plus
+      counterparty) has NOT been posted to the Board's public Legistar or records
+      portal, for fiscal years 2019-20 through 2025-26.
+
+  1b. All contracts, agreements, or instruments valued at $500,000 or above —
+      including amendments and change orders — for which the public record reflects
+      Board approval but does not contain a complete, fully executed copy,
+      for the same period.
+
+  1c. The County's current contract execution policy and signature authorization
+      matrix, including delegated signing authority thresholds for the CAO,
+      department directors, and any authorized designees.
+
+  1d. Any County Auditor-Controller, Internal Audit, or Grand Jury reports,
+      findings, or management letters concerning contract execution compliance,
+      signature gaps, or incomplete procurement records, for fiscal years
+      2019-20 through 2025-26.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 2 — JAG/EDWARD BYRNE AND COPS GRANT COMPLIANCE
+           [190 critical + 35 high-severity documents]
+────────────────────────────────────────────────────────────────────────────────
+
+A review of BOS records identified 190 or more documents referencing Edward Byrne
+Memorial Justice Assistance Grant (JAG) funds awarded to or administered through
+Fresno County without the anti-supplanting certification required under 34 U.S.C.
+§ 10152(a)(1)(G). An additional 14 documents reference COPS grants without the
+required technology cost itemization. Two documents reference criminal intelligence
+activities without citation to 28 CFR Part 23 compliance requirements.
+
+Please provide:
+
+  2a. All JAG award letters, sub-award agreements, and MOUs accepted by or flowing
+      through Fresno County from the U.S. Department of Justice / BJA for grant
+      years 2006 through 2026, including allocations to the Sheriff's Department,
+      Probation Department, and any sub-recipient agencies.
+
+  2b. The anti-supplanting certification submitted with each JAG application or
+      award acceptance for the same period.
+
+  2c. All JAG programmatic and financial progress reports (SF-PPR and SF-425
+      or equivalent) submitted to BJA for grant years 2006 through 2026.
+
+  2d. All COPS grant awards, technology purchase plans, and annual progress
+      reports for grant years 2010 through 2026.
+
+  2e. All BOS resolutions and agenda items authorizing JAG or COPS grant
+      acceptance, technology expenditures, and compliance reporting.
+
+  2f. Any BJA, OIG, or Grand Jury findings concerning Fresno County JAG or COPS
+      compliance, anti-supplanting, or technology procurement.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 3 — SOLE-SOURCE AND PROCUREMENT GOVERNANCE
+           [1,765 high-severity sole-source documents; 303 auto-renewal docs]
+────────────────────────────────────────────────────────────────────────────────
+
+A review of BOS records identified 1,765 documents referencing sole-source or
+no-bid procurement without citation to a Government Code § 10340 justification
+finding, and 303 documents in which vendor contracts appear to include automatic
+renewal clauses that renew without an affirmative BOS vote unless notice is given —
+creating ongoing fiscal obligations without required legislative reauthorization.
+
+Please provide:
+
+  3a. All sole-source authorization memoranda, emergency contract certifications,
+      and findings of fact supporting a waiver of competitive bidding requirements
+      (Gov. Code § 10340), approved by the Board of Supervisors or CAO, for
+      fiscal years 2019-20 through 2025-26.
+
+  3b. All contracts containing automatic renewal clauses currently in effect that
+      have renewed without an affirmative BOS vote or have been authorized for
+      renewal through a consent calendar item rather than a separately noticed
+      agenda item, for fiscal years 2019-20 through 2025-26.
+
+  3c. The County's current policy on auto-renewal clauses and the required
+      notification and reauthorization process before an auto-renewal takes effect.
+
+  3d. All piggyback authorizations and cooperative purchasing agreements
+      (NASPO, OMNIA, and similar) executed by the County, for the same period.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 4 — SURVEILLANCE TECHNOLOGY WITHOUT BOARD AUTHORIZATION
+           [92 critical governance documents]
+────────────────────────────────────────────────────────────────────────────────
+
+Ninety-two documents in BOS records reference County department surveillance
+capabilities — including ALPR systems, body-worn cameras, drones/UAS, and facial
+recognition — without any corresponding BOS resolution, agenda authorization, or
+public hearing record, in potential conflict with AB 481 (Gov. Code § 7070 et seq.)
+and California's general requirement of legislative authorization for county
+department equipment acquisitions above applicable thresholds.
+
+Please provide:
+
+  4a. All BOS resolutions, agenda items, and staff reports authorizing Fresno
+      County departments to acquire or operate any surveillance technology —
+      including ALPR systems, body-worn cameras, drones/UAS, facial recognition
+      systems, or predictive policing tools — from January 1, 2018 through
+      the date of this request.
+
+  4b. The County's AB 481 Militarized Equipment Use Policy, all annual reports
+      submitted to the BOS under AB 481, and all BOS resolutions approving or
+      renewing that policy, for fiscal years 2022-23, 2023-24, 2024-25,
+      and 2025-26.
+
+  4c. The AB 481 equipment inventory for each year referenced above.
+
+  4d. All surveillance-related items that have appeared on a BOS consent calendar
+      (rather than discussion agenda) since January 1, 2018, together with the
+      BOS minutes for those meetings.
+
+────────────────────────────────────────────────────────────────────────────────
+FORMAT AND TIMELINE
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide records in electronic format (PDF, XLSX, or searchable text) where
+available. Acknowledgment is required within 10 calendar days per Gov. Code
+§ 7922.535. Records may be provided on a rolling basis as they are identified.
+
+To the extent records are withheld, please provide a written index identifying
+each withheld record, the specific statutory exemption claimed, and the factual
+basis for the exemption per Gov. Code § 7923.000 et seq.
+
+If any fee estimate will exceed $50.00, please notify me before incurring costs.
+
+Sincerely,
+
+[REQUESTER NAME]
+[ADDRESS]
+[CITY, STATE ZIP]
+[EMAIL]
+[PHONE]
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT LOG (internal reference — do not include in submission)
+  Generated:    2026-10-16
+  Corpus:       fresnocounty_MAS.json — 32,340 docs / 73,547 findings
+  Anchoring findings:
+    - 4,120 docs:   signature layer (CRITICAL) — unsigned/incomplete instruments
+                    aggregate value ~$14.97B
+    - 190 docs:     grant_compliance CRITICAL (JAG anti-supplanting)
+    - 19 docs:      JAG with surveillance vendor reference (high)
+    - 14 docs:      COPS without technology itemization (high)
+    - 2 docs:       criminal intelligence without 28 CFR Part 23 (high)
+    - 92 docs:      surveillance capability without council resolution (CRITICAL)
+    - 1,765 docs:   sole-source without Gov Code §10340 justification (high)
+    - 303 docs:     auto-renewal clause without reauthorization (high)
+    - 132 docs:     surveillance without transparency portal (high)
+    - 17 docs:      surveillance on consent calendar (high)
+  Detector layers: signature, grant_compliance, governance, procurement
+  CPRA statutory basis: Gov. Code §§ 7920.000, 7922.535, 7923.000 et seq.
+  Public contracting: Pub. Contract Code §§ 20160–20175; Gov. Code § 25502.5
+  Federal basis: 34 U.S.C. §10152(a)(1)(G); 28 CFR Part 23; 2 CFR Part 200
+────────────────────────────────────────────────────────────────────────────────

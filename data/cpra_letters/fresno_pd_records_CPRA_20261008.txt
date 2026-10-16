@@ -1,0 +1,166 @@
+October 8, 2026
+
+Records and Identification Division
+Fresno Police Department
+2323 Mariposa Street
+Fresno, CA 93721
+
+Submitted via: Fresno Police Department Records Division
+              (public records portal or in person)
+
+Re: California Public Records Act Request — Law Enforcement Surveillance
+    Technology Operations, Policies, and Compliance Records
+    Gov. Code §§ 7920.000 et seq.
+
+Dear Records Division:
+
+Pursuant to the California Public Records Act (CPRA), Government Code §§ 7920.000
+et seq., I respectfully request the following public records from the Fresno Police
+Department. This request addresses operational use of surveillance and AI-assisted
+policing technologies for which statutory compliance documentation could not be
+located in publicly available Council records.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 1 — FLOCK SAFETY ALPR OPERATIONAL RECORDS
+────────────────────────────────────────────────────────────────────────────────
+
+  1a. The FPD operational policy governing use of Flock Safety ALPR data,
+      including data retention schedules, access controls, and audit log
+      requirements, as currently in effect.
+
+  1b. All data-sharing agreements between FPD and any other agency (federal,
+      state, county, or municipal) regarding Flock Safety ALPR data, including
+      any agreements granting Immigration and Customs Enforcement (ICE) or
+      federal law enforcement access to ALPR data or queries.
+
+  1c. Statistical reports or dashboards reflecting ALPR query volume, plate-read
+      volume, and any "hot list" alert volume for calendar years 2023, 2024,
+      and 2025.
+
+  1d. The Civil Code § 1798.90.5 ALPR usage and privacy policy, including the
+      date it was adopted, any annual updates, and the public-facing location
+      where it is posted.
+
+  1e. Records of any audits, internal affairs investigations, or civilian
+      complaints related to ALPR system misuse or unauthorized access,
+      from January 1, 2020 through the date of this request (with personally
+      identifying information redacted as authorized under Gov. Code § 7923.600).
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 2 — AXON DRAFT ONE / AI REPORT WRITING
+────────────────────────────────────────────────────────────────────────────────
+
+  2a. All FPD policies, procedures, or directives governing officer use of
+      Axon Draft One (AI-generated narrative report writing), including any
+      supervisor review requirements and documentation of officer training.
+
+  2b. The SB 524 (Stats. 2023, ch. 833) AI-transparency impact assessment, or
+      equivalent documentation, prepared before FPD deployed any AI-assisted
+      report-writing tool.
+
+  2c. Any records reflecting the number of reports generated with AI assistance
+      vs. officer-authored reports, for the most recent 12-month period for
+      which data is available.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 3 — BODY-WORN CAMERA PROGRAM (CJIS COMPLIANCE)
+────────────────────────────────────────────────────────────────────────────────
+
+  3a. The FPD body-worn camera policy as currently in effect, including data
+      retention, access controls, evidentiary upload procedures, and any
+      specific reference to CJIS Security Policy compliance.
+
+  3b. The most recent CJIS Security Policy compliance documentation or audit
+      results applicable to FPD's BWC data storage and access systems.
+
+  3c. The Axon BWC contract in effect as of the date of this request, including
+      cloud storage terms, data sovereignty provisions, and any federal law
+      enforcement access provisions.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 4 — DRONE / UAS PROGRAM (AB 481)
+────────────────────────────────────────────────────────────────────────────────
+
+  4a. FPD's current drone/UAS Militarized Equipment Use Policy adopted pursuant
+      to AB 481 (Gov. Code § 7070 et seq.).
+
+  4b. All AB 481 annual reports submitted to the City Council for fiscal years
+      2022-23, 2023-24, 2024-25, and 2025-26.
+
+  4c. All FAA authorizations (Certificates of Authorization or Part 107 waivers)
+      obtained by FPD for drone operations.
+
+  4d. Any incidents or uses of drones in connection with protests, First
+      Amendment-protected activities, or civil disturbances, from January 1,
+      2020 through the date of this request.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 5 — FACIAL RECOGNITION
+────────────────────────────────────────────────────────────────────────────────
+
+  5a. All records reflecting FPD use of facial recognition technology (including
+      any use of external services such as Clearview AI, Amazon Rekognition,
+      or equivalent) from January 1, 2019 through the date of this request.
+
+  5b. Any FPD facial recognition policy, legal opinion on AB 1215 applicability,
+      or documentation of compliance with the moratorium period (2019–2023).
+
+  5c. Any investigative leads or arrests in which facial recognition output
+      played a material role, for the period covered by this request (with
+      case-specific identifying information redacted as authorized).
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 6 — MULTI-LAYER SURVEILLANCE ARCHITECTURE
+────────────────────────────────────────────────────────────────────────────────
+
+City Council records reflect documents indicating a multi-layer surveillance
+architecture (ALPR + facial recognition + BWC data analytics simultaneously).
+
+  6a. Any system architecture documentation, technology integration records, or
+      data fusion agreements reflecting combined use of ALPR, BWC footage,
+      facial recognition, and/or predictive policing analytics.
+
+  6b. The Privacy Impact Assessment or equivalent documentation prepared for
+      any integrated surveillance platform.
+
+────────────────────────────────────────────────────────────────────────────────
+FORMAT AND TIMELINE
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide records in electronic format (PDF, XLSX, or searchable text) where
+available. Acknowledgment is required within 10 calendar days per Gov. Code
+§ 7922.535. To the extent records are withheld under the law enforcement
+investigative records exemption (Gov. Code § 7923.600) or any other exemption,
+please provide a written Vaughn-style index identifying each withheld record, the
+claimed exemption, and the factual basis.
+
+For records partially exempt, please provide segregable non-exempt portions.
+Gov. Code § 7922.000(a).
+
+If any fee estimate will exceed $50.00, please notify me before incurring costs.
+
+Sincerely,
+
+[REQUESTER NAME]
+[ADDRESS]
+[CITY, STATE ZIP]
+[EMAIL]
+[PHONE]
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT LOG (internal reference — do not include in submission)
+  Generated:  2026-10-08
+  Corpus:     fresno_MAS.json — 14,409 docs / 64,489 findings
+  Anchoring findings:
+    - 25 docs: ALPR without SB 524 AI-transparency citation (critical)
+    - 25 docs: ALPR without Civil Code §1798.90.5 usage-policy citation (high)
+    - 51 docs: BWC (Axon) without CJIS Security Policy reference (high)
+    - 7 docs:  Drone/UAS without AB 481 annual-report language (high)
+    - 11 docs: Facial recognition, AB 1215 restrictions apply (critical)
+    - 6 docs:  AI report writing (Draft One) without SB 524 citation (critical)
+    - 2 docs:  Multi-layer surveillance architecture (high)
+    - 18 docs: Flock Safety vendor reference; 56 docs: Axon BWC reference
+  Detector layers: surveillance, procurement
+  CPRA statutory basis: Gov. Code §§ 7920.000, 7922.535, 7922.000(a), 7923.000,
+                        7923.600 et seq.
+────────────────────────────────────────────────────────────────────────────────

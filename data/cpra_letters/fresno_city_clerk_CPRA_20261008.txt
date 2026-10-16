@@ -1,0 +1,161 @@
+October 8, 2026
+
+City Clerk
+City of Fresno
+2600 Fresno Street
+Fresno, CA 93721
+
+Submitted via: City of Fresno Public Records Portal
+              (https://www.fresno.gov/city-clerk/public-records/)
+
+Re: California Public Records Act Request — Surveillance Technology Contracts,
+    Compliance Documentation, and Procurement Records
+    Gov. Code §§ 7920.000 et seq.
+
+Dear City Clerk:
+
+Pursuant to the California Public Records Act (CPRA), as recodified at Government
+Code §§ 7920.000 et seq., I respectfully request the following public records. These
+requests arise from a pattern of surveillance technology deployments identified in
+City of Fresno legislative records that lack the statutory compliance documentation
+required under current California law.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 1 — FLOCK SAFETY ALPR SYSTEM (Civil Code § 1798.90.5 / SB 524)
+────────────────────────────────────────────────────────────────────────────────
+
+A review of City Council agenda packets, staff reports, and attachments (2020–2026)
+identified 25 or more documents referencing Automated License Plate Reader (ALPR)
+deployment in the City of Fresno without any citation to the agency's Civil Code
+§ 1798.90.5 ALPR usage and privacy policy, and without the SB 524 AI-transparency
+impact assessment required before operational use.
+
+Please provide:
+
+  1a. All contracts, purchase orders, amendments, and renewal options between the
+      City of Fresno (including Fresno Police Department) and Flock Safety, Inc.,
+      for ALPR system procurement, installation, maintenance, or data services,
+      for the period January 1, 2018 through the date of this request.
+
+  1b. The City's current ALPR usage and privacy policy required by Civil Code
+      § 1798.90.5, including any version history, adoption resolutions, and the
+      date the policy was last reviewed or updated.
+
+  1c. All SB 524 (Stats. 2023, ch. 833) AI-transparency impact assessments or
+      equivalent documentation prepared in connection with any ALPR system or
+      AI-assisted tool deployed by the Fresno Police Department.
+
+  1d. All City Council agenda items, staff reports, resolutions, and minutes
+      related to ALPR system authorization, funding, or renewal.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 2 — AXON ENTERPRISE (Draft One / AI Report Writing) (SB 524)
+────────────────────────────────────────────────────────────────────────────────
+
+Multiple city agenda documents reference AI-assisted police report writing
+(including Axon's "Draft One" or equivalent product) without any citation to an
+SB 524 AI-transparency impact assessment.
+
+Please provide:
+
+  2a. All contracts, purchase orders, and amendments between the City of Fresno
+      or Fresno Police Department and Axon Enterprise, Inc. (including body-worn
+      camera hardware, software subscriptions, AI analytics, and Draft One),
+      for the period January 1, 2018 through the date of this request.
+
+  2b. All SB 524 (Stats. 2023, ch. 833) impact assessments, AI use policy
+      documentation, or equivalent compliance records prepared in connection
+      with AI-assisted report writing tools deployed by FPD.
+
+  2c. All City Council approvals, budget line items, and any sole-source
+      justifications for Axon Enterprise contracts exceeding $50,000.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 3 — AB 481 ANNUAL MILITARIZED EQUIPMENT REPORTS
+────────────────────────────────────────────────────────────────────────────────
+
+Seven documents in City Council records reference Fresno Police Department drone
+and UAS programs without AB 481 (Stats. 2021, ch. 825) annual-report language.
+
+Please provide:
+
+  3a. The Fresno Police Department's AB 481 Militarized Equipment Use Policy,
+      all annual reports submitted to the City Council under AB 481 (§ 7072),
+      and all Council resolutions approving or renewing that policy, for
+      fiscal years 2022-23, 2023-24, 2024-25, and 2025-26.
+
+  3b. The equipment inventory disclosed in each AB 481 annual report,
+      including drones/UAS, ALPR systems, less-lethal weapons, and any
+      surveillance equipment acquired with federal grants.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 4 — FACIAL RECOGNITION (AB 1215 COMPLIANCE)
+────────────────────────────────────────────────────────────────────────────────
+
+Eleven documents in City Council records reference facial recognition technology,
+subject to the restrictions in AB 1215 (Stats. 2019, ch. 783).
+
+Please provide:
+
+  4a. All records reflecting the City's or FPD's use of, or access to, facial
+      recognition technology from January 1, 2019 through the date of this
+      request, including any contracts, data-sharing agreements, and any
+      reports or incidents involving facial recognition output used in
+      criminal investigations.
+
+  4b. All AB 1215 compliance documentation, legal opinions, or policy
+      determinations regarding facial recognition use or moratorium status.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 5 — JAG GRANT COMPLIANCE DOCUMENTATION
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide:
+
+  5a. All Edward Byrne Memorial Justice Assistance Grant (JAG) award letters,
+      sub-award agreements, and compliance certifications accepted by the City
+      of Fresno or Fresno Police Department for grant years 2019 through 2026.
+
+  5b. All equipment purchases made with JAG funds, including any surveillance
+      technology, ALPR, body cameras, or related hardware.
+
+  5c. All required JAG programmatic and financial reports submitted to the
+      Bureau of Justice Assistance (BJA) for grant years 2019 through 2026.
+
+────────────────────────────────────────────────────────────────────────────────
+FORMAT AND TIMELINE
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide records in electronic format (PDF, XLSX, or searchable text) where
+available. Gov. Code § 7922.535 requires acknowledgment within 10 calendar days.
+To the extent any records are withheld, please provide a written index identifying
+each withheld record, the specific exemption claimed, and the factual basis for
+the exemption. Gov. Code § 7923.000 et seq.
+
+If any fee estimate will exceed $50.00, please notify me before incurring costs.
+I am prepared to pay reasonable direct-cost duplication fees for records not
+available electronically.
+
+Sincerely,
+
+[REQUESTER NAME]
+[ADDRESS]
+[CITY, STATE ZIP]
+[EMAIL]
+[PHONE]
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT LOG (internal reference — do not include in submission)
+  Generated:  2026-10-08
+  Corpus:     fresno_MAS.json — 14,409 docs / 64,489 findings
+  Anchoring findings:
+    - 25 docs: ALPR without SB 524 AI-transparency citation (critical)
+    - 25 docs: ALPR without Civil Code §1798.90.5 usage-policy citation (high)
+    - 11 docs: Facial recognition, AB 1215 restrictions apply (critical)
+    - 6 docs:  AI report writing (Draft One) without SB 524 citation (critical)
+    - 51 docs: BWC (Axon) without CJIS Security Policy reference (high)
+    - 7 docs:  Drone/UAS without AB 481 annual-report language (high)
+    - 18 docs: Flock Safety vendor reference
+  Detector layers: surveillance, procurement, grant_funding_trails
+  CPRA statutory basis: Gov. Code §§ 7920.000, 7922.535, 7923.000 et seq.
+────────────────────────────────────────────────────────────────────────────────

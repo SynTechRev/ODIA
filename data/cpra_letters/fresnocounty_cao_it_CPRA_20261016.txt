@@ -1,0 +1,201 @@
+October 16, 2026
+
+Public Records Coordinator
+County of Fresno — Office of the County Administrative Officer
+2281 Tulare Street, Suite 450
+Fresno, CA 93721
+
+cc: Fresno County Department of Information Technology and Services
+    2220 Tulare Street, Suite 100-B
+    Fresno, CA 93721
+
+Submitted via: Fresno County CAO / County Counsel Public Records Unit
+
+Re: California Public Records Act Request — Technology Governance, AI Procurement
+    Transparency, Surveillance Infrastructure Policy, and Enterprise Contract Records
+    Gov. Code §§ 7920.000 et seq.
+
+Dear Public Records Coordinator:
+
+Pursuant to the California Public Records Act (CPRA), Government Code §§ 7920.000
+et seq., I respectfully request the following public records. This request is
+directed to the County Administrative Officer and the Department of Information
+Technology and Services (ITS) as custodians of county-wide technology governance
+records. It arises from a review of Fresno County Board of Supervisors records —
+32,340 legislative documents — identifying surveillance infrastructure and AI
+procurement activities lacking required governance documentation under California
+law.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 1 — SB 524 AI-TRANSPARENCY IMPACT ASSESSMENTS (COUNTY-WIDE)
+           [SB 524 / Gov. Code § 11548.05 — all County AI procurements]
+────────────────────────────────────────────────────────────────────────────────
+
+SB 524 (Stats. 2023, ch. 833) requires agencies deploying automated decision
+systems or AI-assisted tools to complete an AI-transparency impact assessment
+prior to procurement. BOS records identified multiple County departments
+procuring or operating AI-assisted surveillance and law enforcement tools —
+including ALPR systems, AI report-writing software, and facial recognition —
+without citation to a completed SB 524 assessment.
+
+Please provide:
+
+  1a. All SB 524 AI-transparency impact assessments or equivalent pre-procurement
+      AI risk assessments completed by any Fresno County department or ITS for
+      any AI-assisted system, automated decision tool, or algorithmic platform,
+      from January 1, 2020 through the date of this request.
+
+  1b. The County's enterprise AI governance policy, AI procurement checklist,
+      or technology review framework, as currently in effect, governing County
+      departments' acquisition and deployment of AI or automated decision systems.
+
+  1c. A list of all AI-assisted or automated decision systems currently operated
+      by or on behalf of Fresno County, including vendor name, system purpose,
+      department owner, and year of deployment.
+
+  1d. Any ITS or CAO directives, memoranda, or guidance issued to County
+      departments on AI governance, SB 524 compliance, or automated systems
+      review procedures.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 2 — COUNTY-WIDE SURVEILLANCE INFRASTRUCTURE POLICY
+           [132 docs without transparency portal; 129 without data-retention policy]
+────────────────────────────────────────────────────────────────────────────────
+
+BOS records identified 132 documents referencing County surveillance capabilities
+without citation to a public surveillance transparency portal or inventory, and
+129 without citation to a data-retention policy for surveillance data. County ITS
+typically maintains enterprise data governance policies applicable across departments.
+
+Please provide:
+
+  2a. The County's enterprise data retention policy, including retention schedules
+      for surveillance data (ALPR reads, BWC footage, drone footage, facial
+      recognition records) as applied to all County departments.
+
+  2b. The County's public surveillance transparency report, technology inventory,
+      or online registry of active surveillance systems, as required or voluntarily
+      published under AB 481 or the County's own technology governance framework.
+
+  2c. ITS's current network and data security policies applicable to law
+      enforcement surveillance data stored on County systems or transmitted
+      to or from cloud vendors (including Axon Evidence.com, Flock Safety,
+      and any regional data-sharing networks).
+
+  2d. Any cross-departmental MOUs governing access to County surveillance
+      data by non-County entities, including federal agencies, regional
+      task forces, or private vendors.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 3 — AUTO-RENEWAL CONTRACTS AND ENTERPRISE TECHNOLOGY AGREEMENTS
+           [303 documents with auto-renewal clauses]
+────────────────────────────────────────────────────────────────────────────────
+
+Three hundred and three documents in BOS records reflect contracts containing
+auto-renewal clauses that renew without an affirmative Board vote unless timely
+notice is given. ITS and the CAO typically manage enterprise-level technology
+master agreements subject to this risk.
+
+Please provide:
+
+  3a. All enterprise-level technology master agreements (ELAs, MSAs, SaaS
+      subscriptions, and cloud service agreements) currently in effect between
+      the County and any technology vendor, including Axon, Motorola Solutions,
+      Flock Safety, T-Mobile, Microsoft, Oracle, Tyler Technologies, and similar
+      — together with the auto-renewal provision (if any) in each.
+
+  3b. The County's current policy requiring department heads or ITS to notify
+      the CAO and the BOS prior to an auto-renewal taking effect on any contract
+      above the County's competitive bidding threshold.
+
+  3c. Any master contracts or enterprise agreements that have auto-renewed without
+      a BOS reauthorization vote in the last five fiscal years, together with
+      the CAO notification (or explanation of its absence) for each.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 4 — T-MOBILE / TELECOMMUNICATIONS CONTRACTS
+           [13 documents with T-Mobile reference]
+────────────────────────────────────────────────────────────────────────────────
+
+Thirteen documents in BOS records reference T-Mobile (or related T-Mobile
+Government entities) as a telecommunications vendor for County law enforcement
+or public safety communications infrastructure.
+
+Please provide:
+
+  4a. All contracts, service orders, and data-sharing agreements with T-Mobile
+      (including FirstNet/AT&T comparators) for County public safety or law
+      enforcement telecommunications services, from January 1, 2018 through
+      the date of this request.
+
+  4b. Any County contracts or MOUs that allow T-Mobile or its subcontractors
+      to share, access, or retain location data, call records, or network
+      metadata from County law enforcement communications.
+
+  4c. The County's current policy on law enforcement access to carrier-provided
+      location data, including any cell-site simulator or stingray devices
+      operated by or accessible to County departments.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 5 — MOTOROLA SOLUTIONS PROCUREMENT AND INTEGRATION
+           [11 documents with Motorola Solutions reference]
+────────────────────────────────────────────────────────────────────────────────
+
+Eleven documents reference Motorola Solutions as a vendor for County public safety
+communications (CAD, P25 radio, LIMS, or related systems).
+
+Please provide:
+
+  5a. All contracts, purchase orders, and maintenance agreements with Motorola
+      Solutions for public safety communications hardware, software, or cloud
+      services, from January 1, 2015 through the date of this request.
+
+  5b. Any CAD-to-CAD data-sharing agreements between Fresno County and other
+      jurisdictions enabled through the Motorola Solutions platform.
+
+  5c. The County's current Motorola Solutions software maintenance and support
+      terms, including any data-access or data-retention provisions under
+      which Motorola or its contractors can access County public safety data.
+
+────────────────────────────────────────────────────────────────────────────────
+FORMAT AND TIMELINE
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide records in electronic format (PDF, XLSX, or searchable text) where
+available. Acknowledgment is required within 10 calendar days per Gov. Code
+§ 7922.535. Records may be provided on a rolling basis as they are identified.
+
+To the extent records are withheld, please provide a written index identifying
+each withheld record, the specific statutory exemption claimed, and the factual
+basis for the exemption per Gov. Code § 7923.000 et seq.
+
+If any fee estimate will exceed $50.00, please notify me before incurring costs.
+
+Sincerely,
+
+[REQUESTER NAME]
+[ADDRESS]
+[CITY, STATE ZIP]
+[EMAIL]
+[PHONE]
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT LOG (internal reference — do not include in submission)
+  Generated:    2026-10-16
+  Corpus:       fresnocounty_MAS.json — 32,340 docs / 73,547 findings
+  Anchoring findings (CAO/ITS-relevant):
+    - 20 docs:   ALPR without SB 524 AI-transparency assessment (critical)
+    - 20 docs:   ALPR without Civil Code §1798.90.5 usage policy (critical)
+    - 8 docs:    Facial recognition without AB 1215 compliance (high)
+    - 12 docs:   Drone/UAS without AB 481 annual-report language (high)
+    - 132 docs:  Surveillance capability without public transparency portal (high)
+    - 129 docs:  Surveillance capability without data-retention policy (high)
+    - 303 docs:  Auto-renewal clause without reauthorization vote (high)
+    - 13 docs:   T-Mobile telecommunications reference (low/other)
+    - 11 docs:   Motorola Solutions reference (low/other)
+    - 94 docs:   Lexipol policy boilerplate reference (medium)
+  Detector layers: surveillance, governance, procurement, administrative
+  CPRA statutory basis: Gov. Code §§ 7920.000, 7922.535, 7923.000 et seq.
+  Technology law: SB 524 (AI transparency); AB 481 (militarized equipment);
+                  Civil Code §1798.90.5 (ALPR); AB 1215 (facial recognition)
+────────────────────────────────────────────────────────────────────────────────

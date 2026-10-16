@@ -1,0 +1,192 @@
+October 16, 2026
+
+Public Records Officer
+Tulare County Probation Department
+5100 W. Cypress Avenue
+Visalia, CA 93277
+
+cc: Tulare County Clerk of the Board of Supervisors
+    2800 W. Burrel Avenue, Visalia, CA 93291
+
+Submitted via: Tulare County Probation Department Records Division
+              (in person or via certified mail)
+
+Re: California Public Records Act Request — Federal Grant Compliance, Surveillance
+    Technology Procurement, and Law Enforcement Technology Records
+    Gov. Code §§ 7920.000 et seq.
+
+Dear Public Records Officer:
+
+Pursuant to the California Public Records Act (CPRA), Government Code §§ 7920.000
+et seq., I respectfully request the following public records from the Tulare County
+Probation Department (TCPD). This request arises from a review of Tulare County
+Board of Supervisors agenda packets, staff reports, and attachments spanning
+2006 through 2026 — a corpus of 1,078 Board documents — which identified
+significant and recurring compliance gaps in federal grant certification and
+surveillance technology governance.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 1 — JAG/EDWARD BYRNE GRANT COMPLIANCE (34 U.S.C. § 10152)
+           [60 documents identified — CRITICAL priority]
+────────────────────────────────────────────────────────────────────────────────
+
+A review of Tulare County BOS records identified 60 or more documents referencing
+TCPD's receipt or use of Edward Byrne Memorial Justice Assistance Grant (JAG)
+funds without the anti-supplanting certification required under 34 U.S.C.
+§ 10152(a)(1)(G) and the Bureau of Justice Assistance (BJA) JAG Program Guide.
+Anti-supplanting requires that federal JAG funds supplement — and not replace —
+state and local funding for law enforcement activities.
+
+Please provide:
+
+  1a. All JAG award letters, sub-award agreements, and Memoranda of Understanding
+      (MOUs) accepted by TCPD from the U.S. Department of Justice / BJA for
+      grant years 2006 through 2026.
+
+  1b. The anti-supplanting certification submitted with each JAG application or
+      award acceptance for grant years 2006 through 2026.
+
+  1c. All JAG programmatic and financial progress reports (SF-PPR and SF-425
+      or equivalent) submitted to BJA for grant years 2006 through 2026.
+
+  1d. All equipment, technology, and personnel expenditures funded wholly or
+      partially with JAG funds, for grant years 2006 through 2026.
+
+  1e. Any BJA monitoring reports, audit findings, or correspondence regarding
+      TCPD's JAG compliance, for the same period.
+
+  1f. All BOS resolutions, staff reports, and agenda items related to TCPD JAG
+      grant acceptance, expenditure authorization, or compliance reporting.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 2 — SURVEILLANCE TECHNOLOGY WITHOUT BOS AUTHORIZATION
+           [7 documents — CRITICAL governance findings]
+────────────────────────────────────────────────────────────────────────────────
+
+Seven documents in BOS records reference TCPD surveillance capabilities without
+any corresponding BOS resolution, agenda authorization, or public hearing record,
+in potential conflict with AB 481 (Gov. Code § 7070 et seq.) and general
+separation-of-powers requirements for county department equipment authorization.
+
+Please provide:
+
+  2a. All BOS resolutions, agenda items, and staff reports authorizing TCPD to
+      acquire or operate any surveillance technology, including ALPR systems,
+      body-worn cameras, drones/UAS, facial recognition, or predictive policing
+      tools, from January 1, 2018 through the date of this request.
+
+  2b. TCPD's AB 481 Militarized Equipment Use Policy, all annual reports
+      submitted to the BOS under AB 481, and all BOS resolutions approving
+      or renewing that policy, for fiscal years 2022-23, 2023-24, 2024-25,
+      and 2025-26.
+
+  2c. The AB 481 equipment inventory disclosed in each annual report, including
+      any ALPR systems, drones/UAS, less-lethal weapons, or other surveillance
+      or enforcement equipment.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 3 — ALPR SYSTEM (SB 524 / Civil Code § 1798.90.5)
+           [3 critical + 3 high documents]
+────────────────────────────────────────────────────────────────────────────────
+
+Three Board documents reference TCPD's operation of or access to an Automated
+License Plate Reader (ALPR) system without citation to an SB 524 AI-transparency
+impact assessment, and three reference ALPR without a Civil Code § 1798.90.5
+usage and privacy policy.
+
+Please provide:
+
+  3a. All contracts, purchase orders, amendments, and data-sharing agreements
+      related to any ALPR system used by or accessible to TCPD, including
+      agreements with vendors such as Flock Safety, Vigilant Solutions,
+      or any county-wide ALPR network, from January 1, 2018 through the
+      date of this request.
+
+  3b. TCPD's Civil Code § 1798.90.5 ALPR usage and privacy policy, including
+      the date of adoption and any public-facing posting location.
+
+  3c. The SB 524 (Stats. 2023, ch. 833) AI-transparency impact assessment, or
+      equivalent documentation, prepared before TCPD deployed or accessed any
+      ALPR system or AI-assisted surveillance tool.
+
+  3d. Any data-sharing agreements between TCPD and federal agencies (including
+      ICE, FBI, or HSI) providing access to ALPR data or TCPD surveillance
+      records.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 4 — BODY-WORN CAMERA PROGRAM (CJIS COMPLIANCE)
+           [17 high-severity documents; Axon Enterprise referenced]
+────────────────────────────────────────────────────────────────────────────────
+
+Seventeen Board documents reference TCPD's body-worn camera program without
+citation to CJIS Security Policy compliance provisions.
+
+Please provide:
+
+  4a. TCPD's current body-worn camera policy, including data retention, access
+      controls, evidentiary upload procedures, and any reference to CJIS
+      Security Policy compliance.
+
+  4b. All contracts, purchase orders, and amendments with Axon Enterprise, Inc.
+      (body-worn cameras, hardware, and any cloud storage or AI analytics
+      subscriptions) for the period January 1, 2018 through the date of
+      this request.
+
+  4c. The most recent CJIS Security Policy compliance documentation or audit
+      results applicable to TCPD's BWC data storage and access systems.
+
+  4d. Any BOS staff reports, resolutions, or agenda items authorizing BWC
+      procurement or program expansion.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 5 — DRONE / UAS PROGRAM (AB 481)
+────────────────────────────────────────────────────────────────────────────────
+
+  5a. TCPD's current drone/UAS Militarized Equipment Use Policy under
+      AB 481 (Gov. Code § 7070 et seq.).
+
+  5b. All FAA authorizations (Certificates of Authorization or Part 107 waivers)
+      obtained by TCPD for drone operations.
+
+  5c. Any records of drone/UAS use in connection with probationer supervision,
+      enforcement operations, or community supervision activities, from
+      January 1, 2020 through the date of this request.
+
+────────────────────────────────────────────────────────────────────────────────
+FORMAT AND TIMELINE
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide records in electronic format (PDF, XLSX, or searchable text) where
+available. Acknowledgment is required within 10 calendar days per Gov. Code
+§ 7922.535. Records may be provided on a rolling basis as they are identified.
+
+To the extent records are withheld, please provide a written index identifying
+each withheld record, the specific statutory exemption claimed, and the factual
+basis for the exemption per Gov. Code § 7923.000 et seq.
+
+If any fee estimate will exceed $50.00, please notify me before incurring costs.
+
+Sincerely,
+
+[REQUESTER NAME]
+[ADDRESS]
+[CITY, STATE ZIP]
+[EMAIL]
+[PHONE]
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT LOG (internal reference — do not include in submission)
+  Generated:    2026-10-16
+  Corpus:       tcpd_MAS.json — 962 docs / 8,876 findings (1,078 BOS PDFs ingested)
+  Anchoring findings:
+    - 60 docs: JAG without anti-supplanting certification, 34 U.S.C. §10152(a)(1)(G) (critical)
+    - 7 docs:  Surveillance capability without BOS resolution (governance critical)
+    - 3 docs:  ALPR without SB 524 AI-transparency citation (critical)
+    - 3 docs:  ALPR without Civil Code §1798.90.5 usage-policy citation (high)
+    - 17 docs: BWC (Axon) without CJIS Security Policy reference (high)
+    - 1 doc:   Drone/UAS without AB 481 annual-report language (high)
+    - 9 docs:  Motorola Solutions vendor reference
+  Detector layers: grant_compliance, governance, surveillance, procurement
+  CPRA statutory basis: Gov. Code §§ 7920.000, 7922.535, 7923.000 et seq.
+  Federal basis: 34 U.S.C. §10152(a)(1)(G), 2 CFR Part 200 (anti-supplanting)
+────────────────────────────────────────────────────────────────────────────────
