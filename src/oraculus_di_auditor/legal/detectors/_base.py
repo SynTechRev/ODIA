@@ -32,11 +32,11 @@ class DocContext:
 
     document_id: str
     document_hash: str
-    document_type: str        # "agenda" | "meeting_minutes" | "contract" | "policy" | ...
-    jurisdiction: str         # e.g. "fresnocounty" | "visalia" | "tcso"
-    authority: str | None     # e.g. "Fresno County Board of Supervisors"
+    document_type: str  # "agenda" | "meeting_minutes" | "contract" | "policy" | ...
+    jurisdiction: str  # e.g. "fresnocounty" | "visalia" | "tcso"
+    authority: str | None  # e.g. "Fresno County Board of Supervisors"
     version_date: date | None
-    text: str                 # full document text (UTF-8)
+    text: str  # full document text (UTF-8)
     # Optional: the ODIA anomaly dict that triggered this legal enrichment pass
     source_finding: dict | None = field(default=None, compare=False)
 
@@ -51,15 +51,15 @@ class LegalFinding:
     """
 
     finding_id: str
-    sub_detector: str                    # "l1-statutory-applicability" etc.
+    sub_detector: str  # "l1-statutory-applicability" etc.
     severity: Severity
     document_hash: str
     document_id: str
-    statutes_applied: list[str]          # canonical citation strings
-    legal_conclusion: str                # plain-language determination
-    confidence: float                    # 0.0 (weak signal) – 1.0 (definitive)
+    statutes_applied: list[str]  # canonical citation strings
+    legal_conclusion: str  # plain-language determination
+    confidence: float  # 0.0 (weak signal) – 1.0 (definitive)
     layer: str = "legal"
-    source_finding_id: str | None = None # if enriching an existing anomaly finding
+    source_finding_id: str | None = None  # if enriching an existing anomaly finding
     notes: str | None = None
 
     def to_anomaly_dict(self) -> dict:

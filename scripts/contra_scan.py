@@ -28,44 +28,192 @@ from pathlib import Path
 # entity_id_slug:  used to construct entity_id in the DB (snake_case)
 #
 _ENTITY_CATALOGUE: dict[str, dict] = {
-    "AAA":                      {"entity_name": "AAA Northern California",      "corporate_family": "AAA",                       "entity_id_slug": "aaa_ncal"},
-    "Adventist Health":         {"entity_name": "Adventist Health",             "corporate_family": "Adventist Health System",   "entity_id_slug": "adventist_health"},
-    "Allstate":                 {"entity_name": "Allstate Insurance",           "corporate_family": "Allstate Corporation",      "entity_id_slug": "allstate"},
-    "Amazon":                   {"entity_name": "Amazon.com",                   "corporate_family": "Amazon.com Inc.",           "entity_id_slug": "amazon"},
-    "American Express":         {"entity_name": "American Express",             "corporate_family": "American Express Company",  "entity_id_slug": "amex"},
-    "Anthem":                   {"entity_name": "Anthem Blue Cross",            "corporate_family": "Elevance Health",           "entity_id_slug": "anthem"},
-    "Apple":                    {"entity_name": "Apple Inc.",                   "corporate_family": "Apple Inc.",                "entity_id_slug": "apple"},
-    "AT&T":                     {"entity_name": "AT&T Mobility",               "corporate_family": "AT&T Inc.",                 "entity_id_slug": "att_mobility"},
-    "Bank of America":          {"entity_name": "Bank of America",              "corporate_family": "Bank of America Corp.",     "entity_id_slug": "bofa"},
-    "Boost":                    {"entity_name": "Boost Mobile",                 "corporate_family": "DISH Network",              "entity_id_slug": "boost_mobile"},
-    "Capital One":              {"entity_name": "Capital One",                  "corporate_family": "Capital One Financial",     "entity_id_slug": "capital_one"},
-    "Chase":                    {"entity_name": "JPMorgan Chase",               "corporate_family": "JPMorgan Chase & Co.",      "entity_id_slug": "jpmorgan_chase"},
-    "Comcast":                  {"entity_name": "Comcast / Xfinity",            "corporate_family": "Comcast Corporation",       "entity_id_slug": "comcast"},
-    "Cricket Wireless":         {"entity_name": "Cricket Wireless",             "corporate_family": "AT&T Inc.",                 "entity_id_slug": "cricket_wireless"},
-    "Doordash":                 {"entity_name": "DoorDash",                     "corporate_family": "DoorDash Inc.",             "entity_id_slug": "doordash"},
-    "Family Health Care Network":{"entity_name": "Family Healthcare Network",  "corporate_family": "FHCN",                      "entity_id_slug": "fhcn"},
-    "Farmers Insurance":        {"entity_name": "Farmers Insurance",            "corporate_family": "Zurich Insurance Group",    "entity_id_slug": "farmers_ins"},
-    "Google":                   {"entity_name": "Google LLC",                   "corporate_family": "Google LLC / Alphabet Inc.","entity_id_slug": "google"},
-    "Grubhub":                  {"entity_name": "Grubhub",                      "corporate_family": "Just Eat Takeaway.com",     "entity_id_slug": "grubhub"},
-    "Instacart":                {"entity_name": "Instacart",                    "corporate_family": "Maplebear Inc.",            "entity_id_slug": "instacart"},
-    "Kaiser":                   {"entity_name": "Kaiser Permanente",            "corporate_family": "Kaiser Foundation Health",  "entity_id_slug": "kaiser"},
-    "Kaweah Health":            {"entity_name": "Kaweah Health",                "corporate_family": "Kaweah Health",             "entity_id_slug": "kaweah_health"},
-    "Lyft":                     {"entity_name": "Lyft Inc.",                    "corporate_family": "Lyft Inc.",                 "entity_id_slug": "lyft"},
-    "Meta":                     {"entity_name": "Meta Platforms",               "corporate_family": "Meta Platforms Inc.",       "entity_id_slug": "meta"},
-    "MetroPCS":                 {"entity_name": "Metro by T-Mobile",            "corporate_family": "T-Mobile US Inc.",          "entity_id_slug": "metro_tmobile"},
-    "Microsoft":                {"entity_name": "Microsoft Corporation",        "corporate_family": "Microsoft Corporation",     "entity_id_slug": "microsoft"},
-    "OptumHealth":              {"entity_name": "Optum Health",                 "corporate_family": "UnitedHealth Group",        "entity_id_slug": "optum"},
-    "PG&E":                     {"entity_name": "Pacific Gas and Electric",     "corporate_family": "PG&E Corporation",          "entity_id_slug": "pge"},
-    "SCE":                      {"entity_name": "Southern California Edison",   "corporate_family": "Edison International",      "entity_id_slug": "sce"},
-    "Shipt":                    {"entity_name": "Shipt",                        "corporate_family": "Target Corporation",        "entity_id_slug": "shipt"},
-    "State Farm":               {"entity_name": "State Farm Insurance",         "corporate_family": "State Farm Mutual Auto",    "entity_id_slug": "state_farm"},
-    "T-Mobile":                 {"entity_name": "T-Mobile USA",                 "corporate_family": "T-Mobile US Inc.",          "entity_id_slug": "tmobile"},
-    "Uber":                     {"entity_name": "Uber Technologies",            "corporate_family": "Uber Technologies Inc.",    "entity_id_slug": "uber"},
-    "Verizon":                  {"entity_name": "Verizon Communications",       "corporate_family": "Verizon Communications Inc.","entity_id_slug": "verizon"},
-    "Wells Fargo":              {"entity_name": "Wells Fargo",                  "corporate_family": "Wells Fargo & Company",     "entity_id_slug": "wells_fargo"},
-    "YouTube":                  {"entity_name": "YouTube LLC",                  "corporate_family": "Google LLC / Alphabet Inc.","entity_id_slug": "youtube"},
+    "AAA": {
+        "entity_name": "AAA Northern California",
+        "corporate_family": "AAA",
+        "entity_id_slug": "aaa_ncal",
+    },
+    "Adventist Health": {
+        "entity_name": "Adventist Health",
+        "corporate_family": "Adventist Health System",
+        "entity_id_slug": "adventist_health",
+    },
+    "Allstate": {
+        "entity_name": "Allstate Insurance",
+        "corporate_family": "Allstate Corporation",
+        "entity_id_slug": "allstate",
+    },
+    "Amazon": {
+        "entity_name": "Amazon.com",
+        "corporate_family": "Amazon.com Inc.",
+        "entity_id_slug": "amazon",
+    },
+    "American Express": {
+        "entity_name": "American Express",
+        "corporate_family": "American Express Company",
+        "entity_id_slug": "amex",
+    },
+    "Anthem": {
+        "entity_name": "Anthem Blue Cross",
+        "corporate_family": "Elevance Health",
+        "entity_id_slug": "anthem",
+    },
+    "Apple": {
+        "entity_name": "Apple Inc.",
+        "corporate_family": "Apple Inc.",
+        "entity_id_slug": "apple",
+    },
+    "AT&T": {
+        "entity_name": "AT&T Mobility",
+        "corporate_family": "AT&T Inc.",
+        "entity_id_slug": "att_mobility",
+    },
+    "Bank of America": {
+        "entity_name": "Bank of America",
+        "corporate_family": "Bank of America Corp.",
+        "entity_id_slug": "bofa",
+    },
+    "Boost": {
+        "entity_name": "Boost Mobile",
+        "corporate_family": "DISH Network",
+        "entity_id_slug": "boost_mobile",
+    },
+    "Capital One": {
+        "entity_name": "Capital One",
+        "corporate_family": "Capital One Financial",
+        "entity_id_slug": "capital_one",
+    },
+    "Chase": {
+        "entity_name": "JPMorgan Chase",
+        "corporate_family": "JPMorgan Chase & Co.",
+        "entity_id_slug": "jpmorgan_chase",
+    },
+    "Comcast": {
+        "entity_name": "Comcast / Xfinity",
+        "corporate_family": "Comcast Corporation",
+        "entity_id_slug": "comcast",
+    },
+    "Cricket Wireless": {
+        "entity_name": "Cricket Wireless",
+        "corporate_family": "AT&T Inc.",
+        "entity_id_slug": "cricket_wireless",
+    },
+    "Doordash": {
+        "entity_name": "DoorDash",
+        "corporate_family": "DoorDash Inc.",
+        "entity_id_slug": "doordash",
+    },
+    "Family Health Care Network": {
+        "entity_name": "Family Healthcare Network",
+        "corporate_family": "FHCN",
+        "entity_id_slug": "fhcn",
+    },
+    "Farmers Insurance": {
+        "entity_name": "Farmers Insurance",
+        "corporate_family": "Zurich Insurance Group",
+        "entity_id_slug": "farmers_ins",
+    },
+    "Google": {
+        "entity_name": "Google LLC",
+        "corporate_family": "Google LLC / Alphabet Inc.",
+        "entity_id_slug": "google",
+    },
+    "Grubhub": {
+        "entity_name": "Grubhub",
+        "corporate_family": "Just Eat Takeaway.com",
+        "entity_id_slug": "grubhub",
+    },
+    "Instacart": {
+        "entity_name": "Instacart",
+        "corporate_family": "Maplebear Inc.",
+        "entity_id_slug": "instacart",
+    },
+    "Kaiser": {
+        "entity_name": "Kaiser Permanente",
+        "corporate_family": "Kaiser Foundation Health",
+        "entity_id_slug": "kaiser",
+    },
+    "Kaweah Health": {
+        "entity_name": "Kaweah Health",
+        "corporate_family": "Kaweah Health",
+        "entity_id_slug": "kaweah_health",
+    },
+    "Lyft": {
+        "entity_name": "Lyft Inc.",
+        "corporate_family": "Lyft Inc.",
+        "entity_id_slug": "lyft",
+    },
+    "Meta": {
+        "entity_name": "Meta Platforms",
+        "corporate_family": "Meta Platforms Inc.",
+        "entity_id_slug": "meta",
+    },
+    "MetroPCS": {
+        "entity_name": "Metro by T-Mobile",
+        "corporate_family": "T-Mobile US Inc.",
+        "entity_id_slug": "metro_tmobile",
+    },
+    "Microsoft": {
+        "entity_name": "Microsoft Corporation",
+        "corporate_family": "Microsoft Corporation",
+        "entity_id_slug": "microsoft",
+    },
+    "OptumHealth": {
+        "entity_name": "Optum Health",
+        "corporate_family": "UnitedHealth Group",
+        "entity_id_slug": "optum",
+    },
+    "PG&E": {
+        "entity_name": "Pacific Gas and Electric",
+        "corporate_family": "PG&E Corporation",
+        "entity_id_slug": "pge",
+    },
+    "SCE": {
+        "entity_name": "Southern California Edison",
+        "corporate_family": "Edison International",
+        "entity_id_slug": "sce",
+    },
+    "Shipt": {
+        "entity_name": "Shipt",
+        "corporate_family": "Target Corporation",
+        "entity_id_slug": "shipt",
+    },
+    "State Farm": {
+        "entity_name": "State Farm Insurance",
+        "corporate_family": "State Farm Mutual Auto",
+        "entity_id_slug": "state_farm",
+    },
+    "T-Mobile": {
+        "entity_name": "T-Mobile USA",
+        "corporate_family": "T-Mobile US Inc.",
+        "entity_id_slug": "tmobile",
+    },
+    "Uber": {
+        "entity_name": "Uber Technologies",
+        "corporate_family": "Uber Technologies Inc.",
+        "entity_id_slug": "uber",
+    },
+    "Verizon": {
+        "entity_name": "Verizon Communications",
+        "corporate_family": "Verizon Communications Inc.",
+        "entity_id_slug": "verizon",
+    },
+    "Wells Fargo": {
+        "entity_name": "Wells Fargo",
+        "corporate_family": "Wells Fargo & Company",
+        "entity_id_slug": "wells_fargo",
+    },
+    "YouTube": {
+        "entity_name": "YouTube LLC",
+        "corporate_family": "Google LLC / Alphabet Inc.",
+        "entity_id_slug": "youtube",
+    },
     # Subsidiaries that appear as sub-directories under a parent entity
-    "Zelle":                    {"entity_name": "Zelle",                        "corporate_family": "Early Warning Services LLC","entity_id_slug": "zelle"},
+    "Zelle": {
+        "entity_name": "Zelle",
+        "corporate_family": "Early Warning Services LLC",
+        "entity_id_slug": "zelle",
+    },
 }
 
 # ---------------------------------------------------------------------------
@@ -74,50 +222,121 @@ _ENTITY_CATALOGUE: dict[str, dict] = {
 
 _DOCTYPE_RULES: list[tuple[str, list[str]]] = [
     # arbitration (most specific — must match before tos/privacy)
-    ("arbitration", [
-        "arbitration", "notice of dispute", "dispute form", "adr",
-        "demand for arbitration", "arbitration initiation",
-    ]),
+    (
+        "arbitration",
+        [
+            "arbitration",
+            "notice of dispute",
+            "dispute form",
+            "adr",
+            "demand for arbitration",
+            "arbitration initiation",
+        ],
+    ),
     # eula
-    ("eula", [
-        "end user license", "eula", "software license agreement",
-        "program license agreement", "license agreement", "ios end user",
-        "android end user", "ebonding", "open source",
-    ]),
+    (
+        "eula",
+        [
+            "end user license",
+            "eula",
+            "software license agreement",
+            "program license agreement",
+            "license agreement",
+            "ios end user",
+            "android end user",
+            "ebonding",
+            "open source",
+        ],
+    ),
     # privacy_notice
-    ("privacy_notice", [
-        "privacy policy", "privacy notice", "privacy practices",
-        "privacy statement", "notice at collection", "ccpa",
-        "gdpr", "global privacy", "information practices",
-        "nondiscrimination notice", "notice of privacy",
-        "privacy control", "cookies and tracking", "e-sign",
-        "electronic communications", "paperless", "disclosure",
-        "children's privacy", "subpoena",
-    ]),
+    (
+        "privacy_notice",
+        [
+            "privacy policy",
+            "privacy notice",
+            "privacy practices",
+            "privacy statement",
+            "notice at collection",
+            "ccpa",
+            "gdpr",
+            "global privacy",
+            "information practices",
+            "nondiscrimination notice",
+            "notice of privacy",
+            "privacy control",
+            "cookies and tracking",
+            "e-sign",
+            "electronic communications",
+            "paperless",
+            "disclosure",
+            "children's privacy",
+            "subpoena",
+        ],
+    ),
     # tos (broad catch-all for service agreements)
-    ("tos", [
-        "terms of service", "terms and conditions", "terms of use",
-        "subscriber agreement", "customer agreement", "service agreement",
-        "user agreement", "acceptable use policy", "fee schedule",
-        "mobile agreement", "business agreement", "installment contract",
-        "installment agreement", "credit sale contract", "device return",
-        "warranty", "plan terms", "plan details", "service terms",
-        "wi-fi terms", "wifi terms", "program terms", "web services",
-        "turbo for business", "billing disclosures", "broadband",
-        "mobile broadband", "purchased content", "smart home",
-        "payment terms", "payment conditions", "deposit agreement",
-        "digital services", "member agreement", "membership",
-        "rider agreement", "driver agreement", "driver terms",
-        "shopper agreement", "merchant", "service protection",
-        "upgrade program",
-    ]),
+    (
+        "tos",
+        [
+            "terms of service",
+            "terms and conditions",
+            "terms of use",
+            "subscriber agreement",
+            "customer agreement",
+            "service agreement",
+            "user agreement",
+            "acceptable use policy",
+            "fee schedule",
+            "mobile agreement",
+            "business agreement",
+            "installment contract",
+            "installment agreement",
+            "credit sale contract",
+            "device return",
+            "warranty",
+            "plan terms",
+            "plan details",
+            "service terms",
+            "wi-fi terms",
+            "wifi terms",
+            "program terms",
+            "web services",
+            "turbo for business",
+            "billing disclosures",
+            "broadband",
+            "mobile broadband",
+            "purchased content",
+            "smart home",
+            "payment terms",
+            "payment conditions",
+            "deposit agreement",
+            "digital services",
+            "member agreement",
+            "membership",
+            "rider agreement",
+            "driver agreement",
+            "driver terms",
+            "shopper agreement",
+            "merchant",
+            "service protection",
+            "upgrade program",
+        ],
+    ),
 ]
 
 # Months for date extraction from filenames
 _MONTH_MAP = {
-    "january": "01", "february": "02", "march": "03", "april": "04",
-    "may": "05", "june": "06", "july": "07", "august": "08",
-    "september": "09", "october": "10", "november": "11", "december": "12",
+    "january": "01",
+    "february": "02",
+    "march": "03",
+    "april": "04",
+    "may": "05",
+    "june": "06",
+    "july": "07",
+    "august": "08",
+    "september": "09",
+    "october": "10",
+    "november": "11",
+    "december": "12",
 }
 
 
@@ -241,7 +460,9 @@ def scan_corpus(corpus_root: Path) -> list[dict]:
             "doc_type": doc_type,
             "doc_type_confidence": confidence,
             "version_label": version_label,
-            "effective_date": effective_date.isoformat()[:10] if effective_date else None,
+            "effective_date": (
+                effective_date.isoformat()[:10] if effective_date else None
+            ),
             "source_tier": "T1",
             "needs_review": entity_meta.get("_needs_review", False) or confidence < 0.5,
         }
@@ -251,7 +472,9 @@ def scan_corpus(corpus_root: Path) -> list[dict]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Scan CONTRA corpus and emit a manifest JSON.")
+    parser = argparse.ArgumentParser(
+        description="Scan CONTRA corpus and emit a manifest JSON."
+    )
     parser.add_argument(
         "--corpus-root",
         default=r"D:\CONTRA Contract Corpus",
@@ -283,7 +506,9 @@ def main() -> None:
             needs_review += 1
 
     print(f"\nFound {len(entries)} documents across {len(by_entity)} entities")
-    print(f"  {needs_review} entries flagged for review (low confidence or unknown entity)")
+    print(
+        f"  {needs_review} entries flagged for review (low confidence or unknown entity)"
+    )
     print("\nBy entity:")
     for name, count in sorted(by_entity.items(), key=lambda x: -x[1]):
         print(f"  {name:<40} {count:>3}")
@@ -292,7 +517,9 @@ def main() -> None:
         print(f"  {dt:<20} {count:>3}")
 
     out_path = Path(args.out)
-    out_path.write_text(json.dumps(entries, indent=2, ensure_ascii=False), encoding="utf-8")
+    out_path.write_text(
+        json.dumps(entries, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     print(f"\nManifest written to: {out_path.resolve()}")
     print("Review it before running contra_batch_ingest.py")
 

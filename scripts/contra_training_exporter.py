@@ -114,7 +114,8 @@ def _generate_type1(engine, limit: int | None) -> list[dict]:
     examples = []
     with engine.connect() as conn:
         rows = conn.execute(
-            text("""
+            text(
+                """
             SELECT cf.evidence_excerpt, cf.scoring_axis, cf.severity,
                    cf.doctrinal_anchor, cf.sub_detector, cf.layer, cf.notes,
                    ce.canonical_name, cd.doc_type
@@ -127,7 +128,8 @@ def _generate_type1(engine, limit: int | None) -> list[dict]:
               AND cf.severity IN ('critical', 'high')
             ORDER BY RANDOM()
             LIMIT :lim
-        """),
+        """
+            ),
             {"lim": limit or 2000},
         ).fetchall()
 
@@ -138,8 +140,8 @@ def _generate_type1(engine, limit: int | None) -> list[dict]:
 
         user_msg = (
             f'Analyze the following clause from a {doc_type or "legal"} document by '
-            f'{entity}. Identify the CASI axis, severity level, doctrinal authority, '
-            f'and the specific consumer rights at risk.\n\n'
+            f"{entity}. Identify the CASI axis, severity level, doctrinal authority, "
+            f"and the specific consumer rights at risk.\n\n"
             f'Clause excerpt: "{excerpt}"'
         )
 
@@ -178,7 +180,8 @@ def _generate_type2(engine, limit: int | None) -> list[dict]:
     examples = []
     with engine.connect() as conn:
         rows = conn.execute(
-            text("""
+            text(
+                """
             SELECT cf.evidence_excerpt, cf.scoring_axis, cf.severity, cf.layer, cf.sub_detector
             FROM contra_findings cf
             WHERE cf.evidence_excerpt IS NOT NULL
@@ -186,7 +189,8 @@ def _generate_type2(engine, limit: int | None) -> list[dict]:
               AND cf.scoring_axis IS NOT NULL
             ORDER BY RANDOM()
             LIMIT :lim
-        """),
+        """
+            ),
             {"lim": limit or 1500},
         ).fetchall()
 
@@ -230,7 +234,8 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
     examples = []
     with engine.connect() as conn:
         entities = conn.execute(
-            text("""
+            text(
+                """
             SELECT ce.canonical_name, ce.corporate_family,
                    COUNT(DISTINCT cd.document_hash) as docs,
                    AVG(cs.aggregate) as avg_casi, MAX(cs.aggregate) as max_casi,
@@ -243,7 +248,8 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
             HAVING docs >= 3 AND avg_casi IS NOT NULL
             ORDER BY avg_casi DESC
             LIMIT :lim
-        """),
+        """
+            ),
             {"lim": limit or 30},
         ).fetchall()
 
@@ -252,7 +258,8 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
 
             # Axis breakdown
             axis_rows = conn.execute(
-                text("""
+                text(
+                    """
                 SELECT cf.scoring_axis, cf.severity, COUNT(*) as cnt
                 FROM contra_findings cf
                 JOIN commercial_documents cd ON cd.document_hash = cf.document_hash
@@ -260,7 +267,8 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
                 WHERE ce.canonical_name = :name AND cf.scoring_axis IS NOT NULL
                 GROUP BY cf.scoring_axis, cf.severity
                 ORDER BY cf.scoring_axis, cf.severity
-            """),
+            """
+                ),
                 {"name": name},
             ).fetchall()
 
@@ -284,13 +292,17 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
             band = (
                 "Foreclosure Regime"
                 if avg_casi >= 81
-                else "Severe"
-                if avg_casi >= 61
-                else "Substantial"
-                if avg_casi >= 41
-                else "Elevated"
-                if avg_casi >= 21
-                else "Baseline"
+                else (
+                    "Severe"
+                    if avg_casi >= 61
+                    else (
+                        "Substantial"
+                        if avg_casi >= 41
+                        else "Elevated"
+                        if avg_casi >= 21
+                        else "Baseline"
+                    )
+                )
             )
 
             user_msg = (
@@ -314,11 +326,13 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
                         "data extraction clauses, and remedy foreclosure provisions across the entity's full "
                         "instrument suite."
                         if band == "Foreclosure Regime"
-                        else "substantial cross-axis exposure requiring priority review of arbitration, "
-                        "modification consent, and remedy foreclosure provisions."
-                        if band in ("Severe", "Substantial")
-                        else "elevated individual-axis exposure that does not yet constitute systematic foreclosure "
-                        "but warrants monitoring across the consumer's full instrument portfolio."
+                        else (
+                            "substantial cross-axis exposure requiring priority review of arbitration, "
+                            "modification consent, and remedy foreclosure provisions."
+                            if band in ("Severe", "Substantial")
+                            else "elevated individual-axis exposure that does not yet constitute systematic foreclosure "
+                            "but warrants monitoring across the consumer's full instrument portfolio."
+                        )
                     )
                 )
             )
@@ -490,7 +504,8 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
     with engine.connect() as conn:
         # Get doctrinal anchors with substantial findings
         anchors = conn.execute(
-            text("""
+            text(
+                """
             SELECT cf.doctrinal_anchor, cf.scoring_axis,
                    COUNT(*) as cnt,
                    cf.severity
@@ -501,7 +516,8 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
             GROUP BY cf.doctrinal_anchor, cf.scoring_axis, cf.severity
             HAVING cnt >= 3
             ORDER BY cnt DESC
-        """)
+        """
+            )
         ).fetchall()
 
         processed: set[str] = set()
@@ -513,7 +529,8 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
 
             # Pull representative findings for this anchor
             findings = conn.execute(
-                text("""
+                text(
+                    """
                 SELECT cf.evidence_excerpt, cf.layer, cf.severity,
                        cd.doc_type, ce.canonical_name
                 FROM contra_findings cf
@@ -524,7 +541,8 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
                   AND LENGTH(cf.evidence_excerpt) > 100
                 ORDER BY cf.severity DESC, RANDOM()
                 LIMIT 3
-            """),
+            """
+                ),
                 {"anchor": anchor},
             ).fetchall()
 
@@ -587,16 +605,22 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
                     "collects, processes, or shares sensitive personal information as defined by the statute "
                     "without a separate opt-in consent mechanism as required by § 1798.121(a)."
                     if "CCPA_121" in anchor
-                    else "imposes a fee-shifting or cost-allocation structure that violates the mandatory 30-day "
-                    "fee payment requirement established by § 1281.97."
-                    if "1281_97" in anchor
-                    else "contains provisions that are procedurally adhesive and substantively one-sided, meeting "
-                    "the Armendariz two-prong unconscionability standard under § 1670.5."
-                    if "1670_5" in anchor
-                    else "attempts to waive the worker's representative PAGA standing in a manner that conflicts "
-                    "with the California Supreme Court's holding in Adolph v. Uber (2023)."
-                    if "2699" in anchor
-                    else "contains terms that directly conflict with the statutory requirements."
+                    else (
+                        "imposes a fee-shifting or cost-allocation structure that violates the mandatory 30-day "
+                        "fee payment requirement established by § 1281.97."
+                        if "1281_97" in anchor
+                        else (
+                            "contains provisions that are procedurally adhesive and substantively one-sided, meeting "
+                            "the Armendariz two-prong unconscionability standard under § 1670.5."
+                            if "1670_5" in anchor
+                            else (
+                                "attempts to waive the worker's representative PAGA standing in a manner that conflicts "
+                                "with the California Supreme Court's holding in Adolph v. Uber (2023)."
+                                if "2699" in anchor
+                                else "contains terms that directly conflict with the statutory requirements."
+                            )
+                        )
+                    )
                 )
                 + f"{cross_entity_note}\n\n"
                 f"**Consumer remedies**:\n"
@@ -734,9 +758,11 @@ def _generate_type6(engine, limit: int | None) -> list[dict]:
             + (
                 f"{name_a} is the more severe foreclosure structure."
                 if cifu_a > cifu_b
-                else f"{name_b} is the more severe foreclosure structure."
-                if cifu_b > cifu_a
-                else "both chains are equivalently severe."
+                else (
+                    f"{name_b} is the more severe foreclosure structure."
+                    if cifu_b > cifu_a
+                    else "both chains are equivalently severe."
+                )
             )
             + "\n\n**Axis-by-axis comparison**:\n"
             + "\n".join(axis_cmp)

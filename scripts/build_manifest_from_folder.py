@@ -8,6 +8,7 @@ Usage:
     python scripts/build_manifest_from_folder.py --folder "D:/CONTRA Contract Corpus/Meta" --entity "Meta Platforms" --recurse
     python scripts/build_manifest_from_folder.py --folder "D:/CONTRA Contract Corpus/T-Mobile" --entity "T-Mobile USA" --out contra_manifest_tmobile.json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -20,8 +21,17 @@ _DEFAULT_OUT = "contra_manifest.json"
 _DOC_TYPE_PATTERNS: list[tuple[re.Pattern, str]] = [
     (re.compile(r"arbitrat|dispute|aaa|jams|notice.of.dispute", re.I), "arbitration"),
     (re.compile(r"eula|end.user.licen|software.licen", re.I), "eula"),
-    (re.compile(r"privacy|ccpa|gdpr|hipaa|data.polic|cookie|cpni", re.I), "privacy_notice"),
-    (re.compile(r"terms|tos|tou|subscriber|customer.agreement|service.agreement|conditions", re.I), "tos"),
+    (
+        re.compile(r"privacy|ccpa|gdpr|hipaa|data.polic|cookie|cpni", re.I),
+        "privacy_notice",
+    ),
+    (
+        re.compile(
+            r"terms|tos|tou|subscriber|customer.agreement|service.agreement|conditions",
+            re.I,
+        ),
+        "tos",
+    ),
 ]
 
 _REJECT_PATTERNS = re.compile(
@@ -136,8 +146,9 @@ def main() -> None:
     parser.add_argument("--folder", required=True, help="Path to PDF folder")
     parser.add_argument("--entity", required=True, help="Canonical entity name")
     parser.add_argument(
-        "--recurse", action="store_true",
-        help="Scan subdirectories recursively (use for Meta with Facebook/Instagram/WhatsApp subfolders)"
+        "--recurse",
+        action="store_true",
+        help="Scan subdirectories recursively (use for Meta with Facebook/Instagram/WhatsApp subfolders)",
     )
     parser.add_argument("--out", default=_DEFAULT_OUT, help="Output manifest JSON path")
     parser.add_argument("--dry-run", action="store_true")

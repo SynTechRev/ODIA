@@ -349,3 +349,6 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "scripts/rescore_commercial.py" = ["E501", "C901", "N806"]
 "scripts/visalia_scrape.py" = ["E501", "C901"]
 "scripts/_check_mas.py" = ["E501", "C901", "E402"]
+# Operational scripts catch-all — pre-existing stylistic issues in utility
+# scripts; not enforced for standalone operational tooling
+"scripts/*.py" = ["E501", "N806", "C901", "B007", "E741", "F841"]

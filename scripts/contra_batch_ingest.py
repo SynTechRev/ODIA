@@ -88,7 +88,9 @@ def _seed_entity_registry(session, manifest: list[dict]) -> dict[str, str]:
         name = entry["entity_name"]
         if name in seen:
             continue
-        existing = session.query(CommercialEntity).filter_by(canonical_name=name).first()
+        existing = (
+            session.query(CommercialEntity).filter_by(canonical_name=name).first()
+        )
         if existing:
             seen[name] = existing.entity_id
             continue
@@ -181,9 +183,7 @@ def _run_batch(
         except Exception as exc:
             print(f"  ERR   {prefix} -> {exc}")
             results["errors"] += 1
-            results["error_details"].append(
-                {"file": str(file_path), "error": str(exc)}
-            )
+            results["error_details"].append({"file": str(file_path), "error": str(exc)})
 
     return results
 
@@ -192,7 +192,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Batch-ingest CONTRA corpus manifest into contra_corpus.db"
     )
-    parser.add_argument("--manifest", required=True, help="Path to contra_manifest.json")
+    parser.add_argument(
+        "--manifest", required=True, help="Path to contra_manifest.json"
+    )
     parser.add_argument(
         "--db-path",
         default=r"D:\CONTRA Contract Corpus\contra_corpus.db",

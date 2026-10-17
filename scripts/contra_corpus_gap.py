@@ -75,7 +75,8 @@ def _compute_gap(db_path: str, chain_id: str | None) -> dict:
     with engine.connect() as conn:
         # Build entity → {docs, axes, avg_casi, max_casi, findings} map from DB
         rows = conn.execute(
-            text("""
+            text(
+                """
             SELECT
                 ce.canonical_name,
                 COUNT(DISTINCT cd.document_hash) AS docs,
@@ -87,7 +88,8 @@ def _compute_gap(db_path: str, chain_id: str | None) -> dict:
             LEFT JOIN casi_scores cs ON cs.document_hash = cd.document_hash
             LEFT JOIN contra_findings cf ON cf.document_hash = cd.document_hash
             GROUP BY ce.canonical_name
-        """)
+        """
+            )
         ).fetchall()
 
         entity_stats: dict[str, dict] = {}
@@ -101,13 +103,15 @@ def _compute_gap(db_path: str, chain_id: str | None) -> dict:
 
         # Build entity → set of active axes
         axis_rows = conn.execute(
-            text("""
+            text(
+                """
             SELECT ce.canonical_name, cf.scoring_axis
             FROM contra_findings cf
             JOIN commercial_documents cd ON cd.document_hash = cf.document_hash
             JOIN commercial_entities ce ON ce.entity_id = cd.entity_id
             WHERE cf.scoring_axis IS NOT NULL
-        """)
+        """
+            )
         ).fetchall()
 
         entity_axes: dict[str, set] = {}

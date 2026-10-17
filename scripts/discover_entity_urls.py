@@ -236,9 +236,7 @@ def discover(
                     found[result["url"]] = dict(result, source="footer")
                 time.sleep(pause_sec)
 
-    discovered_list = [
-        {"url": url, **meta} for url, meta in found.items()
-    ]
+    discovered_list = [{"url": url, **meta} for url, meta in found.items()]
 
     summary = {
         "entity_name": entity_name,
@@ -255,7 +253,9 @@ def discover(
             json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8"
         )
         log_file.write_text(
-            json.dumps({"entity": entity_name, "discovered": len(discovered_list)}, indent=2),
+            json.dumps(
+                {"entity": entity_name, "discovered": len(discovered_list)}, indent=2
+            ),
             encoding="utf-8",
         )
         log.info("Written: %s (%d URLs)", out_file, len(discovered_list))
@@ -271,7 +271,9 @@ def main() -> None:
     )
     parser = argparse.ArgumentParser(description="CONTRA entity URL discovery")
     parser.add_argument("--entity", default=None, help="Entity canonical name")
-    parser.add_argument("--entity-slug", default=None, help="entity_id_slug (snake_case)")
+    parser.add_argument(
+        "--entity-slug", default=None, help="entity_id_slug (snake_case)"
+    )
     parser.add_argument("--root-url", default=None, help="Entity root URL")
     parser.add_argument(
         "--batch",
@@ -279,7 +281,9 @@ def main() -> None:
         help="JSON file with list of {entity_name, entity_id_slug, root_url}",
     )
     parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--pause", type=float, default=3.0, help="Seconds between requests")
+    parser.add_argument(
+        "--pause", type=float, default=3.0, help="Seconds between requests"
+    )
     args = parser.parse_args()
 
     if args.batch:
@@ -289,8 +293,16 @@ def main() -> None:
             sys.exit(1)
         entities = json.loads(batch_path.read_text(encoding="utf-8"))
     elif args.entity and args.root_url:
-        slug = args.entity_slug or args.entity.lower().replace(" ", "_").replace("&", "and").replace("/", "_")
-        entities = [{"entity_name": args.entity, "entity_id_slug": slug, "root_url": args.root_url}]
+        slug = args.entity_slug or args.entity.lower().replace(" ", "_").replace(
+            "&", "and"
+        ).replace("/", "_")
+        entities = [
+            {
+                "entity_name": args.entity,
+                "entity_id_slug": slug,
+                "root_url": args.root_url,
+            }
+        ]
     else:
         parser.print_help()
         sys.exit(1)
@@ -312,7 +324,9 @@ def main() -> None:
 
     print(f"\nTotal discovered: {total_found} URLs across {len(entities)} entities")
     if not args.dry_run:
-        print("Run next: python scripts/ingest_commercial_entity.py --entity-slug <slug>")
+        print(
+            "Run next: python scripts/ingest_commercial_entity.py --entity-slug <slug>"
+        )
 
 
 if __name__ == "__main__":

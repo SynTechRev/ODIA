@@ -32,15 +32,21 @@ _DEFAULT_OUT = "data/contra_corpus_archive"
 
 def _engine(db_path: str):
     from sqlalchemy import create_engine
-    return create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False})
+
+    return create_engine(
+        f"sqlite:///{db_path}", connect_args={"check_same_thread": False}
+    )
 
 
 def _build_archive(db_path: str, out_dir: Path) -> None:
-    from sqlalchemy.orm import sessionmaker
     from oraculus_di_auditor.db.models import (
-        CasiScore, CommercialDocument, CommercialEntity, ContraFinding,
+        CasiScore,
+        CommercialDocument,
         CommercialDocumentProvenance,
+        CommercialEntity,
+        ContraFinding,
     )
+    from sqlalchemy.orm import sessionmaker
 
     engine = _engine(db_path)
     Session = sessionmaker(bind=engine)
@@ -55,19 +61,23 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
     # Load all data
     entities = {e.entity_id: e for e in session.query(CommercialEntity).all()}
     scores = {s.document_hash: s for s in session.query(CasiScore).all()}
-    provenance = {p.document_hash: p for p in session.query(CommercialDocumentProvenance).all()}
+    provenance = {
+        p.document_hash: p for p in session.query(CommercialDocumentProvenance).all()
+    }
     findings_by_doc: dict[str, list[dict]] = defaultdict(list)
     for f in session.query(ContraFinding).all():
-        findings_by_doc[f.document_hash].append({
-            "finding_id": f.finding_id,
-            "layer": f.layer,
-            "sub_detector": f.sub_detector,
-            "severity": f.severity,
-            "issue": f.doctrinal_anchor,
-            "evidence_excerpt": f.evidence_excerpt,
-            "scoring_axis": f.scoring_axis,
-            "scoring_delta": f.scoring_delta,
-        })
+        findings_by_doc[f.document_hash].append(
+            {
+                "finding_id": f.finding_id,
+                "layer": f.layer,
+                "sub_detector": f.sub_detector,
+                "severity": f.severity,
+                "issue": f.doctrinal_anchor,
+                "evidence_excerpt": f.evidence_excerpt,
+                "scoring_axis": f.scoring_axis,
+                "scoring_delta": f.scoring_delta,
+            }
+        )
 
     master: list[dict] = []
     by_entity: dict[str, list] = defaultdict(list)
@@ -100,22 +110,36 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
             "corporate_family": entity.corporate_family if entity else None,
             "doc_type": doc.doc_type,
             "version_label": doc.version_label,
-            "effective_date": doc.effective_date.isoformat() if doc.effective_date else None,
+            "effective_date": (
+                doc.effective_date.isoformat() if doc.effective_date else None
+            ),
             "casi_aggregate": agg,
             "casi_band": score.band if score else None,
-            "casi_axes": {
-                "procedural_adhesion": score.procedural_adhesion if score else None,
-                "modification_and_consent": score.modification_and_consent if score else None,
-                "enforcement_cost_asymmetry": score.enforcement_cost_asymmetry if score else None,
-                "remedy_foreclosure": score.remedy_foreclosure if score else None,
-                "data_extraction_depth": score.data_extraction_depth if score else None,
-            } if score else None,
+            "casi_axes": (
+                {
+                    "procedural_adhesion": score.procedural_adhesion if score else None,
+                    "modification_and_consent": (
+                        score.modification_and_consent if score else None
+                    ),
+                    "enforcement_cost_asymmetry": (
+                        score.enforcement_cost_asymmetry if score else None
+                    ),
+                    "remedy_foreclosure": score.remedy_foreclosure if score else None,
+                    "data_extraction_depth": (
+                        score.data_extraction_depth if score else None
+                    ),
+                }
+                if score
+                else None
+            ),
             "finding_count": finding_count,
             "finding_density_ratio": fdr,
             "regulated_content_delta": rcd,
             "source_url": prov.source_url if prov else None,
             "source_tier": prov.source_tier if prov else None,
-            "retrieval_ts": prov.retrieval_ts.isoformat() if prov and prov.retrieval_ts else None,
+            "retrieval_ts": (
+                prov.retrieval_ts.isoformat() if prov and prov.retrieval_ts else None
+            ),
             "findings": doc_findings,
         }
 
@@ -124,13 +148,15 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
         by_doc_type[doc.doc_type or "unknown"].append(entry)
         by_casi_band[score.band if score else "unscored"].append(entry)
         for f in doc_findings:
-            by_finding_type[f["layer"]].append({
-                "document_hash": doc.document_hash,
-                "entity_name": entry["entity_name"],
-                "doc_type": doc.doc_type,
-                "casi_aggregate": agg,
-                "finding": f,
-            })
+            by_finding_type[f["layer"]].append(
+                {
+                    "document_hash": doc.document_hash,
+                    "entity_name": entry["entity_name"],
+                    "doc_type": doc.doc_type,
+                    "casi_aggregate": agg,
+                    "finding": f,
+                }
+            )
 
     # Sort master by CASI desc
     master.sort(key=lambda x: x["casi_aggregate"] or 0, reverse=True)
@@ -138,13 +164,19 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
     # MASTER_INDEX.json
     master_path = out_dir / "MASTER_INDEX.json"
     master_path.write_text(
-        json.dumps({
-            "generated_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
-            "total_documents": len(master),
-            "total_entities": len(by_entity),
-            "total_findings": sum(e["finding_count"] for e in master),
-            "documents": master,
-        }, indent=2, ensure_ascii=False),
+        json.dumps(
+            {
+                "generated_at": __import__("datetime")
+                .datetime.now(__import__("datetime").timezone.utc)
+                .isoformat(),
+                "total_documents": len(master),
+                "total_entities": len(by_entity),
+                "total_findings": sum(e["finding_count"] for e in master),
+                "documents": master,
+            },
+            indent=2,
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
     print(f"  MASTER_INDEX.json ({len(master)} documents)")
@@ -155,7 +187,14 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
         out_file = out_dir / "by_entity" / f"{slug}.json"
         docs_list.sort(key=lambda x: x["casi_aggregate"] or 0, reverse=True)
         out_file.write_text(
-            json.dumps({"entity": name, "document_count": len(docs_list), "documents": docs_list}, indent=2),
+            json.dumps(
+                {
+                    "entity": name,
+                    "document_count": len(docs_list),
+                    "documents": docs_list,
+                },
+                indent=2,
+            ),
             encoding="utf-8",
         )
     print(f"  by_entity/ ({len(by_entity)} files)")
@@ -165,7 +204,14 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
         docs_list.sort(key=lambda x: x["casi_aggregate"] or 0, reverse=True)
         out_file = out_dir / "by_doc_type" / f"{dtype}.json"
         out_file.write_text(
-            json.dumps({"doc_type": dtype, "document_count": len(docs_list), "documents": docs_list}, indent=2),
+            json.dumps(
+                {
+                    "doc_type": dtype,
+                    "document_count": len(docs_list),
+                    "documents": docs_list,
+                },
+                indent=2,
+            ),
             encoding="utf-8",
         )
     print(f"  by_doc_type/ ({len(by_doc_type)} files)")
@@ -176,7 +222,14 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
         safe = band.lower().replace(" ", "_")
         out_file = out_dir / "by_casi_band" / f"{safe}.json"
         out_file.write_text(
-            json.dumps({"band": band, "document_count": len(docs_list), "documents": docs_list}, indent=2),
+            json.dumps(
+                {
+                    "band": band,
+                    "document_count": len(docs_list),
+                    "documents": docs_list,
+                },
+                indent=2,
+            ),
             encoding="utf-8",
         )
     print(f"  by_casi_band/ ({len(by_casi_band)} bands)")
@@ -186,7 +239,14 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
         safe = layer.lower().replace(" ", "_").replace("-", "_")[:40]
         out_file = out_dir / "by_finding_type" / f"{safe}.json"
         out_file.write_text(
-            json.dumps({"layer": layer, "finding_count": len(findings_list), "findings": findings_list}, indent=2),
+            json.dumps(
+                {
+                    "layer": layer,
+                    "finding_count": len(findings_list),
+                    "findings": findings_list,
+                },
+                indent=2,
+            ),
             encoding="utf-8",
         )
     print(f"  by_finding_type/ ({len(by_finding_type)} layers)")
@@ -195,7 +255,9 @@ def _build_archive(db_path: str, out_dir: Path) -> None:
 
     total_size = sum(f.stat().st_size for f in out_dir.rglob("*.json"))
     print(f"\nArchive written to: {out_dir.resolve()}")
-    print(f"Total size: {total_size / 1024:.1f} KB across {sum(1 for _ in out_dir.rglob('*.json'))} JSON files")
+    print(
+        f"Total size: {total_size / 1024:.1f} KB across {sum(1 for _ in out_dir.rglob('*.json'))} JSON files"
+    )
 
 
 def main() -> None:

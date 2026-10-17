@@ -15,6 +15,7 @@ Usage:
     python scripts/harvest_discovered_urls.py --dry-run
     python scripts/harvest_discovered_urls.py --limit 10
 """
+
 from __future__ import annotations
 
 import argparse
@@ -30,7 +31,9 @@ sys.path.insert(0, str(_REPO_ROOT / "src"))
 
 _DEFAULT_DB = r"D:\CONTRA Contract Corpus\contra_corpus.db"
 _CACHE_DIR = Path("cache")
-_USER_AGENT = "ODIA-CONTRA-Harvest/3.9 (SynTechRev research; contact codicalcalculus@gmail.com)"
+_USER_AGENT = (
+    "ODIA-CONTRA-Harvest/3.9 (SynTechRev research; contact codicalcalculus@gmail.com)"
+)
 _PAUSE_PER_REQUEST = 3.0
 _LONG_PAUSE_EVERY = 100
 _LONG_PAUSE_SEC = 30
@@ -38,11 +41,23 @@ _CHECKPOINT_EVERY = 5
 
 # URL keyword → doc_type mapping (ordered: first match wins)
 _DOC_TYPE_PATTERNS: list[tuple[re.Pattern, str]] = [
-    (re.compile(r"arbitrat|dispute|aaa|jams|notice.of.dispute|demand", re.I), "arbitration"),
+    (
+        re.compile(r"arbitrat|dispute|aaa|jams|notice.of.dispute|demand", re.I),
+        "arbitration",
+    ),
     (re.compile(r"eula|end.user.licen|software.licen", re.I), "eula"),
-    (re.compile(r"privacy|ccpa|gdpr|hipaa|data.collection|cookie", re.I), "privacy_notice"),
-    (re.compile(r"terms.of.service|terms.of.use|subscriber.agreement|customer.agreement"
-                r"|service.agreement|tos|tou|legal", re.I), "tos"),
+    (
+        re.compile(r"privacy|ccpa|gdpr|hipaa|data.collection|cookie", re.I),
+        "privacy_notice",
+    ),
+    (
+        re.compile(
+            r"terms.of.service|terms.of.use|subscriber.agreement|customer.agreement"
+            r"|service.agreement|tos|tou|legal",
+            re.I,
+        ),
+        "tos",
+    ),
 ]
 
 _REJECT_PATTERNS = re.compile(
@@ -65,6 +80,7 @@ def _infer_doc_type(url: str, label: str = "") -> str | None:
 def _fetch(url: str) -> bytes | None:
     try:
         import requests
+
         resp = requests.get(
             url,
             headers={"User-Agent": _USER_AGENT},
@@ -117,12 +133,15 @@ def harvest(
 
     print(f"Found {len(discovered_files)} discovered_urls.json file(s).\n")
 
-    from sqlalchemy.orm import sessionmaker
     from oraculus_di_auditor.ingest.commercial import ingest_commercial_document
+    from sqlalchemy.orm import sessionmaker
 
     def _engine(p: str):
         from sqlalchemy import create_engine
-        return create_engine(f"sqlite:///{p}", connect_args={"check_same_thread": False})
+
+        return create_engine(
+            f"sqlite:///{p}", connect_args={"check_same_thread": False}
+        )
 
     engine = _engine(db_path)
     Session = sessionmaker(bind=engine)
@@ -172,7 +191,9 @@ def harvest(
 
             raw = _fetch(url)
             if raw is None:
-                all_failed.append({"entity_name": entity_name, "url": url, "doc_type": doc_type})
+                all_failed.append(
+                    {"entity_name": entity_name, "url": url, "doc_type": doc_type}
+                )
                 total_err += 1
                 checkpoint.add(url)
                 _save_checkpoint(slug, checkpoint)
@@ -194,7 +215,7 @@ def harvest(
                     source_tier="t1",
                 )
                 if result.skipped_duplicate:
-                    print(f"    DUP")
+                    print("    DUP")
                     total_dup += 1
                 else:
                     print(
@@ -204,7 +225,14 @@ def harvest(
                     total_ok += 1
             except Exception as exc:
                 print(f"    INGEST ERROR: {exc}", file=sys.stderr)
-                all_failed.append({"entity_name": entity_name, "url": url, "doc_type": doc_type, "error": str(exc)})
+                all_failed.append(
+                    {
+                        "entity_name": entity_name,
+                        "url": url,
+                        "doc_type": doc_type,
+                        "error": str(exc),
+                    }
+                )
                 total_err += 1
             finally:
                 tmp_path.unlink(missing_ok=True)
@@ -251,7 +279,12 @@ def main() -> None:
     parser.add_argument("--db-path", default=_DEFAULT_DB)
     parser.add_argument("--slug", default=None, help="Process only this cache slug")
     parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--limit", type=int, default=None, help="Max URLs to process across all entities")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Max URLs to process across all entities",
+    )
     args = parser.parse_args()
 
     harvest(

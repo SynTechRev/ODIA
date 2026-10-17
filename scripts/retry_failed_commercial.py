@@ -10,6 +10,7 @@ Usage:
     python scripts/retry_failed_commercial.py --dry-run
     python scripts/retry_failed_commercial.py --max-retries 5
 """
+
 from __future__ import annotations
 
 import argparse
@@ -23,16 +24,21 @@ sys.path.insert(0, str(_REPO_ROOT / "src"))
 
 _DEFAULT_DB = r"D:\CONTRA Contract Corpus\contra_corpus.db"
 _CACHE_DIR = Path("cache")
-_USER_AGENT = "ODIA-CONTRA-Retry/3.9 (SynTechRev research; contact codicalcalculus@gmail.com)"
+_USER_AGENT = (
+    "ODIA-CONTRA-Retry/3.9 (SynTechRev research; contact codicalcalculus@gmail.com)"
+)
 
-_BASE_DELAY = 4.0      # seconds before first retry
-_MAX_DELAY = 120.0     # cap on exponential backoff
+_BASE_DELAY = 4.0  # seconds before first retry
+_MAX_DELAY = 120.0  # cap on exponential backoff
 _DEFAULT_MAX_RETRIES = 4
 
 
 def _engine(db_path: str):
     from sqlalchemy import create_engine
-    return create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False})
+
+    return create_engine(
+        f"sqlite:///{db_path}", connect_args={"check_same_thread": False}
+    )
 
 
 def _fetch_with_backoff(url: str, max_retries: int) -> bytes | None:
@@ -58,7 +64,9 @@ def _fetch_with_backoff(url: str, max_retries: int) -> bytes | None:
             if attempt == max_retries:
                 print(f"    FAIL after {max_retries} attempts: {exc}", file=sys.stderr)
                 return None
-            print(f"    attempt {attempt}/{max_retries} failed ({exc}); retrying in {delay:.0f}s")
+            print(
+                f"    attempt {attempt}/{max_retries} failed ({exc}); retrying in {delay:.0f}s"
+            )
             time.sleep(delay)
             delay = min(delay * 2, _MAX_DELAY)
 
@@ -92,6 +100,7 @@ def retry_all(
     still_failed_by_slug: dict[str, list[dict]] = {}
 
     from sqlalchemy.orm import sessionmaker
+
     engine = _engine(db_path)
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -124,19 +133,26 @@ def retry_all(
 
             # Write to temp file and ingest
             import tempfile
+
             suffix = ".pdf" if raw[:4] == b"%PDF" else ".txt"
             with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
                 tmp.write(raw)
                 tmp_path = Path(tmp.name)
 
             try:
+                from datetime import UTC
                 from datetime import datetime as _dt
-                from oraculus_di_auditor.ingest.commercial import ingest_commercial_document
+
+                from oraculus_di_auditor.ingest.commercial import (
+                    ingest_commercial_document,
+                )
 
                 effective_date = None
                 if effective_date_str:
                     try:
-                        effective_date = _dt.fromisoformat(effective_date_str).replace(tzinfo=UTC)
+                        effective_date = _dt.fromisoformat(effective_date_str).replace(
+                            tzinfo=UTC
+                        )
                     except ValueError:
                         pass
 
@@ -150,7 +166,9 @@ def retry_all(
                     source_url=url,
                     source_tier="t1",
                 )
-                print(f"    OK  CASI={result.casi_aggregate} [{result.casi_band}] {result.total_findings} findings")
+                print(
+                    f"    OK  CASI={result.casi_aggregate} [{result.casi_band}] {result.total_findings} findings"
+                )
                 total_ok += 1
             except Exception as exc:
                 print(f"    INGEST ERROR: {exc}", file=sys.stderr)
@@ -177,15 +195,19 @@ def retry_all(
 
     session.close()
 
-    print(f"\n-- Retry Results --")
+    print("\n-- Retry Results --")
     print(f"  Recovered  : {total_ok}")
     print(f"  Still failed: {total_still_failed}")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="CONTRA retry failed commercial ingest entries")
+    parser = argparse.ArgumentParser(
+        description="CONTRA retry failed commercial ingest entries"
+    )
     parser.add_argument("--db-path", default=_DEFAULT_DB)
-    parser.add_argument("--entity-slug", default=None, help="Restrict to one cache slug (e.g. att_inc)")
+    parser.add_argument(
+        "--entity-slug", default=None, help="Restrict to one cache slug (e.g. att_inc)"
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--max-retries", type=int, default=_DEFAULT_MAX_RETRIES)
     args = parser.parse_args()

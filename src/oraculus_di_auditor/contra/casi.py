@@ -21,8 +21,10 @@ from oraculus_di_auditor.scoring.casi import (
     AXIS_PROCEDURAL_ADHESION,
     AXIS_REMEDY_FORECLOSURE,
     CasiAxes,
-    compute_casi as _compute_casi,
     severity_to_delta,
+)
+from oraculus_di_auditor.scoring.casi import (
+    compute_casi as _compute_casi,
 )
 
 if TYPE_CHECKING:

@@ -21,17 +21,21 @@ _DEFAULT_DB = r"D:\CONTRA Contract Corpus\contra_corpus.db"
 
 def _engine(db_path: str):
     from sqlalchemy import create_engine
-    return create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False})
+
+    return create_engine(
+        f"sqlite:///{db_path}", connect_args={"check_same_thread": False}
+    )
 
 
 def _summary(session) -> None:
     from sqlalchemy import text
+
     rows = [
-        ("commercial_entities",             "Entities"),
-        ("commercial_documents",            "Documents"),
-        ("commercial_document_provenance",  "Provenance records"),
-        ("contra_findings",                 "Findings"),
-        ("casi_scores",                     "CASI scores"),
+        ("commercial_entities", "Entities"),
+        ("commercial_documents", "Documents"),
+        ("commercial_document_provenance", "Provenance records"),
+        ("contra_findings", "Findings"),
+        ("casi_scores", "CASI scores"),
     ]
     print("\n-- CONTRA DB Summary --")
     for table, label in rows:
@@ -43,8 +47,10 @@ def _summary(session) -> None:
 
     # CASI band distribution
     from oraculus_di_auditor.db.models import CasiScore
+
     print("\n-- CASI Band Distribution --")
     from sqlalchemy import func
+
     bands = session.query(CasiScore.band, func.count()).group_by(CasiScore.band).all()
     for band, count in sorted(bands, key=lambda x: x[1], reverse=True):
         print(f"  {band:<30} {count}")
@@ -52,12 +58,15 @@ def _summary(session) -> None:
 
 def _entity_detail(session, entity_name: str) -> None:
     from oraculus_di_auditor.db.models import (
-        CasiScore, CommercialDocument, CommercialEntity, ContraFinding,
+        CommercialDocument,
+        CommercialEntity,
     )
 
-    entity = session.query(CommercialEntity).filter(
-        CommercialEntity.canonical_name == entity_name
-    ).first()
+    entity = (
+        session.query(CommercialEntity)
+        .filter(CommercialEntity.canonical_name == entity_name)
+        .first()
+    )
 
     if not entity:
         print(f"Entity not found: {entity_name}")
@@ -74,37 +83,58 @@ def _entity_detail(session, entity_name: str) -> None:
         findings_count = len(doc.findings)
         band = score.band if score else "no score"
         agg = score.aggregate if score else "-"
-        fdr = f" FDR={score.finding_density_ratio:.1f}" if score and score.finding_density_ratio else ""
-        rcd = f" RCD=+{score.regulated_content_delta}" if score and score.regulated_content_delta else ""
+        fdr = (
+            f" FDR={score.finding_density_ratio:.1f}"
+            if score and score.finding_density_ratio
+            else ""
+        )
+        rcd = (
+            f" RCD=+{score.regulated_content_delta}"
+            if score and score.regulated_content_delta
+            else ""
+        )
         vl = doc.version_label or ""
-        print(f"    [{doc.doc_type:<16}] {vl:<15} CASI={agg:<4} [{band}] | {findings_count} findings{fdr}{rcd}")
+        print(
+            f"    [{doc.doc_type:<16}] {vl:<15} CASI={agg:<4} [{band}] | {findings_count} findings{fdr}{rcd}"
+        )
 
 
 def _top_casi(session, n: int) -> None:
     from oraculus_di_auditor.db.models import (
-        CasiScore, CommercialDocument, CommercialEntity,
+        CasiScore,
+        CommercialDocument,
+        CommercialEntity,
     )
 
     print(f"\n-- Top {n} Documents by CASI Score --")
     results = (
         session.query(CasiScore, CommercialDocument, CommercialEntity)
-        .join(CommercialDocument, CasiScore.document_hash == CommercialDocument.document_hash)
-        .join(CommercialEntity, CommercialDocument.entity_id == CommercialEntity.entity_id)
+        .join(
+            CommercialDocument,
+            CasiScore.document_hash == CommercialDocument.document_hash,
+        )
+        .join(
+            CommercialEntity, CommercialDocument.entity_id == CommercialEntity.entity_id
+        )
         .order_by(CasiScore.aggregate.desc())
         .limit(n)
         .all()
     )
     for score, doc, entity in results:
         vl = doc.version_label or ""
-        print(f"  {score.aggregate:>3} [{score.band:<22}] {entity.canonical_name:<30} {doc.doc_type:<16} {vl}")
+        print(
+            f"  {score.aggregate:>3} [{score.band:<22}] {entity.canonical_name:<30} {doc.doc_type:<16} {vl}"
+        )
 
 
 def _version_chain(session, entity_name: str) -> None:
     from oraculus_di_auditor.db.models import CommercialDocument, CommercialEntity
 
-    entity = session.query(CommercialEntity).filter(
-        CommercialEntity.canonical_name == entity_name
-    ).first()
+    entity = (
+        session.query(CommercialEntity)
+        .filter(CommercialEntity.canonical_name == entity_name)
+        .first()
+    )
     if not entity:
         print(f"Entity not found: {entity_name}")
         return
@@ -117,10 +147,14 @@ def _version_chain(session, entity_name: str) -> None:
     )
     print(f"\n-- Version Chain: {entity_name} --")
     for doc in docs:
-        dt = doc.effective_date.strftime("%Y-%m-%d") if doc.effective_date else "no date"
+        dt = (
+            doc.effective_date.strftime("%Y-%m-%d") if doc.effective_date else "no date"
+        )
         score = doc.casi_score
         agg = score.aggregate if score else "?"
-        print(f"  {dt}  [{doc.doc_type:<16}] {doc.version_label or '':<20} CASI={agg}  {doc.document_hash[:12]}...")
+        print(
+            f"  {dt}  [{doc.doc_type:<16}] {doc.version_label or '':<20} CASI={agg}  {doc.document_hash[:12]}..."
+        )
 
 
 def main() -> None:
@@ -132,6 +166,7 @@ def main() -> None:
     args = parser.parse_args()
 
     from sqlalchemy.orm import sessionmaker
+
     engine = _engine(args.db_path)
     Session = sessionmaker(bind=engine)
     session = Session()

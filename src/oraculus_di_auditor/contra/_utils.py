@@ -18,6 +18,7 @@ def _cpra():
     global _CPRA_LOADER
     if _CPRA_LOADER is None:
         from oraculus_di_auditor.legal.cpra_corpus import CPRACorpusLoader
+
         _CPRA_LOADER = CPRACorpusLoader()
     return _CPRA_LOADER
 
@@ -34,6 +35,7 @@ def extract_cal_citations(text: str) -> list[str]:
     """
     try:
         from oraculus_di_auditor.legal.statute_citation import parse_cal_citations
+
         return [c.canonical for c in parse_cal_citations(text)]
     except ImportError:
         return []

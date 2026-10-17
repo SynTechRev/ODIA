@@ -67,10 +67,12 @@ def entity_deep(db_path: str, entity_name: str) -> dict:
     with engine.connect() as conn:
         # Entity metadata
         ent = conn.execute(
-            text("""
+            text(
+                """
             SELECT entity_id, canonical_name, corporate_family, created_at
             FROM commercial_entities WHERE canonical_name = :name
-        """),
+        """
+            ),
             {"name": entity_name},
         ).fetchone()
 
@@ -81,7 +83,8 @@ def entity_deep(db_path: str, entity_name: str) -> dict:
 
         # All documents
         docs = conn.execute(
-            text("""
+            text(
+                """
             SELECT cd.document_hash, cd.doc_type, cd.version_label, cd.effective_date,
                    cs.aggregate, cs.data_extraction_depth, cs.modification_and_consent,
                    cs.procedural_adhesion, cs.remedy_foreclosure, cs.enforcement_cost_asymmetry
@@ -89,26 +92,30 @@ def entity_deep(db_path: str, entity_name: str) -> dict:
             LEFT JOIN casi_scores cs ON cs.document_hash = cd.document_hash
             WHERE cd.entity_id = :eid
             ORDER BY cs.aggregate DESC NULLS LAST
-        """),
+        """
+            ),
             {"eid": entity_id},
         ).fetchall()
 
         # Findings by axis and severity
         findings_by_axis = conn.execute(
-            text("""
+            text(
+                """
             SELECT cf.scoring_axis, cf.severity, COUNT(*) as cnt
             FROM contra_findings cf
             JOIN commercial_documents cd ON cd.document_hash = cf.document_hash
             WHERE cd.entity_id = :eid AND cf.scoring_axis IS NOT NULL
             GROUP BY cf.scoring_axis, cf.severity
             ORDER BY cf.scoring_axis, cf.severity
-        """),
+        """
+            ),
             {"eid": entity_id},
         ).fetchall()
 
         # Top findings by severity
         top_findings = conn.execute(
-            text("""
+            text(
+                """
             SELECT cf.sub_detector, cf.doctrinal_anchor, cf.severity, cf.scoring_axis,
                    cd.doc_type, cd.version_label
             FROM contra_findings cf
@@ -119,7 +126,8 @@ def entity_deep(db_path: str, entity_name: str) -> dict:
                     WHEN 'medium' THEN 2 ELSE 3 END,
                 cf.scoring_axis
             LIMIT 25
-        """),
+        """
+            ),
             {"eid": entity_id},
         ).fetchall()
 
@@ -160,9 +168,9 @@ def entity_deep(db_path: str, entity_name: str) -> dict:
         "entity_name": ent[1],
         "corporate_family": ent[2],
         "doc_count": len(docs),
-        "avg_casi": round(sum(casi_scores) / len(casi_scores), 1)
-        if casi_scores
-        else None,
+        "avg_casi": (
+            round(sum(casi_scores) / len(casi_scores), 1) if casi_scores else None
+        ),
         "max_casi": max(casi_scores) if casi_scores else None,
         "min_casi": min(casi_scores) if casi_scores else None,
         "total_findings": sum(v["total"] for v in axis_rollup.values()),
@@ -265,7 +273,8 @@ def main() -> None:
     elif args.top or args.all:
         with engine.connect() as conn:
             rows = conn.execute(
-                text("""
+                text(
+                    """
                 SELECT ce.canonical_name, AVG(cs.aggregate) as avg_casi
                 FROM commercial_entities ce
                 LEFT JOIN commercial_documents cd ON cd.entity_id = ce.entity_id
@@ -273,7 +282,8 @@ def main() -> None:
                 GROUP BY ce.canonical_name
                 HAVING COUNT(cd.document_hash) > 0
                 ORDER BY avg_casi DESC NULLS LAST
-            """)
+            """
+                )
             ).fetchall()
         entities = (
             [r[0] for r in rows[: args.top]] if args.top else [r[0] for r in rows]

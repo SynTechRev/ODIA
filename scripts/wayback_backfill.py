@@ -15,13 +15,14 @@ Usage:
     python scripts/wayback_backfill.py --dry-run
     python scripts/wayback_backfill.py --limit 20
 """
+
 from __future__ import annotations
 
 import argparse
 import json
 import sys
 import time
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -37,7 +38,10 @@ _LONG_PAUSE_SEC = 20
 
 def _engine(db_path: str):
     from sqlalchemy import create_engine
-    return create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False})
+
+    return create_engine(
+        f"sqlite:///{db_path}", connect_args={"check_same_thread": False}
+    )
 
 
 def _cdx_lookup(source_url: str, target_date: datetime | None) -> str | None:
@@ -86,26 +90,24 @@ def backfill(
     dry_run: bool,
     limit: int | None,
 ) -> None:
-    from sqlalchemy.orm import sessionmaker
-
     from oraculus_di_auditor.db.models import CommercialDocument, CommercialEntity
+    from sqlalchemy.orm import sessionmaker
 
     engine = _engine(db_path)
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    query = (
-        session.query(CommercialDocument)
-        .filter(
-            CommercialDocument.wayback_url.is_(None),
-            CommercialDocument.source_url.isnot(None),
-        )
+    query = session.query(CommercialDocument).filter(
+        CommercialDocument.wayback_url.is_(None),
+        CommercialDocument.source_url.isnot(None),
     )
 
     if entity_filter:
-        entity = session.query(CommercialEntity).filter_by(
-            canonical_name=entity_filter
-        ).first()
+        entity = (
+            session.query(CommercialEntity)
+            .filter_by(canonical_name=entity_filter)
+            .first()
+        )
         if not entity:
             print(f"Entity not found: {entity_filter}")
             session.close()
@@ -145,11 +147,13 @@ def backfill(
             updated += 1
         else:
             failed += 1
-            failed_log.append({
-                "document_hash": doc.document_hash,
-                "source_url": url,
-                "effective_date": effective.isoformat() if effective else None,
-            })
+            failed_log.append(
+                {
+                    "document_hash": doc.document_hash,
+                    "source_url": url,
+                    "effective_date": effective.isoformat() if effective else None,
+                }
+            )
             print(f"  MISS {label} {url[:60]}")
 
         # Commit every 10 rows so progress survives interruption
@@ -173,7 +177,7 @@ def backfill(
         )
         print(f"\nFailed lookups logged to: {log_path}")
 
-    print(f"\n-- Wayback Backfill Results --")
+    print("\n-- Wayback Backfill Results --")
     print(f"  Updated : {updated}")
     print(f"  No snapshot found : {failed}")
     session.close()

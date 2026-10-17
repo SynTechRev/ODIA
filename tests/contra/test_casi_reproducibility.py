@@ -24,7 +24,9 @@ GOLDEN_DIR = Path(__file__).parent / "golden"
 GOLDEN_FILES = sorted(GOLDEN_DIR.glob("g*.txt"))
 
 if not GOLDEN_FILES:
-    pytest.skip("No golden fixtures found in tests/contra/golden/", allow_module_level=True)
+    pytest.skip(
+        "No golden fixtures found in tests/contra/golden/", allow_module_level=True
+    )
 
 _DOC_META: dict[str, Any] = {
     "entity_id": "test-entity-repro",
@@ -54,12 +56,12 @@ def test_casi_deterministic_three_runs(golden_path: Path) -> None:
     run2 = _score_once(doc_text)
     run3 = _score_once(doc_text)
 
-    assert run1 == run2, (
-        f"{golden_path.name}: run 1 != run 2\n  run1={run1}\n  run2={run2}"
-    )
-    assert run2 == run3, (
-        f"{golden_path.name}: run 2 != run 3\n  run2={run2}\n  run3={run3}"
-    )
+    assert (
+        run1 == run2
+    ), f"{golden_path.name}: run 1 != run 2\n  run1={run1}\n  run2={run2}"
+    assert (
+        run2 == run3
+    ), f"{golden_path.name}: run 2 != run 3\n  run2={run2}\n  run3={run3}"
 
 
 @pytest.mark.parametrize("golden_path", GOLDEN_FILES, ids=lambda p: p.stem)
@@ -68,9 +70,7 @@ def test_casi_aggregate_within_bounds(golden_path: Path) -> None:
     doc_text = golden_path.read_text(encoding="utf-8")
     result = _score_once(doc_text)
     agg = result["aggregate"]
-    assert 0 <= agg <= 100, (
-        f"{golden_path.name}: aggregate {agg} out of [0, 100]"
-    )
+    assert 0 <= agg <= 100, f"{golden_path.name}: aggregate {agg} out of [0, 100]"
 
 
 @pytest.mark.parametrize("golden_path", GOLDEN_FILES, ids=lambda p: p.stem)
@@ -87,9 +87,7 @@ def test_casi_axes_within_bounds(golden_path: Path) -> None:
     )
     for axis in axes:
         val = result[axis]
-        assert 0 <= val <= 20, (
-            f"{golden_path.name}: axis '{axis}'={val} out of [0, 20]"
-        )
+        assert 0 <= val <= 20, f"{golden_path.name}: axis '{axis}'={val} out of [0, 20]"
 
 
 @pytest.mark.parametrize("golden_path", GOLDEN_FILES, ids=lambda p: p.stem)
@@ -104,6 +102,6 @@ def test_casi_band_is_valid_string(golden_path: Path) -> None:
     }
     doc_text = golden_path.read_text(encoding="utf-8")
     result = _score_once(doc_text)
-    assert result["band"] in valid_bands, (
-        f"{golden_path.name}: unexpected band '{result['band']}'"
-    )
+    assert (
+        result["band"] in valid_bands
+    ), f"{golden_path.name}: unexpected band '{result['band']}'"

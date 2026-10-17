@@ -64,7 +64,7 @@ jobs:
           if [ "$CURRENT_BRANCH" = "HEAD" ]; then
             echo "Skipping auto-push: detached HEAD (likely PR SHA)."
           else
-            git add .
+            git add -- src/ tests/ scripts/
             git commit -m "auto-fix: formatting corrections (Black/Ruff/Pre-Commit) [skip ci]" || echo "No changes to commit."
             git push origin "$CURRENT_BRANCH"
           fi
@@ -167,11 +167,11 @@ jobs:
           python -c "
           import json
           from pathlib import Path
-          
+
           index_path = Path('legal/cases/SCOTUS_INDEX.json')
           with open(index_path) as f:
               data = json.load(f)
-          
+
           assert 'version' in data
           assert 'cases' in data
           assert len(data['cases']) > 0
@@ -183,11 +183,11 @@ jobs:
           echo "Validating legal lexicon files..."
           python -c "
           from scripts.jim.jim_semantic_loader import JIMSemanticLoader
-          
+
           # Load all lexicon sources
           loader = JIMSemanticLoader()
           result = loader.load_lexicon_sources()
-          
+
           assert result['success'], f'Failed to load lexicon: {result}'
           print(f'✓ Loaded {result[\"sources_loaded\"]} dictionary sources')
           print(f'  - Black\\'s Law: {result[\"blacks_terms\"]} terms')
@@ -195,18 +195,18 @@ jobs:
           print(f'  - Webster Legal: {result[\"webster_terms\"]} terms')
           print(f'  - Oxford synonyms: {result[\"oxford_mappings\"]} mappings')
           print(f'  - Latin maxims: {result[\"latin_terms\"]} terms')
-          
+
           # Validate schema
           validation = loader.validate_lexicon_schema()
           assert validation['valid'], f'Schema validation failed: {validation[\"errors\"]}'
           print(f'✓ Schema validation passed')
-          
+
           # Test semantic processing
           merged = loader.merge_definitions()
           synonym_graph = loader.build_synonym_graph()
           antonym_graph = loader.build_antonym_graph()
           doctrine_map = loader.infer_doctrines()
-          
+
           print(f'✓ Semantic processing complete:')
           print(f'  - Merged terms: {len(merged)}')
           print(f'  - Synonym relationships: {sum(len(s) for s in synonym_graph.values()) // 2}')
@@ -237,28 +237,28 @@ jobs:
           echo "Validating semantic harmonization artifacts..."
           python -c "
           from scripts.jim.semantic_harmonizer import SemanticHarmonizer
-          
+
           # Initialize harmonizer
           harmonizer = SemanticHarmonizer()
           load_result = harmonizer.load_lexicon_sources()
           assert load_result['success'], 'Failed to load lexicon sources'
-          
+
           # Build harmonization matrix
           matrix = harmonizer.build_harmonization_matrix()
           print(f'✓ Matrix built: {len(matrix)} terms')
-          
+
           # Detect conflicts
           conflicts = harmonizer.detect_semantic_conflicts()
           print(f'✓ Conflicts detected: {len(conflicts)}')
-          
+
           # Compute divergence index
           divergence = harmonizer.compute_meaning_divergence_index()
           print(f'✓ Divergence index computed: {len(divergence)} terms')
-          
+
           # Check canonically stable terms
           stable_terms = [t for t, d in divergence.items() if d['divergence_score'] <= 0.05]
           print(f'✓ Canonically stable terms: {len(stable_terms)} (≤0.05 divergence)')
-          
+
           # Generate artifacts
           artifacts = harmonizer.generate_artifacts()
           assert artifacts['success'], 'Failed to generate artifacts'
@@ -273,11 +273,11 @@ jobs:
           python -c "
           import json
           from pathlib import Path
-          
+
           doctrine_path = Path('scripts/jim/jim_doctrine_map.json')
           with open(doctrine_path) as f:
               data = json.load(f)
-          
+
           assert 'doctrines' in data
           assert 'interpretive_frameworks' in data
           print(f'✓ Valid: {len(data[\"doctrines\"])} doctrines')
@@ -289,21 +289,21 @@ jobs:
         run: |
           python -c "
           from scripts.jim.jim_core import JIMCore
-          
+
           # Initialize JIM
           jim = JIMCore()
           result = jim.initialize()
           assert result['success'], 'JIM initialization failed'
-          
+
           # Run sample analysis
           sample_anomalies = [
               {'id': 'ci_test_1', 'type': 'metadata_break', 'source': 'ace'},
               {'id': 'ci_test_2', 'type': 'surveillance_program', 'source': 'caim'}
           ]
-          
+
           analysis = jim.run_full_analysis(sample_anomalies)
           assert analysis['success'], 'JIM analysis failed'
-          
+
           print('✓ JIM analysis completed successfully')
           print(f\"  - Analyzed: {analysis['analysis']['total_anomalies_analyzed']} anomalies\")
           print(f\"  - High priority: {analysis['analysis']['risk_summary']['high_priority_count']}\")

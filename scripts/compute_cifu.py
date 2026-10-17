@@ -691,9 +691,11 @@ def compute(db_path: str, chain_id: str) -> dict:
                 "relationship": rel_type,
                 "note": note,
                 "docs": len(casi_scores),
-                "avg_casi": round(sum(casi_scores) / len(casi_scores), 1)
-                if casi_scores
-                else None,
+                "avg_casi": (
+                    round(sum(casi_scores) / len(casi_scores), 1)
+                    if casi_scores
+                    else None
+                ),
                 "max_casi": max(casi_scores) if casi_scores else None,
                 "active_axes": axes_active,
                 "axis_count": len(axes_active),

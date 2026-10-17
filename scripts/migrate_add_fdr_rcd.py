@@ -7,6 +7,7 @@ Usage:
     python scripts/migrate_add_fdr_rcd.py
     python scripts/migrate_add_fdr_rcd.py --db-path "D:/CONTRA Contract Corpus/contra_corpus.db"
 """
+
 from __future__ import annotations
 
 import argparse
@@ -32,9 +33,7 @@ def migrate(db_path: str) -> None:
         added: list[str] = []
 
         if "finding_density_ratio" not in existing_cols:
-            cur.execute(
-                "ALTER TABLE casi_scores ADD COLUMN finding_density_ratio REAL"
-            )
+            cur.execute("ALTER TABLE casi_scores ADD COLUMN finding_density_ratio REAL")
             added.append("finding_density_ratio REAL")
 
         if "regulated_content_delta" not in existing_cols:
@@ -49,7 +48,9 @@ def migrate(db_path: str) -> None:
             print(f"Migration complete. Added {len(added)} column(s):")
             for col in added:
                 print(f"  + {col}")
-            print("Existing rows will have NULL for these columns (nullable by design).")
+            print(
+                "Existing rows will have NULL for these columns (nullable by design)."
+            )
             print("New ingests will populate them via the updated pipeline.")
         else:
             print("Schema already up to date — no changes needed.")
