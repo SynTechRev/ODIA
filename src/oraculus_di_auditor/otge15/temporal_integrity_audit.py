@@ -363,9 +363,7 @@ class TemporalIntegrityAuditor:
                     "impact_category": (
                         "high"
                         if normalized_impact > 0.7
-                        else "medium"
-                        if normalized_impact > 0.4
-                        else "low"
+                        else "medium" if normalized_impact > 0.4 else "low"
                     ),
                 }
             )
@@ -498,9 +496,7 @@ class TemporalIntegrityAuditor:
                         "severity": (
                             "high"
                             if overall_divergence > 0.5
-                            else "medium"
-                            if overall_divergence > 0.3
-                            else "low"
+                            else "medium" if overall_divergence > 0.3 else "low"
                         ),
                     }
                 )

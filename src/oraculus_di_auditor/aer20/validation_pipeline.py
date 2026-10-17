@@ -132,9 +132,7 @@ class ValidationPipeline:
         stability_status = (
             "stable"
             if stability > 0.75
-            else "moderate"
-            if stability > 0.6
-            else "unstable"
+            else "moderate" if stability > 0.6 else "unstable"
         )
 
         # Check compliance

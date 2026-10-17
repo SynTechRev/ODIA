@@ -120,8 +120,7 @@ _CHAIN_AUTHORITY_CITED_RE = re.compile(
     r"|\bResolution\s+(?:No\.?\s*)?\d+"
     r"|\bCharter\s+(?:section|art(?:icle)?)\s*\d+"
     # § can appear mid-sentence, no word-boundary needed
-    r"|§\s*\d+"
-    r")",
+    r"|§\s*\d+" r")",
     re.IGNORECASE,
 )
 

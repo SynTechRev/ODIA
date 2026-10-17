@@ -991,9 +991,7 @@ def score_forensic_integrity(
         (
             2.0
             if a.get("severity") == "high"
-            else 1.0
-            if a.get("severity") == "medium"
-            else 0.5
+            else 1.0 if a.get("severity") == "medium" else 0.5
         )
         for a in temporal_anomalies
     )
@@ -1004,9 +1002,7 @@ def score_forensic_integrity(
         (
             2.0
             if a.get("severity") == "high"
-            else 1.0
-            if a.get("severity") == "medium"
-            else 0.5
+            else 1.0 if a.get("severity") == "medium" else 0.5
         )
         for a in producer_anomalies
     )
@@ -1031,9 +1027,7 @@ def score_forensic_integrity(
         (
             2.0
             if a.get("severity") == "high"
-            else 1.0
-            if a.get("severity") == "medium"
-            else 0.5
+            else 1.0 if a.get("severity") == "medium" else 0.5
         )
         for a in retroactive_indicators
     )

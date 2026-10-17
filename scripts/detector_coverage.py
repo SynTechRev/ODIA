@@ -229,9 +229,7 @@ def _print_human(rows: list[dict[str, Any]]) -> None:
         plain_flag = (
             "yes"
             if r.get("plain_template") is True
-            else "no"
-            if r.get("plain_template") is False
-            else "?"
+            else "no" if r.get("plain_template") is False else "?"
         )
         statute = r.get("statute") or "—"
         print(

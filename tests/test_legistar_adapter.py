@@ -297,9 +297,7 @@ class TestRetrieveCorpus:
         assert manifest["matter_count"] == 2
 
     def test_manifest_json_written(self, tmp_path, adapter):
-        with (
-            patch.object(adapter, "list_matters", return_value=[]),
-        ):
+        with (patch.object(adapter, "list_matters", return_value=[]),):
             adapter.retrieve_corpus("2024-01-01", "2024-12-31", tmp_path)
 
         assert (tmp_path / "retrieval_manifest.json").exists()

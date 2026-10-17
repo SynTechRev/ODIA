@@ -48,9 +48,9 @@ class GigTarget(NamedTuple):
     domains: list[str]
     url_path_hints: list[str]
     priority: str
-    direct_urls: list[
-        str
-    ] = []  # fallback: canonical known legal page URLs (no CDX needed)
+    direct_urls: list[str] = (
+        []
+    )  # fallback: canonical known legal page URLs (no CDX needed)
 
 
 _GIG_TARGETS: list[GigTarget] = [

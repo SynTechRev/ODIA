@@ -653,7 +653,9 @@ def register_webhook_routes(app: Any) -> None:
         }
         try:
             req = urllib.request.Request(url, headers=browser_headers)
-            with urllib.request.urlopen(req, timeout=120) as response:  # noqa: S310 — validated http(s) prefix above
+            with urllib.request.urlopen(
+                req, timeout=120
+            ) as response:  # noqa: S310 — validated http(s) prefix above
                 file_bytes = response.read()
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as exc:
             _record_webhook_call(
@@ -1089,7 +1091,9 @@ def _fetch_url(url: str, *, timeout: int = 120) -> bytes:
     tier1_error: Exception | None = None
     try:
         req = urllib.request.Request(url, headers=_BROWSER_HEADERS)
-        with urllib.request.urlopen(req, timeout=timeout) as response:  # noqa: S310 — caller validated http(s) prefix
+        with urllib.request.urlopen(
+            req, timeout=timeout
+        ) as response:  # noqa: S310 — caller validated http(s) prefix
             return response.read()
     except urllib.error.HTTPError as exc:
         if exc.code not in _TIER1_FALLBACK_HTTP_CODES:

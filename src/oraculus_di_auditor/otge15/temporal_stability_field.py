@@ -308,9 +308,7 @@ class TemporalStabilityField:
                             "severity": (
                                 "critical"
                                 if local_stability < 0.3
-                                else "high"
-                                if local_stability < 0.5
-                                else "medium"
+                                else "high" if local_stability < 0.5 else "medium"
                             ),
                         }
                     )

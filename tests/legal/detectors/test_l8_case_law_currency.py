@@ -334,7 +334,9 @@ _CC5_NO_FIRE_FEDERAL_ONLY = (
 def test_cc5_fires_on_qi_california_no_sb2(detector):
     findings = detector.detect(_ctx(_CC5_FIRE_QI_CA), resolver=None)
     cc5 = [f for f in findings if f.notes and "CC-5" in f.notes]
-    assert cc5, "CC-5 should fire on qualified immunity asserted for California claim without SB 2"
+    assert (
+        cc5
+    ), "CC-5 should fire on qualified immunity asserted for California claim without SB 2"
     assert cc5[0].severity == Severity.HIGH
 
 

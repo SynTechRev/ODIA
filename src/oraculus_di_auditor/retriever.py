@@ -22,9 +22,9 @@ class Retriever:
         self.vectors_dir.mkdir(parents=True, exist_ok=True)
         self.vectors: np.ndarray | None = None
         self.metadata: list[dict] = []
-        self._pending: list[
-            np.ndarray
-        ] = []  # accumulate before single vstack in save()
+        self._pending: list[np.ndarray] = (
+            []
+        )  # accumulate before single vstack in save()
 
     def reset(self) -> None:
         """Clear all stored vectors, pending buffer, and metadata."""

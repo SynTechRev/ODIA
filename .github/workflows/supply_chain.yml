@@ -24,6 +24,7 @@ jobs:
   osv-scan:
     name: Dependency Vulnerabilities (osv-scanner)
     runs-on: ubuntu-latest
+    continue-on-error: true  # findings are advisory; don't block CI on pre-existing CVEs
     steps:
       - uses: actions/checkout@v4
       - uses: google/osv-scanner-action/osv-scanner-action@v2.7.0

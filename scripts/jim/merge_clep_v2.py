@@ -147,7 +147,9 @@ def generate_expansion_index(index, new_cases):
                     case["case_id"]
                     for case in new_cases
                     if case["doctrine"] == doctrine
-                ][:5],  # Top 5 cases
+                ][
+                    :5
+                ],  # Top 5 cases
             }
             for doctrine in sorted(new_doctrines)
         ],

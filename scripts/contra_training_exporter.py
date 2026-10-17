@@ -298,9 +298,7 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
                     else (
                         "Substantial"
                         if avg_casi >= 41
-                        else "Elevated"
-                        if avg_casi >= 21
-                        else "Baseline"
+                        else "Elevated" if avg_casi >= 21 else "Baseline"
                     )
                 )
             )
