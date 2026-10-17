@@ -26,6 +26,12 @@ class Retriever:
             np.ndarray
         ] = []  # accumulate before single vstack in save()
 
+    def reset(self) -> None:
+        """Clear all stored vectors, pending buffer, and metadata."""
+        self.vectors = None
+        self._pending = []
+        self.metadata = []
+
     def add_vector(self, vector: np.ndarray, metadata: dict):
         """Add a vector with metadata.
 

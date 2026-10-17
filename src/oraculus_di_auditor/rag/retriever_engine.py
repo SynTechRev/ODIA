@@ -82,8 +82,7 @@ class RetrievalEngine:
             return
         self._embedder.fit(self._corpus_texts)
         self._fitted = True
-        self._retriever.vectors = None  # reset ndarray (was list.clear())
-        self._retriever.metadata.clear()
+        self._retriever.reset()
         for i, text in enumerate(self._corpus_texts):
             vec = self._embedder.embed(text)
             self._retriever.add_vector(vec, self._entry_map[i])
