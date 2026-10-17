@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/utils.py
 """Utility functions for Phase 18: deterministic seeding and canonicalization."""
+
 from __future__ import annotations
 
 import hashlib

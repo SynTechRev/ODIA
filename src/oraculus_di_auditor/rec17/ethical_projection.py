@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rec17/ethical_projection.py
 """Ethical Projection Engine (EPE-17) - Simulates ethical consequences."""
+
 from __future__ import annotations
 
 import hashlib

@@ -10,7 +10,6 @@ import pytest
 # Skip all tests if FastAPI is not installed
 try:
     from fastapi.testclient import TestClient
-
     from oraculus_di_auditor.interface.api import create_app
 
     FASTAPI_AVAILABLE = True

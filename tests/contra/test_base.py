@@ -8,7 +8,6 @@ and anchor vocabulary completeness.
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.contra.anchors import ALL_ANCHORS, ARMENDARIZ, CCP_1281_96
 from oraculus_di_auditor.contra.base import Detector, EvidenceSpan, Finding, Severity
 from oraculus_di_auditor.scoring.casi import (

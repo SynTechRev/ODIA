@@ -302,10 +302,9 @@ def client(seeded_app):
 def _raw_sql_aggregates(monkeypatch=None):
     """Compute the SAME aggregates the /synthesis/aggregates endpoint
     returns, but directly via raw SQL — no aggregation code reuse."""
-    from sqlalchemy import func
-
     from oraculus_di_auditor.db import models as db_models
     from oraculus_di_auditor.db.session import get_db
+    from sqlalchemy import func
 
     with get_db() as s:
         total_docs = s.query(func.count(db_models.Document.id)).scalar() or 0
@@ -400,10 +399,9 @@ def test_b_aggregates_by_finding_id_matches_raw_sql(client):
 
 def test_b_documents_endpoint_total_matches_count_query(client):
     """`/documents` `total` field should equal raw COUNT(*) on the table."""
-    from sqlalchemy import func
-
     from oraculus_di_auditor.db import models as db_models
     from oraculus_di_auditor.db.session import get_db
+    from sqlalchemy import func
 
     with get_db() as s:
         raw_count = s.query(func.count(db_models.Document.id)).scalar() or 0
@@ -414,10 +412,9 @@ def test_b_documents_endpoint_total_matches_count_query(client):
 
 def test_b_anomalies_endpoint_total_matches_count_query(client):
     """`/anomalies` `total` field should equal raw COUNT(*) on the table."""
-    from sqlalchemy import func
-
     from oraculus_di_auditor.db import models as db_models
     from oraculus_di_auditor.db.session import get_db
+    from sqlalchemy import func
 
     with get_db() as s:
         raw_count = s.query(func.count(db_models.Anomaly.id)).scalar() or 0
@@ -428,10 +425,9 @@ def test_b_anomalies_endpoint_total_matches_count_query(client):
 
 def test_b_jurisdictions_doc_counts_match_raw_sql(client):
     """Each jurisdiction's document_count equals raw GROUP BY query."""
-    from sqlalchemy import func
-
     from oraculus_di_auditor.db import models as db_models
     from oraculus_di_auditor.db.session import get_db
+    from sqlalchemy import func
 
     with get_db() as s:
         raw_rows = (

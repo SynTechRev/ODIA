@@ -1,5 +1,6 @@
 # tests/rec17/test_governance_invariants.py
 """Tests for Governance Invariant Engine (GIE-17)."""
+
 from oraculus_di_auditor.rec17.governance_invariants import GovernanceInvariantEngine
 
 

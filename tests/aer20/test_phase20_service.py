@@ -1,7 +1,7 @@
 # tests/aer20/test_phase20_service.py
 """Tests for Phase20Service orchestrator."""
-import pytest
 
+import pytest
 from oraculus_di_auditor.aer20.aer20_service import Phase20Service
 
 

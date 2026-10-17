@@ -17,7 +17,6 @@ pytest.importorskip("fastapi")
 pytest.importorskip("httpx")
 
 from fastapi.testclient import TestClient
-
 from oraculus_di_auditor.interface.api import create_app
 from oraculus_di_auditor.interface.routes import upload as upload_module
 

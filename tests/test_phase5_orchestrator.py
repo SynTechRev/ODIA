@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.orchestrator import Phase5Orchestrator
 from oraculus_di_auditor.orchestrator.agents import (
     AnalysisAgent,

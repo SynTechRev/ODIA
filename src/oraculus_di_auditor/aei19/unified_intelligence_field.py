@@ -4,6 +4,7 @@
 Combines outputs from Phases 12-18 into a single deterministic 142-dimensional
 intelligence tensor with ethical warp and governance weighting.
 """
+
 from __future__ import annotations
 
 from typing import Any

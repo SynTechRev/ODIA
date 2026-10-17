@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rec17/ethical_lattice.py
 """Ethical Lattice Generator (ELG-17) - Multi-axis ethical reasoning."""
+
 from __future__ import annotations
 
 import hashlib

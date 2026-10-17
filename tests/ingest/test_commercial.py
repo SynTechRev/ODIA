@@ -11,9 +11,6 @@ import pytest
 
 sqlalchemy = pytest.importorskip("sqlalchemy")
 
-from sqlalchemy import create_engine  # noqa: E402
-from sqlalchemy.orm import sessionmaker  # noqa: E402
-
 from oraculus_di_auditor.db.models import (  # noqa: E402
     Base,
     CasiScore,
@@ -25,6 +22,8 @@ from oraculus_di_auditor.ingest.commercial import (  # noqa: E402
     IngestionResult,
     ingest_commercial_document,
 )
+from sqlalchemy import create_engine  # noqa: E402
+from sqlalchemy.orm import sessionmaker  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Fixtures

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from odia_legal.vector3 import LegalVector3, ReEvaluationResult, cadenced_reeval
 
 # ---------------------------------------------------------------------------

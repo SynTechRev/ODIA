@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.temporal.lineage_builder import LineageBuilder
 
 # ---------------------------------------------------------------------------

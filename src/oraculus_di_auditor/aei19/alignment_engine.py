@@ -4,6 +4,7 @@
 Ensures all insights comply with REC-17 ethics and RGK-18 governance policies,
 including Constitutional and UDHR mapping and human primacy requirements.
 """
+
 from __future__ import annotations
 
 from typing import Any

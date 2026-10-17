@@ -313,7 +313,8 @@ class AuthService:
             session = (
                 self._db.query(Session)
                 .filter(
-                    Session.token_jti == jti, Session.is_active == True  # noqa: E712
+                    Session.token_jti == jti,
+                    Session.is_active == True,  # noqa: E712
                 )
                 .first()
             )

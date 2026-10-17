@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.legal import CaseLawBuilder, CaseLawRecord, LegalDefinition
 from oraculus_di_auditor.legal.case_law_builder import KeyQuote
 

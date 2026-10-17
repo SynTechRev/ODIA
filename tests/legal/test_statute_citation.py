@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.legal.statute_citation import (
     parse_single,
     parse_usc_citations,

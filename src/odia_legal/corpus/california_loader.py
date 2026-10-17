@@ -46,9 +46,10 @@ import logging
 from datetime import date
 from pathlib import Path
 
+from oraculus_di_auditor.legal.corpus_base import CorpusLoader, LegalText
+
 from odia_legal.citations.parser import parse_cal_code
 from odia_legal.recodification.cpra_crosswalk import CPRACrosswalk
-from oraculus_di_auditor.legal.corpus_base import CorpusLoader, LegalText
 
 logger = logging.getLogger(__name__)
 

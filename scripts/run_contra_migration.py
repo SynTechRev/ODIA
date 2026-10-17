@@ -18,8 +18,6 @@ from pathlib import Path
 # Make the src package importable from the scripts directory
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from sqlalchemy import create_engine, inspect  # noqa: E402
-
 from oraculus_di_auditor.db.models import (  # noqa: E402
     Base,
     CasiScore,
@@ -30,6 +28,7 @@ from oraculus_di_auditor.db.models import (  # noqa: E402
     S128196Case,
 )
 from oraculus_di_auditor.db.session import DEFAULT_DATABASE_URL  # noqa: E402
+from sqlalchemy import create_engine, inspect  # noqa: E402
 
 CONTRA_TABLES = {
     "commercial_entities": CommercialEntity,

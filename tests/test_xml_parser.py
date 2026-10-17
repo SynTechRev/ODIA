@@ -7,7 +7,6 @@ Date: 2025-11-13
 import xml.etree.ElementTree as ET  # noqa: N817
 
 import pytest
-
 from oraculus_di_auditor.ingestion.xml_parser import (
     extract_text_from_xml,
     parse_xml_to_text,

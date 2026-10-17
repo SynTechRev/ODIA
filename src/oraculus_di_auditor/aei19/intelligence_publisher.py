@@ -8,6 +8,7 @@ Generates the final actionable intelligence bundle:
 - Counterfactual options
 - Reversibility instructions
 """
+
 from __future__ import annotations
 
 from typing import Any

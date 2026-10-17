@@ -1,12 +1,10 @@
-"""Integration tests for temporal analysis wired into reporting and multi-jurisdiction.
-"""
+"""Integration tests for temporal analysis wired into reporting and multi-jurisdiction."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.reporting.auto_classify import (
     FINDING_CATEGORIES,
     classify_finding,

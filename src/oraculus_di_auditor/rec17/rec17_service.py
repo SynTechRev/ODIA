@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rec17/rec17_service.py
 """Phase17Service - Recursive Ethical Cognition orchestrator."""
+
 from __future__ import annotations
 
 import hashlib

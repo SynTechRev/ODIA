@@ -10,7 +10,6 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
-
 from oraculus_di_auditor.embeddings import LocalEmbedder
 from oraculus_di_auditor.llm_providers import (
     AnthropicProvider,

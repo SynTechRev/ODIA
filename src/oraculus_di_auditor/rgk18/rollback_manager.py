@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/rollback_manager.py
 """Rollback manager for reversible governance decisions."""
+
 from __future__ import annotations
 
 from typing import Any

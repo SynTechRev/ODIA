@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.config.jurisdiction_loader import JurisdictionConfig
 from oraculus_di_auditor.multi_jurisdiction import JurisdictionRegistry
 

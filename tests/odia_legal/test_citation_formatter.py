@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from odia_legal.citations.formatter import format_all, format_citation
 from odia_legal.citations.parser import (
     Citation,

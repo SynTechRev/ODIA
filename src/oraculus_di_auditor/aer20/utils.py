@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/aer20/utils.py
 """Utility functions for Phase 20 (AER-20) deterministic operations."""
+
 from __future__ import annotations
 
 import hashlib

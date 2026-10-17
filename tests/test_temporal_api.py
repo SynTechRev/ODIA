@@ -7,7 +7,6 @@ import pytest
 pytest.importorskip("fastapi", reason="FastAPI not installed")
 
 from fastapi.testclient import TestClient  # noqa: E402
-
 from oraculus_di_auditor.interface.api import app  # noqa: E402
 
 client = TestClient(app)

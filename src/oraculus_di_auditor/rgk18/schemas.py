@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/schemas.py
 """Pydantic v2 schemas for Phase 18: Recursive Governance Kernel."""
+
 from __future__ import annotations
 
 from typing import Any, Literal

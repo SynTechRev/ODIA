@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from odia_legal.recodification.cpra_crosswalk import (
     _ENTRIES,
     _NEW_TO_OLD,

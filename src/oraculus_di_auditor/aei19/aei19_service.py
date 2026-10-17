@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/aei19/aei19_service.py
 """Phase19Service - Applied Emergent Intelligence orchestrator."""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

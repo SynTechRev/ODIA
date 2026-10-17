@@ -11,7 +11,6 @@ import pytest
 
 try:
     from fastapi.testclient import TestClient
-
     from oraculus_di_auditor.config.jurisdiction_loader import JurisdictionConfig
     from oraculus_di_auditor.interface.routes.multi_jurisdiction import (
         register_multi_jurisdiction_routes,

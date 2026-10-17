@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.analytics.section1281_96.normalize import NormalizedCase
 from oraculus_di_auditor.analytics.section1281_96.retrieval_aaa import (
     AAARetriever,

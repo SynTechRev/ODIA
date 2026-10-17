@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from odia_legal.corpus.multistate_loader import MultiStateCodeLoader
 
 

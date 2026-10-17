@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/ledger.py
 """Certified immutable decision ledger for RGK-18."""
+
 from __future__ import annotations
 
 import hashlib

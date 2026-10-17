@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rec17/legal_mapping.py
 """Legal & Constitutional Mapping (LCM-17) - Symbolic legal analysis."""
+
 from __future__ import annotations
 
 from typing import Any

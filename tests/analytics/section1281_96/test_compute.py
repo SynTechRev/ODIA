@@ -3,7 +3,6 @@
 from datetime import datetime
 
 import pytest
-
 from oraculus_di_auditor.analytics.section1281_96.compute import (
     arbitrator_repeat_player_concentration,
     contra_corpus_entity_slice,

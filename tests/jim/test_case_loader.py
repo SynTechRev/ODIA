@@ -266,9 +266,9 @@ class TestIndexValidation:
 
             # Restore
             if original_weight is not None:
-                loaded_loader.scotus_index["cases"][0][
-                    "doctrinal_weight"
-                ] = original_weight
+                loaded_loader.scotus_index["cases"][0]["doctrinal_weight"] = (
+                    original_weight
+                )
 
 
 class TestSpecificCases:

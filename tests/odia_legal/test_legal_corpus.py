@@ -7,7 +7,6 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-
 from odia_legal.corpus.california_loader import CaliforniaCodeLoader
 from odia_legal.corpus.legal_corpus import LegalCorpus
 

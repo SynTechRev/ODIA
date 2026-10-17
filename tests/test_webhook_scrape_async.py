@@ -697,7 +697,9 @@ auto-renewal language and a sole-source contractor designation.</p>
 </body></html>"""
 
     monkeypatch.setattr(
-        webhook_mod, "_fetch_url", lambda url, timeout=120: html_payload  # noqa: ARG005
+        webhook_mod,
+        "_fetch_url",
+        lambda url, timeout=120: html_payload,  # noqa: ARG005
     )
 
     job_id = "test-job-html"
@@ -1048,7 +1050,9 @@ def test_worker_sniffs_html_bytes_without_filename_hint(webhook_app, monkeypatch
     )
 
     monkeypatch.setattr(
-        webhook_mod, "_fetch_url", lambda url, timeout=120: html_payload  # noqa: ARG005
+        webhook_mod,
+        "_fetch_url",
+        lambda url, timeout=120: html_payload,  # noqa: ARG005
     )
 
     job_id = "test-job-sniff-html"
@@ -1082,7 +1086,9 @@ def test_worker_sniffs_pdf_bytes_without_filename_hint(webhook_app, monkeypatch)
     pdf_payload = b"%PDF-1.4\nfake content"
 
     monkeypatch.setattr(
-        webhook_mod, "_fetch_url", lambda url, timeout=120: pdf_payload  # noqa: ARG005
+        webhook_mod,
+        "_fetch_url",
+        lambda url, timeout=120: pdf_payload,  # noqa: ARG005
     )
 
     job_id = "test-job-sniff-pdf"

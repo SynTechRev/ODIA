@@ -4,6 +4,7 @@
 Simulates 1-3 steps ahead using temporal vectors (P13), scalar recursion (P14),
 and harmonics (P12) in a fully deterministic manner.
 """
+
 from __future__ import annotations
 
 from typing import Any

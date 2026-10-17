@@ -7,9 +7,6 @@ docx = pytest.importorskip("docx")
 
 from datetime import UTC, datetime  # noqa: E402
 
-from sqlalchemy import create_engine  # noqa: E402
-from sqlalchemy.orm import sessionmaker  # noqa: E402
-
 from oraculus_di_auditor.cards.tcams import (  # noqa: E402
     _query_anchor_frequency,
     _query_axis_sums,
@@ -25,6 +22,8 @@ from oraculus_di_auditor.db.models import (  # noqa: E402
     CommercialEntity,
     ContraFinding,
 )
+from sqlalchemy import create_engine  # noqa: E402
+from sqlalchemy.orm import sessionmaker  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Fixtures

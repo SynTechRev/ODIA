@@ -3,6 +3,7 @@
 Run pre-commit on the full repo and auto-commit any formatting/lint fixes.
 Cross-platform alternative to shell scripts for consistent developer workflow.
 """
+
 from __future__ import annotations
 
 import subprocess

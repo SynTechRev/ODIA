@@ -17,9 +17,10 @@ import argparse
 import pathlib
 import sys
 
-from oraculus.ingestion.legislative_loader import load_legislation, normalize_document
 from oraculus_di_auditor.embeddings import LocalEmbedder
 from oraculus_di_auditor.retriever import Retriever
+
+from oraculus.ingestion.legislative_loader import load_legislation, normalize_document
 
 
 def _ingest_documents(input_dir: str) -> list[dict[str, str]]:

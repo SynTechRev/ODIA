@@ -13,8 +13,9 @@ import logging
 from datetime import date
 from pathlib import Path
 
-from odia_legal.citations.parser import parse_cfr
 from oraculus_di_auditor.legal.corpus_base import CorpusLoader, LegalText
+
+from odia_legal.citations.parser import parse_cfr
 
 logger = logging.getLogger(__name__)
 

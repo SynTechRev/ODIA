@@ -144,10 +144,12 @@ def _build_alias_pattern(aliases) -> re.Pattern[str] | None:
     return re.compile(rf"\b(?:{escaped})\b", re.IGNORECASE)
 
 
-def _get_alias_patterns() -> tuple[
-    dict[str, re.Pattern[str]],
-    dict[str, re.Pattern[str]],
-]:
+def _get_alias_patterns() -> (
+    tuple[
+        dict[str, re.Pattern[str]],
+        dict[str, re.Pattern[str]],
+    ]
+):
     """Return (entity_patterns, personnel_patterns), compiling on first call."""
     global _ENTITY_ALIAS_PATTERNS, _PERSONNEL_ALIAS_PATTERNS
     if _ENTITY_ALIAS_PATTERNS is None or _PERSONNEL_ALIAS_PATTERNS is None:

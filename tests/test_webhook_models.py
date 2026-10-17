@@ -15,15 +15,14 @@ import pytest
 # db/ test pattern.
 pytest.importorskip("sqlalchemy")
 
-from sqlalchemy import create_engine  # noqa: E402
-from sqlalchemy.exc import IntegrityError  # noqa: E402
-from sqlalchemy.orm import sessionmaker  # noqa: E402
-
 from oraculus_di_auditor.db.models import (  # noqa: E402
     Base,
     SeenHash,
     WebhookAuditLog,
 )
+from sqlalchemy import create_engine  # noqa: E402
+from sqlalchemy.exc import IntegrityError  # noqa: E402
+from sqlalchemy.orm import sessionmaker  # noqa: E402
 
 
 @pytest.fixture

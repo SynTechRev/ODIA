@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
 from oraculus_di_auditor.adapters.base import DataSourceAdapter
 
 # ---------------------------------------------------------------------------

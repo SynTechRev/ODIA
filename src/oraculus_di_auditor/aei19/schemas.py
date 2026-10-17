@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/aei19/schemas.py
 """Pydantic models for Phase 19 (AEI-19) data structures."""
+
 from __future__ import annotations
 
 from typing import Any

@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/service.py
 """Phase 18 service: RGK-18 orchestrator and external API surface."""
+
 from __future__ import annotations
 
 import uuid

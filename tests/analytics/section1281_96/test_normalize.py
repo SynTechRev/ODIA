@@ -3,7 +3,6 @@
 from datetime import date, datetime
 
 import pytest
-
 from oraculus_di_auditor.analytics.section1281_96.normalize import (
     NormalizedCase,
     claim_amount_tier,
@@ -71,7 +70,6 @@ class TestParseAmount:
             assert parse_amount(val) is None
 
     def test_nan_float(self):
-
         assert parse_amount(float("nan")) is None
 
     def test_commas_stripped(self):

@@ -6,7 +6,6 @@ from datetime import UTC, date, datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from oraculus_di_auditor.ingest.wayback import (
     WaybackCapture,
     find_capture,

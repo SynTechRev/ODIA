@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/policy_interpreter.py
 """Policy interpreter for normalizing and validating GCN rules."""
+
 from __future__ import annotations
 
 from typing import Any, Literal

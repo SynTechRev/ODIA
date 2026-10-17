@@ -7,7 +7,6 @@ Updated: 2025-11-13 (GitHub Copilot Agent - Phase 6)
 
 import numpy as np
 import pytest
-
 from oraculus_di_auditor.embeddings import Embedder, LocalEmbedder
 
 

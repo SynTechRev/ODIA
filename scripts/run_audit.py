@@ -38,7 +38,9 @@ if str(_REPO_ROOT / "src") not in sys.path:
 from oraculus_di_auditor.analysis import (
     analyze_document,  # noqa: E402
     detect_procurement_timeline_anomalies,
-)  # noqa: E402
+)
+
+# noqa: E402
 from oraculus_di_auditor.config import (  # noqa: E402
     JurisdictionConfig,
     load_jurisdiction_config,
@@ -363,7 +365,7 @@ def _date_range(results: list[dict[str, Any]]) -> tuple[str, str]:
 
 
 def _anomaly_summary_by_layer(
-    findings: list[dict[str, Any]]
+    findings: list[dict[str, Any]],
 ) -> dict[str, dict[str, int]]:
     """Return {layer: {severity: count}} mapping."""
     summary: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))

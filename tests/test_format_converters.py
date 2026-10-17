@@ -8,7 +8,6 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
 from oraculus_di_auditor.reporting import (
     AuditReport,
     export_report,

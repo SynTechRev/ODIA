@@ -9,7 +9,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.legal.us_code_loader import USCodeLoader
 
 

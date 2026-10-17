@@ -4,6 +4,7 @@
 Produces analytic, contextual, emergent, and counterfactual insights based on
 deterministic pattern extraction from the Unified Intelligence Field.
 """
+
 from __future__ import annotations
 
 from typing import Any

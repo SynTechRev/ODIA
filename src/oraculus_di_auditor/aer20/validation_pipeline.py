@@ -3,6 +3,7 @@
 
 Performs bounded self-evaluation and self-optimization.
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -131,7 +132,9 @@ class ValidationPipeline:
         stability_status = (
             "stable"
             if stability > 0.75
-            else "moderate" if stability > 0.6 else "unstable"
+            else "moderate"
+            if stability > 0.6
+            else "unstable"
         )
 
         # Check compliance

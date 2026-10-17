@@ -7,6 +7,7 @@ Usage:
 
 Adjust file names/paths in ARTIFACT_PATHS if your repo uses different names.
 """
+
 import argparse
 import json
 from datetime import UTC, datetime

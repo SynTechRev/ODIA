@@ -6,7 +6,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.entity.normalize import normalize_corporate_suffix
 from oraculus_di_auditor.entity.registry import Entity, EntityRegistry
 
@@ -269,7 +268,6 @@ def test_build_analytical_card_with_casi() -> None:
 def test_build_analytical_card_no_emdash_in_content() -> None:
     """Verify no em-dash or en-dash characters appear in the card text."""
     from docx import Document as DocxDocument
-
     from oraculus_di_auditor.cards.analytical_card import (
         AnalyticalCardInput,
         build_analytical_card,

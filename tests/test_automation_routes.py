@@ -25,7 +25,6 @@ pytest.importorskip("fastapi")
 pytest.importorskip("httpx")
 
 from fastapi.testclient import TestClient  # noqa: E402
-
 from oraculus_di_auditor.interface.routes.automation import (  # noqa: E402
     _transform_execution,
     _transform_workflow,

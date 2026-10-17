@@ -10,7 +10,6 @@ classifier branch rather than a generic regression.
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.analysis.cross_entity import (
     _reset_caches_for_tests,
     detect_cross_entity_anomalies,

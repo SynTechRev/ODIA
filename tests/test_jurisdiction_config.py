@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.config import (
     JurisdictionConfig,
     clear_config_cache,

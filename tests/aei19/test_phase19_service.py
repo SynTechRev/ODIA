@@ -1,7 +1,7 @@
 # tests/aei19/test_phase19_service.py
 """Tests for Phase19Service orchestrator."""
-import pytest
 
+import pytest
 from oraculus_di_auditor.aei19.aei19_service import Phase19Service
 
 

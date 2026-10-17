@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.legal.legal_resolver import (
     LegalResolver,
     reset_resolver_for_testing,

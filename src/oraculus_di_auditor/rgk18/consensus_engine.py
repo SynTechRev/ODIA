@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/consensus_engine.py
 """Consensus engine for multi-source evidence aggregation."""
+
 from __future__ import annotations
 
 from .constants import DEFAULT_WEIGHTS

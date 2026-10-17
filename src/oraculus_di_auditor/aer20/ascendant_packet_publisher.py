@@ -3,6 +3,7 @@
 
 Publishes the Output Packet (FAP-20) - the crown jewel.
 """
+
 from __future__ import annotations
 
 from typing import Any

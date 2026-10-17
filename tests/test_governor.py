@@ -529,7 +529,6 @@ class TestGovernorAPIEndpoints:
         """Test /governor/state endpoint is available."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -547,7 +546,6 @@ class TestGovernorAPIEndpoints:
         """Test /governor/state endpoint returns valid data."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -568,7 +566,6 @@ class TestGovernorAPIEndpoints:
         """Test /governor/validate endpoint."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -589,7 +586,6 @@ class TestGovernorAPIEndpoints:
         """Test /governor/enforce endpoint."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:

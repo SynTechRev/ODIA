@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.legal.statute_citation import parse_usc_citations
 from oraculus_di_auditor.reporting.plain_language import (
     TRANSLATIONS,

@@ -12,7 +12,6 @@ import pytest
 
 try:
     from fastapi.testclient import TestClient
-
     from oraculus_di_auditor.interface.api import create_app
     from oraculus_di_auditor.interface.routes.detectors import DETECTOR_REGISTRY
 

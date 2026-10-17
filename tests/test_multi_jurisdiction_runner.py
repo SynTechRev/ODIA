@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.config.jurisdiction_loader import JurisdictionConfig
 from oraculus_di_auditor.multi_jurisdiction.registry import JurisdictionRegistry
 from oraculus_di_auditor.multi_jurisdiction.runner import MultiJurisdictionRunner

@@ -7,7 +7,6 @@ from pathlib import Path
 
 import jinja2
 import pytest
-
 from oraculus_di_auditor.reporting import AuditReport, ReportTemplateEngine
 from oraculus_di_auditor.reporting.models import (
     DetectorSummary,

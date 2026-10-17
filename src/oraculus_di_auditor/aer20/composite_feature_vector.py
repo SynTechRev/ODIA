@@ -4,6 +4,7 @@
 Constructs a 256-dimensional meta-field combining all phases (12-19).
 Extends UIF-19's 142 dimensions with additional synthesis dimensions.
 """
+
 from __future__ import annotations
 
 from typing import Any

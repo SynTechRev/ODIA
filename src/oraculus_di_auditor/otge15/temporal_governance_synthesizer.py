@@ -155,7 +155,9 @@ class TemporalGovernanceSynthesizer:
                             "severity": (
                                 "critical"
                                 if weighted_probability > 0.7
-                                else "high" if weighted_probability > 0.5 else "medium"
+                                else "high"
+                                if weighted_probability > 0.5
+                                else "medium"
                             ),
                         }
                     )
@@ -221,9 +223,7 @@ class TemporalGovernanceSynthesizer:
             "total_corrections": len(corrections),
             "corrections": sorted(
                 corrections, key=lambda c: c["correction_potential"], reverse=True
-            )[
-                :10
-            ],  # Top 10
+            )[:10],  # Top 10
         }
 
     def _generate_drift_advisories(

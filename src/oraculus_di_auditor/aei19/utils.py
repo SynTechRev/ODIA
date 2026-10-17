@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/aei19/utils.py
 """Utility functions for Phase 19 (AEI-19) deterministic operations."""
+
 from __future__ import annotations
 
 import hashlib

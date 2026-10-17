@@ -1,5 +1,6 @@
 # tests/rec17/test_ethical_projection.py
 """Tests for Ethical Projection Engine (EPE-17)."""
+
 from oraculus_di_auditor.rec17.ethical_projection import EthicalProjectionEngine
 
 

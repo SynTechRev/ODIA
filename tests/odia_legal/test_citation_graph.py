@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from odia_legal.citations.graph import CitationGraph, build_default_graph
 
 try:

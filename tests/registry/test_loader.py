@@ -10,7 +10,6 @@ fails CI immediately.
 from __future__ import annotations
 
 import pytest
-
 from oraculus_di_auditor.registry import EntityRegistry, load_default_registry
 
 

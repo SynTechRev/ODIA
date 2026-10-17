@@ -9,7 +9,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.ingestion import (
     compute_file_hash,
     compute_text_hash,

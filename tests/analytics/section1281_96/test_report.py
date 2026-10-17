@@ -9,7 +9,6 @@ from datetime import date, datetime
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.analytics.section1281_96.normalize import NormalizedCase
 
 # Guard: skip entire module if python-docx is not installed

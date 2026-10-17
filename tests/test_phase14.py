@@ -10,7 +10,6 @@ Comprehensive test suite covering:
 """
 
 import pytest
-
 from oraculus_di_auditor.rpg14 import (
     CausalAnomalyDetector,
     CausalGraph,

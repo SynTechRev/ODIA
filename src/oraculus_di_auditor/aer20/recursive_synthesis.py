@@ -3,6 +3,7 @@
 
 Generates holistic synthesis across all intelligence layers.
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -183,7 +184,9 @@ maintaining complete reversibility and human primacy throughout all operations.
                     "status": (
                         "good"
                         if harmony > 0.8
-                        else "moderate" if harmony > 0.6 else "attention"
+                        else "moderate"
+                        if harmony > 0.6
+                        else "attention"
                     ),
                 }
             )
@@ -198,7 +201,9 @@ maintaining complete reversibility and human primacy throughout all operations.
             "overall_status": (
                 "harmonized"
                 if avg_harmony > 0.8
-                else "acceptable" if avg_harmony > 0.6 else "needs_attention"
+                else "acceptable"
+                if avg_harmony > 0.6
+                else "needs_attention"
             ),
         }
 
@@ -237,7 +242,9 @@ maintaining complete reversibility and human primacy throughout all operations.
             "stability_level": (
                 "high"
                 if weighted_stability > 0.75
-                else "moderate" if weighted_stability > 0.6 else "low"
+                else "moderate"
+                if weighted_stability > 0.6
+                else "low"
             ),
         }
 
@@ -346,7 +353,9 @@ maintaining complete reversibility and human primacy throughout all operations.
             "equilibrium_status": (
                 "stable"
                 if std_dev < 0.2
-                else "moderate" if std_dev < 0.4 else "divergent"
+                else "moderate"
+                if std_dev < 0.4
+                else "divergent"
             ),
             "recommendation": (
                 "System in equilibrium"

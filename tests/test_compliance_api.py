@@ -6,7 +6,6 @@ import pytest
 
 try:
     from fastapi.testclient import TestClient
-
     from oraculus_di_auditor.interface.api import create_app
 
     _FASTAPI_AVAILABLE = True

@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from odia_legal.corpus.federal_adjudication_loader import FederalAdjudicationLoader
 
 

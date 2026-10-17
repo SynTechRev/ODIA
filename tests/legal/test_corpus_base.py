@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 import yaml
-
 from oraculus_di_auditor.legal.corpus_base import CorpusLoader, LegalText
 
 

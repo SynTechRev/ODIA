@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/aer20/aer20_service.py
 """Phase20Service - Ascendant Emergence & Recursive Synthesis orchestrator."""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

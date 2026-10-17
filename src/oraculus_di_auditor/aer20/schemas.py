@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/aer20/schemas.py
 """Pydantic models for Phase 20 (AER-20) data structures."""
+
 from __future__ import annotations
 
 from typing import Any

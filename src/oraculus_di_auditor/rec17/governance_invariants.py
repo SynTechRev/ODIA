@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rec17/governance_invariants.py
 """Governance Invariant Engine (GIE-17) - Extracts and validates invariants."""
+
 from __future__ import annotations
 
 from typing import Any

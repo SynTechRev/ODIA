@@ -66,7 +66,6 @@ def get_current_user(token: str | None = None) -> dict[str, Any]:
         return ANONYMOUS_USER
 
     try:
-
         return service.verify_token(token)
     except Exception as exc:
         if _FASTAPI_AVAILABLE:

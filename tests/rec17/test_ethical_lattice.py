@@ -1,5 +1,6 @@
 # tests/rec17/test_ethical_lattice.py
 """Tests for Ethical Lattice Generator (ELG-17)."""
+
 from oraculus_di_auditor.rec17.ethical_lattice import EthicalLatticeGenerator
 
 

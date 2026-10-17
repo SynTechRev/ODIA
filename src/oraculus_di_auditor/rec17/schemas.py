@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rec17/schemas.py
 """Pydantic v2 schemas for Phase 17: Recursive Ethical Cognition."""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

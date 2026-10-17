@@ -1,7 +1,6 @@
 """Tests for Phase 13: QDCL (Quantum-Distributed Cognition Layer)."""
 
 import pytest
-
 from oraculus_di_auditor.qdcl import (
     AdaptiveCompressionExpansion,
     CognitionMode,

@@ -1,5 +1,6 @@
 # tests/rec17/test_legal_mapping.py
 """Tests for Legal & Constitutional Mapping (LCM-17)."""
+
 from oraculus_di_auditor.rec17.legal_mapping import LegalConstitutionalMapper
 
 

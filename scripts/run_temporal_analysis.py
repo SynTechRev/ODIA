@@ -21,11 +21,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from oraculus_di_auditor.temporal.evolution_detector import (
     EvolutionPatternDetector,
-)  # noqa: E402
+)
+
+# noqa: E402
 from oraculus_di_auditor.temporal.lineage_builder import LineageBuilder  # noqa: E402
 from oraculus_di_auditor.temporal.timeline_generator import (
     TimelineGenerator,
-)  # noqa: E402
+)
 
 
 def _load_documents(source_dir: Path) -> list[dict]:

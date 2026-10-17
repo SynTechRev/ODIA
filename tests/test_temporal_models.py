@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 
 import pytest
-
 from oraculus_di_auditor.temporal import (
     ContractEvent,
     ContractLineage,

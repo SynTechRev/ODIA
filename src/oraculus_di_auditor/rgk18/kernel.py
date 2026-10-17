@@ -1,5 +1,6 @@
 # src/oraculus_di_auditor/rgk18/kernel.py
 """Core governance kernel: evaluation, decision making, enforcement."""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

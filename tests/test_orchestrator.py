@@ -16,7 +16,6 @@ class TestOrchestratorEndpoint:
         """Test that orchestrator endpoint is registered."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -34,7 +33,6 @@ class TestOrchestratorEndpoint:
         """Test orchestrator with single document."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -74,7 +72,6 @@ class TestOrchestratorEndpoint:
         """Test orchestrator with multiple documents."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -120,7 +117,6 @@ class TestOrchestratorEndpoint:
         """Test that orchestrator detects cross-document patterns."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -158,7 +154,6 @@ class TestOrchestratorEndpoint:
         """Test that orchestrator correlates anomalies across documents."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -196,7 +191,6 @@ class TestOrchestratorEndpoint:
         """Test that orchestrator provides execution log."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -233,7 +227,6 @@ class TestOrchestratorEndpoint:
         """Test that orchestrator returns metadata."""
         try:
             from fastapi.testclient import TestClient
-
             from oraculus_di_auditor.interface.api import app
 
             if app is None:
@@ -378,11 +371,10 @@ class TestOrchestratorSchemas:
     def test_orchestrator_request_validation(self):
         """Test request validation requires at least one document."""
         try:
-            from pydantic import ValidationError
-
             from oraculus_di_auditor.interface.routes.orchestrator import (
                 OrchestratorRequest,
             )
+            from pydantic import ValidationError
 
             # Should fail with empty documents list
             with pytest.raises(ValidationError):

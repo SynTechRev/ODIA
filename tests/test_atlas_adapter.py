@@ -6,7 +6,6 @@ import csv
 from pathlib import Path
 
 import pytest
-
 from oraculus_di_auditor.adapters.atlas_adapter import AtlasAdapter, AtlasRecord
 
 # Path to the bundled sample dataset

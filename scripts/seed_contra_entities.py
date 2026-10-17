@@ -23,7 +23,9 @@ from oraculus_di_auditor.db.session import (
     DEFAULT_DATABASE_URL,
     get_db,
     init_db,
-)  # noqa: E402
+)
+
+# noqa: E402
 from oraculus_di_auditor.entity.registry import Entity, EntityRegistry  # noqa: E402
 
 _CONFIG = Path(__file__).resolve().parent.parent / "config" / "contra_entities.json"

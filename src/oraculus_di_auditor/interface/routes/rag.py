@@ -66,7 +66,6 @@ def _get_service():
     global _rag_service  # noqa: PLW0603
     if _rag_service is None:
         try:
-
             from oraculus_di_auditor.rag.orac_rag import _DEFAULT_VECTORS_DIR, OracRAG
 
             svc = OracRAG()
