@@ -30,7 +30,6 @@ jobs:
         with:
           scan-args: |-
             --recursive
-            --skip-git
             ./
 
   # ── SBOM generation (Syft) ──────────────────────────────────────────────────
