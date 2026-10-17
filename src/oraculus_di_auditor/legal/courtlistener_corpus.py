@@ -374,8 +374,14 @@ class CourtListenerCorpusLoader(CorpusLoader):
                     opinions = cluster.get("sub_opinions", [])
                     opinion_data = None
                     if opinions:
-                        op_id = opinions[0].get("id") or opinions[0]
-                        opinion_data = self._client.get_opinion(op_id)
+                        op_ref = opinions[0]
+                        if isinstance(op_ref, dict):
+                            op_id = op_ref.get("id")
+                        else:
+                            # v4 API returns URL strings: ".../opinions/12345/"
+                            op_id = str(op_ref).rstrip("/").rsplit("/", 1)[-1]
+                        if op_id:
+                            opinion_data = self._client.get_opinion(op_id)
                     record = _cluster_to_case_record(cluster, opinion_data, topic)
                     if record:
                         self._builder.save_case(record)
