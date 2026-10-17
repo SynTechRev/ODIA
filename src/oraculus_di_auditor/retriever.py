@@ -22,6 +22,9 @@ class Retriever:
         self.vectors_dir.mkdir(parents=True, exist_ok=True)
         self.vectors: np.ndarray | None = None
         self.metadata: list[dict] = []
+        self._pending: list[
+            np.ndarray
+        ] = []  # accumulate before single vstack in save()
 
     def add_vector(self, vector: np.ndarray, metadata: dict):
         """Add a vector with metadata.
@@ -30,8 +33,7 @@ class Retriever:
             vector: Embedding vector
             metadata: Associated metadata (id, text, etc.)
         """
-        v = vector.reshape(1, -1)
-        self.vectors = v if self.vectors is None else np.vstack([self.vectors, v])
+        self._pending.append(vector.reshape(1, -1))
         self.metadata.append(metadata)
 
     def search(
@@ -46,8 +48,17 @@ class Retriever:
         Returns:
             List of (index, similarity_score, metadata) tuples
         """
+        self._flush_pending()
+
         if self.vectors is None or len(self.vectors) == 0:
             return []
+
+        # Upcast float16 storage to float32 for numerically stable dot product.
+        vecs = (
+            self.vectors.astype(np.float32)
+            if self.vectors.dtype == np.float16
+            else self.vectors
+        )
 
         # Normalize query vector
         query_norm = np.linalg.norm(query_vector)
@@ -55,7 +66,7 @@ class Retriever:
             query_vector = query_vector / query_norm
 
         # Compute cosine similarities — vectors is already a numpy array
-        similarities = np.dot(self.vectors, query_vector)
+        similarities = np.dot(vecs, query_vector)
 
         # Get top-k indices
         top_indices = np.argsort(similarities)[::-1][:top_k]
@@ -67,16 +78,28 @@ class Retriever:
 
         return results
 
+    def _flush_pending(self) -> None:
+        """Materialize any pending add_vector() calls into self.vectors.
+
+        Stacking once at flush time is O(n); the old per-add vstack was O(n²).
+        Stored as float16 to keep large corpora (~271k × 2048) under ~1.1 GiB.
+        """
+        if self._pending:
+            self.vectors = np.vstack(self._pending).astype(np.float16)
+            self._pending = []
+
     def save(self, filename: str):
         """Save vectors and metadata to disk.
 
         Args:
             filename: Base filename (without extension)
         """
+        self._flush_pending()
+
         vectors_path = self.vectors_dir / f"{filename}_vectors.npy"
         metadata_path = self.vectors_dir / f"{filename}_metadata.npy"
 
-        np.save(vectors_path, np.array(self.vectors))
+        np.save(vectors_path, self.vectors)
         np.save(metadata_path, np.array(self.metadata, dtype=object))
 
     def load(self, filename: str):

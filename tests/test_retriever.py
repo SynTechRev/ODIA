@@ -6,7 +6,6 @@ Date: 2025-11-13
 
 import numpy as np
 import pytest
-
 from oraculus_di_auditor.retriever import Retriever
 
 
@@ -31,7 +30,8 @@ def test_add_vector():
 
     retriever.add_vector(vector, metadata)
 
-    assert len(retriever.vectors) == 1
+    # vectors are buffered in _pending until flush (search / save); check the buffer
+    assert len(retriever._pending) == 1
     assert len(retriever.metadata) == 1
     assert retriever.metadata[0]["id"] == "doc1"
 

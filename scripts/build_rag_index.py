@@ -243,7 +243,9 @@ def main() -> None:
 
         print("\n[2/3] Building ACE anomaly index (DB findings + L-1..L-10 legal)…")
         ace_texts, ace_metas = build_ace_index(session)
-        ace_embedder = LocalEmbedder(max_features=4096)
+        # 4096 dims × 271k docs × float32 = ~4.4 GiB; use 2048 (same as jim_collection)
+        # → ~1.1 GiB at float16 storage, still sufficient for TF-IDF anomaly retrieval.
+        ace_embedder = LocalEmbedder(max_features=2048)
         fit_and_save("ace_collection", ace_texts, ace_metas, ace_embedder)
 
         print("\n[3/3] Building JIM cross-jurisdiction pattern index…")
