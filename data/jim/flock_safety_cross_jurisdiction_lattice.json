@@ -123,8 +123,8 @@
       "target": "Visalia Police Department",
       "request": "All Flock Safety LLC contracts and data-sharing agreements; ALPR data retention schedules; AB 481 annual report for ALPR systems",
       "deadline_tracking": "CPRA-VPD-FLOCK-001",
-      "letter_file": null,
-      "status": "not_yet_drafted"
+      "letter_file": "data/cpra_letters/visalia_pd_CPRA_20261017.txt",
+      "status": "drafted"
     },
     {
       "target": "Fresno County Sheriff",

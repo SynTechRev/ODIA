@@ -1,0 +1,197 @@
+October 17, 2026
+
+Records Division
+Visalia Police Department
+303 N. Acequia Avenue
+Visalia, CA 93291
+
+Submitted via: Visalia Police Department Records Division (in person or mail)
+
+Re: California Public Records Act Request — Surveillance Technology Contracts,
+    ALPR Compliance Documentation, and Cross-Jurisdictional Data-Sharing Records
+    Gov. Code §§ 7920.000 et seq.
+
+Dear Records Division:
+
+Pursuant to the California Public Records Act (CPRA), Government Code §§ 7920.000
+et seq., I respectfully request the following public records from the Visalia Police
+Department (VPD). This request arises from a review of VPD public records — a corpus
+of 340 documents — identifying surveillance technology deployments that lack required
+statutory compliance documentation under current California law. Specifically, 22
+documents in the VPD corpus reference Automated License Plate Reader (ALPR)
+technology associated with Flock Safety, LLC, producing 355 anomaly findings across
+Civil Code § 1798.90.5, SB 524 AI-transparency, and AB 481 compliance layers. Flock
+Safety represents the highest single-vendor anomaly density in the VPD corpus
+reviewed, and 75 of those findings flag cross-entity ALPR detections without the
+SB 524 AI-transparency citation required since January 1, 2024.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 1 — FLOCK SAFETY ALPR CONTRACTS AND COMPLIANCE DOCUMENTATION
+           (Civil Code § 1798.90.5 / SB 524 / AB 481)
+           [22 documents — Flock Safety reference / 355 findings]
+────────────────────────────────────────────────────────────────────────────────
+
+Twenty-two documents in the VPD corpus reference Flock Safety, LLC as an ALPR
+vendor. None of the 22 documents contain a citation to VPD's Civil Code § 1798.90.5
+ALPR usage and privacy policy, and none cite an SB 524 (Stats. 2023, ch. 839)
+AI-transparency impact assessment. AB 481 (Gov. Code § 7070 et seq.) language
+appears inconsistently — present in a subset of documents but absent from others
+referencing the same deployment — suggesting a governance gap in the equipment-use
+policy adoption process.
+
+Please provide:
+
+  1a. All contracts, purchase orders, amendments, sole-source justification
+      memoranda, and renewal options between VPD (or the City of Visalia on
+      VPD's behalf) and Flock Safety, LLC, for ALPR system procurement,
+      installation, maintenance, or data services, from January 1, 2018
+      through the date of this request.
+
+  1b. VPD's current ALPR usage and privacy policy required by Civil Code
+      § 1798.90.5, including the date of adoption, the date of most recent
+      update, and any public-facing posting location.
+
+  1c. The SB 524 (Stats. 2023, ch. 839) AI-transparency impact assessment, or
+      equivalent documentation, prepared before VPD deployed or accessed any
+      Flock Safety ALPR system or AI-assisted surveillance tool, including any
+      third-party AI components integrated into the Flock Safety platform.
+
+  1d. VPD's AB 481 (Gov. Code § 7070 et seq.) Militarized Equipment Use Policy
+      as approved by the Visalia City Council, specifically identifying ALPR
+      systems as a covered technology category, along with the BOS/City Council
+      resolution adopting the policy.
+
+  1e. VPD's AB 481 annual reports for fiscal years 2022-23, 2023-24, 2024-25,
+      and 2025-26, together with any City Council resolutions ratifying them,
+      to the extent those reports address ALPR system deployment.
+
+  1f. All data-sharing agreements, network participation agreements, or
+      interoperability agreements authorizing VPD to share ALPR data with,
+      or access ALPR data from, any other agency — including but not limited
+      to the City of Fresno, Fresno County Sheriff's Office, TCSO, or any
+      regional or statewide ALPR network administered by Flock Safety, LLC.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 2 — ALPR AUDIT LOGS AND DATA RETENTION (Civil Code § 1798.90.5(b))
+           [75 cross-entity ALPR detection findings / SB 524 gap lattice]
+────────────────────────────────────────────────────────────────────────────────
+
+Seventy-five cross-entity ALPR detection findings in the VPD corpus flag records
+where ALPR hits were acted upon or documented without the AI-transparency citation
+required by SB 524 since January 1, 2024. Civil Code § 1798.90.5(b) requires ALPR
+operators to maintain audit logs of all ALPR data access and to make those logs
+available to authorized parties.
+
+Please provide:
+
+  2a. VPD's ALPR data retention schedule, including the retention period for
+      raw ALPR images, associated vehicle data, and plate-read event records,
+      and the legal authority cited for that schedule.
+
+  2b. VPD's ALPR audit logs for calendar years 2024 and 2025, including query
+      counts by accessing officer/unit, hit counts, and records of any data
+      shared with or received from other agencies, to the extent disclosable
+      under Civil Code § 1798.90.5.
+
+  2c. All documented instances in which VPD ALPR data was shared with a federal
+      agency (including ICE, DEA, FBI, or HSI), including any requests received
+      and the legal authority cited for compliance or denial.
+
+  2d. Any privacy impact assessment or internal policy review conducted in
+      connection with VPD's adoption of Flock Safety's cross-jurisdictional
+      "hot list" or alert-notification features.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 3 — CROSS-JURISDICTIONAL SURVEILLANCE NETWORK DISCLOSURE
+           (AB 481 / SB 524 / Civil Code § 1798.90.5)
+────────────────────────────────────────────────────────────────────────────────
+
+The cross-entity ALPR findings in the VPD corpus indicate that VPD's Flock Safety
+deployment is networked with at least one other agency in the region. Neither
+interoperability agreements nor cross-agency data-access policies are reflected in
+available VPD records.
+
+Please provide:
+
+  3a. All MOUs, data-sharing agreements, or participation agreements between VPD
+      and any other law enforcement agency, school district, private entity, or
+      regional body governing access to a shared Flock Safety ALPR network or
+      "hot list" system.
+
+  3b. Any public notice, community engagement record, or City Council agenda
+      item in which VPD disclosed its participation in a regional or multi-
+      agency Flock Safety ALPR network to the public.
+
+  3c. Any written legal analysis or policy determination regarding VPD's
+      obligation to adopt a separate AB 481 policy for shared ALPR access
+      (as distinct from VPD-operated ALPR systems), consistent with the
+      California Department of Justice's AB 481 guidance.
+
+────────────────────────────────────────────────────────────────────────────────
+REQUEST 4 — JAG / FEDERAL GRANT FUNDING FOR SURVEILLANCE TECHNOLOGY
+           (34 U.S.C. § 10152)
+────────────────────────────────────────────────────────────────────────────────
+
+Federal JAG grants carry an anti-supplanting prohibition under 34 U.S.C.
+§ 10152(a)(1)(G): grant funds may not replace local funds already committed to
+the same purpose. If any component of VPD's Flock Safety ALPR contract was
+funded through JAG or other federal grants, the anti-supplanting certification
+and itemization requirements apply.
+
+Please provide:
+
+  4a. All JAG award letters, sub-award agreements, and MOUs under which VPD
+      has received or administered JAG funds for any purpose, from grant years
+      2006 through 2026.
+
+  4b. Any itemized equipment or technology lists submitted with JAG grant
+      applications or award certifications, including any entries for ALPR
+      systems, body-worn cameras, or other surveillance technology.
+
+  4c. The anti-supplanting certification submitted with or alongside each
+      VPD JAG award acceptance.
+
+────────────────────────────────────────────────────────────────────────────────
+FORMAT AND TIMELINE
+────────────────────────────────────────────────────────────────────────────────
+
+Please provide records in electronic format (PDF, XLSX, or searchable text) where
+available. Acknowledgment is required within 10 calendar days per Gov. Code
+§ 7922.535. Records may be provided on a rolling basis as they are identified.
+
+To the extent records are withheld, please provide a written index identifying
+each withheld record, the specific statutory exemption claimed, and the factual
+basis for the exemption per Gov. Code § 7923.000 et seq.
+
+If any fee estimate will exceed $50.00, please notify me before incurring costs.
+
+Sincerely,
+
+[REQUESTER NAME]
+[ADDRESS]
+[CITY, STATE ZIP]
+[EMAIL]
+[PHONE]
+
+────────────────────────────────────────────────────────────────────────────────
+DOCUMENT LOG (internal reference — do not include in submission)
+  Generated:    2026-10-17
+  Corpus:       visalia-pd — 340 docs / 4,571 findings
+  JIM Lattice:  jim-flock-lattice-20261017 (jim_collection)
+  Anchoring findings (VPD-specific):
+    - 22 docs:   Flock Safety ALPR reference (critical/high)
+    - 355 finds: Flock Safety associated findings
+    - 75 finds:  Cross-entity ALPR detection / SB 524 gap (high)
+    - N/A docs:  Civil Code §1798.90.5 usage-policy citation absent
+    - Partial:   AB 481 annual report language — inconsistent across corpus
+    - Apex:      F-13 corpus finding (Flock Safety, 140 findings) — highest
+                 single-vendor anomaly density in VPD corpus
+  Cross-reference: fresno (city) $1.5M Flock sole-source; fresnocounty 1 doc
+  Detector layers: surveillance, l1_statutory_applicability, governance
+  CPRA statutory basis: Gov. Code §§ 7920.000, 7922.535, 7923.000 et seq.
+  Surveillance law: Civil Code §1798.90.5 (ALPR operator policy);
+                    SB 524 (Stats. 2023, ch. 839) (AI transparency, eff. 1/1/2024);
+                    AB 481 (Gov. Code § 7070 et seq.) (militarized equipment)
+  Federal basis: 34 U.S.C. §10152(a)(1)(G) (JAG anti-supplanting)
+  Tracking ID:  CPRA-VPD-FLOCK-001
+────────────────────────────────────────────────────────────────────────────────
