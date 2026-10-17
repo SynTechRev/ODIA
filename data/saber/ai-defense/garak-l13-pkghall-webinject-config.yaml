@@ -1,0 +1,26 @@
+# garak 0.17.0 config — ARCADE L-13: packagehallucination + web_injection only
+# DanInTheWild excluded: probe 55/256 causes 10-17 min/generation (context overflow)
+# Target: odia-v1 via Ollama (http://127.0.0.1:11434)
+---
+plugins:
+  target_type: ollama
+  target_name: odia-v1
+
+run:
+  generations: 5
+  seed: 42
+  spec:
+    include:
+      - probes.packagehallucination.Dart
+      - probes.packagehallucination.JavaScript
+      - probes.packagehallucination.Python
+      - probes.packagehallucination.Ruby
+      - probes.packagehallucination.Rust
+      - probes.web_injection.ColabAIDataLeakage
+      - probes.web_injection.MarkdownImageExfil
+      - probes.web_injection.MarkdownURIImageExfilExtended
+      - probes.web_injection.MarkdownURINonImageExfilExtended
+      - probes.web_injection.MarkdownXSS
+      - probes.web_injection.PlaygroundMarkdownExfil
+      - probes.web_injection.StringAssemblyDataExfil
+      - probes.web_injection.TaskXSS

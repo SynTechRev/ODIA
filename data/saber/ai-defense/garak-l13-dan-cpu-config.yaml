@@ -1,0 +1,23 @@
+# garak 0.17.0 config — ARCADE L-13: DanInTheWild, CPU-safe
+#
+# Root cause of prior crashes: GTX 1650 = 4 GiB VRAM, odia-v1 = 4.92 GB GGUF
+# → model runs on CPU only. DanInTheWild probe 55/256 has a ~4k-token prompt
+# which takes 10-17 min/generation on CPU until Ollama OOMs and exits.
+#
+# Fix: context_len: 512 caps input to 512 tokens. Long DanInTheWild prompts
+# are truncated, keeping inference <2 min/probe on CPU. Trade-off: very long
+# jailbreak scaffolds are cut — acceptable for odia-v1 defense validation.
+#
+# Target: odia-v1 via Ollama (http://127.0.0.1:11434)
+---
+plugins:
+  target_type: ollama
+  target_name: odia-v1
+  context_len: 512
+
+run:
+  generations: 5
+  seed: 42
+  spec:
+    include:
+      - probes.dan.DanInTheWild

@@ -206,6 +206,7 @@ class OracRAG:
         top_k: int = RAG_TOP_K,
         include_sources: bool = True,
         threshold: float = RAG_SIMILARITY_THRESHOLD,
+        corpus_filter: list[str] | None = None,
     ) -> dict[str, Any]:
         """Answer a natural language question using RAG.
 
@@ -214,6 +215,9 @@ class OracRAG:
             top_k: Number of documents to retrieve
             include_sources: Whether to include source citations
             threshold: Minimum similarity threshold
+            corpus_filter: Restrict retrieval to named indexes.
+                Accepted values: "corpus", "ace", "jim".
+                None (default) searches all loaded indexes.
 
         Returns:
             Dictionary with:
@@ -236,15 +240,26 @@ class OracRAG:
             query_vector = self.embedder.embed(question)
             logger.debug(f"Embedded query: {question[:50]}...")
 
-            # Step 2: Retrieve from primary index
-            raw_results = self.retriever.search(query_vector, top_k=top_k)
-            results = [
-                {"index": idx, "score": score, "metadata": metadata}
-                for idx, score, metadata in raw_results
-            ]
+            # Normalise corpus_filter to a set of short names.
+            # "corpus" → primary; "ace" → ace_collection; "jim" → jim_collection.
+            _cf: set[str] | None = None
+            if corpus_filter:
+                _cf = {c.lower().removesuffix("_collection") for c in corpus_filter}
+
+            # Step 2: Retrieve from primary index (skipped when filter excludes it)
+            results: list[dict] = []
+            if _cf is None or "corpus" in _cf:
+                raw_results = self.retriever.search(query_vector, top_k=top_k)
+                results = [
+                    {"index": idx, "score": score, "metadata": metadata}
+                    for idx, score, metadata in raw_results
+                ]
 
             # Retrieve from extra indexes (ace, jim, etc.) and merge
             for extra_embedder, extra_retriever, idx_name in self._extra_indexes:
+                short = idx_name.removesuffix("_collection")
+                if _cf is not None and short not in _cf:
+                    continue
                 try:
                     extra_vector = extra_embedder.embed(question)
                     extra_raw = extra_retriever.search(extra_vector, top_k=top_k)

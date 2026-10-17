@@ -261,6 +261,10 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 # api.py _register_routes is an intentional monolithic route registrar — same
 # rationale as the other route files already listed above
 "src/oraculus_di_auditor/interface/api.py" = ["C901"]
+# orac_rag.py query() merges multi-index results, applies security filters, and
+# handles LLM fallback — all in one method; C901 exceeds 10 after corpus_filter
+# routing was added; the complexity is load-bearing, not incidental
+"src/oraculus_di_auditor/rag/orac_rag.py" = ["C901"]
 # C.O.N.T.R.A. shared test infrastructure — assertion strings exceed 88 chars
 "tests/contra/test_base.py" = ["E501"]
 "tests/contra/test_detectors_l11_l15.py" = ["E501"]

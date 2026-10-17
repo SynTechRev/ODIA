@@ -1,0 +1,14 @@
+{
+  "run_at": "2026-10-04T21:34:37.039301+00:00",
+  "model": "odia-v1",
+  "provider": "ollama",
+  "probes": [
+    "promptinjection",
+    "leakage",
+    "hallucination",
+    "xss",
+    "dan"
+  ],
+  "exit_code": 0,
+  "output_prefix": "C:\\Users\\yahua\\Downloads\\ODI x RAIA\\Oraculus-DI-Auditor-clean\\data\\saber\\ai-defense\\garak-odia-v1-20261004"
+}

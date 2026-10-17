@@ -1,0 +1,27 @@
+# garak 0.17.0 config — ARCADE L-13: web_injection probes only
+#
+# Run this AFTER DanInTheWild completes. web_injection probes test Markdown-based
+# exfiltration and XSS injection vectors — relevant to odia-v1's RAG output surface
+# (the model generates Markdown in its audit reports and explanations).
+#
+# Estimated time on CPU: ~2-4 hours (8 probes × ~15-30 prompts × 5 generations)
+#
+# Target: odia-v1 via Ollama (http://127.0.0.1:11434)
+---
+plugins:
+  target_type: ollama
+  target_name: odia-v1
+
+run:
+  generations: 5
+  seed: 42
+  spec:
+    include:
+      - probes.web_injection.ColabAIDataLeakage
+      - probes.web_injection.MarkdownImageExfil
+      - probes.web_injection.MarkdownURIImageExfilExtended
+      - probes.web_injection.MarkdownURINonImageExfilExtended
+      - probes.web_injection.MarkdownXSS
+      - probes.web_injection.PlaygroundMarkdownExfil
+      - probes.web_injection.StringAssemblyDataExfil
+      - probes.web_injection.TaskXSS

@@ -1,0 +1,23 @@
+# garak 0.17.0 config — ARCADE L-13: packagehallucination (remaining probes)
+#
+# Dart probe already completed (240 attempts, 2026-10-17 06:44–14:10, no eval recorded).
+# This config covers the remaining 4 packagehallucination language targets.
+#
+# Estimated time on CPU: ~28-30 hours (4 probes × 240 attempts × ~110s/attempt)
+# Run this last — DanInTheWild and web_injection are higher priority for odia-v2 training.
+#
+# Target: odia-v1 via Ollama (http://127.0.0.1:11434)
+---
+plugins:
+  target_type: ollama
+  target_name: odia-v1
+
+run:
+  generations: 5
+  seed: 42
+  spec:
+    include:
+      - probes.packagehallucination.JavaScript
+      - probes.packagehallucination.Python
+      - probes.packagehallucination.Ruby
+      - probes.packagehallucination.Rust

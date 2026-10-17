@@ -77,15 +77,20 @@ data/vectors/*.pkl
 # CPRA investigative letters -- track all drafts
 !data/cpra_letters/
 
-# S.A.B.E.R. -- track the checklist; exclude runtime store/audit/manifest/checkpoint dirs
+# S.A.B.E.R. -- track configs/docs; exclude runtime output and log files
 !data/saber/
 data/saber/store/
 data/saber/audit/
 data/saber/manifests/
 data/saber/checkpoints/
-data/saber/ai-defense/
+data/saber/ai-defense/*.log
+data/saber/ai-defense/*.jsonl
 !data/saber/PHASE1_CHECKLIST.md
 !data/handoffs/
+
+# J.I.M. cross-jurisdiction intelligence documents
+!data/jim/
+!data/jim/*.json
 
 # Phase 7: External legal corpus data paths
 /data/legal/

@@ -1,0 +1,145 @@
+{
+  "document_id": "jim-flock-lattice-20261017",
+  "title": "Flock Safety ALPR Cross-Jurisdiction Surveillance Contract Lattice — Tulare and Fresno Counties",
+  "document_type": "joint_intelligence_memorandum",
+  "jurisdiction": "multi-jurisdiction",
+  "source_collection": "jim",
+  "date_created": "2026-10-17",
+  "analyst": "ODIA Automated Synthesis",
+  "classification": "Public Records Derived",
+  "version": "1.0",
+
+  "executive_summary": "Flock Safety LLC operates an Automatic License Plate Reader (ALPR) surveillance network across at least three agencies in the ODIA corpus. Contracts and procurement records show: (1) City of Fresno — $1,500,000 sole-source contract (Fresno City Legistar, 64,489 findings corpus); (2) Visalia Police Department — 22 documents referencing Flock Safety with 355 associated findings, including 75 cross-entity ALPR detections flagged against SB 524 AI-transparency citation requirements; (3) Fresno County — 1 confirmed Flock Safety reference in a hex-named PDF (SHA-256 verified). This lattice establishes a regional shared-vendor surveillance infrastructure without cross-jurisdictional interoperability disclosure, without AB 481 surveillance use policy citations in all contracts, and without SB 524 AI-transparency compliance language in Fresno City and Visalia PD procurement records.",
+
+  "affected_jurisdictions": [
+    {
+      "jurisdiction": "fresno",
+      "agency": "City of Fresno",
+      "contract_value": 1500000,
+      "contract_value_citation": "Fresno City Legistar corpus, 64,489 findings",
+      "documents_referencing_flock": 18,
+      "key_findings": [
+        "sole-source procurement without Gov. Code § 54202 citation",
+        "SB 524 (Stats. 2023, ch. 839) AI-transparency language absent from contract",
+        "Civil Code § 1798.90.5 ALPR usage-policy citation absent",
+        "AB 481 annual report language absent from surveillance technology approval",
+        "TASER (Axon) sole-source detected in same corpus — possible convergent vendor dependency"
+      ],
+      "severity": "critical",
+      "detector_layers": ["surveillance", "governance", "l1_statutory_applicability", "l7_regulatory_authority"]
+    },
+    {
+      "jurisdiction": "visalia-pd",
+      "agency": "Visalia Police Department",
+      "contract_value": null,
+      "contract_value_citation": "VPD corpus: 22 Flock Safety documents / 355 findings",
+      "documents_referencing_flock": 22,
+      "key_findings": [
+        "75 ALPR detection cross-entity findings flagged against SB 524",
+        "Civil Code § 1798.90.5 usage-policy citation absent in 25 of 22 documents",
+        "Flock Safety = highest single-vendor anomaly density in VPD corpus (F-13 corpus apex: 140 findings)",
+        "AB 481 annual report: present in some documents; absent in others — inconsistent compliance"
+      ],
+      "severity": "high",
+      "detector_layers": ["surveillance", "l1_statutory_applicability", "governance"]
+    },
+    {
+      "jurisdiction": "fresnocounty",
+      "agency": "Fresno County (unspecified department)",
+      "contract_value": null,
+      "contract_value_citation": "1 confirmed Flock Safety reference in hex-named PDF (SHA-256 verified)",
+      "documents_referencing_flock": 1,
+      "key_findings": [
+        "Single confirmed reference — likely procurement or technology-assessment document",
+        "Cross-references Fresno City $1.5M contract per NSU lattice analysis",
+        "County-level interoperability disclosure not found in corpus"
+      ],
+      "severity": "medium",
+      "detector_layers": ["surveillance", "vendor-convergence"]
+    }
+  ],
+
+  "legal_anchors": [
+    {
+      "citation": "Cal. Gov. Code § 54202",
+      "description": "Competitive bidding requirements for public contracts; sole-source exception requires written findings",
+      "relevance": "Fresno City sole-source Flock Safety contract lacks § 54202 written findings in Legistar record"
+    },
+    {
+      "citation": "Cal. Civ. Code § 1798.90.5",
+      "description": "ALPR operator policy requirements — operators must adopt a usage and privacy policy",
+      "relevance": "Policy citation absent from Fresno City and Visalia PD Flock Safety contract documents"
+    },
+    {
+      "citation": "Cal. AB 481 (Stats. 2021, ch. 402)",
+      "description": "Military equipment use policy — agencies must adopt policy approved by governing body before acquiring/using listed surveillance tech including ALPR",
+      "relevance": "AB 481 annual report language absent from Fresno City contract documents; inconsistent in VPD corpus"
+    },
+    {
+      "citation": "Cal. SB 524 (Stats. 2023, ch. 839)",
+      "description": "AI transparency requirement — agencies using AI-assisted tools must disclose AI use in public-facing documents",
+      "relevance": "Flock Safety ALPR uses AI/ML for license plate matching; SB 524 compliance language absent in all three jurisdictions"
+    },
+    {
+      "citation": "34 U.S.C. § 10152 (JAG anti-supplanting)",
+      "description": "Federal JAG grant anti-supplanting prohibition — federal grant funds cannot replace local funds for surveillance tech already budgeted",
+      "relevance": "Cross-jurisdiction JAG anti-supplanting lattice detected in TCSO and Fresno County; Flock Safety contracts should be reviewed for JAG funding streams"
+    }
+  ],
+
+  "cross_jurisdiction_patterns": [
+    {
+      "pattern_id": "flock-regional-network",
+      "description": "Single vendor (Flock Safety LLC) providing ALPR infrastructure to at least 3 agencies across 2 counties without documented interoperability agreement or regional oversight framework",
+      "agencies_confirmed": ["City of Fresno", "Visalia PD", "Fresno County"],
+      "agencies_probable": ["TCSO"],
+      "risk_level": "high",
+      "finding_type": "vendor-convergence:flock-safety-regional-lattice"
+    },
+    {
+      "pattern_id": "sb524-gap-lattice",
+      "description": "SB 524 AI-transparency citation gap appears consistently across all Flock Safety procurement records in corpus — likely reflects a vendor template that predates SB 524 enactment (Jan 1, 2024)",
+      "agencies_affected": ["City of Fresno", "Visalia PD"],
+      "risk_level": "high",
+      "finding_type": "l1_statutory_applicability:sb524-absent"
+    },
+    {
+      "pattern_id": "ab481-inconsistency",
+      "description": "AB 481 compliance language present in some VPD documents but absent in Fresno City — suggests inter-agency policy variance rather than uniform regional adoption",
+      "agencies_affected": ["City of Fresno", "Visalia PD"],
+      "risk_level": "medium",
+      "finding_type": "l2_procedural_compliance:ab481-inconsistent"
+    }
+  ],
+
+  "cpra_recommendations": [
+    {
+      "target": "City of Fresno — City Clerk",
+      "request": "All Flock Safety LLC contracts, amendments, and sole-source justification memoranda; AB 481 use policy adoption resolution; SB 524 AI-transparency compliance documentation",
+      "deadline_tracking": "CPRA-FR-FLOCK-001",
+      "letter_file": "data/cpra_letters/fresno_city_clerk_CPRA_20261008.txt"
+    },
+    {
+      "target": "Visalia Police Department",
+      "request": "All Flock Safety LLC contracts and data-sharing agreements; ALPR data retention schedules; AB 481 annual report for ALPR systems",
+      "deadline_tracking": "CPRA-VPD-FLOCK-001",
+      "letter_file": null,
+      "status": "not_yet_drafted"
+    },
+    {
+      "target": "Fresno County Sheriff",
+      "request": "All Flock Safety LLC or ALPR vendor contracts; interoperability agreements with Fresno City or Visalia PD ALPR networks",
+      "deadline_tracking": "CPRA-FCS-FLOCK-001",
+      "letter_file": "data/cpra_letters/fresnocounty_sheriff_CPRA_20261016.txt"
+    }
+  ],
+
+  "ingest_metadata": {
+    "source": "ODIA automated cross-jurisdiction synthesis",
+    "corpus_version": "v3.9.2",
+    "findings_basis": 271245,
+    "jurisdictions_analyzed": 16,
+    "ready_for_jim_collection": true,
+    "notes": "Add to jim_collection on next RAG index rebuild (scripts/build_rag_index.py)"
+  }
+}

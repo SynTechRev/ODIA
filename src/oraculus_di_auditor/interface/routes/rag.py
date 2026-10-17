@@ -34,6 +34,14 @@ class RAGQueryRequest(BaseModel):  # type: ignore[misc]
         default=None,
         description="Limit to 'documents', 'findings', or 'analysis'",
     )
+    corpus_filter: list[str] | None = Field(
+        default=None,
+        description=(
+            "Restrict retrieval to specific indexes: 'corpus' (document text), "
+            "'ace' (anomaly findings), 'jim' (legal intelligence memos). "
+            "Omit to search all loaded indexes."
+        ),
+    )
 
 
 class RAGQueryResponse(BaseModel):  # type: ignore[misc]
@@ -119,7 +127,11 @@ def register_rag_routes(app: Any) -> None:
                 detail="RAG index not loaded — run scripts/build_rag_index.py first",
             )
 
-        result = svc.query(question=request.query, top_k=request.top_k)
+        result = svc.query(
+            question=request.query,
+            top_k=request.top_k,
+            corpus_filter=request.corpus_filter,
+        )
 
         # Normalise sources to list[dict]
         raw_sources = result.get("sources", [])
