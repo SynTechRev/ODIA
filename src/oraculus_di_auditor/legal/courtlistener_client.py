@@ -105,7 +105,10 @@ class CourtListenerClient:
                 except Exception:
                     return None
             if r.status_code == 429:
-                retry_after = int(r.headers.get("Retry-After", _RATE_LIMIT_BACKOFF_SEC))
+                retry_after = min(
+                    int(r.headers.get("Retry-After", _RATE_LIMIT_BACKOFF_SEC)),
+                    120,
+                )
                 logger.warning("CourtListener rate-limited; sleeping %ds", retry_after)
                 time.sleep(retry_after)
                 continue
