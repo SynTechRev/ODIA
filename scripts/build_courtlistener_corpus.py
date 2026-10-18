@@ -115,8 +115,15 @@ def main() -> None:
 
     client = CourtListenerClient(api_key=api_key or None)
     print("Pinging CourtListener API...")
-    if not client.ping():
-        print("WARNING: CourtListener API ping failed. Check your network or API key.")
+    reachable = client.ping()
+    if not reachable:
+        print("ERROR: CourtListener API unreachable. Check your network connection.")
+        print("  If network is fine, your API key may be invalid.")
+        print(
+            "  Verify at: https://www.courtlistener.com/sign-in/ → Settings → API Token"
+        )
+        sys.exit(1)
+    print("API reachable.")
 
     loader = CourtListenerCorpusLoader(cases_dir=cases_dir, client=client)
 

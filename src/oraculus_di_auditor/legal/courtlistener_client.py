@@ -230,6 +230,14 @@ class CourtListenerClient:
     # ------------------------------------------------------------------
 
     def ping(self) -> bool:
-        """Return True if the API is reachable and the key (if any) is valid."""
-        data = self._get("/")
-        return data is not None
+        """Return True if the API is reachable and the key (if any) is valid.
+
+        Uses a single attempt with a short timeout — no retry loop — so it
+        never blocks for minutes on a rate-limited session.
+        """
+        sess = self._ensure_session()
+        try:
+            r = sess.get(f"{_BASE_URL}/", timeout=10)
+            return r.status_code in (200, 429)  # 429 = reachable but rate-limited
+        except Exception:
+            return False
