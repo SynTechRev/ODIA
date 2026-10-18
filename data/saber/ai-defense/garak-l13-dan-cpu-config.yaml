@@ -8,12 +8,17 @@
 # are truncated, keeping inference <2 min/probe on CPU. Trade-off: very long
 # jailbreak scaffolds are cut — acceptable for odia-v1 defense validation.
 #
+# max_tokens: 256 caps OUTPUT length — prevents odia-v1 from spiraling into
+# an endless persona generation on Content_warning_Bot and similar long-form
+# DAN variants, which caused a 10-hour stall at probe 184 on 2026-10-17.
+#
 # Target: odia-v1 via Ollama (http://127.0.0.1:11434)
 ---
 plugins:
   target_type: ollama
   target_name: odia-v1
   context_len: 512
+  max_tokens: 256
 
 run:
   generations: 5
