@@ -1,6 +1,6 @@
 """Tests for L-8 Case Law Currency detector.
 
-Coverage: CC-1 through CC-5 fire and no-fire cases,
+Coverage: CC-1 through CC-7 fire and no-fire cases,
 edge cases, false-positive guards on clean civic text.
 """
 
@@ -422,3 +422,148 @@ def test_multiple_rules_can_fire_in_one_document(detector):
     findings = detector.detect(_ctx(combined), resolver=None)
     codes = [f.notes.split(":")[0].strip() if f.notes else "" for f in findings]
     assert len(set(codes)) >= 2, "Multiple rules should independently fire"
+
+
+# ---------------------------------------------------------------------------
+# CC-6: ALPR deployment without SB 712 / Civil Code § 1798.90.5
+# ---------------------------------------------------------------------------
+
+_CC6_FIRE_ALPR = (
+    "The City Council approved a contract with Flock Safety for installation of "
+    "twenty ALPR cameras at key intersections. The automated license plate reader "
+    "system will retain data for 30 days and share access with neighboring agencies."
+)
+
+_CC6_FIRE_LPR = (
+    "The department's LPR system captures license plate data on all vehicles "
+    "passing through designated checkpoints. Data is stored in the Flock Safety "
+    "cloud platform and accessible to officers via mobile app."
+)
+
+_CC6_NO_FIRE_SB712_CITED = (
+    "The Flock Safety ALPR contract was approved pursuant to Civil Code § 1798.90.5 "
+    "(SB 712). The department's ALPR usage and privacy policy has been adopted and "
+    "posted publicly as required by statute."
+)
+
+_CC6_NO_FIRE_POLICY_REFERENCE = (
+    "The automated license plate reader system operates under the department's "
+    "ALPR usage policy which is publicly available and consistent with § 1798.90.5."
+)
+
+_CC6_NO_FIRE_UNRELATED = (
+    "The city approved a contract for parking meter maintenance and street sweeping "
+    "services. The vendor will provide monthly reports on service completion."
+)
+
+
+def test_cc6_fires_on_alpr_no_sb712(detector):
+    findings = detector.detect(_ctx(_CC6_FIRE_ALPR), resolver=None)
+    cc6 = [f for f in findings if f.notes and "CC-6" in f.notes]
+    assert cc6, "CC-6 should fire on ALPR/Flock Safety without § 1798.90.5"
+    assert cc6[0].severity == Severity.HIGH
+
+
+def test_cc6_fires_on_lpr_flock_no_sb712(detector):
+    findings = detector.detect(_ctx(_CC6_FIRE_LPR), resolver=None)
+    cc6 = [f for f in findings if f.notes and "CC-6" in f.notes]
+    assert cc6
+
+
+def test_cc6_no_fire_when_sb712_cited(detector):
+    findings = detector.detect(_ctx(_CC6_NO_FIRE_SB712_CITED), resolver=None)
+    cc6 = [f for f in findings if f.notes and "CC-6" in f.notes]
+    assert not cc6
+
+
+def test_cc6_no_fire_when_policy_referenced(detector):
+    findings = detector.detect(_ctx(_CC6_NO_FIRE_POLICY_REFERENCE), resolver=None)
+    cc6 = [f for f in findings if f.notes and "CC-6" in f.notes]
+    assert not cc6
+
+
+def test_cc6_no_fire_on_unrelated_contract(detector):
+    findings = detector.detect(_ctx(_CC6_NO_FIRE_UNRELATED), resolver=None)
+    cc6 = [f for f in findings if f.notes and "CC-6" in f.notes]
+    assert not cc6
+
+
+def test_cc6_statutes_applied(detector):
+    findings = detector.detect(_ctx(_CC6_FIRE_ALPR), resolver=None)
+    cc6 = [f for f in findings if f.notes and "CC-6" in f.notes]
+    statutes = cc6[0].statutes_applied if cc6 else []
+    assert any("1798.90.5" in s for s in statutes)
+    assert any("SB 712" in s for s in statutes)
+
+
+# ---------------------------------------------------------------------------
+# CC-7: Military equipment acquisition without AB 481 annual report mandate
+# ---------------------------------------------------------------------------
+
+_CC7_FIRE_TACTICAL = (
+    "The department requests approval to acquire two tactical vehicles and "
+    "a supply of less-lethal launchers through the 1033 Program. The equipment "
+    "will be assigned to the SWAT unit for high-risk warrant service operations."
+)
+
+_CC7_FIRE_ARMORED = (
+    "Staff recommends approval of the purchase of an armored personnel carrier "
+    "for the Emergency Response Unit. Funding will come from forfeiture accounts "
+    "and federal grant reimbursements."
+)
+
+_CC7_NO_FIRE_AB481_CITED = (
+    "Pursuant to AB 481 (Gov. Code § 7070 et seq.), the department submits its "
+    "Military Equipment Use Policy for governing body approval. The annual military "
+    "equipment report will be posted publicly as required by statute."
+)
+
+_CC7_NO_FIRE_ANNUAL_REPORT = (
+    "In compliance with AB 481, the annual military equipment report has been "
+    "submitted to the city council and posted on the department website. "
+    "The governing body has approved continued use of the armored vehicle."
+)
+
+_CC7_NO_FIRE_UNRELATED = (
+    "The department approved standard patrol vehicle replacements — twelve "
+    "Ford Explorers — through the city fleet replacement program."
+)
+
+
+def test_cc7_fires_on_tactical_vehicle_no_ab481(detector):
+    findings = detector.detect(_ctx(_CC7_FIRE_TACTICAL), resolver=None)
+    cc7 = [f for f in findings if f.notes and "CC-7" in f.notes]
+    assert cc7, "CC-7 should fire on military equipment acquisition without AB 481"
+    assert cc7[0].severity == Severity.HIGH
+
+
+def test_cc7_fires_on_armored_vehicle_no_ab481(detector):
+    findings = detector.detect(_ctx(_CC7_FIRE_ARMORED), resolver=None)
+    cc7 = [f for f in findings if f.notes and "CC-7" in f.notes]
+    assert cc7
+
+
+def test_cc7_no_fire_when_ab481_cited(detector):
+    findings = detector.detect(_ctx(_CC7_NO_FIRE_AB481_CITED), resolver=None)
+    cc7 = [f for f in findings if f.notes and "CC-7" in f.notes]
+    assert not cc7
+
+
+def test_cc7_no_fire_when_annual_report_referenced(detector):
+    findings = detector.detect(_ctx(_CC7_NO_FIRE_ANNUAL_REPORT), resolver=None)
+    cc7 = [f for f in findings if f.notes and "CC-7" in f.notes]
+    assert not cc7
+
+
+def test_cc7_no_fire_on_standard_patrol_vehicles(detector):
+    findings = detector.detect(_ctx(_CC7_NO_FIRE_UNRELATED), resolver=None)
+    cc7 = [f for f in findings if f.notes and "CC-7" in f.notes]
+    assert not cc7
+
+
+def test_cc7_statutes_applied(detector):
+    findings = detector.detect(_ctx(_CC7_FIRE_TACTICAL), resolver=None)
+    cc7 = [f for f in findings if f.notes and "CC-7" in f.notes]
+    statutes = cc7[0].statutes_applied if cc7 else []
+    assert any("7070" in s for s in statutes)
+    assert any("AB 481" in s for s in statutes)

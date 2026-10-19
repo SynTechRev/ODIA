@@ -65,6 +65,34 @@ Rules implemented:
         SB 2 / § 1021.7 / Bane Act acknowledgment distinguishing federal and
         state claims.
 
+  CC-6  ALPR Deployment Without SB 712 / Civil Code § 1798.90.5 Compliance
+        (Cal. Civ. Code § 1798.90.5, enacted by SB 712 (2015))
+        California SB 712 (2015) enacted Civil Code § 1798.90.5, requiring
+        agencies operating Automated License Plate Reader (ALPR) systems to
+        adopt a usage and privacy policy, make it publicly available, and
+        include specific disclosures. Documents authorizing or describing ALPR
+        deployment (contracts, staff reports, council approvals) without citing
+        § 1798.90.5 or a compliant usage policy are relying on authority that
+        does not satisfy the statutory disclosure mandate. Cross-corpus
+        significance: Flock Safety ALPR contracts across Fresno City ($1.5M),
+        Visalia PD (22 docs), and Fresno County (1 doc) form the Flock Safety
+        cross-jurisdiction lattice.
+        Signal: ALPR / Flock Safety / license plate reader reference WITHOUT
+        Civil Code § 1798.90.5 or SB 712 citation.
+
+  CC-7  Military Equipment Acquisition Without AB 481 Annual Report Mandate
+        (Cal. Gov. Code §§ 7070-7075, enacted by AB 481 (2021))
+        California AB 481 (2021) enacted Government Code §§ 7070-7075, requiring
+        law enforcement agencies to obtain governing body approval before
+        acquiring military equipment (as defined), adopt a Military Equipment Use
+        Policy, and submit an annual report to the governing body and public.
+        Documents authorizing military equipment acquisitions, 1033 Program
+        transfers, or tactical gear purchases without citing AB 481 / Gov. Code
+        § 7070 et seq. and the annual report requirement are operating outside
+        the statutory accountability framework.
+        Signal: military equipment / tactical vehicle / 1033 Program / SWAT
+        acquisition WITHOUT AB 481 / § 7070 citation or annual report reference.
+
 Confidence calibration:
   0.85  Direct citation to the superseded authority + confirmed absence of
         the limiting/overruling precedent
@@ -119,14 +147,11 @@ _RE_CARPENTER = re.compile(
 # Old sections: 6250 (purpose), 6252 (definitions), 6253 (right to inspect),
 # 6254 (exemptions), 6255 (catch-all), 6276 (enforcement)
 _RE_OLD_CPRA = re.compile(
-    r"\b(?:"
-    r"Government Code §§? 62[5-7][0-9](?:\.[0-9]+)?|"
-    r"Gov(?:\.|ernment) Code §§? 62[5-7][0-9](?:\.[0-9]+)?|"
-    r"§§? 6254(?:\.[0-9]+)?|"
-    r"§§? 6255|"
-    r"§§? 6276(?:\.[0-9]+)?|"
-    r"§§? 6250(?:\.[0-9]+)?"
-    r")\b",
+    r"(?:"
+    r"\bGovernment Code §§? 62[5-7][0-9](?:\.[0-9]+)?|"
+    r"\bGov(?:\.|ernment) Code §§? 62[5-7][0-9](?:\.[0-9]+)?|"
+    r"§§? 62[5-7][0-9](?:\.[0-9]+)?"
+    r")",
     re.IGNORECASE,
 )
 _RE_NEW_CPRA = re.compile(
@@ -221,6 +246,65 @@ _RE_SB2_ACKNOWLEDGMENT = re.compile(
     r"abolished).{0,40}(?:California|state|Bane Act)|"
     r"Tom Bane Civil Rights Act.{0,40}qualified immunity"
     r")\b",
+    re.IGNORECASE | re.DOTALL,
+)
+
+# ---------------------------------------------------------------------------
+# CC-6: ALPR deployment without SB 712 / Civil Code § 1798.90.5
+# ---------------------------------------------------------------------------
+_RE_ALPR_REFERENCE = re.compile(
+    r"\b(?:"
+    r"ALPR|"
+    r"automated license plate (?:reader|recognition|system)|"
+    r"Flock Safety|"
+    r"license plate reader|"
+    r"license plate (?:data|information|scan|capture|surveillance)|"
+    r"LPR system|"
+    r"fixed LPR|mobile LPR"
+    r")\b",
+    re.IGNORECASE,
+)
+_RE_SB712_COMPLIANCE = re.compile(
+    r"(?:"
+    r"\bCivil Code §§? 1798\.90\.5|"
+    r"\bCiv\.? Code §§? 1798\.90\.5|"
+    r"§§? 1798\.90\.5|"
+    r"\bSB 712\b|"
+    r"ALPR (?:usage |privacy )?policy.{0,30}(?:public|posted|available)|"
+    r"§§? 1798\.90"
+    r")",
+    re.IGNORECASE,
+)
+
+# ---------------------------------------------------------------------------
+# CC-7: Military equipment acquisition without AB 481 annual report mandate
+# ---------------------------------------------------------------------------
+_RE_MILITARY_EQUIP = re.compile(
+    r"\b(?:"
+    r"military equipment|"
+    r"tactical (?:vehicle|gear|equipment|rifle|weapon)|"
+    r"armored (?:vehicle|personnel carrier|APC)|"
+    r"MRAP|BearCat|"
+    r"1033 [Pp]rogram|LESO [Pp]rogram|"
+    r"SWAT (?:equipment|vehicle|gear)|"
+    r"surplus military|"
+    r"night.?vision (?:device|equipment|goggle)|"
+    r"breaching (?:tool|device)|"
+    r"less.?lethal (?:weapon|munition|launcher)"
+    r")\b",
+    re.IGNORECASE,
+)
+_RE_AB481_CITATION = re.compile(
+    r"(?:"
+    r"\bAB 481\b|"
+    r"\bGovernment Code §§? 707[0-5]|"
+    r"\bGov\.? Code §§? 707[0-5]|"
+    r"§§? 707[0-5]|"
+    r"military equipment use policy|"
+    r"annual (?:military equipment |MEUP )?report.{0,30}"
+    r"(?:governing body|city council|board of supervisors|public)|"
+    r"(?:governing body|city council|board of supervisors).{0,40}military equipment"
+    r")",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -402,6 +486,66 @@ class L8CaseLawCurrency:
                     confidence=0.78,
                     source_finding_id=source_id,
                     notes="CC-5: qualified immunity asserted for California claims without SB 2 / Pen. Code § 1021.7",
+                )
+            )
+
+        # CC-6: ALPR deployment without SB 712 / Civil Code § 1798.90.5
+        if _RE_ALPR_REFERENCE.search(text) and not _RE_SB712_COMPLIANCE.search(text):
+            findings.append(
+                LegalFinding(
+                    finding_id=_finding_id(ctx, "CC-6"),
+                    sub_detector=self.detector_id,
+                    severity=Severity.HIGH,
+                    document_hash=ctx.document_hash,
+                    document_id=ctx.document_id,
+                    statutes_applied=[
+                        "Cal. Civ. Code § 1798.90.5",
+                        "Cal. SB 712 (2015)",
+                    ],
+                    legal_conclusion=(
+                        "Document references Automated License Plate Reader (ALPR) systems, "
+                        "Flock Safety equipment, or license plate data collection without "
+                        "citing California Civil Code § 1798.90.5 (enacted by SB 712, 2015), "
+                        "which requires agencies operating ALPR systems to adopt and publicly "
+                        "post a usage and privacy policy. The policy must specify the authorized "
+                        "uses of ALPR data, retention limits, access controls, and audit "
+                        "procedures. Contracts, staff reports, and council approvals that "
+                        "authorize ALPR deployment without referencing § 1798.90.5 compliance "
+                        "are proceeding outside the statutory accountability framework."
+                    ),
+                    confidence=0.75,
+                    source_finding_id=source_id,
+                    notes="CC-6: ALPR/Flock Safety deployment without SB 712 / Civ. Code § 1798.90.5 citation",
+                )
+            )
+
+        # CC-7: Military equipment acquisition without AB 481 annual report mandate
+        if _RE_MILITARY_EQUIP.search(text) and not _RE_AB481_CITATION.search(text):
+            findings.append(
+                LegalFinding(
+                    finding_id=_finding_id(ctx, "CC-7"),
+                    sub_detector=self.detector_id,
+                    severity=Severity.HIGH,
+                    document_hash=ctx.document_hash,
+                    document_id=ctx.document_id,
+                    statutes_applied=[
+                        "Cal. Gov. Code §§ 7070-7075",
+                        "Cal. AB 481 (2021), eff. Jan. 1, 2022",
+                    ],
+                    legal_conclusion=(
+                        "Document references military equipment acquisition, tactical vehicle "
+                        "procurement, or 1033 Program transfers without citing California AB 481 "
+                        "(2021), which enacted Government Code §§ 7070-7075 effective January 1, "
+                        "2022. AB 481 requires law enforcement agencies to obtain governing body "
+                        "approval before acquiring military equipment as defined under § 7070(c), "
+                        "adopt a publicly available Military Equipment Use Policy, and submit an "
+                        "annual report to the governing body and post it publicly. Acquisitions "
+                        "that do not reference the AB 481 approval and annual reporting framework "
+                        "are operating outside the statutory accountability mandate."
+                    ),
+                    confidence=0.75,
+                    source_finding_id=source_id,
+                    notes="CC-7: military equipment acquisition without AB 481 / Gov. Code § 7070 annual report citation",
                 )
             )
 
