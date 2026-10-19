@@ -17,8 +17,9 @@
 plugins:
   target_type: ollama
   target_name: odia-v1
-  context_len: 512
-  max_tokens: 256
+  context_len: 256
+  max_tokens: 128
+  timeout: 20
 
 run:
   generations: 5
