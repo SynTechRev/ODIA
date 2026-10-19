@@ -7,11 +7,11 @@ ODIA is a **general-purpose legal document ingestion, normalization, and anomaly
 **Repository**: https://github.com/SynTechRev/ODIA
 **License**: MIT
 
-## Current State (as of 2026-08-11)
+## Current State (as of 2026-10-19)
 
 - **Version**: 3.9.2 (active development, master branch)
 - **Python**: 3.11+ required (tested on 3.14)
-- **Tests**: 4339 passing, 15 skipped (data-dependent corpus/transparency tests)
+- **Tests**: 4339+ passing, 15 skipped (data-dependent corpus/transparency tests)
 - **Working core**: Ingestion, analysis, orchestration, governance, compliance, auth, RAG, C.O.N.T.R.A. commercial analysis — all functional and tested
 - **Higher phases** (12–20): Architectural scaffolding exists — experimental/theoretical
 - **Frontend**: Next.js 14 production app in `frontend/` — Upload, Results History, Synthesis/RAIA, RAG Query, Compliance, Legal, C.O.N.T.R.A., Config
@@ -19,31 +19,32 @@ ODIA is a **general-purpose legal document ingestion, normalization, and anomaly
 - **Desktop**: Electron app ships via GitHub Actions (`Build and Release Desktop Apps` workflow). v3.9.2 CI build triggered 2026-08-11. v3.9.1 installer on GitHub Release.
 - **LLM**: `odia-v1` — QLoRA fine-tuned Llama-3.1-8B (87,618 examples, Q4_K_M GGUF, 4.92 GB). Registered in Ollama. Live in RAG pipeline as default LLM. Artifacts: `D:\ODIA\models\odia-v1.q4_k_m.gguf` (local) + HuggingFace `SynTechRev/odia-v1` (private).
 - **RAG**: `OracRAG` class loads TF-IDF index from disk at startup (`collection`, `ace_collection`, `jim_collection`). Default: provider=ollama, model=odia-v1. Config: `config/rag_config.py` + `config/ollama_config.yaml`. Desktop backend reads ODIA_VECTORS_DIR from installDir (fixed v3.9.1). Similarity threshold fixed 0.3→0.05 (v3.9.2). Retriever `.tolist()` perf bug fixed (v3.9.2).
-- **DB**: SQLAlchemy + SQLite (`oraculus_audit.db`) — **50,699 documents / 148,349 anomaly findings** across 16 jurisdictions (Tulare + Fresno Counties). Finding-bearing docs only: ~43,606 (remainder have zero anomalies).
-- **RAG Index**: Full production index built 2026-08-11 (50,699 corpus / 148,349 ACE / 3,066 JIM). Copied to install dir `C:\Users\yahua\AppData\Local\Programs\ODIA\data\vectors\`.
+- **DB**: SQLAlchemy + SQLite (`oraculus_audit.db`) — **81,309 documents / 271,245 anomaly findings** across 16 jurisdictions (Tulare + Fresno Counties + City of Fresno + TCPD). Finding-bearing docs: ~68,000 (remainder have zero anomalies).
+- **RAG Index**: Full production index rebuilt 2026-10-16 (81,309 corpus / 271,245 ACE / 3,937 JIM). float16 dims, 2048 ace dims. Copied to `C:\Users\yahua\AppData\Roaming\ODIA\data\vectors\` (Electron userData).
+- **Case law corpus**: 133 cases in `legal/cases/` — CourtListener authenticated harvest complete 2026-10-19 (commit 84fbf83). Topics: CPRA exemptions, 4th Amendment ALPR/GPS, AB 481, JAG compliance, Brown Act, biometric privacy.
 
-## Corpus Status (Tulare + Fresno Counties)
+## Corpus Status (Tulare + Fresno Counties + City of Fresno)
 
 | Jurisdiction | Docs | Findings | MAS Status | Notes |
 |---|---|---|---|---|
-| **fresnocounty** | **32,340** | **73,547** | **V4.0 DONE 2026-07-31** | NSU complete. 25,247 finding-bearing docs. Zero Flock (1 in hex-named PDF confirmed). $14.97B unsigned instruments. CPRA matrix 10 targets. |
-| **fresno-pd** | **126** | **526** | **V4.0 DONE 2026-07-31** | 121 finding-bearing docs. FPD operational reports, AB 481, Policy Manual 7-16-26. 3 Flock detections. |
-| fresno (city) | 0 | 0 | NONE | City of Fresno Legistar NOT YET INGESTED. Next NSU target. $1.5M Flock contract confirmed via manual search. |
-| visalia | 7,928 | 20,824 | DONE 2026-06-16 | 20 detector layers. Scalar 0.8871 (compliance baseline). |
-| farmersville | 1,643 | 7,525 | Complete | MAS purged |
-| exeter | 1,396 | 4,838 | Complete | MAS purged |
-| dinuba | 1,105 | 13,506 | Complete | MAS purged |
-| lindsay | 805 | 4,799 | Complete | MAS purged |
-| tcso | 573 | 4,474 | DONE 2026-06-16 | McMillian anchor. $18.8M Axon MSA. 35 CRITICAL. L-detectors active. |
-| visalia-pd | 340 | 4,571 | Complete | 22 Flock Safety docs / 355 findings. F-13 corpus apex (140). |
-| porterville | 350 | 1,756 | Complete | MAS purged |
-| tcda | 660 | 102 | DONE 2026-06-16 | Compliance baseline anchor. Scalar 0.9240. Zero CRITICAL. |
-| woodlake | 103 | 773 | Complete | MAS purged |
-| tulare | 3,062 | 10,750 | Complete | MAS purged |
-| tulare-county | 95 | 119 | Complete | County umbrella |
-| **tcpd** | **161** | **132** | **PARTIAL** | Public records only. SEU operationally present (April 29, 2026 field action) but absent from all 161 docs. CPRA-004 pending. |
-| multi-jurisdiction | 12 | 107 | Complete | Cross-jurisdiction index docs |
-| **TOTAL** | **50,699** | **148,349** | | 16 jurisdictions |
+| **fresnocounty** | **27,413** | **123,736** | **V4.0 DONE 2026-07-31** | NSU complete. ~23,000 finding-bearing docs. Zero Flock (1 in hex-named PDF confirmed). ~4,120 unsigned instruments. CPRA matrix 10 targets. CPRA letters drafted (BOS Clerk, Sheriff, CAO+ITS). |
+| **fresno (city)** | **14,409** | **64,489** | **V2.0 ACTIVE** | DONE 2026-10-08 (16,692 matters / 29,308 files). $1.5M Flock contract. 2,956 unsigned instruments (94.4% of criticals). CPRA letters: City Clerk + unsigned instruments drafted. |
+| **fresno-pd** | **~261** | **~526** | **V4.0 DONE 2026-07-31** | FPD operational reports, AB 481, Policy Manual 7-16-26. 3 Flock detections. CPRA letter drafted. |
+| visalia | 5,814 | 20,824 | DONE 2026-06-16 | 20 detector layers. Scalar 0.8871 (compliance baseline). |
+| farmersville | 1,292 | 7,525 | Complete | MAS purged |
+| exeter | 1,048 | 4,838 | Complete | MAS purged |
+| dinuba | 1,087 | 13,506 | Complete | MAS purged |
+| lindsay | 661 | 4,799 | Complete | MAS purged |
+| tcso | 458 | 4,474 | DONE 2026-06-16 | McMillian anchor. $18.8M Axon MSA. 35 CRITICAL. L-detectors active. |
+| visalia-pd | 337 | 4,571 | Complete | 22 Flock Safety docs / 355 findings. F-13 corpus apex (140). CPRA letter CPRA-VPD-FLOCK-001 drafted 2026-10-17. |
+| porterville | 340 | 1,756 | Complete | MAS purged |
+| tcda | 97 | 102 | DONE 2026-06-16 | Compliance baseline anchor. Scalar 0.9240. Zero CRITICAL. |
+| woodlake | 85 | 773 | Complete | MAS purged |
+| tulare | 2,244 | 10,750 | Complete | MAS purged |
+| tulare-county | 49 | 119 | Complete | County umbrella |
+| **tcpd** | **~1,262** | **significant** | **DONE 2026-10-08** | 1,262 PDFs via PrimeGov BOS portal (2006–2026). 60 JAG anti-supplanting. CPRA letter drafted. SEU operationally present. |
+| multi-jurisdiction | 7 | 107 | Complete | Cross-jurisdiction index docs |
+| **TOTAL** | **~81,309** | **271,245** | | 16 jurisdictions |
 
 ## Architecture
 
@@ -102,21 +103,24 @@ All original priorities are complete. Active work:
 14. ~~RAG pipeline end-to-end fix~~ — Done 2026-08-11. vectors copied to install dir, similarity threshold 0.3→0.05, retriever perf bug fixed. v3.9.2.
 
 **Active next steps**:
-- ~~RAG index rebuild~~ — Done 2026-08-11. Full production index: 50,699 corpus / 148,349 ACE / 3,066 JIM. Copied to install dir.
-- ~~split_mas_export.py~~ — Done 2026-07-31. 28 files, all under 8 MB, in `data/mas_export/fresnocounty_splits/`.
+- ~~RAG index rebuild~~ — Done 2026-10-16. 81,309 corpus / 271,245 ACE / 3,937 JIM. Copied to `Roaming\ODIA\data\vectors`.
+- ~~split_mas_export.py~~ — Done 2026-07-31. Files in `data/mas_export/fresnocounty_splits/` and `data/mas_export/fresno_splits/` (35 files).
 - ~~Fresno County + Fresno PD MAS via Opus~~ — Done 2026-07-31. V4.0 Full-Scope Comprehensive Synthesis complete.
 - ~~C.O.N.T.R.A. framework~~ — Done 2026-08-07. 10 detectors, CASI, 12-step ingest pipeline. v3.9.0.
 - ~~v3.9.1 CI build~~ — Done 2026-08-11. All 4 platform installers on GitHub Release.
-- ~~v3.9.2 CI build~~ — Triggered 2026-08-11. RAG threshold fix + retriever perf fix + CONTRA nav.
-- **P0**: City of Fresno NSU ingest: delete `cache\fresno_legistar\progress.json`, then `python scripts/ingest_legistar.py --client fresno` with backend running (Flock $1.5M + TASER sole-source + JAG not yet in corpus)
-- **P0**: Fresno MAS V2.0 via Opus — after city Legistar ingest + CPRA returns
-- **P0**: First `odia contra-ingest` pilot run on actual commercial contract PDFs (DB has 32 entities seeded, schema ready)
-- **P1**: CPRA letters (target 2026-08-30) — Fresno County Sheriff, BOS Clerk, IT/CEO; City of Fresno/FPD
-- **P1**: Flock Safety cross-jurisdiction lattice document (VPD 75 detections vs fresnocounty 1) → `jim_collection`
-- TCPD Questys harvest: `python scripts/ingest_tcpd.py --dry-run` then full run
-- `odia_legal` submodule — Phase 1 foundation (CPRA crosswalk, L-9 recodification, citation parser). Critical deadline: 2028-07-02 (Sunshine Dragnet Phase Zero). L-detectors not yet run on fresnocounty — projected ~25,700 additional findings when integrated.
+- ~~v3.9.2 CI build~~ — Done 2026-08-11. RAG threshold fix + retriever perf fix + CONTRA nav.
+- ~~City of Fresno NSU ingest~~ — Done 2026-10-08. 16,692 matters / 29,308 files / 64,489 findings. Watchdog TCP fix + WAL mode performance enhancements committed.
+- ~~TCPD harvest~~ — Done 2026-10-08. 1,262 PDFs via PrimeGov portal.
+- ~~CPRA letters (7 letters)~~ — All committed db6c064. Fresno City Clerk, FPD Records, Fresno City unsigned instruments, Fresno County Sheriff, Fresno County BOS Clerk, Fresno County CAO+ITS, TCPD Probation. VPD Flock (CPRA-VPD-FLOCK-001) committed separately.
+- ~~Flock Safety cross-jurisdiction lattice~~ — Committed `data/jim/flock_safety_cross_jurisdiction_lattice.json` to jim_collection. Covers Fresno City ($1.5M), VPD (22 docs/355 findings), Fresno County (1 doc).
+- ~~CourtListener case law corpus~~ — 133 cases in `legal/cases/`. Authenticated harvest complete 2026-10-19 (commit 84fbf83). Bugs fixed: sub_opinions URL strings (v4 API), Retry-After cap, fast ping.
+- ~~CI workflow fixes~~ — Done 2026-10-17. osv-scanner @v2.7.0, git add scope fix, pyproject lint rules.
+- **P0**: Fresno MAS V2.0 via Opus — 25/34 files remaining in `data/mas_export/fresno_splits/`; 9 uploaded; 94.4% criticals = signature layer (unsigned instruments)
+- **P0**: First `odia contra-ingest` pilot run on actual commercial contract PDFs (DB has 32 entities seeded, schema ready — blocked on ToS/contract PDF source files)
+- **P1**: S.A.B.E.R. ARCADE L-13 DanInTheWild — Run 3 in progress (`data/saber/ai-defense/garak-l13-dan-cpu-config.yaml`; context_len=256, max_tokens=128, timeout=20; all 256 probes). web_injection COMPLETE (8 probes). pkghall still running (PID 1964, lowest priority).
+- **P1**: odia-v2 training — 327,503 examples in `data/training/`. Blocked: Vast.ai credits $0 + SSH key not uploaded. Starting from odia-v1 weights: 1 epoch (~12–15h) recommended.
+- `odia_legal` submodule — Phase 1 foundation (CPRA crosswalk, L-9 recodification, citation parser). Critical deadline: 2028-07-02 (Sunshine Dragnet Phase Zero).
 - Multi-index RAG routing — expose `ace_collection` and `jim_collection` via `corpus_filter` in the API
-- odia-v2 training after TCPD ingested + legal corpus expanded
 - Migrate `@app.on_event("startup")` → FastAPI `lifespan` handler (deprecation warnings in every test run)
 
 ## odia-v1 Model Reference
@@ -175,7 +179,7 @@ All original priorities are complete. Active work:
 - Do NOT use `datetime.utcnow()` — use `datetime.now(UTC)` (UTC imported from `datetime`)
 - Do NOT open files without `encoding="utf-8"` when reading JSON or text on Windows
 - Do NOT use `@app.on_event("startup")` — migrate new handlers to the `lifespan` context manager
-- Do NOT re-run odia-v1 training — model is complete and deployed; wait for odia-v2 after TCPD ingest
+- Do NOT re-run odia-v1 training — model is complete and deployed; odia-v2 (327,503 examples in `data/training/`) is ready but blocked on Vast.ai credits + SSH key
 
 ## Running the Project
 
