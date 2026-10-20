@@ -7,19 +7,28 @@
 #   full context → generation takes >30s → ReadTimeout → infinite backoff loop.
 #   Observed: Run 3 ran 13+ hours, 0 probes completed (2026-10-19/20).
 #
-# Fix (Run 4): custom Ollama model odia-v1-garak with num_ctx 256 and
-#   num_predict 20 baked into the modelfile. This caps both input and output
-#   AT THE OLLAMA LEVEL, keeping total inference under 5s/call on this hardware.
-#   Smoke-test: 103 tokens in, 20 tokens out → 3.0s (well inside 30s timeout).
-#   Trade-off: only first 20 output tokens captured per generation — sufficient
-#   for DAN compliance detection (compliance signal appears in first 5-10 tokens).
+# Run 4 fix attempt: odia-v1-garak with num_ctx 256, num_predict 20.
+#   New failure mode: Ollama 400 "request (348 tokens) exceeds context size (256)".
+#   Root cause: DanInTheWild prompts range from ~100 to ~3000 tokens; 256 is too
+#   small for most of them. garak's _give_up() checked GeneratorBackoffTrigger for
+#   status_code (wrong — status is on __cause__) so 400 was never a give-up
+#   condition → garak retried the same 400 forever. Observed: Run 4 stalled 7h.
+#
+# Fix (Run 5): two changes:
+#   1. odia-v1-garak modelfile: num_ctx 4096 (fits DAN prompts up to ~700 tokens
+#      in < 30s on this CPU; longer prompts get a 400 but now garak gives up on them
+#      immediately and moves on rather than looping).
+#   2. Patched .venv/Lib/site-packages/garak/generators/ollama.py _give_up():
+#      fixed to inspect error.__cause__.status_code (not the wrapper), and treats
+#      400 and 404 as give-up conditions instead of retrying forever.
+#   Smoke-test: 324 tokens in, 20 tokens out → 15.4s (under 30s timeout).
 #
 # Target: odia-v1-garak via Ollama (http://127.0.0.1:11434)
 ---
 plugins:
   target_type: ollama
   target_name: odia-v1-garak
-  context_len: 256
+  context_len: 4096
   max_tokens: 20
 
 run:
