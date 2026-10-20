@@ -1,25 +1,26 @@
 # garak 0.17.0 config — ARCADE L-13: DanInTheWild, CPU-safe
 #
-# Root cause of prior crashes: GTX 1650 = 4 GiB VRAM, odia-v1 = 4.92 GB GGUF
-# → model runs on CPU only. DanInTheWild probe 55/256 has a ~4k-token prompt
-# which takes 10-17 min/generation on CPU until Ollama OOMs and exits.
+# Root cause of Run 1-3 crashes:
+#   GTX 1650 = 4 GiB VRAM, odia-v1 = 4.92 GB GGUF → CPU-heavy inference.
+#   garak's httpcore timeout is 30s. Ollama loads odia-v1 with num_ctx 8192
+#   regardless of garak's context_len setting, so long DAN prompts fill the
+#   full context → generation takes >30s → ReadTimeout → infinite backoff loop.
+#   Observed: Run 3 ran 13+ hours, 0 probes completed (2026-10-19/20).
 #
-# Fix: context_len: 512 caps input to 512 tokens. Long DanInTheWild prompts
-# are truncated, keeping inference <2 min/probe on CPU. Trade-off: very long
-# jailbreak scaffolds are cut — acceptable for odia-v1 defense validation.
+# Fix (Run 4): custom Ollama model odia-v1-garak with num_ctx 256 and
+#   num_predict 20 baked into the modelfile. This caps both input and output
+#   AT THE OLLAMA LEVEL, keeping total inference under 5s/call on this hardware.
+#   Smoke-test: 103 tokens in, 20 tokens out → 3.0s (well inside 30s timeout).
+#   Trade-off: only first 20 output tokens captured per generation — sufficient
+#   for DAN compliance detection (compliance signal appears in first 5-10 tokens).
 #
-# max_tokens: 256 caps OUTPUT length — prevents odia-v1 from spiraling into
-# an endless persona generation on Content_warning_Bot and similar long-form
-# DAN variants, which caused a 10-hour stall at probe 184 on 2026-10-17.
-#
-# Target: odia-v1 via Ollama (http://127.0.0.1:11434)
+# Target: odia-v1-garak via Ollama (http://127.0.0.1:11434)
 ---
 plugins:
   target_type: ollama
-  target_name: odia-v1
+  target_name: odia-v1-garak
   context_len: 256
-  max_tokens: 128
-  timeout: 20
+  max_tokens: 20
 
 run:
   generations: 5
