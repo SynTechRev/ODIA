@@ -13,7 +13,7 @@ Usage:
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -125,7 +125,7 @@ class IssueGenerator:
 
         # Author and timestamp
         author = flag.get("author", "Unknown")
-        timestamp = flag.get("timestamp", datetime.utcnow().isoformat())
+        timestamp = flag.get("timestamp", datetime.now(UTC).isoformat())
 
         issue_content = f"""---
 name: Audit Finding

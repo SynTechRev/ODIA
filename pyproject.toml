@@ -107,6 +107,13 @@ pythonpath = ["src"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+filterwarnings = [
+    # Third-party: langsmith uses deprecated asyncio.iscoroutinefunction (Python 3.12+)
+    "ignore::DeprecationWarning:langsmith",
+    # Third-party: any other vendor deprecation noise
+    "ignore::DeprecationWarning:starlette",
+    "ignore::DeprecationWarning:httpx",
+]
 
 [tool.black]
 line-length = 88

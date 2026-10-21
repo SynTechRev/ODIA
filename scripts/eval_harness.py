@@ -16,7 +16,7 @@ import argparse
 import json
 import sys
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -265,7 +265,7 @@ class EvaluationHarness:
         self.client = ollama_client
         self.retriever = retriever
         self.output_dir = output_dir
-        self.run_id = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        self.run_id = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
         self.run_dir = output_dir / self.run_id
         self.run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -327,7 +327,7 @@ Answer:"""
                 "response": response,
                 "latency_seconds": latency,
                 "success": success,
-                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "timestamp": datetime.now(UTC).isoformat(),
             }
 
             results.append(result)
@@ -353,7 +353,7 @@ Answer:"""
                 if results
                 else 0
             ),
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "results": results,
         }
 

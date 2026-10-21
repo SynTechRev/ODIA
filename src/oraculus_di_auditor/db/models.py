@@ -22,14 +22,16 @@ try:  # pragma: no cover - import logic
         String,
         Text,
     )
-    from sqlalchemy.orm import declarative_base, relationship
+    from sqlalchemy.orm import DeclarativeBase, relationship
 except ImportError as e:  # pragma: no cover - environment without dependency
     raise ImportError(
         "SQLAlchemy is required for database models. "
         "Install with: pip install SQLAlchemy"
     ) from e
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):  # type: ignore
+    pass
 
 
 class Document(Base):  # type: ignore

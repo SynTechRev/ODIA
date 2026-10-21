@@ -15,7 +15,7 @@ Usage:
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 try:
@@ -172,7 +172,7 @@ def update_manifest(
             "document_id": doc_id,
             "source": "ocr_extraction",
             "original_path": "",
-            "ingest_date": datetime.utcnow().isoformat() + "Z",
+            "ingest_date": datetime.now(UTC).isoformat(),
             "uploader": "system",
             "checksum_sha256": "",
             "flags": [],
@@ -196,7 +196,7 @@ def update_manifest(
 
     manifest["chain_of_custody"].append(
         {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "actor": "ocr_sample.py",
             "action": "text_extraction",
             "details": (
