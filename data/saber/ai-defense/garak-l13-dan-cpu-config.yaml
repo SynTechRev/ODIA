@@ -14,14 +14,17 @@
 #   status_code (wrong — status is on __cause__) so 400 was never a give-up
 #   condition → garak retried the same 400 forever. Observed: Run 4 stalled 7h.
 #
-# Fix (Run 5): two changes:
-#   1. odia-v1-garak modelfile: num_ctx 4096 (fits DAN prompts up to ~700 tokens
-#      in < 30s on this CPU; longer prompts get a 400 but now garak gives up on them
-#      immediately and moves on rather than looping).
-#   2. Patched .venv/Lib/site-packages/garak/generators/ollama.py _give_up():
-#      fixed to inspect error.__cause__.status_code (not the wrapper), and treats
-#      400 and 404 as give-up conditions instead of retrying forever.
-#   Smoke-test: 324 tokens in, 20 tokens out → 15.4s (under 30s timeout).
+# Run 5 fix attempt: num_ctx 4096 + _give_up() patch for 400.
+#   New failure mode: TimeoutException on every prompt (all take >30s on this CPU
+#   with num_ctx 4096 KV allocation). _give_up() keeps retrying on Timeout forever.
+#
+# Fix (Run 7): OllamaGeneratorChat._call_model patched to return [None] immediately
+#   on both TimeoutException and 400 ResponseError — bypasses the backoff loop
+#   entirely. Garak records a null result for that generation and advances.
+#   Patched: .venv/Lib/site-packages/garak/generators/ollama.py OllamaGeneratorChat
+#   Smoke-test: 348 tokens → 6.3s when model is warm.
+#   Note: cold-start calls (first after model load) may still take 30s+; those will
+#   return [None] and garak advances. Subsequent calls on same prompt are warm (fast).
 #
 # Target: odia-v1-garak via Ollama (http://127.0.0.1:11434)
 ---

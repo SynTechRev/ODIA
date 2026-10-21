@@ -77,6 +77,10 @@ data/vectors/*.pkl
 # CPRA investigative letters -- track all drafts
 !data/cpra_letters/
 
+# Training data (odia-v2 source corpus — track jsonl, exclude large binaries)
+!data/training/
+!data/training/*.jsonl
+
 # S.A.B.E.R. -- track configs/docs; exclude runtime output and log files
 !data/saber/
 data/saber/store/

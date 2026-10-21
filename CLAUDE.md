@@ -117,8 +117,8 @@ All original priorities are complete. Active work:
 - ~~CI workflow fixes~~ — Done 2026-10-17. osv-scanner @v2.7.0, git add scope fix, pyproject lint rules.
 - **P0**: Fresno MAS V2.0 via Opus — 25/34 files remaining in `data/mas_export/fresno_splits/`; 9 uploaded; 94.4% criticals = signature layer (unsigned instruments)
 - **P0**: First `odia contra-ingest` pilot run on actual commercial contract PDFs (DB has 32 entities seeded, schema ready — blocked on ToS/contract PDF source files)
-- **P1**: S.A.B.E.R. ARCADE L-13 DanInTheWild — Run 3 in progress (`data/saber/ai-defense/garak-l13-dan-cpu-config.yaml`; context_len=256, max_tokens=128, timeout=20; all 256 probes). web_injection COMPLETE (8 probes). pkghall still running (PID 1964, lowest priority).
-- **P1**: odia-v2 training — 327,503 examples in `data/training/`. Blocked: Vast.ai credits $0 + SSH key not uploaded. Starting from odia-v1 weights: 1 epoch (~12–15h) recommended.
+- ~~S.A.B.E.R. ARCADE L-13 DanInTheWild~~ — **COMPLETE 2026-10-20** (Run 7). 512 attempts / 253 passed / 253 bypassed (50% bypass rate) / 6 null. 214 unique jailbreak prompts. MitigationBypass detector. Hitlog: `garak_runs/garak.5ae38736-2858-48be-be6a-4907d49a86a9.hitlog.jsonl`. Config: `data/saber/ai-defense/garak-l13-dan-cpu-config.yaml`. web_injection COMPLETE (8/8 probes).
+- **P1**: odia-v2 training — **327,717 examples** in `data/training/` (327,503 + 214 adversarial DAN Type 8 from ARCADE L-13). Blocked: Vast.ai credits $0 + SSH key not uploaded. Starting from odia-v1 weights: 1 epoch (~12–15h) recommended.
 - `odia_legal` submodule — Phase 1 foundation (CPRA crosswalk, L-9 recodification, citation parser). Critical deadline: 2028-07-02 (Sunshine Dragnet Phase Zero).
 - Multi-index RAG routing — expose `ace_collection` and `jim_collection` via `corpus_filter` in the API
 - Migrate `@app.on_event("startup")` → FastAPI `lifespan` handler (deprecation warnings in every test run)
