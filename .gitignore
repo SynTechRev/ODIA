@@ -91,6 +91,7 @@ data/saber/ai-defense/*.log
 data/saber/ai-defense/*.jsonl
 !data/saber/PHASE1_CHECKLIST.md
 !data/handoffs/
+!data/handoffs/**
 
 # J.I.M. cross-jurisdiction intelligence documents
 !data/jim/

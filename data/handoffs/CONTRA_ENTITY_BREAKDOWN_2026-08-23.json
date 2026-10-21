@@ -1,0 +1,752 @@
+{
+  "generated_at": "2026-08-24T01:13:55.603217+00:00",
+  "corpus_totals": {
+    "documents": 311,
+    "entities_with_docs": 28,
+    "total_findings": 7134
+  },
+  "band_distribution": {
+    "Baseline Adhesion": 146,
+    "Elevated Asymmetry": 130,
+    "Substantial Asymmetry": 18,
+    "Severe Asymmetry": 17
+  },
+  "entities": [
+    {
+      "canonical_name": "AT&T Mobility",
+      "corporate_family": "AT&T",
+      "doc_count": 35,
+      "avg_casi": 57.1,
+      "max_casi": 77,
+      "fr_docs": 0,
+      "severe_docs": 296,
+      "ded": 179,
+      "mc": 27,
+      "pa": 175,
+      "rf": 104,
+      "eca": 22,
+      "total_findings": 507
+    },
+    {
+      "canonical_name": "Modulr FS Limited",
+      "corporate_family": "Modulr",
+      "doc_count": 1,
+      "avg_casi": 50.0,
+      "max_casi": 50,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 25,
+      "mc": 5,
+      "pa": 6,
+      "rf": 3,
+      "eca": 0,
+      "total_findings": 39
+    },
+    {
+      "canonical_name": "Sprinto Inc.",
+      "corporate_family": "Sprinto",
+      "doc_count": 2,
+      "avg_casi": 49.3,
+      "max_casi": 73,
+      "fr_docs": 0,
+      "severe_docs": 37,
+      "ded": 46,
+      "mc": 4,
+      "pa": 7,
+      "rf": 8,
+      "eca": 2,
+      "total_findings": 67
+    },
+    {
+      "canonical_name": "Cricket Wireless",
+      "corporate_family": "AT&T",
+      "doc_count": 16,
+      "avg_casi": 49.1,
+      "max_casi": 69,
+      "fr_docs": 0,
+      "severe_docs": 131,
+      "ded": 129,
+      "mc": 26,
+      "pa": 111,
+      "rf": 41,
+      "eca": 11,
+      "total_findings": 318
+    },
+    {
+      "canonical_name": "JPMorgan Chase",
+      "corporate_family": "JPMorgan Chase",
+      "doc_count": 16,
+      "avg_casi": 48.7,
+      "max_casi": 68,
+      "fr_docs": 0,
+      "severe_docs": 210,
+      "ded": 242,
+      "mc": 5,
+      "pa": 58,
+      "rf": 53,
+      "eca": 5,
+      "total_findings": 363
+    },
+    {
+      "canonical_name": "Upside Commerce Group",
+      "corporate_family": "Upside",
+      "doc_count": 2,
+      "avg_casi": 47.6,
+      "max_casi": 74,
+      "fr_docs": 0,
+      "severe_docs": 64,
+      "ded": 91,
+      "mc": 2,
+      "pa": 21,
+      "rf": 26,
+      "eca": 2,
+      "total_findings": 142
+    },
+    {
+      "canonical_name": "Uber Technologies Inc.",
+      "corporate_family": "Uber",
+      "doc_count": 8,
+      "avg_casi": 44.1,
+      "max_casi": 71,
+      "fr_docs": 0,
+      "severe_docs": 46,
+      "ded": 120,
+      "mc": 1,
+      "pa": 28,
+      "rf": 39,
+      "eca": 3,
+      "total_findings": 191
+    },
+    {
+      "canonical_name": "Fullstory Inc.",
+      "corporate_family": "Fullstory",
+      "doc_count": 12,
+      "avg_casi": 43.7,
+      "max_casi": 80,
+      "fr_docs": 0,
+      "severe_docs": 56,
+      "ded": 136,
+      "mc": 10,
+      "pa": 28,
+      "rf": 28,
+      "eca": 2,
+      "total_findings": 204
+    },
+    {
+      "canonical_name": "Comcast / Xfinity",
+      "corporate_family": "Comcast Corporation",
+      "doc_count": 53,
+      "avg_casi": 41.0,
+      "max_casi": 77,
+      "fr_docs": 0,
+      "severe_docs": 126,
+      "ded": 217,
+      "mc": 34,
+      "pa": 200,
+      "rf": 41,
+      "eca": 26,
+      "total_findings": 518
+    },
+    {
+      "canonical_name": "Vanta Inc.",
+      "corporate_family": "Vanta",
+      "doc_count": 11,
+      "avg_casi": 36.6,
+      "max_casi": 53,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 47,
+      "mc": 6,
+      "pa": 18,
+      "rf": 9,
+      "eca": 3,
+      "total_findings": 83
+    },
+    {
+      "canonical_name": "Microsoft Corporation",
+      "corporate_family": "Microsoft",
+      "doc_count": 6,
+      "avg_casi": 35.6,
+      "max_casi": 71,
+      "fr_docs": 0,
+      "severe_docs": 71,
+      "ded": 441,
+      "mc": 4,
+      "pa": 25,
+      "rf": 11,
+      "eca": 3,
+      "total_findings": 484
+    },
+    {
+      "canonical_name": "Socure Inc.",
+      "corporate_family": "Socure",
+      "doc_count": 4,
+      "avg_casi": 33.3,
+      "max_casi": 34,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 128,
+      "mc": 3,
+      "pa": 9,
+      "rf": 4,
+      "eca": 4,
+      "total_findings": 148
+    },
+    {
+      "canonical_name": "Jumio Inc.",
+      "corporate_family": "Jumio",
+      "doc_count": 10,
+      "avg_casi": 32.6,
+      "max_casi": 60,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 131,
+      "mc": 4,
+      "pa": 11,
+      "rf": 3,
+      "eca": 1,
+      "total_findings": 150
+    },
+    {
+      "canonical_name": "Drata Inc.",
+      "corporate_family": "Drata",
+      "doc_count": 7,
+      "avg_casi": 30.3,
+      "max_casi": 39,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 84,
+      "mc": 6,
+      "pa": 9,
+      "rf": 7,
+      "eca": 1,
+      "total_findings": 107
+    },
+    {
+      "canonical_name": "Veriff Inc.",
+      "corporate_family": "Veriff",
+      "doc_count": 4,
+      "avg_casi": 28.8,
+      "max_casi": 34,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 93,
+      "mc": 4,
+      "pa": 9,
+      "rf": 4,
+      "eca": 1,
+      "total_findings": 111
+    },
+    {
+      "canonical_name": "Verizon Communications",
+      "corporate_family": "Verizon",
+      "doc_count": 11,
+      "avg_casi": 28.5,
+      "max_casi": 42,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 988,
+      "mc": 20,
+      "pa": 4,
+      "rf": 3,
+      "eca": 0,
+      "total_findings": 1015
+    },
+    {
+      "canonical_name": "Dwolla Inc.",
+      "corporate_family": "Dwolla",
+      "doc_count": 1,
+      "avg_casi": 28.0,
+      "max_casi": 28,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 40,
+      "mc": 0,
+      "pa": 1,
+      "rf": 2,
+      "eca": 0,
+      "total_findings": 43
+    },
+    {
+      "canonical_name": "TrustArc Inc.",
+      "corporate_family": "TrustArc",
+      "doc_count": 11,
+      "avg_casi": 27.2,
+      "max_casi": 34,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 88,
+      "mc": 3,
+      "pa": 14,
+      "rf": 5,
+      "eca": 2,
+      "total_findings": 112
+    },
+    {
+      "canonical_name": "Kaiser Permanente",
+      "corporate_family": "Kaiser Permanente",
+      "doc_count": 8,
+      "avg_casi": 26.5,
+      "max_casi": 32,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 166,
+      "mc": 0,
+      "pa": 14,
+      "rf": 3,
+      "eca": 2,
+      "total_findings": 185
+    },
+    {
+      "canonical_name": "Tealium Inc.",
+      "corporate_family": "Tealium",
+      "doc_count": 3,
+      "avg_casi": 25.0,
+      "max_casi": 31,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 14,
+      "mc": 0,
+      "pa": 5,
+      "rf": 1,
+      "eca": 1,
+      "total_findings": 21
+    },
+    {
+      "canonical_name": "Cambridge Mobile Telematics",
+      "corporate_family": "Cambridge Mobile Telematics",
+      "doc_count": 1,
+      "avg_casi": 24.0,
+      "max_casi": 24,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 26,
+      "mc": 0,
+      "pa": 1,
+      "rf": 0,
+      "eca": 0,
+      "total_findings": 27
+    },
+    {
+      "canonical_name": "NextRoll Inc.",
+      "corporate_family": "NextRoll",
+      "doc_count": 3,
+      "avg_casi": 23.8,
+      "max_casi": 24,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 146,
+      "mc": 0,
+      "pa": 2,
+      "rf": 0,
+      "eca": 0,
+      "total_findings": 148
+    },
+    {
+      "canonical_name": "Google LLC",
+      "corporate_family": "Alphabet",
+      "doc_count": 61,
+      "avg_casi": 23.7,
+      "max_casi": 34,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 1367,
+      "mc": 46,
+      "pa": 54,
+      "rf": 35,
+      "eca": 0,
+      "total_findings": 1502
+    },
+    {
+      "canonical_name": "Plaid Inc.",
+      "corporate_family": "Plaid",
+      "doc_count": 8,
+      "avg_casi": 23.5,
+      "max_casi": 25,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 126,
+      "mc": 1,
+      "pa": 7,
+      "rf": 0,
+      "eca": 0,
+      "total_findings": 134
+    },
+    {
+      "canonical_name": "Zelle",
+      "corporate_family": "JPMorgan Chase",
+      "doc_count": 6,
+      "avg_casi": 22.7,
+      "max_casi": 39,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 62,
+      "mc": 2,
+      "pa": 1,
+      "rf": 6,
+      "eca": 0,
+      "total_findings": 71
+    },
+    {
+      "canonical_name": "Meta Platforms",
+      "corporate_family": "Meta",
+      "doc_count": 9,
+      "avg_casi": 22.1,
+      "max_casi": 30,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 406,
+      "mc": 2,
+      "pa": 9,
+      "rf": 2,
+      "eca": 1,
+      "total_findings": 420
+    },
+    {
+      "canonical_name": "Pinterest Inc.",
+      "corporate_family": "Pinterest",
+      "doc_count": 1,
+      "avg_casi": 20.0,
+      "max_casi": 20,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 19,
+      "mc": 0,
+      "pa": 0,
+      "rf": 0,
+      "eca": 0,
+      "total_findings": 19
+    },
+    {
+      "canonical_name": "Portier LLC",
+      "corporate_family": "Uber",
+      "doc_count": 1,
+      "avg_casi": 14.0,
+      "max_casi": 14,
+      "fr_docs": 0,
+      "severe_docs": 0,
+      "ded": 0,
+      "mc": 0,
+      "pa": 2,
+      "rf": 3,
+      "eca": 0,
+      "total_findings": 5
+    }
+  ],
+  "findings_by_layer": {
+    "L-11": 627,
+    "L-12": 185,
+    "L-13": 97,
+    "L-14": 2809,
+    "L-15": 305,
+    "L-16": 1089,
+    "L-17": 1354,
+    "L-18": 325,
+    "L-19": 92,
+    "L-20": 251
+  },
+  "findings_by_sub_detector": [
+    {
+      "id": "L-17:C",
+      "count": 1193,
+      "severity": "medium"
+    },
+    {
+      "id": "L-14:B",
+      "count": 722,
+      "severity": "medium"
+    },
+    {
+      "id": "L-14:G",
+      "count": 603,
+      "severity": "high"
+    },
+    {
+      "id": "L-14:F",
+      "count": 465,
+      "severity": "medium"
+    },
+    {
+      "id": "L-14:C",
+      "count": 360,
+      "severity": "high"
+    },
+    {
+      "id": "L-11:D",
+      "count": 340,
+      "severity": "low"
+    },
+    {
+      "id": "L-16:C",
+      "count": 266,
+      "severity": "low"
+    },
+    {
+      "id": "L-16:A",
+      "count": 238,
+      "severity": "high"
+    },
+    {
+      "id": "L-18:H",
+      "count": 231,
+      "severity": "medium"
+    },
+    {
+      "id": "L-20:E",
+      "count": 213,
+      "severity": "high"
+    },
+    {
+      "id": "L-14:D",
+      "count": 189,
+      "severity": "low"
+    },
+    {
+      "id": "L-16:B",
+      "count": 189,
+      "severity": "high"
+    },
+    {
+      "id": "L-14:E",
+      "count": 186,
+      "severity": "critical"
+    },
+    {
+      "id": "L-14:A",
+      "count": 140,
+      "severity": "low"
+    },
+    {
+      "id": "L-15:A",
+      "count": 134,
+      "severity": "high"
+    },
+    {
+      "id": "L-12:E",
+      "count": 118,
+      "severity": "low"
+    },
+    {
+      "id": "L-16:F",
+      "count": 113,
+      "severity": "high"
+    },
+    {
+      "id": "L-17:B",
+      "count": 111,
+      "severity": "critical"
+    },
+    {
+      "id": "L-14:I",
+      "count": 103,
+      "severity": "critical"
+    },
+    {
+      "id": "L-11:A",
+      "count": 92,
+      "severity": "high"
+    },
+    {
+      "id": "L-16:E",
+      "count": 88,
+      "severity": "medium"
+    },
+    {
+      "id": "L-16:G",
+      "count": 78,
+      "severity": "medium"
+    },
+    {
+      "id": "L-19:G",
+      "count": 72,
+      "severity": "high"
+    },
+    {
+      "id": "L-16:H",
+      "count": 64,
+      "severity": "low"
+    },
+    {
+      "id": "L-11:B",
+      "count": 61,
+      "severity": "critical"
+    },
+    {
+      "id": "L-15:B",
+      "count": 60,
+      "severity": "medium"
+    },
+    {
+      "id": "L-11:C",
+      "count": 55,
+      "severity": "medium"
+    },
+    {
+      "id": "L-15:F",
+      "count": 55,
+      "severity": "critical"
+    },
+    {
+      "id": "L-11:I",
+      "count": 53,
+      "severity": "low"
+    },
+    {
+      "id": "L-16:D",
+      "count": 53,
+      "severity": "medium"
+    },
+    {
+      "id": "L-14:H",
+      "count": 41,
+      "severity": "medium"
+    },
+    {
+      "id": "L-13:A",
+      "count": 39,
+      "severity": "high"
+    },
+    {
+      "id": "L-12:C",
+      "count": 34,
+      "severity": "high"
+    },
+    {
+      "id": "L-18:D",
+      "count": 33,
+      "severity": "high"
+    },
+    {
+      "id": "L-15:C",
+      "count": 28,
+      "severity": "high"
+    },
+    {
+      "id": "L-13:E",
+      "count": 27,
+      "severity": "low"
+    },
+    {
+      "id": "L-12:B",
+      "count": 26,
+      "severity": "medium"
+    },
+    {
+      "id": "L-18:B",
+      "count": 21,
+      "severity": "high"
+    },
+    {
+      "id": "L-17:D",
+      "count": 19,
+      "severity": "high"
+    },
+    {
+      "id": "L-18:A",
+      "count": 18,
+      "severity": "high"
+    },
+    {
+      "id": "L-18:E",
+      "count": 18,
+      "severity": "high"
+    },
+    {
+      "id": "L-13:C",
+      "count": 17,
+      "severity": "critical"
+    },
+    {
+      "id": "L-15:E",
+      "count": 17,
+      "severity": "high"
+    },
+    {
+      "id": "L-20:C",
+      "count": 17,
+      "severity": "medium"
+    },
+    {
+      "id": "L-20:A",
+      "count": 16,
+      "severity": "high"
+    },
+    {
+      "id": "L-13:D",
+      "count": 13,
+      "severity": "high"
+    },
+    {
+      "id": "L-19:E",
+      "count": 13,
+      "severity": "medium"
+    },
+    {
+      "id": "L-11:J",
+      "count": 12,
+      "severity": "high"
+    },
+    {
+      "id": "L-15:D",
+      "count": 11,
+      "severity": "medium"
+    },
+    {
+      "id": "L-17:E",
+      "count": 11,
+      "severity": "critical"
+    },
+    {
+      "id": "L-17:A",
+      "count": 10,
+      "severity": "critical"
+    },
+    {
+      "id": "L-17:F",
+      "count": 10,
+      "severity": "high"
+    },
+    {
+      "id": "L-11:H",
+      "count": 9,
+      "severity": "medium"
+    },
+    {
+      "id": "L-12:A",
+      "count": 7,
+      "severity": "medium"
+    },
+    {
+      "id": "L-19:F",
+      "count": 7,
+      "severity": "medium"
+    },
+    {
+      "id": "L-11:F",
+      "count": 5,
+      "severity": "medium"
+    },
+    {
+      "id": "L-20:G",
+      "count": 5,
+      "severity": "medium"
+    },
+    {
+      "id": "L-18:F",
+      "count": 4,
+      "severity": "critical"
+    },
+    {
+      "id": "L-13:B",
+      "count": 1,
+      "severity": "medium"
+    }
+  ],
+  "analyst_notes": [
+    "L-17:C is still the #1 sub-detector at 1193 hits post-fix. All are gated on has_train. The 'any data/content/information you provide' alternative in _P_C may still over-fire on AI-company ToS documents that mention training anywhere in the document. Recommend spot-check of 10 random L-17:C matches.",
+    "AT&T Mobility avg CASI 57.1 (35 docs) \u2014 highest avg in corpus. Prior session summary stated 22.9 \u2014 that figure was from a pre-expansion sample with fewer documents. 35 docs at avg 57.1 confirms AT&T telecom template is structurally Substantial-Severe.",
+    "Verizon has 1015 findings across 11 docs (avg 92.3 findings/doc) \u2014 highest finding density in corpus \u2014 but max CASI only 42. Finding-density/CASI ratio: FDR indicates extremely granular disclosure without reaching remedy-foreclosure severity. Verizon discloses everything; restricts little.",
+    "Zero Foreclosure Regime documents confirmed post-fix. Fullstory holds corpus max at CASI 80 (session replay).",
+    "Compliance-vendor paradox confirmed: Sprinto avg 49.3, Vanta avg 36.6, Drata avg 30.3. All have full 5-axis presence."
+  ]
+}
