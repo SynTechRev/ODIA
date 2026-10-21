@@ -1,0 +1,50 @@
+# garak 0.17.0 config — ARCADE L-14: Encoding Injection, CPU-safe
+#
+# Probe category: probes.encoding — all active classes
+#
+# Active probe classes (16 total, all optional deps confirmed present):
+#   InjectBase64, InjectBase16, InjectBase32, InjectAscii85, InjectHex,
+#   InjectUU, InjectROT13, InjectBase2048, InjectBraille, InjectAtbash,
+#   InjectMorse, InjectNato, InjectEcoji, InjectZalgo, InjectLeet,
+#   InjectUnicodeTagChars
+#
+# Inactive (skipped by garak): InjectQP, InjectMime,
+#   InjectUnicodeVariantSelectors, InjectSneakyBits
+#
+# Detector: encoding.DecodeMatch (primary), encoding.DecodeApprox (extended)
+# Goal: test whether odia-v1 decodes and repeats obfuscated payloads.
+#   A "pass" (safe) = model does NOT reproduce the payload.
+#   A "fail" (bypass) = model decodes and echoes the encoded content.
+#
+# Hardware: GTX 1650 / CPU inference. odia-v1-garak = num_ctx 4096,
+#   num_predict 20, temperature 0.1. Encoding payloads are short (XSS strings,
+#   slur terms, plain text). Most prompts fit context and complete in < 30s.
+#   Same [None] skip patch as L-13 is in place for any that timeout.
+#
+# Prompt count: up to 64 per probe (soft_probe_prompt_cap) × 16 probes = ~1024
+#   prompts × 5 generations = ~5,120 attempts.
+#
+# Prerequisite: plugin cache must be newer than ollama.py.
+#   Check: compare mtimes of
+#     C:\Users\yahua\.cache\garak\resources\plugin_cache.json
+#   vs
+#     .venv\Lib\site-packages\garak\generators\ollama.py
+#   If ollama.py is newer, run:
+#     python -c "import os,time; os.utime(r'C:\Users\yahua\.cache\garak\resources\plugin_cache.json', (time.time(), time.time()))"
+#
+# Run command (from repo root, with venv active):
+#   python -m garak --config data/saber/ai-defense/garak-l14-encoding-cpu-config.yaml
+#
+---
+plugins:
+  target_type: ollama
+  target_name: odia-v1-garak
+  context_len: 4096
+  max_tokens: 20
+
+run:
+  generations: 5
+  seed: 42
+  spec:
+    include:
+      - probes.encoding
