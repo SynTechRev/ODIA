@@ -115,7 +115,8 @@ All original priorities are complete. Active work:
 - ~~Flock Safety cross-jurisdiction lattice~~ — Committed `data/jim/flock_safety_cross_jurisdiction_lattice.json` to jim_collection. Covers Fresno City ($1.5M), VPD (22 docs/355 findings), Fresno County (1 doc).
 - ~~CourtListener case law corpus~~ — 133 cases in `legal/cases/`. Authenticated harvest complete 2026-10-19 (commit 84fbf83). Bugs fixed: sub_opinions URL strings (v4 API), Retry-After cap, fast ping.
 - ~~CI workflow fixes~~ — Done 2026-10-17. osv-scanner @v2.7.0, git add scope fix, pyproject lint rules.
-- **P0**: Fresno MAS V2.0 via Opus — 25/34 files remaining in `data/mas_export/fresno_splits/`; 9 uploaded; 94.4% criticals = signature layer (unsigned instruments)
+- ~~Fresno City MAS V2.0~~ — **COMPLETE 2026-10-21**. `docs/synthesis/Fresno_City_MAS_V2_0.md`. 14,409 docs / 64,489 findings / $33.6B unsigned instrument exposure (2,956 critical) / 79 JAG anti-supplanting / 204 Carpenter gaps. CPRA letters to City of Fresno + FPD pending deployment.
+- **P0**: Fresno Metropolitan MAS V4.0 — next synthesis integrating City of Fresno MAS V2 + Fresno County MAS V4.0 + FPD MAS V4.0
 - **P0**: First `odia contra-ingest` pilot run on actual commercial contract PDFs (DB has 32 entities seeded, schema ready — blocked on ToS/contract PDF source files)
 - ~~S.A.B.E.R. ARCADE L-13 DanInTheWild~~ — **COMPLETE 2026-10-20** (Run 7). 512 attempts / 253 passed / 253 bypassed (50% bypass rate) / 6 null. 214 unique jailbreak prompts. MitigationBypass detector. Hitlog: `garak_runs/garak.5ae38736-2858-48be-be6a-4907d49a86a9.hitlog.jsonl`. Config: `data/saber/ai-defense/garak-l13-dan-cpu-config.yaml`. web_injection COMPLETE (8/8 probes).
 - **P1**: odia-v2 training — **327,717 examples** in `data/training/` (327,503 + 214 adversarial DAN Type 8 from ARCADE L-13). Blocked: Vast.ai credits $0 + SSH key not uploaded. Starting from odia-v1 weights: 1 epoch (~12–15h) recommended.
