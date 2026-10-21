@@ -7,16 +7,32 @@ on:
       - master
       - copilot/initiate-full-ingestion
       - ingestion-clean
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "legal/**"
+      - "pyproject.toml"
+      - "requirements.txt"
+      - ".github/workflows/python-ci.yml"
   pull_request:
     branches:
       - main
       - master
       - copilot/initiate-full-ingestion
       - ingestion-clean
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "legal/**"
+      - "pyproject.toml"
+      - "requirements.txt"
+      - ".github/workflows/python-ci.yml"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.sha }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
