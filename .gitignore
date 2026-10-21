@@ -77,9 +77,14 @@ data/vectors/*.pkl
 # CPRA investigative letters -- track all drafts
 !data/cpra_letters/
 
-# Training data (odia-v2 source corpus — track jsonl, exclude large binaries)
+# Training data — track adversarial source files only; exclude large odia-v1 exports
 !data/training/
-!data/training/*.jsonl
+!data/training/adversarial_*.jsonl
+# odia-v1 source corpus exports (140MB–516MB each — on HuggingFace, not git)
+data/training/odia_sft_*.jsonl
+data/training/odia_combined_*.jsonl
+data/training/*.json
+data/training/*.log
 
 # S.A.B.E.R. -- track configs/docs; exclude runtime output and log files
 !data/saber/
@@ -228,6 +233,9 @@ models/
 # Runtime manifests and error logs
 contra_manifest_*.json
 contra_ingest_errors.json
+
+# Runtime log files
+logs/
 
 # Ruff / linter output files
 text

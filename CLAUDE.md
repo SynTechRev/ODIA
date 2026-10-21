@@ -122,7 +122,7 @@ All original priorities are complete. Active work:
 - **P1**: odia-v2 training — **327,717 examples** in `data/training/` (327,503 + 214 adversarial DAN Type 8 from ARCADE L-13). Blocked: Vast.ai credits $0 + SSH key not uploaded. Starting from odia-v1 weights: 1 epoch (~12–15h) recommended.
 - `odia_legal` submodule — Phase 1 foundation (CPRA crosswalk, L-9 recodification, citation parser). Critical deadline: 2028-07-02 (Sunshine Dragnet Phase Zero).
 - Multi-index RAG routing — expose `ace_collection` and `jim_collection` via `corpus_filter` in the API
-- Migrate `@app.on_event("startup")` → FastAPI `lifespan` handler (deprecation warnings in every test run)
+- ~~Migrate `@app.on_event("startup")` → FastAPI `lifespan` handler~~ — Already done; `api.py` uses `@asynccontextmanager` + `lifespan=_lifespan` correctly (verified 2026-10-21)
 
 ## odia-v1 Model Reference
 
@@ -179,8 +179,8 @@ All original priorities are complete. Active work:
 - Do NOT use overly abstract/mythological naming for new code — prefer clear engineering terminology
 - Do NOT use `datetime.utcnow()` — use `datetime.now(UTC)` (UTC imported from `datetime`)
 - Do NOT open files without `encoding="utf-8"` when reading JSON or text on Windows
-- Do NOT use `@app.on_event("startup")` — migrate new handlers to the `lifespan` context manager
-- Do NOT re-run odia-v1 training — model is complete and deployed; odia-v2 (327,503 examples in `data/training/`) is ready but blocked on Vast.ai credits + SSH key
+- Do NOT use `@app.on_event("startup")` — all new handlers go in the `lifespan` context manager (`api.py:116`)
+- Do NOT re-run odia-v1 training — model is complete and deployed; odia-v2 (327,717 examples in `data/training/`) is ready but blocked on Vast.ai credits + SSH key
 
 ## Running the Project
 
