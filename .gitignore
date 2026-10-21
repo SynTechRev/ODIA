@@ -232,6 +232,9 @@ contra_ingest_errors.json
 # Ruff / linter output files
 text
 
-# Session handoff documents (root-level)
-ODIA_OPUS_HANDOFF_*.md
-OPUS_ENTRY_MESSAGE_*.md
+# Session handoff documents (root-level only)
+/ODIA_OPUS_HANDOFF_*.md
+/OPUS_ENTRY_MESSAGE_*.md
+# Un-ignore handoffs inside data/handoffs/ (tracked project documents)
+!data/handoffs/ODIA_OPUS_HANDOFF_*.md
+!data/handoffs/OPUS_ENTRY_MESSAGE_*.md

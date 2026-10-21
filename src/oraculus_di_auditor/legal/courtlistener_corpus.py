@@ -8,12 +8,15 @@ loaded from disk first (no API hit if already present). The harvest script
 (scripts/build_courtlistener_corpus.py) populates the cache on first run.
 
 ODIA audit focus areas, weighted by relevance to known corpus anomalies:
-  - CPRA / California public records law (exemptions, disclosure duties)
-  - 4th Amendment surveillance (automated license plate readers, body cams)
-  - AB 481 military equipment (transparency requirements)
-  - Federal grant accountability (JAG, Byrne, Title IV-E)
-  - Privacy / biometric surveillance (BIPA analogues)
-  - Public meeting law (Brown Act, First Amendment access)
+  - CPRA / California public records law (exemptions, disclosure duties, fee doctrine)
+  - 4th Amendment surveillance (ALPR, GPS, body cams, Carpenter third-party doctrine)
+  - AB 481 / AB 1215 — military equipment and facial recognition transparency
+  - Federal grant accountability (JAG, Byrne anti-supplanting, False Claims Act)
+  - Procedural due process (Mathews v. Eldridge balancing test, 103 findings)
+  - Privacy / biometric surveillance (BIPA analogues, 28 CFR Part 23)
+  - Public meeting law (Brown Act consent calendar, action without authority)
+  - SB 1421 police records transparency (peace officer records, Brady/Pitchess)
+  - California contract law (unsigned instruments, ultra vires authority)
 """
 
 from __future__ import annotations
@@ -112,6 +115,105 @@ ODIA_HARVEST_QUERIES: list[dict] = [
         "query": "biometric data collection privacy Fourth Amendment",
         "courts": ["scotus", "ca9"],
         "topic": "privacy",
+        "max_results": 10,
+    },
+    # ---- Procedural Due Process (Mathews v. Eldridge) ----
+    {
+        "query": "Mathews Eldridge procedural due process balancing test",
+        "courts": ["scotus", "ca9"],
+        "topic": "due_process",
+        "max_results": 15,
+    },
+    {
+        "query": "procedural due process notice hearing deprivation government benefit",
+        "courts": ["scotus", "ca9", "cal"],
+        "topic": "due_process",
+        "max_results": 15,
+    },
+    # ---- False Claims Act / Anti-Supplanting ----
+    {
+        "query": "False Claims Act qui tam federal grant fraud anti-supplanting",
+        "courts": ["scotus", "ca9"],
+        "topic": "false_claims",
+        "max_results": 15,
+    },
+    {
+        "query": "JAG Byrne grant supplanting law enforcement local funds",
+        "courts": ["scotus", "ca9"],
+        "topic": "false_claims",
+        "max_results": 10,
+    },
+    # ---- California Contract Law / Unsigned Instruments ----
+    {
+        "query": "California public contract unsigned agreement authority to bind",
+        "courts": ["cal", "caca"],
+        "topic": "contract_law",
+        "max_results": 15,
+    },
+    {
+        "query": "ultra vires government contract public agency authority",
+        "courts": ["cal", "caca", "ca9"],
+        "topic": "contract_law",
+        "max_results": 15,
+    },
+    # ---- SB 1421 Police Records Transparency ----
+    {
+        "query": "SB 1421 police personnel records disclosure Brady Pitchess",
+        "courts": ["cal", "caca"],
+        "topic": "sb1421",
+        "max_results": 15,
+    },
+    {
+        "query": "peace officer records transparency use of force sustained complaint",
+        "courts": ["cal", "caca"],
+        "topic": "sb1421",
+        "max_results": 10,
+    },
+    # ---- CPRA Fee Doctrine ----
+    {
+        "query": "CPRA public records fee direct cost duplication excessive charge",
+        "courts": ["cal", "caca"],
+        "topic": "cpra_fee",
+        "max_results": 15,
+    },
+    # ---- Facial Recognition / AB 1215 ----
+    {
+        "query": "facial recognition law enforcement Fourth Amendment biometric surveillance",
+        "courts": ["scotus", "ca9", "cal"],
+        "topic": "facial_recognition",
+        "max_results": 15,
+    },
+    # ---- 28 CFR Part 23 Criminal Intelligence ----
+    {
+        "query": "28 CFR Part 23 criminal intelligence system reasonable suspicion",
+        "courts": ["scotus", "ca9"],
+        "topic": "criminal_intelligence",
+        "max_results": 10,
+    },
+    # ---- Brown Act Consent Calendar / Action Without Authority ----
+    {
+        "query": "Brown Act consent calendar agenda item notice opportunity comment",
+        "courts": ["cal", "caca"],
+        "topic": "brown_act",
+        "max_results": 15,
+    },
+    {
+        "query": "Brown Act violation action without authority nullification remedy",
+        "courts": ["cal", "caca"],
+        "topic": "brown_act",
+        "max_results": 10,
+    },
+    # ---- Carpenter / Third-Party Doctrine (Surveillance expansion) ----
+    {
+        "query": "Carpenter third-party doctrine cell site location data warrant",
+        "courts": ["scotus", "ca9"],
+        "topic": "surveillance",
+        "max_results": 15,
+    },
+    {
+        "query": "ALPR license plate reader long-term tracking mosaic theory",
+        "courts": ["ca9", "cal"],
+        "topic": "surveillance",
         "max_results": 10,
     },
 ]
