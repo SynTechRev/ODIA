@@ -119,7 +119,7 @@ All original priorities are complete. Active work:
 - **P0**: Fresno Metropolitan MAS V4.0 — next synthesis integrating City of Fresno MAS V2 + Fresno County MAS V4.0 + FPD MAS V4.0
 - **P0**: First `odia contra-ingest` pilot run on actual commercial contract PDFs (DB has 32 entities seeded, schema ready — blocked on ToS/contract PDF source files)
 - ~~S.A.B.E.R. ARCADE L-13 DanInTheWild~~ — **COMPLETE 2026-10-20** (Run 7). 512 attempts / 253 passed / 253 bypassed (50% bypass rate) / 6 null. 214 unique jailbreak prompts. MitigationBypass detector. Hitlog: `garak_runs/garak.5ae38736-2858-48be-be6a-4907d49a86a9.hitlog.jsonl`. Config: `data/saber/ai-defense/garak-l13-dan-cpu-config.yaml`. web_injection COMPLETE (8/8 probes).
-- **P1**: odia-v2 training — **327,717 examples** in `data/training/` (327,503 + 214 adversarial DAN Type 8 from ARCADE L-13). Blocked: Vast.ai credits $0 + SSH key not uploaded. Starting from odia-v1 weights: 1 epoch (~12–15h) recommended.
+- ~~**P1**: odia-v2 training~~ — **COMPLETE 2026-10-22**. 327,717 examples (56,282 reports + 271,221 explanations + 214 adversarial DAN Type 8). 1 epoch QLoRA on CMP 170HX. Q4_K_M GGUF exported. Artifacts: `SynTechRev/odia-v2` (HuggingFace private) — LoRA adapters + GGUF. Pending: download GGUF → `D:\ODIA\models\odia-v2.q4_k_m.gguf`, register in Ollama, update RAG config.
 - `odia_legal` submodule — Phase 1 foundation (CPRA crosswalk, L-9 recodification, citation parser). Critical deadline: 2028-07-02 (Sunshine Dragnet Phase Zero).
 - Multi-index RAG routing — expose `ace_collection` and `jim_collection` via `corpus_filter` in the API
 - ~~Migrate `@app.on_event("startup")` → FastAPI `lifespan` handler~~ — Already done; `api.py` uses `@asynccontextmanager` + `lifespan=_lifespan` correctly (verified 2026-10-21)
@@ -180,7 +180,7 @@ All original priorities are complete. Active work:
 - Do NOT use `datetime.utcnow()` — use `datetime.now(UTC)` (UTC imported from `datetime`)
 - Do NOT open files without `encoding="utf-8"` when reading JSON or text on Windows
 - Do NOT use `@app.on_event("startup")` — all new handlers go in the `lifespan` context manager (`api.py:116`)
-- Do NOT re-run odia-v1 training — model is complete and deployed; odia-v2 (327,717 examples in `data/training/`) is ready but blocked on Vast.ai credits + SSH key
+- Do NOT re-run odia-v1 or odia-v2 training — both complete. odia-v2: 327,717 examples, Q4_K_M GGUF at `SynTechRev/odia-v2` (HuggingFace). Next training is odia-v3 (pending ARCADE L-14 encoding adversarials + future corpus expansion).
 
 ## Running the Project
 

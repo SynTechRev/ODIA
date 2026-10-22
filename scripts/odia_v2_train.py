@@ -61,7 +61,10 @@ model = FastLanguageModel.get_peft_model(
 from datasets import load_dataset  # noqa: E402
 
 dataset = load_dataset(
-    "SynTechRev/odia-v2-training",
+    "json",
+    data_files={
+        "train": "hf://datasets/SynTechRev/odia-v2-training/odia_v2_combined_327717.jsonl"
+    },
     split="train",
     token=HF_TOKEN,
 )

@@ -1,9 +1,20 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-03-16T01:59:13Z",
-  "term_count": 51,
-  "case_count": 48,
+  "generated_at": "2026-10-22T03:05:21Z",
+  "term_count": 59,
+  "case_count": 55,
   "terms": {
+    "law enforcement investigative records": {
+      "term": "law enforcement investigative records",
+      "definition": "Under § 6254(f) / § 7923.650, records of investigations conducted by any state or local police agency are exempt from CPRA if disclosure would endanger the safety of a person involved in an investigation, disclose the identity of a confidential informant, or constitute an unwarranted invasion of personal privacy.",
+      "case_name": "American Civil Liberties Union of Northern California v. Superior Court",
+      "citation": "202 Cal.App.4th 55 (2011)",
+      "year": 2011,
+      "court": "California Court of Appeal, First District",
+      "context": "The exemption requires particularized showing, not automatic application to all records held by law enforcement.",
+      "is_holding": true,
+      "superseded_by": null
+    },
     "Auer deference": {
       "term": "Auer deference",
       "definition": "The rule that a court must defer to an agency's reasonable interpretation of its own genuinely ambiguous regulation, unless that interpretation is plainly erroneous or inconsistent with the regulation. Also called Seminole Rock deference. Substantially narrowed by Kisor v. Wilkie (2019).",
@@ -81,6 +92,17 @@
       "is_holding": true,
       "superseded_by": null
     },
+    "burden of proof in CPRA exemption claims": {
+      "term": "burden of proof in CPRA exemption claims",
+      "definition": "The public agency asserting an exemption bears the burden of demonstrating that the exemption applies to the specific records at issue; the requestor need not prove the records are disclosable.",
+      "case_name": "CBS, Inc. v. Block",
+      "citation": "42 Cal.3d 646 (1986)",
+      "year": 1986,
+      "court": "California Supreme Court",
+      "context": "Core CPRA procedural rule derived from legislative intent favoring access.",
+      "is_holding": true,
+      "superseded_by": null
+    },
     "Chevron deference": {
       "term": "Chevron deference",
       "definition": "A two-step test for judicial review of agency statutory interpretations: Step 1 asks whether Congress has directly spoken to the question; if the statute is silent or ambiguous, Step 2 asks whether the agency's interpretation is a permissible and reasonable construction of the statute.",
@@ -125,6 +147,28 @@
       "is_holding": true,
       "superseded_by": null
     },
+    "public record": {
+      "term": "public record",
+      "definition": "Any writing containing information relating to the conduct of the public's business prepared, owned, used, or retained by any state or local agency regardless of physical form or characteristics.",
+      "case_name": "City of San Jose v. Superior Court",
+      "citation": "12 Cal.3d 447 (1974)",
+      "year": 1974,
+      "court": "California Supreme Court",
+      "context": "Broad construction of Government Code § 6252(e) (now § 7920.540) adopted by the court.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "public record on personal device": {
+      "term": "public record on personal device",
+      "definition": "A communication that relates to the conduct of the public's business is a public record under CPRA regardless of whether it was transmitted or stored on a personal device, personal email account, or through a personal platform rather than a government-issued system.",
+      "case_name": "City of San Jose v. Superior Court",
+      "citation": "2 Cal.5th 608 (2017)",
+      "year": 2017,
+      "court": "California Supreme Court",
+      "context": "The court rejected attempts to evade CPRA through use of private communication channels.",
+      "is_holding": true,
+      "superseded_by": null
+    },
     "pretermination hearing": {
       "term": "pretermination hearing",
       "definition": "The minimum pre-deprivation procedural protection required before a government employer may terminate a classified civil servant: oral or written notice of the charges, an explanation of the employer's evidence, and a meaningful opportunity for the employee to respond before the termination takes effect.",
@@ -156,6 +200,17 @@
       "court": "SCOTUS",
       "context": "The Court held that the interpretation of the Fourteenth Amendment enunciated in Brown v. Board of Education is the supreme law of the land, binding upon all state officials.",
       "is_holding": true,
+      "superseded_by": null
+    },
+    "peace officer personnel records — pre-SB 1421 rule": {
+      "term": "peace officer personnel records — pre-SB 1421 rule",
+      "definition": "Under the pre-2019 regime, peace officer personnel records were categorically confidential under Pen. Code § 832.7, shielding discipline, complaints, and Internal Affairs records from CPRA disclosure without a court order or statutory exception.",
+      "case_name": "Copley Press, Inc. v. Superior Court",
+      "citation": "39 Cal.4th 1272 (2006)",
+      "year": 2006,
+      "court": "California Supreme Court",
+      "context": "This rule was fundamentally altered by SB 1421 (2018), which made records of use of force, sexual assault, and dishonesty findings publicly disclosable.",
+      "is_holding": false,
       "superseded_by": null
     },
     "public record privilege (press)": {
@@ -320,6 +375,17 @@
       "year": 2024,
       "court": "SCOTUS",
       "context": "Post-Loper Bright, courts no longer apply Chevron deference to agency statutory interpretations; instead, they exercise independent judgment as to what the statute means.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "attorney-client privilege under CPRA": {
+      "term": "attorney-client privilege under CPRA",
+      "definition": "Section 6254(k) / 7923.700 incorporates the attorney-client privilege, exempting from CPRA disclosure any confidential communication between a client and their lawyer. For government agencies, communications with in-house and outside counsel for the purpose of legal advice are protected.",
+      "case_name": "Los Angeles County Board of Supervisors v. Superior Court",
+      "citation": "2 Cal.5th 282 (2016)",
+      "year": 2016,
+      "court": "California Supreme Court",
+      "context": "The court resolved tension between CPRA access and attorney-client privilege in favor of privilege for bona fide confidential attorney communications.",
       "is_holding": true,
       "superseded_by": null
     },
@@ -551,6 +617,28 @@
       "year": 1987,
       "court": "SCOTUS",
       "context": "Dole's four-part test controls whether Congress may attach conditions to federal grants to states; subsequent decisions added a fifth implicit element — the conditions must not be so coercive as to effectively compel compliance.",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "deliberative process privilege": {
+      "term": "deliberative process privilege",
+      "definition": "A common-law privilege protecting pre-decisional, deliberative communications that are part of an agency's decision-making process, when disclosure would inhibit the free exchange of ideas necessary for effective government.",
+      "case_name": "Times Mirror Co. v. Superior Court",
+      "citation": "53 Cal.3d 1325 (1991)",
+      "year": 1991,
+      "court": "California Supreme Court",
+      "context": "Recognized as a basis for invoking § 6255 catch-all exemption (now § 7922.000).",
+      "is_holding": true,
+      "superseded_by": null
+    },
+    "public interest balancing test": {
+      "term": "public interest balancing test",
+      "definition": "Under § 6255 (§ 7922.000), the agency must demonstrate that the public interest served by nondisclosure 'clearly outweighs' the public interest served by disclosure; mere inconvenience or embarrassment is insufficient.",
+      "case_name": "Times Mirror Co. v. Superior Court",
+      "citation": "53 Cal.3d 1325 (1991)",
+      "year": 1991,
+      "court": "California Supreme Court",
+      "context": "Standard for § 6255 catch-all exemption invocations.",
       "is_holding": true,
       "superseded_by": null
     },
