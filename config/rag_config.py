@@ -20,7 +20,7 @@ RAG_LLM_PROVIDER = os.getenv("RAG_LLM_PROVIDER", "ollama")
 # Model names (provider-specific defaults)
 RAG_LLM_MODEL = os.getenv(
     "RAG_LLM_MODEL",
-    "odia-v1",  # ODIA fine-tuned Llama-3.1-8B (local, via Ollama)
+    "odia-v2",  # ODIA fine-tuned Llama-3.1-8B v2 (327,717 examples, local via Ollama)
 )
 
 # Sampling temperature (0.0-2.0, lower = more deterministic)
