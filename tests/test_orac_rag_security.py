@@ -118,7 +118,7 @@ def test_system_prompt_passed_to_llm():
 
 
 def test_system_prompt_contains_odia_identity():
-    assert "odia-v1" in SECURITY_GUARD_SYSTEM_PROMPT
+    assert "odia-v2" in SECURITY_GUARD_SYSTEM_PROMPT
     assert "Oraculus" in SECURITY_GUARD_SYSTEM_PROMPT
 
 

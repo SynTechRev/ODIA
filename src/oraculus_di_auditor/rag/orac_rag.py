@@ -68,30 +68,36 @@ _CUE_MARKERS = (
     "Your compliance analysis:",
     "Your vendor analysis:",
     "Your answer:",
+    "Compiled audit synthesis:",
 )
 
-# odia-v1's training system prompt is echoed at the start of every completion
-# before the actual findings. Detect and strip it by its unique opening phrase.
+# Training preambles echoed at the start of completions before actual findings.
 _ODIA_V1_PREAMBLE_PREFIX = (
     "You are Oraculus, a specialized legal-document anomaly analysis assistant"
 )
+_ODIA_V2_PREAMBLE_PREFIX = (
+    "You are Oraculus, a civic-accountability document analysis system"
+)
+_PREAMBLE_PREFIXES = (_ODIA_V1_PREAMBLE_PREFIX, _ODIA_V2_PREAMBLE_PREFIX)
 
 
 def _strip_prompt_echo(text: str) -> str:
     """Return only the generated content, stripping known prompt echo patterns.
 
     Handles two echo patterns:
-    1. odia-v1 training preamble — a paragraph starting with _ODIA_V1_PREAMBLE_PREFIX
-       that the model echoes before every answer; ends at the first blank line.
+    1. Training preamble echo — a paragraph starting with a known preamble prefix;
+       ends at the first blank line.
     2. Prompt cue markers (e.g. "Your audit analysis:") from rag_prompts templates.
     """
     text = text.strip()
 
-    # Strip odia-v1 training preamble if present at the start.
-    if text.startswith(_ODIA_V1_PREAMBLE_PREFIX):
-        double_nl = text.find("\n\n")
-        if double_nl != -1:
-            text = text[double_nl:].strip()
+    # Strip training preamble if present at the start.
+    for prefix in _PREAMBLE_PREFIXES:
+        if text.startswith(prefix):
+            double_nl = text.find("\n\n")
+            if double_nl != -1:
+                text = text[double_nl:].strip()
+            break
 
     # Strip rag_prompts cue markers (covers non-odia-v1 providers).
     best_idx = -1
