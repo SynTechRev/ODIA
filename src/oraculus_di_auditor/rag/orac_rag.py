@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from ..embeddings import LocalEmbedder
+from ..interface.reasoning_mode import build_reasoning_prompt, strip_thinking_tags
 from ..llm_providers import get_provider
 from ..rag_context import ContextAssembler
 from ..rag_prompts import get_prompt_for_query
@@ -213,6 +214,7 @@ class OracRAG:
         include_sources: bool = True,
         threshold: float = RAG_SIMILARITY_THRESHOLD,
         corpus_filter: list[str] | None = None,
+        reasoning_mode: bool = False,
     ) -> dict[str, Any]:
         """Answer a natural language question using RAG.
 
@@ -304,12 +306,18 @@ class OracRAG:
                 prompt_template = get_prompt_for_query(question)
                 prompt = prompt_template.format(context=context, question=question)
 
+                if reasoning_mode:
+                    prompt = build_reasoning_prompt(prompt, question)
+
                 answer = self.llm.generate(
                     prompt=prompt,
                     context="",  # Already in prompt
                     system_prompt=SECURITY_GUARD_SYSTEM_PROMPT,
                 )
                 answer = _strip_prompt_echo(answer)
+
+                if reasoning_mode:
+                    _thinking, answer = strip_thinking_tags(answer)
 
                 # M-2: Output filter -- blocks any DAN compliance that slips through
                 jb = check_output(answer)

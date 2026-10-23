@@ -102,6 +102,30 @@ All original priorities are complete. Active work:
 13. ~~C.O.N.T.R.A. frontend nav tab~~ — Done 2026-08-11. /contra page live in v3.9.1. Detector registry, entity registry, CASI status tiles.
 14. ~~RAG pipeline end-to-end fix~~ — Done 2026-08-11. vectors copied to install dir, similarity threshold 0.3→0.05, retriever perf bug fixed. v3.9.2.
 
+## 10-Day Capability Challenge (Active: 2026-10-23 onward)
+
+Branch: `learning/10-day-challenge`. Merges to main after Day 11 consolidation review.
+Advances odia-v2 and the platform from TF-IDF + QLoRA baseline toward an agentic
+R.A.I.A. system with modern retrieval, tool-calling detectors, three-tier memory,
+reasoning-mode inference, and continuous evaluation. See `BLOCKERS.md` for
+discrepancies between the handoff document and current platform state.
+
+| Day | Domain | Build Artifact | Status |
+|---|---|---|---|
+| 1 | Reasoning Foundations | `interface/reasoning_mode.py`, reasoning_mode flag on RAG endpoint | COMPLETE 2026-10-23 |
+| 2 | Retrieval Part 1 | `retrieval/hybrid.py` (BGE-M3 + BM25 + bge-reranker-v2-m3) | PENDING |
+| 3 | Retrieval Part 2 | `retrieval/colbert_index.py` (ColBERTv2 via ragatouille) | PENDING |
+| 4 | Agentic Orchestration | `agents/raia_v0.py` (LangGraph analyze/xref/deepen/verify cycle) | PENDING |
+| 5 | Document AI | ColPali vs Nougat vs Marker bakeoff on 20-doc Fresno sample | PENDING |
+| 6 | Preference Optimization | `data/preferences_v1.jsonl`, DPO config, 10-step smoke test | PENDING |
+| 7 | Neurosymbolic Integration | `tools/detector_tools.py` (L-1 through L-10 as callable tools) | PENDING |
+| 8 | Knowledge Graph | JAG subgraph via nano-graphrag (79 critical findings) | PENDING |
+| 9 | Memory Architecture | `memory/three_tier.py` (working + archival + episodic via Letta) | PENDING |
+| 10 | Evaluation Harness | `eval/harness.py` (7-metric scorecard + judge model + CI gate) | PENDING |
+
+Mars review checkpoints: end of Day 3 (retrieval decision), Day 5 (document AI decision),
+Day 7 (detector tool-calling pattern), Day 10 (evaluation baseline), Day 11 (consolidation PR).
+
 **Active next steps**:
 - ~~RAG index rebuild~~ — Done 2026-10-16. 81,309 corpus / 271,245 ACE / 3,937 JIM. Copied to `Roaming\ODIA\data\vectors`.
 - ~~split_mas_export.py~~ — Done 2026-07-31. Files in `data/mas_export/fresnocounty_splits/` and `data/mas_export/fresno_splits/` (35 files).
