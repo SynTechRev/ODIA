@@ -229,16 +229,17 @@ def test_deepen_node_sets_confidence() -> None:
     assert "(doc_id:abc123)" in result["deepened_findings"]
 
 
-def test_verify_node_passes_on_valid_citation_and_confidence() -> None:
+def test_verify_node_passes_on_valid_citation() -> None:
     corpus_ids = {"abc123", "def456"}
     state = _empty_state(
         deepened_findings="Analysis. (doc_id:abc123)",
-        confidence=0.80,
+        confidence=0.0,
         confidence_threshold=0.75,
     )
     result = verify_node(state, corpus_ids)
     assert result["reflection"] is None
     assert result["citation_validity"] == {"abc123": True}
+    assert result["confidence"] == 1.0  # 1 valid / 1 cited
     assert result["iteration"] == 1
 
 
@@ -254,16 +255,17 @@ def test_verify_node_sets_reflection_on_invalid_citation() -> None:
     assert "nonexistent" in result["reflection"]
 
 
-def test_verify_node_sets_reflection_on_low_confidence() -> None:
+def test_verify_node_sets_reflection_on_no_citations() -> None:
     corpus_ids = {"abc123"}
     state = _empty_state(
-        deepened_findings="Analysis. (doc_id:abc123)",
-        confidence=0.50,
+        deepened_findings="Analysis with no document references.",
+        confidence=0.90,
         confidence_threshold=0.75,
     )
     result = verify_node(state, corpus_ids)
     assert result["reflection"] is not None
-    assert "0.50" in result["reflection"] or "threshold" in result["reflection"].lower()
+    assert "citation" in result["reflection"].lower()
+    assert result["confidence"] == 0.0
 
 
 def test_finalize_node_halt_reason_verify_passed() -> None:
@@ -364,11 +366,11 @@ def test_loop_on_invalid_citation() -> None:
     assert result["iteration"] == 2
 
 
-def test_loop_on_low_confidence() -> None:
+def test_loop_on_zero_citations_then_cited() -> None:
     analyze_resp = "SUB_QUESTIONS:\n1. Any issues?\n\nANALYTICAL_ANGLE: overview"
-    deepen_low = 'Analysis. (doc_id:abc123)\n{"confidence": 0.50}'
-    deepen_high = 'Deeper analysis. (doc_id:abc123)\n{"confidence": 0.85}'
-    provider = _MockProvider([analyze_resp, deepen_low, analyze_resp, deepen_high])
+    deepen_no_cite = "Analysis with no document references."
+    deepen_cited = "Deeper analysis. (doc_id:abc123)"
+    provider = _MockProvider([analyze_resp, deepen_no_cite, analyze_resp, deepen_cited])
     retriever = _mock_retriever(["abc123"])
     corpus_ids = {"abc123"}
 

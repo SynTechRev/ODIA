@@ -152,8 +152,8 @@ def _build_deepen_prompt(
         f"  - Cite each document you reference using the format (doc_id:{example_id})\n"
         "    Copy the doc_id exactly as it appears in PASSAGES. Do not truncate it.\n"
         "  - Only cite doc_ids that appear verbatim in the PASSAGES section.\n"
-        '  - End your response with: {"confidence": 0.73} '
-        "(replace 0.73 with your actual confidence between 0.00 and 1.00)\n\n"
+        "  - You MUST cite at least one document. "
+        "Findings without citations are rejected.\n"
         f"PASSAGES:\n{passages_block}\n\n"
         "FINDING:"
     )
@@ -289,11 +289,21 @@ def deepen_node(state: RAIAState, provider: BaseLLMProvider) -> RAIAState:
 
 
 def verify_node(state: RAIAState, corpus_ids: set[str]) -> RAIAState:
-    """Check citations and confidence threshold. Write reflection on failure."""
+    """Check citations and confidence threshold. Write reflection on failure.
+
+    Confidence is computed as citation grounding density: the fraction of
+    cited doc_ids that exist in the corpus. This replaces model self-reporting,
+    which odia-v2 does not perform reliably.
+    """
     cited = _extract_citations(state["deepened_findings"])
     validity = {doc_id: doc_id in corpus_ids for doc_id in cited}
     all_valid = all(validity.values()) if validity else True
-    confidence_met = state["confidence"] >= state["confidence_threshold"]
+
+    # Citation grounding density: 0.0 if no citations, 1.0 if all valid.
+    valid_count = sum(1 for v in validity.values() if v)
+    citation_density = valid_count / len(cited) if cited else 0.0
+    state["confidence"] = citation_density
+    confidence_met = citation_density >= state["confidence_threshold"]
 
     state["citation_validity"] = validity
     state["verification_notes"] = _build_verify_notes(
@@ -308,11 +318,11 @@ def verify_node(state: RAIAState, corpus_ids: set[str]) -> RAIAState:
             "in the retrieved passages."
         )
     elif not confidence_met:
+        # No citations at all — density is 0.0.
         state["reflection"] = (
-            f"Confidence {state['confidence']:.2f} is below threshold "
-            f"{state['confidence_threshold']:.2f}. "
-            "Deepen the analysis: identify more specific evidence, "
-            "cross-reference additional patterns, and make a stronger claim."
+            "Your finding contained no document citations. "
+            "You MUST cite at least one document from the PASSAGES section "
+            "using the format (doc_id:<exact-id-from-passages>)."
         )
     else:
         state["reflection"] = None
