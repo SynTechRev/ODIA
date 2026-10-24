@@ -113,7 +113,7 @@ discrepancies between the handoff document and current platform state.
 | Day | Domain | Build Artifact | Status |
 |---|---|---|---|
 | 1 | Reasoning Foundations | `interface/reasoning_mode.py`, reasoning_mode flag on RAG endpoint | COMPLETE 2026-10-23 |
-| 2 | Retrieval Part 1 | `retrieval/hybrid.py` (BGE-M3 + BM25 + bge-reranker-v2-m3) | PENDING |
+| 2 | Retrieval Part 1 | `retrieval/hybrid.py` (BGE-M3 + BM25 + bge-reranker-v2-m3) | COMPLETE 2026-10-23 |
 | 3 | Retrieval Part 2 | `retrieval/colbert_index.py` (ColBERTv2 via ragatouille) | PENDING |
 | 4 | Agentic Orchestration | `agents/raia_v0.py` (LangGraph analyze/xref/deepen/verify cycle) | PENDING |
 | 5 | Document AI | ColPali vs Nougat vs Marker bakeoff on 20-doc Fresno sample | PENDING |
