@@ -115,7 +115,7 @@ discrepancies between the handoff document and current platform state.
 | 1 | Reasoning Foundations | `interface/reasoning_mode.py`, reasoning_mode flag on RAG endpoint | COMPLETE 2026-10-23 |
 | 2 | Retrieval Part 1 | `retrieval/hybrid.py` (BGE-M3 + BM25 + bge-reranker-v2-m3) | COMPLETE 2026-10-23 |
 | 3 | Retrieval Part 2 | `retrieval/colbert_index.py` (ColBERTv2 direct MaxSim, ragatouille incompatible w/ 3.14) | COMPLETE 2026-10-23 |
-| 4 | Agentic Orchestration | `agents/raia_v0.py` (LangGraph analyze/xref/deepen/verify cycle) | COMPLETE 2026-10-23 (traces pending inference backend) |
+| 4 | Agentic Orchestration | `agents/raia_v0.py` (LangGraph analyze/xref/deepen/verify cycle) | COMPLETE 2026-10-24 (5 traces run; citation prompt fixes applied; rerun pending) |
 | 5 | Document AI | ColPali vs Nougat vs Marker bakeoff on 20-doc Fresno sample | PENDING |
 | 6 | Preference Optimization | `data/preferences_v1.jsonl`, DPO config, 10-step smoke test | PENDING |
 | 7 | Neurosymbolic Integration | `tools/detector_tools.py` (L-1 through L-10 as callable tools) | PENDING |
