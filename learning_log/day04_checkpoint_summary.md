@@ -148,19 +148,23 @@ showing what was tried.
 **Criterion**: 4-5 traces verify_passed with valid citations and high confidence = endpoint
 production-ready behind allowlist. 2 or fewer = stays internal through 90-day deepening.
 
-**Count of clean verify_passed halts**: 4 / 5
+**Count of clean verify_passed halts**: 4 / 5 (run 3, after citation grounding fixes)
 
-**Caveat**: All 4 verify_passed halts are vacuously valid -- zero citations extracted in
-findings, so citation_validity={} which evaluates all_valid=True by the empty-dict rule.
-The model is not citing documents, so the citation gate is not actually being exercised.
+**Run 3 results (final):**
+- instrument_type: verify_passed, 3 iter, confidence=1.00 (real citations)
+- dollar_range: verify_passed, 2 iter, confidence=1.00 (real citations)
+- severity_critical: max_iterations, 3 iter, confidence=0.00 (zero citations all iterations)
+- gap_pattern: verify_passed, 1 iter, confidence=1.00 (real citations)
+- combined: verify_passed, 1 iter, confidence=1.00 (real citations)
 
-**Decision**: Stays internal through Day 11 guard rails.
+**Decision**: Endpoint stays internal through 90-day deepening.
 
-Reasoning: 4/5 verify_passed on the surface looks production-ready, but the underlying
-citation discipline is failing (4 traces have zero citations). Opening the endpoint while
-the model is not grounding its findings in specific documents would undermine the
-accountability purpose of the tool. The citation prompt fixes in commit 7e5b840 need a
-rerun to verify before any production-path decision is revisited.
+Reasoning: 4/5 verify_passed with real citations (confidence=1.00) meets the criterion
+on paper. However severity_critical is a consistent zero-citation failure across all 3
+runs, and the production guard rail for an accountability tool requires citation grounding
+across all query types before opening the endpoint. The /api/v1/raia/analyze endpoint
+opens when severity_critical and all categories demonstrate citation discipline. Target:
+Day 11 consolidation review.
 
 ---
 
