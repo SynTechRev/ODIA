@@ -62,6 +62,8 @@ data/raw/
 data/reports/
 !data/cases/
 !data/statutes/
+# Day 03: ragatouille index directory (runtime, not source)
+.ragatouille/
 # 10-Day Challenge: eval query/output files are versioned source artifacts
 !data/eval/
 data/eval/*.jsonl
@@ -89,6 +91,7 @@ data/vectors/*.pkl
 # odia-v1 source corpus exports (140MB–516MB each — on HuggingFace, not git)
 data/training/odia_sft_*.jsonl
 data/training/odia_combined_*.jsonl
+data/training/odia_v2_combined_*.jsonl
 data/training/*.json
 data/training/*.log
 

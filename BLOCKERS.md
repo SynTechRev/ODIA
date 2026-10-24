@@ -79,9 +79,19 @@ are blank. Day 1 build (reasoning_mode.py scaffold) is complete. Evaluation run 
 **Handoff requires:** Mars sign-off on production retriever selection after Day 3
 three-way benchmark before Day 4 wires it into the R.A.I.A. agent.
 
-**Current state:** Days 2 and 3 not yet started. Flagging in advance.
+**Current state (2026-10-23):** Day 3 complete. Three-way benchmark ran:
+TF-IDF/BM25 vs Hybrid (BGE-M3+BM25+reranker) vs ColBERTv2 (direct MaxSim).
 
-**Mars action required at end of Day 3.**
+Watch 1 confirmed: ragatouille 0.0.9 fails Python 3.14 (voyager.voyager_ext C-ext missing).
+Replaced with direct ColBERT MaxSim via transformers. 24/24 tests pass including 6 integration
+tests using the actual colbertv2.0 weights.
+
+Decision document: `learning_log/day03_retrieval_decision.md`.
+Benchmark results: `data/eval/retrieval_benchmark_day03.json`.
+Visualization: `data/eval/retrieval_benchmark_day03.png`.
+
+**Mars action required:** Review decision document and sign off before Day 4 starts.
+Options: Case A (ColBERT as production), Case B (Ensemble), Case C (Hybrid as production).
 
 ---
 
@@ -121,11 +131,13 @@ All scripts will be written with Windows compatibility unless explicitly a Vast.
 **Handoff requires:** 100-query held-out eval set with known-relevant document IDs
 for retrieval benchmark (Days 2, 3) and evaluation harness (Day 10).
 
-**Current state:** Directory created. Set not yet built. Needs to be constructed from
-existing Mars-reviewed corpus outputs before Day 2 benchmark can run.
+**RESOLVED (2026-10-23):** `data/eval/retrieval_queries_v1.jsonl` written with 100 queries
+across 5 categories (instrument_type, dollar_range, severity_critical, gap_pattern, combined).
+Known-relevant doc IDs derived from detector output in `data/eval/fresno_signature_1k.jsonl`
+(1000 docs from layer_signature.json, sorted by document_id ascending).
 
-**Mars action required before Day 2:** Identify or confirm the 100-query set and
-known-relevant doc IDs.
+Note for Day 10: the eval set is lexically biased (derived from detector patterns).
+Day 10 harness will need semantic/adversarial queries added for a complete evaluation.
 
 ---
 
@@ -143,5 +155,20 @@ the contra_training_v1.jsonl separately.
 
 ---
 
+## B-11: Python 3.14 Incompatibility Pattern (4 packages)
+
+Documented across Days 2 and 3. Four packages fail on Python 3.14 C-extensions:
+
+| Package | Blocker | Day | Replacement |
+|---|---|---|---|
+| FlagEmbedding | pandas/datasets C-ext | 2 | sentence_transformers |
+| nano-graphrag | gensim __NUMPY_SETUP__ | 8 | networkx + pyvis |
+| marker-pdf | pillow<11 no 3.14 wheel | 5 | pymupdf + pdfplumber |
+| ragatouille | voyager.voyager_ext | 3 | direct transformers MaxSim |
+
+No Mars sign-off needed -- pattern is documented and handled per day.
+
+---
+
 *Last updated: 2026-10-23*
-*Updated by: Claude Sonnet 4.6 (session start protocol, branch initialization)*
+*Updated by: Claude Sonnet 4.6 (Days 2-3 protocol)*
