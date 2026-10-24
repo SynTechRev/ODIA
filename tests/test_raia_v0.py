@@ -153,6 +153,14 @@ def test_parse_deepen_response_clamps_confidence() -> None:
     assert conf_low == 0.0
 
 
+def test_parse_deepen_response_plain_confidence_fallback() -> None:
+    findings, conf = _parse_deepen_response(
+        "Analysis of documents.\nCONFIDENCE: 0.85\nSUMMARY: Issues found."
+    )
+    assert abs(conf - 0.85) < 0.001
+    assert "CONFIDENCE" not in findings.upper()
+
+
 # ---------------------------------------------------------------------------
 # Unit tests: individual nodes
 # ---------------------------------------------------------------------------

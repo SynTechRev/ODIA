@@ -72,6 +72,13 @@ class RAIAState(TypedDict):
 # ---------------------------------------------------------------------------
 
 
+_RAIA_SYSTEM_PROMPT = (
+    "You are O.D.I.A., an investigative audit AI analyzing civic documents. "
+    "You decompose queries, retrieve evidence, synthesize findings, and verify "
+    "citations. Follow all structured output instructions exactly."
+)
+
+
 def _build_analyze_prompt(
     query: str,
     reflection: str | None,
@@ -81,13 +88,12 @@ def _build_analyze_prompt(
         f"\nPREVIOUS ATTEMPT REFLECTION:\n{reflection}\n" if reflection else ""
     )
     return (
-        "You are O.D.I.A., an investigative audit AI analyzing civic documents.\n"
         f"ITERATION: {iteration + 1}\n"
         f"QUERY: {query}\n"
         f"{reflection_block}\n"
         "Decompose this query into 2-4 specific sub-questions each targeting a "
         "different investigative angle. Then state the primary analytical lens.\n\n"
-        "Respond in this exact format:\n"
+        "Respond in this exact format and nothing else:\n"
         "SUB_QUESTIONS:\n"
         "1. [sub-question]\n"
         "2. [sub-question]\n\n"
@@ -135,32 +141,44 @@ def _build_deepen_prompt(
         issues_text = "\n".join(f"    - {iss}" for iss in issues)
         passage_lines.append(f"  [doc_id:{doc_id}] {title}\n{issues_text}")
     passages_block = "\n".join(passage_lines)
+    # Show a concrete example ID so the model does not copy the placeholder.
+    example_id = passages[0].get("document_id", "a1b2c3d4") if passages else "a1b2c3d4"
     return (
-        "You are O.D.I.A., an investigative audit AI.\n"
         f"QUERY: {query}\n"
         f"ANALYTICAL ANGLE: {angle}\n"
         f"SUB-QUESTIONS:\n{sq_text}\n\n"
-        "Synthesize a specific investigative finding from the passages below.\n"
+        "Write a specific investigative finding using only the passages below.\n"
         "Rules:\n"
-        "  - Cite every specific document using the format (doc_id:XXXX) "
-        "where XXXX is the exact doc_id shown in PASSAGES.\n"
+        f"  - Cite documents as (doc_id:<id>) using the exact id from PASSAGES, "
+        f"for example: (doc_id:{example_id[:16]}...)\n"
         "  - Only cite doc_ids that appear verbatim in the PASSAGES section.\n"
-        "  - End your response with a JSON confidence block on its own line: "
-        '{"confidence": 0.XX}\n\n'
-        f"PASSAGES:\n{passages_block}"
+        '  - End your response with: {"confidence": 0.85} '
+        "(replace 0.85 with your actual confidence between 0.00 and 1.00)\n\n"
+        f"PASSAGES:\n{passages_block}\n\n"
+        "FINDING:"
     )
 
 
 def _parse_deepen_response(response: str) -> tuple[str, float]:
     confidence = 0.5
+    # Primary: JSON block {"confidence": 0.XX}
     match = re.search(r'\{"confidence":\s*(-?[0-9.]+)\}', response)
     if match:
         try:
             confidence = max(0.0, min(1.0, float(match.group(1))))
         except ValueError:
             pass
-    findings = re.sub(r'\{"confidence":\s*[0-9.]+\}', "", response).strip()
-    return findings, confidence
+    else:
+        # Fallback: plain "CONFIDENCE: 0.XX" emitted by some models
+        match = re.search(r"CONFIDENCE:\s*([0-9.]+)", response, re.IGNORECASE)
+        if match:
+            try:
+                confidence = max(0.0, min(1.0, float(match.group(1))))
+            except ValueError:
+                pass
+    findings = re.sub(r'\{"confidence":\s*[0-9.]+\}', "", response)
+    findings = re.sub(r"CONFIDENCE:\s*[0-9.]+", "", findings, flags=re.IGNORECASE)
+    return findings.strip(), confidence
 
 
 def _extract_citations(text: str) -> list[str]:
@@ -199,7 +217,9 @@ def analyze_node(state: RAIAState, provider: BaseLLMProvider) -> RAIAState:
         reflection=state.get("reflection"),
         iteration=state["iteration"],
     )
-    response = provider.generate(prompt=prompt, context="", max_tokens=512)
+    response = provider.generate(
+        prompt=prompt, context="", max_tokens=512, system_prompt=_RAIA_SYSTEM_PROMPT
+    )
     sub_questions, angle = _parse_analyze_response(response)
     state["sub_questions"] = sub_questions
     state["analytical_angle"] = angle
@@ -251,7 +271,9 @@ def deepen_node(state: RAIAState, provider: BaseLLMProvider) -> RAIAState:
         passages=state["retrieved_passages"],
         angle=state["analytical_angle"],
     )
-    response = provider.generate(prompt=prompt, context="", max_tokens=1024)
+    response = provider.generate(
+        prompt=prompt, context="", max_tokens=1024, system_prompt=_RAIA_SYSTEM_PROMPT
+    )
     findings, confidence = _parse_deepen_response(response)
     state["deepened_findings"] = findings
     state["confidence"] = confidence
