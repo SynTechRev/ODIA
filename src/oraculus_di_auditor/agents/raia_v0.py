@@ -141,7 +141,7 @@ def _build_deepen_prompt(
         issues_text = "\n".join(f"    - {iss}" for iss in issues)
         passage_lines.append(f"  [doc_id:{doc_id}] {title}\n{issues_text}")
     passages_block = "\n".join(passage_lines)
-    # Show a concrete example ID so the model does not copy the placeholder.
+    # Use the full first passage ID as example so the model sees a real-looking ID.
     example_id = passages[0].get("document_id", "a1b2c3d4") if passages else "a1b2c3d4"
     return (
         f"QUERY: {query}\n"
@@ -149,11 +149,11 @@ def _build_deepen_prompt(
         f"SUB-QUESTIONS:\n{sq_text}\n\n"
         "Write a specific investigative finding using only the passages below.\n"
         "Rules:\n"
-        f"  - Cite documents as (doc_id:<id>) using the exact id from PASSAGES, "
-        f"for example: (doc_id:{example_id[:16]}...)\n"
+        f"  - Cite each document you reference using the format (doc_id:{example_id})\n"
+        "    Copy the doc_id exactly as it appears in PASSAGES. Do not truncate it.\n"
         "  - Only cite doc_ids that appear verbatim in the PASSAGES section.\n"
-        '  - End your response with: {"confidence": 0.85} '
-        "(replace 0.85 with your actual confidence between 0.00 and 1.00)\n\n"
+        '  - End your response with: {"confidence": 0.73} '
+        "(replace 0.73 with your actual confidence between 0.00 and 1.00)\n\n"
         f"PASSAGES:\n{passages_block}\n\n"
         "FINDING:"
     )
