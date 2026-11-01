@@ -26,7 +26,16 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from rank_bm25 import BM25Okapi
+
+# rank_bm25 is optional at import time; only needed when HybridRetriever.index()
+# is called. This allows the module to be imported in CI environments without
+# rank_bm25 installed (e.g. when only testing ColBERT or other retrievers).
+try:
+    from rank_bm25 import BM25Okapi as _BM25Okapi
+
+    _BM25_AVAILABLE = True
+except ImportError:
+    _BM25_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +88,7 @@ class HybridRetriever:
 
         self._dense_model = None
         self._rerank_model = None
-        self._bm25: BM25Okapi | None = None
+        self._bm25: Any | None = None
         self._doc_ids: list[str] = []
         self._doc_texts: list[str] = []
         self._docs: list[dict[str, Any]] = []
@@ -144,9 +153,14 @@ class HybridRetriever:
         self._doc_ids = [d["document_id"] for d in documents]
         self._doc_texts = [_doc_text(d) for d in documents]
 
+        if not _BM25_AVAILABLE:
+            raise ImportError(
+                "rank_bm25 is required to use HybridRetriever. "
+                "Install it with: pip install rank-bm25"
+            )
         logger.info("Building BM25 index over %d docs", len(documents))
         tokenized = [_tokenize(t) for t in self._doc_texts]
-        self._bm25 = BM25Okapi(tokenized)
+        self._bm25 = _BM25Okapi(tokenized)
 
         logger.info(
             "Encoding %d docs with BGE-M3 (batch_size=%d)", len(documents), batch_size

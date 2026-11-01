@@ -18,6 +18,7 @@ Usage:
   python -I scripts/raia_severity_critical_gate.py --model odia-v2 --baseline
   python -I scripts/raia_severity_critical_gate.py --min-pass 2 --out data/eval/gate_day11.json
 """
+
 import argparse
 import json
 import re

@@ -10,6 +10,7 @@ Usage:
   python -I scripts/build_jag_subgraph.py --db oraculus_audit.db --out-dir data/graphs
   python -I scripts/build_jag_subgraph.py --json-only
 """
+
 import argparse
 import sys
 from pathlib import Path

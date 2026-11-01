@@ -7,6 +7,7 @@ Usage:
   python -I scripts/run_eval_harness.py --judge ollama
   python -I scripts/run_eval_harness.py --out data/eval/scorecard_day10.json
 """
+
 import argparse
 import sys
 from pathlib import Path

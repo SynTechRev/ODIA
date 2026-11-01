@@ -91,8 +91,7 @@ def test_parse_invalid_xml(tmp_path):
 
 def test_extract_text_from_element():
     """Test extracting text from XML element."""
-    root = ET.fromstring(
-        """
+    root = ET.fromstring("""
 <root>
     <a>Text A</a>
     <b>Text B</b>
@@ -100,8 +99,7 @@ def test_extract_text_from_element():
         <d>Nested D</d>
     </c>
 </root>
-"""
-    )
+""")
 
     text = extract_text_from_xml(root)
 
@@ -112,15 +110,13 @@ def test_extract_text_from_element():
 
 def test_extract_text_preserves_order():
     """Test that text extraction preserves document order."""
-    root = ET.fromstring(
-        """
+    root = ET.fromstring("""
 <doc>
     <p>First paragraph</p>
     <p>Second paragraph</p>
     <p>Third paragraph</p>
 </doc>
-"""
-    )
+""")
 
     text = extract_text_from_xml(root)
     lines = [line.strip() for line in text.split("\n") if line.strip()]
@@ -132,15 +128,13 @@ def test_extract_text_preserves_order():
 
 def test_extract_text_handles_empty_elements():
     """Test extraction with empty elements."""
-    root = ET.fromstring(
-        """
+    root = ET.fromstring("""
 <doc>
     <p>Text before</p>
     <empty></empty>
     <p>Text after</p>
 </doc>
-"""
-    )
+""")
 
     text = extract_text_from_xml(root)
 
@@ -150,8 +144,7 @@ def test_extract_text_handles_empty_elements():
 
 def test_extract_text_handles_whitespace():
     """Test that whitespace is handled correctly."""
-    root = ET.fromstring(
-        """
+    root = ET.fromstring("""
 <doc>
     <p>  Text with spaces  </p>
     <p>
@@ -159,8 +152,7 @@ def test_extract_text_handles_whitespace():
         text
     </p>
 </doc>
-"""
-    )
+""")
 
     text = extract_text_from_xml(root)
 

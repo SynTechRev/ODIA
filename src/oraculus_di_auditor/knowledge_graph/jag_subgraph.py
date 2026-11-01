@@ -78,16 +78,14 @@ def _query_jag_findings(db_path: Path) -> dict[str, JurisdictionFindings]:
     findings: dict[str, JurisdictionFindings] = {}
 
     # Anti-supplanting (critical)
-    rows = conn.execute(
-        """
+    rows = conn.execute("""
         SELECT d.jurisdiction, COUNT(*) as cnt
         FROM anomalies a
         JOIN analyses an ON a.analysis_id = an.id
         JOIN documents d ON an.document_id = d.document_id
         WHERE a.anomaly_id = 'grant:jag-without-anti-supplanting'
         GROUP BY d.jurisdiction
-    """
-    ).fetchall()
+    """).fetchall()
     for r in rows:
         juris = r["jurisdiction"]
         if juris not in findings:
@@ -95,15 +93,13 @@ def _query_jag_findings(db_path: Path) -> dict[str, JurisdictionFindings]:
         findings[juris].anti_supplanting_count = r["cnt"]
 
     # JAG-funded surveillance (high) with vendor names
-    rows2 = conn.execute(
-        """
+    rows2 = conn.execute("""
         SELECT d.jurisdiction, a.details_json
         FROM anomalies a
         JOIN analyses an ON a.analysis_id = an.id
         JOIN documents d ON an.document_id = d.document_id
         WHERE a.anomaly_id = 'grant:jag-funded-surveillance'
-    """
-    ).fetchall()
+    """).fetchall()
     for r in rows2:
         juris = r["jurisdiction"]
         if juris not in findings:
@@ -503,8 +499,7 @@ def export_graph_html(
         )
 
     # Physics layout for DAG readability
-    net.set_options(
-        """
+    net.set_options("""
 {
   "physics": {
     "hierarchicalRepulsion": {
@@ -540,8 +535,7 @@ def export_graph_html(
     "keyboard": true
   }
 }
-"""
-    )
+""")
 
     net.save_graph(str(output_path))
     logger.info("Graph HTML exported to %s", output_path)

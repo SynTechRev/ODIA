@@ -25,6 +25,7 @@ Usage:
   python -I scripts/generate_raia_traces.py --max-iterations 5
   python -I scripts/generate_raia_traces.py --out data/eval/raia_custom.jsonl
 """
+
 import argparse
 import json
 import sqlite3

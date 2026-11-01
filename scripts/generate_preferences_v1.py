@@ -19,6 +19,7 @@ Usage:
   python -I scripts/generate_preferences_v1.py --input data/eval/raia_day04_traces.jsonl
   python -I scripts/generate_preferences_v1.py --output data/preferences_v1.jsonl
 """
+
 import argparse
 import json
 import re

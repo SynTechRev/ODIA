@@ -4,6 +4,7 @@
 The final phase that completes the Oraculus system by unifying all prior phases
 into a self-aware, recursively-optimizing, deterministic intelligence architecture.
 """
+
 from .aer20_service import Phase20Service
 from .schemas import (
     AlignmentAnalysis,

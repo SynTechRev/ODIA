@@ -25,6 +25,7 @@ HybridRetriever replacing the _TFIDFRetrieverShim:
 The raia_v0 agent reads data/vectors/hybrid_index/ if the --retriever flag
 is set to "hybrid" (default still "tfidf" until index exists).
 """
+
 import argparse
 import json
 import logging

@@ -137,7 +137,7 @@ def deskew_image(image: np.ndarray) -> np.ndarray:
             return image
 
         # Rotate image to correct skew
-        (h, w) = image.shape[:2]
+        h, w = image.shape[:2]
         center = (w // 2, h // 2)
         rotation_matrix = cv2.getRotationMatrix2D(center, median_angle, 1.0)
         rotated = cv2.warpAffine(

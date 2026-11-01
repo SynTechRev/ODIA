@@ -1,9 +1,9 @@
 """
-export_mas_corpus.py — Export ODIA audit DB to Opus-readable JSON files.
+export_mas_corpus.py - Export ODIA audit DB to Opus-readable JSON files.
 
 Produces a set of structured JSON files in data/mas_export/ that can be
 uploaded directly to a Claude.ai project folder for MAS synthesis by an
-Opus model.  Uses only stdlib sqlite3 — no SQLAlchemy required.
+Opus model.  Uses only stdlib sqlite3 - no SQLAlchemy required.
 
 Usage:
     python scripts/export_mas_corpus.py
@@ -11,14 +11,14 @@ Usage:
     python scripts/export_mas_corpus.py --db "C:/path/to/oraculus_audit.db"
     python scripts/export_mas_corpus.py --out data/mas_export
 
-Output files (full export — no --jurisdiction flag):
-    CORPUS_INDEX.json              — master stats across all jurisdictions
-    SEVERITY_MATRIX.json           — severity x layer heatmap
-    CROSS_JURISDICTION_PATTERNS.json — finding patterns present in 2+ jurisdictions
-    {jurisdiction}_MAS.json        — full per-jurisdiction finding detail
+Output files (full export - no --jurisdiction flag):
+    CORPUS_INDEX.json              - master stats across all jurisdictions
+    SEVERITY_MATRIX.json           - severity x layer heatmap
+    CROSS_JURISDICTION_PATTERNS.json - finding patterns present in 2+ jurisdictions
+    {jurisdiction}_MAS.json        - full per-jurisdiction finding detail
 
-Output files (single-jurisdiction export — --jurisdiction specified):
-    {jurisdiction}_MAS.json        — full finding detail for that jurisdiction only
+Output files (single-jurisdiction export - --jurisdiction specified):
+    {jurisdiction}_MAS.json        - full finding detail for that jurisdiction only
     (corpus-wide files are skipped; use full export to regenerate those)
 """
 
@@ -67,7 +67,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         print(f"Filter:    jurisdiction = {jurisdiction!r}")
 
     # ------------------------------------------------------------------
-    # 1. Load findings — optionally filtered to a single jurisdiction
+    # 1. Load findings - optionally filtered to a single jurisdiction
     # ------------------------------------------------------------------
     print("Loading findings...")
     if jurisdiction:
@@ -98,8 +98,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
             (jurisdiction,),
         ).fetchall()
     else:
-        rows = con.execute(
-            """
+        rows = con.execute("""
             SELECT
                 d.jurisdiction,
                 d.document_id,
@@ -120,8 +119,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
             JOIN analyses   al ON al.id            = am.analysis_id
             JOIN documents  d  ON d.document_id    = al.document_id
             ORDER BY d.jurisdiction, al.scalar_score DESC, am.severity
-        """
-        ).fetchall()
+        """).fetchall()
 
     print(f"Loaded {len(rows):,} finding rows")
     if jurisdiction and len(rows) == 0:
@@ -244,7 +242,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         )
 
     # ------------------------------------------------------------------
-    # 4. Corpus-wide files — skipped when --jurisdiction is set
+    # 4. Corpus-wide files - skipped when --jurisdiction is set
     # ------------------------------------------------------------------
     if jurisdiction:
         con.close()
@@ -289,7 +287,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         "note": (
             "TCPD corpus comprises public-facing meeting records only (CCP, JJDPC, MJJCC "
             "divisions). Procurement contracts, SEU operational records, and grant "
-            "applications are not publicly disclosed — expected via CPRA-004 response. "
+            "applications are not publicly disclosed - expected via CPRA-004 response. "
             "All other Tulare County jurisdictions are complete."
         ),
     }
@@ -301,11 +299,10 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
     print(f"\nCorpus index -> {idx_path.name} ({idx_path.stat().st_size // 1024} KB)")
 
     # ------------------------------------------------------------------
-    # 5. SEVERITY_MATRIX.json — severity × layer heatmap
+    # 5. SEVERITY_MATRIX.json - severity × layer heatmap
     # ------------------------------------------------------------------
     print("Building severity matrix...")
-    sev_layer_rows = con.execute(
-        """
+    sev_layer_rows = con.execute("""
         SELECT
             d.jurisdiction,
             am.severity,
@@ -316,8 +313,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         JOIN documents d  ON d.document_id = al.document_id
         GROUP BY d.jurisdiction, am.severity, am.layer
         ORDER BY d.jurisdiction, am.severity, am.layer
-    """
-    ).fetchall()
+    """).fetchall()
 
     matrix: dict[str, dict] = defaultdict(lambda: defaultdict(dict))
     all_layers: set = set()
@@ -440,7 +436,7 @@ def export(db_path: Path, out_dir: Path, jurisdiction: str | None = None) -> Non
         print(f"  {f.name:55s}  {size_kb:>6,} KB")
     print()
     print("Upload order for Opus MAS synthesis:")
-    print("  1. CORPUS_INDEX.json           (start here — gives full landscape)")
+    print("  1. CORPUS_INDEX.json           (start here - gives full landscape)")
     print("  2. CROSS_JURISDICTION_PATTERNS.json (systemic patterns)")
     print("  3. SEVERITY_MATRIX.json        (risk heatmap by layer)")
     print("  4. Per-jurisdiction *_MAS.json files (detail level)")

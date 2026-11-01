@@ -24,6 +24,7 @@ Post-download local step:
   python scripts/raia_severity_critical_gate.py  -- re-run Day 4 five-query eval
   (severity_critical must achieve >= 1 verified doc_id to promote /api/v1/raia/analyze)
 """
+
 import argparse
 import hashlib
 import json

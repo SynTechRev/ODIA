@@ -1,4 +1,4 @@
-"""generate_mas.py — CLI Master Audit Summary generator.
+"""generate_mas.py - CLI Master Audit Summary generator.
 
 Queries oraculus_audit.db for a jurisdiction's documents and anomaly findings,
 then renders a structured Markdown MAS document. No API server or UI required.
@@ -65,8 +65,7 @@ def _connect() -> sqlite3.Connection:
 
 
 def _list_jurisdictions(conn: sqlite3.Connection) -> list[tuple[str, int, int]]:
-    rows = conn.execute(
-        """
+    rows = conn.execute("""
         SELECT d.jurisdiction,
                COUNT(DISTINCT d.id) AS doc_count,
                COUNT(an.id)         AS finding_count
@@ -75,8 +74,7 @@ def _list_jurisdictions(conn: sqlite3.Connection) -> list[tuple[str, int, int]]:
         LEFT JOIN anomalies an ON an.analysis_id = al.id
         GROUP BY d.jurisdiction
         ORDER BY doc_count DESC
-        """
-    ).fetchall()
+        """).fetchall()
     return [(r["jurisdiction"], r["doc_count"], r["finding_count"]) for r in rows]
 
 
@@ -151,7 +149,7 @@ def _render(
     lines: list[str] = []
 
     lines += [
-        f"# Master Audit Summary — {display}",
+        f"# Master Audit Summary - {display}",
         f"**Generated:** {ts}  ",
         "**ODIA Version:** 3.8.x  ",
         f"**Minimum Severity Filter:** {min_severity.upper()}  ",
@@ -240,7 +238,7 @@ def _render(
         lines += [
             "---",
             "",
-            "## High-Severity Documents (sample — top 20)",
+            "## High-Severity Documents (sample - top 20)",
             "",
             "| Jurisdiction | Title | High Findings |",
             "|-------------|-------|--------------|",
@@ -268,27 +266,27 @@ def _render(
     recs: list[str] = []
     if sev_counts.get("high", 0) > 0:
         recs.append(
-            f"**Immediate Review Required** — {sev_counts['high']:,} high-severity findings "
+            f"**Immediate Review Required** - {sev_counts['high']:,} high-severity findings "
             "identified. Legal counsel and department heads should be briefed on flagged documents."
         )
     if layer_counts.get("fiscal", 0) > 50:
         recs.append(
-            f"**Fiscal Audit** — {layer_counts['fiscal']:,} fiscal irregularities detected. "
+            f"**Fiscal Audit** - {layer_counts['fiscal']:,} fiscal irregularities detected. "
             "Recommend independent financial review of contracts and expenditure authorization chains."
         )
     if layer_counts.get("surveillance", 0) > 20:
         recs.append(
-            f"**Surveillance Policy Review** — {layer_counts['surveillance']:,} surveillance-related "
+            f"**Surveillance Policy Review** - {layer_counts['surveillance']:,} surveillance-related "
             "findings. Recommend Civil Liberties Impact Assessment under AB 481 framework."
         )
     if layer_counts.get("procurement", 0) > 20:
         recs.append(
-            f"**Procurement Compliance** — {layer_counts['procurement']:,} procurement timeline "
+            f"**Procurement Compliance** - {layer_counts['procurement']:,} procurement timeline "
             "anomalies. Review bid documentation and competitive solicitation records."
         )
     if any(k.startswith("l") for k in layer_counts):
         recs.append(
-            "**CPRA Compliance** — Legal layer detectors flagged potential public records "
+            "**CPRA Compliance** - Legal layer detectors flagged potential public records "
             "access violations. Cross-reference with CPRA request logs."
         )
     if not recs:

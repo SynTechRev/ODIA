@@ -13,6 +13,7 @@ Usage:
   python -I scripts/smoke_test_dpo.py --mode forward  # forward pass (GPU needed)
   python -I scripts/smoke_test_dpo.py --beta 0.05    # test a specific beta (Watch 1)
 """
+
 import argparse
 import json
 import re
