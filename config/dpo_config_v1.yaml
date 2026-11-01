@@ -1,0 +1,68 @@
+# DPO training configuration for odia-v3 (Day 6)
+# Based on: Rafailov et al., "Direct Preference Optimization" (2023)
+# Requires: trl >= 0.9, transformers, unsloth (on Vast.ai instance)
+#
+# Run on Vast.ai RTX 4090 (Day 11 session) after smoke test passes locally.
+# Smoke test: python -I scripts/smoke_test_dpo.py
+
+model:
+  base_model: odia-v2           # deployed locally; load from D:\ODIA\models\odia-v2.q4_k_m.gguf
+  hf_base: unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit  # for Vast.ai (pull from HF)
+  quantization: q4_k_m
+  max_seq_length: 2048
+
+# DPO hyperparameters
+# Watch 1: beta sweep for production run -- start at 0.1, sweep across all values below
+dpo:
+  beta: 0.1                     # KL penalty coefficient; increase -> more conservative
+  beta_sweep: [0.05, 0.1, 0.2, 0.3]  # run smoke tests across these before full training
+  loss_type: sigmoid            # standard DPO loss (Rafailov eq. 7)
+  label_smoothing: 0.0          # 0 = pure DPO; > 0 = IPO-style smoothing
+
+training:
+  epochs: 5                     # 5 pairs x 5 epochs = 25 steps (enough signal)
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 1   # effective batch size = 1; each pair = 1 step
+  learning_rate: 5.0e-7         # DPO needs lower LR than SFT; 1e-7 to 1e-6 range
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05            # ~1 warmup step out of 25 -- don't waste budget
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  fp16: false
+  bf16: true                    # RTX 4090 supports bf16 natively
+  optim: adamw_8bit             # 8-bit Adam for VRAM efficiency
+  logging_steps: 1
+  save_steps: 50
+  seed: 42
+
+# Watch 2: dual-model memory footprint
+# Policy model (training) + Reference model (frozen) simultaneously in VRAM.
+# RTX 4090 24GB: dual Llama-3.1-8B Q4_K_M ~10GB each = ~10-12GB peak.
+# Safe on RTX 4090; constrained on GTX 1650 (run smoke test in format-only mode locally).
+memory:
+  reference_model_offload: false   # set true if OOM on smaller GPU
+  max_memory_mb: 20000            # 20GB headroom ceiling on RTX 4090
+
+data:
+  train_file: data/preferences_v1.jsonl
+  format: prompt_chosen_rejected    # TRL DPOTrainer expects: {"prompt", "chosen", "rejected"}
+  max_pairs: null                   # null = use all pairs; set int to subsample
+
+output:
+  output_dir: models/odia-v3-dpo-lora
+  save_merged: false               # merge adapters at Day 11 on Vast.ai
+  hub_model_id: SynTechRev/odia-v3-dpo  # private HuggingFace repo
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  bias: none

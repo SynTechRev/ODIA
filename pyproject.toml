@@ -151,6 +151,14 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "src/oraculus_di_auditor/aer20/*.py" = ["E501", "C901"]
 "src/oraculus_di_auditor/reporting/models.py" = ["C901"]
 "src/oraculus_di_auditor/reporting/plain_language.py" = ["E501"]
+"src/oraculus_di_auditor/eval/harness.py" = ["E501"]
+"src/oraculus_di_auditor/knowledge_graph/jag_subgraph.py" = ["E501"]
+"src/oraculus_di_auditor/memory/three_tier.py" = ["E501"]
+"src/oraculus_di_auditor/tools/detector_tools.py" = ["E501"]
+"scripts/raia_severity_critical_gate.py" = ["E501"]
+"scripts/smoke_test_dpo.py" = ["E501", "E741"]
+"scripts/train_dpo.py" = ["E501", "E741"]
+"scripts/convert_dpo_to_gguf.py" = ["E501"]
 # v2.7.10 — _markdown_to_docx_pythondocx is an intentionally long
 # switchboard parser for the audit-report Markdown subset. Splitting
 # it into helpers obscures the "one rule per Markdown construct"

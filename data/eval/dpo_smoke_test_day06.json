@@ -1,0 +1,66 @@
+{
+  "mode": "format",
+  "run_date": "2026-10-31T22:26:57.785743+00:00",
+  "preferences_file": "data\\preferences_v1.jsonl",
+  "beta_config": 0.1,
+  "format_ok": true,
+  "signal_check": {
+    "total_pairs": 5,
+    "signal_clear": 5,
+    "signal_unclear": 0,
+    "length_ratio_ok": 5,
+    "details": [
+      {
+        "pair_index": 0,
+        "chosen_citations": 1,
+        "rejected_citations": 0,
+        "chosen_len": 645,
+        "rejected_len": 616,
+        "length_ratio": 0.955,
+        "length_ratio_ok": true,
+        "signal_clear": true
+      },
+      {
+        "pair_index": 1,
+        "chosen_citations": 1,
+        "rejected_citations": 0,
+        "chosen_len": 429,
+        "rejected_len": 406,
+        "length_ratio": 0.946,
+        "length_ratio_ok": true,
+        "signal_clear": true
+      },
+      {
+        "pair_index": 2,
+        "chosen_citations": 0,
+        "rejected_citations": 0,
+        "chosen_len": 836,
+        "rejected_len": 807,
+        "length_ratio": 0.965,
+        "length_ratio_ok": true,
+        "signal_clear": true
+      },
+      {
+        "pair_index": 3,
+        "chosen_citations": 1,
+        "rejected_citations": 0,
+        "chosen_len": 273,
+        "rejected_len": 243,
+        "length_ratio": 0.89,
+        "length_ratio_ok": true,
+        "signal_clear": true
+      },
+      {
+        "pair_index": 4,
+        "chosen_citations": 1,
+        "rejected_citations": 0,
+        "chosen_len": 323,
+        "rejected_len": 295,
+        "length_ratio": 0.913,
+        "length_ratio_ok": true,
+        "signal_clear": true
+      }
+    ]
+  },
+  "verdict": "PASS"
+}
