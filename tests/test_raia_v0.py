@@ -13,6 +13,11 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
+
+# run_raia -> build_raia_graph -> langgraph.graph.StateGraph. Skip this module
+# in CI environments where langgraph is not installed.
+pytest.importorskip("langgraph")
+
 from oraculus_di_auditor.agents.raia_v0 import (
     RAIAState,
     _extract_citations,

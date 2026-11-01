@@ -159,6 +159,8 @@ select = ["E", "F", "W", "I", "N", "UP", "C90", "B"]
 "scripts/smoke_test_dpo.py" = ["E501", "E741"]
 "scripts/train_dpo.py" = ["E501", "E741"]
 "scripts/convert_dpo_to_gguf.py" = ["E501"]
+"tests/test_hybrid_retrieval.py" = ["E402"]
+"tests/test_raia_v0.py" = ["E402"]
 # v2.7.10 — _markdown_to_docx_pythondocx is an intentionally long
 # switchboard parser for the audit-report Markdown subset. Splitting
 # it into helpers obscures the "one rule per Markdown construct"

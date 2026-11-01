@@ -13,6 +13,11 @@ from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
+
+# HybridRetriever.index() requires rank_bm25. Skip the whole module in CI
+# environments where rank_bm25 is not installed (pure-numpy / no-ML CI).
+pytest.importorskip("rank_bm25")
+
 from oraculus_di_auditor.retrieval.hybrid import (
     HybridRetriever,
     _doc_text,
