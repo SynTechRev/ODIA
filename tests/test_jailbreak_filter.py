@@ -28,7 +28,7 @@ def test_security_guard_prompt_non_empty():
 
 
 def test_security_guard_prompt_contains_identity():
-    assert "odia-v1" in SECURITY_GUARD_SYSTEM_PROMPT
+    assert "Oraculus" in SECURITY_GUARD_SYSTEM_PROMPT
 
 
 def test_security_guard_prompt_rejects_dan():

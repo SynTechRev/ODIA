@@ -1,0 +1,20 @@
+{"id": "q01", "category": "cpra", "query": "What CPRA denial patterns appear most frequently across Fresno County agencies and what statutory exemptions are being cited?", "reference_answer": ""}
+{"id": "q02", "category": "cpra", "query": "Which Fresno County agencies have failed to include appeal rights in CPRA denial letters and what is the legal consequence?", "reference_answer": ""}
+{"id": "q03", "category": "cpra", "query": "How many CPRA requests in the corpus show response timing violations and which agencies are responsible?", "reference_answer": ""}
+{"id": "q04", "category": "signature", "query": "What is the total count of unsigned instrument findings in the City of Fresno corpus and what is the severity breakdown?", "reference_answer": ""}
+{"id": "q05", "category": "signature", "query": "Which document types in the Fresno City corpus show the highest concentration of missing signature findings?", "reference_answer": ""}
+{"id": "q06", "category": "signature", "query": "What dollar exposure is represented by the unsigned instruments flagged in the City of Fresno fiscal documents?", "reference_answer": ""}
+{"id": "q07", "category": "jag", "query": "Which Fresno County agencies received JAG grant funding and which of those show anti-supplanting findings?", "reference_answer": ""}
+{"id": "q08", "category": "jag", "query": "What specific anti-supplanting patterns appear in the TCPD JAG findings and how many critical findings are documented?", "reference_answer": ""}
+{"id": "q09", "category": "jag", "query": "How does the JAG anti-supplanting finding pattern in Fresno City compare to Fresno County?", "reference_answer": ""}
+{"id": "q10", "category": "carpenter", "query": "Which documents in the corpus implicate the Carpenter v. United States third-party doctrine and what specific surveillance technologies are involved?", "reference_answer": ""}
+{"id": "q11", "category": "carpenter", "query": "What Carpenter analysis gaps appear in the ALPR deployment documents across Fresno jurisdictions?", "reference_answer": ""}
+{"id": "q12", "category": "carpenter", "query": "How many Flock Safety deployment documents lack Carpenter constitutional analysis and which jurisdictions are they from?", "reference_answer": ""}
+{"id": "q13", "category": "cross_jurisdiction", "query": "Which anomaly patterns appear in both Fresno City and Fresno County documents suggesting shared governance failures?", "reference_answer": ""}
+{"id": "q14", "category": "cross_jurisdiction", "query": "Compare the unsigned instrument severity distribution between Fresno County and Visalia. Which jurisdiction shows higher critical findings per document?", "reference_answer": ""}
+{"id": "q15", "category": "cross_jurisdiction", "query": "Which vendors appear in procurement anomaly findings across more than one jurisdiction in the corpus?", "reference_answer": ""}
+{"id": "q16", "category": "analytical", "query": "What are the three most critical systemic compliance failures across all seventeen jurisdictions based on finding frequency and severity?", "reference_answer": ""}
+{"id": "q17", "category": "analytical", "query": "Summarize the Brown Act violation patterns found in the corpus including which agency types show the highest frequency.", "reference_answer": ""}
+{"id": "q18", "category": "analytical", "query": "What evidence in the corpus supports a finding that surveillance procurement in Fresno County was conducted outside normal competitive bidding requirements?", "reference_answer": ""}
+{"id": "q19", "category": "analytical", "query": "Which fiscal year shows the highest concentration of audit anomalies across the Fresno metropolitan corpus and what detector layers are most active in that period?", "reference_answer": ""}
+{"id": "q20", "category": "analytical", "query": "What is the relationship between JAG federal grant compliance failures and the constitutional surveillance findings in the corpus? Does the evidence suggest a pattern?", "reference_answer": ""}

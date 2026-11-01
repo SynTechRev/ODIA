@@ -102,6 +102,31 @@ All original priorities are complete. Active work:
 13. ~~C.O.N.T.R.A. frontend nav tab~~ — Done 2026-08-11. /contra page live in v3.9.1. Detector registry, entity registry, CASI status tiles.
 14. ~~RAG pipeline end-to-end fix~~ — Done 2026-08-11. vectors copied to install dir, similarity threshold 0.3→0.05, retriever perf bug fixed. v3.9.2.
 
+## 10-Day Capability Challenge (Active: 2026-10-23 onward)
+
+Branch: `learning/10-day-challenge`. Merges to main after Day 11 consolidation review.
+Advances odia-v2 and the platform from TF-IDF + QLoRA baseline toward an agentic
+R.A.I.A. system with modern retrieval, tool-calling detectors, three-tier memory,
+reasoning-mode inference, and continuous evaluation. See `BLOCKERS.md` for
+discrepancies between the handoff document and current platform state.
+
+| Day | Domain | Build Artifact | Status |
+|---|---|---|---|
+| 1 | Reasoning Foundations | `interface/reasoning_mode.py`, reasoning_mode flag on RAG endpoint | COMPLETE 2026-10-23 |
+| 2 | Retrieval Part 1 | `retrieval/hybrid.py` (BGE-M3 + BM25 + bge-reranker-v2-m3) | COMPLETE 2026-10-23 |
+| 3 | Retrieval Part 2 | `retrieval/colbert_index.py` (ColBERTv2 direct MaxSim, ragatouille incompatible w/ 3.14) | COMPLETE 2026-10-23 |
+| 4 | Agentic Orchestration | `agents/raia_v0.py` (LangGraph analyze/xref/deepen/verify cycle) | COMPLETE 2026-10-24 (4/5 verify_passed conf=1.00; severity_critical model limit documented) |
+| 5 | Document AI | pymupdf bakeoff on 1,107 TCPD PrimeGov PDFs (ColPali/Nougat/marker-pdf deferred to Day 11 -- Python 3.14 + VRAM constraints) | COMPLETE 2026-10-31 (pymupdf wins all cats; pypdf/pdfplumber content duplication bug confirmed on Cat C; D-05 resolved: 81,309/271,245/16 jurisd. authoritative) |
+| 6 | Preference Optimization | `data/preferences_v1.jsonl`, DPO config, 10-step smoke test | COMPLETE 2026-10-31 (B-6 Session B signed off; B-10 Option B: RAIA run3 traces as chosen; 5 DPO pairs; format smoke test PASS 5/5 signal clear 5/5 Watch3 ratio OK; forward mode deferred Day 11 Vast.ai) |
+| 7 | Neurosymbolic Integration | `tools/detector_tools.py` (L-1 through L-10 as callable tools) | COMPLETE 2026-10-31 (10 @tool wrappers + DetectorRegistry + legal_scan_node; smoke tests PASS; B-7 SIGNED OFF 2026-10-31) |
+| 8 | Knowledge Graph | `knowledge_graph/jag_subgraph.py` (networkx + pyvis, nano-graphrag replaced per B-11) | COMPLETE 2026-10-31 (50 nodes/105 edges; 614 critical + 146 high across 14 jurisdictions; 8 vendors; Watch 1/2 PASS; data/graphs/jag_anti_supplanting.json + .html) |
+| 9 | Memory Architecture | `memory/three_tier.py` (working + archival + episodic; Letta unavailable, native SQLite impl per B-11) | COMPLETE 2026-10-31 (WorkingMemory + EpisodicMemory + ArchivalMemory + ThreeTierMemory; bootstrap from Day 8 JAG subgraph + Day 4 traces; all smoke tests PASS; B-7 detector hints wired) |
+| 10 | Evaluation Harness | `eval/harness.py` (7-metric scorecard + judge model + CI gate) | COMPLETE 2026-10-31 (HeuristicJudge + OllamaJudge; 6/7 gate metrics PASS; iteration_efficiency FAIL 0.3333 < 0.4000 -- expected pre-DPO baseline; Day 11 post-DPO re-run is production gate) |
+| 11 | Vast.ai DPO Training | odia-v3.q4_k_m.gguf (4.6 GB), severity_critical gate PASS, Modelfile.v3 | COMPLETE 2026-11-01 (5 pairs, 5 epochs, beta=0.05, RTX 4090 6.49 GB peak VRAM; severity_critical sc-01 verify_passed 3 citations; odia-v3 authorized for /api/v1/raia/analyze; HybridRetriever index deferred B-13; post-DPO traces deferred B-14) |
+
+Mars review checkpoints: end of Day 3 (retrieval decision), Day 5 (document AI decision),
+Day 7 (detector tool-calling pattern), Day 10 (evaluation baseline), Day 11 (consolidation PR).
+
 **Active next steps**:
 - ~~RAG index rebuild~~ — Done 2026-10-16. 81,309 corpus / 271,245 ACE / 3,937 JIM. Copied to `Roaming\ODIA\data\vectors`.
 - ~~split_mas_export.py~~ — Done 2026-07-31. Files in `data/mas_export/fresnocounty_splits/` and `data/mas_export/fresno_splits/` (35 files).
@@ -119,7 +144,7 @@ All original priorities are complete. Active work:
 - **P0**: Fresno Metropolitan MAS V4.0 — next synthesis integrating City of Fresno MAS V2 + Fresno County MAS V4.0 + FPD MAS V4.0
 - **P0**: First `odia contra-ingest` pilot run on actual commercial contract PDFs (DB has 32 entities seeded, schema ready — blocked on ToS/contract PDF source files)
 - ~~S.A.B.E.R. ARCADE L-13 DanInTheWild~~ — **COMPLETE 2026-10-20** (Run 7). 512 attempts / 253 passed / 253 bypassed (50% bypass rate) / 6 null. 214 unique jailbreak prompts. MitigationBypass detector. Hitlog: `garak_runs/garak.5ae38736-2858-48be-be6a-4907d49a86a9.hitlog.jsonl`. Config: `data/saber/ai-defense/garak-l13-dan-cpu-config.yaml`. web_injection COMPLETE (8/8 probes).
-- **P1**: odia-v2 training — **327,717 examples** in `data/training/` (327,503 + 214 adversarial DAN Type 8 from ARCADE L-13). Blocked: Vast.ai credits $0 + SSH key not uploaded. Starting from odia-v1 weights: 1 epoch (~12–15h) recommended.
+- ~~**P1**: odia-v2 training~~ — **COMPLETE 2026-10-22**. 327,717 examples (56,282 reports + 271,221 explanations + 214 adversarial DAN Type 8). 1 epoch QLoRA on CMP 170HX. Q4_K_M GGUF exported. Artifacts: `SynTechRev/odia-v2` (HuggingFace private) — LoRA adapters + GGUF. Pending: download GGUF → `D:\ODIA\models\odia-v2.q4_k_m.gguf`, register in Ollama, update RAG config.
 - `odia_legal` submodule — Phase 1 foundation (CPRA crosswalk, L-9 recodification, citation parser). Critical deadline: 2028-07-02 (Sunshine Dragnet Phase Zero).
 - Multi-index RAG routing — expose `ace_collection` and `jim_collection` via `corpus_filter` in the API
 - ~~Migrate `@app.on_event("startup")` → FastAPI `lifespan` handler~~ — Already done; `api.py` uses `@asynccontextmanager` + `lifespan=_lifespan` correctly (verified 2026-10-21)
@@ -180,7 +205,7 @@ All original priorities are complete. Active work:
 - Do NOT use `datetime.utcnow()` — use `datetime.now(UTC)` (UTC imported from `datetime`)
 - Do NOT open files without `encoding="utf-8"` when reading JSON or text on Windows
 - Do NOT use `@app.on_event("startup")` — all new handlers go in the `lifespan` context manager (`api.py:116`)
-- Do NOT re-run odia-v1 training — model is complete and deployed; odia-v2 (327,717 examples in `data/training/`) is ready but blocked on Vast.ai credits + SSH key
+- Do NOT re-run odia-v1 or odia-v2 training — both complete. odia-v2: 327,717 examples, Q4_K_M GGUF at `SynTechRev/odia-v2` (HuggingFace). Next training is odia-v3 (pending ARCADE L-14 encoding adversarials + future corpus expansion).
 
 ## Running the Project
 

@@ -42,6 +42,14 @@ class RAGQueryRequest(BaseModel):  # type: ignore[misc]
             "Omit to search all loaded indexes."
         ),
     )
+    reasoning_mode: bool = Field(
+        default=False,
+        description=(
+            "Enable chain-of-thought reasoning scaffold (10-Day Challenge Day 1). "
+            "When True, the model externalizes sub-question decomposition and "
+            "evidence mapping inside <thinking> tags before the final answer."
+        ),
+    )
 
 
 class RAGQueryResponse(BaseModel):  # type: ignore[misc]
@@ -131,6 +139,7 @@ def register_rag_routes(app: Any) -> None:
             question=request.query,
             top_k=request.top_k,
             corpus_filter=request.corpus_filter,
+            reasoning_mode=request.reasoning_mode,
         )
 
         # Normalise sources to list[dict]

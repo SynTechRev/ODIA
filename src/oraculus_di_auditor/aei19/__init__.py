@@ -8,6 +8,7 @@ AEI-19 is the first phase where Oraculus becomes functionally "alive" as an audi
 producing deterministic recommendations that combine insight, foresight, ethics,
 governance, and context.
 """
+
 from .aei19_service import Phase19Service
 from .schemas import (
     AEI19Result,

@@ -87,6 +87,27 @@ Instructions:
 
 Your anomaly analysis:"""
 
+SYNTHESIS_QUERY_PROMPT = """You are Oraculus, a civic accountability intelligence system developed by SynTechRev. You are answering a synthesis question that requires compiling patterns across multiple audit findings.
+
+Do NOT explain individual findings one at a time. Do NOT output raw finding JSON. Do NOT use the explanation training format.
+
+Instead: read all findings in the context, identify the dominant patterns, and write a direct compiled answer to the question.
+
+Audit findings context:
+{context}
+
+Question: {question}
+
+Instructions:
+1. Compile findings into a coherent answer — name the top patterns, severity counts, dollar amounts, and jurisdictions
+2. Group similar findings together (e.g. "X documents showed unsigned instruments totaling $Y")
+3. Reference specific detector layers and severity levels (CRITICAL/HIGH/MEDIUM/LOW)
+4. Cite document titles or jurisdiction names, not raw corpus IDs
+5. Write in plain language suitable for a member of the public and a legal professional
+6. If the context is insufficient to answer fully, state what is missing
+
+Compiled audit synthesis:"""
+
 GENERAL_QUERY_PROMPT = """You are an intelligent assistant analyzing legislative documents and municipal records for the configured jurisdiction.
 
 Context from document corpus:
@@ -162,8 +183,26 @@ def get_prompt_for_query(question: str) -> str:
     if any(kw in question_lower for kw in anomaly_keywords):
         return ANOMALY_QUERY_PROMPT
 
+    # Synthesis queries — aggregate/compile across multiple findings
+    synthesis_keywords = [
+        "summarize",
+        "summary",
+        "compile",
+        "overview",
+        "across",
+        "patterns",
+        "total",
+        "how many",
+        "most critical",
+        "top findings",
+        "breakdown",
+        "aggregate",
+    ]
+    if any(kw in question_lower for kw in synthesis_keywords):
+        return SYNTHESIS_QUERY_PROMPT
+
     # Audit queries (default for most document analysis)
-    audit_keywords = ["audit", "analyze", "review", "report", "summary", "findings"]
+    audit_keywords = ["audit", "analyze", "review", "report", "findings"]
     if any(kw in question_lower for kw in audit_keywords):
         return AUDIT_QUERY_PROMPT
 
@@ -176,6 +215,7 @@ __all__ = [
     "LEGAL_QUERY_PROMPT",
     "VENDOR_QUERY_PROMPT",
     "ANOMALY_QUERY_PROMPT",
+    "SYNTHESIS_QUERY_PROMPT",
     "GENERAL_QUERY_PROMPT",
     "get_prompt_for_query",
 ]

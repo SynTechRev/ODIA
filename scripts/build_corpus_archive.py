@@ -1,14 +1,14 @@
-"""build_corpus_archive.py — Corpus archive and navigation index builder.
+"""build_corpus_archive.py - Corpus archive and navigation index builder.
 
 Produces a structured, navigable archive from the ODIA audit DB with:
 
   data/corpus_archive/
-    MASTER_INDEX.json               — All documents, all findings, searchable
-    by_finding/{anomaly_id}.json    — Every occurrence of each finding type
-    by_severity/{level}.json        — All findings at critical/high/medium/low
+    MASTER_INDEX.json               - All documents, all findings, searchable
+    by_finding/{anomaly_id}.json    - Every occurrence of each finding type
+    by_severity/{level}.json        - All findings at critical/high/medium/low
     {jurisdiction}/
-      index.json                    — Jurisdiction summary + doc list
-      {document_id[:16]}__{title}.json  — Per-document record with all findings
+      index.json                    - Jurisdiction summary + doc list
+      {document_id[:16]}__{title}.json  - Per-document record with all findings
 
 Each per-document record includes:
   - Full document metadata
@@ -82,8 +82,7 @@ def build_archive(
     )
 
     print("Loading documents + findings...")
-    rows = con.execute(
-        f"""
+    rows = con.execute(f"""
         SELECT
             d.document_id,
             d.title,
@@ -108,13 +107,11 @@ def build_archive(
         JOIN anomalies am ON am.analysis_id = al.id
         WHERE 1=1 {jur_clause}
         ORDER BY d.jurisdiction, al.scalar_score DESC, am.severity
-    """
-    ).fetchall()
+    """).fetchall()
     print(f"Loaded {len(rows):,} finding rows")
 
     # Also load zero-finding documents
-    zero_rows = con.execute(
-        f"""
+    zero_rows = con.execute(f"""
         SELECT
             d.document_id,
             d.title,
@@ -132,8 +129,7 @@ def build_archive(
         JOIN analyses al ON al.document_id = d.document_id
         WHERE al.anomaly_count = 0 {jur_clause}
         ORDER BY d.jurisdiction
-    """
-    ).fetchall()
+    """).fetchall()
     print(f"Loaded {len(zero_rows):,} zero-finding documents")
 
     # ------------------------------------------------------------------
@@ -364,7 +360,7 @@ def build_archive(
         print(f"done ({sum(len(doc_findings[d]) for d in doc_ids):,} findings)")
 
     # ------------------------------------------------------------------
-    # 5. by_finding index — one file per anomaly_id
+    # 5. by_finding index - one file per anomaly_id
     # ------------------------------------------------------------------
     print(
         f"\nBuilding by_finding index ({len(finding_occurrences)} unique finding types)..."
@@ -460,10 +456,10 @@ def build_archive(
         },
         "jurisdictions": jur_summaries,
         "navigation": {
-            "by_finding": "by_finding/FINDING_INDEX.json — All finding types, sorted by frequency",
-            "by_severity": "by_severity/{critical|high|medium|low}.json — All findings at each level",
-            "per_jurisdiction": "{jurisdiction}/index.json — Documents and findings for one jurisdiction",
-            "per_document": "{jurisdiction}/{doc_id[:16]}__{title}.json — Full record for one document",
+            "by_finding": "by_finding/FINDING_INDEX.json - All finding types, sorted by frequency",
+            "by_severity": "by_severity/{critical|high|medium|low}.json - All findings at each level",
+            "per_jurisdiction": "{jurisdiction}/index.json - Documents and findings for one jurisdiction",
+            "per_document": "{jurisdiction}/{doc_id[:16]}__{title}.json - Full record for one document",
         },
         "note": (
             "Text excerpt / page-level location data is not yet stored in the DB "
@@ -491,10 +487,10 @@ def build_archive(
     print(f"Archive root:           {out_dir.resolve()}")
     print()
     print("Navigation entry points:")
-    print("  MASTER_INDEX.json                — start here")
-    print("  by_finding/FINDING_INDEX.json    — browse by finding type")
-    print("  by_severity/critical.json        — all critical findings")
-    print("  {jurisdiction}/index.json        — per-jurisdiction document list")
+    print("  MASTER_INDEX.json                - start here")
+    print("  by_finding/FINDING_INDEX.json    - browse by finding type")
+    print("  by_severity/critical.json        - all critical findings")
+    print("  {jurisdiction}/index.json        - per-jurisdiction document list")
 
 
 def main() -> None:

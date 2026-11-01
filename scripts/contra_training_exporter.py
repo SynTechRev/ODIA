@@ -4,10 +4,10 @@ Converts the CONTRA corpus DB (findings + CASI scores + entity/chain context) in
 instruction-tuning JSONL examples for odia-v2 fine-tuning. Produces four example types
 designed to build commercial contract reasoning capability:
 
-  TYPE 1  — FINDING_EXPLANATION  : "What does this clause mean?" → legal analysis
-  TYPE 2  — AXIS_CLASSIFICATION   : "Which CASI axis?" → axis + severity + doctrinal anchor
-  TYPE 3  — ENTITY_AUDIT          : "Audit this entity's posture" → CASI profile + risk narrative
-  TYPE 4  — CHAIN_AUDIT           : "What foreclosure exposure does this chain create?" → CIFU analysis
+  TYPE 1  - FINDING_EXPLANATION  : "What does this clause mean?" → legal analysis
+  TYPE 2  - AXIS_CLASSIFICATION   : "Which CASI axis?" → axis + severity + doctrinal anchor
+  TYPE 3  - ENTITY_AUDIT          : "Audit this entity's posture" → CASI profile + risk narrative
+  TYPE 4  - CHAIN_AUDIT           : "What foreclosure exposure does this chain create?" → CIFU analysis
 
 Output format: newline-delimited JSON (one example per line), compatible with Unsloth
 chat-template fine-tuning (system/user/assistant turns).
@@ -48,28 +48,28 @@ _SYSTEM_PROMPT = (
 
 _AXIS_DESCRIPTIONS = {
     "data_extraction_depth": (
-        "Data Extraction Depth (DED) — the breadth and sensitivity of personal data the "
+        "Data Extraction Depth (DED) - the breadth and sensitivity of personal data the "
         "instrument authorizes collection of, including biometrics, precise geolocation, "
         "behavioral profiles, and sensitive personal information under CCPA § 1798.121."
     ),
     "modification_and_consent": (
-        "Modification & Consent (MC) — unilateral modification rights that allow the "
+        "Modification & Consent (MC) - unilateral modification rights that allow the "
         "instrument to be changed without meaningful consumer consent, typically through "
         "continued-use acceptance clauses or constructive notice provisions."
     ),
     "procedural_adhesion": (
-        "Procedural Adhesion (PA) — take-it-or-leave-it contract conditions, "
+        "Procedural Adhesion (PA) - take-it-or-leave-it contract conditions, "
         "buried or obscured material terms, and absence of meaningful opt-out "
         "that indicate substantive unconscionability under Armendariz and Sanchez v. Valencia."
     ),
     "remedy_foreclosure": (
-        "Remedy Foreclosure (RF) — provisions that eliminate, cap, or procedurally "
+        "Remedy Foreclosure (RF) - provisions that eliminate, cap, or procedurally "
         "foreclose the consumer's ability to obtain meaningful relief: jury waivers, "
         "injunctive relief bans, shortened statutes of limitations, damages caps, "
         "PAGA waivers, and biometric data release clauses."
     ),
     "enforcement_cost_asymmetry": (
-        "Enforcement Cost Asymmetry (ECA) — clauses that make individual enforcement "
+        "Enforcement Cost Asymmetry (ECA) - clauses that make individual enforcement "
         "prohibitively expensive for consumers: mandatory arbitration at JAMS/AAA, "
         "individual-only proceeding requirements, fee-shifting provisions, and "
         "multi-LLC architecture that multiplies separate arbitration obligations."
@@ -78,17 +78,17 @@ _AXIS_DESCRIPTIONS = {
 
 _SEVERITY_NARRATIVE = {
     "critical": (
-        "CRITICAL severity indicates a per se rights elimination — a clause that "
+        "CRITICAL severity indicates a per se rights elimination - a clause that "
         "categorically forecloses a California statutory right or constitutes a "
         "pre-dispute waiver that California courts void as against public policy."
     ),
     "high": (
-        "HIGH severity indicates substantial rights impairment — terms that "
+        "HIGH severity indicates substantial rights impairment - terms that "
         "materially disadvantage the consumer but may survive unconscionability "
         "challenge depending on the full contract context."
     ),
     "medium": (
-        "MEDIUM severity indicates meaningful rights restriction — provisions that "
+        "MEDIUM severity indicates meaningful rights restriction - provisions that "
         "limit remedies or disclosure obligations but do not categorically eliminate them."
     ),
     "low": (
@@ -114,8 +114,7 @@ def _generate_type1(engine, limit: int | None) -> list[dict]:
     examples = []
     with engine.connect() as conn:
         rows = conn.execute(
-            text(
-                """
+            text("""
             SELECT cf.evidence_excerpt, cf.scoring_axis, cf.severity,
                    cf.doctrinal_anchor, cf.sub_detector, cf.layer, cf.notes,
                    ce.canonical_name, cd.doc_type
@@ -128,8 +127,7 @@ def _generate_type1(engine, limit: int | None) -> list[dict]:
               AND cf.severity IN ('critical', 'high')
             ORDER BY RANDOM()
             LIMIT :lim
-        """
-            ),
+        """),
             {"lim": limit or 2000},
         ).fetchall()
 
@@ -147,8 +145,8 @@ def _generate_type1(engine, limit: int | None) -> list[dict]:
 
         assistant_msg = (
             f"This clause triggers the **{axis.replace('_', ' ').title()}** CASI axis "
-            f"({axis_desc.split(' — ')[0]}).\n\n"
-            f"**Severity**: {severity.upper()} — {sev_narr}\n\n"
+            f"({axis_desc.split(' - ')[0]}).\n\n"
+            f"**Severity**: {severity.upper()} - {sev_narr}\n\n"
             f"**Doctrinal authority**: {anchor}\n\n"
             f"**Detector**: {layer}-{sub_det}\n\n"
             f"**Analysis**: {notes or 'This provision operates to restrict consumer rights along the identified axis.'}\n\n"
@@ -180,8 +178,7 @@ def _generate_type2(engine, limit: int | None) -> list[dict]:
     examples = []
     with engine.connect() as conn:
         rows = conn.execute(
-            text(
-                """
+            text("""
             SELECT cf.evidence_excerpt, cf.scoring_axis, cf.severity, cf.layer, cf.sub_detector
             FROM contra_findings cf
             WHERE cf.evidence_excerpt IS NOT NULL
@@ -189,8 +186,7 @@ def _generate_type2(engine, limit: int | None) -> list[dict]:
               AND cf.scoring_axis IS NOT NULL
             ORDER BY RANDOM()
             LIMIT :lim
-        """
-            ),
+        """),
             {"lim": limit or 1500},
         ).fetchall()
 
@@ -207,7 +203,7 @@ def _generate_type2(engine, limit: int | None) -> list[dict]:
             f"**Primary CASI axis**: {axis.replace('_', ' ').title()} ({axis})\n\n"
             f"**Severity**: {severity.upper()}\n\n"
             f"**Detector**: {layer}, sub-detector {sub_det}\n\n"
-            f"**Axis rationale**: {_AXIS_DESCRIPTIONS.get(axis, '').split(' — ')[1] if ' — ' in _AXIS_DESCRIPTIONS.get(axis, '') else _AXIS_DESCRIPTIONS.get(axis, '')}"
+            f"**Axis rationale**: {_AXIS_DESCRIPTIONS.get(axis, '').split(' - ')[1] if ' - ' in _AXIS_DESCRIPTIONS.get(axis, '') else _AXIS_DESCRIPTIONS.get(axis, '')}"
         )
 
         examples.append(
@@ -234,8 +230,7 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
     examples = []
     with engine.connect() as conn:
         entities = conn.execute(
-            text(
-                """
+            text("""
             SELECT ce.canonical_name, ce.corporate_family,
                    COUNT(DISTINCT cd.document_hash) as docs,
                    AVG(cs.aggregate) as avg_casi, MAX(cs.aggregate) as max_casi,
@@ -248,8 +243,7 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
             HAVING docs >= 3 AND avg_casi IS NOT NULL
             ORDER BY avg_casi DESC
             LIMIT :lim
-        """
-            ),
+        """),
             {"lim": limit or 30},
         ).fetchall()
 
@@ -258,8 +252,7 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
 
             # Axis breakdown
             axis_rows = conn.execute(
-                text(
-                    """
+                text("""
                 SELECT cf.scoring_axis, cf.severity, COUNT(*) as cnt
                 FROM contra_findings cf
                 JOIN commercial_documents cd ON cd.document_hash = cf.document_hash
@@ -267,8 +260,7 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
                 WHERE ce.canonical_name = :name AND cf.scoring_axis IS NOT NULL
                 GROUP BY cf.scoring_axis, cf.severity
                 ORDER BY cf.scoring_axis, cf.severity
-            """
-                ),
+            """),
                 {"name": name},
             ).fetchall()
 
@@ -313,7 +305,7 @@ def _generate_type3(engine, limit: int | None) -> list[dict]:
                 f"## C.O.N.T.R.A. Audit Profile: {name}\n\n"
                 + (f"**Corporate family**: {family}\n\n" if family else "")
                 + f"**Corpus coverage**: {docs} documents | {findings} findings\n\n"
-                f"**CASI score**: {avg_casi:.1f} avg / {max_casi} max — **{band}** band\n\n"
+                f"**CASI score**: {avg_casi:.1f} avg / {max_casi} max - **{band}** band\n\n"
                 f"**Axis coverage**:\n{axis_lines}\n\n"
                 f"**Risk assessment**: "
                 + (
@@ -396,7 +388,7 @@ def _generate_type4(engine, limit: int | None) -> list[dict]:
         assistant_msg = (
             f"## CIFU Analysis: {chain_def['name']}\n\n"
             f"**Chain description**: {chain_def['description']}\n\n"
-            f"**CIFU score**: {cifu}/100 — **{band}**\n\n"
+            f"**CIFU score**: {cifu}/100 - **{band}**\n\n"
             f"**Chain composition**: {n} entities including {member_names}\n\n"
             f"**Active foreclosure axes**:\n{axis_lines}\n\n"
             f"**Interpretation**: {r['band_desc']} "
@@ -404,7 +396,7 @@ def _generate_type4(engine, limit: int | None) -> list[dict]:
                 f"The {n}-entity chain creates compounding exposure: a consumer who "
                 f"accepts {anchor}'s primary instrument implicitly accepts the data "
                 f"collection, arbitration, and remedy foreclosure provisions of all "
-                f"{n - 1} downstream instruments simultaneously — each with independent "
+                f"{n - 1} downstream instruments simultaneously - each with independent "
                 f"foreclosure architecture. No single CASI score captures this aggregate "
                 f"exposure; only cross-instrument CIFU analysis reveals the full foreclosure regime."
                 if cifu >= 81
@@ -431,30 +423,30 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
     """Doctrine Application: doctrinal_anchor + finding excerpt → statutory analysis.
 
     For each unique anchor with enough findings, generates an example explaining
-    exactly how the statute applies to the contract clause — building citation-grounded
+    exactly how the statute applies to the contract clause - building citation-grounded
     legal reasoning capability.
     """
     from sqlalchemy import text
 
     # Anchor descriptions mapping anchor ID → human-readable statute text
     _ANCHOR_LABELS = {
-        "CCPA_1798_100": "California Civil Code § 1798.100 (CCPA — right to know)",
-        "CCPA_1798_110": "California Civil Code § 1798.110 (CCPA — categories of personal information)",
-        "CCPA_1798_115": "California Civil Code § 1798.115 (CCPA — sharing of personal information)",
-        "CCPA_1798_120": "California Civil Code § 1798.120 (CCPA — right to opt out of sale)",
-        "CCPA_121": "California Civil Code § 1798.121 (CPRA — sensitive personal information)",
-        "CCPA_125": "California Civil Code § 1798.125 (CCPA — non-discrimination for exercising rights)",
+        "CCPA_1798_100": "California Civil Code § 1798.100 (CCPA - right to know)",
+        "CCPA_1798_110": "California Civil Code § 1798.110 (CCPA - categories of personal information)",
+        "CCPA_1798_115": "California Civil Code § 1798.115 (CCPA - sharing of personal information)",
+        "CCPA_1798_120": "California Civil Code § 1798.120 (CCPA - right to opt out of sale)",
+        "CCPA_121": "California Civil Code § 1798.121 (CPRA - sensitive personal information)",
+        "CCPA_125": "California Civil Code § 1798.125 (CCPA - non-discrimination for exercising rights)",
         "CCP_1281_97": "California Code of Civil Procedure § 1281.97 (employer/consumer arbitration deadlines)",
         "CCP_1281_98": "California Code of Civil Procedure § 1281.98 (arbitration fee waiver trigger)",
-        "FAA_9": "9 U.S.C. § 2 (Federal Arbitration Act — written arbitration provision)",
-        "FAA_3": "9 U.S.C. § 3 (Federal Arbitration Act — stay of proceedings pending arbitration)",
-        "BIPA_15": "740 ILCS 14/15 (Biometric Information Privacy Act, section 15 — duties of private entities)",
-        "BIPA_20": "740 ILCS 14/20 (Biometric Information Privacy Act, section 20 — private right of action)",
-        "FCRA_616": "15 U.S.C. § 1681n (Fair Credit Reporting Act — civil liability for willful noncompliance)",
+        "FAA_9": "9 U.S.C. § 2 (Federal Arbitration Act - written arbitration provision)",
+        "FAA_3": "9 U.S.C. § 3 (Federal Arbitration Act - stay of proceedings pending arbitration)",
+        "BIPA_15": "740 ILCS 14/15 (Biometric Information Privacy Act, section 15 - duties of private entities)",
+        "BIPA_20": "740 ILCS 14/20 (Biometric Information Privacy Act, section 20 - private right of action)",
+        "FCRA_616": "15 U.S.C. § 1681n (Fair Credit Reporting Act - civil liability for willful noncompliance)",
         "PLAID_FTC": "In re Plaid Inc., FTC File No. 2023169 (Consent Order, Aug. 2022)",
         "CCP_1670_5": "California Code of Civil Procedure § 1670.5 (unconscionable contract provisions)",
-        "CAL_LABOR_2699": "California Labor Code § 2699 (Private Attorneys General Act — PAGA civil penalties)",
-        "AB_51": "California AB 51 (Gov. Code § 12953 — mandatory arbitration ban for employees)",
+        "CAL_LABOR_2699": "California Labor Code § 2699 (Private Attorneys General Act - PAGA civil penalties)",
+        "AB_51": "California AB 51 (Gov. Code § 12953 - mandatory arbitration ban for employees)",
     }
 
     _ANCHOR_ANALYSIS = {
@@ -464,7 +456,7 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
             "precise geolocation, racial/ethnic origin, biometric data for identification, and health "
             "information. An instrument that collects SPI without a specific, separate opt-in consent "
             "mechanism violates § 1798.121(a). The provision is self-executing for California residents "
-            "and does not require a private right of action — CPPA enforcement is the primary remedy "
+            "and does not require a private right of action - CPPA enforcement is the primary remedy "
             "channel, but consumers may also raise § 1798.121 in conjunction with § 1798.150 (statutory "
             "damages) when a data breach involves SPI."
         ),
@@ -501,9 +493,7 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
     examples = []
     with engine.connect() as conn:
         # Get doctrinal anchors with substantial findings
-        anchors = conn.execute(
-            text(
-                """
+        anchors = conn.execute(text("""
             SELECT cf.doctrinal_anchor, cf.scoring_axis,
                    COUNT(*) as cnt,
                    cf.severity
@@ -514,9 +504,7 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
             GROUP BY cf.doctrinal_anchor, cf.scoring_axis, cf.severity
             HAVING cnt >= 3
             ORDER BY cnt DESC
-        """
-            )
-        ).fetchall()
+        """)).fetchall()
 
         processed: set[str] = set()
         for anchor, axis, cnt, severity in anchors:
@@ -527,8 +515,7 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
 
             # Pull representative findings for this anchor
             findings = conn.execute(
-                text(
-                    """
+                text("""
                 SELECT cf.evidence_excerpt, cf.layer, cf.severity,
                        cd.doc_type, ce.canonical_name
                 FROM contra_findings cf
@@ -539,8 +526,7 @@ def _generate_type5(engine, limit: int | None) -> list[dict]:
                   AND LENGTH(cf.evidence_excerpt) > 100
                 ORDER BY cf.severity DESC, RANDOM()
                 LIMIT 3
-            """
-                ),
+            """),
                 {"anchor": anchor},
             ).fetchall()
 
@@ -685,7 +671,7 @@ def _generate_type6(engine, limit: int | None) -> list[dict]:
         chain_results.keys(), key=lambda c: -chain_results[c]["cifu_score"]
     )
 
-    # Generate pairwise comparisons — focus on highest-CIFU pairs first, then cross-sector
+    # Generate pairwise comparisons - focus on highest-CIFU pairs first, then cross-sector
     pairs: list[tuple[str, str]] = []
     # High vs mid
     for i in range(min(4, len(chain_ids))):
@@ -752,7 +738,7 @@ def _generate_type6(engine, limit: int | None) -> list[dict]:
             f"**CIFU scores**:\n"
             f"  - {name_a}: {cifu_a}/100 ({band_a})\n"
             f"  - {name_b}: {cifu_b}/100 ({band_b})\n"
-            f"  - Delta: {abs(cifu_a - cifu_b):.1f} points — "
+            f"  - Delta: {abs(cifu_a - cifu_b):.1f} points - "
             + (
                 f"{name_a} is the more severe foreclosure structure."
                 if cifu_a > cifu_b
@@ -769,7 +755,7 @@ def _generate_type6(engine, limit: int | None) -> list[dict]:
             f"{name_a} has {ra['n_entities']} entities across {sum(m.get('docs',0) for m in ra.get('members',[]))} documents, "
             f"while {name_b} has {rb['n_entities']} entities across {sum(m.get('docs',0) for m in rb.get('members',[]))} documents. "
             + (
-                "Document volume reflects corpus penetration but does not automatically indicate higher severity — "
+                "Document volume reflects corpus penetration but does not automatically indicate higher severity - "
                 "CIFU measures structural breadth and depth, not document volume."
             )
             + "\n\n**Chain-crossing consumer risk**:\n"

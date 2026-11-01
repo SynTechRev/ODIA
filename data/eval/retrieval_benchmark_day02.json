@@ -1,0 +1,1674 @@
+{
+  "docs": 1000,
+  "queries": 100,
+  "systems": [
+    {
+      "system": "tfidf_bm25",
+      "aggregate": {
+        "mrr_at_10": 0.81875,
+        "recall_at_10": 0.743,
+        "recall_at_20": 0.759,
+        "ndcg_at_10": 0.7548043458587057
+      },
+      "by_category": {
+        "instrument_type": {
+          "mrr_at_10": 0.875,
+          "recall_at_10": 0.8949999999999999
+        },
+        "dollar_range": {
+          "mrr_at_10": 0.49375,
+          "recall_at_10": 0.28500000000000003
+        },
+        "severity_critical": {
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7899999999999999
+        },
+        "gap_pattern": {
+          "mrr_at_10": 0.725,
+          "recall_at_10": 0.745
+        },
+        "combined": {
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0
+        }
+      },
+      "per_query": [
+        {
+          "id": "q001",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q002",
+          "category": "instrument_type",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.9,
+          "recall_at_20": 0.95,
+          "ndcg_at_10": 0.7799082337019198
+        },
+        {
+          "id": "q003",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q004",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q005",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q006",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q007",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q008",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q009",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q010",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q011",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q012",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q013",
+          "category": "instrument_type",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q014",
+          "category": "instrument_type",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q015",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q016",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q017",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q018",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q019",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q020",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q021",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.3,
+          "recall_at_20": 0.35,
+          "ndcg_at_10": 0.40853591842579556
+        },
+        {
+          "id": "q022",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.4,
+          "ndcg_at_10": 0.40741536676357565
+        },
+        {
+          "id": "q023",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.1,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.13886244387355454
+        },
+        {
+          "id": "q024",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.1,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.13886244387355454
+        },
+        {
+          "id": "q025",
+          "category": "dollar_range",
+          "mrr_at_10": 0.16666666666666666,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.45,
+          "ndcg_at_10": 0.2816372027313761
+        },
+        {
+          "id": "q026",
+          "category": "dollar_range",
+          "mrr_at_10": 0.3333333333333333,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.3,
+          "ndcg_at_10": 0.18340980524840012
+        },
+        {
+          "id": "q027",
+          "category": "dollar_range",
+          "mrr_at_10": 0.25,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.25,
+          "ndcg_at_10": 0.17993148201117176
+        },
+        {
+          "id": "q028",
+          "category": "dollar_range",
+          "mrr_at_10": 0.16666666666666666,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.45,
+          "ndcg_at_10": 0.2816372027313761
+        },
+        {
+          "id": "q029",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.5,
+          "recall_at_20": 0.35,
+          "ndcg_at_10": 0.5795003533950692
+        },
+        {
+          "id": "q030",
+          "category": "dollar_range",
+          "mrr_at_10": 0.125,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.15,
+          "ndcg_at_10": 0.13568544539116628
+        },
+        {
+          "id": "q031",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.1,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.13886244387355454
+        },
+        {
+          "id": "q032",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.1,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.13886244387355454
+        },
+        {
+          "id": "q033",
+          "category": "dollar_range",
+          "mrr_at_10": 0.16666666666666666,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.45,
+          "ndcg_at_10": 0.2816372027313761
+        },
+        {
+          "id": "q034",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.5,
+          "recall_at_20": 0.35,
+          "ndcg_at_10": 0.5795003533950692
+        },
+        {
+          "id": "q035",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.1,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.13886244387355454
+        },
+        {
+          "id": "q036",
+          "category": "dollar_range",
+          "mrr_at_10": 0.3333333333333333,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.3,
+          "ndcg_at_10": 0.18340980524840012
+        },
+        {
+          "id": "q037",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.4,
+          "ndcg_at_10": 0.40741536676357565
+        },
+        {
+          "id": "q038",
+          "category": "dollar_range",
+          "mrr_at_10": 0.3333333333333333,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.3,
+          "ndcg_at_10": 0.18340980524840012
+        },
+        {
+          "id": "q039",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.5,
+          "recall_at_20": 0.35,
+          "ndcg_at_10": 0.5795003533950692
+        },
+        {
+          "id": "q040",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.4,
+          "ndcg_at_10": 0.40741536676357565
+        },
+        {
+          "id": "q041",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q042",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q043",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.9,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q044",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.9,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q045",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q046",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q047",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q048",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.9,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q049",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q050",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q051",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.9,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q052",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q053",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.8669479898642709
+        },
+        {
+          "id": "q054",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q055",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.8669479898642709
+        },
+        {
+          "id": "q056",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.9,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q057",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q058",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q059",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.7967610662472991
+        },
+        {
+          "id": "q060",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.85,
+          "ndcg_at_10": 0.8512360941594272
+        },
+        {
+          "id": "q061",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q062",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q063",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q064",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.9,
+          "recall_at_20": 0.95,
+          "ndcg_at_10": 0.7799082337019198
+        },
+        {
+          "id": "q065",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q066",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q067",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q068",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q069",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q070",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q071",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q072",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q073",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q074",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q075",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q076",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q077",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q078",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q079",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q080",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q081",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q082",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q083",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q084",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q085",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q086",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q087",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q088",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q089",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q090",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q091",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q092",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q093",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q094",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q095",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q096",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q097",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q098",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q099",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q100",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        }
+      ],
+      "elapsed_s": 0.17
+    },
+    {
+      "system": "hybrid_bge_m3",
+      "aggregate": {
+        "mrr_at_10": 0.8441666666666667,
+        "recall_at_10": 0.747,
+        "recall_at_20": 0.6984999999999999,
+        "ndcg_at_10": 0.759593446782384
+      },
+      "by_category": {
+        "instrument_type": {
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.95
+        },
+        "dollar_range": {
+          "mrr_at_10": 0.8291666666666666,
+          "recall_at_10": 0.61
+        },
+        "severity_critical": {
+          "mrr_at_10": 0.675,
+          "recall_at_10": 0.43499999999999994
+        },
+        "gap_pattern": {
+          "mrr_at_10": 0.7166666666666667,
+          "recall_at_10": 0.74
+        },
+        "combined": {
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0
+        }
+      },
+      "per_query": [
+        {
+          "id": "q001",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q002",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q003",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q004",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.9,
+          "ndcg_at_10": 0.7827392871477701
+        },
+        {
+          "id": "q005",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q006",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q007",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q008",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q009",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q010",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q011",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q012",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q013",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.65,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q014",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.3589542101716347
+        },
+        {
+          "id": "q015",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q016",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q017",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q018",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q019",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q020",
+          "category": "instrument_type",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q021",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.2,
+          "ndcg_at_10": 0.3589542101716347
+        },
+        {
+          "id": "q022",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.6,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q023",
+          "category": "dollar_range",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q024",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.9,
+          "recall_at_20": 0.5,
+          "ndcg_at_10": 0.9363792118010481
+        },
+        {
+          "id": "q025",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.6,
+          "recall_at_20": 0.65,
+          "ndcg_at_10": 0.5993294818993699
+        },
+        {
+          "id": "q026",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.45,
+          "ndcg_at_10": 0.8701249883466592
+        },
+        {
+          "id": "q027",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.55,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q028",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.75,
+          "ndcg_at_10": 0.8482378089219645
+        },
+        {
+          "id": "q029",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.6,
+          "recall_at_20": 0.45,
+          "ndcg_at_10": 0.5684579545875155
+        },
+        {
+          "id": "q030",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.9,
+          "recall_at_20": 0.55,
+          "ndcg_at_10": 0.9266360779006398
+        },
+        {
+          "id": "q031",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.5,
+          "recall_at_20": 0.5,
+          "ndcg_at_10": 0.5582604437617528
+        },
+        {
+          "id": "q032",
+          "category": "dollar_range",
+          "mrr_at_10": 0.25,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.1610425878239398
+        },
+        {
+          "id": "q033",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.4,
+          "ndcg_at_10": 0.47479014188018454
+        },
+        {
+          "id": "q034",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.1,
+          "recall_at_20": 0.2,
+          "ndcg_at_10": 0.22009176629808017
+        },
+        {
+          "id": "q035",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.35,
+          "ndcg_at_10": 0.522495596791931
+        },
+        {
+          "id": "q036",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.9,
+          "recall_at_20": 0.7,
+          "ndcg_at_10": 0.8611375561264454
+        },
+        {
+          "id": "q037",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.7,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q038",
+          "category": "dollar_range",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.6,
+          "recall_at_20": 0.35,
+          "ndcg_at_10": 0.7151857987862356
+        },
+        {
+          "id": "q039",
+          "category": "dollar_range",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.75,
+          "ndcg_at_10": 0.650033222048579
+        },
+        {
+          "id": "q040",
+          "category": "dollar_range",
+          "mrr_at_10": 0.3333333333333333,
+          "recall_at_10": 0.6,
+          "recall_at_20": 0.5,
+          "ndcg_at_10": 0.47682620352203725
+        },
+        {
+          "id": "q041",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.25,
+          "ndcg_at_10": 0.4779671403625728
+        },
+        {
+          "id": "q042",
+          "category": "severity_critical",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q043",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q044",
+          "category": "severity_critical",
+          "mrr_at_10": 0.5,
+          "recall_at_10": 0.5,
+          "recall_at_20": 0.4,
+          "ndcg_at_10": 0.4642913062995817
+        },
+        {
+          "id": "q045",
+          "category": "severity_critical",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q046",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.75,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q047",
+          "category": "severity_critical",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q048",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.65,
+          "ndcg_at_10": 0.7917267193679838
+        },
+        {
+          "id": "q049",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.95,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q050",
+          "category": "severity_critical",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q051",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.9,
+          "recall_at_20": 0.6,
+          "ndcg_at_10": 0.8899541168509599
+        },
+        {
+          "id": "q052",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.7,
+          "recall_at_20": 0.5,
+          "ndcg_at_10": 0.7381919257729245
+        },
+        {
+          "id": "q053",
+          "category": "severity_critical",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q054",
+          "category": "severity_critical",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q055",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.1,
+          "recall_at_20": 0.1,
+          "ndcg_at_10": 0.22009176629808017
+        },
+        {
+          "id": "q056",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.15,
+          "ndcg_at_10": 0.28371255449703187
+        },
+        {
+          "id": "q057",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.6,
+          "recall_at_20": 0.6,
+          "ndcg_at_10": 0.6687607038361472
+        },
+        {
+          "id": "q058",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.25,
+          "ndcg_at_10": 0.5637884576902256
+        },
+        {
+          "id": "q059",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 0.7,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q060",
+          "category": "severity_critical",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 0.2,
+          "recall_at_20": 0.15,
+          "ndcg_at_10": 0.33013764944712026
+        },
+        {
+          "id": "q061",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q062",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q063",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q064",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.3333333333333333,
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.9,
+          "ndcg_at_10": 0.6410457898283652
+        },
+        {
+          "id": "q065",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q066",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q067",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q068",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q069",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q070",
+          "category": "gap_pattern",
+          "mrr_at_10": 0.0,
+          "recall_at_10": 0.0,
+          "recall_at_20": 0.0,
+          "ndcg_at_10": 0.0
+        },
+        {
+          "id": "q071",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q072",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q073",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q074",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q075",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q076",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q077",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q078",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q079",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q080",
+          "category": "gap_pattern",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q081",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q082",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q083",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q084",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q085",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q086",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q087",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q088",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q089",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q090",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q091",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q092",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q093",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q094",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q095",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q096",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q097",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q098",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q099",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        },
+        {
+          "id": "q100",
+          "category": "combined",
+          "mrr_at_10": 1.0,
+          "recall_at_10": 1.0,
+          "recall_at_20": 1.0,
+          "ndcg_at_10": 1.0
+        }
+      ],
+      "elapsed_s": 597.41
+    }
+  ]
+}

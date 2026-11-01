@@ -1,4 +1,4 @@
-"""ingest_monitor.py — Live dashboard for bulk_ingest.py progress.
+"""ingest_monitor.py - Live dashboard for bulk_ingest.py progress.
 
 Queries oraculus_audit.db every 30 seconds and prints a per-jurisdiction
 summary table. Run in a second terminal window while bulk_ingest.py runs.
@@ -24,7 +24,7 @@ _DB_PATH = _REPO_ROOT / "oraculus_audit.db"
 
 
 # ---------------------------------------------------------------------------
-# DB helpers — raw sqlite3 so this script has zero heavy imports
+# DB helpers - raw sqlite3 so this script has zero heavy imports
 # ---------------------------------------------------------------------------
 
 
@@ -55,8 +55,7 @@ _RULE_WIDTH = _COL_J + _COL_D + _COL_F + _COL_S + _COL_L + 10
 
 def _render() -> None:
     # Per-jurisdiction aggregates
-    juris_rows = _query(
-        """
+    juris_rows = _query("""
         SELECT
             d.jurisdiction,
             COUNT(DISTINCT d.id)                AS docs,
@@ -66,20 +65,17 @@ def _render() -> None:
         LEFT JOIN analyses a ON a.document_id = d.document_id
         GROUP BY d.jurisdiction
         ORDER BY docs DESC
-        """
-    )
+        """)
 
     # Top detector layer per jurisdiction
-    layer_rows = _query(
-        """
+    layer_rows = _query("""
         SELECT d.jurisdiction, an.layer, COUNT(*) AS cnt
         FROM anomalies an
         JOIN analyses  a  ON a.id           = an.analysis_id
         JOIN documents d  ON d.document_id  = a.document_id
         WHERE an.layer IS NOT NULL AND an.layer != ''
         GROUP BY d.jurisdiction, an.layer
-        """
-    )
+        """)
     top_layer: dict[str, str] = {}
     for lr in layer_rows:
         j, layer, cnt = lr["jurisdiction"] or "unknown", lr["layer"], lr["cnt"]
@@ -97,15 +93,13 @@ def _render() -> None:
     sev = {r["severity"]: r["cnt"] for r in sev_rows}
 
     # Recent documents ingested
-    recent = _query(
-        """
+    recent = _query("""
         SELECT d.jurisdiction, d.title, a.anomaly_count, a.analysis_timestamp
         FROM documents d
         JOIN analyses a ON a.document_id = d.document_id
         ORDER BY a.analysis_timestamp DESC
         LIMIT 5
-        """
-    )
+        """)
 
     total_docs = sum(r["docs"] for r in juris_rows)
     total_findings = sum(r["findings"] for r in juris_rows)
@@ -129,8 +123,8 @@ def _render() -> None:
 
     for r in juris_rows:
         j = (r["jurisdiction"] or "unknown")[:_COL_J]
-        score = f"{r['avg_score']:.3f}" if r["avg_score"] is not None else "—"
-        tl = top_layer.get(r["jurisdiction"] or "unknown", "—")[:_COL_L]
+        score = f"{r['avg_score']:.3f}" if r["avg_score"] is not None else "-"
+        tl = top_layer.get(r["jurisdiction"] or "unknown", "-")[:_COL_L]
         print(
             f"  {j:<{_COL_J}} "
             f"{r['docs']:>{_COL_D}} "

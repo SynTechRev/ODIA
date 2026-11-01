@@ -8,8 +8,10 @@ api_base: "http://localhost:11434"
 
 # Model Configuration
 models:
-  default: "odia-v1"
+  default: "odia-v3"
   alternatives:
+    - "odia-v2"
+    - "odia-v1"
     - "llama3.1:8b"
     - "llama3"
     - "mistral"

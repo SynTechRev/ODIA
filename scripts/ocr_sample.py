@@ -86,7 +86,7 @@ class OCRProcessor:
             angle = -angle
 
         # Rotate image
-        (h, w) = gray.shape[:2]
+        h, w = gray.shape[:2]
         center = (w // 2, h // 2)
         rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
         rotated = cv2.warpAffine(

@@ -4,6 +4,7 @@
 This module implements a deterministic governance kernel that enforces,
 validates, and synthesizes governance rules across the entire pipeline.
 """
+
 from .consensus_engine import ConsensusEngine
 from .kernel import GovernanceKernel
 from .ledger import Ledger
