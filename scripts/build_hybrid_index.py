@@ -73,7 +73,6 @@ def _load_documents(db_path: Path, limit: int | None) -> list[dict]:
             SELECT
                 d.document_id,
                 d.title,
-                d.analysis_summary,
                 d.jurisdiction
             FROM documents d
             ORDER BY d.document_id
@@ -111,7 +110,6 @@ def _load_documents(db_path: Path, limit: int | None) -> list[dict]:
                 {
                     "document_id": doc_id,
                     "title": row["title"] or "",
-                    "analysis_summary": row["analysis_summary"] or "",
                     "jurisdiction": row["jurisdiction"] or "",
                     "findings": findings_by_doc.get(doc_id, []),
                 }
