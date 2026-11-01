@@ -73,8 +73,11 @@ def _load_documents(db_path: Path, limit: int | None) -> list[dict]:
             SELECT
                 d.document_id,
                 d.title,
-                d.jurisdiction
+                d.jurisdiction,
+                an.summary AS analysis_summary
             FROM documents d
+            LEFT JOIN analyses an ON an.document_id = d.document_id
+            GROUP BY d.document_id
             ORDER BY d.document_id
         """
         if limit:
@@ -83,11 +86,13 @@ def _load_documents(db_path: Path, limit: int | None) -> list[dict]:
         rows = conn.execute(query).fetchall()
         log.info("Loaded %d document rows", len(rows))
 
-        # Build doc_id -> findings list map
+        # Build doc_id -> findings list map via analyses join
         log.info("Loading anomaly findings (may take a minute)...")
-        finding_rows = conn.execute(
-            "SELECT document_id, issue, severity, layer FROM anomaly_findings"
-        ).fetchall()
+        finding_rows = conn.execute("""
+            SELECT an2.document_id, af.issue, af.severity, af.layer
+            FROM anomalies af
+            JOIN analyses an2 ON an2.id = af.analysis_id
+            """).fetchall()
         log.info("Loaded %d finding rows", len(finding_rows))
 
         findings_by_doc: dict[str, list[dict]] = {}
@@ -111,6 +116,7 @@ def _load_documents(db_path: Path, limit: int | None) -> list[dict]:
                     "document_id": doc_id,
                     "title": row["title"] or "",
                     "jurisdiction": row["jurisdiction"] or "",
+                    "analysis_summary": row["analysis_summary"] or "",
                     "findings": findings_by_doc.get(doc_id, []),
                 }
             )
