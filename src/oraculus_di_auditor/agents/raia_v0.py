@@ -20,7 +20,16 @@ import logging
 import re
 from typing import Any, Literal, TypedDict
 
-from langgraph.graph import END, StateGraph
+# langgraph is optional at import time; it is only required when build_raia_graph()
+# is called. This allows the pure helper functions (analyze_node, verify_node, etc.)
+# and the RAIAState TypedDict to be imported and unit-tested without langgraph.
+try:
+    from langgraph.graph import END as _LG_END
+    from langgraph.graph import StateGraph as _StateGraph
+
+    _LANGGRAPH_AVAILABLE = True
+except ImportError:
+    _LANGGRAPH_AVAILABLE = False
 
 from oraculus_di_auditor.llm_providers import BaseLLMProvider
 from oraculus_di_auditor.retrieval.hybrid import HybridRetriever
@@ -379,7 +388,12 @@ def build_raia_graph(
     corpus_ids: set[str],
 ) -> Any:
     """Construct and compile the R.A.I.A. LangGraph graph."""
-    builder: StateGraph = StateGraph(RAIAState)
+    if not _LANGGRAPH_AVAILABLE:
+        raise ImportError(
+            "langgraph is required to use build_raia_graph. "
+            "Install it with: pip install langgraph"
+        )
+    builder: Any = _StateGraph(RAIAState)
 
     builder.add_node("analyze", lambda s: analyze_node(s, provider))
     builder.add_node("cross_reference", lambda s: cross_reference_node(s, retriever))
@@ -396,7 +410,7 @@ def build_raia_graph(
         _should_continue,
         {"loop": "analyze", "finalize": "finalize"},
     )
-    builder.add_edge("finalize", END)
+    builder.add_edge("finalize", _LG_END)
 
     return builder.compile()
 

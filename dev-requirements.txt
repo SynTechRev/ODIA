@@ -5,3 +5,5 @@ pytest-cov==6.0.0
 mypy==1.11.2
 pre-commit==3.8.0
 jsonschema>=4.20.0
+virtualenv>=21.14.13
+filelock>=4.2.1
