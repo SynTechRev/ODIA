@@ -1,4 +1,11 @@
-﻿from .colbert_index import ColBERTRetriever
-from .hybrid import HybridRetriever
+﻿from .hybrid import HybridRetriever
 
-__all__ = ["HybridRetriever", "ColBERTRetriever"]
+# ColBERTRetriever requires torch, which is not installed in the base CI
+# environment (no GPU). Guard the import so the retrieval package loads
+# cleanly in test environments and falls back gracefully when torch is absent.
+try:
+    from .colbert_index import ColBERTRetriever
+
+    __all__ = ["HybridRetriever", "ColBERTRetriever"]
+except ImportError:
+    __all__ = ["HybridRetriever"]

@@ -31,8 +31,18 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-import torch
-from transformers import AutoModel, AutoTokenizer
+
+# torch and transformers are optional at import time; they are only required
+# when ColBERTRetriever._load_model() is called. This allows the module and
+# its pure-numpy helpers (_l2_normalize, _doc_text) to be imported in CI
+# environments without a GPU or torch installation.
+try:
+    import torch
+    from transformers import AutoModel, AutoTokenizer
+
+    _TORCH_AVAILABLE = True
+except ImportError:
+    _TORCH_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +103,11 @@ class ColBERTRetriever:
     def _load_model(self) -> None:
         if self._model is not None:
             return
+        if not _TORCH_AVAILABLE:
+            raise ImportError(
+                "torch and transformers are required to use ColBERTRetriever. "
+                "Install them with: pip install torch transformers"
+            )
         if not self._model_path.exists():
             raise FileNotFoundError(
                 f"ColBERTv2 model not found at {self._model_path}. "

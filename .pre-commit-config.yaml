@@ -18,7 +18,7 @@ repos:
 
   # Black formatting — must match what CI checks with `black --check`
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 26.3.0
     hooks:
       - id: black
 
