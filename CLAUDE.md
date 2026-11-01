@@ -102,6 +102,31 @@ All original priorities are complete. Active work:
 13. ~~C.O.N.T.R.A. frontend nav tab~~ — Done 2026-08-11. /contra page live in v3.9.1. Detector registry, entity registry, CASI status tiles.
 14. ~~RAG pipeline end-to-end fix~~ — Done 2026-08-11. vectors copied to install dir, similarity threshold 0.3→0.05, retriever perf bug fixed. v3.9.2.
 
+## 10-Day Capability Challenge (Active: 2026-10-23 onward)
+
+Branch: `learning/10-day-challenge`. Merges to main after Day 11 consolidation review.
+Advances odia-v2 and the platform from TF-IDF + QLoRA baseline toward an agentic
+R.A.I.A. system with modern retrieval, tool-calling detectors, three-tier memory,
+reasoning-mode inference, and continuous evaluation. See `BLOCKERS.md` for
+discrepancies between the handoff document and current platform state.
+
+| Day | Domain | Build Artifact | Status |
+|---|---|---|---|
+| 1 | Reasoning Foundations | `interface/reasoning_mode.py`, reasoning_mode flag on RAG endpoint | COMPLETE 2026-10-23 |
+| 2 | Retrieval Part 1 | `retrieval/hybrid.py` (BGE-M3 + BM25 + bge-reranker-v2-m3) | COMPLETE 2026-10-23 |
+| 3 | Retrieval Part 2 | `retrieval/colbert_index.py` (ColBERTv2 direct MaxSim, ragatouille incompatible w/ 3.14) | COMPLETE 2026-10-23 |
+| 4 | Agentic Orchestration | `agents/raia_v0.py` (LangGraph analyze/xref/deepen/verify cycle) | COMPLETE 2026-10-24 (4/5 verify_passed conf=1.00; severity_critical model limit documented) |
+| 5 | Document AI | pymupdf bakeoff on 1,107 TCPD PrimeGov PDFs (ColPali/Nougat/marker-pdf deferred to Day 11 -- Python 3.14 + VRAM constraints) | COMPLETE 2026-10-31 (pymupdf wins all cats; pypdf/pdfplumber content duplication bug confirmed on Cat C; D-05 resolved: 81,309/271,245/16 jurisd. authoritative) |
+| 6 | Preference Optimization | `data/preferences_v1.jsonl`, DPO config, 10-step smoke test | COMPLETE 2026-10-31 (B-6 Session B signed off; B-10 Option B: RAIA run3 traces as chosen; 5 DPO pairs; format smoke test PASS 5/5 signal clear 5/5 Watch3 ratio OK; forward mode deferred Day 11 Vast.ai) |
+| 7 | Neurosymbolic Integration | `tools/detector_tools.py` (L-1 through L-10 as callable tools) | COMPLETE 2026-10-31 (10 @tool wrappers + DetectorRegistry + legal_scan_node; smoke tests PASS; B-7 SIGNED OFF 2026-10-31) |
+| 8 | Knowledge Graph | `knowledge_graph/jag_subgraph.py` (networkx + pyvis, nano-graphrag replaced per B-11) | COMPLETE 2026-10-31 (50 nodes/105 edges; 614 critical + 146 high across 14 jurisdictions; 8 vendors; Watch 1/2 PASS; data/graphs/jag_anti_supplanting.json + .html) |
+| 9 | Memory Architecture | `memory/three_tier.py` (working + archival + episodic; Letta unavailable, native SQLite impl per B-11) | COMPLETE 2026-10-31 (WorkingMemory + EpisodicMemory + ArchivalMemory + ThreeTierMemory; bootstrap from Day 8 JAG subgraph + Day 4 traces; all smoke tests PASS; B-7 detector hints wired) |
+| 10 | Evaluation Harness | `eval/harness.py` (7-metric scorecard + judge model + CI gate) | COMPLETE 2026-10-31 (HeuristicJudge + OllamaJudge; 6/7 gate metrics PASS; iteration_efficiency FAIL 0.3333 < 0.4000 -- expected pre-DPO baseline; Day 11 post-DPO re-run is production gate) |
+| 11 | Vast.ai DPO Training | odia-v3.q4_k_m.gguf (4.6 GB), severity_critical gate PASS, Modelfile.v3 | COMPLETE 2026-11-01 (5 pairs, 5 epochs, beta=0.05, RTX 4090 6.49 GB peak VRAM; severity_critical sc-01 verify_passed 3 citations; odia-v3 authorized for /api/v1/raia/analyze; HybridRetriever index deferred B-13; post-DPO traces deferred B-14) |
+
+Mars review checkpoints: end of Day 3 (retrieval decision), Day 5 (document AI decision),
+Day 7 (detector tool-calling pattern), Day 10 (evaluation baseline), Day 11 (consolidation PR).
+
 **Active next steps**:
 - ~~RAG index rebuild~~ — Done 2026-10-16. 81,309 corpus / 271,245 ACE / 3,937 JIM. Copied to `Roaming\ODIA\data\vectors`.
 - ~~split_mas_export.py~~ — Done 2026-07-31. Files in `data/mas_export/fresnocounty_splits/` and `data/mas_export/fresno_splits/` (35 files).

@@ -1,0 +1,47 @@
+{
+  "run_date": "2026-11-01T04:33:43.076335+00:00",
+  "model": "odia-v3",
+  "baseline": false,
+  "gate_threshold": 1,
+  "gate_passed": true,
+  "verdict": "PASS",
+  "passed_count": 1,
+  "total_queries": 3,
+  "max_iterations": 3,
+  "confidence_threshold": 0.75,
+  "results": [
+    {
+      "query_id": "sc-01",
+      "query": "critical unsigned agreement instrument compliance violation",
+      "halt_reason": "verify_passed",
+      "iterations": 2,
+      "citations_found": 3,
+      "citations_valid": 3,
+      "gate_pass": true,
+      "latency_s": 233.810579,
+      "error": null
+    },
+    {
+      "query_id": "sc-02",
+      "query": "JAG grant anti-supplanting critical compliance finding",
+      "halt_reason": "max_iterations",
+      "iterations": 3,
+      "citations_found": 0,
+      "citations_valid": 0,
+      "gate_pass": false,
+      "latency_s": 434.170578,
+      "error": null
+    },
+    {
+      "query_id": "sc-03",
+      "query": "surveillance procurement without council authorization critical",
+      "halt_reason": "max_iterations",
+      "iterations": 3,
+      "citations_found": 1,
+      "citations_valid": 0,
+      "gate_pass": false,
+      "latency_s": 212.76776,
+      "error": null
+    }
+  ]
+}

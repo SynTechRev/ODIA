@@ -219,14 +219,12 @@ ethical, and governance boundaries while maintaining complete human oversight an
 
         formatted = []
         for i, mip in enumerate(meta_insights, 1):
-            formatted.append(
-                f"""
+            formatted.append(f"""
 **Meta-Insight {i}** (Confidence: {mip.confidence:.1%})
 - **Foundational:** {mip.foundational_insight[:200]}...
 - **Structural:** {mip.structural_insight[:200]}...
 - **Ethical:** {mip.ethical_insight[:200]}...
-"""
-            )
+""")
         return "\n".join(formatted)
 
     def _build_structured_packet(

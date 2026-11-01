@@ -1,4 +1,4 @@
-"""CONTRA corpus gap analyzer — coverage report against chain definitions.
+"""CONTRA corpus gap analyzer - coverage report against chain definitions.
 
 Reads _CIFU_CHAINS from compute_cifu.py, queries contra_corpus.db, and reports:
   - Which chain members have zero docs
@@ -74,9 +74,7 @@ def _compute_gap(db_path: str, chain_id: str | None) -> dict:
 
     with engine.connect() as conn:
         # Build entity → {docs, axes, avg_casi, max_casi, findings} map from DB
-        rows = conn.execute(
-            text(
-                """
+        rows = conn.execute(text("""
             SELECT
                 ce.canonical_name,
                 COUNT(DISTINCT cd.document_hash) AS docs,
@@ -88,9 +86,7 @@ def _compute_gap(db_path: str, chain_id: str | None) -> dict:
             LEFT JOIN casi_scores cs ON cs.document_hash = cd.document_hash
             LEFT JOIN contra_findings cf ON cf.document_hash = cd.document_hash
             GROUP BY ce.canonical_name
-        """
-            )
-        ).fetchall()
+        """)).fetchall()
 
         entity_stats: dict[str, dict] = {}
         for row in rows:
@@ -102,17 +98,13 @@ def _compute_gap(db_path: str, chain_id: str | None) -> dict:
             }
 
         # Build entity → set of active axes
-        axis_rows = conn.execute(
-            text(
-                """
+        axis_rows = conn.execute(text("""
             SELECT ce.canonical_name, cf.scoring_axis
             FROM contra_findings cf
             JOIN commercial_documents cd ON cd.document_hash = cf.document_hash
             JOIN commercial_entities ce ON ce.entity_id = cd.entity_id
             WHERE cf.scoring_axis IS NOT NULL
-        """
-            )
-        ).fetchall()
+        """)).fetchall()
 
         entity_axes: dict[str, set] = {}
         for ename, axis in axis_rows:
@@ -198,7 +190,7 @@ def _compute_gap(db_path: str, chain_id: str | None) -> dict:
 
 def _print_report(results: dict) -> None:
     print(
-        f"\nC.O.N.T.R.A. Corpus Gap Analysis — {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}"
+        f"\nC.O.N.T.R.A. Corpus Gap Analysis - {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}"
     )
     print("=" * 72)
 
@@ -227,14 +219,14 @@ def _print_report(results: dict) -> None:
 
         if r["gap_member_list"]:
             print(
-                f"\n  GAP MEMBERS ({r['gap_members']} — no corpus docs or all axes silent):"
+                f"\n  GAP MEMBERS ({r['gap_members']} - no corpus docs or all axes silent):"
             )
             print(f"  {'Entity':<35} {'Docs':>5} {'MaxCASI':>7} {'Silent Axes':>12}")
             print(f"  {'─'*63}")
             for m in r["gap_member_list"]:
                 in_db = "" if m["in_db"] else " [NOT IN DB]"
-                silent = ",".join(_AXIS_SHORT[a] for a in m["axes_silent"]) or "—"
-                casi_str = str(m["max_casi"]) if m["max_casi"] is not None else "—"
+                silent = ",".join(_AXIS_SHORT[a] for a in m["axes_silent"]) or "-"
+                casi_str = str(m["max_casi"]) if m["max_casi"] is not None else "-"
                 print(
                     f"  {m['entity_name'][:34]:<35} {m['docs']:>5} {casi_str:>7} {silent:>12}{in_db}"
                 )
@@ -246,8 +238,8 @@ def _print_report(results: dict) -> None:
             )
             print(f"  {'─'*70}")
             for m in r["present_member_list"]:
-                silent = ",".join(_AXIS_SHORT[a] for a in m["axes_silent"]) or "—"
-                avg_str = f"{m['avg_casi']:.1f}" if m["avg_casi"] is not None else "—"
+                silent = ",".join(_AXIS_SHORT[a] for a in m["axes_silent"]) or "-"
+                avg_str = f"{m['avg_casi']:.1f}" if m["avg_casi"] is not None else "-"
                 print(
                     f"  {m['entity_name'][:34]:<35} {m['docs']:>4} {avg_str:>7} "
                     f"  {m['axes_active_count']}/5 {silent:>20}"
