@@ -1,0 +1,248 @@
+{
+  "run_date": "2026-11-02T04:29:02.265835+00:00",
+  "trace_file": "data\\eval\\raia_day11_hybrid_traces.jsonl",
+  "query_count": 5,
+  "max_iterations": 3,
+  "metrics": [
+    {
+      "name": "verify_pass_rate",
+      "value": 0.8,
+      "threshold": 0.75,
+      "is_gate": true,
+      "passed": true,
+      "unit": "fraction",
+      "details": {
+        "by_category": {
+          "instrument_type": {
+            "passed": 0,
+            "total": 1
+          },
+          "dollar_range": {
+            "passed": 1,
+            "total": 1
+          },
+          "severity_critical": {
+            "passed": 1,
+            "total": 1
+          },
+          "gap_pattern": {
+            "passed": 1,
+            "total": 1
+          },
+          "combined": {
+            "passed": 1,
+            "total": 1
+          }
+        },
+        "passed": 4,
+        "total": 5
+      }
+    },
+    {
+      "name": "citation_density_mean",
+      "value": 0.8,
+      "threshold": 0.75,
+      "is_gate": true,
+      "passed": true,
+      "unit": "fraction",
+      "details": {
+        "all_mean": 0.8,
+        "verify_passed_mean": 1.0,
+        "per_query": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "citation_precision_mean",
+      "value": 0.8,
+      "threshold": 0.8,
+      "is_gate": true,
+      "passed": true,
+      "unit": "fraction",
+      "details": {
+        "per_query": [
+          {
+            "query_id": "q020",
+            "precision": 0.0,
+            "citation_count": 0
+          },
+          {
+            "query_id": "q040",
+            "precision": 1.0,
+            "citation_count": 5
+          },
+          {
+            "query_id": "q060",
+            "precision": 1.0,
+            "citation_count": 5
+          },
+          {
+            "query_id": "q080",
+            "precision": 1.0,
+            "citation_count": 3
+          },
+          {
+            "query_id": "q100",
+            "precision": 1.0,
+            "citation_count": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "iteration_efficiency",
+      "value": 0.2667,
+      "threshold": 0.4,
+      "is_gate": true,
+      "passed": false,
+      "unit": "0=worst 1=best",
+      "details": {
+        "mean_iterations": 2.2,
+        "max_iterations": 3,
+        "per_query": [
+          {
+            "query_id": "q020",
+            "iterations": 3
+          },
+          {
+            "query_id": "q040",
+            "iterations": 1
+          },
+          {
+            "query_id": "q060",
+            "iterations": 3
+          },
+          {
+            "query_id": "q080",
+            "iterations": 2
+          },
+          {
+            "query_id": "q100",
+            "iterations": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "answer_adequacy",
+      "value": 0.52,
+      "threshold": 0.5,
+      "is_gate": true,
+      "passed": true,
+      "unit": "fraction",
+      "details": {
+        "judge_type": "HeuristicJudge",
+        "per_query": [
+          {
+            "query_id": "q020",
+            "score": 0.4,
+            "halt_reason": "max_iterations"
+          },
+          {
+            "query_id": "q040",
+            "score": 0.6,
+            "halt_reason": "verify_passed"
+          },
+          {
+            "query_id": "q060",
+            "score": 0.4,
+            "halt_reason": "verify_passed"
+          },
+          {
+            "query_id": "q080",
+            "score": 0.6,
+            "halt_reason": "verify_passed"
+          },
+          {
+            "query_id": "q100",
+            "score": 0.6,
+            "halt_reason": "verify_passed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "category_balance",
+      "value": 0.8,
+      "threshold": 0.6,
+      "is_gate": true,
+      "passed": true,
+      "unit": "fraction",
+      "details": {
+        "total_categories": 5,
+        "passed_categories": 4,
+        "categories": [
+          "combined",
+          "dollar_range",
+          "gap_pattern",
+          "instrument_type",
+          "severity_critical"
+        ],
+        "passed_category_names": [
+          "combined",
+          "dollar_range",
+          "gap_pattern",
+          "severity_critical"
+        ]
+      }
+    },
+    {
+      "name": "latency_p50_ok",
+      "value": 0.0,
+      "threshold": 0.0,
+      "is_gate": false,
+      "passed": true,
+      "unit": "1=ok 0=exceeds_sla",
+      "details": {
+        "p50_seconds": 372.5,
+        "mean_seconds": 329.7,
+        "sla_seconds": 300.0,
+        "per_query": [
+          {
+            "query_id": "q020",
+            "latency_sec": 463.44
+          },
+          {
+            "query_id": "q040",
+            "latency_sec": 149.24
+          },
+          {
+            "query_id": "q060",
+            "latency_sec": 395.36
+          },
+          {
+            "query_id": "q080",
+            "latency_sec": 372.49
+          },
+          {
+            "query_id": "q100",
+            "latency_sec": 268.0
+          }
+        ]
+      }
+    }
+  ],
+  "gate_passed": false,
+  "verdict": "FAIL",
+  "failed_metrics": [
+    "iteration_efficiency"
+  ],
+  "details": {
+    "judge_type": "HeuristicJudge",
+    "latency_sla_seconds": 300.0,
+    "thresholds_applied": {
+      "verify_pass_rate": 0.75,
+      "citation_density_mean": 0.75,
+      "citation_precision_mean": 0.8,
+      "iteration_efficiency": 0.4,
+      "answer_adequacy": 0.5,
+      "category_balance": 0.6,
+      "latency_p50_ok": 0.0
+    }
+  }
+}
